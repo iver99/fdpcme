@@ -1464,13 +1464,16 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 		Actions builder = new Actions(driver.getWebDriver());
 		driver.getLogger().info("Now moving to the widget title bar");
 		builder.moveToElement(widgetTitle).perform();
+		driver.waitForServer();
 		driver.takeScreenShot();
 		driver.getLogger().info("and clicks the widget config button");
 		//		builder.moveToElement(widgetDataExplore).click().perform();
 		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 		wait.until(ExpectedConditions.elementToBeClickable(widgetDataExplore));
 		widgetDataExplore.click();
+		driver.waitForServer();
 		driver.takeScreenShot();
+
 	}
 
 	private void duplicateDashboardCommonUse(WebDriver driver, String name, String descriptions, String operationName)
@@ -1604,7 +1607,6 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	{
 		driver.waitForElementPresent(DashBoardPageId_190.BUILDERTILESEDITAREA);
 		driver.click(DashBoardPageId_190.BUILDERTILESEDITAREA);
-		driver.takeScreenShot();
 
 		String titleTitlesLocator = String.format(DashBoardPageId_190.BUILDERTILETITLELOCATOR, widgetName);
 		List<WebElement> tileTitles = driver.getWebDriver().findElements(By.xpath(titleTitlesLocator));
@@ -1612,6 +1614,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 			throw new NoSuchElementException("Tile with title=" + widgetName + ", index=" + index + " is not found");
 		}
 		tileTitles.get(index).click();
+		driver.waitForServer();
 		driver.takeScreenShot();
 		return tileTitles.get(index);
 	}
