@@ -101,6 +101,7 @@ define([
                         headerViewModel.brandingbarParams.showTimeSelector(false);
                         headerViewModel.brandingbarParams.showEntitySelector(false);
                     }else {
+			self.dashboard.enableEntityFilter(val);
                         if(val === "FALSE") {
                             headerViewModel && headerViewModel.brandingbarParams.showEntitySelector(false);
                         }else {

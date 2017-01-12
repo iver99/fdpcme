@@ -931,7 +931,7 @@ define(['knockout',
                     self.userExtendedOptions.tsel = {};
                 }
                 
-                if(!self.toolbarModel.zdtStatus()){
+                if(self.toolbarModel.zdtStatus()){
                     return;
                 }
                 
