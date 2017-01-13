@@ -9,6 +9,8 @@ import java.util.List;
 
 import javax.ws.rs.core.Response;
 
+import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.resource.UserOptionsNotFoundException;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.testng.Assert;
@@ -45,7 +47,8 @@ public class DashboardAPITest
 	APIBase mockedAPIBase;
 	@Mocked
 	DashboardManager mockedDashboardManager;
-
+	@Mocked
+	Throwable throwable;
 	DashboardAPI dashboardAPI = new DashboardAPI();
 
 	@Test
@@ -55,7 +58,7 @@ public class DashboardAPITest
 			{
 				anyDependencyStatus.isDatabaseUp();
 				result = true;
-				
+
 				mockedAPIBase.initializeUserContext(anyString, anyString);
 				result = null;
 
@@ -170,6 +173,75 @@ public class DashboardAPITest
 			}
 		};
 		assertDeleteDashboard();
+	}
+
+	@Test
+	public void getDashboardUserOptions(@Mocked final UserOptionsManager userOptionsManager,
+										@Mocked final DependencyStatus anyDependencyStatus,
+										@Mocked final UserOptions userOptions, @Mocked final UserOptionsNotFoundException userOptionNotFoundException) throws DashboardNotFoundException, UserOptionsNotFoundException {
+		new Expectations() {
+			{
+				anyDependencyStatus.isDatabaseUp();
+				result = true;
+				UserOptionsManager.getInstance();
+				result = userOptionsManager;
+				userOptionsManager.getOptionsById((BigInteger)any, anyLong);
+				result = userOptionNotFoundException;
+			}
+		};
+		dashboardAPI.getDashboardUserOptions("","","",new BigInteger("1"));
+	}
+
+
+	@Test
+	public void getDashboardUserOptions(@Mocked final UserOptionsManager userOptionsManager,
+										@Mocked final DependencyStatus anyDependencyStatus,
+										@Mocked final UserOptions userOptions, @Mocked final DashboardNotFoundException dashboardNotFoundException) throws DashboardNotFoundException, UserOptionsNotFoundException {
+		new Expectations() {
+			{
+				anyDependencyStatus.isDatabaseUp();
+				result = true;
+				UserOptionsManager.getInstance();
+				result = userOptionsManager;
+				userOptionsManager.getOptionsById((BigInteger)any, anyLong);
+				result = dashboardNotFoundException;
+			}
+		};
+		dashboardAPI.getDashboardUserOptions("","","",new BigInteger("1"));
+	}
+
+	@Test
+	public void getDashboardUserOptions(@Mocked final UserOptionsManager userOptionsManager,
+										@Mocked final DependencyStatus anyDependencyStatus,
+										@Mocked final UserOptions userOptions, @Mocked final DashboardException dashboardNotFoundException) throws DashboardNotFoundException, UserOptionsNotFoundException {
+		new Expectations() {
+			{
+				anyDependencyStatus.isDatabaseUp();
+				result = true;
+				UserOptionsManager.getInstance();
+				result = userOptionsManager;
+				userOptionsManager.getOptionsById((BigInteger)any, anyLong);
+				result = dashboardNotFoundException;
+			}
+		};
+		dashboardAPI.getDashboardUserOptions("","","",new BigInteger("1"));
+	}
+
+	@Test
+	public void getDashboardUserOptions(@Mocked final UserOptionsManager userOptionsManager,
+										@Mocked final DependencyStatus anyDependencyStatus,
+										@Mocked final UserOptions userOptions, @Mocked final BasicServiceMalfunctionException dashboardNotFoundException) throws DashboardNotFoundException, UserOptionsNotFoundException {
+		new Expectations() {
+			{
+				anyDependencyStatus.isDatabaseUp();
+				result = true;
+				UserOptionsManager.getInstance();
+				result = userOptionsManager;
+				userOptionsManager.getOptionsById((BigInteger)any, anyLong);
+				result = dashboardNotFoundException;
+			}
+		};
+		dashboardAPI.getDashboardUserOptions("","","",new BigInteger("1"));
 	}
 
 	@Test
@@ -605,4 +677,40 @@ public class DashboardAPITest
 		dashboardAPI.queryDashboardSetsBySubId("", "", "", BigInteger.valueOf(1L));
 	}
 
+	@Test
+	public void testDeleteDashboards(){
+		new Expectations(){
+			{
+				DashboardManager.getInstance();
+				result = mockedDashboardManager;
+			}
+		};
+		dashboardAPI.deleteDashboards("tenandIdParam","userTenant","refer");
+	}
+	@Test
+	public void testDeleteDashboards(@Mocked final DashboardManager dashboardManager,
+									 @Mocked final DashboardException dashboardException) throws DashboardException {
+		new Expectations(){
+			{
+				DashboardManager.getInstance();
+				result = dashboardManager;
+				dashboardManager.deleteDashboards(anyLong);
+				result = dashboardException;
+			}
+		};
+		dashboardAPI.deleteDashboards("tenandIdParam","userTenant","refer");
+	}
+	@Test
+	public void testDeleteDashboards(@Mocked final DashboardManager dashboardManager,
+									 @Mocked final BasicServiceMalfunctionException dashboardException) throws DashboardException {
+		new Expectations(){
+			{
+				DashboardManager.getInstance();
+				result = dashboardManager;
+				dashboardManager.deleteDashboards(anyLong);
+				result = dashboardException;
+			}
+		};
+		dashboardAPI.deleteDashboards("tenandIdParam","userTenant","refer");
+	}
 }

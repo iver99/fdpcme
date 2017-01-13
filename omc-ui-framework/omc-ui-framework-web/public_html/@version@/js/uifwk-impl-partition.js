@@ -22,6 +22,7 @@ define([
 'uifwk/@version@/js/util/typeahead-search-impl',
 'uifwk/@version@/js/util/usertenant-util-impl',
 'uifwk/@version@/js/sdk/context-util-impl',
+'uifwk/@version@/js/sdk/SessionCacheUtil',
 'uifwk/@version@/js/resources/nls/uifwkCommonMsg',
 'uifwk/@version@/js/resources/nls/root/uifwkCommonMsg',
 'uifwk/@version@/js/util/zdt-util-impl',

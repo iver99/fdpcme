@@ -13,4 +13,6 @@ public class DashBoardPageId_1150 {
 
     //Search button in explore menu
     public static final String XPATH_EXPLORE_Search = "//a[text()='Data Explorer' and @role='menuitem']";
+    
+    public static final String BUILDERDATETIMEPICKERLOCATOR = "//div[@id='emaas-appheader-timecxt']";
 }
