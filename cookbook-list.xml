@@ -1,8 +1,9 @@
 <?xml version="1.0"?> 
+kbook-list.xml.swp
  
 <cookbooks> 
   <cookbook name="cookbook-emcs-dashboardService-api" dir="dashboards-chef"/> 
   <cookbook name="cookbook-emcs-dashboardService-ui" dir="dashboards-chef"/>  
   <cookbook name="cookbook-emcs-omc-ui-framework" dir="dashboards-chef"/>
- <cookbook name="cookbook-emcs-dashboard-comparator" dir="dashboards-chef"/>
+<!-- <cookbook name="cookbook-emcs-dashboard-comparator" dir="dashboards-chef"/>-->
 </cookbooks> 
