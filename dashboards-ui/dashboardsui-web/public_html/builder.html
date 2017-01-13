@@ -30,7 +30,7 @@
             </header>
 
             <div id="dbd-set-tabs" data-bind="stopDataBinding: !isDashboardSet(), visible: isDashboardSet" class="no-print">
-                <div id="dbd-tabs-container" data-bind="ojComponent:{component: 'ojTabs',truncation:'none',removable:dashboardsetConfig.isCreator && notZdtStatus,reorderable:dashboardsetConfig.isCreator}">
+                <div id="dbd-tabs-container" data-bind="ojComponent:{component: 'ojTabs',truncation:'none',removable:disableRemove,reorderable:dashboardsetConfig.isCreator}">
                     <div id="dbd-set-name" class="oj-tabs-facet">
                             <span data-bind="text:dashboardsetName()"></span>
                             <button id="tabs-caret"
@@ -44,7 +44,7 @@
                     <ul class="dbd-tabs-nav">
                     </ul>
 
-                    <div class="oj-tabs-facet demo-tabs-facet-flex" data-bind="visible:dashboardsetConfig.isCreator() && noDashboardHome() && notZdtStatus">
+                    <div class="oj-tabs-facet demo-tabs-facet-flex" data-bind="visible:enableAdd">
                          <span id="add-nav" data-bind="click:addNewDashboard,attr: {title: getNlsString('DBSSET_BUILDER_ADD_DASHBOARD_TOSET')">
                              <i class="fa-icon-font fa-icon-font-14 dbd-icon-add"></i>
                          </span>
