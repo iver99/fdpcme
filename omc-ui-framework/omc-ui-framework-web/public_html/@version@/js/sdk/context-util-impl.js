@@ -658,7 +658,7 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                 var arr = tp.split("_");
                 return {
                     unit: arr[2],
-                    duration: arr[1]
+                    duration: parseInt(arr[1])
                 }
             };
 
