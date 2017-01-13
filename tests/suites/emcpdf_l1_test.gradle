@@ -108,7 +108,8 @@ dependencies {
 apply plugin: 'java'
 
 
-task DEVTest_ws(type:EMTest){ 
+task DEVTest_ws(type:EMTest){
+	//below are dashboards-web test cases
 	include "oracle/sysman/emaas/platform/dashboards/ws/ErrorEntityTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/APIBaseTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/ConfigurationAPITest.class"
@@ -125,66 +126,43 @@ task DEVTest_ws(type:EMTest){
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/ScreenShotEntityTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/TenantSubscriptionsAPITest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/ZDTAPITest.class"
-	
-	include "oracle/sysman/emaas/platform/dashboards/ws/rest/loggingconfig/LoggingItemsTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ws/rest/loggingconfig/LoggingItemTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ws/rest/loggingconfig/UpdatedLoggerLevelTest.class"
-	
-	include "oracle/sysman/emaas/platform/dashboards/ws/rest/model/*.class"
+	include "oracle/sysman/emaas/platform/dashboards/ws/rest/WidgetNotificationAPITest_S2.class"
 
-	include "oracle/sysman/emaas/platform/dashboards/ws/rest/subappedition/ServiceEntityTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ws/rest/subappedition/TenantDetailEntityTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ws/rest/subappedition/TenantEditionEntityTest.class"
-	
-	include "oracle/sysman/emaas/platform/dashboards/ws/rest/util/DashboardAPIUtilTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ws/rest/util/PrivilegeCheckerTest.class"
-	
-	include "oracle/sysman/emaas/platform/dashboards/ws/rest/zdt/TableRowsSynchronizerTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ws/rest/zdt/ZDTEntityTest.class"
+	include "oracle/sysman/emaas/platform/dashboards/ws/rest/zdt/*.class"
+	include "oracle/sysman/emaas/platform/dashboards/ws/rest/loggingconfig/*.class"
+	include "oracle/sysman/emaas/platform/dashboards/ws/rest/model/*.class"
+	include "oracle/sysman/emaas/platform/dashboards/ws/rest/util/*.class"
+	include "oracle/sysman/emaas/platform/dashboards/ws/rest/subappedition/*.class"
+	include "oracle/sysman/emaas/platform/dashboards/ws/rest/zdt/tablerows/*.class"
+	include "oracle/sysman/emaas/platform/dashboards/ws/rest/ssfnotification/*.class"
+
+	//below are dashboard-comparator-web test cases
+	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/comparator/rows/*.class"
+	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/*.class"
+	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/comparator/rows/entities/*.class"
+
+
 	useRestAssured=true
 	ext.set("testType", "unit")
 }
 
 task DEVTest(type:EMTest,dependsOn: DEVTest_ws){
+	//below are dashboards-core test cases
 	include "oracle/sysman/emaas/platform/dashboards/core/DashboardExcepionsTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/DashboardManagerTest_S2.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/DBConnectionManagerTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/PreferenceManagerTest_S2.class"
-	//include "oracle/sysman/emaas/platform/dashboards/core/persistence/DashboardServiceFacadeTest_S2.class"
-	//include "oracle/sysman/emaas/platform/dashboards/core/persistence/PersistenceManagerTest_S2.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/UserOptionsManagerTest_S2.class"
-	include "oracle/sysman/emaas/platform/dashboards/core/model/DashboardApplicationTypeTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/core/model/PaginatedDashboardsTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/core/model/TileParamTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/core/model/TileTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/core/model/UserOptionsTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/core/model/DashboardTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/core/model/combined/CombinedDashboardTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/core/restclient/AppMappingKeyTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/core/restclient/AppMappingCollectionTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/core/restclient/DomainEntityTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/core/restclient/DomainsEntityTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/entity/EmsDashboardSetPKTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/entity/EmsSubDashboardTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/entity/EmsUserOptionsTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/entity/customizer/EmsPreferenceRedirectorTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ws/rest/ssfnotification/WidgetNotificationTypeTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ws/rest/WidgetNotificationAPITest_S2.class"
 
-	include "oracle/sysman/emaas/platform/dashboards/ws/rest/zdt/tablerows/TableRowsEntityTest.class"
-
-	include "oracle/sysman/emaas/platform/dashboards/core/util/FacadeUtilTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/core/util/UserContextTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/core/util/DataFormatUtilsTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/core/util/TenantContextTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/core/util/SchemaUtilTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/core/util/LogUtilTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/core/util/RegistryLookupUtilTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/core/util/TenantSubscriptionUtilTest.class"
+	include "oracle/sysman/emaas/platform/dashboards/core/model/*.class"
+	include "oracle/sysman/emaas/platform/dashboards/core/model/combined/*.class"
+	include "oracle/sysman/emaas/platform/dashboards/core/restclient/*.class"
+	include "oracle/sysman/emaas/platform/dashboards/core/util/*.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/wls/management/AppLoggingManageMXBeanTest_S2.class"
-	include "oracle/sysman/emaas/platform/dashboards/core/zdt/DataManagerTest.class"
+	include "oracle/sysman/emaas/platform/dashboards/core/zdt/*.class"
 
-	//below are comparator web utils test cases
+
+	//below are zdt comparator web utils test cases
 	include "oracle/sysman/emaas/platform/dashboards/comparator/targetmodel/services/*.class"
 	include "oracle/sysman/emaas/platform/dashboards/comparator/webutils/**/*.class"
 
@@ -201,88 +179,45 @@ task DEVTest(type:EMTest,dependsOn: DEVTest_ws){
 }
 
 task DEVUiTest(type:EMTest,dependsOn: DEVTest){
-	include "oracle/sysman/emaas/platform/dashboards/targetmodel/services/DashboardStatusTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/targetmodel/services/JMXUtilTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/webutils/services/AvailabilityServiceManagerTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/webutils/services/DashboardApiLifecycleServiceTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/webutils/services/EMTargetInitializerTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/webutils/services/EMTargetMXBeanTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/webutils/services/LoggingServiceManagerTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/webutils/services/PropertyReaderTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/webutils/services/RegistryServiceManagerTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/webutils/timer/AvailabilityNotificationTest.class"
+	//below are dashboards-webutil test case
+	include "oracle/sysman/emaas/platform/dashboards/webutils/services/*.class"
+	include "oracle/sysman/emaas/platform/dashboards/targetmodel/services/*.class"
+	include "oracle/sysman/emaas/platform/dashboards/webutils/timer/*.class"
 
 
  	useRestAssured=true
 	ext.set("testType", "unit")
 }
 
-task DEVWebTest(type:EMTest,dependsOn: DEVUiTest){
-	include "oracle/sysman/emaas/platform/dashboards/ui/web/ClickjackingFilterTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/web/DashboardsUiCORSFilterTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/web/GzipFilterTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/web/HomePageFilterTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/web/gzip/GzipServletOutputStreamTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/web/gzip/GzipServletResponseWrapperTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/web/context/GlobalContextUtilTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/web/AdditionalDataFilterTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/web/MockCloseableHttpResponse.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/web/NLSFilterTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/DashboardDataAccessUtilTest.class"
+task DEVUiWebTest(type:EMTest,dependsOn: DEVUiTest){
+	//below are dashboards-ui-web test cases
+	include "oracle/sysman/emaas/platform/dashboards/ui/web/*.class"
+	include "oracle/sysman/emaas/platform/dashboards/ui/web/gzip/*.class"
+	include "oracle/sysman/emaas/platform/dashboards/ui/web/context/*.class"
 
 }
 
-task DEVUIWebUtilTest(type:EMTest,dependsOn: DEVWebTest){
-	include "oracle/sysman/emaas/platform/dashboards/ui/targetmodel/services/DashboardUIStatusTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/targetmodel/services/JMXUtilTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/services/AvailabilityServiceManagerTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/services/DashboardUiLifecycleServiceTest.class"	
-	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/services/EMTargetInitializerTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/services/EMTargetMXBeanTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/services/LoggingServiceManagerTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/services/PropertyReaderTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/services/RegistryServiceManagerTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/JsonUtilTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/LogUtilTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/RegistryLookupUtilTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/StringUtilTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/TenantSubscriptionUtilTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/AppLoggingManageMXBeanTest_S2.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/AppLoggingManageMXBeanTest_S2.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/StringCacheUtilTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/SubscribedAppCacheUtilTest.class"
+task DEVUIWebUtilTest(type:EMTest,dependsOn: DEVUiWebTest){
+	//below are dashboardsui-webutil test cases
+	include "oracle/sysman/emaas/platform/dashboards/ui/targetmodel/services/*.class"
+	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/services/*.class"
+	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/*.class"
 	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/wls/management/AppLoggingManageMXBeanTest_S2.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/json/AppMappingEntityTest.class"
+	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/json/*.class"
 }
 
-task DEVUiFWKTest(type:EMTest,dependsOn: DEVUIWebUtilTest){ 
+task DEVUiFWKTest(type:EMTest,dependsOn: DEVUIWebUtilTest){
+	//below are omc-ui-fwk-webutil test case
+	include "oracle/sysman/emaas/platform/uifwk/ui/target/services/*.class"
+	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/services/*.class"
+	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/wls/management/AppLoggingManageMXBeanTest_S2.class"
+//	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/util/DataFetcherTest.class"
+	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/util/LogUtilTest.class"
 	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/util/StringUtilTest.class"
 	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/util/RegistryLookupUtilTest.class"
-	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/util/LogUtilTest.class"
-	include "oracle/sysman/emaas/platform/uifwk/ui/target/services/JMXUtilTest.class"
-	include "oracle/sysman/emaas/platform/uifwk/ui/target/services/OmcUiStatusTest.class"
-	
-	
-	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/services/AvailabilityServiceManagerTest.class"
-	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/services/EMTargetInitializerTest.class"
-	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/services/EMTargetMXBeanTest.class"
-	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/services/LoggingServiceManagerTest.class"
-	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/services/OmcUiFrameworkLifecycleServiceTest.class"
-	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/services/PropertyReaderTest.class"
-	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/services/RegistryServiceManagerTest.class"
-        include "oracle/sysman/emaas/platform/uifwk/ui/webutils/wls/management/AppLoggingManageMXBeanTest_S2.class"
-
-	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/comparator/rows/entities/DashboardRowEntityTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/comparator/rows/entities/DashboardSetRowEntityTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/comparator/rows/entities/DashboardTileParamsRowEntityTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/comparator/rows/entities/DashboardTileRowEntityTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/comparator/rows/entities/DashboardUserOptionsRowEntityTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/comparator/rows/entities/PreferenceRowEntityTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/DashboardsComparatorCORSFilterTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/ZDTAPITest.class"
-
-//	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/util/DataFetcherTest.class"
 	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/util/StringCacheUtilTest.class"
+
+	//below are omc-ui-fwk-web test case
 	include "oracle/sysman/emaas/platform/uifwk/ui/web/UifwkPartitionJsFilterTest.class"
 	
 	useRestAssured=true
@@ -290,14 +225,10 @@ task DEVUiFWKTest(type:EMTest,dependsOn: DEVUIWebUtilTest){
 
 }
 
-
-task EntityTest(type:EMTest,dependsOn: DEVUiFWKTest){ 
-	include "oracle/sysman/emaas/platform/dashboards/entity/EmsDashboardTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/entity/EmsDashboardTileParamsPKTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/entity/EmsDashboardTileParamsTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/entity/EmsDashboardTileTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/entity/EmsPreferencePKTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/entity/EmsPreferenceTest.class"
+task EntityTest(type:EMTest,dependsOn: DEVUiFWKTest){
+	//below are dashboards-entity test cases
+	include "oracle/sysman/emaas/platform/dashboards/entity/*.class"
+	include "oracle/sysman/emaas/platform/dashboards/entity/customizer/*.class"
 	useRestAssured=true
 	ext.set("testType", "unit")
 
