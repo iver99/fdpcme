@@ -242,23 +242,6 @@ public class RegistryServiceManager implements ApplicationServiceManager
 		return registrationComplete;
 	}
 
-	//	/**
-	//	 * Update dashboards UI service status to out of service on service manager
-	//	 */
-	//	public void markOutOfService(List<InstanceInfo> services, List<NonServiceResource> resources, List<String> otherReasons)
-	//	{
-	//		RegistrationManager.getInstance().getRegistrationClient().outOfServiceCausedBy(services, resources, otherReasons);
-	//		//		RegistrationManager.getInstance().getRegistrationClient().updateStatus(InstanceStatus.OUT_OF_SERVICE);
-	//	}
-
-	//	/**
-	//	 * Update dashboards UI service status to up on service manager
-	//	 */
-	//	public void markServiceUp()
-	//	{
-	//		RegistrationManager.getInstance().getRegistrationClient().updateStatus(InstanceStatus.UP);
-	//	}
-
 	@Override
 	public void postStart(ApplicationLifecycleEvent evt) throws Exception
 	{
@@ -279,9 +262,6 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	@Override
 	public void preStop(ApplicationLifecycleEvent evt) throws Exception
 	{
-		//		logger.info("Pre-stopping service, attempting to close entityimanager factory");
-		//		PersistenceManager.getInstance().closeEntityManagerFactory();
-		//		logger.info("Pre-stopping service, entityimanager factory closed");
 
 		logger.info("Pre-stopping 'Service Registry' application service");
 		RegistrationManager.getInstance().getRegistrationClient().shutdown();
@@ -302,13 +282,6 @@ public class RegistryServiceManager implements ApplicationServiceManager
 
 			logger.info("Initialize lookup manager");
 			LookupManager.getInstance().initComponent(Arrays.asList(serviceProps.getProperty("serviceUrls")));
-
-			//			logger.info("Checking RegistryService");
-			//			if (RegistryLookupUtil.getServiceInternalLink("RegistryService", "1.0+", "collection/instances", null) == null) {
-			//				setRegistrationComplete(Boolean.FALSE);
-			//				logger.error("Failed to found registryService. Dashboard-UI registration is not complete.");
-			//				return false;
-			//			}
 
 			ServiceConfigBuilder builder = new ServiceConfigBuilder();
 			builder.serviceName(serviceProps.getProperty("serviceName")).version(serviceProps.getProperty("version"))
@@ -355,9 +328,6 @@ public class RegistryServiceManager implements ApplicationServiceManager
 			logger.error(e.getLocalizedMessage(), e);
 			//			throw e;
 		}
-		//		logger.info("Post-starting service, attempting to create entityimanager factory");
-		//		PersistenceManager.getInstance().createEntityManagerFactory();
-		//		logger.info("Post-starting service, entityimanager factory created");
 		return registrationComplete;
 	}
 

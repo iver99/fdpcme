@@ -135,6 +135,12 @@ define(['knockout',
             };
 
             self.dashboardsetConfig.isCreator = ko.observable(dashboardsetEditDisabled());
+            self.disableRemove = ko.computed(function () {
+                return self.dashboardsetConfig.isCreator() && self.notZdtStatus();
+            });
+            self.enableAdd =ko.computed(function () {
+                return self.dashboardsetConfig.isCreator() && self.noDashboardHome() && self.notZdtStatus();
+            }); 
             
             self.normalMode = new Builder.NormalEditorMode();
             self.tabletMode = new Builder.TabletEditorMode();
