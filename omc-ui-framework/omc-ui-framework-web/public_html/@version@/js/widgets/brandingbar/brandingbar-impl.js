@@ -181,9 +181,13 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         if (self.topologyNeedRefresh) {
                             refreshTopologyParams();
                         }
-                        if (self.highlightedEntities().length === 0) {
+                        var entityMeIds = cxtUtil.getEntityMeIds();
+                        if (entityMeIds && entityMeIds.length) {
+                            self.highlightedEntities(entityMeIds);
+                        } else {
                             self.highlightedEntities([NO_HIGHLIGHT]);
                         }
+
                         $(".ude-topology-in-brandingbar .oj-diagram").ojDiagram("refresh");
                     }
                     //set brandingbar_cache information for Topology expanded state
