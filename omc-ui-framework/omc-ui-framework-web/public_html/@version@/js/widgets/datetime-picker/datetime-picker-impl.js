@@ -1378,7 +1378,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             start = newDateWithMilliseconds(sdt);
                             end = new Date();
                         } else if(omcContext.time && omcContext.time.timePeriod && 
-                                ((tp = self.timePeriodsNlsObject[formalizeTimePeriod(omcContext.time.timePeriod)]) || isValidFlexRelTimePeriod(omcContext.time.timePeriod))) {
+                                (((tp = self.timePeriodsNlsObject[formalizeTimePeriod(omcContext.time.timePeriod)]) && tp !== self.timePeriodCustom) || isValidFlexRelTimePeriod(omcContext.time.timePeriod))) {
                             if(tp) {
                                 if(tp === self.timePeriodToday) {
                                     start = new Date(curDate.getFullYear(), curDate.getMonth(), curDate.getDate());
@@ -1390,17 +1390,6 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                     end = curDate;
                                     self.setTimePeriodChosen(tp);
                                     self.setTimePeriodToLastX(tp, start, end, 1);
-                                }else if(tp === self.timePeriodCustom) {
-                                    if(self.startDateTime && self.endDateTime) {
-                                        sdt = self.getParam(self.startDateTime);
-                                        edt = self.getParam(self.endDateTime);
-                                        start = newDateWithMilliseconds(sdt);
-                                        end = newDateWithMilliseconds(edt);
-                                        customClick(0);
-                                    }else {
-                                        throw new Error('Error: set timePeriod to "Custom" without time range specified!');
-                                        return;
-                                    }
                                 }else {
                                     if(tp === self.timePeriodLast1year) {
                                         start = new Date(curDate.getFullYear()-1, curDate.getMonth(), curDate.getDate(), curDate.getHours(), curDate.getMinutes(), curDate.getSeconds(), curDate.getMilliseconds());
@@ -1439,7 +1428,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                 self.timePeriod(self.timePeriodCustom);
                             }
                         } else if(omcContext.time && omcContext.time.startTime && omcContext.time.endTime && 
-                                !isNaN(parseInt(omcContext.time.startTime)) && isNaN(parseInt(omcContext.time.endTime))) {
+                                !isNaN(parseInt(omcContext.time.startTime)) && !isNaN(parseInt(omcContext.time.endTime))) {
                             curDate = new Date();
                             //users input start date and end date
                             sdt = new Date(parseInt(omcContext.time.startTime));
