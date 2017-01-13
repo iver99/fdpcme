@@ -189,7 +189,7 @@ define(['knockout',
                             if (self.isHomeDashboard) {                                
                                 localStorage.deleteHomeDbd=true;
                             }
-                            window.location = cxtUtil.appendOMCContext( document.location.protocol + '//' + document.location.host + '/emsaasui/emcpdfui/home.html');
+                            window.location = cxtUtil.appendOMCContext( document.location.protocol + '//' + document.location.host + '/emsaasui/emcpdfui/home.html', true, true, true);
                         }     
                     },
                     error: function(jqXHR, textStatus, errorThrown) {}

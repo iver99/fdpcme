@@ -894,6 +894,10 @@ define(['knockout',
 
             self.clearSessionCache = function () {
                 window.sessionStorage.removeItem('_uifwk_brandingbar_cache');
+                window.sessionStorage.removeItem('_uifwk_omccontextcache_composite');
+                window.sessionStorage.removeItem('_uifwk_omccontextcache_entity');
+
+                window.sessionStorage.removeItem('_udeCommonSessionCache');
                 for (var attr in window.sessionStorage) {
                     if (attr.indexOf('_udeTopologyCache') === 0) {
                         window.sessionStorage.removeItem(attr);
@@ -959,25 +963,25 @@ define(['knockout',
                             doneCallback(window._registrationServerCache);
                         }
                         else {
-                            ajaxUtil.ajaxWithRetry({type: 'GET', contentType:'application/json',url: self.getRegistrationUrl(),
+                            ajaxUtil.ajaxWithRetry({type: 'GET', contentType: 'application/json', url: self.getRegistrationUrl(),
                                 dataType: 'json',
                                 headers: this.getDefaultHeader(),
-                                async: toSendAsync === false? false:true,
-                                success: function(data, textStatus, jqXHR){
+                                async: toSendAsync === false ? false : true,
+                                success: function (data, textStatus, jqXHR) {
                                     doneCallback(data, textStatus, jqXHR);
                                 },
-                                error: function(jqXHR, textStatus, errorThrown){
+                                error: function (jqXHR, textStatus, errorThrown) {
                                     console.log('Failed to get registration info!');
                                     window._uifwk.cachedData.isFetchingRegistrations = false;
-                                    if(errorCallback){
+                                    if (errorCallback) {
                                         errorCallback(jqXHR, textStatus, errorThrown);
                                     }
                                 }
                             });
                         }
-                    }else{
-                        window._uifwk.cachedData.registrations.subscribe(function(data){
-                            if(data){
+                    } else {
+                        window._uifwk.cachedData.registrations.subscribe(function (data) {
+                            if (data) {
                                 successCallback(data);
                             }
                         });

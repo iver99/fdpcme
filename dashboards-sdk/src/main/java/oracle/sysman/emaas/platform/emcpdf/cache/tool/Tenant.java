@@ -5,30 +5,31 @@ import java.io.Serializable;
 /**
  * Created by chehao on 2016/12/11.
  */
-public class Tenant implements Serializable
-{
+public class Tenant implements Serializable {
     private String tenantName;
     private Long tenantId;
+    private String userName;
 
-    public Tenant(Long tenantId)
-    {
+    public Tenant(Long tenantId) {
         this.tenantId = tenantId;
     }
 
-    public Tenant(Long tenantId, String tenantName)
-    {
+    public Tenant(String tenantName, String userName) {
+        this.tenantName = tenantName;
+        this.userName = userName;
+    }
+
+    public Tenant(Long tenantId, String tenantName) {
         this.tenantId = tenantId;
         this.tenantName = tenantName;
     }
 
-    public Tenant(String tenantName)
-    {
+    public Tenant(String tenantName) {
         this.tenantName = tenantName;
     }
 
     @Override
-    public boolean equals(Object obj)
-    {
+    public boolean equals(Object obj) {
         if (this == obj) {
             return true;
         }
@@ -41,17 +42,23 @@ public class Tenant implements Serializable
             if (other.tenantName != null) {
                 return false;
             }
-        }
-        else if (!tenantName.equals(other.tenantName)) {
+        } else if (!tenantName.equals(other.tenantName)) {
             return false;
         }
+        if (userName == null) {
+            if (other.userName != null) {
+                return false;
+            }
+        } else if (!userName.equals(other.userName)) {
+            return false;
+        }
+
 
         if (tenantId == null) {
             if (other.tenantId != null) {
                 return false;
             }
-        }
-        else if (!tenantId.equals(other.tenantId)) {
+        } else if (!tenantId.equals(other.tenantId)) {
             return false;
         }
         return true;
@@ -60,22 +67,19 @@ public class Tenant implements Serializable
     /**
      * @return the tenantId
      */
-    public Long getTenantId()
-    {
+    public Long getTenantId() {
         return tenantId;
     }
 
     /**
      * @return the tenantName
      */
-    public String getTenantName()
-    {
+    public String getTenantName() {
         return tenantName;
     }
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         int result = 0;
         if (tenantName != null) {
             result += tenantName.hashCode();
@@ -87,38 +91,31 @@ public class Tenant implements Serializable
     }
 
     /**
-     * @param tenantId
-     *            the tenantId to set
+     * @param tenantId the tenantId to set
      */
-    public void setTenantId(Long tenantId)
-    {
+    public void setTenantId(Long tenantId) {
         this.tenantId = tenantId;
     }
 
     /**
-     * @param tenantName
-     *            the tenantName to set
+     * @param tenantName the tenantName to set
      */
-    public void setTenantName(String tenantName)
-    {
+    public void setTenantName(String tenantName) {
         this.tenantName = tenantName;
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(getClass().getSimpleName());
         if (tenantName != null) {
             sb.append("  (TenantName)" + tenantName);
-        }
-        else {
+        } else {
             sb.append("  (TenantName) null");
         }
         if (tenantId != null) {
             sb.append("  (TenantId)" + tenantId);
-        }
-        else {
+        } else {
             sb.append("  (TenantId) null");
         }
         return sb.toString();
