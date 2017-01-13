@@ -477,7 +477,8 @@ public class DashboardAPI extends APIBase
 		logkeyHeaders("queryDashboards()", userTenant, tenantIdParam);
 		String qs = null;
 		try {
-			qs = queryString == null ? null : java.net.URLDecoder.decode(queryString, "UTF-8");
+			//emcpdf-3012
+			qs = queryString == null ? null : java.net.URLDecoder.decode(queryString.replaceAll("%", "\\%25"), "UTF-8").replace("%", "\\%");
 		}
 		catch (UnsupportedEncodingException e) {
 			LOGGER.error(e.getLocalizedMessage(), e);
