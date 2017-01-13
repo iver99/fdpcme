@@ -35,7 +35,7 @@ define(['jquery',
                 error: function(){
                     oj.Logger.error('Error when fetching widgets by URL: '+ widgetsUrl + '.');
                 },
-                async: true
+                async: false
             });
         };
 
