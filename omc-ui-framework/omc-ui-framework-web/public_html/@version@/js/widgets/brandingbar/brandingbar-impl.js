@@ -80,8 +80,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             //Set showTimeSelector config. Default value is true. It can be set as an knockout observable and be changed after page is loaded
             if (ko.isObservable(params.showTimeSelector)) {
                 self.showTimeSelector = params.showTimeSelector;
-            } else {
-                self.showTimeSelector = ko.observable(ko.unwrap(params.showTimeSelector) === false ? false : true);
+            }else {
+                self.showTimeSelector = ko.observable(ko.unwrap(params.showTimeSelector) === true ? true : false);
             }
 //            self.showTimeSelector = ko.observable(false);
             //
@@ -176,6 +176,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             function handleShowHideTopology() {
                 $("#ude-topology-div").slideToggle("fast", function () {
                     self.isTopologyDisplayed(!self.isTopologyDisplayed());
+
                     if (self.isTopologyDisplayed()) {
                         //when expanding the topology, do a refresh if needed
                         if (self.topologyNeedRefresh) {
@@ -1150,13 +1151,13 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 //When no compositeMEID exists, disable topology button
                 else {
                     //Hide topology
-                    if (self.isTopologyDisplayed()) {
+                    if (self.isTopologyDisplayed() && !self.topologyDisabled()) {
                         self.showTopology();
                     }
-                    ;
+
                     self.topologyDisabled(true);
                 }
-                ;
+
 
 //                if (!self.cxtCompositeName && self.cxtCompositeMeId) {
 //                    //fetch composite name from WS API by compositeMeId
