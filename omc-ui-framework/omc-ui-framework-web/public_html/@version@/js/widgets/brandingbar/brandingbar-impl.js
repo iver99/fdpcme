@@ -19,6 +19,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             var msgUtil = new msgUtilModel();
             var cxtUtil = new contextModel();
             var NO_HIGHLIGHT = 'NO_HIGHLIGHT';
+            var CONTEXT_CHANGE = 'CONTEXT_CHANGE';
             // clear topologyParams first from global context
             cxtUtil.clearTopologyParams();
 
@@ -80,7 +81,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             //Set showTimeSelector config. Default value is true. It can be set as an knockout observable and be changed after page is loaded
             if (ko.isObservable(params.showTimeSelector)) {
                 self.showTimeSelector = params.showTimeSelector;
-            }else {
+            } else {
                 self.showTimeSelector = ko.observable(ko.unwrap(params.showTimeSelector) === true ? true : false);
             }
 //            self.showTimeSelector = ko.observable(false);
@@ -184,7 +185,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         }
                         var entityMeIds = cxtUtil.getEntityMeIds();
                         if (entityMeIds && entityMeIds.length) {
-                            self.highlightedEntities(entityMeIds);
+                            self.highlightedEntities(entityMeIds.concat([CONTEXT_CHANGE, NO_HIGHLIGHT]));
                         } else {
                             self.highlightedEntities([NO_HIGHLIGHT]);
                         }
@@ -1105,7 +1106,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     console.log("***********updating highlightedEntities");
                     if (entityMEIds && entityMEIds.length) {
                         console.log("***********entityMEIds are not empty");
-                        self.highlightedEntities(entityMEIds);
+                        self.highlightedEntities(entityMEIds.concat([CONTEXT_CHANGE, NO_HIGHLIGHT]));
                     } else {
                         self.highlightedEntities([NO_HIGHLIGHT]);
                     }
