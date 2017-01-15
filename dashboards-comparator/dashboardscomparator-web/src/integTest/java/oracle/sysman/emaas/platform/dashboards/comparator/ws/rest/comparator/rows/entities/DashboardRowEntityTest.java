@@ -2,6 +2,7 @@ package oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.ro
 
 import java.math.BigInteger;
 
+import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.counts.CountsEntity;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 @Test(groups = { "s1" })
@@ -229,5 +230,17 @@ public class DashboardRowEntityTest
 		Assert.assertNotEquals(dre1.hashCode(), dre2.hashCode());
 		dre2.setExtendedOptions("options");
 		Assert.assertEquals(dre1.hashCode(), dre2.hashCode());
+	}
+	private CountsEntity countsEntity;
+	@Test
+	public void testCountsEntity(){
+		countsEntity = new CountsEntity(1L,1L,1L);
+		countsEntity.setCountOfDashboards(1L);
+		countsEntity.setCountOfFavorite(1L);
+		countsEntity.setCountOfPreference(1L);
+
+		countsEntity.getCountOfDashboards();
+		countsEntity.getCountOfFavorite();
+		countsEntity.getCountOfPreference();
 	}
 }

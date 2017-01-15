@@ -18,6 +18,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             var self = this;
             var msgUtil = new msgUtilModel();
             var cxtUtil = new contextModel();
+            var NO_HIGHLIGHT = 'NO_HIGHLIGHT';
+            var CONTEXT_CHANGE = 'CONTEXT_CHANGE';
             // clear topologyParams first from global context
             cxtUtil.clearTopologyParams();
 
@@ -57,6 +59,11 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 self.showReadOnlyPillRemove = ko.observable(false);
             }
             self.showEntityContextSelector = ko.observable(false);
+            if (ko.isObservable(params.showEntitySelector)) {
+                self.showEntitySelector = params.showEntitySelector;
+            } else {
+                self.showEntitySelector = ko.observable(ko.unwrap(params.showEntitySelector) === false ? false : true);
+            }
 
             //respond to change to entityContextReadOnly
             self.entityContextReadOnly.subscribe(function () {
@@ -72,10 +79,10 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.entityContextReadOnly.notifySubscribers();
 
             //Set showTimeSelector config. Default value is true. It can be set as an knockout observable and be changed after page is loaded
-            if(ko.isObservable(params.showTimeSelector)) {
+            if (ko.isObservable(params.showTimeSelector)) {
                 self.showTimeSelector = params.showTimeSelector;
-            }else {
-                self.showTimeSelector = ko.observable(ko.unwrap(params.showTimeSelector) === false ? false : true);
+            } else {
+                self.showTimeSelector = ko.observable(ko.unwrap(params.showTimeSelector) === true ? true : false);
             }
 //            self.showTimeSelector = ko.observable(false);
             //
@@ -88,11 +95,14 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.customNodeDataLoader = ko.observable();
             self.customEventHandler = ko.observable();
             self.miniEntityCardActions = ko.observable();
+            self.highlightedEntities = ko.observableArray([NO_HIGHLIGHT]);
+            self.topologyData = ko.observable();
             if (params) {
                 self.associations(params.associations);
                 self.layout(params.layout);
                 self.customNodeDataLoader(params.customNodeDataLoader);
                 self.customEventHandler(params.customEventHandler);
+                self.topologyData(params.topologyData);
                 self.miniEntityCardActions(params.miniEntityCardActions);
             }
 
@@ -108,7 +118,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     template: {require: 'text!/emsaasui/emcta/ta/js/sdk/globalcontextbar/emctas-globalbar.html'}
                 });
             }
-            
+
             if (self.showGlobalContextBanner() === true) {
                 refreshOMCContext();
             }
@@ -161,16 +171,25 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         }));
                     }
                 }
-            };
+            }
+            ;
 
             function handleShowHideTopology() {
                 $("#ude-topology-div").slideToggle("fast", function () {
                     self.isTopologyDisplayed(!self.isTopologyDisplayed());
+
                     if (self.isTopologyDisplayed()) {
                         //when expanding the topology, do a refresh if needed
                         if (self.topologyNeedRefresh) {
                             refreshTopologyParams();
                         }
+                        var entityMeIds = cxtUtil.getEntityMeIds();
+                        if (entityMeIds && entityMeIds.length) {
+                            self.highlightedEntities(entityMeIds.concat([CONTEXT_CHANGE, NO_HIGHLIGHT]));
+                        } else {
+                            self.highlightedEntities([NO_HIGHLIGHT]);
+                        }
+
                         $(".ude-topology-in-brandingbar .oj-diagram").ojDiagram("refresh");
                     }
                     //set brandingbar_cache information for Topology expanded state
@@ -235,50 +254,50 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     }
                 }
             }
-            
+
             self.topologySize = ko.observable();
             self.topologyHeight = ko.observable();
-            self.topologySize.subscribe(function(topoHeight) {
-               topoHeight && topoHeight.h && self.topologyHeight(topoHeight.h);
-		if(self.topologyHeight()<=201) {
+            self.topologySize.subscribe(function (topoHeight) {
+                topoHeight && topoHeight.h && self.topologyHeight(topoHeight.h);
+                if (self.topologyHeight() <= 201) {
                     self.topologyCssHeight(self.topologyHeight());
-                }else {
+                } else {
                     self.topologyCssHeight(201);
                 }
             });
-            
+
             self.isMaximized = ko.observable(false);
-            
-            self.showTopologyMaxIcon = function() {
+
+            self.showTopologyMaxIcon = function () {
                 $("#maxMinTopology").css("display", "block");
             };
-            self.hideTopologyMaxIcon = function() {
+            self.hideTopologyMaxIcon = function () {
                 $("#maxMinTopology").css("display", "none");
             };
-            self.maximizeTopology = function() {
+            self.maximizeTopology = function () {
                 self.topologyCssHeight(self.topologyHeight());
                 self.isMaximized(true);
                 var $b = $(".right-panel-toggler:visible")[0] && ko.dataFor($(".right-panel-toggler:visible")[0]).$b;
                 $b && $b.triggerBuilderResizeEvent('Topology is maximized!');
             };
-            self.restoreTopology = function() {
+            self.restoreTopology = function () {
                 self.topologyCssHeight(201);
-                self.isMaximized(false);                
+                self.isMaximized(false);
                 var $b = $(".right-panel-toggler:visible")[0] && ko.dataFor($(".right-panel-toggler:visible")[0]).$b;
                 $b && $b.triggerBuilderResizeEvent('Topology is restored!');
             };
-            self.maxMinTopologyToggle = function() {
-                if(!self.isMaximized()) {
+            self.maxMinTopologyToggle = function () {
+                if (!self.isMaximized()) {
                     self.maximizeTopology();
-                }else {
+                } else {
                     self.restoreTopology();
                 }
             };
-            
-	    self.topologyCssHeight = ko.observable();
-            self.topologyStyle = ko.computed(function() {
+
+            self.topologyCssHeight = ko.observable();
+            self.topologyStyle = ko.computed(function () {
                 var height = "100%; max-height: 204px"
-                if(self.topologyCssHeight()) {
+                if (self.topologyCssHeight()) {
                     height = (self.topologyCssHeight() + 3) + "px";
                 }
                 return "display: flex; float: left; width: 100%; height: " + height + ";";
@@ -442,9 +461,9 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.sessionTimeoutBtnOK = nls.BRANDING_BAR_SESSION_TIMEOUT_DIALOG_BTN_OK;
             self.sessionTimeoutWarnDialogId = 'sessionTimeoutWarnDialog';
             self.sessionTimeoutWarnIcon = warnMessageIcon;
-            
+
             //Fetch and set sso logout url and session expiry time
-            dfu.getRegistrations(function(data){
+            dfu.getRegistrations(function (data) {
                 //Setup timer to handle session timeout
                 if (!dfu.isDevMode()) {
                     dfu.setupSessionLifecycleTimeoutTimer(data.sessionExpiryTime, self.sessionTimeoutWarnDialogId);
@@ -781,43 +800,45 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     }
                 }
                 else if (data && data.tag && data.tag === 'EMAAS_OMC_GLOBAL_CONTEXT_UPDATED') {
+                    console.log("**************omc context change message received");
                     if (self.showGlobalContextBanner() === true) {
+                        console.log("****************call refreshOMCContext");
                         refreshOMCContext();
                     }
                 }
             }
-            
+
             function fireTopologyStatusChangeEvent(actionType) {
-                var intervalId = setInterval(function(){
-                        if ($('div#ude-topology-div div[id^=emcta-topology-diagram]').length > 0) {
-                            var prevStatus = null;
-                            var currentStatus = null;
-                            if (actionType === 'Open') {
-                                prevStatus = 'Closed';
-                                currentStatus = 'Open';
-                            }
-                            else if (actionType === 'Close') {
-                                prevStatus = 'Open';
-                                currentStatus = 'Closed';
-                            }
-                            else if (actionType === 'Refresh') {
-                                prevStatus = 'Open';
-                                currentStatus = 'Open';
-                            }
-                            
-                            var message = {'tag': 'EMAAS_OMC_TOPOLOGY_STATUS_UPDATED', 
-                                'eventType': actionType,
-                                'previousStatus': prevStatus, // Open or Closed
-                                'currentStatus': currentStatus // Closed or Open
-                            };
-                            window.postMessage(message, window.location.href);
-                            clearInterval(intervalId);
+                var intervalId = setInterval(function () {
+                    if ($('div#ude-topology-div div[id^=emcta-topology-diagram]').length > 0) {
+                        var prevStatus = null;
+                        var currentStatus = null;
+                        if (actionType === 'Open') {
+                            prevStatus = 'Closed';
+                            currentStatus = 'Open';
                         }
-                    }, 100); 
+                        else if (actionType === 'Close') {
+                            prevStatus = 'Open';
+                            currentStatus = 'Closed';
+                        }
+                        else if (actionType === 'Refresh') {
+                            prevStatus = 'Open';
+                            currentStatus = 'Open';
+                        }
+
+                        var message = {'tag': 'EMAAS_OMC_TOPOLOGY_STATUS_UPDATED',
+                            'eventType': actionType,
+                            'previousStatus': prevStatus, // Open or Closed
+                            'currentStatus': currentStatus // Closed or Open
+                        };
+                        window.postMessage(message, window.location.href);
+                        clearInterval(intervalId);
+                    }
+                }, 100);
             }
-            
+
             function fireMessageChangeEvent(eventType, msgId) {
-                var message = {'tag': 'EMAAS_OMC_PAGE_LEVEL_MESSAGE_UPDATED', 
+                var message = {'tag': 'EMAAS_OMC_PAGE_LEVEL_MESSAGE_UPDATED',
                     'eventType': eventType, //Add or Remove
                     'messageId': msgId
                 };
@@ -858,7 +879,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     }
                     else if (message.category === catRetryInProgress) {
                         if (retryingMessageIds.length === 0) {
-                        	if (currentPlannedDowntimeMsgId === null) {
+                            if (currentPlannedDowntimeMsgId === null) {
                                 displayMessages.splice(0, 0, message);
                             }
                             else {
@@ -902,7 +923,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                             removeMessage(message);
                         }, data.removeDelayTime);
                     }
-                    
+
                     //Fire message change event
                     fireMessageChangeEvent('Create', message.id);
                 }
@@ -948,7 +969,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         self.hiddenMessagesExpanded(false);
                     }
                 }
-                
+
                 //Fire message change event
                 fireMessageChangeEvent('Delete', data.id);
             }
@@ -1079,14 +1100,24 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 //                    }
                     var topologyParams = cxtUtil.getTopologyParams();
                     if (topologyParams && !self.topologyParamsSet) {
-                         refreshTopology = true;
+                        refreshTopology = true;
                     }
+                    var entityMEIds = cxtUtil.getEntityMeIds();
+                    console.log("***********updating highlightedEntities");
+                    if (entityMEIds && entityMEIds.length) {
+                        console.log("***********entityMEIds are not empty");
+                        self.highlightedEntities(entityMEIds.concat([CONTEXT_CHANGE, NO_HIGHLIGHT]));
+                    } else {
+                        self.highlightedEntities([NO_HIGHLIGHT]);
+                    }
+
                     if (refreshTopology) {
                         if (topologyParams) {
                             self.associations(topologyParams.associations);
                             self.layout(topologyParams.layout);
                             self.customNodeDataLoader(topologyParams.customNodeDataLoader);
                             self.customEventHandler(topologyParams.customEventHandler);
+                            self.topologyData(topologyParams.topologyData);
                             self.miniEntityCardActions(topologyParams.miniEntityCardActions);
                             self.topologyParamsSet = true;
                         }
@@ -1121,13 +1152,13 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 //When no compositeMEID exists, disable topology button
                 else {
                     //Hide topology
-                    if (self.isTopologyDisplayed()) {
+                    if (self.isTopologyDisplayed() && !self.topologyDisabled()) {
                         self.showTopology();
                     }
-                    ;
+
                     self.topologyDisabled(true);
                 }
-                ;
+
 
 //                if (!self.cxtCompositeName && self.cxtCompositeMeId) {
 //                    //fetch composite name from WS API by compositeMeId
@@ -1152,6 +1183,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 self.topologyNeedRefresh = true;
                 if (self.isTopologyDisplayed()) {
                     // update parameters for topology 
+                    console.log("***********calling refreshTopologyParams");
                     refreshTopologyParams(true);
                 }
             }
@@ -1332,10 +1364,11 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             //
             var message = {'tag': 'EMAAS_BRANDINGBAR_INSTANTIATED'};
             window.postMessage(message, window.location.href);
-            
+
             //Detect planned downtime
             var zdtUtil = new zdtUtilModel();
-            zdtUtil.detectPlannedDowntime(function(){});
+            zdtUtil.detectPlannedDowntime(function () {
+            });
         }
 
         return BrandingBarViewModel;

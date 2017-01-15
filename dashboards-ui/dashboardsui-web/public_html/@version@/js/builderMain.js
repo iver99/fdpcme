@@ -302,7 +302,7 @@ require(['knockout',
                             self.builderTitle = dfu_model.generateWindowTitle(dashboard.name(), null, null, getNlsString("DBS_HOME_TITLE_DASHBOARDS"));
                         }
 
-                        function DashboardsetHeaderViewModel() {
+			function DashboardsetHeaderViewModel() {
 			    var self = this;
 			    self.userName = dfu.getUserName();
 			    self.tenantName = dfu.getTenantName();
@@ -313,7 +313,19 @@ require(['knockout',
 				appId: self.appId,
 				isAdmin:true,
 				showGlobalContextBanner: ko.observable(false),
-				showTimeSelector: ko.observable(false)
+				showTimeSelector: ko.observable(false),
+				timeSelectorParams: {
+				    startDateTime: ko.observable(null),
+				    endDateTime: ko.observable(null),
+				    timePeriod: ko.observable("LAST_14_DAY"),
+				    timePeriodsNotToShow: ko.observable([]),
+				    hideMainLabel: true,
+				    callbackAfterApply: null
+				},
+				showEntitySelector: ko.observable(false),
+				entityContextParams: {
+				    readOnly: true
+				}
 			    };
 
                             $("#headerWrapper").on("DOMSubtreeModified", function() {

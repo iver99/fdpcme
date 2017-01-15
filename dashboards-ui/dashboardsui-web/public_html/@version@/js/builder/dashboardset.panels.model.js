@@ -69,10 +69,28 @@ define([
                     var headerViewModel = ko.dataFor(headerWrapper);
                 }
                 
-                if(dashboardsetToolBarModel.dashboardInst.enableEntityFilter()==="GC") {
-                    headerViewModel && headerViewModel.brandingbarParams.showGlobalContextBanner(true);
-                }else {
+                if(dashboardsetToolBarModel.isDashboardSet()) {
                     headerViewModel && headerViewModel.brandingbarParams.showGlobalContextBanner(false);
+                    headerViewModel && headerViewModel.brandingbarParams.showTimeSelector(false);
+                    headerViewModel && headerViewModel.brandingbarParams.showEntitySelector(false);
+                }else {
+                    if(dashboardsetToolBarModel.dashboardInst.enableEntityFilter()!=="FALSE" || dashboardsetToolBarModel.dashboardInst.enableTimeRange()!=="FALSE") {    
+                        headerViewModel && headerViewModel.brandingbarParams.showGlobalContextBanner(true);
+                        if(dashboardsetToolBarModel.dashboardInst.enableTimeRange()==="FALSE") {
+                            headerViewModel && headerViewModel.brandingbarParams.showTimeSelector(false);
+                        }else {
+                            headerViewModel && headerViewModel.brandingbarParams.showTimeSelector(true);
+                        }
+                        if(dashboardsetToolBarModel.dashboardInst.enableEntityFilter()==="FALSE") {
+                            headerViewModel && headerViewModel.brandingbarParams.showEntitySelector(false);
+                        }else {
+                            headerViewModel && headerViewModel.brandingbarParams.showEntitySelector(true);
+                        }
+                    }else {
+                        headerViewModel && headerViewModel.brandingbarParams.showGlobalContextBanner(false);
+                        headerViewModel && headerViewModel.brandingbarParams.showTimeSelector(false);
+                        headerViewModel && headerViewModel.brandingbarParams.showEntitySelector(false);
+                    }
                 }
 
                 if (alreadyLoaded) {
