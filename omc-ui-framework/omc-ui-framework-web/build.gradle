@@ -513,7 +513,7 @@ task dominifystackblurjs(type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
 }
 
 javascript.source.cachedjs.js.files.eachWithIndex { File jsFile, idx ->
-    tasks.create(name: "dominifycachejs${idx}", type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
+    tasks.add(name: "dominifycachejs${idx}", type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
 		String fileName = "${jsFile.name}"
 		String renamedFile = fileName.replace(".",".orig.")
 		def parentDir = jsFile.parent
