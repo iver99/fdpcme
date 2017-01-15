@@ -1,3 +1,4 @@
+
 //-----------------------------------------------------------------------------
 // Enable this to be a rootProject which uses project common files.
 //
@@ -9,17 +10,21 @@ buildscript {
   if (System.env.BRANCH_TOP_DIR) {
     project.ext.commonBranchTopDir = System.env.BRANCH_TOP_DIR
   } else {
+    if ( ! project.hasProperty('PUB_SHELL') || ! project.PUB_SHELL) {
+      project.ext.PUB_SHELL = System.env.PUB_SHELL ?: "bash"
+    }
     def command = "cd '$rootDir' && git rev-parse --show-toplevel"
     def stdout = new StringBuilder(); def stderr = new StringBuilder(); def exitCode = 1
     try {
-      def proc = new ProcessBuilder("sh", "-c", command).start()
+      def proc = new ProcessBuilder("$project.PUB_SHELL", "-c", command).start()
       proc.waitForProcessOutput(stdout, stderr); exitCode = proc.exitValue()
     } catch (Exception e) { stderr << e.message }
     if (exitCode) {
-      throw new GradleException (
-        "[ERROR] sh or git command is not found or pwd=${System.properties.'user.dir'} is not a git project dir\n" +
+      throw new GradleException(
+        "[ERROR] shell or git command is not found or pwd=${System.properties.'user.dir'} is not a git project dir\n" +
         "[Note] If git is not available, env variables BRANCH_TOP_DIR and BRANCH_NAME must be set\n" +
-        "[Command] sh -c \"$command\"\n" + "[Error] $stderr")
+        "[Note] PUB_SHELL=$project.PUB_SHELL\n" +
+        "[Command] $project.PUB_SHELL -c \"$command\"\n" + "[Error] $stderr")
     } else {
       project.ext.commonBranchTopDir = "$stdout".trim()
     }
@@ -106,7 +111,7 @@ allprojects {
         testLogging {
              showStandardStreams = false
         }
-        ignoreFailures = false
+        ext.ignoreFailures = false
         enableAssertions = true
 	}
 // Run s1 test group - the first stage unit test group
@@ -114,7 +119,7 @@ allprojects {
     // (no DB and no long wait for test result)
     task s1tests(type: Test) {
 	        useTestNG() {
-	            ignoreFailures = false
+	            ext.ignoreFailures = false
 	            includeGroups 's1'
 	        }
                 configure commonTestConfig
@@ -138,7 +143,7 @@ allprojects {
     task s2tests(type: Test) {
 
 	        useTestNG() {
-	            ignoreFailures = true
+	            ext.ignoreFailures = true
 	            includeGroups 's2'
 	        }
 	        configure commonTestConfig

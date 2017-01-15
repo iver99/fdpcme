@@ -8,7 +8,7 @@ configurations {
 //version = '1.0.0'
 version = project.ext.getServiceVersion("DashboardService-ui")
 group = 'emaas/applications/dashboards-framework'
-deployname=artifactPrefix+'dashboards-ui'
+ext.deployname=artifactPrefix+'dashboards-ui'
 def artifactId = 'dashboardsui' 
 def groupId = group 
 def versionNumber = version
@@ -58,11 +58,11 @@ loadConfiguration()
 def loadConfiguration() {
 
     def environment = hasProperty('env') ? env : 'dev'
-    setProperty 'environment', environment
+    project.ext.environment = environment
     
     def configFile = file("${rootDir}/appServerConfig.config")
     def appServerconfig = new ConfigSlurper(environment).parse(configFile.toURL())
-    setProperty 'appServerconfig', appServerconfig
+    project.ext.appServerconfig = appServerconfig
 }
 
 task uiappServerInit << {

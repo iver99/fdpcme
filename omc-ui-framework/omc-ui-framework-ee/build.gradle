@@ -62,11 +62,11 @@ loadConfiguration()
 def loadConfiguration() {
 
     def environment = hasProperty('env') ? env : 'dev'
-    setProperty 'environment', environment
+    project.ext.environment = environment
     
     def configFile = file("${rootDir}/appServerConfig.config")
     def appServerconfig = new ConfigSlurper(environment).parse(configFile.toURL())
-    setProperty 'appServerconfig', appServerconfig
+    project.ext.appServerconfig = appServerconfig
 }
 
 task appServerInit << {

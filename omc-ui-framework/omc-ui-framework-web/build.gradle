@@ -10,7 +10,7 @@ apply plugin: 'war'
 apply plugin: 'compass'
 apply from: 'test.gradle'
 
-jsversion = project.ext.getServiceVersion('OMC-UI-Framework')
+def jsversion = project.ext.getServiceVersion('OMC-UI-Framework')
 def versionPathElement = jsversion + "-"+ new SimpleDateFormat("yyMMdd.HHmmss").format(new Date())
 
 // source 'webapp' directory
@@ -62,7 +62,7 @@ dependencies {
     compile(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1'){ transitive = false }
     compile(group: 'com.font-awesome', name: 'font-awesome', version: '4.3.0', ext: 'zip') {transitive = false }
     compile(group: 'com.oracle.emaas.emctas.tgtsel', name:'emcs-targetselector', version:tselVersion, ext:'zip'){ transitive = false }
-    providedCompile project(':dashboards-ui-test-common-api')  { transitive = false }
+    providedCompile (project(':dashboards-ui-test-common-api')) // { transitive = false }
     compass (group: 'org.jruby', name: 'jruby-complete', version: '1.7.3')
     jscover (group:'com.github.tntim96', name:'JSCover-all', version:'1.0.19')
 }
@@ -513,7 +513,7 @@ task dominifystackblurjs(type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
 }
 
 javascript.source.cachedjs.js.files.eachWithIndex { File jsFile, idx ->
-    tasks.add(name: "dominifycachejs${idx}", type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
+    tasks.create(name: "dominifycachejs${idx}", type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
 		String fileName = "${jsFile.name}"
 		String renamedFile = fileName.replace(".",".orig.")
 		def parentDir = jsFile.parent
