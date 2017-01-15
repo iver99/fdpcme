@@ -18,6 +18,14 @@ import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 public class DashboardHomeUtil_1130 extends DashboardHomeUtil_175
 {
+	@Override
+	public void closeOverviewPage(WebDriver driver)
+	{
+
+		driver.getLogger().info("This API is deprecated");
+
+	}
+
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardHomeUtil#filterOptions(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
@@ -25,7 +33,7 @@ public class DashboardHomeUtil_1130 extends DashboardHomeUtil_175
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardHomeUtil#gotoDataExplorer(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
 	@Override
-	public void gotoDataExplorer(WebDriver driver, String option) 
+	public void gotoDataExplorer(WebDriver driver, String option)
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call exploreData -> " + option);
 
@@ -34,12 +42,13 @@ public class DashboardHomeUtil_1130 extends DashboardHomeUtil_175
 		driver.click(convertName(DashBoardPageId.EXPLOREDATABTNID));
 		//WebElement menu = driver.getElement(convertName(DashBoardPageId.EXPLOREDATAMENU));
                  
-                if (IDashboardHomeUtil.EXPLOREDATA_MENU_LOG.equals(option)) {                 
-                        driver.click(DashBoardPageId_1130.EXPLORE_LOG);
-                 } else {
-                     	driver.click(DashBoardPageId.EXPLORE_Search);
-		 }
- 
+		if (IDashboardHomeUtil.EXPLOREDATA_MENU_LOG.equals(option)) {
+			driver.click(DashBoardPageId_1130.EXPLORE_LOG);
+		}else if (IDashboardHomeUtil.EXPLOREDATA_MENU_SEARCH.equals(option)) {
+			driver.click(DashBoardPageId.EXPLORE_Search);
+		}else{
+			throw new IllegalArgumentException("NOT supported option: "+option);
+		}
                
      }  
 
