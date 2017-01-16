@@ -113,7 +113,7 @@ task appServerDeploy{
 
 		ant.wldeploy(action:'deploy',  
 		source:     ear.archivePath, 
-		name:       "DashboardService-Comparator-6",
+		name:       "DashboardService-comparator-6",
 		targets:	wlsserver_target,
 		adminurl:   t3URL,  
 		user:       adminUser, 
@@ -133,7 +133,7 @@ task appServerUndeploy{
 		println "Undeploying ${appName_ui}-${version} from ${t3URL}" 
 
 		ant.wldeploy(action:'undeploy',  
-		name:       "DashboardService-Comparator-6",
+		name:       "DashboardService-comparator-6",
 		adminurl:   t3URL,  
 		user:       adminUser, 
 		password:   adminUserPassword, 

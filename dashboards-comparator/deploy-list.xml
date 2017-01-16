@@ -1,6 +1,6 @@
 <?xml version="1.0"?> 
  
-<service-artifacts name="dashboardService-comparator"> 
+<service-artifacts name="DashboardService-comparator"> 
       <file name='../dashboards-comparator/dashboardscomparator-ee/build/libs/emaas-applications-dashboards-comparator'
             serviceName='DashboardService-comparator'> 
             <version>SERVICEVERSION</version> 

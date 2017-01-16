@@ -16,7 +16,7 @@
                    [
                             {
                               "name": "applicationName",
-                               "defaultValue": "Dashboard-comparator"
+                               "defaultValue": "DashboardService-comparator"
                              }
                    ]
                    },
@@ -27,7 +27,7 @@
                     [
                           {
                                 "name": "applicationName",
-                                "defaultValue": "Dashboard-comparator"
+                                "defaultValue": "DashboardService-comparator"
                             }
                     ]
                   },
@@ -38,7 +38,7 @@
                     [
                            {
                                  "name": "applicationName",
-                                 "defaultValue": "Dashboard-comparator"
+                                 "defaultValue": "DashboardService-comparator"
                             }
                      ]
                   }
