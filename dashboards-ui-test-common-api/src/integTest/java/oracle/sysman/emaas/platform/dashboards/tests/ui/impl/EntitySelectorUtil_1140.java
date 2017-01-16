@@ -38,19 +38,18 @@ public class EntitySelectorUtil_1140 extends EntitySelectorUtil_Version implemen
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IEntitySelectorUtil#getCategories(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
-	@Override
-	public int getCategories(WebDriver driver)
-	{
-
-		openEntitySelector(driver);
-
-		//get all the headings
-		List<WebElement> entSelectorHeadings = driver.getWebDriver().findElements(By.xpath(DashBoardPageId.EntSelCategories));
-		int count = entSelectorHeadings.size();
-		LOGGER.log(Level.INFO, "{0} headings found", new Object[] { count });
-
-		return count;
-	}
+	//	private int getCategories(WebDriver driver)
+	//	{
+	//
+	//		openEntitySelector(driver);
+	//
+	//		//get all the headings
+	//		List<WebElement> entSelectorHeadings = driver.getWebDriver().findElements(By.xpath(DashBoardPageId.EntSelCategories));
+	//		int count = entSelectorHeadings.size();
+	//		LOGGER.log(Level.INFO, "{0} headings found", new Object[] { count });
+	//
+	//		return count;
+	//	}
 
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IEntitySelectorUtil#getNumberOfPills(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
@@ -115,7 +114,6 @@ public class EntitySelectorUtil_1140 extends EntitySelectorUtil_Version implemen
 	@Override
 	public void searchText(WebDriver driver, String text)
 	{
-		//TODO: if input is not visible, open entity selector?
 		LOGGER.log(Level.INFO, "Verify if Entity Selector is open");
 		WebElement suggestionPopup = driver.getWebDriver().findElement(By.xpath(DashBoardPageId.EntSelSuggestionPopup));
 		if (!suggestionPopup.isDisplayed()) {
@@ -188,37 +186,6 @@ public class EntitySelectorUtil_1140 extends EntitySelectorUtil_Version implemen
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IEntitySelectorUtil#selectFirstSuggestionByCategory(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
-	@Override
-	public void selectFirstSuggestionByCategory(WebDriver driver, String category)
-	{
-		//select the first composite entity found with that description
-		LOGGER.log(Level.INFO, "Wait for first result to be clickable");
-		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), UNTIL_TIMEOUT);
-		WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(MessageFormat.format(
-				DashBoardPageId.EntSelSuggestionByCategory, category))));
-		LOGGER.log(Level.INFO, "Click on first available result");
-		element.click();
-
-	}
-
-	/* (non-Javadoc)
-	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IEntitySelectorUtil#selectItemById(oracle.sysman.qatool.uifwk.webdriver.WebDriver, int)
-	 */
-	@Override
-	public void selectItemById(WebDriver driver, int index)
-	{
-		final int prevCount = getNumberOfPills(driver);
-		LOGGER.log(Level.INFO, "Wait for item to be clickable");
-		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), UNTIL_TIMEOUT);
-		WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(MessageFormat.format(
-				DashBoardPageId.EntSelSuggestionById, index))));
-		LOGGER.log(Level.INFO, "Click on item at index {0}", new Object[] { index });
-		element.click();
-
-		//Wait until the new pill is displayed
-		waitForNewPill(driver, prevCount);
-
-	}
 
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IEntitySelectorUtil#validateReadOnlyMode(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
@@ -235,36 +202,23 @@ public class EntitySelectorUtil_1140 extends EntitySelectorUtil_Version implemen
 	}
 
 	/* (non-Javadoc)
-	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IEntitySelectorUtil#verifyCategoryIsVisible(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
+	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IEntitySelectorUtil#selectItemById(oracle.sysman.qatool.uifwk.webdriver.WebDriver, int)
 	 */
-	@Override
-	public void verifyCategoryIsVisible(WebDriver driver, String text)
-	{
-		String xpath = MessageFormat.format(DashBoardPageId.EntSelCategoryByText, text);
-
-		//We should know wheter the item is present or not without causing an exception or failing the test
-		LOGGER.log(Level.INFO, "Checking visibility of item ''{0}''", new Object[] { text });
-		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), UNTIL_TIMEOUT);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xpath)));
-		LOGGER.log(Level.INFO, "Item ''{0}'' is visible", new Object[] { text });
-
-	}
-
-	/* (non-Javadoc)
-	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IEntitySelectorUtil#verifyCategoryNotVisible(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
-	 */
-	@Override
-	public void verifyCategoryNotVisible(WebDriver driver, List<String> categoryNames)
-	{
-		LOGGER.log(Level.INFO, "Checking categories are not visible");
-		List<WebElement> categories = driver.getWebDriver().findElements(By.xpath(DashBoardPageId.EntSelCategories));
-		for (WebElement element : categories) {
-			String elementText = element.getText().trim();
-			Assert.assertFalse(categoryNames.contains(elementText));
-		}
-		LOGGER.log(Level.INFO, "Categories are not present");
-
-	}
+	//	@Override
+	//	public void selectItemById(WebDriver driver, int index)
+	//	{
+	//		final int prevCount = getNumberOfPills(driver);
+	//		LOGGER.log(Level.INFO, "Wait for item to be clickable");
+	//		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), UNTIL_TIMEOUT);
+	//		WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(MessageFormat.format(
+	//				DashBoardPageId.EntSelSuggestionById, index))));
+	//		LOGGER.log(Level.INFO, "Click on item at index {0}", new Object[] { index });
+	//		element.click();
+	//
+	//		//Wait until the new pill is displayed
+	//		waitForNewPill(driver, prevCount);
+	//
+	//	}
 
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IEntitySelectorUtil#waitForNewPill(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
@@ -284,6 +238,49 @@ public class EntitySelectorUtil_1140 extends EntitySelectorUtil_Version implemen
 		});
 		LOGGER.log(Level.INFO, "A new pill has been added to the Global Context bar");
 		driver.takeScreenShot();
+
+	}
+
+	private void selectFirstSuggestionByCategory(WebDriver driver, String category)
+	{
+		//select the first composite entity found with that description
+		LOGGER.log(Level.INFO, "Wait for first result to be clickable");
+		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), UNTIL_TIMEOUT);
+		WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(MessageFormat.format(
+				DashBoardPageId.EntSelSuggestionByCategory, category))));
+		LOGGER.log(Level.INFO, "Click on first available result");
+		element.click();
+
+	}
+
+	/* (non-Javadoc)
+	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IEntitySelectorUtil#verifyCategoryNotVisible(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
+	 */
+
+	/* (non-Javadoc)
+	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IEntitySelectorUtil#verifyCategoryIsVisible(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
+	 */
+	private void verifyCategoryIsVisible(WebDriver driver, String text)
+	{
+		String xpath = MessageFormat.format(DashBoardPageId.EntSelCategoryByText, text);
+
+		//We should know wheter the item is present or not without causing an exception or failing the test
+		LOGGER.log(Level.INFO, "Checking visibility of item ''{0}''", new Object[] { text });
+		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), UNTIL_TIMEOUT);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xpath)));
+		LOGGER.log(Level.INFO, "Item ''{0}'' is visible", new Object[] { text });
+
+	}
+
+	private void verifyCategoryNotVisible(WebDriver driver, List<String> categoryNames)
+	{
+		LOGGER.log(Level.INFO, "Checking categories are not visible");
+		List<WebElement> categories = driver.getWebDriver().findElements(By.xpath(DashBoardPageId.EntSelCategories));
+		for (WebElement element : categories) {
+			String elementText = element.getText().trim();
+			Assert.assertFalse(categoryNames.contains(elementText));
+		}
+		LOGGER.log(Level.INFO, "Categories are not present");
 
 	}
 }

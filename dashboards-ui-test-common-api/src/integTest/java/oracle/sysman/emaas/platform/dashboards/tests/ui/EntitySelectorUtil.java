@@ -10,8 +10,6 @@
 
 package oracle.sysman.emaas.platform.dashboards.tests.ui;
 
-import java.util.List;
-
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.IEntitySelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.UtilLoader;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
@@ -27,12 +25,12 @@ public class EntitySelectorUtil
 	 * @param
 	 * @return
 	 */
-	public static int getCategories(WebDriver driver)
-	{
-		IEntitySelectorUtil esu = new UtilLoader<IEntitySelectorUtil>().loadUtil(driver, IEntitySelectorUtil.class);
-		return esu.getCategories(driver);
-
-	}
+	//	public static int getCategories(WebDriver driver)
+	//	{
+	//		IEntitySelectorUtil esu = new UtilLoader<IEntitySelectorUtil>().loadUtil(driver, IEntitySelectorUtil.class);
+	//		return esu.getCategories(driver);
+	//
+	//	}
 
 	/**
 	 * @param driver
@@ -105,22 +103,22 @@ public class EntitySelectorUtil
 	 * @param
 	 * @return
 	 */
-	public void selectFirstSuggestionByCategory(WebDriver driver, String category)
-	{
-		IEntitySelectorUtil esu = new UtilLoader<IEntitySelectorUtil>().loadUtil(driver, IEntitySelectorUtil.class);
-		esu.selectFirstSuggestionByCategory(driver, category);
-	}
+	//	public void selectFirstSuggestionByCategory(WebDriver driver, String category)
+	//	{
+	//		IEntitySelectorUtil esu = new UtilLoader<IEntitySelectorUtil>().loadUtil(driver, IEntitySelectorUtil.class);
+	//		esu.selectFirstSuggestionByCategory(driver, category);
+	//	}
 
 	/**
 	 * @param driver
 	 * @param
 	 * @return
 	 */
-	public void selectItemById(WebDriver driver, int index)
-	{
-		IEntitySelectorUtil esu = new UtilLoader<IEntitySelectorUtil>().loadUtil(driver, IEntitySelectorUtil.class);
-		esu.selectItemById(driver, index);
-	}
+	//	public void selectItemById(WebDriver driver, int index)
+	//	{
+	//		IEntitySelectorUtil esu = new UtilLoader<IEntitySelectorUtil>().loadUtil(driver, IEntitySelectorUtil.class);
+	//		esu.selectItemById(driver, index);
+	//	}
 
 	/**
 	 * @param driver
@@ -138,31 +136,31 @@ public class EntitySelectorUtil
 	 * @param
 	 * @return
 	 */
-	public void verifyCategoryIsVisible(WebDriver driver, String text)
-	{
-		IEntitySelectorUtil esu = new UtilLoader<IEntitySelectorUtil>().loadUtil(driver, IEntitySelectorUtil.class);
-		esu.verifyCategoryIsVisible(driver, text);
-	}
+	//	public void verifyCategoryIsVisible(WebDriver driver, String text)
+	//	{
+	//		IEntitySelectorUtil esu = new UtilLoader<IEntitySelectorUtil>().loadUtil(driver, IEntitySelectorUtil.class);
+	//		esu.verifyCategoryIsVisible(driver, text);
+	//	}
 
 	/**
 	 * @param driver
 	 * @param
 	 * @return
 	 */
-	public void verifyCategoryNotVisible(WebDriver driver, List<String> categoryNames)
-	{
-		IEntitySelectorUtil esu = new UtilLoader<IEntitySelectorUtil>().loadUtil(driver, IEntitySelectorUtil.class);
-		esu.verifyCategoryNotVisible(driver, categoryNames);
-	}
+	//	public void verifyCategoryNotVisible(WebDriver driver, List<String> categoryNames)
+	//	{
+	//		IEntitySelectorUtil esu = new UtilLoader<IEntitySelectorUtil>().loadUtil(driver, IEntitySelectorUtil.class);
+	//		esu.verifyCategoryNotVisible(driver, categoryNames);
+	//	}
 
 	/**
 	 * @param driver
 	 * @param
 	 * @return
 	 */
-	public void waitForNewPill(WebDriver driver, int prevPillCount)
-	{
-		IEntitySelectorUtil esu = new UtilLoader<IEntitySelectorUtil>().loadUtil(driver, IEntitySelectorUtil.class);
-		esu.waitForNewPill(driver, prevPillCount);
-	}
+	//	public void waitForNewPill(WebDriver driver, int prevPillCount)
+	//	{
+	//		IEntitySelectorUtil esu = new UtilLoader<IEntitySelectorUtil>().loadUtil(driver, IEntitySelectorUtil.class);
+	//		esu.waitForNewPill(driver, prevPillCount);
+	//	}
 }

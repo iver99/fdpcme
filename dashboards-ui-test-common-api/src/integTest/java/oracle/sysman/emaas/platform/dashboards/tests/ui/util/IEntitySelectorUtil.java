@@ -10,8 +10,6 @@
 
 package oracle.sysman.emaas.platform.dashboards.tests.ui.util;
 
-import java.util.List;
-
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 /**
@@ -24,7 +22,7 @@ public interface IEntitySelectorUtil extends IUiTestCommonAPI
 	 * @param
 	 * @return
 	 */
-	public int getCategories(WebDriver driver);
+	//	public int getCategories(WebDriver driver);
 
 	/**
 	 * @param driver
@@ -73,14 +71,14 @@ public interface IEntitySelectorUtil extends IUiTestCommonAPI
 	 * @param
 	 * @return
 	 */
-	public void selectFirstSuggestionByCategory(WebDriver driver, String category);
+	//	public void selectFirstSuggestionByCategory(WebDriver driver, String category);
 
 	/**
 	 * @param driver
 	 * @param
 	 * @return
 	 */
-	public void selectItemById(WebDriver driver, int index);
+	//	public void selectItemById(WebDriver driver, int index);
 
 	/**
 	 * @param driver
@@ -94,20 +92,20 @@ public interface IEntitySelectorUtil extends IUiTestCommonAPI
 	 * @param
 	 * @return
 	 */
-	public void verifyCategoryIsVisible(WebDriver driver, String text);
+	//	public void verifyCategoryIsVisible(WebDriver driver, String text);
 
 	/**
 	 * @param driver
 	 * @param
 	 * @return
 	 */
-	public void verifyCategoryNotVisible(WebDriver driver, List<String> categoryNames);
+	//	public void verifyCategoryNotVisible(WebDriver driver, List<String> categoryNames);
 
 	/**
 	 * @param driver
 	 * @param
 	 * @return
 	 */
-	public void waitForNewPill(WebDriver driver, int prevPillCount);
+	//	public void waitForNewPill(WebDriver driver, int prevPillCount);
 
 }
