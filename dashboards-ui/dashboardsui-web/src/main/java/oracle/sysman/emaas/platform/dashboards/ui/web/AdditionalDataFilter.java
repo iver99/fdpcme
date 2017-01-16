@@ -1,6 +1,7 @@
 package oracle.sysman.emaas.platform.dashboards.ui.web;
 
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.DashboardDataAccessUtil;
+import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.ParallelThreadPool;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.StringUtil;
 
 import org.apache.logging.log4j.LogManager;
@@ -13,6 +14,10 @@ import javax.servlet.http.HttpServletResponseWrapper;
 
 import java.io.*;
 import java.math.BigInteger;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 import java.util.regex.Pattern;
 
 /**
@@ -145,40 +150,93 @@ public class AdditionalDataFilter implements Filter {
         return json.replace("\\", "\\\\").replace("\"", "\\\"").replace("$", "\\$");
     }
 
-    private String getDashboardData(String tenant, String user, BigInteger dashboardId, String referer, String sessionExp) {
+    private String getDashboardData(final String tenant, final String user, final BigInteger dashboardId, final String referer, final String sessionExp) {
         if (StringUtil.isEmpty(tenant) || StringUtil.isEmpty(user)) {
             LOGGER.warn("tenant {}/user {} is null or empty or invalid, so do not update dashboard page then", tenant, user);
             return null;
         }
-        StringBuilder sb = new StringBuilder();
+        //use StringBuffer to make sure synchronized
+        StringBuffer sb = new StringBuffer();
+        ExecutorService pool = ParallelThreadPool.getThreadPool();
+        //Get dashboards string
         if (BigInteger.ZERO.compareTo(dashboardId) < 0) {
-            String dashboardString = DashboardDataAccessUtil.getDashboardData(tenant, tenant + "." + user, referer, dashboardId);
-            if (StringUtil.isEmpty(dashboardString)) {
-                LOGGER.warn("Retrieved null or empty dashboard for tenant {} user {} and dashboardId {}, so do not update page data then", tenant, user, dashboardId);
-            } else {
-                dashboardString = formatJsonString(dashboardString);
-                LOGGER.info("Escaping retrieved data before inserting to html. Vlaue now is: {}", dashboardString);
-                sb.append("window._dashboardServerCache=").append(dashboardString).append(";");
+            Future<String> futureDashboards = pool.submit(new Callable<String>() {
+                @Override
+                public String call() throws Exception {
+                    LOGGER.info("Thread in pool to retrieve dashboard string...");
+                    return DashboardDataAccessUtil.getDashboardData(tenant, tenant + "." + user, referer, dashboardId);
+                }
+            });
+            String dashboardString = null;
+            try {
+                dashboardString = futureDashboards.get();
+                if (StringUtil.isEmpty(dashboardString)) {
+                    LOGGER.warn("Retrieved null or empty dashboard for tenant {} user {} and dashboardId {}, so do not update page data then", tenant, user, dashboardId);
+                } else {
+                    dashboardString = formatJsonString(dashboardString);
+                    LOGGER.info("Escaping retrieved data before inserting to html. Vlaue now is: {}", dashboardString);
+                    sb.append("window._dashboardServerCache=").append(dashboardString).append(";");
+                }
+            } catch (InterruptedException e) {
+                LOGGER.error(e.getLocalizedMessage());
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                LOGGER.error(e.getLocalizedMessage());
             }
+//            String dashboardString = DashboardDataAccessUtil.getDashboardData(tenant, tenant + "." + user, referer, dashboardId);
+
         } else {
             LOGGER.warn("dashboardId {} is invalid, so do not update dashboard page for dashboard data then", dashboardId);
         }
 
-        String userInfoString = DashboardDataAccessUtil.getUserTenantInfo(tenant, tenant + "." + user, referer, sessionExp);
-        if (StringUtil.isEmpty(userInfoString)) {
-            LOGGER.warn("Retrieved null or empty user info for tenant {} user {}", tenant, user);
+        //Get userInfo string
+        Future<String> futureUserInfo = pool.submit(new Callable<String>() {
+            @Override
+            public String call() throws Exception {
+                LOGGER.info("Thread in pool to retrieve userInfo...");
+                return DashboardDataAccessUtil.getUserTenantInfo(tenant, tenant + "." + user, referer, sessionExp);
+            }
+        });
+        try {
+            //get result;
+            String userInfoString = futureUserInfo.get();
+            if (StringUtil.isEmpty(userInfoString)) {
+                LOGGER.warn("Retrieved null or empty user info for tenant {} user {}", tenant, user);
+            }
+            else {
+                sb.append("window._userInfoServerCache=").append(userInfoString).append(";");
+            }
+        } catch (InterruptedException e) {
+            LOGGER.error(e.getLocalizedMessage());
+        } catch (ExecutionException e) {
+            LOGGER.error(e.getLocalizedMessage());
         }
-        else {
-            sb.append("window._userInfoServerCache=").append(userInfoString).append(";");
+//        String userInfoString = DashboardDataAccessUtil.getUserTenantInfo(tenant, tenant + "." + user, referer, sessionExp);
+
+        //Get Registry string
+        Future<String> futureRegistry = pool.submit(new Callable<String>() {
+            @Override
+            public String call() throws Exception {
+                LOGGER.info("Thread in pool to retrieve Registry...");
+                return DashboardDataAccessUtil.getRegistrationData(tenant, tenant + "." + user, referer, sessionExp);
+            }
+        });
+        try {
+            String regString = futureRegistry.get();
+            if (StringUtil.isEmpty(regString)) {
+                LOGGER.warn("Retrieved null or empty registration for tenant {} user {}", tenant, user);
+            }
+            else {
+                sb.append("window._registrationServerCache=").append(regString).append(";");
+            }
+        } catch (InterruptedException e) {
+            LOGGER.error(e.getLocalizedMessage());
+        } catch (ExecutionException e) {
+            LOGGER.error(e.getLocalizedMessage());
         }
 
-        String regString = DashboardDataAccessUtil.getRegistrationData(tenant, tenant + "." + user, referer, sessionExp);
-        if (StringUtil.isEmpty(regString)) {
-            LOGGER.warn("Retrieved null or empty registration for tenant {} user {}", tenant, user);
-        }
-        else {
-            sb.append("window._registrationServerCache=").append(regString).append(";");
-        }
+//        String regString = DashboardDataAccessUtil.getRegistrationData(tenant, tenant + "." + user, referer, sessionExp);
+
         return sb.toString();
     }
 }
