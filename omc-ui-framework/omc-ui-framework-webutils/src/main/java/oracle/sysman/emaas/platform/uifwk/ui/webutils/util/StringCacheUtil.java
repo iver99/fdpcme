@@ -11,6 +11,7 @@
 package oracle.sysman.emaas.platform.uifwk.ui.webutils.util;
 
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,6 +19,7 @@ import org.apache.logging.log4j.Logger;
 /**
  * @author aduan
  */
+@Deprecated
 public class StringCacheUtil
 {
 	private static class CachedObj
@@ -57,13 +59,18 @@ public class StringCacheUtil
 		return REG_INSTANCE;
 	}
 
-	private final LinkedHashMap<String, CachedObj> container = new LinkedHashMap<String, CachedObj>(CACHE_CAPACITY);
+	private final LinkedHashMap<String, CachedObj> container = new LinkedHashMap<String, CachedObj>(CACHE_CAPACITY){
+		@Override
+		protected boolean removeEldestEntry(Map.Entry<String, CachedObj> eldest) {
+			return size() > CACHE_CAPACITY-2;
+		}
+	};
 
 	private StringCacheUtil()
 	{
 
 	}
-
+	@Deprecated
 	public String get(String key)
 	{
 		if (StringUtil.isEmpty(key)) {
@@ -81,7 +88,7 @@ public class StringCacheUtil
 		String value = co.getObject();
 		return value;
 	}
-
+	@Deprecated
 	public String put(String key, String value)
 	{
 		if (StringUtil.isEmpty(key)) {
@@ -96,7 +103,7 @@ public class StringCacheUtil
 		container.put(key, co);
 		return value;
 	}
-
+	@Deprecated
 	public String remove(String key)
 	{
 		if (StringUtil.isEmpty(key)) {
@@ -114,7 +121,7 @@ public class StringCacheUtil
 		}
 		return null;
 	}
-
+	@Deprecated
 	private boolean isValidValue(CachedObj co)
 	{
 		if (co == null) {
