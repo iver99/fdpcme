@@ -155,36 +155,20 @@ public class AdditionalDataFilter implements Filter {
             LOGGER.warn("tenant {}/user {} is null or empty or invalid, so do not update dashboard page then", tenant, user);
             return null;
         }
+        long start =System.currentTimeMillis();
         //use StringBuffer to make sure synchronized
         StringBuffer sb = new StringBuffer();
         ExecutorService pool = ParallelThreadPool.getThreadPool();
         //Get dashboards string
+        Future<String> futureDashboards= null;
         if (BigInteger.ZERO.compareTo(dashboardId) < 0) {
-            Future<String> futureDashboards = pool.submit(new Callable<String>() {
+            futureDashboards = pool.submit(new Callable<String>() {
                 @Override
                 public String call() throws Exception {
                     LOGGER.info("Thread in pool to retrieve dashboard string...");
                     return DashboardDataAccessUtil.getDashboardData(tenant, tenant + "." + user, referer, dashboardId);
                 }
             });
-            String dashboardString = null;
-            try {
-                dashboardString = futureDashboards.get();
-                if (StringUtil.isEmpty(dashboardString)) {
-                    LOGGER.warn("Retrieved null or empty dashboard for tenant {} user {} and dashboardId {}, so do not update page data then", tenant, user, dashboardId);
-                } else {
-                    dashboardString = formatJsonString(dashboardString);
-                    LOGGER.info("Escaping retrieved data before inserting to html. Vlaue now is: {}", dashboardString);
-                    sb.append("window._dashboardServerCache=").append(dashboardString).append(";");
-                }
-            } catch (InterruptedException e) {
-                LOGGER.error(e.getLocalizedMessage());
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                LOGGER.error(e.getLocalizedMessage());
-            }
-//            String dashboardString = DashboardDataAccessUtil.getDashboardData(tenant, tenant + "." + user, referer, dashboardId);
-
         } else {
             LOGGER.warn("dashboardId {} is invalid, so do not update dashboard page for dashboard data then", dashboardId);
         }
@@ -197,22 +181,6 @@ public class AdditionalDataFilter implements Filter {
                 return DashboardDataAccessUtil.getUserTenantInfo(tenant, tenant + "." + user, referer, sessionExp);
             }
         });
-        try {
-            //get result;
-            String userInfoString = futureUserInfo.get();
-            if (StringUtil.isEmpty(userInfoString)) {
-                LOGGER.warn("Retrieved null or empty user info for tenant {} user {}", tenant, user);
-            }
-            else {
-                sb.append("window._userInfoServerCache=").append(userInfoString).append(";");
-            }
-        } catch (InterruptedException e) {
-            LOGGER.error(e.getLocalizedMessage());
-        } catch (ExecutionException e) {
-            LOGGER.error(e.getLocalizedMessage());
-        }
-//        String userInfoString = DashboardDataAccessUtil.getUserTenantInfo(tenant, tenant + "." + user, referer, sessionExp);
-
         //Get Registry string
         Future<String> futureRegistry = pool.submit(new Callable<String>() {
             @Override
@@ -221,7 +189,19 @@ public class AdditionalDataFilter implements Filter {
                 return DashboardDataAccessUtil.getRegistrationData(tenant, tenant + "." + user, referer, sessionExp);
             }
         });
+        /**
+         * Attention:Future.get() will block current thread, so put all of them at the bottom
+         */
         try {
+            //get userInfo result;
+            String userInfoString = futureUserInfo.get();
+            if (StringUtil.isEmpty(userInfoString)) {
+                LOGGER.warn("Retrieved null or empty user info for tenant {} user {}", tenant, user);
+            }
+            else {
+                sb.append("window._userInfoServerCache=").append(userInfoString).append(";");
+            }
+            //get  registry result
             String regString = futureRegistry.get();
             if (StringUtil.isEmpty(regString)) {
                 LOGGER.warn("Retrieved null or empty registration for tenant {} user {}", tenant, user);
@@ -229,14 +209,24 @@ public class AdditionalDataFilter implements Filter {
             else {
                 sb.append("window._registrationServerCache=").append(regString).append(";");
             }
+            //get dashboard result (put this get action in the last because it is most time-costing)
+            if (futureDashboards != null){
+                String dashboardString = futureDashboards.get();
+                if (StringUtil.isEmpty(dashboardString)) {
+                    LOGGER.warn("Retrieved null or empty dashboard for tenant {} user {} and dashboardId {}, so do not update page data then", tenant, user, dashboardId);
+                } else {
+                    dashboardString = formatJsonString(dashboardString);
+                    LOGGER.info("Escaping retrieved data before inserting to html. Vlaue now is: {}", dashboardString);
+                    sb.append("window._dashboardServerCache=").append(dashboardString).append(";");
+                }
+            }
         } catch (InterruptedException e) {
             LOGGER.error(e.getLocalizedMessage());
+            e.printStackTrace();
         } catch (ExecutionException e) {
             LOGGER.error(e.getLocalizedMessage());
         }
-
-//        String regString = DashboardDataAccessUtil.getRegistrationData(tenant, tenant + "." + user, referer, sessionExp);
-
+        LOGGER.info("Time cost is "+Long.valueOf(System.currentTimeMillis()-start)+"ms");
         return sb.toString();
     }
 }
