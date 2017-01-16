@@ -17,7 +17,10 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.GlobalContextUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.WelcomeUtil;
+import oracle.sysman.emsaas.login.PageUtils;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
@@ -34,6 +37,9 @@ public class TestGlobalContext extends LoginAndLogout
 	public static final String DSBNAME = "DASHBOARD_GLOBALTESTING";
 	public static final String DSBSETNAME = "DASHBOARDSET_GLOBALTESTING";
 
+	private String dbName_willDelete = "";
+	private String dbSetName_willDelete = "";
+	
 	public void initTest(String testName)
 	{
 		login(this.getClass().getName() + "." + testName);
@@ -56,11 +62,12 @@ public class TestGlobalContext extends LoginAndLogout
 
 		DashBoardUtils.deleteDashboard(webd, DSBNAME);
 		DashBoardUtils.deleteDashboard(webd, DSBSETNAME);
+		DashBoardUtils.deleteDashboard(webd, dbName_willDelete);
 		webd.getLogger().info("All test data have been removed");
 
 		LoginAndLogout.logoutMethod();
 	}
-
+/
 	@Test
 	public void testGlobalContextCreateDashboard()
 	{
@@ -259,5 +266,110 @@ public class TestGlobalContext extends LoginAndLogout
 		BrandingBarUtil.visitWelcome(webd);
 		Assert.assertFalse(GlobalContextUtil.isGlobalContextExisted(webd), "The global context exists in Welcome Page");
 
+	}
+	
+	@Test(groups = "test_omcCtx")
+	public void testomcCtx_DeleteDashboard()
+	{
+		dbName_willDelete = "selfDb-" + generateTimeStamp();
+
+		//Initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test case: testGlobalContextDeleteDashboard");
+
+		//visit home page
+		BrandingBarUtil.visitDashboardHome(webd);
+		DashboardHomeUtil.gridView(webd);
+		DashboardHomeUtil.createDashboard(webd, dbName_willDelete, null);
+		DashboardBuilderUtil.verifyDashboard(webd, dbName_willDelete, null, false);
+		
+		//find edit button and click it
+		WebElement editButton = webd.getWebDriver().findElement(By.xpath("//button[@title='Edit Settings']"));		
+		Assert.assertTrue(editButton.isDisplayed(), "Edit button isn't displayed in self dashboard");
+		webd.click("//button[@title='Edit Settings']");
+		
+		//find the dashboard name and click it
+		WebElement dashboardName = webd.getWebDriver().findElement(By.xpath(".//*[@id='dbd-edit-settings-container']/span[2]"));
+		Assert.assertTrue(dashboardName.isDisplayed(), "dashboardName isn't displayed in self dashboard");
+		webd.click("css=.edit-setting-link.edit-dsb-link");
+		
+		//find Delete Dashboard button and click it 
+		WebElement deleteDashboardButton = webd.getWebDriver().findElement(By.xpath("//div/button/span[text()='Delete Dashboard']"));
+		Assert.assertTrue(deleteDashboardButton.isDisplayed(), "deleteDashboardButton isn't displayed in self dashboard");
+		webd.click("//div/button/span[text()='Delete Dashboard']");
+		
+		//find Delete button and click it 
+		WebElement deleteButton = webd.getWebDriver().findElement(By.xpath("//div/button/span[text()='Delete']"));
+		Assert.assertTrue(deleteButton.isDisplayed(), "deleteButton isn't displayed in popup dialog");
+		webd.click("//div/button/span[text()='Delete']");
+	
+		//verify omcCtx exist in the url
+		String url1 = webd.getWebDriver().getCurrentUrl();
+		webd.getLogger().info("start to verify omcCtx exist in the dashboard home url");
+		Assert.assertTrue(url1.contains("omcCtx="), "The global context infomation in URL is lost");
+		
+		//open the dashboard, eg: Host Operations in the home page, then verify omcCtx exist in the url
+		webd.getLogger().info("open the OOB dashboard");
+		DashboardHomeUtil.selectDashboard(webd, "Host Operations");		
+		
+		String url2 = webd.getWebDriver().getCurrentUrl();		
+		webd.getLogger().info("start to verify omcCtx exist in the OOB dashboard url");	
+		Assert.assertTrue(url2.contains("omcCtx="), "The global context infomation in URL is lost in OOB dashboard page");		
+	}
+
+	@Test(groups = "test_omcCtx", dependsOnMethods = { "testomcCtx_DeleteDashboard" })
+	public void testomcCtx_DeleteDashboardSet()
+	{
+		dbSetName_willDelete = "selfDbSet-" + generateTimeStamp();
+
+		//Initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test case: testGlobalContextDeleteDashboard");
+
+		//visit home page
+		BrandingBarUtil.visitDashboardHome(webd);
+		DashboardHomeUtil.gridView(webd);
+		DashboardHomeUtil.createDashboardSet(webd, dbSetName_willDelete, null);
+		DashboardBuilderUtil.verifyDashboardSet(webd, dbSetName_willDelete);
+		
+		DashboardBuilderUtil.createDashboardInsideSet(webd, dbName_willDelete, null);
+		
+		//find edit button and click it
+		WebElement editButton = webd.getWebDriver().findElement(By.xpath("//button[@title='Edit Settings']"));		
+		Assert.assertTrue(editButton.isDisplayed(), "Edit button isn't displayed in self dashboard set");
+		webd.click("//button[@title='Edit Settings']");
+		
+		//find the dashboard name and click it
+		WebElement dashboardSetName = webd.getWebDriver().findElement(By.xpath(".//*[@id='dbd-edit-settings-container']/span[2]"));
+		Assert.assertTrue(dashboardSetName.isDisplayed(), "dashboardSetName isn't displayed in self dashboard set");
+		webd.click("css=.edit-setting-link.edit-dsbset-link");
+	
+		
+		//find Delete Dashboard button and click it 
+		WebElement deleteDashboardSetButton = webd.getWebDriver().findElement(By.xpath("//div/button/span[text()='Delete Dashboard Set']"));
+		Assert.assertTrue(deleteDashboardSetButton.isDisplayed(), "deleteDashboardSetButton isn't displayed in self dashboard set");
+		webd.click("//div/button/span[text()='Delete Dashboard Set']");
+		
+		//find Delete button and click it 
+		WebElement deleteButton = webd.getWebDriver().findElement(By.xpath("//div[@id='__oj_zorder_container']/div[2]/div/div[3]/button/span[text()='Delete']"));
+		Assert.assertTrue(deleteButton.isDisplayed(), "deleteButton isn't displayed in popup dialog");
+		webd.click("//div[@id='__oj_zorder_container']/div[2]/div/div[3]/button/span[text()='Delete']");
+	
+		//verify omcCtx exist in the url
+		String url1 = webd.getWebDriver().getCurrentUrl();
+		webd.getLogger().info("start to verify omcCtx exist in the dashboard home url");
+		Assert.assertTrue(url1.contains("omcCtx="), "The global context infomation in URL is lost");
+		
+		//open the dashboard, eg: Host Operations in the home page, then verify omcCtx exist in the url
+		webd.getLogger().info("open the OOB dashboard");
+		DashboardHomeUtil.selectDashboard(webd, "Host Operations");		
+		
+		String url2 = webd.getWebDriver().getCurrentUrl();		
+		webd.getLogger().info("start to verify omcCtx exist in the OOB dashboard url");	
+		Assert.assertTrue(url2.contains("omcCtx="), "The global context infomation in URL is lost in OOB dashboard page");		
+	}
+	private String generateTimeStamp()
+	{
+		return String.valueOf(System.currentTimeMillis());
 	}
 }
