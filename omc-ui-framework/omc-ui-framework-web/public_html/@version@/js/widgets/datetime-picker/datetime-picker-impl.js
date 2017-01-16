@@ -1966,6 +1966,15 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                 }
                             },false);
                         }
+                        if(!self.removeClickListenerOnChosenTime){
+                            self.removeClickListenerOnChosenTime = true;
+                            $(".datetimepicker-dropdown").each(function(){
+                                this.addEventListener("click",function(_evnt){
+                                    _evnt.stopPropagation();
+                                    return true;
+                                },false);
+                            });
+                        }
                     }
                 };
 
@@ -2656,7 +2665,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                         self.lrCtrlVal("flexRelTimeCtrl");
                                         if(parsedTimePeriod) {
                                             self.flexRelTimeVal(parsedTimePeriod.duration);
-                                            self.flexRelTimeOpt(parsedTimePeriod.unit);
+                                            self.flexRelTimeOpt([parsedTimePeriod.unit]);
                                         }
                                         self.timePeriod(self.timePeriodCustom);
                                     }

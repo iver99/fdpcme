@@ -135,6 +135,12 @@ define(['knockout',
             };
 
             self.dashboardsetConfig.isCreator = ko.observable(dashboardsetEditDisabled());
+            self.disableRemove = ko.computed(function () {
+                return self.dashboardsetConfig.isCreator() && self.notZdtStatus();
+            });
+            self.enableAdd =ko.computed(function () {
+                return self.dashboardsetConfig.isCreator() && self.noDashboardHome() && self.notZdtStatus();
+            }); 
             
             self.normalMode = new Builder.NormalEditorMode();
             self.tabletMode = new Builder.TabletEditorMode();
@@ -699,7 +705,7 @@ define(['knockout',
                             if (!self.dashboardsetConfig.setHome()) {                                
                                 localStorage.deleteHomeDbd=true;
                             }
-                            window.location = cxtUtil.appendOMCContext( document.location.protocol + '//' + document.location.host + '/emsaasui/emcpdfui/home.html');
+                            window.location = cxtUtil.appendOMCContext( document.location.protocol + '//' + document.location.host + '/emsaasui/emcpdfui/home.html', true, true, true);
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
                         }
