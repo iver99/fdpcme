@@ -67,7 +67,7 @@ public class TestGlobalContext extends LoginAndLogout
 
 		LoginAndLogout.logoutMethod();
 	}
-/
+
 	@Test
 	public void testGlobalContextCreateDashboard()
 	{
