@@ -536,7 +536,7 @@ define(['knockout',
         function eagerLoadDahshboardTilesAtPageLoad(dfu, ko, normalMode, tabletMode, mode, timeSelector, targets) {
             var dds = new Builder.DashboardDataSource().dataSource;
             for (var prop in dds) {
-                if (!dds[prop].dashboard || !dds[prop].dashboard.tiles || dds[prop].eagerLoaded) {
+                if (!dds[prop] || !dds[prop].dashboard || !dds[prop].dashboard.tiles || dds[prop].eagerLoaded) {
                     continue;
                 }
                 var dashboard = dds[prop].dashboard;
