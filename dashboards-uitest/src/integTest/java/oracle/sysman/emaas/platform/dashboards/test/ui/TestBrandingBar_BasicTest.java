@@ -76,6 +76,21 @@ public class TestBrandingBar_BasicTest extends LoginAndLogout
 	}
 
 	@Test
+	public void testComplianceLink()
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testComplianceLink");
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		// Monitoring link
+		BrandingBarUtil.visitApplicationCloudService(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_COMP);
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		//verify the url of opened page
+		DashBoardUtils.verifyURL_WithPara(webd, "complianceuiservice/index.html");
+	}
+
+	@Test
 	public void testDashBoardHomeLink()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
