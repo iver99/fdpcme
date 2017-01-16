@@ -618,34 +618,6 @@ public class DataManager
 		return result;
 	}
 
-	private int insertDashboardLastAccess(EntityManager entityManager, BigInteger dashboardId, String accessedBy, String accessDate, Long tenantId, String creationDate, String lastModificationDate) {
-		logger.debug("Calling DataManager.insertDashboardLastAccess");
-		int result;
-		String sql = "INSERT INTO EMS_DASHBOARD_LAST_ACCESS(DASHBOARD_ID, ACCESSED_BY, ACCESS_DATE, TENANT_ID, CREATION_DATE, LAST_MODIFICATION_DATE)values(?, ?,to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'), ?, to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') , to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') )";
-		Query query = entityManager.createNativeQuery(sql)
-				.setParameter(1, dashboardId)
-				.setParameter(2, accessedBy)
-				.setParameter(3, accessDate)
-				.setParameter(4, tenantId)
-				.setParameter(5, creationDate)
-				.setParameter(6, lastModificationDate);
-		result = query.executeUpdate();
-		return result;
-	}
-
-	private int insertDashboardFavorite(EntityManager entityManager, String userName, BigInteger dashboardId, String creationDate, Long tenantId, String lastModificationDate) {
-		logger.debug("Calling DataManager.insertDashboardFavorite");
-		int result;
-		String sql = "INSERT INTO EMS_DASHBOARD_FAVORITE(USER_NAME, DASHBOARD_ID, CREATION_DATE, TENANT_ID, LAST_MODIFICATION_DATE)values(?, ?, to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') , ?, to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') )";
-		Query query = entityManager.createNativeQuery(sql)
-				.setParameter(1, userName)
-				.setParameter(2, dashboardId)
-				.setParameter(3, creationDate)
-				.setParameter(4, tenantId)
-				.setParameter(5,lastModificationDate);
-		result = query.executeUpdate();
-		return result;
-	}
 
 	private int insertDashboardUserOption(EntityManager entityManager, String userName, Long tenantId, BigInteger dashboardId, Long autoRefreshInterval, String accessDate,
 										  Integer isFavorite, String extendedOptions, String creationDate, String lastModificationDate) {

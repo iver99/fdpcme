@@ -6,7 +6,7 @@ import org.testng.annotations.Test;
 
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil.VersionedLink;
-
+@Test(groups = { "s2" })
 public class CachedLinkTest
 {
 	private final static String testHref = "test href";
@@ -31,5 +31,10 @@ public class CachedLinkTest
 		Link testLink = cl.getLink();
 		Assert.assertEquals(testLink.getHref(), link.getHref());
 		Assert.assertEquals(testLink.getRel(), link.getRel());
+	}
+	@Test
+	public void testGetLink(){
+		CachedLink cl = new CachedLink(link);
+		cl.getLink();
 	}
 }

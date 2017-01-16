@@ -1,11 +1,12 @@
-define([
+define('uifwk/@version@/js/sdk/context-util-impl', [
     'ojs/ojcore',
     'knockout',
     'jquery',
     'uifwk/@version@/js/util/df-util-impl',
-    'uifwk/@version@/js/sdk/entity-object'
+    'uifwk/@version@/js/sdk/entity-object',
+    'uifwk/@version@/js/sdk/SessionCacheUtil'
 ],
-    function (oj, ko, $, dfuModel, EntityObject)
+    function (oj, ko, $, dfuModel, EntityObject, SessionCacheUtil)
     {
         function UIFWKContextUtil() {
             var self = this;
@@ -24,7 +25,7 @@ define([
                 window._uifwk.respectOMCEntityContext = true;
                 window._uifwk.respectOMCTimeContext = true;
             }
-            
+
             self.OMCTimeConstants = {
                 TIME_UNIT: {
                     SECOND: 'SECOND',
@@ -52,20 +53,38 @@ define([
                     CUSTOM: 'CUSTOM'
                 }
             };
-            
+
             //freeze every constant object inside
             Object.freeze(self.OMCTimeConstants.TIME_UNIT);
             Object.freeze(self.OMCTimeConstants.QUICK_PICK);
 
+            //
+            // sessionStorage cache
+            //
+            var sessionCaches = [];
+            var sessionCacheNames = ['_uifwk_omccontextcache_composite', '_uifwk_omccontextcache_entity'];
+            for (var i = 0; i < sessionCacheNames.length; i++) {
+                sessionCaches.push(new SessionCacheUtil(sessionCacheNames[i], 1));
+            }
+            if (window.performance) {
+                //When there're multiple instance of ContextUtil, we should only clear the cache once during a page refresh, otherwise
+                //it may cause cached data lost though composite/entities already fetched
+                if (window.performance.navigation.type === 1 && !window._uifwk.isOmcContextCacheCleared) {
+                    for (var i = 0; i < sessionCaches.length; i++) {
+                        sessionCaches[i].clearCache();
+                    }
+                    window._uifwk.isOmcContextCacheCleared = true;
+                }
+            }
             /**
              * Get URL parameter name for OMC global context.
              * 
              * @returns {String} URL parameter name for OMC global context
              */
-            self.getOMCContextUrlParamName = function() {
+            self.getOMCContextUrlParamName = function () {
                 return omcCtxParamName;
             };
-            
+
             /**
              * Specify whether to respect the OMC application context or not
              * 
@@ -73,10 +92,10 @@ define([
              * 
              * @returns
              */
-            self.respectOMCApplicationContext = function(respectOmcAppCtx) {
+            self.respectOMCApplicationContext = function (respectOmcAppCtx) {
                 window._uifwk.respectOMCApplicationContext = respectOmcAppCtx;
             };
-            
+
             /**
              * Specify whether to respect the OMC entity context or not
              * 
@@ -84,10 +103,10 @@ define([
              * 
              * @returns
              */
-            self.respectOMCEntityContext = function(respectOmcEntityCtx) {
+            self.respectOMCEntityContext = function (respectOmcEntityCtx) {
                 window._uifwk.respectOMCEntityContext = respectOmcEntityCtx;
             };
-            
+
             /**
              * Specify whether to respect the OMC time context or not
              * 
@@ -95,22 +114,64 @@ define([
              * 
              * @returns
              */
-            self.respectOMCTimeContext = function(respectOmcTimeCtx) {
+            self.respectOMCTimeContext = function (respectOmcTimeCtx) {
                 window._uifwk.respectOMCTimeContext = respectOmcTimeCtx;
             };
-            
+
             function getGlobalContext() {
                 var globalCtx = null;
+                //If context already retrieved, fetch it from window object directly
                 if (window._uifwk.omcContext) {
                     globalCtx = window._uifwk.omcContext;
                 }
-                //Otherwise, retrieve the global context from URL parameters
+                //Otherwise, retrieve the context from URL parameters
                 if (!globalCtx) {
                     globalCtx = getContextFromUrl();
+
+                    //Check and fetch cached data from session storage
+                    //composite type/name/display name/class
+                    if (globalCtx && globalCtx['composite'] && globalCtx['composite']['compositeMEID']) {
+                        var compositeCacheKey = globalCtx['composite']['compositeMEID'];
+                        var cache = sessionCaches[0].retrieveDataFromCache(compositeCacheKey);
+                        if (cache) {
+                            if (cache['compositeType']) {
+                                globalCtx['composite']['compositeType'] = cache['compositeType'];
+                            }
+                            if (cache['compositeName']) {
+                                globalCtx['composite']['compositeName'] = cache['compositeName'];
+                            }
+                            if (cache['compositeDisplayName']) {
+                                globalCtx['composite']['compositeDisplayName'] = cache['compositeDisplayName'];
+                            }
+                            if (cache['compositeClass']) {
+                                globalCtx['composite']['compositeClass'] = cache['compositeClass'];
+                            }
+                        }
+                    }
+                    //Entities
+                    if (globalCtx && globalCtx['entity'] && (globalCtx['entity']['entitiesType'] || globalCtx['entity']['entityMEIDs'])) {
+                        var entityCacheKey = null;
+                        var entityMeIds = globalCtx['entity']['entityMEIDs'] ? globalCtx['entity']['entityMEIDs'].split(',') : null;
+                        var entitiesType = globalCtx['entity']['entitiesType'];
+                        if (entityMeIds && entityMeIds.length > 0 && entitiesType) {
+                            entityCacheKey = entityMeIds.sort().join() + entitiesType;
+                        }
+                        else if (entityMeIds && entityMeIds.length > 0) {
+                            entityCacheKey = entityMeIds.sort().join();
+                        }
+                        else if (entitiesType) {
+                            entityCacheKey = entitiesType;
+                        }
+                        var cache = sessionCaches[1].retrieveDataFromCache(entityCacheKey);
+                        if (cache && cache['entities']) {
+                            globalCtx['entity']['entities'] = cache['entities'];
+                        }
+                    }
                 }
+
                 return globalCtx;
             }
-            
+
             function getNonGlobalContext() {
                 var nonGlobalCtx = null;
                 if (window._uifwk.nonGlobalContext) {
@@ -118,7 +179,7 @@ define([
                 }
                 return nonGlobalCtx;
             }
-            
+
             function fetchRespectedOmcContext(context, ctxName, respectOmcCtx) {
                 var globalCtx = getGlobalContext();
                 var nonGlobalCtx = getNonGlobalContext();
@@ -133,7 +194,7 @@ define([
                     }
                 }
             }
-            
+
             function isGlobalContextRespected() {
                 return window._uifwk.respectOMCApplicationContext !== false ||
                     window._uifwk.respectOMCEntityContext !== false ||
@@ -215,7 +276,7 @@ define([
 //                                omcContext[contextName][paramName] = paramValue.split(',');
 //                            }
 //                            else {
-                                omcContext[contextName][paramName] = paramValue;
+                            omcContext[contextName][paramName] = paramValue;
 //                            }
                         }
                     }
@@ -243,11 +304,16 @@ define([
                 var previousCompositeMeId = getIndividualContext('composite', 'backupCompositeMEID');
 //                var omcCtx = self.getOMCContext();
 //                omcCtx.previousCompositeMeId = previousCompositeMeId;
+                if (!context) {
+                    context = {};
+                }
                 context.previousCompositeMeId = previousCompositeMeId;
+                var prevCtx = self.getOMCContext();
                 storeContext(context);
                 if (isGlobalContextRespected()) {
                     updateCurrentURL();
-                    fireOMCContextChangeEvent();
+                    //Fire change event. Need to parse json to avoid data clone error when post message.
+                    fireOMCContextChangeEvent('All', JSON.parse(JSON.stringify(prevCtx)), JSON.parse(JSON.stringify(context)));
                 }
             };
 
@@ -261,7 +327,7 @@ define([
                     window.history.replaceState(window.history.state, document.title, newurl);
                 }
             }
-            
+
             function storeIndividualContext(context, ctxName, respectOmcCtx) {
                 if (context && context[ctxName]) {
                     if (respectOmcCtx !== false) {
@@ -386,7 +452,7 @@ define([
 
                 return newUrl;
             };
-            
+
             /**
              * Get the current OMC global context and append it into the given 
              * URL as parameters. This function is used by custom deep linking 
@@ -411,7 +477,9 @@ define([
              * @returns 
              */
             self.setStartTime = function (startTime) {
-                setIndividualContext('time', 'startTime', parseInt(startTime));
+                if (self.getStartTime() !== parseInt(startTime)) {
+                    setIndividualContext('time', 'startTime', parseInt(startTime));
+                }
             };
 
             /**
@@ -422,9 +490,9 @@ define([
              */
             self.getStartTime = function () {
                 var start = getIndividualContext('time', 'startTime');
-                if(start && !isNaN(parseInt(start))) {
+                if (start && !isNaN(parseInt(start))) {
                     return parseInt(start);
-                }else {
+                } else {
                     return null;
                 }
             };
@@ -436,7 +504,9 @@ define([
              * @returns 
              */
             self.setEndTime = function (endTime) {
-                setIndividualContext('time', 'endTime', parseInt(endTime));
+                if (self.getEndTime() !== parseInt(endTime)) {
+                    setIndividualContext('time', 'endTime', parseInt(endTime));
+                }
             };
 
             /**
@@ -447,9 +517,9 @@ define([
              */
             self.getEndTime = function () {
                 var end = getIndividualContext('time', 'endTime');
-                if(end && !isNaN(parseInt(end))) {
+                if (end && !isNaN(parseInt(end))) {
                     return parseInt(end);
-                }else {
+                } else {
                     return null;
                 }
             };
@@ -474,11 +544,21 @@ define([
              * @returns 
              */
             self.setStartAndEndTime = function (start, end) {
-                setIndividualContext('time', 'timePeriod', 'CUSTOM', false, false);
-                setIndividualContext('time', 'startTime', parseInt(start), false, false);
-                setIndividualContext('time', 'endTime', parseInt(end), true, true);
+                var prevStartTime = self.getStartTime();
+                var prevEndTime = self.getEndTime();
+                if (prevStartTime !== start || prevEndTime !== end) {
+                    setIndividualContext('time', 'timePeriod', 'CUSTOM', false, false);
+                    setIndividualContext('time', 'startTime', parseInt(start), false, false);
+                    setIndividualContext('time', 'endTime', parseInt(end), false, false);
+                    if (isGlobalContextRespected()) {
+                        updateCurrentURL();
+                        fireOMCContextChangeEvent('startEndTime',
+                            {'startTime': prevStartTime, 'endTime': prevEndTime},
+                        {'startTime': start, 'endTime': end});
+                    }
+                }
             };
-            
+
             /**
              * Evaluate start and end time.
              * If both start and end are avail in global context, return them directly.
@@ -487,25 +567,25 @@ define([
              * 
              * @returns {start: <start timestamp in Number>, end: <end timestamp in Number>} or null
              */
-            self.evaluateStartEndTime = function() {
+            self.evaluateStartEndTime = function () {
                 var start = self.getStartTime();
                 var end = self.getEndTime();
                 var timePeriod = self.getTimePeriod();
-                if(start && end) {
+                if (start && end) {
                     return {
                         start: start,
                         end: end
-                    }
-                }else if(timePeriod) {
+                    };
+                } else if (timePeriod) {
                     var timeRange = self.getStartEndTimeFromTimePeriod(timePeriod);
-                    if(timeRange) {
+                    if (timeRange) {
                         return {
                             start: timeRange.start.getTime(),
                             end: timeRange.end.getTime()
-                        }
+                        };
                     }
-                    return timeRange
-                }else {
+                    return timeRange;
+                } else {
                     return null;
                 }
             };
@@ -532,7 +612,7 @@ define([
                 var tpPattern = new RegExp("^LAST_[1-9]{1}[0-9]*_(SECOND|MINUTE|HOUR|DAY|WEEK|MONTH|YEAR){1}$");
                 return tpPattern.test(timePeriod);
             };
-            
+
             /**
              * Generate "LAST_X_UNIT" from time unit and time duration
              * 
@@ -541,13 +621,13 @@ define([
              * @returns {String} - formalized time period like "LAST_X_UNIT"
              */
             self.generateTimePeriodFromUnitAndDuration = function (unit, duration) {
-                if(!self.OMCTimeConstants.TIME_UNIT[unit]) {
+                if (!self.OMCTimeConstants.TIME_UNIT[unit]) {
                     console.log("Invalid unit: " + unit + " to generateTimePeriodFromUnitAndDuration");
                     return null;
                 }
-                if(duration <=0 || isNaN(parseInt(duration))) {
+                if (duration <= 0 || isNaN(parseInt(duration))) {
                     console.log("Invalid duration: " + duration + " to generateTimePeriodFromUnitAndDuration");
-                    return null;   
+                    return null;
                 }
                 var arr = [];
                 arr[0] = "LAST";
@@ -555,26 +635,26 @@ define([
                 arr[2] = self.OMCTimeConstants.TIME_UNIT[unit];
                 return arr.join("_");
             };
-            
+
             /**
              * Parse user specified time period or OMC context time period to unit and duration
              * 
              * @param {type} timePeriod
              * @returns 
              */
-            self.parseTimePeriodToUnitAndDuration = function(timePeriod) {
+            self.parseTimePeriodToUnitAndDuration = function (timePeriod) {
                 var tp = null;
-                if(!timePeriod) {
+                if (!timePeriod) {
                     tp = self.getTimePeriod();
-                }else {
+                } else {
                     tp = timePeriod;
                 }
-                
-                if(!self.isValidTimePeriod(tp)) {
+
+                if (!self.isValidTimePeriod(tp)) {
                     console.log("Invalid time period: " + tp + " in parseTimePeriodToUnitAndDuration");
                     return null;
                 }
-                
+
                 var arr = tp.split("_");
                 return {
                     unit: arr[2],
@@ -606,7 +686,7 @@ define([
                     return {
                         start: end,
                         end: end
-                    }
+                    };
                 } else if (self.isValidTimePeriod(timePeriod)) {
                     arr = timePeriod.split("_");
                     num = arr[1];
@@ -655,59 +735,59 @@ define([
             self.getTimePeriod = function () {
                 return getIndividualContext('time', 'timePeriod');
             };
-            
+
             /**
              * Get OMC global context of time period duration
              * 
              * @returns time period duration number or null
              */
-            self.getTimePeriodDuration = function() {
+            self.getTimePeriodDuration = function () {
                 var tp = self.parseTimePeriodToUnitAndDuration();
-                if(tp) {
+                if (tp) {
                     return tp.duration;
-                }else {
+                } else {
                     return null;
                 }
             };
-            
+
             /**
              * Set OMC context of time period duration
              * 
              * @param {type} duration
              * @returns {undefined}
              */
-            self.setTimePeriodDuration = function(duration) {
+            self.setTimePeriodDuration = function (duration) {
                 var tp = self.parseTimePeriodToUnitAndDuration();
                 tp && (tp = self.generateTimePeriodFromUnitAndDuration(tp.unit, parseInt(duration)));
                 tp && self.setTimePeriod(tp);
             };
-            
+
             /**
              * Get OMC global context of time period unit
              * 
              * @returns time period unit or null
              */
-            self.getTimePeriodUnit = function() {
+            self.getTimePeriodUnit = function () {
                 var tp = self.parseTimePeriodToUnitAndDuration();
-                if(tp) {
+                if (tp) {
                     return tp.unit;
-                }else {
+                } else {
                     return null;
                 }
             };
-            
+
             /**
              * Set OMC context of time period unit
              * 
              * @param {type} unit
              * @returns {undefined}
              */
-            self.setTimePeriodUnit = function(unit) {
+            self.setTimePeriodUnit = function (unit) {
                 var tp = self.parseTimePeriodToUnitAndDuration();
                 tp && (tp = self.generateTimePeriodFromUnitAndDuration(unit, tp.duration));
                 tp && self.setTimePeriod(tp);
             };
-            
+
             /**
              * Set OMC context time period unit and duration at the same time
              * 
@@ -715,11 +795,11 @@ define([
              * @param {type} duration
              * @returns {undefined}
              */
-            self.setTimePeriodUnitAndDuration = function(unit, duration) {
+            self.setTimePeriodUnitAndDuration = function (unit, duration) {
                 var tp = self.generateTimePeriodFromUnitAndDuration(unit, duration);
                 tp && self.setTimePeriod(tp);
             };
-            
+
             /**
              * Set OMC global context of composite guid.
              * 
@@ -732,14 +812,14 @@ define([
                     omcContext.previousCompositeMeId = self.getCompositeMeId();
                     storeContext(omcContext);
 
-                    setIndividualContext('composite', 'compositeMEID', compositeMEID, false, false);
                     //Set composite meId will reset composite type/name, 
                     //next time you get the composite type/name will return the new type/name
                     setIndividualContext('composite', 'compositeType', null, false, false);
                     setIndividualContext('composite', 'compositeName', null, false, false);
                     setIndividualContext('composite', 'compositeDisplayName', null, false, false);
                     setIndividualContext('composite', 'compositeEntity', null, false, false);
-                    setIndividualContext('composite', 'compositeNeedRefresh', true, true, false);
+                    setIndividualContext('composite', 'compositeNeedRefresh', true, false, false);
+                    setIndividualContext('composite', 'compositeMEID', compositeMEID, true, false);
                 }
             };
 
@@ -807,6 +887,12 @@ define([
                     return compositeType;
                 }
                 else if (self.getCompositeMeId() && getIndividualContext('composite', 'compositeNeedRefresh') !== 'false') {
+                    //sessionStorage cache
+                    var compositeCacheKey = self.getCompositeMeId();
+                    var cache = sessionCaches[0].retrieveDataFromCache(compositeCacheKey);
+                    if (cache && cache['compositeType']) {
+                        return cache['compositeType'];
+                    }
                     //Fetch composite name/type
                     queryODSEntitiesByMeIds([self.getCompositeMeId()], fetchCompositeCallback);
                 }
@@ -835,6 +921,12 @@ define([
                     return compositeName;
                 }
                 else if (self.getCompositeMeId() && getIndividualContext('composite', 'compositeNeedRefresh') !== 'false') {
+                    //sessionStorage cache
+                    var compositeCacheKey = self.getCompositeMeId();
+                    var cache = sessionCaches[0].retrieveDataFromCache(compositeCacheKey);
+                    if (cache && cache['compositeName']) {
+                        return cache['compositeName'];
+                    }
                     //Fetch composite name/type
                     queryODSEntitiesByMeIds([self.getCompositeMeId()], fetchCompositeCallback);
                 }
@@ -853,6 +945,12 @@ define([
                     return compositeDisplayName;
                 }
                 else if (self.getCompositeMeId() && getIndividualContext('composite', 'compositeNeedRefresh') !== 'false') {
+                    //sessionStorage cache
+                    var compositeCacheKey = self.getCompositeMeId();
+                    var cache = sessionCaches[0].retrieveDataFromCache(compositeCacheKey);
+                    if (cache && cache['compositeDisplayName']) {
+                        return cache['compositeDisplayName'];
+                    }
                     //Fetch composite name/type
                     queryODSEntitiesByMeIds([self.getCompositeMeId()], fetchCompositeCallback);
                 }
@@ -876,6 +974,12 @@ define([
                     return compositeClass;
                 }
                 else if (self.getCompositeMeId() && getIndividualContext('composite', 'compositeNeedRefresh') !== 'false') {
+                    //sessionStorage cache
+                    var compositeCacheKey = self.getCompositeMeId();
+                    var cache = sessionCaches[0].retrieveDataFromCache(compositeCacheKey);
+                    if (cache && cache['compositeClass']) {
+                        return cache['compositeClass'];
+                    }
                     //Fetch composite name/type
                     queryODSEntitiesByMeIds([self.getCompositeMeId()], fetchCompositeCallback);
                 }
@@ -917,16 +1021,20 @@ define([
 
                 //If it's an array, convert to a comma separated string
                 if ($.isArray(entityMEIDs)) {
-                    meIds = entityMEIDs.join();
+                    meIds = entityMEIDs.sort().join();
                 }
 //                //If it's a string
                 else if (entityMEIDs) {
                     meIds = entityMEIDs;
                 }
-                setIndividualContext('entity', 'entityMEIDs', meIds, true, true);
-                //Set entity meIds will reset the cached entity objects, 
-                //next time you get the entities will return the new ones
-                setIndividualContext('entity', 'entities', null, false, false);
+                var currentEntityIds = self.getEntityMeIds();
+                if (meIds !== (currentEntityIds ? currentEntityIds.sort().join() : null)) {
+                    console.log("****************** updating entity ids");
+                    setIndividualContext('entity', 'entityMEIDs', meIds, true, true);
+                    //Set entity meIds will reset the cached entity objects, 
+                    //next time you get the entities will return the new ones
+                    setIndividualContext('entity', 'entities', null, false, false);
+                }
             };
 
             /**
@@ -954,7 +1062,9 @@ define([
              * @returns 
              */
             self.setEntitiesType = function (entitiesType) {
-                setIndividualContext('entity', 'entitiesType', entitiesType);
+                if (self.getEntitiesType() !== entitiesType) {
+                    setIndividualContext('entity', 'entitiesType', entitiesType);
+                }
             };
 
             /**
@@ -994,7 +1104,14 @@ define([
              * @returns 
              */
             self.clearCompositeContext = function () {
-                clearIndividualContext('composite');
+                var compositeCacheKey = self.getCompositeMeId();
+                if (compositeCacheKey) {
+                    sessionCaches[0].updateCacheData(compositeCacheKey, 'compositeDisplayName', null);
+                    sessionCaches[0].updateCacheData(compositeCacheKey, 'compositeName', null);
+                    sessionCaches[0].updateCacheData(compositeCacheKey, 'compositeType', null);
+                    sessionCaches[0].updateCacheData(compositeCacheKey, 'compositeClass', null);
+                    clearIndividualContext('composite');
+                }
             };
 
             /**
@@ -1014,6 +1131,10 @@ define([
              * @returns 
              */
             self.clearEntityContext = function () {
+                var entityCacheKey = getEntityCacheKey();
+                if (entityCacheKey) {
+                    sessionCaches[1].updateCacheData(entityCacheKey, 'entities', null);
+                }
                 clearIndividualContext('entity');
             };
 
@@ -1031,32 +1152,42 @@ define([
                 else {
                     var entityMeIds = self.getEntityMeIds();
                     var entitiesType = self.getEntitiesType();
-                    entities = [];
-                    if (entityMeIds && entityMeIds.length > 0 && entitiesType) {
-                        //Query entities by meIds and filter by entites type
-                        queryODSEntitiesByMeIds(entityMeIds, loadEntities);
-                        for (var i = 0; i < entitiesFetched.length; i++) {
-                            var entity = entitiesFetched[i];
-                            if (entity['entityType'] === entitiesType) {
-                                entities.push(entity);
-                            }
-                        }
-                    }
-                    else if (entityMeIds && entityMeIds.length > 0) {
-                        //Query entities by meIds
-                        queryODSEntitiesByMeIds(entityMeIds, loadEntities);
-                        for (var i = 0; i < entitiesFetched.length; i++) {
-                            entities.push(entitiesFetched[i]);
-                        }
-                    }
-                    else if (entitiesType) {
-                        //Query by entities type
-                        queryODSEntitiesByEntityType(entitiesType, loadEntities);
-                        for (var i = 0; i < entitiesFetched.length; i++) {
-                            entities.push(entitiesFetched[i]);
-                        }
+                    //sessionStorage cache
+                    var entityCacheKey = getEntityCacheKey();
+                    var cache = sessionCaches[1].retrieveDataFromCache(entityCacheKey);
+                    if (cache) {
+                        entities = cache['entities'];
                     }
 
+                    if (!entities) {
+                        entities = [];
+                        if (entityMeIds && entityMeIds.length > 0 && entitiesType) {
+                            //Query entities by meIds and filter by entites type
+                            queryODSEntitiesByMeIds(entityMeIds, loadEntities);
+                            for (var i = 0; i < entitiesFetched.length; i++) {
+                                var entity = entitiesFetched[i];
+                                if (entity['entityType'] === entitiesType) {
+                                    entities.push(entity);
+                                }
+                            }
+                        }
+                        else if (entityMeIds && entityMeIds.length > 0) {
+                            //Query entities by meIds
+                            queryODSEntitiesByMeIds(entityMeIds, loadEntities);
+                            for (var i = 0; i < entitiesFetched.length; i++) {
+                                entities.push(entitiesFetched[i]);
+                            }
+                        }
+                        else if (entitiesType) {
+                            //Query by entities type
+                            queryODSEntitiesByEntityType(entitiesType, loadEntities);
+                            for (var i = 0; i < entitiesFetched.length; i++) {
+                                entities.push(entitiesFetched[i]);
+                            }
+                        }
+                        // update sessionStorage cache
+                        sessionCaches[1].updateCacheData(entityCacheKey, 'entities', entities);
+                    }
                     //Cache the entities data
                     var omcCtx = self.getOMCContext();
                     if (!omcCtx['entity']) {
@@ -1102,6 +1233,70 @@ define([
                 }
             };
 
+            /**
+             * Add event change listener for global context change
+             *
+             * @param {Function} callback Callback function for the listener
+             *
+             * @returns
+             */
+            self.subscribeOMCContextChangeEvent = function (callback) {
+                function onCtxChange(event) {
+                    if (event.origin !== window.location.protocol + '//' + window.location.host) {
+                        return;
+                    }
+                    var data = event.data;
+                    //Only handle received message for global context change
+                    if (data && data.tag && data.tag === 'EMAAS_OMC_GLOBAL_CONTEXT_UPDATED') {
+                        if ($.isFunction(callback)) {
+                            callback(data);
+                        }
+                    }
+                }
+                ;
+                window.addEventListener("message", onCtxChange, false);
+            };
+
+            /**
+             * Add event change listener for topology status change when it's opened or closed
+             *
+             * @param {Function} callback Callback function for the listener
+             *
+             * @returns
+             */
+            self.subscribeTopologyStatusChangeEvent = function (callback) {
+                function onTopologyStatusChange(event) {
+                    if (event.origin !== window.location.protocol + '//' + window.location.host) {
+                        return;
+                    }
+                    var data = event.data;
+                    //Only handle received message for topology status change when it's opened or closed
+                    if (data && data.tag && data.tag === 'EMAAS_OMC_TOPOLOGY_STATUS_UPDATED') {
+                        if ($.isFunction(callback)) {
+                            callback(data);
+                        }
+                    }
+                }
+                ;
+                window.addEventListener("message", onTopologyStatusChange, false);
+            };
+
+            function getEntityCacheKey() {
+                var entityCacheKey = null;
+                var entityMeIds = self.getEntityMeIds();
+                var entitiesType = self.getEntitiesType();
+                if (entityMeIds && entityMeIds.length > 0 && entitiesType) {
+                    entityCacheKey = entityMeIds.sort().join() + entitiesType;
+                }
+                else if (entityMeIds && entityMeIds.length > 0) {
+                    entityCacheKey = entityMeIds.sort().join();
+                }
+                else if (entitiesType) {
+                    entityCacheKey = entitiesType;
+                }
+                return entityCacheKey;
+            }
+
             function afterBrandingBarInstantiated(callback) {
                 function receiveMessage(event) {
                     if (event.origin !== window.location.protocol + '//' + window.location.host) {
@@ -1120,11 +1315,19 @@ define([
             /**
              * Fire OMC change event when omc context is updated.
              * 
-             * @param {Object} currentCtx Current OMC context
+             * @param {String} contextName Name of the updated context
+             * @param {Object or String} previousValue Value before change
+             * @param {Object or String} currentValue Value after change
+             * @param {boolean} ignoreContextInfo if true, don't include context info since context info may contain functions
              * @returns 
              */
-            function fireOMCContextChangeEvent(currentCtx) {
-                var message = {'tag': 'EMAAS_OMC_GLOBAL_CONTEXT_UPDATED', 'currentCtx': currentCtx};
+            function fireOMCContextChangeEvent(contextName, previousValue, currentValue, ignoreContextInfo) {
+                var message = {'tag': 'EMAAS_OMC_GLOBAL_CONTEXT_UPDATED'};
+                message.contextName = contextName;
+                if (!ignoreContextInfo) {
+                    message.previousValue = previousValue;
+                    message.currentValue = currentValue;
+                }
                 window.postMessage(message, window.location.href);
             }
 
@@ -1138,11 +1341,12 @@ define([
                 if (contextName) {
                     var omcContext = self.getOMCContext();
                     if (omcContext[contextName]) {
+                        var previousValue = omcContext[contextName];
                         delete omcContext[contextName];
                         storeContext(omcContext);
                         if (isGlobalContextRespected()) {
                             updateCurrentURL();
-                            fireOMCContextChangeEvent();
+                            fireOMCContextChangeEvent(contextName, JSON.parse(JSON.stringify(previousValue)), null);
                         }
                     }
                 }
@@ -1162,10 +1366,15 @@ define([
             function setIndividualContext(contextName, paramName, value, fireChangeEvent, replaceState, raw) {
                 if (contextName && paramName) {
                     var omcContext = self.getOMCContext();
+                    var previousValue = null;
+                    var currentValue = value;
                     //If value is not null and not empty
                     if (value) {
                         if (!omcContext[contextName]) {
                             omcContext[contextName] = {};
+                        }
+                        if (omcContext[contextName][paramName]) {
+                            previousValue = omcContext[contextName][paramName];
                         }
                         if (raw) {
                             omcContext[contextName][paramName] = value;
@@ -1175,15 +1384,44 @@ define([
                     }
                     //Otherwise, if value is null or empty then clear the context
                     else if (omcContext[contextName] && omcContext[contextName][paramName]) {
+                        previousValue = omcContext[contextName][paramName];
                         delete omcContext[contextName][paramName];
+                    }
+
+                    //Set new evaluated start, end time when time period is updated
+                    if (paramName === 'timePeriod') {
+                        //Get previous evaluated start, end time
+                        var prevEvaluatedStartEndTime = getIndividualContext('time', 'evaluatedStartEndTime');
+                        var curEvaluatedStartEndTime = null;
+                        var timeRange = self.getStartEndTimeFromTimePeriod(value);
+                        if (timeRange) {
+                            curEvaluatedStartEndTime = {
+                                start: timeRange.start.getTime(),
+                                end: timeRange.end.getTime()
+                            };
+                        }
+                        if (value) {
+                            omcContext[contextName]['evaluatedStartEndTime'] = curEvaluatedStartEndTime;
+                        }
+                        previousValue = {'timePeriod': previousValue,
+                            'startTime': prevEvaluatedStartEndTime ? prevEvaluatedStartEndTime.start : null,
+                            'endTime': prevEvaluatedStartEndTime ? prevEvaluatedStartEndTime.end : null};
+                        currentValue = {'timePeriod': value,
+                            'startTime': curEvaluatedStartEndTime ? curEvaluatedStartEndTime.start : null,
+                            'endTime': curEvaluatedStartEndTime ? curEvaluatedStartEndTime.end : null};
                     }
                     storeContext(omcContext);
                     if (isGlobalContextRespected()) {
                         updateCurrentURL(replaceState);
+                        var ignoreContextInfo = false;
                         if (fireChangeEvent !== false) {
-                            fireOMCContextChangeEvent();
+                            if (contextName === 'topology') {
+                                ignoreContextInfo = true;
+                            }
+                            fireOMCContextChangeEvent(paramName, previousValue, currentValue, ignoreContextInfo);
                         }
                     }
+
                 }
             }
 
@@ -1236,12 +1474,12 @@ define([
                         return url.replace(pattern, '$1$3').replace(/(&|\?)$/, '') + hash;
                     }
                 }
-                
+
                 //If value is not empty, append it to the URL
                 if (paramValue) {
-                    return url + (url.indexOf('?') > 0 ? 
-                    //Handle case that an URL ending with a question mark only
-                    (url.lastIndexOf('?') === url.length - 1 ? '': '&') : '?') + paramName + '=' + paramValue + hash; 
+                    return url + (url.indexOf('?') > 0 ?
+                        //Handle case that an URL ending with a question mark only
+                            (url.lastIndexOf('?') === url.length - 1 ? '' : '&') : '?') + paramName + '=' + paramValue + hash;
                 }
                 //If value is empty, return original URL
                 return url;
@@ -1384,20 +1622,26 @@ define([
             }
 
             function fetchCompositeCallback(data) {
+                var compositeDisplayName = null, compositeName = null, compositeType = null, compositeClass = null;
                 if (data && data['rows'] && data['rows'].length > 0) {
                     var entity = data['rows'][0];
-                    setIndividualContext('composite', 'compositeDisplayName', entity[1], false, false);
-                    setIndividualContext('composite', 'compositeName', entity[2], false, false);
-                    setIndividualContext('composite', 'compositeType', entity[4], false, false);
-                    setIndividualContext('composite', 'compositeClass', entity[5], false, false);
+                    compositeDisplayName = entity[1];
+                    compositeName = entity[2];
+                    compositeType = entity[4];
+                    compositeClass = entity[5];
                 }
-                else {
-                    setIndividualContext('composite', 'compositeDisplayName', null, false, false);
-                    setIndividualContext('composite', 'compositeName', null, false, false);
-                    setIndividualContext('composite', 'compositeType', null, false, false);
-                    setIndividualContext('composite', 'compositeClass', null, false, false);
-                }
-                setIndividualContext('composite', 'compositeNeedRefresh', 'false', true, true);
+                setIndividualContext('composite', 'compositeDisplayName', compositeDisplayName, false, false);
+                setIndividualContext('composite', 'compositeName', compositeName, false, false);
+                setIndividualContext('composite', 'compositeType', compositeType, false, false);
+                setIndividualContext('composite', 'compositeClass', compositeClass, false, false);
+                // cache
+                var compositeCacheKey = self.getCompositeMeId();
+                sessionCaches[0].updateCacheData(compositeCacheKey, 'compositeDisplayName', compositeDisplayName);
+                sessionCaches[0].updateCacheData(compositeCacheKey, 'compositeName', compositeName);
+                sessionCaches[0].updateCacheData(compositeCacheKey, 'compositeType', compositeType);
+                sessionCaches[0].updateCacheData(compositeCacheKey, 'compositeClass', compositeClass);
+
+                setIndividualContext('composite', 'compositeNeedRefresh', 'false', false, true);
             }
 
             function executeODSQuery(jsonOdsQuery, callback) {
@@ -1428,7 +1672,6 @@ define([
                 return odsUrl;
             }
         }
-
         return UIFWKContextUtil;
     }
     );

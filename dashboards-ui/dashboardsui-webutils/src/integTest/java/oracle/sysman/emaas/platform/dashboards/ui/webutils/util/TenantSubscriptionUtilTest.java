@@ -20,6 +20,10 @@ import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.TenantSubscripti
 
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.subscription.SubscribedAppCacheUtil;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.subscription.SubscribedApps;
+import oracle.sysman.emaas.platform.emcpdf.cache.api.ICache;
+import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
+import oracle.sysman.emaas.platform.emcpdf.cache.exception.ExecutionException;
+import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -333,18 +337,20 @@ public class TenantSubscriptionUtilTest
 	// @formatter:off
 
 	@Test(groups = { "s2" })
-	public void testGetTenantSubscribedServicesIOExceptionS2(@Mocked final SubscribedAppCacheUtil cacheUtil, @Mocked RegistryLookupUtil anyUtil,
-			@Mocked final RestClient anyClient, @Mocked final JsonUtil anyJsonUtil) throws IOException
-	{
+	public void testGetTenantSubscribedServicesIOExceptionS2(@Mocked final CacheManagers anyCacheManagers, @Mocked final ICacheManager anyCacheManager,
+															 @Mocked final ICache anyCache, @Mocked RegistryLookupUtil anyUtil,
+															 @Mocked final RestClient anyClient, @Mocked final JsonUtil anyJsonUtil) throws IOException, ExecutionException {
 		final Link link = new Link();
 
 		link.withHref("http://slc04pgi.us.oracle.com:7019/emcpdf/api/v1/subscribedapps");
 		link.withRel("");
 		new Expectations() {
 			{
-				SubscribedAppCacheUtil.getInstance();
-				result = cacheUtil;
-				cacheUtil.get(anyString);
+				CacheManagers.getInstance().build();
+				result = anyCacheManager;
+				anyCacheManager.getCache(anyString);
+				result = anyCache;
+				anyCache.get(any);
 				result = null;
 
 				RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, anyString);
@@ -371,16 +377,19 @@ public class TenantSubscriptionUtilTest
 	}
 
 	@Test(groups = {"s2"})
-	public void testGetTenantSubscribedServicesFromCache(@Mocked final SubscribedAppCacheUtil cacheUtil) {
+	public void testGetTenantSubscribedServicesFromCache(@Mocked final CacheManagers anyCacheManagers, @Mocked final ICacheManager anyCacheManager,
+														 @Mocked final ICache anyCache) throws ExecutionException {
 		String tenant = "tenant";
 		final List<String> apps = Arrays.asList("ITA", "APM");
 		SubscribedAppCacheUtil sacu = SubscribedAppCacheUtil.getInstance();
 		sacu.put(tenant, apps);
 		new Expectations() {
 			{
-				SubscribedAppCacheUtil.getInstance();
-				result = cacheUtil;
-				cacheUtil.get(anyString);
+				CacheManagers.getInstance().build();
+				result = anyCacheManager;
+				anyCacheManager.getCache(anyString);
+				result = anyCache;
+				anyCache.get(any);
 				result = apps;
 			}
 		};
@@ -389,18 +398,20 @@ public class TenantSubscriptionUtilTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testGetTenantSubscribedServicesS2(@Mocked final SubscribedAppCacheUtil cacheUtil, @Mocked RegistryLookupUtil anyUtil,
-												  @Mocked final RestClient anyClient)
-	{
+	public void testGetTenantSubscribedServicesS2(@Mocked final CacheManagers anyCacheManagers, @Mocked final ICacheManager anyCacheManager,
+												  @Mocked final ICache anyCache, @Mocked RegistryLookupUtil anyUtil,
+												  @Mocked final RestClient anyClient) throws ExecutionException {
 		final Link link = new Link();
 
 		link.withHref("http://slc04pgi.us.oracle.com:7019/emcpdf/api/v1/subscribedapps");
 		link.withRel("");
 		new Expectations() {
 			{
-				SubscribedAppCacheUtil.getInstance();
-				result = cacheUtil;
-				cacheUtil.get(anyString);
+				CacheManagers.getInstance().build();
+				result = anyCacheManager;
+				anyCacheManager.getCache(anyString);
+				result = anyCache;
+				anyCache.get(any);
 				result = null;
 
 				RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, anyString);

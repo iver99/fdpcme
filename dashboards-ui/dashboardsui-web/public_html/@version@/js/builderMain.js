@@ -281,7 +281,19 @@ require(['knockout',
                 appId: self.appId,
                 isAdmin:true,
                 showGlobalContextBanner: ko.observable(false),
-                showTimeSelector: ko.observable(false)
+                showTimeSelector: ko.observable(false),
+                timeSelectorParams: {
+                    startDateTime: ko.observable(null),
+                    endDateTime: ko.observable(null),
+                    timePeriod: ko.observable("LAST_14_DAY"),
+                    timePeriodsNotToShow: ko.observable([]),
+                    hideMainLabel: true,
+                    callbackAfterApply: null
+                },
+                showEntitySelector: ko.observable(false),
+                entityContextParams: {
+                    readOnly: true
+                }
             };
 
             $("#headerWrapper").on("DOMSubtreeModified", function() {
@@ -326,6 +338,7 @@ require(['knockout',
             }
 
             var headerViewModel = new DashboardsetHeaderViewModel();
+            ko.applyBindings({}, $('#loading')[0]);  //to make text binding on loading work
             ko.applyBindings(headerViewModel, $('#headerWrapper')[0]);
 
             new Builder.DashboardDataSource().loadDashboardData(dsbId, function (dashboard) {

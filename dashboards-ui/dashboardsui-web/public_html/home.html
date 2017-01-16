@@ -2,7 +2,7 @@
 
 <!-- Dashboards home -->
 
-<html data-testapiversion="1.13.0" lang="en-US">
+<html data-testapiversion="1.15.0" lang="en-US">
     <head>
         <title data-bind="text:homeTitle"></title>
         
@@ -19,7 +19,7 @@
         <script data-main="@version@/js/homeMain" src="libs/@version@/js/oraclejet/js/libs/require/require.js"></script>
     </head>
     <body>
-        <div class="loadingIndicator" id="loading">Loading</div>
+        <div class="loadingIndicator" id="loading" data-bind="text:getNlsString('DBS_HOME_LOADING')"></div>
         <div id="globalBody" style="display: none"> 
             <!-- Header section which contains the Global Branding, Global Navigation, and Application Navigation code.
                 Template is located in /templates/demoAppHeaderTemplate.html

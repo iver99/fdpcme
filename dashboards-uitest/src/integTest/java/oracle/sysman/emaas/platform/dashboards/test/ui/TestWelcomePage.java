@@ -42,6 +42,36 @@ public class TestWelcomePage extends LoginAndLogout
 	}
 
 	@Test
+	public void testOpenCompliancePage()
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test opening Compliance in welcome page...");
+
+		BrandingBarUtil.visitWelcome(webd);
+		WelcomeUtil.visitCompliance(webd);
+
+		//verify the url of opened page
+		DashBoardUtils.verifyURL_WithPara(webd, "complianceuiservice/index.html");
+
+		webd.getLogger().info("Test open Compliance in welcome page finished!!!");
+	}
+
+	//	@Test
+	//	public void testOpenServiceOfferingPage()
+	//	{
+	//		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+	//		webd.getLogger().info("Start to test opening 'Service Offerings' in welcome page...");
+	//
+	//		BrandingBarUtil.visitWelcome(webd);
+	//		WelcomeUtil.learnMoreServiceOffering(webd);
+	//		webd.switchToWindow();
+	//		String tmpUrl = webd.getWebDriver().getCurrentUrl();
+	//		webd.getLogger().info("Open 'Service Offerings' by url: " + tmpUrl);
+	//		Assert.assertEquals(tmpUrl, "https://cloud.oracle.com/management");
+	//		webd.getLogger().info("Test opening 'Service Offerings' in welcome page finished!!!");
+	//	}
+
+	@Test
 	public void testOpenDashboardPage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -69,21 +99,6 @@ public class TestWelcomePage extends LoginAndLogout
 		DashBoardUtils.verifyURL(webd, "emlacore/html/log-analytics-search.html");
 
 		webd.getLogger().info("Test opening Data Explorers-Log in welcome page finished!!!");
-	}
-
-	@Test
-	public void testOpenDE_SearchPage()
-	{
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start to test opening Data Explorers-Search in welcome page...");
-
-		BrandingBarUtil.visitWelcome(webd);
-		WelcomeUtil.dataExplorers(webd, "search");
-
-		//verify the url of opened page
-		DashBoardUtils.verifyURL(webd, "emcta/ta/analytics.html");
-
-		webd.getLogger().info("Test opening Data Explorers-Search in welcome page finished!!!");
 	}
 
 	//	@Test
@@ -114,6 +129,66 @@ public class TestWelcomePage extends LoginAndLogout
 	//		urlVerification(tmpUrl, "monitoringservicesui/cms/index.html");
 	//		webd.getLogger().info("Test open Infrastructure Monitoring in welcome page finished!!!");
 	//	}
+
+	@Test
+	public void testOpenDE_SearchPage()
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test opening Data Explorers-Search in welcome page...");
+
+		BrandingBarUtil.visitWelcome(webd);
+		WelcomeUtil.dataExplorers(webd, "search");
+
+		//verify the url of opened page
+		DashBoardUtils.verifyURL(webd, "emcta/ta/analytics.html");
+
+		webd.getLogger().info("Test opening Data Explorers-Search in welcome page finished!!!");
+	}
+
+	@Test
+	public void testOpenInfrastructureMonitoringPage()
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test opening Infrastructure Monitoring in welcome page...");
+
+		BrandingBarUtil.visitWelcome(webd);
+		WelcomeUtil.visitInfraMonitoring(webd);
+
+		//verify the url of opened page
+		DashBoardUtils.verifyURL(webd, "monitoringservicesui/cms/index.html");
+
+		webd.getLogger().info("Test opening Infrastructure Monitoring in welcome page finished!!!");
+	}
+
+	@Test
+	public void testOpenITA_ApPrefPage()
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test opening ITA: Application Performance Analytics in welcome page...");
+
+		BrandingBarUtil.visitWelcome(webd);
+		WelcomeUtil.visitITA(webd, "applicationPerformanceAnalytic");
+
+		//verify the url of opened page
+		DashBoardUtils.verifyURL(webd, "emcitas/ap-analytics-war/html/ap-perf-analytics.html");
+
+		webd.getLogger().info("Test opening ITA: Application Performance Analytics in welcome page finished!!!");
+	}
+
+	@Test
+	public void testOpenITA_AvailPage()
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test opening ITA: Availability Analytics in welcome page...");
+
+		BrandingBarUtil.visitWelcome(webd);
+		WelcomeUtil.visitITA(webd, "availabilityAnalytics");
+
+		//verify the url of opened page
+		DashBoardUtils.verifyURL(webd, "emcitas/avail-analytics-war/html/avail-analytics-home.html");
+
+		webd.getLogger().info("Test opening ITA: Availability Analytics in welcome page finished!!!");
+	}
 
 	@Test
 	public void testOpenITA_DEPage()
@@ -219,37 +294,7 @@ public class TestWelcomePage extends LoginAndLogout
 
 		webd.getLogger().info("Test opening ITA: Application Server Analytics in welcome page finished!!!");
 	}
-	
-	@Test
-	public void testOpenITA_ApPrefPage()
-	{
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start to test opening ITA: Application Performance Analytics in welcome page...");
 
-		BrandingBarUtil.visitWelcome(webd);
-		WelcomeUtil.visitITA(webd, "applicationPerformanceAnalytic");
-
-		//verify the url of opened page
-		DashBoardUtils.verifyURL(webd, "emcitas/ap-analytics-war/html/ap-perf-analytics.html");
-
-		webd.getLogger().info("Test opening ITA: Application Performance Analytics in welcome page finished!!!");
-	}
-	
-	@Test
-	public void testOpenITA_AvailPage()
-	{
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start to test opening ITA: Availability Analytics in welcome page...");
-
-		BrandingBarUtil.visitWelcome(webd);
-		WelcomeUtil.visitITA(webd, "availabilityAnalytics");
-
-		//verify the url of opened page
-		DashBoardUtils.verifyURL(webd, "emcitas/avail-analytics-war/html/avail-analytics-home.html");
-
-		webd.getLogger().info("Test opening ITA: Availability Analytics in welcome page finished!!!");
-	}
-	
 	@Test
 	public void testOpenITAPage()
 	{
@@ -286,20 +331,35 @@ public class TestWelcomePage extends LoginAndLogout
 		webd.getLogger().info("Test open LA in welcome page finished!!!");
 	}
 
-	//	@Test
-	//	public void testOpenServiceOfferingPage()
-	//	{
-	//		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-	//		webd.getLogger().info("Start to test opening 'Service Offerings' in welcome page...");
-	//
-	//		BrandingBarUtil.visitWelcome(webd);
-	//		WelcomeUtil.learnMoreServiceOffering(webd);
-	//		webd.switchToWindow();
-	//		String tmpUrl = webd.getWebDriver().getCurrentUrl();
-	//		webd.getLogger().info("Open 'Service Offerings' by url: " + tmpUrl);
-	//		Assert.assertEquals(tmpUrl, "https://cloud.oracle.com/management");
-	//		webd.getLogger().info("Test opening 'Service Offerings' in welcome page finished!!!");
-	//	}
+	@Test
+	public void testOpenOrchestrationPage()
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test opening Orchestration in welcome page...");
+
+		BrandingBarUtil.visitWelcome(webd);
+		WelcomeUtil.visitOrchestration(webd);
+
+		//verify the url of opened page
+		DashBoardUtils.verifyURL_WithPara(webd, "emcpdfui/home.html?filter=ocs");
+
+		webd.getLogger().info("Test open Security Analytics in welcome page finished!!!");
+	}
+
+	@Test
+	public void testOpenSecurityPage()
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test opening Security Analytics in welcome page...");
+
+		BrandingBarUtil.visitWelcome(webd);
+		WelcomeUtil.visitSecurity(webd);
+
+		//verify the url of opened page
+		DashBoardUtils.verifyURL_WithPara(webd, "saui/web/index.html?L0=userBehaviors&L1=Graphical");
+
+		webd.getLogger().info("Test open Security Analytics in welcome page finished!!!");
+	}
 
 	//	@Test
 	//	public void testOpenVideosPage()
@@ -329,6 +389,10 @@ public class TestWelcomePage extends LoginAndLogout
 		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, "ITA"));
 		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, "dashboards"));
 		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, "dataExplorers"));
+		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, "infraMonitoring"));
+		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, "securityAnalytics"));
+		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, "orchestration"));
+		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, "compliance"));
 
 		Assert.assertTrue(WelcomeUtil.isLearnMoreItemExisted(webd, "getStarted"));
 		Assert.assertTrue(WelcomeUtil.isLearnMoreItemExisted(webd, "videos"));
