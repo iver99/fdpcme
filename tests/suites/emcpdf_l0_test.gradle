@@ -48,10 +48,12 @@ dependencies {
 	exclude('module':'groovy')}
 	testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-webutils-integ-tests', version: "${REPO_BID}") {
 	exclude('module':'groovy')}
+/*
 	testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardscomparator-web-integ-tests', version: "${REPO_BID}") {
 	exclude('module':'groovy')}
 	testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardscomparator-webutils-integ-tests', version: "${REPO_BID}") {
 	exclude('module':'groovy')}
+*/
 	testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-core-integ-tests', version: "${REPO_BID}") {
 	exclude('module':'groovy')}
 	testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-sdk-integ-tests', version: "${REPO_BID}") {
@@ -65,9 +67,10 @@ dependencies {
     testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-core', version: "${REPO_BID}") {transitive=false}
     testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-entities', version: "${REPO_BID}") {transitive=false}
     testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-webutils', version: "${REPO_BID}") {transitive=false}
-    testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardscomparator-web', version: "${REPO_BID}") {transitive=false}
+ /*   testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardscomparator-web', version: "${REPO_BID}") {transitive=false}
     testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardscomparator-webutils', version: "${REPO_BID}") {transitive=false}
-    testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardsui-web', version: "${REPO_BID}") {transitive=false}
+*/   
+ testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardsui-web', version: "${REPO_BID}") {transitive=false}
     testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardsui-webutils', version: "${REPO_BID}") {transitive=false}
     testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'omc-ui-framework-webutils', version:"${REPO_BID}") {transitive=false}
 	testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'omc-ui-framework-web', version:"${REPO_BID}") {transitive=false}
@@ -139,7 +142,6 @@ task DEVTest_ws(type:EMTest){
 	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/*.class"
 	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/comparator/rows/entities/*.class"
 
-
 	useRestAssured=true
 	ext.set("testType", "unit")
 }
@@ -163,7 +165,6 @@ task DEVTest(type:EMTest,dependsOn: DEVTest_ws){
 	include "oracle/sysman/emaas/platform/dashboards/comparator/targetmodel/services/*.class"
 	include "oracle/sysman/emaas/platform/dashboards/comparator/webutils/**/*.class"
 
-	//***************below are dashboards-sdk project test cases***************//
 	include "oracle/sysman/emaas/platform/emcpdf/cache/screenshot/*.class"
 	include "oracle/sysman/emaas/platform/emcpdf/cache/exception/*.class"
 	include "oracle/sysman/emaas/platform/emcpdf/cache/support/**/*.class"

@@ -984,6 +984,7 @@ define(['knockout',
                                 if (TargetSelectorUtils) {
                                     TargetSelectorUtils.registerComponents();
                                 }
+                                ctxUtil.setOMCContext(omcContext);
                                 $.when(TargetSelectorUtils.getCriteriaFromOmcContext()).done(function (criteria) {
                                     entityContext = {criteria: criteria};
                                     dtd.resolve(entityContext);
