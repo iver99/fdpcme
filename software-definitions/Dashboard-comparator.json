@@ -53,6 +53,6 @@
                   "rel": "link/gzip",
                   "href": "<software>"
          },
-         "microServices":["Dashboard-UI"]
+         "microServices":["DashboardService-comparator"]
 
         }
