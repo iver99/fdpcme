@@ -165,7 +165,7 @@ public class AdditionalDataFilter implements Filter {
             futureDashboards = pool.submit(new Callable<String>() {
                 @Override
                 public String call() throws Exception {
-                    LOGGER.info("Thread in pool to retrieve dashboard string...");
+                    LOGGER.debug("Thread in pool to retrieve dashboard string...");
                     return DashboardDataAccessUtil.getDashboardData(tenant, tenant + "." + user, referer, dashboardId);
                 }
             });
@@ -177,7 +177,7 @@ public class AdditionalDataFilter implements Filter {
         Future<String> futureUserInfo = pool.submit(new Callable<String>() {
             @Override
             public String call() throws Exception {
-                LOGGER.info("Thread in pool to retrieve userInfo...");
+                LOGGER.debug("Thread in pool to retrieve userInfo...");
                 return DashboardDataAccessUtil.getUserTenantInfo(tenant, tenant + "." + user, referer, sessionExp);
             }
         });
@@ -185,7 +185,7 @@ public class AdditionalDataFilter implements Filter {
         Future<String> futureRegistry = pool.submit(new Callable<String>() {
             @Override
             public String call() throws Exception {
-                LOGGER.info("Thread in pool to retrieve Registry...");
+                LOGGER.debug("Thread in pool to retrieve Registry...");
                 return DashboardDataAccessUtil.getRegistrationData(tenant, tenant + "." + user, referer, sessionExp);
             }
         });
@@ -226,7 +226,7 @@ public class AdditionalDataFilter implements Filter {
         } catch (ExecutionException e) {
             LOGGER.error(e.getLocalizedMessage());
         }
-        LOGGER.info("Time cost is "+Long.valueOf(System.currentTimeMillis()-start)+"ms");
+        LOGGER.debug("Time cost is "+Long.valueOf(System.currentTimeMillis()-start)+"ms");
         return sb.toString();
     }
 }
