@@ -8,7 +8,7 @@ configurations {
 //version = '1.0.0'
 version = project.ext.getServiceVersion("DashboardService-comparator")
 group = 'emaas/applications/dashboards-framework'
-deployname=artifactPrefix+'dashboards-comparator'
+deployname=artifactPrefix+'dashboard-comparator'
 def artifactId = 'dashboardscomparator' 
 def groupId = group 
 def versionNumber = version
@@ -17,7 +17,7 @@ ear
 {
 	libDirName 'lib'
 	appDirName 'EarContent'
-	baseName = artifactPrefix+'dashboards-comparator'
+	baseName = artifactPrefix+'dashboard-comparator'
 	from('ear/META-INF')
 	{ 
 		include 'ear/META-INF/*.xml'
