@@ -19,6 +19,14 @@ import javax.ws.rs.core.UriBuilder;
 
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
+import oracle.sysman.emaas.platform.emcpdf.cache.api.ICache;
+import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
+import oracle.sysman.emaas.platform.emcpdf.cache.exception.ExecutionException;
+import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.DefaultKeyGenerator;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
+import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
 import oracle.sysman.emaas.platform.uifwk.ui.webutils.util.LogUtil.InteractionLogDirection;
 
 import org.apache.commons.lang.StringUtils;
@@ -95,12 +103,24 @@ public class DataFetcher
 	{
 		try {
 			long start = System.currentTimeMillis();
-			StringCacheUtil cache = StringCacheUtil.getRegistrationCacheInstance();
-			String data = cache.get(userTenant);
-			if (!StringUtil.isEmpty(data)) {
-				LOGGER.info("Retrieved registration data from cache for userTenant {}", userTenant);
-				return data;
+			Tenant cacheTenant = new Tenant(tenantIdParam);
+			Object userTenantKey = DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(userTenant));
+			ICacheManager cm = CacheManagers.getInstance().build();
+			ICache cache = cm.getCache(CacheConstants.CACHES_REGISTRY_CACHE);
+			if (cache != null) {
+				try {
+					Object obj = cache.get(userTenantKey);
+					if (obj instanceof String) {
+						String data = (String)obj;
+						LOGGER.info("Retrieved registration data from cache for userTenant {}, cached data is {}", userTenant, data);
+						return data;
+					}
+				} catch (ExecutionException e) {
+					// for cache issue, we'll continue retrieve data and just log a warning message
+					LOGGER.warn(e.getLocalizedMessage(), e);
+				}
 			}
+
 			Link configurationsLink = RegistryLookupUtil.getServiceInternalLink("Dashboard-API", "1.0+",
 					"static/dashboards.configurations", null);
 			if (configurationsLink == null || StringUtils.isEmpty(configurationsLink.getHref())) {

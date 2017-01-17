@@ -15,6 +15,8 @@ import mockit.Mocked;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
 
+import oracle.sysman.emaas.platform.emcpdf.cache.api.ICache;
+import oracle.sysman.emaas.platform.emcpdf.cache.exception.ExecutionException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -26,8 +28,7 @@ import com.sun.jersey.api.client.WebResource.Builder;
 public class DataFetcherTest
 {
 	@Test(groups = { "s2" })
-	public void testGetRegistrationFromCache(@Mocked final StringCacheUtil cacheUtil)
-	{
+	public void testGetRegistrationFromCache(@Mocked final ICache cacheUtil) throws ExecutionException {
 		new Expectations() {
 			{
 				cacheUtil.get(anyString);
