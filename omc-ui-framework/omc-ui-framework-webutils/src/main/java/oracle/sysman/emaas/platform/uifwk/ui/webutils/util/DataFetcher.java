@@ -103,7 +103,7 @@ public class DataFetcher
 	{
 		try {
 			long start = System.currentTimeMillis();
-			Tenant cacheTenant = new Tenant(tenantIdParam);
+			/*Tenant cacheTenant = new Tenant(tenantIdParam);
 			Object userTenantKey = DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(userTenant));
 			ICacheManager cm = CacheManagers.getInstance().build();
 			ICache cache = cm.getCache(CacheConstants.CACHES_REGISTRY_CACHE);
@@ -119,7 +119,7 @@ public class DataFetcher
 					// for cache issue, we'll continue retrieve data and just log a warning message
 					LOGGER.warn(e.getLocalizedMessage(), e);
 				}
-			}
+			}*/
 
 			Link configurationsLink = RegistryLookupUtil.getServiceInternalLink("Dashboard-API", "1.0+",
 					"static/dashboards.configurations", null);
@@ -140,7 +140,7 @@ public class DataFetcher
 				rc.setHeader("SESSION_EXP", sessionExp);
 			}
 			String response = rc.get(registrationHref, tenantIdParam);
-			cache.put(userTenant, response);
+			//cache.put(userTenantKey, response);
 			LOGGER.info("Retrieved registration data is: {}", response);
 			LOGGER.info("It takes {}ms to retrieve registration data from Dashboard-API", System.currentTimeMillis() - start);
 			return response;

@@ -74,6 +74,7 @@ public class UifwkPartitionJsFilter implements Filter
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
 			ServletException
 	{
+try{
 		LOGGER.debug("Now enter the UifwkPartitionJsFilter");
 		HttpServletRequest httpReq = (HttpServletRequest) request;
 		String userTenant = httpReq.getHeader(OAM_REMOTE_USER_HEADER);
@@ -109,18 +110,21 @@ public class UifwkPartitionJsFilter implements Filter
 			if (!StringUtil.isEmpty(registrationData)) {
 				sb.append("window\\._uifwk\\.cachedData\\.registrations=");
 				sb.append(registrationData);
+				sb.append(";");
 			}
 
 			String apps = TenantSubscriptionUtil.getTenantSubscribedServices(tenant, user);
 			if (!StringUtil.isEmpty(apps)) {
 				sb.append("window\\._uifwk\\.cachedData\\.subscribedapps=");
 				sb.append(apps);
+				sb.append(";");
 			}
 
 			String replacedToData = sb.toString();
+			LOGGER.info("!!!!!!!!!to be replaced data is {}", replacedToData);
 			if (!StringUtil.isEmpty(replacedToData)) {
 				//Replace registration and/or subscribed app data
-				String tobeReplaced = "window\\._uifwk\\.cachedData\\.registrations=null";
+				String tobeReplaced = "window\\._uifwk\\.cachedData\\.registrations=null;";
 				wrapperString = wrapperString.replaceFirst(tobeReplaced, replacedToData);
 				LOGGER.info("The server side data to be replaced is {}", replacedToData);
 			}
@@ -131,6 +135,9 @@ public class UifwkPartitionJsFilter implements Filter
 		response.setContentLength(caw.toString().length());
 		out.write(caw.toString());
 		out.close();
+} catch (Exception e) {
+	LOGGER.error(e.getLocalizedMessage(), e);
+}
 	}
 
 	@Override
