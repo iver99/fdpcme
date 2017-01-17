@@ -553,15 +553,16 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 		Actions actions = new Actions(driver.getWebDriver());
 		driver.getLogger().info("Focus to the table header");
 		actions.moveToElement(tableHeader).build().perform();
+		
+		driver.waitForServer();
 		driver.takeScreenShot();
 
 		driver.getLogger().info("Click Sort icon");
 		actions.moveToElement(tableSort).click().perform();
-
+		
+		driver.waitForServer();	
 		driver.takeScreenShot();
 
-		WaitUtil.waitForPageFullyLoaded(driver);
-		driver.takeScreenShot();
 	}
 
 	/* (non-Javadoc)
