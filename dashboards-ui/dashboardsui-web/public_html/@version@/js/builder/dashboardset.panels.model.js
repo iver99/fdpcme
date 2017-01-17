@@ -50,7 +50,7 @@ define([
             };
             
             self.showDashboard = function (dashboardsetToolBarModel) {
-                document.activeElement.blur();//to blur the focused item on another tab
+                document.activeElement && document.activeElement.blur();//to blur the focused item on another tab
                 var dashboardItem=dashboardsetToolBarModel.selectedDashboardItem(),               
                     dashboardId = dashboardItem.dashboardId,
                     divId = "dashboard-" + dashboardId,
