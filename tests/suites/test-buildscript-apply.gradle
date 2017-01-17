@@ -1,12 +1,13 @@
-/* Copyright (c) 2016, Oracle and/or its affiliates. All rights reserved.*/
+/* Copyright (c) 2016, 2017 Oracle and/or its affiliates. All rights reserved.*/
+
 /*
- * DESCRIPTION
- *   Common buildscript to be applied for all lrgs.
- *
- * MODIFIED MM/DD/YY
- * skuchero 09/12/16 - update CBF template code
- * skgupta  02/11/16 - Creation
- */
+   DESCRIPTION
+     Common buildscript to be applied for all lrgs.
+  
+   MODIFIED MM/DD/YY
+   skuchero 01/16/17 - Update CBF template code
+   skgupta  02/11/16 - Creation
+*/
 //-----------------------------------------------------------------------------
 // Enable this to be a rootProject which uses project common files.
 //
@@ -18,20 +19,26 @@ buildscript {
   if (System.env.BRANCH_TOP_DIR) {
     project.ext.commonBranchTopDir = System.env.BRANCH_TOP_DIR
   } else {
+    if ( ! project.hasProperty('PUB_SHELL') || ! project.PUB_SHELL) {
+      project.ext.PUB_SHELL = System.env.PUB_SHELL ?: "bash"
+    }
     def command = "cd '$rootDir' && git rev-parse --show-toplevel"
     def stdout = new StringBuilder(); def stderr = new StringBuilder(); def exitCode = 1
     try {
-      def proc = new ProcessBuilder("sh", "-c", command).start()
+      def proc = new ProcessBuilder("$project.PUB_SHELL", "-c", command).start()
       proc.waitForProcessOutput(stdout, stderr); exitCode = proc.exitValue()
     } catch (Exception e) { stderr << e.message }
     if (exitCode) {
-      throw new GradleException (
-        "[ERROR] sh or git command is not found or pwd=${System.properties.'user.dir'} is not a git project dir\n" +
+      throw new GradleException(
+        "[ERROR] shell or git command is not found or pwd=${System.properties.'user.dir'} is not a git project dir\n" +
         "[Note] If git is not available, env variables BRANCH_TOP_DIR and BRANCH_NAME must be set\n" +
-        "[Command] sh -c \"$command\"\n" + "[Error] $stderr")
+        "[Note] PUB_SHELL=$project.PUB_SHELL\n" +
+        "[Command] $project.PUB_SHELL -c \"$command\"\n" + "[Error] $stderr")
     } else {
       project.ext.commonBranchTopDir = "$stdout".trim()
     }
   }
   apply from: "$project.commonBranchTopDir/common/scripts/buildscript-apply-delegate.gradle"
 }
+//-----------------------------------------------------------------------------
+

@@ -1,23 +1,27 @@
-/* Copyright (c) 2016, Oracle and/or its affiliates. All rights reserved.*/
+/* Copyright (c) 2016, 2017 Oracle and/or its affiliates. All rights reserved.*/
+
 /*
- * DESCRIPTION
- *     Common gradle script to be applied for all lrgs.
- *
- * MODIFIED    (MM/DD/YY)
- *   skgupta     02/11/16 - Creation
- *
- */
-/*
- * 1. Apply common plugins
- * 2. Configure the common publishing repository
- * 3. configure project repositories to resolve artifact specs
- * 4. and do other common configuration for allprojects{}.
- *
- * NOTE:
- *   project.pubBuildscriptDir is set as a result of the previous apply from script:
- *   project.commonBranchTopDir/common/scripts/buildscript-apply-delegate.gradle
- */
+   DESCRIPTION
+     Common gradle script to be applied for all lrgs.
+  
+   MODIFIED MM/DD/YY
+   skuchero 01/16/17 - Update CBF template code
+   skgupta  02/11/16 - Creation
+*/
+//-----------------------------------------------------------------------------
+// Apply common plugins,
+// configure the common publishing repository,
+// configure project repositories to resolve artifact specs,
+// and do other common configuration for allprojects{}.
+//
+// NOTE:
+//   project.pubBuildscriptDir is set as a result of the previous apply from script:
+//   project.commonBranchTopDir/common/scripts/buildscript-apply-delegate.gradle
+//
 def pubAllprojects = project.hasProperty('PUB_ALLPROJECTS') ?
-project.PUB_ALLPROJECTS : "$project.pubBuildscriptDir/allprojects.gradle"
+  project.PUB_ALLPROJECTS : "$project.pubBuildscriptDir/allprojects.gradle"
 apply from: new File(pubAllprojects).isAbsolute() ?
-"$pubAllprojects" : "$project.commonBranchTopDir/$pubAllprojects"
+  "$pubAllprojects" : "$project.commonBranchTopDir/$pubAllprojects"
+//
+//-----------------------------------------------------------------------------
+

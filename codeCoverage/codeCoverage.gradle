@@ -307,9 +307,6 @@ else {
 
     loadCCConfiguration()
 
-    // Apply sonar-runner plugin to upload coverage data to a sonar server
-    // apply plugin: 'sonar-runner' // done by CBF
-
     // Set Sonar general properties to the project
     sonarRunner {
         sonarProperties {
@@ -348,14 +345,9 @@ else {
         }
     }
 
-    // apply plugin: 'jacoco' // done by CBF
-
     afterEvaluate {
         // some tasks apply only to projects with java plugin applied.
         if (project.plugins.hasPlugin('java')) {
-	jacoco { 
-   	 toolVersion = '0.7.2.201409121644' 
-  	} 
 
             jacocoTestReport {
                 executionData = fileTree(dir: "${buildDir}/jacoco", include: '**/*.exec')
@@ -436,7 +428,7 @@ task resetRemoteCC << {
 }
 
 project.tasks.withType(JacocoMerge) { task ->
-    task.ext.destPath = new File(project.getBuildDir(), "/jacoco/${task.name}.exec")
+    task.destinationFile = new File(project.getBuildDir(), "/jacoco/${task.name}.exec")
 }
 
 
