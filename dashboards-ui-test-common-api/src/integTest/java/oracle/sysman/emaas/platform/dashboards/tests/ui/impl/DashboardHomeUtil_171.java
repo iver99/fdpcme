@@ -285,10 +285,10 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 		List<String> names = new ArrayList<String>();
 		List<WebElement> eles = driver.getWebDriver().findElements(By.xpath(DashBoardPageId.DASHBOARDNAMECONTAINERS));
 		for (int i = 1; i <= eles.size(); i++) {
-			driver.getLogger().info("Get dahsbord name for: "
-					+ DashBoardPageId.DASHBOARDNAMEINDEXLOCATOR.replaceFirst("_index_", String.valueOf(i)));
-			WebElement ele = driver
-					.getElement(DashBoardPageId.DASHBOARDNAMEINDEXLOCATOR.replaceFirst("_index_", String.valueOf(i)));
+			String locator = DashBoardPageId.DASHBOARDNAMEINDEXLOCATOR.replaceFirst("_index_", String.valueOf(i));
+			driver.getLogger().info("Get dahsbord name for: "+ locator);
+			driver.waitForElementPresent(locator);
+			WebElement ele = driver.getElement(locator);
 			String name = getElementAttribtue(ele, "aria-label");
 			if (name == null) {
 				name = ele.getText();
