@@ -282,13 +282,16 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	@Override
 	public List<String> listDashboardNames(WebDriver driver) 
 	{
+		driver.waitForServer();
 		List<String> names = new ArrayList<String>();
 		List<WebElement> eles = driver.getWebDriver().findElements(By.xpath(DashBoardPageId.DASHBOARDNAMECONTAINERS));
 		for (int i = 1; i <= eles.size(); i++) {
 			String locator = DashBoardPageId.DASHBOARDNAMEINDEXLOCATOR.replaceFirst("_index_", String.valueOf(i));
 			driver.getLogger().info("Get dahsbord name for: "+ locator);
 			driver.waitForElementPresent(locator);
+			driver.waitForServer();
 			WebElement ele = driver.getElement(locator);
+			driver.waitForServer();
 			String name = getElementAttribtue(ele, "aria-label");
 			if (name == null) {
 				name = ele.getText();
