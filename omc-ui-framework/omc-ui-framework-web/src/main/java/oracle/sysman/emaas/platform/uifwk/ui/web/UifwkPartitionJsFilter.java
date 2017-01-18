@@ -74,7 +74,6 @@ public class UifwkPartitionJsFilter implements Filter
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
 			ServletException
 	{
-try{
 		LOGGER.debug("Now enter the UifwkPartitionJsFilter");
 		HttpServletRequest httpReq = (HttpServletRequest) request;
 		String userTenant = httpReq.getHeader(OAM_REMOTE_USER_HEADER);
@@ -136,9 +135,6 @@ try{
 		response.setContentLength(caw.toString().length());
 		out.write(caw.toString());
 		out.close();
-} catch (Exception e) {
-	LOGGER.error(e.getLocalizedMessage(), e);
-}
 	}
 
 	@Override
