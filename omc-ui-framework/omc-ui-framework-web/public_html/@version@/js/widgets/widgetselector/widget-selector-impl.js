@@ -4,7 +4,7 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-impl',[
     'uifwk/@version@/js/util/df-util-impl', 
     'ojs/ojcore',
     'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg',
-    'uifwk/js/sdk/context-util',
+    'uifwk/@version@/js/sdk/context-util-impl',
     'uifwk/@version@/js/util/typeahead-search-impl', 
     'ojs/ojselectcombobox',
     'ojs/ojdialog',
