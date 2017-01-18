@@ -111,15 +111,15 @@ allprojects {
         testLogging {
              showStandardStreams = false
         }
-        ext.ignoreFailures = false
+        ignoreFailures = false
         enableAssertions = true
 	}
 // Run s1 test group - the first stage unit test group
     // Tests in this group should be fast and just make sure no basic functionality was broken
     // (no DB and no long wait for test result)
     task s1tests(type: Test) {
+          ignoreFailures = false
 	        useTestNG() {
-	            ext.ignoreFailures = false
 	            includeGroups 's1'
 	        }
                 configure commonTestConfig
@@ -142,8 +142,8 @@ allprojects {
     // Tests in this group are more complex and may take a longer time to run
     task s2tests(type: Test) {
 
+          ignoreFailures = true
 	        useTestNG() {
-	            ext.ignoreFailures = true
 	            includeGroups 's2'
 	        }
 	        configure commonTestConfig
