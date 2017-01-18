@@ -186,11 +186,11 @@ task DEVTest(type:EMTest,dependsOn: DEVTest_ws){
 	include "oracle/sysman/emaas/platform/dashboards/core/util/TenantSubscriptionUtilTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/wls/management/AppLoggingManageMXBeanTest_S2.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/zdt/DataManagerTest.class"
-/*
+
 	//below are comparator web utils test cases
-	include "oracle/sysman/emaas/platform/dashboards/comparator/targetmodel/services/*.class"
-	include "oracle/sysman/emaas/platform/dashboards/comparator/webutils/**/*.class"
-*/
+	//include "oracle/sysman/emaas/platform/dashboards/comparator/targetmodel/services/*.class"
+	//include "oracle/sysman/emaas/platform/dashboards/comparator/webutils/**/*.class"
+
 	//below are sdk project test cases
 	include "oracle/sysman/emaas/platform/emcpdf/cache/screenshot/*.class"
 	include "oracle/sysman/emaas/platform/emcpdf/cache/exception/*.class"
