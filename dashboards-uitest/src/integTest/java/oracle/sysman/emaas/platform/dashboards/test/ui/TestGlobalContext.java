@@ -17,7 +17,10 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.GlobalContextUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.WelcomeUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
@@ -34,6 +37,8 @@ public class TestGlobalContext extends LoginAndLogout
 	public static final String DSBNAME = "DASHBOARD_GLOBALTESTING";
 	public static final String DSBSETNAME = "DASHBOARDSET_GLOBALTESTING";
 
+	private String dbName_tailsTest = "";
+	
 	public void initTest(String testName)
 	{
 		login(this.getClass().getName() + "." + testName);
@@ -259,5 +264,72 @@ public class TestGlobalContext extends LoginAndLogout
 		BrandingBarUtil.visitWelcome(webd);
 		Assert.assertFalse(GlobalContextUtil.isGlobalContextExisted(webd), "The global context exists in Welcome Page");
 
+	}
+	
+	@Test
+	public void tesTGlobalContext_SwitchEntity()
+	{
+		dbName_tailsTest = "selfDb-" + generateTimeStamp();
+
+		//Initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test case: testomcCtx_OpenITAWidget");
+
+		//visit home page
+		BrandingBarUtil.visitDashboardHome(webd);
+		DashboardHomeUtil.gridView(webd);
+		DashboardHomeUtil.createDashboard(webd, dbName_tailsTest, null);
+		DashboardBuilderUtil.verifyDashboard(webd, dbName_tailsTest, null, false);
+		
+		DashboardBuilderUtil.addWidgetToDashboard(webd, "Analytics Line");
+		DashboardBuilderUtil.saveDashboard(webd);	
+		
+		//find edit button and click it
+		WebElement editButton = webd.getWebDriver().findElement(By.xpath(DashBoardPageId.DASHBOARDEDITBUTTON));		
+		Assert.assertTrue(editButton.isDisplayed(), "Edit button isn't displayed in self dashboard");
+		webd.click(DashBoardPageId.DASHBOARDEDITBUTTON);
+		
+		//find the dashboard name and click it
+		WebElement dashboardName = webd.getWebDriver().findElement(By.xpath("css="+ DashBoardPageId.DASHBOARDNAME_CSS));
+		Assert.assertTrue(dashboardName.isDisplayed(), "dashboardName isn't displayed in self dashboard");
+		webd.click("css="+ DashBoardPageId.DASHBOARDNAME_CSS);
+		
+		//find Dashboard Filters and click it
+		WebElement dashboardFilters = webd.getWebDriver().findElement(By.xpath(DashBoardPageId.DASHBOARDFILTERS));
+		Assert.assertTrue(dashboardFilters.isDisplayed(), "Dashboard Filters isn't displayed in self dashboard");
+		webd.click(DashBoardPageId.DASHBOARDFILTERS);
+		
+		//make sure Entities label is displayed
+		WebElement entitiesLabel = webd.getWebDriver().findElement(By.xpath(DashBoardPageId.DASHBOARDENTITIES));
+		Assert.assertTrue(entitiesLabel.isDisplayed(), "Entities Label isn't displayed in self dashboard");
+
+		//find "Use dashboard entities" radio button, then select it
+		WebElement useDbEntities = webd.getWebDriver().findElement(By.xpath(DashBoardPageId.ENABLEENTITYFILTER));
+		Assert.assertTrue(useDbEntities.isDisplayed(), "Use dashboard entities isn't displayed in self dashboard");
+		webd.click(DashBoardPageId.ENABLEENTITYFILTER);		
+		
+		Assert.assertFalse(webd.isDisplayed(GLBCTXTID),"emaas-appheader-globalcxt is displayed on the top");
+		Assert.assertTrue(webd.isDisplayed(DashBoardPageId.ENTITYBUTTON),"All Entities button isn't display on the top-left cornor, when select dashboard entities");
+		
+		//find "GC entities" radio button, then select it
+		WebElement useGCEntities = webd.getWebDriver().findElement(By.xpath(DashBoardPageId.ENABLEGCENTITYFILTER));
+		Assert.assertTrue(useGCEntities.isDisplayed(), "GC entities filter isn't displayed in self dashboard");
+		webd.click(DashBoardPageId.ENABLEGCENTITYFILTER);
+		
+		Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(webd), "The global context isn't exists when select GC entities filter");
+		Assert.assertTrue(webd.isDisplayed(DashBoardPageId.ENTITYBUTTON),"All Entities button isn't display on the top-left cornor, when select GC entities filter");
+	
+		//find "" radio button, then select it
+		WebElement disableEntity = webd.getWebDriver().findElement(By.xpath(DashBoardPageId.DISABLEENTITYFILTER));
+		Assert.assertTrue(disableEntity.isDisplayed(), "Disable entities filter isn't displayed in self dashboard");
+		webd.click(DashBoardPageId.DISABLEENTITYFILTER);
+		
+		Assert.assertFalse(webd.isDisplayed(GLBCTXTID),"emaas-appheader-globalcxt is displayed on the top");
+		Assert.assertFalse(webd.isElementPresent(DashBoardPageId.ENTITYBUTTON), "All Entities button is present on the top-left cornor, when select disable entities fileter");
+	}
+	
+	private String generateTimeStamp()
+	{
+		return String.valueOf(System.currentTimeMillis());
 	}
 }
