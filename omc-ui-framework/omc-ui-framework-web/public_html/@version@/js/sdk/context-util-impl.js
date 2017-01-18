@@ -1540,7 +1540,7 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                             "distinct": true,
                             "from": [{
                                     "table": "innerJoin",
-                                    "lhs": {"table": "virtual", "name": "Target", "alias": "me"},
+                                    "lhs": {"table": "virtual", "name": "ManageableEntity", "alias": "me"},
                                     "rhs": {"table": "virtual", "name": "ManageableEntityType", "alias": "tp1"},
                                     "on": {
                                         "cond": "compare",
