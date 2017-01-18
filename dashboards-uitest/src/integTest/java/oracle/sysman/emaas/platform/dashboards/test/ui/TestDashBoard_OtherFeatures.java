@@ -47,7 +47,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 	private String dbName_duplicateOOB = "";
 	private String dbName_saveConfirmation = "";
 
-//	private final String customWidgetName = "Running Workflow Submission";
+	private final String customWidgetName = "Workflow Submission Details";
 	private final String OOBName = "Middleware Operations";
 
 	@BeforeClass
@@ -456,7 +456,6 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		Assert.assertFalse(webd.isDisplayed("css=" + PageId.TARGETSELECTOR_CSS), "The target selector is in the page");
 	}
 
-/*
 	@Test
 	public void testHideOpenInIconForCustomWidget()
 	{
@@ -497,7 +496,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		Assert.assertFalse(DashBoardUtils.verifyOpenInIconExist(webd, customWidgetName, 0),
 				"The 'Open In' icon is displayed for the custom widget");
 	}
-*/
+
 	@Test
 	public void testHideTimeRangeFilter()
 	{
