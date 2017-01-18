@@ -17,10 +17,15 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.GlobalContextUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.WelcomeUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * @author cawei
@@ -33,6 +38,9 @@ public class TestGlobalContext extends LoginAndLogout
 	public static final String GLBCTXTBUTTON = "buttonShowTopology";
 	public static final String DSBNAME = "DASHBOARD_GLOBALTESTING";
 	public static final String DSBSETNAME = "DASHBOARDSET_GLOBALTESTING";
+	
+	private String dbName_ude = "";
+	private String dbName_la = "";
 
 	public void initTest(String testName)
 	{
@@ -56,6 +64,8 @@ public class TestGlobalContext extends LoginAndLogout
 
 		DashBoardUtils.deleteDashboard(webd, DSBNAME);
 		DashBoardUtils.deleteDashboard(webd, DSBSETNAME);
+		DashBoardUtils.deleteDashboard(webd, dbName_ude);
+		DashBoardUtils.deleteDashboard(webd, dbName_la);
 		webd.getLogger().info("All test data have been removed");
 
 		LoginAndLogout.logoutMethod();
@@ -259,5 +269,66 @@ public class TestGlobalContext extends LoginAndLogout
 		BrandingBarUtil.visitWelcome(webd);
 		Assert.assertFalse(GlobalContextUtil.isGlobalContextExisted(webd), "The global context exists in Welcome Page");
 
+	}
+	
+	@Test(groups = "test_omcCtx")
+	public void testomcCtx_OpenITAWidget()
+	{
+		dbName_ude = "selfDb-" + generateTimeStamp();
+	
+		//Initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test case: testomcCtx_OpenITAWidget");
+	
+		//visit home page
+		BrandingBarUtil.visitDashboardHome(webd);
+		DashboardHomeUtil.gridView(webd);
+		DashboardHomeUtil.createDashboard(webd, dbName_ude, null);
+		DashboardBuilderUtil.verifyDashboard(webd, dbName_ude, null, false);
+		
+		DashboardBuilderUtil.addWidgetToDashboard(webd, "Analytics Line");
+		DashboardBuilderUtil.saveDashboard(webd);	
+		DashboardBuilderUtil.openWidget(webd, "Analytics Line");
+		
+		webd.switchToWindow();
+		webd.getLogger().info("Wait for the widget loading....");
+		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
+		wait1.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id='save_widget_btn']")));
+	
+		//verify the open url
+		DashBoardUtils.verifyURL_WithPara(webd, "omcCtx=");	
+	}
+
+	@Test(groups = "test_omcCtx")
+	public void testomcCtx_OpenLAWidget()
+	{
+		dbName_la = "selfDb-" + generateTimeStamp();
+	
+		//Initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test case: testomcCtx_OpenLAWidget");
+	
+		//visit home page
+		BrandingBarUtil.visitDashboardHome(webd);
+		DashboardHomeUtil.gridView(webd);
+		DashboardHomeUtil.createDashboard(webd, dbName_la, null);
+		DashboardBuilderUtil.verifyDashboard(webd, dbName_la, null, false);
+		
+		DashboardBuilderUtil.addWidgetToDashboard(webd, "All Logs Trend");
+		DashboardBuilderUtil.saveDashboard(webd);	
+		DashboardBuilderUtil.openWidget(webd, "All Logs Trend");
+		
+		webd.switchToWindow();
+		webd.getLogger().info("Wait for the widget loading....");
+		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
+		wait1.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id='srchSrch']")));
+	
+		//verify the open url
+		DashBoardUtils.verifyURL_WithPara(webd, "omcCtx=");	
+	}
+
+	private String generateTimeStamp()
+	{
+		return String.valueOf(System.currentTimeMillis());
 	}
 }
