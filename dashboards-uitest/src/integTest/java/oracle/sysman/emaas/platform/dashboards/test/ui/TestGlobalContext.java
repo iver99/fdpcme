@@ -61,6 +61,7 @@ public class TestGlobalContext extends LoginAndLogout
 
 		DashBoardUtils.deleteDashboard(webd, DSBNAME);
 		DashBoardUtils.deleteDashboard(webd, DSBSETNAME);
+		DashBoardUtils.deleteDashboard(webd, dbName_tailsTest);
 		webd.getLogger().info("All test data have been removed");
 
 		LoginAndLogout.logoutMethod();
