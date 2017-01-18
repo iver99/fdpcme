@@ -80,6 +80,29 @@ define(['knockout', 'jquery'],
                 }
                 return message;
             };
+            
+            /**
+             * Add event change listener for message in the branding bar when it is created or destroyed
+             *
+             * @param {Function} callback Callback function for the listener
+             *
+             * @returns
+             */
+            self.subscribeMessageChangeEvent = function(callback) {
+                function onMessageChange(event) {
+                    if (event.origin !== window.location.protocol + '//' + window.location.host) {
+                        return;
+                    }
+                    var data = event.data;
+                    //Only handle received message when message in the branding bar is created or destroyed
+                    if (data && data.tag && data.tag === 'EMAAS_OMC_PAGE_LEVEL_MESSAGE_UPDATED') {
+                        if ($.isFunction(callback)) {
+                            callback(data);
+                        }
+                    }
+                };
+                window.addEventListener("message", onMessageChange, false);
+            };
         }
 
         return DashboardFrameworkMessageUtility;

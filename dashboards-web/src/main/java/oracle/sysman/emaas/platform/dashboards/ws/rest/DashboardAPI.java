@@ -13,6 +13,7 @@ package oracle.sysman.emaas.platform.dashboards.ws.rest;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -32,7 +33,15 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.StreamingOutput;
 
+import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
+import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
+import oracle.sysman.emaas.platform.emcpdf.cache.support.screenshot.LRUScreenshotCacheManager;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.*;
+import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.resource.UserOptionsNotFoundException;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
+import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
+import oracle.sysman.emaas.platform.emcpdf.cache.util.ScreenshotPathGenerator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.jettison.json.JSONObject;
@@ -44,11 +53,6 @@ import oracle.sysman.emaas.platform.dashboards.core.DashboardConstants;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardManager;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardsFilter;
 import oracle.sysman.emaas.platform.dashboards.core.UserOptionsManager;
-import oracle.sysman.emaas.platform.dashboards.core.cache.Tenant;
-import oracle.sysman.emaas.platform.dashboards.core.cache.screenshot.ScreenshotCacheManager;
-import oracle.sysman.emaas.platform.dashboards.core.cache.screenshot.ScreenshotData;
-import oracle.sysman.emaas.platform.dashboards.core.cache.screenshot.ScreenshotElement;
-import oracle.sysman.emaas.platform.dashboards.core.cache.screenshot.ScreenshotPathGenerator;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DatabaseDependencyUnavailableException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
@@ -125,7 +129,7 @@ public class DashboardAPI extends APIBase
 	@Path("{id: [1-9][0-9]*}")
 	public Response deleteDashboard(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
-			@PathParam("id") Long dashboardId)
+			@PathParam("id") BigInteger dashboardId)
 	{
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [DELETE] /v1/dashboards/{}", dashboardId);
 		DashboardManager manager = DashboardManager.getInstance();
@@ -150,6 +154,34 @@ public class DashboardAPI extends APIBase
 		}
 		catch (BasicServiceMalfunctionException e) {
 			//e.printStackTrace();
+			LOGGER.error(e.getLocalizedMessage(), e);
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+		finally {
+			clearUserContext();
+		}
+	}
+	
+	@DELETE
+	@Path("all")
+	//@Path("tenant/{id: [1-9][0-9]*}")  
+	public Response deleteDashboards(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
+			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer)
+			//@PathParam("id") Long tenantId)  
+	{
+		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [DELETE] /v1/dashboards/all");
+		DashboardManager manager = DashboardManager.getInstance();
+		try {
+			logkeyHeaders("deleteDashboardsByTenant()", userTenant, tenantIdParam);
+			Long tenantId = getTenantId(tenantIdParam);
+			initializeUserContext(tenantIdParam, userTenant);
+			manager.deleteDashboards(tenantId);
+			return Response.status(Status.NO_CONTENT).build();
+		}
+		catch (DashboardException e) {
+			return buildErrorResponse(new ErrorEntity(e));
+		} catch (BasicServiceMalfunctionException e) {
+			// TODO Auto-generated catch block
 			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
@@ -197,9 +229,10 @@ public class DashboardAPI extends APIBase
 	@Produces("image/png")
 	public Object getDashboardScreenShot(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
-			@PathParam("id") Long dashboardId, @PathParam("serviceVersion") String serviceVersion,
+			@PathParam("id") BigInteger dashboardId, @PathParam("serviceVersion") String serviceVersion,
 			@PathParam("fileName") String fileName)
 	{
+		ICacheManager scm= CacheManagers.getInstance().build(CacheConstants.LRU_SCREENSHOT_MANAGER);
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer,
 				"Service call to [GET] /v1/dashboards/{}/screenshot/{}/images/{}", dashboardId, serviceVersion, fileName);
 
@@ -218,13 +251,21 @@ public class DashboardAPI extends APIBase
 			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
-		ScreenshotCacheManager scm = ScreenshotCacheManager.getInstance();
+//		ScreenshotCacheManager scm = ScreenshotCacheManager.getInstance();
 		Tenant cacheTenant = new Tenant(tenantId, TenantContext.getCurrentTenant());
 		CacheControl cc = new CacheControl();
 		cc.setMaxAge(2592000); //browser side keeps screenshot image in cache for 30 days
 		//try to get from cache
 		try {
-			final ScreenshotElement se = scm.getScreenshotFromCache(cacheTenant, dashboardId, fileName);
+//			final ScreenshotElement se = scm.getScreenshotFromCache(cacheTenant, dashboardId, fileName);
+			if (dashboardId == null || dashboardId.compareTo(BigInteger.ZERO) <= 0) {
+				LOGGER.warn("Unexpected dashboard id to get screenshot from cache for tenant={}, dashboard id={}, fileName={}",
+						cacheTenant, dashboardId, fileName);
+			}
+			if (StringUtil.isEmpty(fileName)) {
+				LOGGER.warn("Unexpected empty screenshot file name for tenant={}, dashboard id={}", cacheTenant, dashboardId);
+			}
+			final ScreenshotElement se = (ScreenshotElement) scm.getCache(CacheConstants.CACHES_SCREENSHOT_CACHE).get(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(dashboardId)));
 			if (se != null) {
 				if (fileName.equals(se.getFileName())) {
 					return Response.ok(new StreamingOutput() {
@@ -267,14 +308,29 @@ public class DashboardAPI extends APIBase
 				LOGGER.error("Does not retrieved base64 screenshot data");
 				return Response.status(Status.NOT_FOUND).build();
 			}
-			final ScreenshotElement se = scm.storeBase64ScreenshotToCache(cacheTenant, dashboardId, ss);
-			if (se == null || se.getBuffer() == null) {
+//			final ScreenshotElement se = scm.storeBase64ScreenshotToCache(cacheTenant, dashboardId, ss);
+			String newFileName = ScreenshotPathGenerator.getInstance().generateFileName(dashboardId, ss.getCreationDate(), ss.getModificationDate());
+			byte[] decoded = null;
+			if (ss.getScreenshot().startsWith(DashboardManager.SCREENSHOT_BASE64_PNG_PREFIX)) {
+				decoded = Base64.decode(ss.getScreenshot().substring(DashboardManager.SCREENSHOT_BASE64_PNG_PREFIX.length()));
+			}
+			else if (ss.getScreenshot().startsWith(DashboardManager.SCREENSHOT_BASE64_JPG_PREFIX)) {
+				decoded = Base64.decode(ss.getScreenshot().substring(DashboardManager.SCREENSHOT_BASE64_JPG_PREFIX.length()));
+			}
+			else {
+				LOGGER.debug("Failed to retrieve screenshot decoded bytes as the previs isn't supported");
+				decoded=null;
+			}
+			Binary bin = new Binary(decoded);
+			ScreenshotElement nse = new ScreenshotElement(newFileName, bin);
+			scm.getCache(CacheConstants.CACHES_SCREENSHOT_CACHE).put(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(dashboardId)),nse);
+			if (nse == null || nse.getBuffer() == null) {
 				LOGGER.debug("Does not retrieved base64 screenshot data after store to cache. return 404 then");
 				return Response.status(Status.NOT_FOUND).build();
 			}
-			if (!fileName.equals(se.getFileName())) {
+			if (!fileName.equals(nse.getFileName())) {
 				LOGGER.error("The requested screenshot file name {} for tenant={}, dashboard id={} does not exist", fileName,
-						TenantContext.getCurrentTenant(), dashboardId, se.getFileName());
+						TenantContext.getCurrentTenant(), dashboardId, nse.getFileName());
 				return Response.status(Status.NOT_FOUND).build();
 			}
 			LOGGER.debug(
@@ -288,12 +344,12 @@ public class DashboardAPI extends APIBase
 				{
 					byte[] decoded = null;
 					if (ss.getScreenshot().startsWith(DashboardManager.SCREENSHOT_BASE64_PNG_PREFIX)) {
-						decoded = Base64
-								.decode(ss.getScreenshot().substring(DashboardManager.SCREENSHOT_BASE64_PNG_PREFIX.length()));
+						decoded = Base64.decode(ss.getScreenshot().substring(
+								DashboardManager.SCREENSHOT_BASE64_PNG_PREFIX.length()));
 					}
 					else if (ss.getScreenshot().startsWith(DashboardManager.SCREENSHOT_BASE64_JPG_PREFIX)) {
-						decoded = Base64
-								.decode(ss.getScreenshot().substring(DashboardManager.SCREENSHOT_BASE64_JPG_PREFIX.length()));
+						decoded = Base64.decode(ss.getScreenshot().substring(
+								DashboardManager.SCREENSHOT_BASE64_JPG_PREFIX.length()));
 					}
 					else {
 						LOGGER.debug("Failed to retrieve screenshot decoded bytes as the previs isn't supported");
@@ -306,6 +362,10 @@ public class DashboardAPI extends APIBase
 				}
 
 			}).cacheControl(cc).build();
+		}
+		catch(DashboardNotFoundException e){
+			LOGGER.warn("Specific dashboard not found for id {}",dashboardId);
+			return Response.status(Status.NOT_FOUND).build();
 		}
 		catch(DatabaseDependencyUnavailableException e){
 			LOGGER.error(e.getLocalizedMessage(), e);
@@ -325,7 +385,7 @@ public class DashboardAPI extends APIBase
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getDashboardUserOptions(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
-			@PathParam("id") Long dashboardId)
+			@PathParam("id") BigInteger dashboardId)
 	{
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [GET] /v1/dashboards/{}/options", dashboardId);
 		UserOptionsManager userOptionsManager = UserOptionsManager.getInstance();
@@ -338,6 +398,14 @@ public class DashboardAPI extends APIBase
 			initializeUserContext(tenantIdParam, userTenant);
 			UserOptions options = userOptionsManager.getOptionsById(dashboardId, tenantId);
 			return Response.ok(getJsonUtil().toJson(options)).build();
+		}
+		catch (UserOptionsNotFoundException e){
+			LOGGER.warn("Specific User Option is not found for dashboard id {}", dashboardId);
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+		catch (DashboardNotFoundException e){
+			LOGGER.warn("Specific dashboard is not found for dashboard id {}", dashboardId);
+			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (DashboardException e) {
 			LOGGER.error(e.getLocalizedMessage(), e);
@@ -357,7 +425,7 @@ public class DashboardAPI extends APIBase
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response queryDashboardById(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
-			@PathParam("id") long dashboardId)
+			@PathParam("id") BigInteger dashboardId)
 	{
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [GET] /v1/dashboards/{}", dashboardId);
 		DashboardManager dm = DashboardManager.getInstance();
@@ -373,6 +441,11 @@ public class DashboardAPI extends APIBase
 			Dashboard dbd = dm.getCombinedDashboardById(dashboardId, tenantId, userName);
 			updateDashboardAllHref(dbd, tenantIdParam);
 			return Response.ok(getJsonUtil().toJson(dbd)).build();
+		}
+		catch(DashboardNotFoundException e){
+			//suppress error information in log file
+			LOGGER.warn("Specific dashboard not found for id {}", dashboardId);
+			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (DashboardException e) {
 			LOGGER.error(e.getLocalizedMessage(), e);
@@ -399,8 +472,8 @@ public class DashboardAPI extends APIBase
 	@QueryParam("onlyFavorites") Boolean onlyFavorites*/)
 	{
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer,
-				"Service call to [GET] /v1/dashboards?queryString={}&limit={}&offset={}&orderBy={}&filter={}", queryString, limit,
-				offset, orderBy, filterString);
+				"Service call to [GET] /v1/dashboards?queryString={}&limit={}&offset={}&orderBy={}&filter={}", queryString,
+				limit, offset, orderBy, filterString);
 		logkeyHeaders("queryDashboards()", userTenant, tenantIdParam);
 		String qs = null;
 		try {
@@ -451,7 +524,7 @@ public class DashboardAPI extends APIBase
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response quickUpdateDashboard(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
-			@PathParam("id") long dashboardId, JSONObject inputJson)
+			@PathParam("id") BigInteger dashboardId, JSONObject inputJson)
 	{
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [PUT] /v1/dashboards/{}/quickUpdate",
 				dashboardId);
@@ -549,7 +622,7 @@ public class DashboardAPI extends APIBase
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response saveUserOptions(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
-			@PathParam("id") Long dashboardId, JSONObject inputJson)
+			@PathParam("id") BigInteger dashboardId, JSONObject inputJson)
 	{
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [POST] /v1/dashboards/{}/options/",
 				dashboardId);
@@ -593,7 +666,7 @@ public class DashboardAPI extends APIBase
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateDashboard(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
-			@PathParam("id") long dashboardId, JSONObject inputJson)
+			@PathParam("id") BigInteger dashboardId, JSONObject inputJson)
 	{
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [PUT] /v1/dashboards/{}", dashboardId);
 		logkeyHeaders("updateDashboard()", userTenant, tenantIdParam);
@@ -642,10 +715,9 @@ public class DashboardAPI extends APIBase
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateUserOptions(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
-			@PathParam("id") Long dashboardId, JSONObject inputJson)
+			@PathParam("id") BigInteger dashboardId, JSONObject inputJson)
 	{
-		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [PUT] /v1/dashboards/{}/options/",
-				dashboardId);
+		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [PUT] /v1/dashboards/{}/options/", dashboardId);
 		UserOptions userOption;
 		try {
 			userOption = getJsonUtil().fromJson(inputJson.toString(), UserOptions.class);
@@ -686,7 +758,7 @@ public class DashboardAPI extends APIBase
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response queryDashboardSetsBySubId(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 									   @HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
-									   @PathParam("id") long dashboardId)
+									   @PathParam("id") BigInteger dashboardId)
 	{
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [GET] /v1/dashboards/{}/dashboardsets", dashboardId);
 		DashboardManager dm = DashboardManager.getInstance();
@@ -700,7 +772,12 @@ public class DashboardAPI extends APIBase
 			initializeUserContext(tenantIdParam, userTenant);
 			Dashboard dbd = dm.getDashboardSetsBySubId(dashboardId, tenantId);
 			return Response.ok(getJsonUtil().toJson(dbd)).build();
-		} catch (DashboardException e) {
+		}
+		catch(DashboardNotFoundException e){
+			LOGGER.warn("Specific dashboard not found for id {}",dashboardId);
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+		catch (DashboardException e) {
 			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		} catch (BasicServiceMalfunctionException e) {
@@ -724,9 +801,10 @@ public class DashboardAPI extends APIBase
 		updateDashboardHref(dbd, tenantName);
 		updateDashboardScreenshotHref(dbd, tenantName);
 		updateDashboardOptionsHref(dbd, tenantName);
-		if(dbd != null && dbd.getType()!= null && dbd.getType().equals(Dashboard.DASHBOARD_TYPE_SET) && dbd.getSubDashboards() != null){
-			for(Dashboard subDbd :dbd.getSubDashboards()){
-				updateDashboardHref(subDbd,tenantName);
+		if (dbd != null && dbd.getType() != null && dbd.getType().equals(Dashboard.DASHBOARD_TYPE_SET)
+				&& dbd.getSubDashboards() != null) {
+			for (Dashboard subDbd : dbd.getSubDashboards()) {
+				updateDashboardHref(subDbd, tenantName);
 			}
 		}
 		return dbd;

@@ -1,14 +1,18 @@
 package oracle.sysman.emaas.platform.dashboards.ui.web;
 
-import mockit.*;
-import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.DashboardDataAccessUtil;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import java.math.BigInteger;
 
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
+
+import mockit.Expectations;
+import mockit.Mocked;
+import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.DashboardDataAccessUtil;
+
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 /**
  * Created by guochen on 11/29/16.
@@ -27,7 +31,7 @@ public class AdditionalDataFilterTest {
                 result = "1";
                 anyByteArrayOutputStream.toString();
                 result = "////TODO////";
-                DashboardDataAccessUtil.getDashboardData(anyString, anyString, anyString, anyLong);
+                DashboardDataAccessUtil.getDashboardData(anyString, anyString, anyString, (BigInteger) any);
                 result = "{value: 123abc??$^-[]|(&!~@#%^&*+{}<>\\_,.;`':\"}";
                 DashboardDataAccessUtil.getRegistrationData(anyString, anyString, anyString, anyString);
                 result = "{registration data}";

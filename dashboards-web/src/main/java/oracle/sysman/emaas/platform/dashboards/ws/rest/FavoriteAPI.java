@@ -10,6 +10,7 @@
 
 package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +28,7 @@ import javax.ws.rs.core.Response.Status;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardManager;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 
@@ -51,7 +53,7 @@ public class FavoriteAPI extends APIBase
 	@Path("{id: [1-9][0-9]*}")
 	public Response addOneFavoriteDashboard(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
-			@PathParam("id") Long dashboardId)
+			@PathParam("id") BigInteger dashboardId)
 	{
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [POST] /v1/dashboards/favorites/{}",
 				dashboardId);
@@ -76,7 +78,7 @@ public class FavoriteAPI extends APIBase
 	@Path("{id: [1-9][0-9]*}")
 	public Response deleteOneFavoriteDashboard(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
-			@PathParam("id") Long dashboardId)
+			@PathParam("id") BigInteger dashboardId)
 	{
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [DELETE] /v1/dashboards/favorites/{}",
 				dashboardId);
@@ -133,7 +135,7 @@ public class FavoriteAPI extends APIBase
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response isFavoriteDashboard(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
-			@PathParam("id") Long dashboardId)
+			@PathParam("id") BigInteger dashboardId)
 	{
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [GET] /v1/dashboards/favorites/{}",
 				dashboardId);
@@ -146,6 +148,10 @@ public class FavoriteAPI extends APIBase
 			IsFavoriteEntity ife = new IsFavoriteEntity();
 			ife.setIsFavorite(isFavorite);
 			return Response.status(Status.OK).entity(getJsonUtil().toJson(ife)).build();
+		}
+		catch(DashboardNotFoundException e){
+			LOGGER.warn("Specific dashboard is not found for id {}",dashboardId);
+			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (DashboardException e) {
 			LOGGER.error(e.getLocalizedMessage(), e);

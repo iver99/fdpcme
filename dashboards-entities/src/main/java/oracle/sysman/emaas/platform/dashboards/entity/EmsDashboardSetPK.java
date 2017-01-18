@@ -1,49 +1,55 @@
 package oracle.sysman.emaas.platform.dashboards.entity;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 
 /**
  * @author jishshi
  * @since 2016/3/3.
  */
-public class EmsDashboardSetPK implements Serializable {
-    private static final long serialVersionUID = 6345975239287337011L;
+public class EmsDashboardSetPK implements Serializable
+{
+	private static final long serialVersionUID = 6345975239287337011L;
 
+	private BigInteger dashboardSetId;
 
-    private Long dashboardSetId;
+	private BigInteger subDashboardId;
 
-    private Long subDashboardId;
+	@Override
+	public boolean equals(Object other)
+	{
+		if (other instanceof EmsDashboardSetPK) {
+			final EmsDashboardSetPK otherEmsDashboardSetPK = (EmsDashboardSetPK) other;
+			final boolean isEqual = otherEmsDashboardSetPK.dashboardSetId.equals(dashboardSetId)
+					&& otherEmsDashboardSetPK.subDashboardId.equals(subDashboardId);
+			return isEqual;
+		}
+		return false;
+	}
 
+	public BigInteger getDashboardSetId()
+	{
+		return dashboardSetId;
+	}
 
-    public Long getDashboardSetId() {
-        return dashboardSetId;
-    }
+	public BigInteger getSubDashboardId()
+	{
+		return subDashboardId;
+	}
 
-    public void setDashboardSetId(Long dashboardSetId) {
-        this.dashboardSetId = dashboardSetId;
-    }
+	@Override
+	public int hashCode()
+	{
+		return super.hashCode();
+	}
 
-    public Long getSubDashboardId() {
-        return subDashboardId;
-    }
+	public void setDashboardSetId(BigInteger dashboardSetId)
+	{
+		this.dashboardSetId = dashboardSetId;
+	}
 
-    public void setSubDashboardId(Long subDashboardId) {
-        this.subDashboardId = subDashboardId;
-    }
-
-
-    @Override
-    public boolean equals(Object other) {
-        if (other instanceof EmsDashboardSetPK) {
-            final EmsDashboardSetPK otherEmsDashboardSetPK = (EmsDashboardSetPK) other;
-            final boolean isEqual = otherEmsDashboardSetPK.dashboardSetId.equals(dashboardSetId) && otherEmsDashboardSetPK.subDashboardId.equals(subDashboardId);
-            return isEqual;
-        }
-        return false;
-    }
-
-    @Override
-    public int hashCode() {
-        return super.hashCode();
-    }
+	public void setSubDashboardId(BigInteger subDashboardId)
+	{
+		this.subDashboardId = subDashboardId;
+	}
 }

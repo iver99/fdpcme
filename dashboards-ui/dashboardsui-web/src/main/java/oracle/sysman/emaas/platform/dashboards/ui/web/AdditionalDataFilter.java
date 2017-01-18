@@ -2,6 +2,7 @@ package oracle.sysman.emaas.platform.dashboards.ui.web;
 
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.DashboardDataAccessUtil;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.StringUtil;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -9,7 +10,9 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
+
 import java.io.*;
+import java.math.BigInteger;
 import java.util.regex.Pattern;
 
 /**
@@ -33,7 +36,11 @@ public class AdditionalDataFilter implements Filter {
 
         private PrintWriter writer = null;
         {
-            writer = new PrintWriter(new OutputStreamWriter(byteStream));
+            try {
+				writer = new PrintWriter(new OutputStreamWriter(byteStream, "UTF-8"));
+			} catch (UnsupportedEncodingException e) {
+				LOGGER.error("Failed to encode outputStream", e);
+			}
         }
 
         public CaptureWrapper(HttpServletResponse response)
@@ -45,7 +52,7 @@ public class AdditionalDataFilter implements Filter {
         {
             String result;
             try {
-                outputStream.flush();
+            	outputStream.flush();
                 outputStream.close();
                 result = byteStream.toString();
             }
@@ -74,11 +81,14 @@ public class AdditionalDataFilter implements Filter {
 
     }
 
+    @Override
     public void doFilter(ServletRequest request, ServletResponse response,
                          FilterChain chain) throws IOException, ServletException {
         LOGGER.debug("Now enter the AdditionalDataFilter");
         HttpServletRequest httpReq = (HttpServletRequest) request;
         final HttpServletResponse httpResponse = (HttpServletResponse) response;
+        httpResponse.setCharacterEncoding("utf-8");
+        httpResponse.setContentType("text/html;charset=utf-8");
 
         final CaptureWrapper wrapper = new CaptureWrapper(httpResponse);
         chain.doFilter(request, wrapper);
@@ -93,6 +103,8 @@ public class AdditionalDataFilter implements Filter {
             LOGGER.debug("Replacing and inserting addtional data now!");
         }
         LOGGER.debug("After inserting additional data, the response test is {}", newResponseText);
+	response.setCharacterEncoding("utf-8");
+        response.setContentType("text/html;charset=utf-8");
         // Writes the updated response text to the response object
         try (PrintWriter writer = new PrintWriter(response.getOutputStream())) {
             writer.println(newResponseText);
@@ -120,13 +132,8 @@ public class AdditionalDataFilter implements Filter {
             }
 
             final String dashboardIdStr = httpReq.getParameter("dashboardId");
-            try {
-                Long dashboardId = Long.valueOf(dashboardIdStr);
-                return getDashboardData(tenant, user, dashboardId, httpReq.getHeader("referer"), sesExp);
-            } catch (NumberFormatException e) {
-                LOGGER.error("Invalid dashboard ID form URL: {}", dashboardIdStr);
-                return null;
-            }
+            BigInteger dashboardId = new BigInteger(dashboardIdStr);
+            return getDashboardData(tenant, user, dashboardId, httpReq.getHeader("referer"), sesExp);
         }
         return null;
     }
@@ -138,13 +145,13 @@ public class AdditionalDataFilter implements Filter {
         return json.replace("\\", "\\\\").replace("\"", "\\\"").replace("$", "\\$");
     }
 
-    private String getDashboardData(String tenant, String user, long dashboardId, String referer, String sessionExp) {
+    private String getDashboardData(String tenant, String user, BigInteger dashboardId, String referer, String sessionExp) {
         if (StringUtil.isEmpty(tenant) || StringUtil.isEmpty(user)) {
             LOGGER.warn("tenant {}/user {} is null or empty or invalid, so do not update dashboard page then", tenant, user);
             return null;
         }
         StringBuilder sb = new StringBuilder();
-        if (dashboardId > 0) {
+        if (BigInteger.ZERO.compareTo(dashboardId) < 0) {
             String dashboardString = DashboardDataAccessUtil.getDashboardData(tenant, tenant + "." + user, referer, dashboardId);
             if (StringUtil.isEmpty(dashboardString)) {
                 LOGGER.warn("Retrieved null or empty dashboard for tenant {} user {} and dashboardId {}, so do not update page data then", tenant, user, dashboardId);

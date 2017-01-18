@@ -64,12 +64,32 @@ define([
                     $(".dashboard-picker-container").removeClass("df-collaps");
                 }
                 
-                //show globalcontext banner for dashboards except Orchestration OOB dashboards
-                if(!(dashboardsetToolBarModel.dashboardExtendedOptions && dashboardsetToolBarModel.dashboardExtendedOptions.showGlobalContextBanner === false)) {                
-                    var headerWrapper = $("#headerWrapper")[0];
-                    if(headerWrapper) {
-                        var headerViewModel = ko.dataFor(headerWrapper);
-                        headerViewModel.brandingbarParams.showGlobalContextBanner(true);
+                var headerWrapper = $("#headerWrapper")[0];
+                if(headerWrapper) {
+                    var headerViewModel = ko.dataFor(headerWrapper);
+                }
+                
+                if(dashboardsetToolBarModel.isDashboardSet()) {
+                    headerViewModel && headerViewModel.brandingbarParams.showGlobalContextBanner(false);
+                    headerViewModel && headerViewModel.brandingbarParams.showTimeSelector(false);
+                    headerViewModel && headerViewModel.brandingbarParams.showEntitySelector(false);
+                }else {
+                    if(dashboardsetToolBarModel.dashboardInst.enableEntityFilter()!=="FALSE" || dashboardsetToolBarModel.dashboardInst.enableTimeRange()!=="FALSE") {    
+                        headerViewModel && headerViewModel.brandingbarParams.showGlobalContextBanner(true);
+                        if(dashboardsetToolBarModel.dashboardInst.enableTimeRange()==="FALSE") {
+                            headerViewModel && headerViewModel.brandingbarParams.showTimeSelector(false);
+                        }else {
+                            headerViewModel && headerViewModel.brandingbarParams.showTimeSelector(true);
+                        }
+                        if(dashboardsetToolBarModel.dashboardInst.enableEntityFilter()==="FALSE" || dashboardsetToolBarModel.dashboardInst.enableEntityFilter()==="TRUE") {
+                            headerViewModel && headerViewModel.brandingbarParams.showEntitySelector(false);
+                        }else {
+                            headerViewModel && headerViewModel.brandingbarParams.showEntitySelector(true);
+                        }
+                    }else {
+                        headerViewModel && headerViewModel.brandingbarParams.showGlobalContextBanner(false);
+                        headerViewModel && headerViewModel.brandingbarParams.showTimeSelector(false);
+                        headerViewModel && headerViewModel.brandingbarParams.showEntitySelector(false);
                     }
                 }
 
@@ -120,7 +140,9 @@ define([
                     dashboardsViewModle.showExploreDataBtn(false);
 
                     dashboardsViewModle.handleDashboardClicked = function(event, data) {
-
+                        if(event){
+                            event.preventDefault();
+                        }
                         var hasDuplicatedDashboard = false;
                         var isCreator=dashboardsetToolBarModel.dashboardsetConfig.isCreator();
                         var dataId;
@@ -223,6 +245,8 @@ define([
                             if(value.dashboardId===currentDashboardId){
                                 value.name(dashboardName);
                                 $('#dashboardTab-'+currentDashboardId).find('.tabs-name').text(dashboardName);
+                                $('#dashboardTab-'+currentDashboardId).attr("data-tabs-name",dashboardName);
+                                $('#dashboardTab-'+currentDashboardId).attr("data-dashboard-name-in-set",dashboardName);
                             }
                         });
                         dashboardsetToolBarModel.reorderedDbsSetItems().filter(function(value) {

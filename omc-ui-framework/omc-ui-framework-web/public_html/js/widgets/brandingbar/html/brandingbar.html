@@ -1,5 +1,5 @@
         <div class="emaas-appheader">
-            <div id="emaas-appheader-bar" data-testapiversion="1.13.0" class="oj-row emaas-appheader-lite" style="max-width: 1920px;padding-left: 10px">
+            <div id="emaas-appheader-bar" data-testapiversion="1.15.0" class="oj-row emaas-appheader-lite" style="max-width: 1920px;padding-left: 10px">
 
                 <!-- logo -->  
                 <div class="emaas-appheader-logo" data-bind="attr: {'aria-label': textOracle}">
@@ -107,6 +107,7 @@
                 }">
             </div>  
             
+            <!-- ko if: showEntitySelector() -->
             <span style="float: left;padding-top:3px;margin-right:6px;">
             <div id="topologyButtonWrapper" data-bind="ojComponent: {component: 'ojButtonset', checked: isTopologyButtonChecked}" style="height:32px; background-color: white; border-radius: 2px;">
             <label for="buttonShowTopology"></label>
@@ -120,36 +121,66 @@
                }" style="height:29px; margin-bottom:0px"/>
             </div>
             </span>
-
-            
+            <!-- ko if: showEntityContextSelector() -->
+            <div id="emcta-ctxtSel" class="animated_transitions" style="flex: auto" data-bind="component:{name:'emcta-context-selector',
+                params:{id: 'emcta-ctxtSel', entityContextParams: entityContextParams}}">
+            </div>
+            <!-- /ko -->
+            <!-- ko if: !showEntityContextSelector() -->
             <div class="ude-sdk emaas-appheader-inline-flexbox emaas-appheader-flexbox-auto animated_transitions" style="padding-bottom: 10px; padding-top: 3px; height: 32px; display: flex;">
             <div class="ude-sdk emcta_panel_border flexBoxNoShrink flexBoxColumn flexBoxAuto animated_transitions" id="globalBar_wrapper"
                  style="padding:2px;">
                 <!-- ko if: compositeCxtText() -->
                 <div class="ude-sdk pill filterpill_value filterpill_with_value" style="margin-bottom: auto; margin-top: auto;height: 20px; 
                      padding-left: 8px; padding-right:8px; font-size: 14px; padding-top: 3px;padding-bottom: 1px;margin-left:0px; font-weight: normal; cursor: default;"
-                     id="globalBar_pillWrapper">     
-                     <span style="white-space: pre-wrap;"
-                           data-bind="text:compositeCxtText, attr:{title:cxtCompositeName}" class="ude-sdk"></span>
+                     id="globalBar_pillWrapper">
+                    <span style="white-space: pre-wrap; vertical-align: super;"
+                          data-bind="text:compositeCxtText, attr:{title:cxtCompositeName}" class="ude-sdk">
+                    </span>
+                    <!-- ko if: showReadOnlyPillRemove -->
+                        <!-- ko ifnot: compositeCxtText() == gcAllEntities -->
+                         <a href="#" data-bind="click: removeROCompositePill, attr:{id:'globalBar_pillWrapper' + '_remove'}" style="display: inline-block">
+                            <div aria-hidden="true" role="button" class="pill_remove_gc" data-bind="attr: {title:removePillTitle}"></div>
+                         </a>
+                        <!-- /ko -->
+                    <!-- /ko -->
                 </div>
                 <!-- /ko -->
-                <!-- ko foreach: entitiesDisplayNames() -->
-                <div class="ude-sdk pill filterpill_value filterpill_with_value" style="margin-bottom: auto; margin-top: auto;height: 20px;
-                     padding-left: 8px; padding-right:8px; font-size: 14px; padding-top: 3px;padding-bottom: 1px;margin-left:0px; font-weight: normal; cursor: default;"
+                <!-- ko foreach: entitiesList() -->
+                <div class="ude-sdk pill filterpill_value filterpill_with_value"
+                     style="margin-bottom: auto; margin-top: auto; margin-left: 0px;
+                            padding-left: 8px; padding-right: 8px; padding-top: 3px;padding-bottom: 1px;
+                            height: 20px; font-size: 14px; font-weight: normal; cursor: default;"
                      data-bind="attr: {id: 'globalBar_pillWrapper_' + $index()}">
-                     <span style="white-space: pre-wrap;"
-                           data-bind="text:$data.displayName, attr:{title:$data.entityName}" class="ude-sdk"></span>
+                    <span style="white-space: pre-wrap; vertical-align: super;"
+                        data-bind="text:$data.displayName, attr:{title:$data.entityName}" class="ude-sdk">
+                    </span>
+                    <!-- ko if: showReadOnlyPillRemove -->
+                        <a href="#" data-bind="click: $parent.removeROEntityPill, attr:{id:'globalBar_pillWrapper_' + $index() + '_remove'}" style="display: inline-block">
+                            <div aria-hidden="true" role="button" class="pill_remove_gc" data-bind="attr: {title:$parent.removePillTitle}"></div>
+                        </a>
+                    <!-- /ko -->
                 </div>
                 <!-- /ko -->
             </div>
             </div>
-
+            <!-- /ko -->
+            <!-- /ko -->
             <!-- ko if: showTimeSelector() === true -->
-                <div id ="emaas-appheader-timecxt" class="emaas-appheader-time-context" data-bind="component: {name: 'df-datetime-picker', params: timeSelectorParams}">
+                <!-- ko if: showEntitySelector() === false -->
+                    <div class="ude-sdk emaas-appheader-inline-flexbox emaas-appheader-flexbox-auto animated_transitions" style="padding-bottom: 10px; padding-top: 3px; height: 32px; display: flex;">
+                        <div class="ude-sdk emcta_panel_border flexBoxNoShrink flexBoxColumn flexBoxAuto animated_transitions" id="globalBar_wrapper"
+                            style="padding:2px;">
+                        </div>
+                    </div>
+                <!-- /ko -->
+                <div id ="emaas-appheader-timecxt" class="emaas-appheader-time-context" data-bind="component: {name: 'df-datetime-picker', params: timeSelectorParams}" style="padding-top: 3px">
                 </div>
             <!-- /ko -->
         </div>
 
+        
+        <!-- ko if: showEntitySelector() -->
         <!-- topology --->
         <!-- ko if: isTopologyCompRegistered() !== false -->
         <div id="ude-topology-div" style="overflow-y:auto; height:auto; background-color:white; display: flex;"
@@ -169,7 +200,8 @@
             
             <!--<div data-bind="attr: {style: topologyStyle}" style="margin: 0 auto">test div</div>-->
             
-        <div class="ude-topology ude-topology-in-brandingbar" data-bind="component:{name:'emctas-topology', 
+        <div class="ude-topology ude-topology-in-brandingbar" data-bind="attr: {style: topologyStyle},
+           component:{name:'emctas-topology', 
             params:{
                    entityQueryVars: queryVars(),
                    entities: entities(),
@@ -179,14 +211,15 @@
                    customEventHandler: customEventHandler(),
                    miniEntityCardActions: miniEntityCardActions(),
                    enableCache: true,
-                   topologySize: topologySize
+                   topologySize: topologySize,
+                   topologyData: topologyData()
                 }
-            },
-            attr: {style: topologyStyle}">
+            }">
         </div>      
         </div>
         <!-- /ko -->
         <!-- End of topology -->
+        <!-- /ko -->
 
         <!-- /ko -->  <!-- End of Global Context Banner -->
 

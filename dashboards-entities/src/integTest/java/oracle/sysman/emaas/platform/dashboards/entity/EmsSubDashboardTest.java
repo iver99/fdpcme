@@ -1,21 +1,21 @@
 package oracle.sysman.emaas.platform.dashboards.entity;
 
-import org.testng.annotations.Test;
+import java.math.BigInteger;
 
-import static org.testng.Assert.*;
+import org.testng.annotations.Test;
 
 @Test(groups = {"s1"})
 public class EmsSubDashboardTest {
-    private EmsSubDashboard emsSubDashboard = new EmsSubDashboard(1L,1L,1);
+    private EmsSubDashboard emsSubDashboard = new EmsSubDashboard(BigInteger.valueOf(1L),BigInteger.valueOf(1L),1);
     @Test
     public void testSetDashboardSetId() throws Exception {
-        emsSubDashboard.setDashboardSetId(1L);
+        emsSubDashboard.setDashboardSetId(BigInteger.valueOf(1L));
         emsSubDashboard.getDashboardSetId();
     }
 
     @Test
     public void testSetSubDashboardId() throws Exception {
-        emsSubDashboard.setSubDashboardId(1L);
+        emsSubDashboard.setSubDashboardId(BigInteger.valueOf(1L));
         emsSubDashboard.getSubDashboardId();
     }
 
