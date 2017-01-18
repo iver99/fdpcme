@@ -44,8 +44,8 @@ public class TenantSubscriptionUtil
 		}
 
 		long startTime = System.currentTimeMillis();
-		/*Tenant cacheTenant = new Tenant(tenant);
-		Object tenantKey = DefaultKeyGenerator.getInstance().generate(cacheTenant, new Keys(CacheConstants.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS));
+		Tenant cacheTenant = new Tenant(tenant);
+		Object tenantKey = DefaultKeyGenerator.getInstance().generate(cacheTenant, new Keys(CacheConstants.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS_UIFWK));
 		ICacheManager cm = CacheManagers.getInstance().build();
 		ICache cache = cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE);
 		if (cache != null) {
@@ -59,7 +59,7 @@ public class TenantSubscriptionUtil
 				// for cache issue, we'll continue retrieve data and just log a warning message
 				LOGGER.warn(e.getLocalizedMessage(), e);
 			}
-		}*/
+		}
 
 		// instead of retrieving subscribed apps from entitynaming, we get that from dashboard api
 		Link subAppLink = RegistryLookupUtil.getServiceInternalLink("Dashboard-API", "1.0+", "static/dashboards.subscribedapps",
@@ -76,7 +76,7 @@ public class TenantSubscriptionUtil
 		rc.setHeader(HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME, tenant);
 		rc.setHeader("X-REMOTE-USER", tenant + "." + user);
 		String subAppResponse = rc.get(subAppHref, tenant);
-		//cache.put(tenantKey, subAppResponse);
+		cache.put(tenantKey, subAppResponse);
 		LOGGER.info("Checking tenant (" + tenant + ") subscriptions. Dashboard-API subscribed app response is " + subAppResponse);
 		LOGGER.info("It takes {}ms to retrieve subscribed app data from Dashboard-API", System.currentTimeMillis() - startTime);
 		return subAppResponse;
