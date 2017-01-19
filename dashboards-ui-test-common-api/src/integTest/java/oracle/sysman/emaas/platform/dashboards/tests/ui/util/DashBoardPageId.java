@@ -24,6 +24,7 @@ public class DashBoardPageId
 	public static final String WIDGETADDBUTTON = "emcpdf_dsbopts_add";//"//div[@id='ojDialogWrapper-widgetDetailsDialog']/div[5]/button";////div[18]/div[5]/button/span[text()='Add']";
 	public static final String DASHBOARDEDIT = "//*[@id='emcpdf_dsbopts_edit']";
 	public static final String DASHBOARDEDITBUTTON = "//button[@title='Edit Settings']";
+	public static final String DASHBOARDNAME = ".//*[@id='dbd-edit-settings-container']/span[2]";
 	public static final String DASHBOARDNAME_CSS = ".edit-setting-link.edit-dsb-link";
 	public static final String DASHBOARDFILTERS = "//span[contains(text(),'Dashboard Filters')]";
 	public static final String DASHBOARDENTITIES = "//label[text()='Entities']";

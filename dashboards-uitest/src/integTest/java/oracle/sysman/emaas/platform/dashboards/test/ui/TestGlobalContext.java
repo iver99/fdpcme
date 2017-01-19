@@ -291,8 +291,7 @@ public class TestGlobalContext extends LoginAndLogout
 		webd.click(DashBoardPageId.DASHBOARDEDITBUTTON);
 		
 		//find the dashboard name and click it
-	//	WebElement dashboardName = webd.getWebDriver().findElement(By.xpath("css="+ DashBoardPageId.DASHBOARDNAME_CSS));
-		WebElement dashboardName = webd.getWebDriver().findElement(By.cssSelector("css="+ DashBoardPageId.DASHBOARDNAME_CSS));		
+		WebElement dashboardName = webd.getWebDriver().findElement(By.xpath(DashBoardPageId.DASHBOARDNAME));		
 		Assert.assertTrue(dashboardName.isDisplayed(), "dashboardName isn't displayed in self dashboard");
 		webd.click("css="+ DashBoardPageId.DASHBOARDNAME_CSS);
 		
