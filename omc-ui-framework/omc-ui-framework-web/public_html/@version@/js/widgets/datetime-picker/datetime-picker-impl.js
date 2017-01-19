@@ -134,6 +134,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     return ctxUtil.isValidTimePeriod(timePeriod);
                 }
 
+                self.showPanel = ko.observable(false);
                 self.enableTimeFilter = ko.observable(false);
                 self.tfInfoIndicatorVisible = ko.observable(false);
                 self.timeFilterInfo = ko.observable();
@@ -1915,6 +1916,9 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 //contol whether the panel should popup or not
                 self.panelControl = function (data,event) {
                     event.stopPropagation();
+                    if(self.showPanel() === false) {
+                        self.showPanel(true);
+                    }
                     if(!self.dtpickerPosition) {
                         if(params.dtpickerPosition) {
                             if(params.dtpickerPosition === "right") {

@@ -15,6 +15,7 @@
                 <span data-bind="html: timeFilterInfo"></span>
             </div>
 
+            <!-- ko if: showPanel() === true -->
             <div class="panel" style="display:inline-block; padding: 0px; margin: 0px;" data-bind="ojComponent: {component: 'ojPopup', chrome: 'none', beforeClose: setLastDatas}, click: function(data, event) {event.stopPropagation();return true;}, attr: {id: 'panel_'+randomId}"> 
                 <!-- left of panel -->
                 <div class="drawers" data-bind="style: {height: leftDrawerHeight}">
@@ -231,6 +232,7 @@
                         <!-- /ko -->
                     </div>
                 </div>
-            </div> 
+            </div>
+            <!-- /ko -->
 
         </div>
