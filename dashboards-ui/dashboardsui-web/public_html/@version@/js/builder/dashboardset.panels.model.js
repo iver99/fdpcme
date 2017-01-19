@@ -81,7 +81,7 @@ define([
                         }else {
                             headerViewModel && headerViewModel.brandingbarParams.showTimeSelector(true);
                         }
-                        if(dashboardsetToolBarModel.dashboardInst.enableEntityFilter()==="FALSE") {
+                        if(dashboardsetToolBarModel.dashboardInst.enableEntityFilter()==="FALSE" || dashboardsetToolBarModel.dashboardInst.enableEntityFilter()==="TRUE") {
                             headerViewModel && headerViewModel.brandingbarParams.showEntitySelector(false);
                         }else {
                             headerViewModel && headerViewModel.brandingbarParams.showEntitySelector(true);
