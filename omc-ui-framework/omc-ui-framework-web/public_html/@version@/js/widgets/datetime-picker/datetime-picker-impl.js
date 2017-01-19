@@ -1378,7 +1378,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             start = newDateWithMilliseconds(sdt);
                             end = new Date();
                         } else if(omcContext.time && omcContext.time.timePeriod && 
-                                ((tp = self.timePeriodsNlsObject[formalizeTimePeriod(omcContext.time.timePeriod)]) || isValidFlexRelTimePeriod(omcContext.time.timePeriod))) {
+                                (((tp = self.timePeriodsNlsObject[formalizeTimePeriod(omcContext.time.timePeriod)]) && tp !== self.timePeriodCustom) || isValidFlexRelTimePeriod(omcContext.time.timePeriod))) {
                             if(tp) {
                                 if(tp === self.timePeriodToday) {
                                     start = new Date(curDate.getFullYear(), curDate.getMonth(), curDate.getDate());
@@ -1390,17 +1390,6 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                     end = curDate;
                                     self.setTimePeriodChosen(tp);
                                     self.setTimePeriodToLastX(tp, start, end, 1);
-                                }else if(tp === self.timePeriodCustom) {
-                                    if(self.startDateTime && self.endDateTime) {
-                                        sdt = self.getParam(self.startDateTime);
-                                        edt = self.getParam(self.endDateTime);
-                                        start = newDateWithMilliseconds(sdt);
-                                        end = newDateWithMilliseconds(edt);
-                                        customClick(0);
-                                    }else {
-                                        throw new Error('Error: set timePeriod to "Custom" without time range specified!');
-                                        return;
-                                    }
                                 }else {
                                     if(tp === self.timePeriodLast1year) {
                                         start = new Date(curDate.getFullYear()-1, curDate.getMonth(), curDate.getDate(), curDate.getHours(), curDate.getMinutes(), curDate.getSeconds(), curDate.getMilliseconds());
@@ -1439,7 +1428,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                 self.timePeriod(self.timePeriodCustom);
                             }
                         } else if(omcContext.time && omcContext.time.startTime && omcContext.time.endTime && 
-                                !isNaN(parseInt(omcContext.time.startTime)) && isNaN(parseInt(omcContext.time.endTime))) {
+                                !isNaN(parseInt(omcContext.time.startTime)) && !isNaN(parseInt(omcContext.time.endTime))) {
                             curDate = new Date();
                             //users input start date and end date
                             sdt = new Date(parseInt(omcContext.time.startTime));
@@ -2622,6 +2611,8 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 function callbackForOmcCtxChange(ctxChangeEvent) {
                     var start;
                     var end;
+                    var ctxStart = null;
+                    var ctxEnd = null;
                     var tp;
                     var timeRange;
                     var parsedTimePeriod;
@@ -2630,9 +2621,39 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         if(self.hideTimeSelection() === false) {
                             start = oj.IntlConverterUtils.isoToLocalDate(self.startDateISO().slice(0, 10) + self.startTime());
                             end = oj.IntlConverterUtils.isoToLocalDate(self.endDateISO().slice(0, 10) + self.endTime());
+                            
+                            if(ctxChangeEvent.currentValue.startTime) {
+                                if(self.timeConverter() === self.timeConverterMillisecond) {
+                                    ctxStart = ctxChangeEvent.currentValue.startTime;
+                                }else {
+                                    ctxStart = oj.IntlConverterUtils.dateToLocalIso(new Date(ctxChangeEvent.currentValue.startTime));
+                                    ctxStart = oj.IntlConverterUtils.isoToLocalDate(ctxStart.slice(0, 10) + ctxStart.slice(10, 16));
+                                    ctxStart = ctxStart.getTime();
+                                }
+                            }
+                            if(ctxChangeEvent.currentValue.endTime) {
+                                if(self.timeConverter() === self.timeConverterMillisecond) {
+                                    ctxEnd = ctxChangeEvent.currentValue.endTime;
+                                }else {
+                                    ctxEnd = oj.IntlConverterUtils.dateToLocalIso(new Date(ctxChangeEvent.currentValue.endTime));
+                                    ctxEnd = oj.IntlConverterUtils.isoToLocalDate(ctxEnd.slice(0, 10) + ctxEnd.slice(10, 16));
+                                    ctxEnd = ctxEnd.getTime();
+                                }
+                            }
                         }else {
                             start = oj.IntlConverterUtils.isoToLocalDate(self.startDateISO().slice(0, 10));
                             end = oj.IntlConverterUtils.isoToLocalDate(self.endDateISO().slice(0, 10));
+                            
+                            if(ctxChangeEvent.currentValue.startTime) {
+                                ctxStart = oj.IntlConverterUtils.dateToLocalIso(new Date(ctxChangeEvent.currentValue.startTime));
+                                ctxStart = oj.IntlConverterUtils.isoToLocalDate(ctxStart.slice(0, 10));
+                                ctxStart = ctxStart.getTime();
+                            }
+                            if(ctxChangeEvent.currentValue.endTime) {
+                                ctxEnd = oj.IntlConverterUtils.dateToLocalIso(new Date(ctxChangeEvent.currentValue.endTime));
+                                ctxEnd = oj.IntlConverterUtils.isoToLocalDate(ctxEnd.slice(0, 10));
+                                ctxEnd = ctxEnd.getTime();
+                            }
                         }
                         start = start.getTime();
                         end = end.getTime();
@@ -2644,16 +2665,15 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         
                         if(ctxChangeEvent.contextName === "timePeriod") {
                             if(ctxChangeEvent.currentValue.timePeriod !== tp
-                                    || (ctxChangeEvent.currentValue.startTime && ctxChangeEvent.currentValue.startTime !== start) 
-                                    || (ctxChangeEvent.currentValue.endTime && ctxChangeEvent.currentValue.endTime !== end)) {
+                                    || (ctxStart && ctxStart !== start) 
+                                    || (ctxEnd && ctxEnd !== end)) {
                                 tp = self.timePeriodsNlsObject[ctxChangeEvent.currentValue.timePeriod];
                                 if((tp && tp !== self.timePeriodCustom) || isValidFlexRelTimePeriod(ctxChangeEvent.currentValue.timePeriod)) {
                                     timeRange = ctxUtil.getStartEndTimeFromTimePeriod(ctxChangeEvent.currentValue.timePeriod);
-                                    start = ctxChangeEvent.currentValue.startTime ? new Date(ctxChangeEvent.currentValue.startTime) : timeRange.start;
-                                    end = ctxChangeEvent.currentValue.endTime ? new Date(ctxChangeEvent.currentValue.endTime) : timeRange.end;
+                                    start = ctxStart ? new Date(ctxStart) : timeRange.start;
+                                    end = ctxEnd ? new Date(ctxEnd) : timeRange.end;
                                     start = oj.IntlConverterUtils.dateToLocalIso(start);
                                     end = oj.IntlConverterUtils.dateToLocalIso(end);
-                                    
                                     if(tp) { //For quick picks
                                         self.lrCtrlVal("timeLevelCtrl");
                                         self.selectByDrawer(true);
@@ -2684,11 +2704,11 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                     setTimeout(function() {self.applyClick(false);}, 0);
                                 }
                             }
-                        }else if(ctxChangeEvent.contextName === "startEndTime" && ctxChangeEvent.currentValue.startTime && ctxChangeEvent.currentValue.endTime && 
-                                (ctxChangeEvent.currentValue.startTime !== start || ctxChangeEvent.currentValue.endTime !== end)) {
+                        }else if(ctxChangeEvent.contextName === "startEndTime" && ctxStart && ctxEnd && 
+                                (ctxStart !== start || ctxEnd !== end)) {
                             self.lrCtrlVal("timeLevelCtrl");
-                            start = new Date(ctxChangeEvent.currentValue.startTime);
-                            end = new Date(ctxChangeEvent.currentValue.endTime);
+                            start = new Date(ctxStart);
+                            end = new Date(ctxEnd);
                             start = oj.IntlConverterUtils.dateToLocalIso(start);
                             end = oj.IntlConverterUtils.dateToLocalIso(end);
                             

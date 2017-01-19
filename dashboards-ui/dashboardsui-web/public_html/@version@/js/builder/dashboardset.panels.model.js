@@ -50,7 +50,7 @@ define([
             };
             
             self.showDashboard = function (dashboardsetToolBarModel) {
-                document.activeElement.blur();//to blur the focused item on another tab
+                document.activeElement && document.activeElement.blur();//to blur the focused item on another tab
                 var dashboardItem=dashboardsetToolBarModel.selectedDashboardItem(),               
                     dashboardId = dashboardItem.dashboardId,
                     divId = "dashboard-" + dashboardId,
@@ -81,7 +81,7 @@ define([
                         }else {
                             headerViewModel && headerViewModel.brandingbarParams.showTimeSelector(true);
                         }
-                        if(dashboardsetToolBarModel.dashboardInst.enableEntityFilter()==="FALSE") {
+                        if(dashboardsetToolBarModel.dashboardInst.enableEntityFilter()==="FALSE" || dashboardsetToolBarModel.dashboardInst.enableEntityFilter()==="TRUE") {
                             headerViewModel && headerViewModel.brandingbarParams.showEntitySelector(false);
                         }else {
                             headerViewModel && headerViewModel.brandingbarParams.showEntitySelector(true);

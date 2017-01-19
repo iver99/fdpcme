@@ -9,6 +9,7 @@ import java.util.LinkedHashMap;
 /**
  * Created by guochen on 11/18/16.
  */
+@Deprecated
 public class StringCacheUtil {
     private static Logger LOGGER = LogManager.getLogger(StringCacheUtil.class);
 
@@ -59,7 +60,7 @@ public class StringCacheUtil {
     private StringCacheUtil() {
 
     }
-
+    @Deprecated
     public String put(String key, String value) {
         if (StringUtil.isEmpty(key)) {
             LOGGER.error("Failed to put value {} into cache, as specified key is empty", value == null? null: value.toString());
@@ -73,7 +74,7 @@ public class StringCacheUtil {
         container.put(key, co);
         return value;
     }
-
+    @Deprecated
     public String get(String key) {
         if (StringUtil.isEmpty(key)) {
             LOGGER.error("Failed to getDashboardData value for key as it is null or empty: {}", key);
@@ -89,7 +90,7 @@ public class StringCacheUtil {
         String value = co.getObject();
         return value;
     }
-
+    @Deprecated
     public String remove(String key) {
         if (StringUtil.isEmpty(key)) {
             LOGGER.error("Failed to remove value for key as key is null or empty: {}", key);
@@ -104,7 +105,7 @@ public class StringCacheUtil {
         }
         return null;
     }
-
+    @Deprecated
     private boolean isValidValue(CachedObj co) {
         if (co == null) {
             return false;
