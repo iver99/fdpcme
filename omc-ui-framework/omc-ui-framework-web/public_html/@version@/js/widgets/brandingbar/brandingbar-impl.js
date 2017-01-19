@@ -96,13 +96,15 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.customEventHandler = ko.observable();
             self.miniEntityCardActions = ko.observable();
             self.highlightedEntities = ko.observableArray([NO_HIGHLIGHT]);
-            self.topologyData = ko.observable();
+            self.topologyData = function (data) {
+                self.udeTopologyData = data;
+            };
+
             if (params) {
                 self.associations(params.associations);
                 self.layout(params.layout);
                 self.customNodeDataLoader(params.customNodeDataLoader);
                 self.customEventHandler(params.customEventHandler);
-                self.topologyData(params.topologyData);
                 self.miniEntityCardActions(params.miniEntityCardActions);
             }
 
@@ -1117,7 +1119,6 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                             self.layout(topologyParams.layout);
                             self.customNodeDataLoader(topologyParams.customNodeDataLoader);
                             self.customEventHandler(topologyParams.customEventHandler);
-                            self.topologyData(topologyParams.topologyData);
                             self.miniEntityCardActions(topologyParams.miniEntityCardActions);
                             self.topologyParamsSet = true;
                         }
