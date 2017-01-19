@@ -101,7 +101,6 @@ public class AdditionalDataFilter implements Filter {
 
         final CaptureWrapper wrapper = new CaptureWrapper(httpResponse);
         if (!StringUtil.isEmpty(CACHED_BEFORE_ADDITIONAL_DATA_PART)) {
-            LOGGER.info("There's cached static html fragment, concatinate them together as the response");
             // previously the html static resource (start part&end part) has been cached,
             // so no need to parse the static resource again or go to the next filter
             // just concatinate the data string into one
@@ -110,7 +109,7 @@ public class AdditionalDataFilter implements Filter {
             sb.append(data);
             sb.append(CACHED_AFTER_ADDITIONAL_DATA_PART);
             String newResponseText = sb.toString();
-            LOGGER.info("After inserting additional data, the response test is {}", newResponseText);
+            LOGGER.info("After getting cached static html fragment, contactinating the data and inserting into html, the response text is {}", newResponseText);
             response.setCharacterEncoding("utf-8");
             response.setContentType("text/html;charset=utf-8");
             try (PrintWriter writer = new PrintWriter(response.getOutputStream())) {
@@ -125,27 +124,31 @@ public class AdditionalDataFilter implements Filter {
         assert (responseText != null);
         String data = getDashboardData(httpReq);
         String newResponseText = responseText;
-        LOGGER.debug("Before inserting additional data, the response test is {}", newResponseText);
+        LOGGER.info("Before inserting additional data, the response text is {}", newResponseText);
         if (!StringUtil.isEmpty(data) && responseText != null) {
-            if (!StringUtil.isEmpty(CACHED_BEFORE_ADDITIONAL_DATA_PART)) {
-                // we do not need to sync the opration on cached string for multi-thread, as the cached html fragment will be always the same
-                int idx = responseText.indexOf(ADDITIONA_DATA_TO_REPLACE);
-                CACHED_BEFORE_ADDITIONAL_DATA_PART = responseText.substring(0, idx);
-                CACHED_AFTER_ADDITIONAL_DATA_PART = responseText.substring(idx + ADDITIONA_DATA_TO_REPLACE.length(), responseText.length());
-            }
+            int idx = responseText.indexOf(ADDITIONA_DATA_TO_REPLACE);
+            String beforePart = responseText.substring(0, idx);
+            LOGGER.debug("Before part is {}", beforePart);
+            String afterPart = responseText.substring(idx + ADDITIONA_DATA_TO_REPLACE.length(), responseText.length());
+            LOGGER.debug("After part is {}", afterPart);
+            updateCachedHtmlFragments(beforePart, afterPart);
             StringBuilder sb = new StringBuilder(CACHED_BEFORE_ADDITIONAL_DATA_PART);
             sb.append(data);
             sb.append(CACHED_AFTER_ADDITIONAL_DATA_PART);
             newResponseText = sb.toString();
-            LOGGER.debug("Replacing and inserting addtional data now!");
+            LOGGER.info("After inserting additional data, the response text is {}", newResponseText);
         }
-        LOGGER.info("After inserting additional data, the response test is {}", newResponseText);
         response.setCharacterEncoding("utf-8");
         response.setContentType("text/html;charset=utf-8");
         // Writes the updated response text to the response object
         try (PrintWriter writer = new PrintWriter(response.getOutputStream())) {
             writer.println(newResponseText);
         }
+    }
+
+    private synchronized static void updateCachedHtmlFragments(String beforePart, String afterPart) {
+        CACHED_BEFORE_ADDITIONAL_DATA_PART = beforePart;
+        CACHED_AFTER_ADDITIONAL_DATA_PART = afterPart;
     }
 
     private void replaceDashboardData() {
@@ -177,13 +180,6 @@ public class AdditionalDataFilter implements Filter {
             return getDashboardData(tenant, user, dashboardId, httpReq.getHeader("referer"), sesExp);
         }
         return null;
-    }
-
-    String formatJsonString(String json) {
-        if (StringUtil.isEmpty(json)) {
-            return json;
-        }
-        return json.replace("\\", "\\\\").replace("\"", "\\\"").replace("$", "\\$");
     }
 
     private String getDashboardData(final String tenant, final String user, final BigInteger dashboardId, final String referer, final String sessionExp) {
@@ -251,7 +247,8 @@ public class AdditionalDataFilter implements Filter {
                 if (StringUtil.isEmpty(dashboardString)) {
                     LOGGER.warn("Retrieved null or empty dashboard for tenant {} user {} and dashboardId {}, so do not update page data then", tenant, user, dashboardId);
                 } else {
-                    dashboardString = formatJsonString(dashboardString);
+                    // as we don't use regexp for string operation, but directly concatenate the strings, no need to escape
+                    //dashboardString = formatJsonString(dashboardString);
                     LOGGER.info("Escaping retrieved data before inserting to html. Vlaue now is: {}", dashboardString);
                     sb.append("window._dashboardServerCache=").append(dashboardString).append(";");
                 }
