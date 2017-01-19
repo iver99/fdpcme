@@ -7,7 +7,7 @@ import java.util.ResourceBundle;
  */
 public class CacheConfig {
     //if you want to run local test, please comment this line of below code.
-    public static ResourceBundle conf = ResourceBundle.getBundle("cache_config");
+    /*public static ResourceBundle conf = ResourceBundle.getBundle("cache_config");
     //all cache group's expiration time
     public static final Long ADMIN_LINK_CACHE_EXPIRE_TIME = Long.valueOf(conf.getString("ADMIN_LINK_CACHE_EXPIRE_TIME"));
     public static final Long CLOUD_SERVICE_LINK_EXPIRE_TIME = Long.valueOf(conf.getString("CLOUD_SERVICE_LINK_EXPIRE_TIME"));
@@ -51,13 +51,13 @@ public class CacheConfig {
     //log cache status time interval
     public static final Long LOG_INTERVAL = Long.valueOf(conf.getString("LOG_INTERVAL"));
     //refresh cache interval
-    public static final Long REFRESH_CACHE_INTERVAL = Long.valueOf(conf.getString("LOG_INTERVAL"));
+    public static final Long REFRESH_CACHE_INTERVAL = Long.valueOf(conf.getString("LOG_INTERVAL"));*/
 
 
    /**
      * below code are used when you want to run local test,and before you use , please comment above code.
      */
-    /*public static final Long ADMIN_LINK_CACHE_EXPIRE_TIME = 20L;
+    public static final Long ADMIN_LINK_CACHE_EXPIRE_TIME = 20L;
     public static final Long CLOUD_SERVICE_LINK_EXPIRE_TIME =20L;
     public static final Long HOME_LINK_EXPIRE_TIME = 20L;
     public static final Long VISUAL_ANALYZER_LINK_EXPIRE_TIME = 20L;
@@ -90,8 +90,8 @@ public class CacheConfig {
     public static final Integer ETERNAL_CAPACITY = 20;
     public static final Integer DEFAULT_CAPACITY = 20;
     public static final Long LOG_INTERVAL = 20L;
-    public static final Integer REGISTRY_CAPACITY = 20L;
-    public static final Integer TENANT_USER_CAPACITY = 20L;
-    public static final Long REFRESH_CACHE_INTERVAL = 20L;*/
+    public static final Integer REGISTRY_CAPACITY = 20;
+    public static final Integer TENANT_USER_CAPACITY = 20;
+    public static final Long REFRESH_CACHE_INTERVAL = 20L;
 }
 

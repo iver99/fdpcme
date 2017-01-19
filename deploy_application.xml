@@ -23,10 +23,12 @@
          </DependsOn>
 </Service>
 
+
 <Service Name="DashboardService-comparator" Version="1.15.0" type="app">
         <artifact name="softwarejson" loc="software-definitions/Dashboard-comparator.json"/>
         <artifact name="cookbook" loc="dashboards-chef/cookbook-emcs-dashboard-comparator"/> 
         <artifact name="software" loc="dashboards-comparator/deploy-list.xml"/>
 </Service> 
+
 </Application>
 </EMaaSManifest>

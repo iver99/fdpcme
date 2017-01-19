@@ -79,11 +79,11 @@ public class LoggingConfigAPITest {
                 Map<String,LoggerConfig> loggers = new HashMap<>();
                 loggers.put(loggerName,new LoggerConfig(loggerName, level, true));
 
-                configuration.getLoggers();
-                result = loggers;
+                /*configuration.getLoggers();
+                result = loggers;*/
 
-                configuration.getProperties();
-                result  = new HashMap<String,String>();
+               /* configuration.getProperties();
+                result  = new HashMap<String,String>();*/
 
             }
         };
@@ -105,11 +105,11 @@ public class LoggingConfigAPITest {
                 Map<String,LoggerConfig> loggers = new HashMap<>();
                 loggers.put(loggerName,new LoggerConfig(loggerName, level, true));
 
-                configuration.getLoggers();
+               /* configuration.getLoggers();
                 result = loggers;
 
                 configuration.getProperties();
-                result  = new HashMap<String,String>();
+                result  = new HashMap<String,String>();*/
 
             }
         };
