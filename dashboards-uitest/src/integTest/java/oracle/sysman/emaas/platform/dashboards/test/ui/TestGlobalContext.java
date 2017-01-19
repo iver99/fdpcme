@@ -23,9 +23,9 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+//import org.openqa.selenium.By;
+//import org.openqa.selenium.support.ui.ExpectedConditions;
+//import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * @author cawei
@@ -292,11 +292,13 @@ public class TestGlobalContext extends LoginAndLogout
 		
 		webd.switchToWindow();
 		webd.getLogger().info("Wait for the widget loading....");
-		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		wait1.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id='save_widget_btn']")));
-	
+		//WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
+		//wait1.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id='save_widget_btn']")));
+		webd.waitForElementPresent("//*[@id='save_widget_btn']", WaitUtil.WAIT_TIMEOUT);
+		
 		//verify the open url
 		DashBoardUtils.verifyURL_WithPara(webd, "omcCtx=");	
+		Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(webd),"The global context exists in ITA widget");
 	}
 
 	@Test(groups = "test_omcCtx")
@@ -320,11 +322,13 @@ public class TestGlobalContext extends LoginAndLogout
 		
 		webd.switchToWindow();
 		webd.getLogger().info("Wait for the widget loading....");
-		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		wait1.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id='srchSrch']")));
-	
+		//WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
+		//wait1.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id='srchSrch']")));
+		webd.waitForElementPresent("//*[@id='srchSrch']", WaitUtil.WAIT_TIMEOUT);
+		
 		//verify the open url
 		DashBoardUtils.verifyURL_WithPara(webd, "omcCtx=");	
+		Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(webd),"The global context exists in LA widget");
 	}
 
 	private String generateTimeStamp()
