@@ -183,7 +183,10 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 
                     if (self.isTopologyDisplayed()) {
                         //when expanding the topology, do a refresh if needed
+                        console.log("**************topology displayed");
+                        console.log("**************self.topologyNeedRefresh" + self.topologyNeedRefresh);
                         if (self.topologyNeedRefresh) {
+                            console.log("**************refreshTopologyParams");
                             refreshTopologyParams();
                         }
                         var entityMeIds = cxtUtil.getEntityMeIds();
@@ -192,7 +195,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         } else {
                             self.highlightedEntities([NO_HIGHLIGHT]);
                         }
-
+                        self.topologyInitialized = true;
                         $(".ude-topology-in-brandingbar .oj-diagram").ojDiagram("refresh");
                     }
                     //set brandingbar_cache information for Topology expanded state
@@ -1067,15 +1070,20 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     var refreshTopology = true;
                     var omcContext = cxtUtil.getOMCContext();
                     var currentCompositeId = cxtUtil.getCompositeMeId();
+                    console.log("************currentCompositeId" + currentCompositeId);
                     if (currentCompositeId) {
                         if (self.topologyInitialized === true && currentCompositeId === omcContext.previousCompositeMeId) {
+                            console.log("****************self.topologyInitialized" + self.topologyInitialized);
+                            console.log("************previousCompositeMeId" + omcContext.previousCompositeMeId);
                             refreshTopology = false;
                         }
                         else {
+                            console.log("*******************refresh topology entities");
                             var compositeId = [];
                             compositeId.push(currentCompositeId);
                             self.entities(compositeId);
                             omcContext.previousCompositeMeId = currentCompositeId;
+                            self.topologyInitialized = true;
                         }
                         self.topologyDisabled(false);
                     }
@@ -1124,12 +1132,16 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                             self.topologyParamsSet = true;
                         }
                         $(".ude-topology-in-brandingbar .oj-diagram").ojDiagram("refresh");
-                        self.topologyInitialized = true;
+                        if (self.isTopologyDisplayed()) {
+                            console.log("***************topology initialied");
+                            self.topologyInitialized = true;
+                        }
                         if (fireTopoChangeEvent) {
                             fireTopologyStatusChangeEvent('Refresh');
                         }
                     }
                     //Clear dirty flag for topology after refreshing done
+                    console.log("***********set self.topologyNeedRefresh to false");
                     self.topologyNeedRefresh = false;
                 }
             }
@@ -1182,6 +1194,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 //                refreshTimeCtxText();
 
                 //Set a dirty flag for topology to be refreshed
+                console.log("***********set self.topologyNeedRefresh to true");
                 self.topologyNeedRefresh = true;
                 if (self.isTopologyDisplayed()) {
                     // update parameters for topology 
