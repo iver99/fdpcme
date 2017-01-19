@@ -297,13 +297,6 @@ require(['ojs/ojcore',
                             //change name of data explorer in ITA starting with "Data Explorer - "
                         }
                     }
-                    landingHomeUrls["DB_perf"] = self.getITAVerticalAppUrl("verticalApplication.db-perf");
-                    landingHomeUrls["DB_resource"] = self.getITAVerticalAppUrl("verticalApplication.db-resource");
-                    landingHomeUrls["mw_perf"] = self.getITAVerticalAppUrl("verticalApplication.mw-perf");
-                    landingHomeUrls["mw_resource"] = self.getITAVerticalAppUrl("verticalApplication.mw-resource");
-                    landingHomeUrls["svr_resource"] = self.getITAVerticalAppUrl("verticalApplication.svr-resource");
-                    landingHomeUrls["avail-analytics"] = self.getITAVerticalAppUrl("verticalApplication.avail-analytics");
-                    landingHomeUrls["app_perf"] = self.getITAVerticalAppUrl("verticalApplication.app-perf-analytics");
                     self.landingHomeUrls = landingHomeUrls;
                 }
                 self.getServiceUrls();
@@ -360,11 +353,21 @@ require(['ojs/ojcore',
                     }
                 };
                 self.ITAOptionChosen = function(event, data) {
+                    var ITA_OPTION_MAP = {
+                        "DB_perf": "verticalApplication.db-perf",
+                        "DB_resource": "verticalApplication.db-resource",
+                        "mw_perf": "verticalApplication.mw-perf",
+                        "mw_resource": "verticalApplication.mw-resource",
+                        "svr_resource": "verticalApplication.svr-resource",
+                        "avail-analytics": "verticalApplication.avail-analytics",
+                        "app_perf": "verticalApplication.app-perf-analytics"
+                    };
                     if(!self.landingHomeUrls) {
                         console.log("---fetching service links is not finished yet!---");
                         return;
                     }
-                    if(data.value && self.landingHomeUrls[data.value]) {
+                    if(data.value){
+                        self.landingHomeUrls[data.value] = self.getITAVerticalAppUrl(ITA_OPTION_MAP[data.value]);
                         oj.Logger.info('Trying to open ' + data.value + ' by URL: ' + self.landingHomeUrls[data.value]);
                         window.location.href = cxtUtil.appendOMCContext(self.landingHomeUrls[data.value]);
                     }
