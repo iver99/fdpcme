@@ -26,7 +26,11 @@ import java.util.regex.Pattern;
 public class AdditionalDataFilter implements Filter {
     private final static Logger LOGGER = LogManager.getLogger(AdditionalDataFilter.class);
 
-    private static final Pattern pattern = Pattern.compile("////TODO////");
+    private static final String ADDITIONA_DATA_TO_REPLACE = "////ADDITIONALDATA////";
+    private static final Pattern pattern = Pattern.compile(ADDITIONA_DATA_TO_REPLACE);
+
+    private static String CACHED_BEFORE_ADDITIONAL_DATA_PART = "";
+    private static String CACHED_AFTER_ADDITIONAL_DATA_PART = "";
 
     private static class CaptureWrapper extends HttpServletResponseWrapper
     {
@@ -96,6 +100,25 @@ public class AdditionalDataFilter implements Filter {
         httpResponse.setContentType("text/html;charset=utf-8");
 
         final CaptureWrapper wrapper = new CaptureWrapper(httpResponse);
+        if (!StringUtil.isEmpty(CACHED_BEFORE_ADDITIONAL_DATA_PART)) {
+            LOGGER.info("There's cached static html fragment, concatinate them together as the response");
+            // previously the html static resource (start part&end part) has been cached,
+            // so no need to parse the static resource again or go to the next filter
+            // just concatinate the data string into one
+            String data = getDashboardData(httpReq);
+            StringBuilder sb = new StringBuilder(CACHED_BEFORE_ADDITIONAL_DATA_PART);
+            sb.append(data);
+            sb.append(CACHED_AFTER_ADDITIONAL_DATA_PART);
+            String newResponseText = sb.toString();
+            LOGGER.info("After inserting additional data, the response test is {}", newResponseText);
+            response.setCharacterEncoding("utf-8");
+            response.setContentType("text/html;charset=utf-8");
+            try (PrintWriter writer = new PrintWriter(response.getOutputStream())) {
+                writer.println(newResponseText);
+            }
+            return;
+        }
+
         chain.doFilter(request, wrapper);
 
         final String responseText = wrapper.getResponseText();
@@ -104,16 +127,29 @@ public class AdditionalDataFilter implements Filter {
         String newResponseText = responseText;
         LOGGER.debug("Before inserting additional data, the response test is {}", newResponseText);
         if (!StringUtil.isEmpty(data) && responseText != null) {
-            newResponseText = pattern.matcher(responseText).replaceFirst(data);
+            if (!StringUtil.isEmpty(CACHED_BEFORE_ADDITIONAL_DATA_PART)) {
+                // we do not need to sync the opration on cached string for multi-thread, as the cached html fragment will be always the same
+                int idx = responseText.indexOf(ADDITIONA_DATA_TO_REPLACE);
+                CACHED_BEFORE_ADDITIONAL_DATA_PART = responseText.substring(0, idx);
+                CACHED_AFTER_ADDITIONAL_DATA_PART = responseText.substring(idx + ADDITIONA_DATA_TO_REPLACE.length(), responseText.length());
+            }
+            StringBuilder sb = new StringBuilder(CACHED_BEFORE_ADDITIONAL_DATA_PART);
+            sb.append(data);
+            sb.append(CACHED_AFTER_ADDITIONAL_DATA_PART);
+            newResponseText = sb.toString();
             LOGGER.debug("Replacing and inserting addtional data now!");
         }
-        LOGGER.debug("After inserting additional data, the response test is {}", newResponseText);
-	response.setCharacterEncoding("utf-8");
+        LOGGER.info("After inserting additional data, the response test is {}", newResponseText);
+        response.setCharacterEncoding("utf-8");
         response.setContentType("text/html;charset=utf-8");
         // Writes the updated response text to the response object
         try (PrintWriter writer = new PrintWriter(response.getOutputStream())) {
             writer.println(newResponseText);
         }
+    }
+
+    private void replaceDashboardData() {
+
     }
 
     @Override
