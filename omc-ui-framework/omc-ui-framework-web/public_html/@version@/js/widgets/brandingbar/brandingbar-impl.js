@@ -99,6 +99,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.topologyData = function (data) {
                 self.udeTopologyData = data;
             };
+            self.updateGlobalContextByTopologySelection = params.updateGlobalContextByTopologySelection;
 
             if (params) {
                 self.associations(params.associations);
