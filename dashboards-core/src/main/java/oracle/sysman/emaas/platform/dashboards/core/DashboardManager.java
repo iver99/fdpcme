@@ -16,6 +16,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.ScreenshotData;
+
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -45,6 +46,7 @@ import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.ZDTContext;
+import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil.VersionedLink;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsPreference;
@@ -473,15 +475,15 @@ public class DashboardManager
 
     private String retrieveSavedSeasrch(List<String> ssfIdList) {
         TenantSubscriptionUtil.RestClient rc = new TenantSubscriptionUtil.RestClient();
-        Link tenantsLink = RegistryLookupUtil.getServiceInternalLink(
-        		"SavedSearch", "1.0+", "search", null);
+        Link tenantsLink = RegistryLookupUtil.getServiceInternalLink("SavedSearch", "1.0+", "search", null);
         String tenantHref = tenantsLink.getHref() + "/list";
         String tenantName = TenantContext.getCurrentTenant();
         Map<String, Object> headers = new HashMap<String, Object>();
         headers.put("X-USER-IDENTITY-DOMAIN-NAME", tenantName);
         String savedSearchResponse = null;
         try {
-        	savedSearchResponse = rc.put(tenantHref, headers, ssfIdList.toString(), tenantName);
+        	savedSearchResponse = rc.put(tenantHref, headers, ssfIdList.toString(), tenantName, 
+        	        ((VersionedLink) tenantsLink).getAuthToken());
         } catch (Exception e) {
         	LOGGER.info("savedsearch response", e);
         }

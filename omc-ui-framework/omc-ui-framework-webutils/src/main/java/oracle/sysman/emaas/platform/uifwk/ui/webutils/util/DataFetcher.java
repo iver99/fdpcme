@@ -18,7 +18,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICache;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.exception.ExecutionException;
@@ -28,6 +27,7 @@ import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
 import oracle.sysman.emaas.platform.uifwk.ui.webutils.util.LogUtil.InteractionLogDirection;
+import oracle.sysman.emaas.platform.uifwk.ui.webutils.util.RegistryLookupUtil.VersionedLink;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -53,7 +53,7 @@ public class DataFetcher
 		{
 		}
 
-		public String get(String url, String tenant)
+		public String get(String url, String tenant, String auth)
 		{
 			if (StringUtils.isEmpty(url)) {
 				return null;
@@ -61,8 +61,6 @@ public class DataFetcher
 
 			ClientConfig cc = new DefaultClientConfig();
 			Client client = Client.create(cc);
-			char[] authToken = RegistrationManager.getInstance().getAuthorizationToken();
-			String auth = String.copyValueOf(authToken);
 			if (StringUtil.isEmpty(auth)) {
 				LOGGER.warn("Warning: RestClient get an empty auth token when connection to url {}", url);
 			}
@@ -139,8 +137,8 @@ public class DataFetcher
 			if (!StringUtil.isEmpty(sessionExp)) {
 				rc.setHeader("SESSION_EXP", sessionExp);
 			}
-			String response = rc.get(registrationHref, tenantIdParam);
-			cache.put(userTenantKey, response);
+			String response = rc.get(registrationHref, tenantIdParam, ((VersionedLink) configurationsLink).getAuthToken());
+			cache.put(userTenant, response);
 			LOGGER.info("Retrieved registration data is: {}", response);
 			LOGGER.info("It takes {}ms to retrieve registration data from Dashboard-API", System.currentTimeMillis() - start);
 			return response;

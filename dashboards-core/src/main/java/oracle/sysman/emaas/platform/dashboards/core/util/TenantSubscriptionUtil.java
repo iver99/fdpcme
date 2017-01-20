@@ -20,21 +20,20 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 
-import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
-import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
-import oracle.sysman.emaas.platform.emcpdf.cache.support.lru.LRUCacheManager;
-import oracle.sysman.emaas.platform.emcpdf.cache.tool.DefaultKeyGenerator;
-import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
-import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
-import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter;
 import oracle.sysman.emaas.platform.dashboards.core.restclient.AppMappingCollection;
 import oracle.sysman.emaas.platform.dashboards.core.restclient.AppMappingEntity;
 import oracle.sysman.emaas.platform.dashboards.core.restclient.DomainEntity;
 import oracle.sysman.emaas.platform.dashboards.core.restclient.DomainsEntity;
 import oracle.sysman.emaas.platform.dashboards.core.util.LogUtil.InteractionLogDirection;
+import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil.VersionedLink;
+import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
+import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.DefaultKeyGenerator;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
+import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -61,7 +60,7 @@ public class TenantSubscriptionUtil
 		{
 		}
 
-		public String get(String url, String tenant)
+		public String get(String url, String tenant, String auth)
 		{
 			if (url == null || "".equals(url)) {
 				return null;
@@ -69,8 +68,6 @@ public class TenantSubscriptionUtil
 
 			ClientConfig cc = new DefaultClientConfig();
 			Client client = Client.create(cc);
-			char[] authToken = RegistrationManager.getInstance().getAuthorizationToken();
-			String auth = String.copyValueOf(authToken);
 			if (StringUtil.isEmpty(auth)) {
 				LOGGER.warn("Warning: RestClient get an empty auth token when connection to url {}", url);
 			}
@@ -93,7 +90,7 @@ public class TenantSubscriptionUtil
 			}
 		}
 
-		public String get(String url, String tenantName, String userName)
+		public String get(String url, String tenantName, String userName, String auth)
 		{
 			if (url == null || "".equals(url)) {
 				return null;
@@ -101,15 +98,13 @@ public class TenantSubscriptionUtil
 
 			ClientConfig cc = new DefaultClientConfig();
 			Client client = Client.create(cc);
-			char[] authToken = RegistrationManager.getInstance().getAuthorizationToken();
-			String auth = String.copyValueOf(authToken);
 			if (StringUtil.isEmpty(auth)) {
 				LOGGER.warn("Warning: RestClient get an empty auth token when connection to url {}", url);
 			}
 			else {
 				LogUtil.setInteractionLogThreadContext(tenantName, url, InteractionLogDirection.OUT);
 				itrLogger
-						.info("RestClient is connecting to get response after getting authorization token from registration manager.");
+						.info("RestClient is connecting to get response after getting authorization token {} from registration manager.", auth);
 			}
 			try {
 				Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
@@ -130,7 +125,7 @@ public class TenantSubscriptionUtil
 
 		}
 
-		public String put(String url, Map<String, Object> headers, Object requestEntity, String tenant)
+		public String put(String url, Map<String, Object> headers, Object requestEntity, String tenant, String auth)
 		{
 			if (StringUtil.isEmpty(url)) {
 				LOGGER.error("Unable to post to an empty URL for requestEntity: \"{}\", tenant: \"{}\"", requestEntity, tenant);
@@ -144,8 +139,6 @@ public class TenantSubscriptionUtil
 			ClientConfig cc = new DefaultClientConfig();
 			cc.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
 			Client client = Client.create(cc);
-			char[] authToken = RegistrationManager.getInstance().getAuthorizationToken();
-			String auth = String.copyValueOf(authToken);
 			if (StringUtil.isEmpty(auth)) {
 				LOGGER.warn("Warning: RestClient get an empty auth token when connection to url {}", url);
 			}
@@ -171,11 +164,8 @@ public class TenantSubscriptionUtil
 	}
 
 	private static Boolean IS_TEST_ENV = null;
-
 	private static Object lock = new Object();
-
 	private static final Logger LOGGER = LogManager.getLogger(TenantSubscriptionUtil.class);
-
 	private static Logger itrLogger = LogUtil.getInteractionLogger();
 
 	@SuppressWarnings("unchecked")
@@ -220,7 +210,7 @@ public class TenantSubscriptionUtil
 		LOGGER.debug("Checking tenant (" + tenant + ") subscriptions. The entity naming href is " + domainLink.getHref());
 		String domainHref = domainLink.getHref();
 		RestClient rc = new RestClient();
-		String domainsResponse = rc.get(domainHref, tenant);
+		String domainsResponse = rc.get(domainHref, tenant, ((VersionedLink) domainLink).getAuthToken());
 		LOGGER.debug("Checking tenant (" + tenant + ") subscriptions. Domains list response is " + domainsResponse);
 		JsonUtil ju = JsonUtil.buildNormalMapper();
 		try {
@@ -246,7 +236,7 @@ public class TenantSubscriptionUtil
 			String appMappingUrl = tenantAppUrl + "/lookups?opcTenantId=" + tenant;
 			LOGGER.debug("Checking tenant (" + tenant + ") subscriptions. tenant application mapping lookup URL is "
 					+ appMappingUrl);
-			String appMappingJson = rc.get(appMappingUrl, tenant);
+			String appMappingJson = rc.get(appMappingUrl, tenant, ((VersionedLink) domainLink).getAuthToken());
 			LOGGER.debug("Checking tenant (" + tenant + ") subscriptions. application lookup response json is " + appMappingJson);
 			if (appMappingJson == null || "".equals(appMappingJson)) {
 				cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE).evict(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS)));

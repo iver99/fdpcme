@@ -46,9 +46,6 @@ dependencies
     earlib getProjectArtifact('commons-lang3')    
     earlib getProjectArtifact('commons-logging')    
     earlib getProjectArtifact('commons-codec')    
-
-    
-    
 }
 
 // All WLS Related things

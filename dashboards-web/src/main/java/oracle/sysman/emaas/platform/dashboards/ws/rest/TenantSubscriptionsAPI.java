@@ -29,6 +29,7 @@ import oracle.sysman.emaas.platform.dashboards.core.exception.resource.TenantWit
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
 import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
+import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil.VersionedLink;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
@@ -131,7 +132,7 @@ public class TenantSubscriptionsAPI extends APIBase
 					+ tenantsLink.getHref());
 			String tenantHref = tenantsLink.getHref() + "/" + tenantName;
 			TenantSubscriptionUtil.RestClient rc = new TenantSubscriptionUtil.RestClient();
-			String tenantResponse = rc.get(tenantHref, tenantName);
+			String tenantResponse = rc.get(tenantHref, tenantName, ((VersionedLink) tenantsLink).getAuthToken());
 			LOGGER.debug("Checking tenant (" + tenantName + ") subscriptions with edition. Tenant response is " + tenantResponse);
 			JsonUtil ju = JsonUtil.buildNormalMapper();
 			TenantDetailEntity de = ju.fromJson(tenantResponse, TenantDetailEntity.class);

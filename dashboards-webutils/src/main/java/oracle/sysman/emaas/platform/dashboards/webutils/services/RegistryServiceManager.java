@@ -424,6 +424,8 @@ public class RegistryServiceManager implements ApplicationServiceManager
 			LOGGER.info("Registering service with 'Service Registry'");
 			RegistrationManager.getInstance().getRegistrationClient().register();
 			RegistrationManager.getInstance().getRegistrationClient().updateStatus(InstanceStatus.UP);
+			//register OAuth ready status with Service Registry
+			RegistrationManager.getInstance().getRegistrationClient().setOauthReady(true);
 
 			setRegistrationComplete(Boolean.TRUE);
 			LOGGER.info("Service manager is up. Completed dashboard-API registration");

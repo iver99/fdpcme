@@ -16,8 +16,8 @@ import mockit.Mock;
 import mockit.MockUp;
 import mockit.Mocked;
 import mockit.Verifications;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.RegistryLookupUtil;
+import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.RegistryLookupUtil.VersionedLink;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.TenantSubscriptionUtil;
 
 import org.testng.annotations.Test;
@@ -35,7 +35,7 @@ public class DashboardsUiCORSFilterTest
 		final String builderPath = "http://xxxx/emsaasui/emcpdfui/builder.html";
 		final String tenant = "tenant01.emcsadmin";
 		final List<String> serviceList = Arrays.asList("APM", "LogAnalytics", "ITAnalytics");
-		final Link link = new Link();
+		final VersionedLink link = new VersionedLink();
 		link.withHref("http://xxxx/naming/entitynaming/v1/domains");
 
 		DashboardsUiCORSFilter filter = new DashboardsUiCORSFilter();

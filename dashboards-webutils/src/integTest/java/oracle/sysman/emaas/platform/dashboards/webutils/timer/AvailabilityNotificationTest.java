@@ -12,24 +12,24 @@ package oracle.sysman.emaas.platform.dashboards.webutils.timer;
 
 import javax.management.Notification;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import mockit.Expectations;
 import mockit.Mocked;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emaas.platform.dashboards.core.DBConnectionManager;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
+import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil.VersionedLink;
 import oracle.sysman.emaas.platform.dashboards.targetmodel.services.GlobalStatus;
 import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
 import oracle.sysman.emaas.platform.dashboards.webutils.services.RegistryServiceManager;
+
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 /**
  * @author aduan
  */
 public class AvailabilityNotificationTest
 {
-	@SuppressWarnings("unchecked")
 	@Test(groups = { "s2" })
 	public void testHandleNotification(@Mocked final Notification anyNoti, @Mocked final RegistryServiceManager anyRsm,
 			@Mocked final DBConnectionManager anyDcm, @Mocked final RegistryLookupUtil anyLookupUtil)
@@ -60,8 +60,8 @@ public class AvailabilityNotificationTest
 				anyDcm.isDatabaseConnectionAvailable();
 				result = true;
 				RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, null);
-				result = new Link().withRel("collection/domains").withHref(
-						"http://den00zyr.us.oracle.com:7007/naming/entitynaming/v1/domains");
+				result = new VersionedLink(new Link().withRel("collection/domains").withHref(
+						"http://den00zyr.us.oracle.com:7007/naming/entitynaming/v1/domains"), null, null);
 			}
 		};
 		an.handleNotification(anyNoti, null);

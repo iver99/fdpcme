@@ -10,8 +10,6 @@
 
 package oracle.sysman.emaas.platform.dashboards.ws.rest.util;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,9 +18,12 @@ import mockit.Expectations;
 import mockit.Mocked;
 import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
+import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil.VersionedLink;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.model.RoleNamesEntity;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -38,6 +39,9 @@ public class PrivilegeCheckerTest
 	{
 		String tenantName = "emaastesttenant1";
 		String userName = "emcsadmin";
+		final VersionedLink link = new VersionedLink();
+		link.withHref("http://hostname:port/testapi");
+		link.setAuthToken("auth");
 
 		// Test case when failed to discover the SecurityAuthorization service link
 		new Expectations() {
@@ -52,8 +56,8 @@ public class PrivilegeCheckerTest
 		new Expectations() {
 			{
 				RegistryLookupUtil.getServiceInternalEndpoint(anyString, anyString, anyString);
-				result = "http://hostname:port/testapi";
-				rc.get(anyString, anyString, anyString);
+				result = link;
+				rc.get(anyString, anyString, anyString, anyString);
 				result = "{\"roleNames\": [\"APM Administrator\",\"APM User\",\"IT Analytics Administrator\",\"Log Analytics Administrator\",\"Log Analytics User\",\"IT Analytics User\"]}";
 			}
 		};

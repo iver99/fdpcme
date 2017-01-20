@@ -3,8 +3,7 @@ package oracle.sysman.emaas.platform.dashboards.ui.webutils.util;
 import java.math.BigInteger;
 
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
-import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.registration.StringCacheUtil;
-
+import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.RegistryLookupUtil.VersionedLink;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICache;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.exception.ExecutionException;
@@ -13,6 +12,7 @@ import oracle.sysman.emaas.platform.emcpdf.cache.tool.DefaultKeyGenerator;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -39,7 +39,7 @@ public class DashboardDataAccessUtil {
             rc.setHeader("X-USER-IDENTITY-DOMAIN-NAME", tenantIdParam);
             rc.setHeader("X-REMOTE-USER", userTenant);
             rc.setHeader("Referer", referer);
-            String response = rc.get(dashboardHref, tenantIdParam);
+            String response = rc.get(dashboardHref, tenantIdParam, ((VersionedLink) dashboardsLink).getAuthToken());
             LOGGER.info("Retrieved dashboard data is: {}", response);
             LOGGER.info("It takes {}ms to retrieve dashboard data from Dashboard-API", (System.currentTimeMillis() - start));
             return response;
@@ -88,7 +88,7 @@ public class DashboardDataAccessUtil {
             if (!StringUtil.isEmpty(sessionExp)) {
                 rc.setHeader("SESSION_EXP", sessionExp);
             }
-            String response = rc.get(userInfoHref, tenantIdParam);
+            String response = rc.get(userInfoHref, tenantIdParam, ((VersionedLink) configurationsLink).getAuthToken());
             cache.put(userTenantKey, response);
             LOGGER.info("Retrieved userInfo data is: {}", response);
             LOGGER.info("It takes {}ms to retrieve userInfo data from Dashboard-API", (System.currentTimeMillis() - start));
@@ -137,7 +137,7 @@ public class DashboardDataAccessUtil {
             if (!StringUtil.isEmpty(sessionExp)) {
                 rc.setHeader("SESSION_EXP", sessionExp);
             }
-            String response = rc.get(userInfoHref, tenantIdParam);
+            String response = rc.get(userInfoHref, tenantIdParam, ((VersionedLink) configurationsLink).getAuthToken());
             cache.put(userTenantKey, response);
             LOGGER.info("Retrieved registration data is: {}", response);
             LOGGER.info("It takes {}ms to retrieve registration data from Dashboard-API", (System.currentTimeMillis() - start));
