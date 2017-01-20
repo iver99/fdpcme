@@ -104,55 +104,60 @@ public class AdditionalDataFilter implements Filter {
             // previously the html static resource (start part&end part) has been cached,
             // so no need to parse the static resource again or go to the next filter
             // just concatinate the data string into one
-            String data = getDashboardData(httpReq);
-            StringBuilder sb = new StringBuilder(CACHED_BEFORE_ADDITIONAL_DATA_PART);
-            sb.append(data);
-            sb.append(CACHED_AFTER_ADDITIONAL_DATA_PART);
-            String newResponseText = sb.toString();
+            String dashboardData = getDashboardData(httpReq);
+            String newResponseText = getResponseText(dashboardData);
             LOGGER.info("After getting cached static html fragment, contactinating the data and inserting into html, the response text is {}", newResponseText);
-            response.setCharacterEncoding("utf-8");
-            response.setContentType("text/html;charset=utf-8");
-            try (PrintWriter writer = new PrintWriter(response.getOutputStream())) {
-                writer.println(newResponseText);
-            }
+            updateResponseWithDashboardDataText(response, newResponseText);
             return;
         }
+
 
         chain.doFilter(request, wrapper);
 
         final String responseText = wrapper.getResponseText();
         assert (responseText != null);
-        String data = getDashboardData(httpReq);
+        String dashboardData = getDashboardData(httpReq);
         String newResponseText = responseText;
         LOGGER.info("Before inserting additional data, the response text is {}", newResponseText);
-        if (!StringUtil.isEmpty(data) && responseText != null) {
+        if (!StringUtil.isEmpty(dashboardData) && responseText != null) {
             int idx = responseText.indexOf(ADDITIONA_DATA_TO_REPLACE);
             String beforePart = responseText.substring(0, idx);
             LOGGER.debug("Before part is {}", beforePart);
             String afterPart = responseText.substring(idx + ADDITIONA_DATA_TO_REPLACE.length(), responseText.length());
             LOGGER.debug("After part is {}", afterPart);
             updateCachedHtmlFragments(beforePart, afterPart);
-            StringBuilder sb = new StringBuilder(CACHED_BEFORE_ADDITIONAL_DATA_PART);
-            sb.append(data);
-            sb.append(CACHED_AFTER_ADDITIONAL_DATA_PART);
-            newResponseText = sb.toString();
+            newResponseText = getResponseText(dashboardData);
             LOGGER.info("After inserting additional data, the response text is {}", newResponseText);
         }
+        updateResponseWithDashboardDataText(response, newResponseText);
+    }
+
+    /**
+     * 
+     * @param response
+     * @param newResponseText
+     * @throws IOException
+     */
+    private void updateResponseWithDashboardDataText(ServletResponse response, String newResponseText) throws IOException {
         response.setCharacterEncoding("utf-8");
         response.setContentType("text/html;charset=utf-8");
-        // Writes the updated response text to the response object
         try (PrintWriter writer = new PrintWriter(response.getOutputStream())) {
             writer.println(newResponseText);
         }
     }
 
+    private String getResponseText(String dashboardData) {
+        String newResponseText;
+        StringBuilder sb = new StringBuilder(CACHED_BEFORE_ADDITIONAL_DATA_PART);
+        sb.append(dashboardData);
+        sb.append(CACHED_AFTER_ADDITIONAL_DATA_PART);
+        newResponseText = sb.toString();
+        return newResponseText;
+    }
+
     private synchronized static void updateCachedHtmlFragments(String beforePart, String afterPart) {
         CACHED_BEFORE_ADDITIONAL_DATA_PART = beforePart;
         CACHED_AFTER_ADDITIONAL_DATA_PART = afterPart;
-    }
-
-    private void replaceDashboardData() {
-
     }
 
     @Override
