@@ -2,19 +2,24 @@
             <label for="dropdown" data-bind="attr: {id: 'dropdownLabel_'+randomId}" style="font-weight: bold; font-size: 14px; vertical-align: middle; padding-right: 5px;" data-bind="text: timeRangeMsg, style: {display: hideMainLabel}"></label>
             <span class="oj-select-choice"  style="width: auto; display: inline-block" data-bind="attr: {id: 'dropDown_'+randomId}, click: panelControl, event: {keypress: function(data, event) {if(isEnterPressed(data, event)) {panelControl();}}}" aria-label="Pick datetime"> 
                 <span class="oj-select-chosen" style="padding-right: 24px;" data-bind="html: dateTimeInfo"></span>
+                <!-- ko if: tfInfoIndicatorVisible() === true -->
                 <span class="time-filter-indicator fa-icon-font" 
                   data-bind="event: {mouseover: showTimeFilterInfo, mouseout: hideTimeFilterInfo, 
                               keypress: function(data, event) {event.stopPropagation(); if(isEnterPressed(data, event)) {toggleTimeFilterInfo();}}},
                               click: toggleTimeFilterInfo, clickBubble: false,
-                             visible: tfInfoIndicatorVisible, attr: {id: 'tfInfoIndicator_'+randomId, 'aria-label': tfIndicatorLabel}"></span>
+                              attr: {id: 'tfInfoIndicator_'+randomId, 'aria-label': tfIndicatorLabel}"></span>
+                <!-- /ko -->
                 <a class="oj-select-arrow oj-component-icon oj-clickable-icon-nocontext oj-select-open-icon"></a>
             </span>
            
             <!-- popup for time filter info -->
+            <!-- ko if: showTimeFilterInfoPopUp() === true -->
             <div style="display: none;" data-bind="ojComponent: {component: 'ojPopup'}, attr: {id: 'tfInfo_'+randomId}">
                 <span data-bind="html: timeFilterInfo"></span>
             </div>
+            <!-- /ko -->
 
+            <!-- ko if: showPanel() === true -->
             <div class="panel" style="display:inline-block; padding: 0px; margin: 0px;" data-bind="ojComponent: {component: 'ojPopup', chrome: 'none', beforeClose: setLastDatas}, click: function(data, event) {event.stopPropagation();return true;}, attr: {id: 'panel_'+randomId}"> 
                 <!-- left of panel -->
                 <div class="drawers" data-bind="style: {height: leftDrawerHeight}">
@@ -231,6 +236,7 @@
                         <!-- /ko -->
                     </div>
                 </div>
-            </div> 
+            </div>
+            <!-- /ko -->
 
         </div>
