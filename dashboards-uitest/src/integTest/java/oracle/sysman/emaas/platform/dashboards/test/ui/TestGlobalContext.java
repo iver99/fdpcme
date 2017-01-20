@@ -318,7 +318,7 @@ public class TestGlobalContext extends LoginAndLogout
 		Assert.assertTrue(useDbEntities.isDisplayed(), "Use dashboard entities isn't displayed in self dashboard");
 		webd.click(PageId.ENABLEENTITYFILTER);		
 		
-		Assert.assertFalse(webd.isDisplayed(GLBCTXTID),"emaas-appheader-globalcxt is displayed on the top");
+		Assert.assertFalse(GlobalContextUtil.isGlobalContextExisted(webd),"The global context isn't exists when select dashboard entities filter");
 		Assert.assertTrue(webd.isDisplayed(PageId.ENTITYBUTTON),"All Entities button isn't display on the top-left cornor, when select dashboard entities");
 		
 		//find "Use entities defined by content" radio button, then select it
@@ -326,7 +326,7 @@ public class TestGlobalContext extends LoginAndLogout
 		Assert.assertTrue(disableEntity.isDisplayed(), "Disable entities filter isn't displayed in self dashboard");
 		webd.click(PageId.DISABLEENTITYFILTER);
 		
-		Assert.assertFalse(webd.isDisplayed(GLBCTXTID),"emaas-appheader-globalcxt is displayed on the top");
+		Assert.assertFalse(GlobalContextUtil.isGlobalContextExisted(webd),"The global context isn't exists when select disable entities filter");
 		Assert.assertFalse(webd.isElementPresent(PageId.ENTITYBUTTON), "All Entities button is present on the top-left cornor, when select disable entities fileter");
 	}
 	
