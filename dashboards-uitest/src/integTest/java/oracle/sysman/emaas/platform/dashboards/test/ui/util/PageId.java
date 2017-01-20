@@ -55,7 +55,8 @@ public class PageId
 	public static final String ENABLEENTITYFILTER = "//*[@id='enableEntityFilter']";
 	public static final String ENABLEGCENTITYFILTER = "//*[@id='enableGCEntities']";
 	public static final String DISABLEENTITYFILTER = "//*[@id='disableEntityFilter']";
-	public static final String ENTITYBUTTON = "//*[@id='emcta_tgtSel2_dropDown']";
+	public static final String ENTITYBUTTON = "//*[@id='emcta_tgtSel0_dropDown']";
+	
 	
 	//check box
 	public static final String ITA_BOXID = "itaopt";

@@ -304,14 +304,6 @@ public class TestGlobalContext extends LoginAndLogout
 		//make sure Entities label is displayed
 		WebElement entitiesLabel = webd.getWebDriver().findElement(By.xpath(PageId.DASHBOARDENTITIES));
 		Assert.assertTrue(entitiesLabel.isDisplayed(), "Entities Label isn't displayed in self dashboard");
-
-		//find "Use dashboard entities" radio button, then select it
-		WebElement useDbEntities = webd.getWebDriver().findElement(By.xpath(PageId.ENABLEENTITYFILTER));
-		Assert.assertTrue(useDbEntities.isDisplayed(), "Use dashboard entities isn't displayed in self dashboard");
-		webd.click(PageId.ENABLEENTITYFILTER);		
-		
-		Assert.assertFalse(webd.isDisplayed(GLBCTXTID),"emaas-appheader-globalcxt is displayed on the top");
-		Assert.assertTrue(webd.isDisplayed(PageId.ENTITYBUTTON),"All Entities button isn't display on the top-left cornor, when select dashboard entities");
 		
 		//find "GC entities" radio button, then select it
 		WebElement useGCEntities = webd.getWebDriver().findElement(By.xpath(PageId.ENABLEGCENTITYFILTER));
@@ -321,7 +313,15 @@ public class TestGlobalContext extends LoginAndLogout
 		Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(webd), "The global context isn't exists when select GC entities filter");
 		Assert.assertTrue(webd.isDisplayed(PageId.ENTITYBUTTON),"All Entities button isn't display on the top-left cornor, when select GC entities filter");
 	
-		//find "" radio button, then select it
+		//find "Use dashboard entities" radio button, then select it
+		WebElement useDbEntities = webd.getWebDriver().findElement(By.xpath(PageId.ENABLEENTITYFILTER));
+		Assert.assertTrue(useDbEntities.isDisplayed(), "Use dashboard entities isn't displayed in self dashboard");
+		webd.click(PageId.ENABLEENTITYFILTER);		
+		
+		Assert.assertFalse(webd.isDisplayed(GLBCTXTID),"emaas-appheader-globalcxt is displayed on the top");
+		Assert.assertTrue(webd.isDisplayed(PageId.ENTITYBUTTON),"All Entities button isn't display on the top-left cornor, when select dashboard entities");
+		
+		//find "Use entities defined by content" radio button, then select it
 		WebElement disableEntity = webd.getWebDriver().findElement(By.xpath(PageId.DISABLEENTITYFILTER));
 		Assert.assertTrue(disableEntity.isDisplayed(), "Disable entities filter isn't displayed in self dashboard");
 		webd.click(PageId.DISABLEENTITYFILTER);
