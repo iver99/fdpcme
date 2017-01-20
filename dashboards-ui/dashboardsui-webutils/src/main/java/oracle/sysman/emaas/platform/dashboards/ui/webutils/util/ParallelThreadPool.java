@@ -8,9 +8,9 @@ import java.util.concurrent.Executors;
  */
 public class ParallelThreadPool {
 
-    private static ExecutorService pool = Executors.newFixedThreadPool(20);
+    /*private static ExecutorService pool = Executors.newFixedThreadPool(20);
 
     public static  ExecutorService  getThreadPool(){
         return pool;
-    }
+    }*/
 }
