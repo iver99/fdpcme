@@ -459,7 +459,10 @@ public class DashBoardPageId
 
 	//Add button for widgetSelector
 	public static final String WIDGETSELECTOR_ADDBUTTONID = "add-widget-button";
-
+	//UDE page
+	public static final String SAVEBUTTON_UDE = "//*[@id='save_widget_btn']";
+	//LA page
+	public static final String RUNBUTTON_LA = "//*[@id='srchSrch']";
 	private DashBoardPageId()
 	{
 	}

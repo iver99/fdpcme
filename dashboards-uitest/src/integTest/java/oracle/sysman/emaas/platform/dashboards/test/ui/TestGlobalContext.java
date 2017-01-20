@@ -17,6 +17,7 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.GlobalContextUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.WelcomeUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 
 import org.testng.Assert;
@@ -292,13 +293,13 @@ public class TestGlobalContext extends LoginAndLogout
 		
 		webd.switchToWindow();
 		webd.getLogger().info("Wait for the widget loading....");
-		//WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 		//wait1.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id='save_widget_btn']")));
-		webd.waitForElementPresent("//*[@id='save_widget_btn']", WaitUtil.WAIT_TIMEOUT);
+		webd.waitForElementPresent(DashBoardPageId.SAVEBUTTON_UDE, WaitUtil.WAIT_TIMEOUT);
 		
 		//verify the open url
 		DashBoardUtils.verifyURL_WithPara(webd, "omcCtx=");	
 		Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(webd),"The global context exists in ITA widget");
+		Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd),"All Entities");
 	}
 
 	@Test(groups = "test_omcCtx")
@@ -322,13 +323,13 @@ public class TestGlobalContext extends LoginAndLogout
 		
 		webd.switchToWindow();
 		webd.getLogger().info("Wait for the widget loading....");
-		//WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 		//wait1.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id='srchSrch']")));
-		webd.waitForElementPresent("//*[@id='srchSrch']", WaitUtil.WAIT_TIMEOUT);
+		webd.waitForElementPresent(DashBoardPageId.RUNBUTTON_LA, WaitUtil.WAIT_TIMEOUT);
 		
 		//verify the open url
 		DashBoardUtils.verifyURL_WithPara(webd, "omcCtx=");	
 		Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(webd),"The global context exists in LA widget");
+		Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd),"All Entities");
 	}
 
 	private String generateTimeStamp()
