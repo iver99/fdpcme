@@ -3,6 +3,8 @@ package oracle.sysman.emaas.platform.dashboards.core.persistence;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
+import oracle.sysman.emaas.platform.dashboards.core.BaseTest;
+
 import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -10,12 +12,11 @@ import org.testng.annotations.Test;
 /**
  * @author guobaochen
  */
-public class PersistenceManagerTest
+public class PersistenceManagerTest extends BaseTest
 {
 	@BeforeTest
 	public void setUp()
 	{
-		PersistenceManager.setTestEnv(true);
 	}
 
 	@Test

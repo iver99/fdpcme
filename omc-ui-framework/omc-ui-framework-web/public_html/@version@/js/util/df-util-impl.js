@@ -872,6 +872,12 @@ define(['knockout',
                     //Append uifwk css file into document head
                     $('head').append('<link id="uifwkAltaCss" rel="stylesheet" href="/emsaasui/uifwk/@version@/css/uifwk-alta.css" type="text/css"/>');
                 }
+                
+                document.getElementById('uifwkAltaCss').onload = function() {
+                    if (window._uifwk && window._uifwk.brandingbar_css_load_callback && $.isFunction(window._uifwk.brandingbar_css_load_callback)) {
+                        window._uifwk.brandingbar_css_load_callback();
+                    }
+                };
             };
 
             function showSessionTimeoutWarningDialog(warningDialogId) {
@@ -888,6 +894,10 @@ define(['knockout',
 
             self.clearSessionCache = function () {
                 window.sessionStorage.removeItem('_uifwk_brandingbar_cache');
+                window.sessionStorage.removeItem('_uifwk_omccontextcache_composite');
+                window.sessionStorage.removeItem('_uifwk_omccontextcache_entity');
+
+                window.sessionStorage.removeItem('_udeCommonSessionCache');
                 for (var attr in window.sessionStorage) {
                     if (attr.indexOf('_udeTopologyCache') === 0) {
                         window.sessionStorage.removeItem(attr);
@@ -927,8 +937,10 @@ define(['knockout',
             }
 
             self.getRegistrations = function (successCallback, toSendAsync, errorCallback) {
-                if (window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.registrations && window._uifwk.cachedData.registrations()) {
-                    successCallback(window._uifwk.cachedData.registrations());
+                if (window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.registrations && 
+                        ($.isFunction(window._uifwk.cachedData.registrations) ? window._uifwk.cachedData.registrations() : true)) {
+                    successCallback($.isFunction(window._uifwk.cachedData.registrations) ? window._uifwk.cachedData.registrations() : 
+                            window._uifwk.cachedData.registrations);
                 } else {
                     if (!window._uifwk) {
                         window._uifwk = {};
@@ -951,25 +963,25 @@ define(['knockout',
                             doneCallback(window._registrationServerCache);
                         }
                         else {
-                            ajaxUtil.ajaxWithRetry({type: 'GET', contentType:'application/json',url: self.getRegistrationUrl(),
+                            ajaxUtil.ajaxWithRetry({type: 'GET', contentType: 'application/json', url: self.getRegistrationUrl(),
                                 dataType: 'json',
                                 headers: this.getDefaultHeader(),
-                                async: toSendAsync === false? false:true,
-                                success: function(data, textStatus, jqXHR){
+                                async: toSendAsync === false ? false : true,
+                                success: function (data, textStatus, jqXHR) {
                                     doneCallback(data, textStatus, jqXHR);
                                 },
-                                error: function(jqXHR, textStatus, errorThrown){
+                                error: function (jqXHR, textStatus, errorThrown) {
                                     console.log('Failed to get registration info!');
                                     window._uifwk.cachedData.isFetchingRegistrations = false;
-                                    if(errorCallback){
+                                    if (errorCallback) {
                                         errorCallback(jqXHR, textStatus, errorThrown);
                                     }
                                 }
                             });
                         }
-                    }else{
-                        window._uifwk.cachedData.registrations.subscribe(function(data){
-                            if(data){
+                    } else {
+                        window._uifwk.cachedData.registrations.subscribe(function (data) {
+                            if (data) {
                                 successCallback(data);
                             }
                         });

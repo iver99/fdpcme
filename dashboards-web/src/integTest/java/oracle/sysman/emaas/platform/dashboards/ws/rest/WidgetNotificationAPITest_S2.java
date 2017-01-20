@@ -1,23 +1,19 @@
 package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
+import java.io.IOException;
+import java.math.BigInteger;
+
 import mockit.Expectations;
-import mockit.Mock;
 import mockit.Mocked;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.tenant.TenantIdProcessor;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardManager;
-import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.ssfnotification.WidgetNotificationType;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.ssfnotification.WidgetNotifyEntity;
+
 import org.codehaus.jettison.json.JSONObject;
 import org.testng.annotations.Test;
-
-import javax.servlet.annotation.MultipartConfig;
-
-import java.io.IOException;
-
-import static org.testng.Assert.*;
 
 @Test(groups = {"s2"})
 public class WidgetNotificationAPITest_S2 {
@@ -67,7 +63,7 @@ public class WidgetNotificationAPITest_S2 {
                 result = 1L;
                 DashboardManager.getInstance();
                 result = dashboardManager;
-                dashboardManager.updateWidgetDeleteForTilesByWidgetId(anyLong, anyLong);
+                dashboardManager.updateWidgetDeleteForTilesByWidgetId(anyLong, (BigInteger) any);
                 result = 1;
             }
         };

@@ -17,6 +17,7 @@ requirejs.config({
             'uifwk/js/util/screenshot-util',
             'uifwk/js/util/typeahead-search',
             'uifwk/js/util/usertenant-util',
+            'uifwk/js/util/zdt-util',
             'uifwk/js/sdk/context-util',
             'uifwk/js/widgets/aboutbox/js/aboutbox',
             'uifwk/js/widgets/brandingbar/js/brandingbar',
@@ -205,13 +206,20 @@ require(['ojs/ojcore',
                 self.ITA_Type = "select";
                 self.data_type = "select";
 
+                self.showAPM = ko.observable(false);
+                self.showLA = ko.observable(false);
+                self.showITA = ko.observable(false);
+                self.showDashboard = ko.observable(false);
+                self.showDataExplorer = ko.observable(false);
+                self.showLearnMore = ko.observable(false);
+                
                 self.showInfraMonitoring = ko.observable(false);
                 self.showCompliance = ko.observable(false);
                 self.showSecurityAnalytics = ko.observable(false);
                 self.showOrchestration = ko.observable(false);
 
                 self.getServiceUrls = function() {
-                    dfu.getRegistrations(fetchServiceLinks);
+                    dfu.getRegistrations(fetchServiceLinks, true, errorCallback);
                 };
 
                 //get urls of databases and middleware
@@ -221,10 +229,27 @@ require(['ojs/ojcore',
                     var url = dfu_model.discoverUrl(serviceName, version, rel);
                     return url;
                 };
+                
+                function errorCallback() {
+                    self.showAPM(true);
+                    self.showLA(true);
+                    self.showITA(true);
+                    self.showDashboard(true);
+                    self.showDataExplorer(true);
+                    self.showLearnMore(true);
+                }
 
                 function fetchServiceLinks(data) {
                     var landingHomeUrls = {};
                     var i;
+                    
+                    self.showAPM(true);
+                    self.showLA(true);
+                    self.showITA(true);
+                    self.showDashboard(true);
+                    self.showDataExplorer(true);
+                    self.showLearnMore(true);
+                    
                     if(data.cloudServices && data.cloudServices.length>0) {
                         var cloudServices = data.cloudServices;
                         var cloudServicesNum = cloudServices.length;
@@ -250,7 +275,15 @@ require(['ojs/ojcore',
                         for(i=0; i<dataExplorersNum; i++) {
                             var originalName = dataExplorers[i].name;
                             dataExplorers[i].name = originalName.replace(/Visual Analyzer/i, '').replace(/^\s*|\s*$/g, '');
+                            if(dataExplorers[i].serviceName === "LogAnalyticsUI"){
+                                dataExplorers[i].name = getNlsString("LANDING_HOME_LOG_EXPLORER");
+                            }else if(dataExplorers[i].serviceName === "TargetAnalytics"){
+                                dataExplorers[i].name = getNlsString("LANDING_HOME_DATA_EXPLORER");
+                            }
                             self.exploreDataLinkList.push(dataExplorers[i]);
+                            self.exploreDataLinkList.sort(function(left,right){
+                                return left.name<=right.name?-1:1;
+                            });
                             landingHomeUrls[dataExplorers[i].name] = dataExplorers[i].href;
                             //change name of data explorer in ITA to "Data Explorer - Analyze" & "Data Explorer"
 

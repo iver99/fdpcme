@@ -41,10 +41,10 @@ public class ScreenshorCRUD
 		tenantid = ct.getTenantid();
 		tenantid_2 = ct.getTenantid2();
 		remoteuser = ct.getRemoteUser();
-		screenshotRelUrl = ScreenshorCRUD.getScreenshotRelURLForDashboard(2L);
+		screenshotRelUrl = ScreenshorCRUD.getScreenshotRelURLForDashboard("2");
 	}
 
-	private static String getScreenshotRelURLForDashboard(long dashboardId)
+	private static String getScreenshotRelURLForDashboard(String dashboardId)
 	{
 		Response res = RestAssured
 				.given()
@@ -59,7 +59,7 @@ public class ScreenshorCRUD
 		return ScreenshorCRUD.getScreenshotRelURLForScreenshotUrl(dashboardId, screenshotUrl);
 	}
 
-	private static String getScreenshotRelURLForScreenshotUrl(long dashboardId, String screenshotUrl)
+	private static String getScreenshotRelURLForScreenshotUrl(String dashboardId, String screenshotUrl)
 	{
 		int index = screenshotUrl.indexOf("/sso.static/dashboards.service");
 		String relUrl = "/dashboards" + screenshotUrl.substring(index + "/sso.static/dashboards.service".length());
@@ -102,9 +102,8 @@ public class ScreenshorCRUD
 			Assert.assertTrue(res.getStatusCode() == 201);
 
 			dashboard_id = res.jsonPath().getString("id");
-			long lDashboardId = Long.valueOf(dashboard_id).longValue();
 			String ssUrl = res.jsonPath().getString("screenShotHref");
-			String ssRelUrl = ScreenshorCRUD.getScreenshotRelURLForScreenshotUrl(lDashboardId, ssUrl);
+			String ssRelUrl = ScreenshorCRUD.getScreenshotRelURLForScreenshotUrl(dashboard_id, ssUrl);
 			
 			Response res2 = RestAssured
 					.given()
@@ -168,9 +167,12 @@ public class ScreenshorCRUD
 			Assert.assertTrue(res.getStatusCode() == 201);
 
 			dashboard_id = res.jsonPath().getString("id");
-			long lDashboardId = Long.valueOf(dashboard_id).longValue();
 			String ssUrl = res.jsonPath().getString("screenShotHref");
-			String ssRelUrl = ScreenshorCRUD.getScreenshotRelURLForScreenshotUrl(lDashboardId, ssUrl);
+
+			String ssRelUrl = ScreenshorCRUD.getScreenshotRelURLForScreenshotUrl(dashboard_id, ssUrl);
+			System.out.println("											");
+
+			System.out.println("Verify that the other user can't query if the dashboard has screen shot...");
 			Response res2 = RestAssured
 					.given()
 					.contentType(ContentType.JSON)
@@ -218,9 +220,10 @@ public class ScreenshorCRUD
 			Assert.assertTrue(res.getStatusCode() == 201);
 
 			dashboard_id = res.jsonPath().getString("id");
-			long lDashboardId = Long.valueOf(dashboard_id).longValue();
 			String ssUrl = res.jsonPath().getString("screenShotHref");
-			String ssRelUrl = ScreenshorCRUD.getScreenshotRelURLForScreenshotUrl(lDashboardId, ssUrl);
+
+			String ssRelUrl = ScreenshorCRUD.getScreenshotRelURLForScreenshotUrl(dashboard_id, ssUrl);
+
 			Response res2 = RestAssured
 					.given()
 					.contentType(ContentType.JSON)
@@ -282,10 +285,10 @@ public class ScreenshorCRUD
 			Assert.assertTrue(res.getStatusCode() == 201);
 
 			dashboard_id = res.jsonPath().getString("id");
-			long lDashboardId = Long.valueOf(dashboard_id).longValue();
 			String ssUrl = res.jsonPath().getString("screenShotHref");
-			String ssRelUrl = ScreenshorCRUD.getScreenshotRelURLForScreenshotUrl(lDashboardId, ssUrl);
-		
+
+			String ssRelUrl = ScreenshorCRUD.getScreenshotRelURLForScreenshotUrl(dashboard_id, ssUrl);
+
 			Response res2 = RestAssured
 					.given()
 					.contentType(ContentType.JSON)

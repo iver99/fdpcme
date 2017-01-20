@@ -63,6 +63,7 @@ dependencies {
     compile(group: 'com.font-awesome', name: 'font-awesome', version: '4.3.0', ext: 'zip') {transitive = false }
     compile(group: 'com.oracle.emaas.emctas.tgtsel', name:'emcs-targetselector', version:tselVersion, ext:'zip'){ transitive = false }
     providedCompile project(':dashboards-ui-test-common-api')  { transitive = false }
+    providedCompile project(':omc-ui-framework:omc-ui-framework-webutils')  { transitive = false }
     compass (group: 'org.jruby', name: 'jruby-complete', version: '1.7.3')
     jscover (group:'com.github.tntim96', name:'JSCover-all', version:'1.0.19')
 }
@@ -682,6 +683,14 @@ task minifyUIFwkPartitionJs(dependsOn: [combineAppJs],type: com.eriwen.gradle.js
         String absPath = compiledFile;
         contents = contents.replaceAll(Pattern.quote(absPath), "uifwk-partition.orig.js")
         mapFile.write(contents, "UTF-8")
+        
+        //Inject contents of uifwk-load.js into uifwk-partition.js 
+        File uifwkLoadJsFile = new File(compiledDir+'/'+versionPathElement+'/js/uifwk-load.js')
+        String uifwkLoadJsContents = uifwkLoadJsFile.getText('UTF-8')
+        File uifwkPartitionJsFile = new File(compiledDir + '/js/uifwk-partition.js')
+        String uifwkPartitionJsContents = uifwkPartitionJsFile.getText('UTF-8')
+        uifwkPartitionJsContents =  uifwkLoadJsContents + uifwkPartitionJsContents
+        uifwkPartitionJsFile.write(uifwkPartitionJsContents, 'UTF-8')
     }
 }
 
@@ -786,6 +795,23 @@ task copyDevJs(type:Copy, dependsOn: [cleanJs, unpackJETFromArtifactory, unpackJ
     }  
 }
 
+test {
+        classpath = sourceSets.test.compileClasspath + sourceSets.test.output
+        useTestNG()
+        {
+                //We explicity include only tests annotate as s1 or s2 - they are "short-running" tests,
+                //if you wish to run ALL tests within this projet - remove following.
+                includeGroups 's1' ,'s2'
+        }
+}
+
+eclipse {
+    classpath {
+        plusConfigurations += configurations.testNG
+        plusConfigurations += configurations.webdriver //avoid building error in Eclipse
+    }
+}
+
 if(project.hasProperty("devMode")){
 	war.dependsOn copyDevJs
 }
@@ -840,9 +866,15 @@ publishing.publications {
 	setGroupId("${publishGroup}")
         artifact integTestJar.archivePath
     }
+	thisJarPublication(MavenPublication) {
+//		from project.components.java
+		setGroupId("${publishGroup}")
+		artifact jar
+	}
 }
 
 artifactoryPublish {
 	publications ('integTest')
+	publications('thisJarPublication')
 }
 

@@ -23,11 +23,21 @@
                  <pipeline name="STAGE"/>
              </pipelines>
      </lrg>
-      <!--<lrg name="emcitats_allsrg_3n" repos="emcitats" description="Run LRG from emcpdf to ensure the SDK is not breaking it.">
+      <lrg name="emcitats_allsrg_3n" repos="emcitats" description="Run LRG from emcpdf to ensure the SDK is not breaking it.">
 	     <pipelines>
 	     <pipeline name="PRODUCT"/> 
 	     </pipelines> 
-	</lrg>-->
+	</lrg>
+      <lrg name="emaas_itcs_livetargetscans_3n" repos="emcitcs" description="Run LRG from emcpdf to ensure the SDK is not breaking it.">
+	     <pipelines>
+	     <pipeline name="PRODUCT"/> 
+	     </pipelines> 
+	</lrg>
+      <lrg name="emcos_ui_tests_3n" repos="emcos" description="Run LRG from emcpdf to ensure the SDK is not breaking it.">
+	     <pipelines>
+	     <pipeline name="PRODUCT"/> 
+	     </pipelines> 
+	</lrg>
 
 
  </lrg-metadata>

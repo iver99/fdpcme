@@ -10,6 +10,7 @@ import javax.persistence.Persistence;
 
 import mockit.Mocked;
 import mockit.NonStrictExpectations;
+import oracle.sysman.emaas.platform.dashboards.core.BaseTest;
 import oracle.sysman.emaas.platform.dashboards.core.util.SchemaUtil;
 import oracle.sysman.qatool.uifwk.utils.Utils;
 
@@ -20,12 +21,11 @@ import org.testng.annotations.Test;
 /**
  * @author guobaochen
  */
-public class PersistenceManagerTest_S2
+public class PersistenceManagerTest_S2 extends BaseTest
 {
 	@BeforeTest
 	public void setUp()
 	{
-		PersistenceManager.setTestEnv(true);
 	}
 
 	@Test(groups = { "s2" })

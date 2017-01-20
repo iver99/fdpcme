@@ -116,6 +116,51 @@ public class TestWelcomePage extends LoginAndLogout
 	//	}
 
 	@Test
+	public void testOpenInfrastructureMonitoringPage()
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test opening Infrastructure Monitoring in welcome page...");
+
+		BrandingBarUtil.visitWelcome(webd);
+		WelcomeUtil.visitInfraMonitoring(webd);
+
+		//verify the url of opened page
+		DashBoardUtils.verifyURL(webd, "monitoringservicesui/cms/index.html");
+
+		webd.getLogger().info("Test opening Infrastructure Monitoring in welcome page finished!!!");
+	}
+
+	@Test
+	public void testOpenITA_ApPrefPage()
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test opening ITA: Application Performance Analytics in welcome page...");
+
+		BrandingBarUtil.visitWelcome(webd);
+		WelcomeUtil.visitITA(webd, "applicationPerformanceAnalytic");
+
+		//verify the url of opened page
+		DashBoardUtils.verifyURL(webd, "emcitas/ap-analytics-war/html/ap-perf-analytics.html");
+
+		webd.getLogger().info("Test opening ITA: Application Performance Analytics in welcome page finished!!!");
+	}
+
+	@Test
+	public void testOpenITA_AvailPage()
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test opening ITA: Availability Analytics in welcome page...");
+
+		BrandingBarUtil.visitWelcome(webd);
+		WelcomeUtil.visitITA(webd, "availabilityAnalytics");
+
+		//verify the url of opened page
+		DashBoardUtils.verifyURL(webd, "emcitas/avail-analytics-war/html/avail-analytics-home.html");
+
+		webd.getLogger().info("Test opening ITA: Availability Analytics in welcome page finished!!!");
+	}
+
+	@Test
 	public void testOpenITA_DEPage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -206,6 +251,21 @@ public class TestWelcomePage extends LoginAndLogout
 	}
 
 	@Test
+	public void testOpenITA_ServerPage()
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test opening ITA: Application Server Analytics in welcome page...");
+
+		BrandingBarUtil.visitWelcome(webd);
+		WelcomeUtil.visitITA(webd, "performanceAnalyticsApplicationServer");
+
+		//verify the url of opened page
+		DashBoardUtils.verifyURL(webd, "emcitas/mw-analytics-war/html/mw-perf-dashboard.html");
+
+		webd.getLogger().info("Test opening ITA: Application Server Analytics in welcome page finished!!!");
+	}
+
+	@Test
 	public void testOpenITAPage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -239,6 +299,36 @@ public class TestWelcomePage extends LoginAndLogout
 		DashBoardUtils.verifyURL(webd, "emlacore/html/log-analytics-search.html");
 
 		webd.getLogger().info("Test open LA in welcome page finished!!!");
+	}
+
+	@Test
+	public void testOpenOrchestrationPage()
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test opening Orchestration in welcome page...");
+
+		BrandingBarUtil.visitWelcome(webd);
+		WelcomeUtil.visitOrchestration(webd);
+
+		//verify the url of opened page
+		DashBoardUtils.verifyURL_WithPara(webd, "emcpdfui/home.html?filter=ocs");
+
+		webd.getLogger().info("Test open Security Analytics in welcome page finished!!!");
+	}
+
+	@Test
+	public void testOpenSecurityPage()
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test opening Security Analytics in welcome page...");
+
+		BrandingBarUtil.visitWelcome(webd);
+		WelcomeUtil.visitSecurity(webd);
+
+		//verify the url of opened page
+		DashBoardUtils.verifyURL_WithPara(webd, "saui/web/index.html?L0=userBehaviors&L1=Graphical");
+
+		webd.getLogger().info("Test open Security Analytics in welcome page finished!!!");
 	}
 
 	//	@Test
@@ -284,6 +374,10 @@ public class TestWelcomePage extends LoginAndLogout
 		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, "ITA"));
 		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, "dashboards"));
 		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, "dataExplorers"));
+		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, "infraMonitoring"));
+		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, "securityAnalytics"));
+		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, "orchestration"));
+		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, "compliance"));
 
 		Assert.assertTrue(WelcomeUtil.isLearnMoreItemExisted(webd, "getStarted"));
 		Assert.assertTrue(WelcomeUtil.isLearnMoreItemExisted(webd, "videos"));

@@ -28,6 +28,7 @@ import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionE
 import oracle.sysman.emaas.platform.dashboards.core.PreferenceManager;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DatabaseDependencyUnavailableException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.resource.PreferenceNotFoundException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Preference;
 import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
@@ -128,6 +129,11 @@ public class PreferenceAPI extends APIBase
 			initializeUserContext(tenantIdParam, userTenant);
 			Preference input = pm.getPreferenceByKey(key, tenantId);
 			return Response.ok(getJsonUtil().toJson(input)).build();
+		}
+		catch (PreferenceNotFoundException e){
+			//in order to suppress error information in log files, do not log stack trace info
+			LOGGER.warn("Specific preference is not found for id {}",key);
+			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (DashboardException e) {
 			LOGGER.error(e.getLocalizedMessage(), e);
