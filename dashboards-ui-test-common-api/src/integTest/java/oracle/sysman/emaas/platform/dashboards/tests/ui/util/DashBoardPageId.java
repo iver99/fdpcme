@@ -23,11 +23,6 @@ public class DashBoardPageId
 	public static final String DASHBOARDSAVEID = "dashboard-screenshot";
 	public static final String WIDGETADDBUTTON = "emcpdf_dsbopts_add";//"//div[@id='ojDialogWrapper-widgetDetailsDialog']/div[5]/button";////div[18]/div[5]/button/span[text()='Add']";
 	public static final String DASHBOARDEDIT = "//*[@id='emcpdf_dsbopts_edit']";
-	public static final String DASHBOARDEDITBUTTON = "//button[@title='Edit Settings']";
-	public static final String DASHBOARDNAME = ".//*[@id='dbd-edit-settings-container']/span[2]";
-	public static final String DASHBOARDNAME_CSS = ".edit-setting-link.edit-dsb-link";
-	public static final String DASHBOARDFILTERS = "//span[contains(text(),'Dashboard Filters')]";
-	public static final String DASHBOARDENTITIES = "//label[text()='Entities']";
 	
 	public static final String DASHBOARDDUPLICATE = "//*[@id='emcpdf_dsbopts_duplicate']";
 	public static final String DASHBOARDDELETE = "//*[@id='emcpdf_dsbopts_delete']";
@@ -86,10 +81,6 @@ public class DashBoardPageId
 	public static final String FILTERSHARELOCATOR = "//*[@id='shareopt']";
 	public static final String FILTERMELOCATOR = "//*[@id='otheropt']";
 	public static final String FILTERFAVORITELOCATOR = "//*[@id='myfavorites']";
-	public static final String ENABLEENTITYFILTER = "//*[@id='enableEntityFilter']";
-	public static final String ENABLEGCENTITYFILTER = "//*[@id='enableGCEntities']";
-	public static final String DISABLEENTITYFILTER = "//*[@id='disableEntityFilter']";
-	public static final String ENTITYBUTTON = "//*[@id='emcta_tgtSel2_dropDown']";
 	
 	// sort by
 	public static final String SORTBYSELECTLOCATOR = "//div[not(contains(@style,'display:none'))]//*[contains(@class, 'dsb-sortcb')]//*[contains(@class, 'oj-select-chosen')]";
