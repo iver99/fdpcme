@@ -1,6 +1,6 @@
 cookbook
 ===================
-This cookbook deploys an create a DB user, creates data-source in WLS & deploys an ear in such WLS
+This cookbook deploys the dashboard comparator application to WLS
 
 Requirements
 ------------
@@ -14,5 +14,5 @@ TODO: Write usage instructions for each cookbook.
 
 License and Authors
 -------------------
-Authors: ping wu
+Authors: ping.w.wu
 
