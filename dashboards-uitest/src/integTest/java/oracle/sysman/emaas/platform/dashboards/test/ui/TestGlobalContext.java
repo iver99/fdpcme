@@ -18,16 +18,11 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.GlobalContextUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.WelcomeUtil;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
-
-//import org.openqa.selenium.By;
-//import org.openqa.selenium.support.ui.ExpectedConditions;
-//import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * @author cawei
@@ -299,7 +294,7 @@ public class TestGlobalContext extends LoginAndLogout
 		
 		//verify the open url
 		DashBoardUtils.verifyURL_WithPara(webd, "omcCtx=");	
-		Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(webd),"The global context exists in ITA widget");
+		Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(webd),"The global context isn't exists in ITA widget");
 		Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd),"All Entities");
 	}
 
@@ -329,7 +324,7 @@ public class TestGlobalContext extends LoginAndLogout
 		
 		//verify the open url
 		DashBoardUtils.verifyURL_WithPara(webd, "omcCtx=");	
-		Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(webd),"The global context exists in LA widget");
+		Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(webd),"The global context isn't exists in LA widget");
 		Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd),"All Entities");
 	}
 
