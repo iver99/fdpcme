@@ -167,7 +167,14 @@ define(['knockout',
             if (!tile){
                 return;
             }
-
+            
+            // this avoids the tile to be initialized for the 2nd time
+            if (tile.initialized) {
+                return;
+            } else {
+                tile.initialized = true;
+            }
+            
             tile.shouldHide = ko.observable(false);
             tile.toBeOccupied = ko.observable(false);
 
@@ -187,6 +194,7 @@ define(['knockout',
             tile.shorterEnabled = ko.computed(function() {
                 return mode.getModeHeight(tile) > 1;
             });
+            console.log("Eager loading tile with widget id="+tile.WIDGET_NAME())
             tile.upEnabled = ko.observable(true);
             tile.leftEnabled = ko.observable(true);
             tile.rightEnabled = ko.observable(true);
@@ -301,7 +309,8 @@ define(['knockout',
             };
 
             if (loadImmediately) {
-                var assetRoot = dfu.getAssetRootUrl(tile.PROVIDER_NAME(), true);
+                //Builder.eagerLoadDahshboardSingleTileAtPageLoad(dfu, ko, tile);
+                /*var assetRoot = dfu.getAssetRootUrl(tile.PROVIDER_NAME(), true);
                 var kocVM = tile.WIDGET_VIEWMODEL();
                 if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
                     kocVM = assetRoot + kocVM;
@@ -310,7 +319,12 @@ define(['knockout',
                 if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
                     kocTemplate = assetRoot + kocTemplate;
                 }
-                Builder.registerComponent(tile.WIDGET_KOC_NAME(), kocVM, kocTemplate);
+                Builder.registerComponent(tile.WIDGET_KOC_NAME(), kocVM, kocTemplate);*/
+            }
+            
+            tile.loadEangerLoadedTile = function(element) {
+                Builder.attachEagerLoadedDahshboardSingleTileAtPageLoad(tile, $(element).find(".dbd-tile-widget-wrapper")[0]);
+                return "dbd-tile-widget-wrapper-loaded";
             }
         }
         Builder.registerFunction(initializeTileAfterLoad, 'initializeTileAfterLoad');
@@ -320,6 +334,8 @@ define(['knockout',
                 return;
             }
 
+            console.log("getTileConfigure with widget id="+tile.WIDGET_NAME())
+            console.log("Tile object is "+JSON.stringify(tile))
             tile.upEnabled(mode.getModeRow(tile) > 0);
             tile.leftEnabled(mode.getModeColumn(tile) > 0);
             tile.rightEnabled(mode.getModeColumn(tile)+mode.getModeWidth(tile) < mode.MODE_MAX_COLUMNS);
