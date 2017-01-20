@@ -1265,6 +1265,46 @@ public class VerifyOOB extends LoginAndLogout
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start the test in verifyOrchestration_GridView");
 
+		//click on Grid View
+		webd.getLogger().info("Click on Grid View icon");
+		DashboardHomeUtil.gridView(webd);
+
+		//Open the OOB dashboard---Orchestration Workflows
+		webd.getLogger().info("Open the OOB dashboard---Orchestration Workflows");
+		DashboardHomeUtil.selectDashboard(webd, "Orchestration Workflows");
+
+		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
+
+		//verify Orchestration Workflows
+		verifyOrchestration();
+	}
+	@Test
+	public void verifyOrchestration_ListView()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test in verifyOrchestration_ListView");
+
+		//click on List View
+		webd.getLogger().info("Click on List View icon");
+		DashboardHomeUtil.listView(webd);
+
+		//Open the OOB dashboard---Orchestration Workflows
+		webd.getLogger().info("Open the OOB dashboard---Orchestration Workflows");
+		DashboardHomeUtil.selectDashboard(webd, "Orchestration Workflows");
+
+		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
+
+		//verify Orchestration Workflows
+		verifyOrchestration();
+	}
+	@Test
+	public void verifyOrchestration_WithFilter_GridView()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test in verifyOrchestration_GridView");
+
 		//click Filter-orchestration
 		webd.getLogger().info("Click Cloud Services - orchestration");
 		DashboardHomeUtil.filterOptions(webd, "orchestration");
@@ -1283,7 +1323,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyOrchestration();
 	}
 	@Test
-	public void verifyOrchestration_ListView()
+	public void verifyOrchestration_WithFilter_ListView()
 	{
 		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
