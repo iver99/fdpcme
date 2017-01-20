@@ -12,6 +12,7 @@ package oracle.sysman.emaas.platform.dashboards.test.ui;
 
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.DashBoardUtils;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.LoginAndLogout;
+import oracle.sysman.emaas.platform.dashboards.test.ui.util.PageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
@@ -294,7 +295,7 @@ public class TestGlobalContext extends LoginAndLogout
 		webd.switchToWindow();
 		webd.getLogger().info("Wait for the widget loading....");
 		//wait1.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id='save_widget_btn']")));
-		webd.waitForElementPresent(DashBoardPageId.SAVEBUTTON_UDE, WaitUtil.WAIT_TIMEOUT);
+		webd.waitForElementPresent(PageId.SAVEBUTTON_UDE, WaitUtil.WAIT_TIMEOUT);
 		
 		//verify the open url
 		DashBoardUtils.verifyURL_WithPara(webd, "omcCtx=");	
@@ -324,7 +325,7 @@ public class TestGlobalContext extends LoginAndLogout
 		webd.switchToWindow();
 		webd.getLogger().info("Wait for the widget loading....");
 		//wait1.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id='srchSrch']")));
-		webd.waitForElementPresent(DashBoardPageId.RUNBUTTON_LA, WaitUtil.WAIT_TIMEOUT);
+		webd.waitForElementPresent(PageId.RUNBUTTON_LA, WaitUtil.WAIT_TIMEOUT);
 		
 		//verify the open url
 		DashBoardUtils.verifyURL_WithPara(webd, "omcCtx=");	

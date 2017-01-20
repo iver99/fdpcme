@@ -88,4 +88,9 @@ public class PageId
 	public static final String ERRORURL_CSS = "div[data-bind=\"visible: invalidUrl\"]";
 	public static final String DEFAULTHOME_CSS = "div[data-bind=\"visible: defaultHomeLinkVisible\"]";
 	public static final String DEFAULTHOMEURL_CSS = ".dbd-error-url[href=\"/emsaasui/emcpdfui/welcome.html\"]";
+	
+	//UDE page
+	public static final String SAVEBUTTON_UDE = "//*[@id='save_widget_btn']";
+	//LA page
+	public static final String RUNBUTTON_LA = "//*[@id='srchSrch']";
 }
