@@ -125,7 +125,7 @@ public class AdditionalDataFilter implements Filter {
             LOGGER.debug("Before part is {}", beforePart);
             String afterPart = responseText.substring(idx + ADDITIONA_DATA_TO_REPLACE.length(), responseText.length());
             LOGGER.debug("After part is {}", afterPart);
-            updateCachedHtmlFragments(beforePart, afterPart);
+            AdditionalDataFilter.updateCachedHtmlFragments(beforePart, afterPart);
             newResponseText = getResponseText(dashboardData);
             LOGGER.info("After inserting additional data, the response text is {}", newResponseText);
         }
@@ -133,6 +133,7 @@ public class AdditionalDataFilter implements Filter {
     }
 
     /**
+     *  Update the response string with the specified response text
      * 
      * @param response
      * @param newResponseText
@@ -146,6 +147,11 @@ public class AdditionalDataFilter implements Filter {
         }
     }
 
+    /**
+     *  get the final response text by concatenating the cached before part+dashboard data+cached end part
+     * 
+     * @param dashboardData
+     */
     private String getResponseText(String dashboardData) {
         String newResponseText;
         StringBuilder sb = new StringBuilder(CACHED_BEFORE_ADDITIONAL_DATA_PART);
@@ -199,6 +205,7 @@ public class AdditionalDataFilter implements Filter {
             if (StringUtil.isEmpty(dashboardString)) {
                 LOGGER.warn("Retrieved null or empty dashboard for tenant {} user {} and dashboardId {}, so do not update page data then", tenant, user, dashboardId);
             } else {
+                //we do not need to escape the string, as we don't use regexp any more, but string concatenation
                 //dashboardString = formatJsonString(dashboardString);
                 //LOGGER.info("Escaping retrieved data before inserting to html. Vlaue now is: {}", dashboardString);
                 sb.append("window._dashboardServerCache=").append(dashboardString).append(";");
