@@ -1265,9 +1265,9 @@ public class VerifyOOB extends LoginAndLogout
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start the test in verifyOrchestration_GridView");
 
-		//click Filter-Application PerfAnalytics
-		//webd.getLogger().info("Click Cloud Services - IT Analytics");
-		//DashboardHomeUtil.filterOptions(webd, "ita");
+		//click Filter-orchestration
+		webd.getLogger().info("Click Cloud Services - orchestration");
+		DashboardHomeUtil.filterOptions(webd, "orchestration");
 
 		//click on Grid View
 		webd.getLogger().info("Click on Grid View icon");
@@ -1289,9 +1289,9 @@ public class VerifyOOB extends LoginAndLogout
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start the test in verifyOrchestration_ListView");
 
-		//click Filter-Application PerfAnalytics
-		//webd.getLogger().info("Click Cloud Services - IT Analytics");
-		//DashboardHomeUtil.filterOptions(webd, "ita");
+		//click Filter-orchestration
+		webd.getLogger().info("Click Cloud Services - orchestration");
+		DashboardHomeUtil.filterOptions(webd, "orchestration");
 
 		//click on List View
 		webd.getLogger().info("Click on List View icon");
@@ -1314,8 +1314,13 @@ public class VerifyOOB extends LoginAndLogout
 
 		//verify the url of opened page
 		DashBoardUtils.verifyURL(webd, "emcpdfui/builder.html?dashboardId=37");
-		//verify the APM open correctly
-		//TODO
+	
+		DashboardBuilderUtil.verifyWidget(webd, "Summary");
+		DashboardBuilderUtil.verifyWidget(webd, "Workflow Submission Alerts");
+		DashboardBuilderUtil.verifyWidget(webd, "Submissions by User");
+		DashboardBuilderUtil.verifyWidget(webd, "Submissions by Type");
+		DashboardBuilderUtil.verifyWidget(webd, "Histogram of Submissions by Average Failed Steps");
+		DashboardBuilderUtil.verifyWidget(webd, "Workflow Submission Details");
 
 		webd.getLogger().info("Verification end...");
 	}
