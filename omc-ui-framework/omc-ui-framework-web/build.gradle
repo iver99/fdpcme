@@ -29,6 +29,8 @@ def compiledDir = buildDir.absolutePath+'/public_html'
 def File sourceTargetSelectorAPIDestDir = new File(buildDir.absolutePath+'/stage_tsel')
 def webRootSourceDir = 'public_html'
 
+def chefDir = project.rootDir.absolutePath +'/dashboards-chef/cookbook-emcs-omc-ui-framework/recipes'
+
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
@@ -277,7 +279,25 @@ clean.dependsOn cleanJet,cleanFont,cleanTargetSelector
 project.task("cleanCompassCss")<<{
 }
 
-task copyJsSource(type:Copy, dependsOn:[cleanJs,compileSass]) {
+project.task("prepareChef")<<{
+
+  File chefFile = new File(chefDir+"/default.rb")
+
+		String contents = chefFile.getText('UTF-8')
+		String replacereg = "@version@"
+		contents = contents.replaceAll(Pattern.quote(replacereg), versionPathElement)
+		chefFile.write(contents, 'UTF-8')
+   
+//   new File(chefDir).eachFile {
+	//filesMatching("**/*.rb"){
+
+  //     	    filter(ReplaceTokens, tokens: [version: versionPathElement])
+//    }
+//    into "../../dashboards-chef/cookbook-emcs-omc-ui-framework/recipes/"
+//}
+}
+
+task copyJsSource(type:Copy, dependsOn:[cleanJs,compileSass,prepareChef]) {
     from (webRootSourceDir) {
         include "**/*"
         exclude "**/uifwkCommonMsg.js"
@@ -719,6 +739,14 @@ task minifyUIFwkImplPartitionJs(dependsOn: [minifyUIFwkPartitionJs],type: com.er
         String absPath = compiledFile;
         contents = contents.replaceAll(Pattern.quote(absPath), "uifwk-impl-partition.orig.js")
         mapFile.write(contents, "UTF-8")
+
+	//create cached.js file
+	//Files.copy(Paths.get(compiledDir+"/"+versionPathElement+"/js/uifwk-impl-partition.js"), Paths.get(compiledDir+"/"+versionPathElement+"/js/uifwk-impl-partition-cached.js"))
+	Files.copy(Paths.get(compiledDir+"/js/uifwk-partition.js"), Paths.get(compiledDir+"/"+versionPathElement+"/js/uifwk-impl-partition-cached.js"))
+
+	text = new File(compiledDir+"/"+versionPathElement+"/js/uifwk-impl-partition.js").getText()
+	File cachedFile = new File(compiledDir+"/"+versionPathElement+"/js/uifwk-impl-partition-cached.js")
+	cachedFile.append("\n"+text,'UTF-8')
     }
 }
 //Combine end
