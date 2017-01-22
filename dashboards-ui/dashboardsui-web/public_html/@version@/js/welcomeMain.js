@@ -362,14 +362,34 @@ require(['ojs/ojcore',
                         "avail-analytics": "verticalApplication.avail-analytics",
                         "app_perf": "verticalApplication.app-perf-analytics"
                     };
+                    var ITA_OPTION_NAME_MAP = {
+                        "DB_perf": self.ITA_DB_Performance,
+                        "DB_resource": self.ITA_DB_Resource,
+                        "mw_perf": self.ITA_Middleware_Performance,
+                        "mw_resource": self.ITA_Middleware_Resource,
+                        "svr_resource": self.ITA_Server_Resource,
+                        "avail-analytics": self.ITA_Avail_Analytics,
+                        "app_perf": self.ITA_Application_Performance
+                    };
                     if(!self.landingHomeUrls) {
                         console.log("---fetching service links is not finished yet!---");
                         return;
                     }
-                    if(data.value){
+                    if(data.value && data.value.indexOf("select")<0){
                         self.landingHomeUrls[data.value] = self.getITAVerticalAppUrl(ITA_OPTION_MAP[data.value]);
-                        oj.Logger.info('Trying to open ' + data.value + ' by URL: ' + self.landingHomeUrls[data.value]);
-                        window.location.href = cxtUtil.appendOMCContext(self.landingHomeUrls[data.value]);
+                        if(!self.landingHomeUrls[data.value]){
+                            oj.Logger.error('Failed to open ' + data.value + '.');
+                            //show error message to user when the link is empty
+                            dfu.showMessage({
+                                type: 'error',
+                                summary: getNlsString('LANDING_HOME_URL_ERROR_MSG', ITA_OPTION_NAME_MAP[data.value]),
+                                detail: '',
+                                removeDelayTime: 5000
+                            });
+                        }else{
+                            oj.Logger.info('Trying to open ' + data.value + ' by URL: ' + self.landingHomeUrls[data.value]);
+                            window.location.href = cxtUtil.appendOMCContext(self.landingHomeUrls[data.value]);
+                        }
                     }
                 };
                 self.openInfraMonitoring = function() {
