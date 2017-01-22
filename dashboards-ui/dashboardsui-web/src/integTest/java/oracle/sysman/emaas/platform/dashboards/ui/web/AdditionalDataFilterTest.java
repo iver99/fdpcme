@@ -11,6 +11,7 @@ import mockit.Expectations;
 import mockit.Mocked;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.DashboardDataAccessUtil;
 
+import oracle.sysman.emaas.platform.uifwk.nls.filter.NLSFilter;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -20,7 +21,8 @@ import org.testng.annotations.Test;
 public class AdditionalDataFilterTest {
     @Test(groups = { "s2" })
     public void testDoFilter(@Mocked final FilterChain chain, @Mocked final HttpServletRequest httpReq, @Mocked final HttpServletResponse response,
-                             @Mocked final ByteArrayOutputStream anyByteArrayOutputStream, @Mocked final DashboardDataAccessUtil dashboardDataAccessUtil) throws Exception
+                             @Mocked final ByteArrayOutputStream anyByteArrayOutputStream, @Mocked final NLSFilter nlsf,
+                             @Mocked final DashboardDataAccessUtil dashboardDataAccessUtil) throws Exception
     {
         final AdditionalDataFilter filter = new AdditionalDataFilter();
         new Expectations() {
@@ -30,7 +32,9 @@ public class AdditionalDataFilterTest {
                 httpReq.getParameter(anyString);
                 result = "1";
                 anyByteArrayOutputStream.toString();
-                result = "////ADDITIONALDATA////";
+                result = "<BEFORE_PART lang=\"en-US\">INTER_PART////ADDITIONALDATA////END_PART";
+                NLSFilter.getLangAttr((HttpServletRequest)any);
+                result = "lang=\"en\"";
                 DashboardDataAccessUtil.getDashboardData(anyString, anyString, anyString, (BigInteger) any);
                 result = "{value: 123abc??$^-[]|(&!~@#%^&*+{}<>\\_,.;`':\"}";
                 DashboardDataAccessUtil.getRegistrationData(anyString, anyString, anyString, anyString);
