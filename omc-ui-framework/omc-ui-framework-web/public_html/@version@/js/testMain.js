@@ -170,7 +170,8 @@ require(['knockout',
 //                    relNotificationShow: "warnings",
                     isAdmin: isAdmin,
                     entities: entities,
-                    showGlobalContextBanner: false
+                    showGlobalContextBanner: true,
+                    showTimeSelector: ko.observable(true)
                 };
             }
 

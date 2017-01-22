@@ -28,6 +28,9 @@ buildscript {
 apply from: 'test-project-apply.gradle'
 apply from: 'setup.gradle'
 import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
+
+project.ext.omctf_omcCloudSetup_deployArgs= "-skipOpssConfig true -skipRestartServerOpss true " 
+
 /* *************************************************************************************************
  *                   END OF TEST-INFRA-BLOCK
  ***************************************************************************************************/
@@ -162,14 +165,13 @@ task DEVTest(type:EMTest,dependsOn: DEVTest_ws){
 	include "oracle/sysman/emaas/platform/dashboards/core/restclient/*.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/util/*.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/wls/management/AppLoggingManageMXBeanTest_S2.class"
-	include "oracle/sysman/emaas/platform/dashboards/core/zdt/*.class"
+	include "oracle/sysman/emaas/platform/dashboards/core/zdt/DataManagerTest.class"
 
+	//below are comparator web utils test cases
+	//include "oracle/sysman/emaas/platform/dashboards/comparator/targetmodel/services/*.class"
+	//include "oracle/sysman/emaas/platform/dashboards/comparator/webutils/**/*.class"
 
-	//***************below are dashboardscomparator-webutils project test cases***************//
-	include "oracle/sysman/emaas/platform/dashboards/comparator/targetmodel/services/*.class"
-	include "oracle/sysman/emaas/platform/dashboards/comparator/webutils/**/*.class"
-
-	//***************below are dashboards-sdk project test cases***************//
+	//below are sdk project test cases
 	include "oracle/sysman/emaas/platform/emcpdf/cache/screenshot/*.class"
 	include "oracle/sysman/emaas/platform/emcpdf/cache/exception/*.class"
 	include "oracle/sysman/emaas/platform/emcpdf/cache/support/**/*.class"
