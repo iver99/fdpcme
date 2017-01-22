@@ -26,7 +26,11 @@ import java.util.regex.Pattern;
 public class AdditionalDataFilter implements Filter {
     private final static Logger LOGGER = LogManager.getLogger(AdditionalDataFilter.class);
 
-    private static final Pattern pattern = Pattern.compile("////TODO////");
+    private static final String ADDITIONA_DATA_TO_REPLACE = "////ADDITIONALDATA////";
+    private static final Pattern pattern = Pattern.compile(ADDITIONA_DATA_TO_REPLACE);
+
+    private static String CACHED_BEFORE_ADDITIONAL_DATA_PART = "";
+    private static String CACHED_AFTER_ADDITIONAL_DATA_PART = "";
 
     private static class CaptureWrapper extends HttpServletResponseWrapper
     {
@@ -96,24 +100,70 @@ public class AdditionalDataFilter implements Filter {
         httpResponse.setContentType("text/html;charset=utf-8");
 
         final CaptureWrapper wrapper = new CaptureWrapper(httpResponse);
+        if (!StringUtil.isEmpty(CACHED_BEFORE_ADDITIONAL_DATA_PART)) {
+            // previously the html static resource (start part&end part) has been cached,
+            // so no need to parse the static resource again or go to the next filter
+            // just concatinate the data string into one
+            String dashboardData = getDashboardData(httpReq);
+            String newResponseText = getResponseText(dashboardData);
+            LOGGER.info("After getting cached static html fragment, contactinating the data and inserting into html, the response text is {}", newResponseText);
+            updateResponseWithDashboardDataText(response, newResponseText);
+            return;
+        }
+
+
         chain.doFilter(request, wrapper);
 
         final String responseText = wrapper.getResponseText();
         assert (responseText != null);
-        String data = getDashboardData(httpReq);
+        String dashboardData = getDashboardData(httpReq);
         String newResponseText = responseText;
-        LOGGER.debug("Before inserting additional data, the response test is {}", newResponseText);
-        if (!StringUtil.isEmpty(data) && responseText != null) {
-            newResponseText = pattern.matcher(responseText).replaceFirst(data);
-            LOGGER.debug("Replacing and inserting addtional data now!");
+        LOGGER.info("Before inserting additional data, the response text is {}", newResponseText);
+        if (!StringUtil.isEmpty(dashboardData) && responseText != null) {
+            int idx = responseText.indexOf(ADDITIONA_DATA_TO_REPLACE);
+            String beforePart = responseText.substring(0, idx);
+            LOGGER.debug("Before part is {}", beforePart);
+            String afterPart = responseText.substring(idx + ADDITIONA_DATA_TO_REPLACE.length(), responseText.length());
+            LOGGER.debug("After part is {}", afterPart);
+            AdditionalDataFilter.updateCachedHtmlFragments(beforePart, afterPart);
+            newResponseText = getResponseText(dashboardData);
+            LOGGER.info("After inserting additional data, the response text is {}", newResponseText);
         }
-        LOGGER.debug("After inserting additional data, the response test is {}", newResponseText);
-	response.setCharacterEncoding("utf-8");
+        updateResponseWithDashboardDataText(response, newResponseText);
+    }
+
+    /**
+     *  Update the response string with the specified response text
+     * 
+     * @param response
+     * @param newResponseText
+     * @throws IOException
+     */
+    private void updateResponseWithDashboardDataText(ServletResponse response, String newResponseText) throws IOException {
+        response.setCharacterEncoding("utf-8");
         response.setContentType("text/html;charset=utf-8");
-        // Writes the updated response text to the response object
         try (PrintWriter writer = new PrintWriter(response.getOutputStream())) {
             writer.println(newResponseText);
         }
+    }
+
+    /**
+     *  get the final response text by concatenating the cached before part+dashboard data+cached end part
+     * 
+     * @param dashboardData
+     */
+    private String getResponseText(String dashboardData) {
+        String newResponseText;
+        StringBuilder sb = new StringBuilder(CACHED_BEFORE_ADDITIONAL_DATA_PART);
+        sb.append(dashboardData);
+        sb.append(CACHED_AFTER_ADDITIONAL_DATA_PART);
+        newResponseText = sb.toString();
+        return newResponseText;
+    }
+
+    private synchronized static void updateCachedHtmlFragments(String beforePart, String afterPart) {
+        CACHED_BEFORE_ADDITIONAL_DATA_PART = beforePart;
+        CACHED_AFTER_ADDITIONAL_DATA_PART = afterPart;
     }
 
     @Override
@@ -143,13 +193,6 @@ public class AdditionalDataFilter implements Filter {
         return null;
     }
 
-    String formatJsonString(String json) {
-        if (StringUtil.isEmpty(json)) {
-            return json;
-        }
-        return json.replace("\\", "\\\\").replace("\"", "\\\"").replace("$", "\\$");
-    }
-
     private String getDashboardData(String tenant, String user, BigInteger dashboardId, String referer, String sessionExp) {
         if (StringUtil.isEmpty(tenant) || StringUtil.isEmpty(user)) {
             LOGGER.warn("tenant {}/user {} is null or empty or invalid, so do not update dashboard page then", tenant, user);
@@ -162,8 +205,9 @@ public class AdditionalDataFilter implements Filter {
             if (StringUtil.isEmpty(dashboardString)) {
                 LOGGER.warn("Retrieved null or empty dashboard for tenant {} user {} and dashboardId {}, so do not update page data then", tenant, user, dashboardId);
             } else {
-                dashboardString = formatJsonString(dashboardString);
-                LOGGER.info("Escaping retrieved data before inserting to html. Vlaue now is: {}", dashboardString);
+                //we do not need to escape the string, as we don't use regexp any more, but string concatenation
+                //dashboardString = formatJsonString(dashboardString);
+                //LOGGER.info("Escaping retrieved data before inserting to html. Vlaue now is: {}", dashboardString);
                 sb.append("window._dashboardServerCache=").append(dashboardString).append(";");
             }
         } else {

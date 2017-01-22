@@ -30,7 +30,7 @@ public class AdditionalDataFilterTest {
                 httpReq.getParameter(anyString);
                 result = "1";
                 anyByteArrayOutputStream.toString();
-                result = "////TODO////";
+                result = "////ADDITIONALDATA////";
                 DashboardDataAccessUtil.getDashboardData(anyString, anyString, anyString, (BigInteger) any);
                 result = "{value: 123abc??$^-[]|(&!~@#%^&*+{}<>\\_,.;`':\"}";
                 DashboardDataAccessUtil.getRegistrationData(anyString, anyString, anyString, anyString);
@@ -42,12 +42,12 @@ public class AdditionalDataFilterTest {
         filter.doFilter(httpReq, response, chain);
     }
 
-    @Test(groups = { "s2" })
+    /*@Test(groups = { "s2" })
     public void testFormatJsonString() {
         AdditionalDataFilter filter = new AdditionalDataFilter();
         String json = "{field1: value, field2: \"value2\", field3: \\\"value3\\\"}";
         String expected = "{field1: value, field2: \\\"value2\\\", field3: \\\\\\\"value3\\\\\\\"}";
         Assert.assertEquals(filter.formatJsonString(json), expected);
-    }
+    }*/
 }
 
