@@ -13,12 +13,14 @@ import oracle.sysman.emaas.platform.dashboards.entity.EmsSubDashboard;
 
 import org.testng.annotations.Test;
 
+import javax.persistence.EntityManager;
+
 @Test(groups = {"s2"})
 public class DashboardTest {
     @Mocked
     DashboardServiceFacade dashboardServiceFacade;
     @Test
-    public void testValueOf() throws Exception {
+    public void testValueOf(@Mocked final EntityManager entityManager) throws Exception {
         EmsDashboard from  = new EmsDashboard();
         from .setCreationDate(new Date());
         from.setDashboardId(BigInteger.ONE);
@@ -45,6 +47,8 @@ public class DashboardTest {
             {
                 dashboardServiceFacade.getEmsDashboardByIds((List)any, anyLong);
                 result = emsDashboards;
+                dashboardServiceFacade.getEntityManager();
+                result = entityManager;
             }
         };
         Dashboard.valueOf(from, new Dashboard(), true, true, true);
