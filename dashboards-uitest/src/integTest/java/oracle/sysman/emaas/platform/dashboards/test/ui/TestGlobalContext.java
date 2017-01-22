@@ -20,7 +20,8 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.GlobalContextUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.WelcomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 
-
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
@@ -40,8 +41,12 @@ public class TestGlobalContext extends LoginAndLogout
 	private String dbName_ude = "";
 	private String dbName_la = "";
 
+
 	private String dbName_willDelete = "";
 	private String dbSetName_willDelete = "";
+
+	private String dbName_tailsTest = "";
+
 	
 	public void initTest(String testName)
 	{
@@ -65,11 +70,10 @@ public class TestGlobalContext extends LoginAndLogout
 
 		DashBoardUtils.deleteDashboard(webd, DSBNAME);
 		DashBoardUtils.deleteDashboard(webd, DSBSETNAME);
-
 		DashBoardUtils.deleteDashboard(webd, dbName_ude);
 		DashBoardUtils.deleteDashboard(webd, dbName_la);
-
 		DashBoardUtils.deleteDashboard(webd, dbName_willDelete);
+		DashBoardUtils.deleteDashboard(webd, dbName_tailsTest);
 
 		webd.getLogger().info("All test data have been removed");
 
@@ -276,6 +280,7 @@ public class TestGlobalContext extends LoginAndLogout
 
 	}
 	
+
 	@Test(groups = "test_omcCtx")
 	public void testomcCtx_OpenITAWidget()
 	{
@@ -399,6 +404,70 @@ public class TestGlobalContext extends LoginAndLogout
 		webd.getLogger().info("start to verify omcCtx exist in the OOB dashboard url");	
 		Assert.assertTrue(url2.contains("omcCtx="), "The global context infomation in URL is lost in OOB dashboard page");		
 	}
+
+	@Test
+	public void tesTGlobalContext_SwitchEntity()
+	{
+		dbName_tailsTest = "selfDb-" + generateTimeStamp();
+
+		//Initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test case: testomcCtx_OpenITAWidget");
+
+		//visit home page
+		BrandingBarUtil.visitDashboardHome(webd);
+		DashboardHomeUtil.gridView(webd);
+		DashboardHomeUtil.createDashboard(webd, dbName_tailsTest, null);
+		DashboardBuilderUtil.verifyDashboard(webd, dbName_tailsTest, null, false);
+		
+		DashboardBuilderUtil.addWidgetToDashboard(webd, "Analytics Line");
+		DashboardBuilderUtil.saveDashboard(webd);	
+		
+		//find edit button and click it
+		WebElement editButton = webd.getWebDriver().findElement(By.xpath(PageId.DASHBOARDEDITBUTTON));		
+		Assert.assertTrue(editButton.isDisplayed(), "Edit button isn't displayed in self dashboard");
+		webd.click(PageId.DASHBOARDEDITBUTTON);
+		
+		//find the dashboard name and click it
+		WebElement dashboardName = webd.getWebDriver().findElement(By.xpath(PageId.DASHBOARDNAME));		
+		Assert.assertTrue(dashboardName.isDisplayed(), "dashboardName isn't displayed in self dashboard");
+		webd.click("css="+ PageId.DASHBOARDNAME_CSS);
+		
+		//find Dashboard Filters and click it
+		WebElement dashboardFilters = webd.getWebDriver().findElement(By.xpath(PageId.DASHBOARDFILTERS));
+		Assert.assertTrue(dashboardFilters.isDisplayed(), "Dashboard Filters isn't displayed in self dashboard");
+		webd.click(PageId.DASHBOARDFILTERS);
+		
+		//make sure Entities label is displayed
+		WebElement entitiesLabel = webd.getWebDriver().findElement(By.xpath(PageId.DASHBOARDENTITIES));
+		Assert.assertTrue(entitiesLabel.isDisplayed(), "Entities Label isn't displayed in self dashboard");
+		
+		//find "GC entities" radio button, then select it
+		WebElement useGCEntities = webd.getWebDriver().findElement(By.xpath(PageId.ENABLEGCENTITYFILTER));
+		Assert.assertTrue(useGCEntities.isDisplayed(), "GC entities filter isn't displayed in self dashboard");
+		webd.click(PageId.ENABLEGCENTITYFILTER);
+		
+		Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(webd), "The global context isn't exists when select GC entities filter");
+		Assert.assertTrue(webd.isDisplayed(PageId.ENTITYBUTTON),"All Entities button isn't display on the top-left cornor, when select GC entities filter");
+	
+		//find "Use dashboard entities" radio button, then select it
+		WebElement useDbEntities = webd.getWebDriver().findElement(By.xpath(PageId.ENABLEENTITYFILTER));
+		Assert.assertTrue(useDbEntities.isDisplayed(), "Use dashboard entities isn't displayed in self dashboard");
+		webd.click(PageId.ENABLEENTITYFILTER);		
+		
+		Assert.assertFalse(GlobalContextUtil.isGlobalContextExisted(webd),"The global context isn't exists when select dashboard entities filter");
+		Assert.assertTrue(webd.isDisplayed(PageId.ENTITYBUTTON),"All Entities button isn't display on the top-left cornor, when select dashboard entities");
+		
+		//find "Use entities defined by content" radio button, then select it
+		WebElement disableEntity = webd.getWebDriver().findElement(By.xpath(PageId.DISABLEENTITYFILTER));
+		Assert.assertTrue(disableEntity.isDisplayed(), "Disable entities filter isn't displayed in self dashboard");
+		webd.click(PageId.DISABLEENTITYFILTER);
+		
+		Assert.assertFalse(GlobalContextUtil.isGlobalContextExisted(webd),"The global context isn't exists when select disable entities filter");
+		Assert.assertFalse(webd.isElementPresent(PageId.ENTITYBUTTON), "All Entities button is present on the top-left cornor, when select disable entities fileter");
+	}
+	
+
 	private String generateTimeStamp()
 	{
 		return String.valueOf(System.currentTimeMillis());
