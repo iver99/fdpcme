@@ -307,6 +307,10 @@ define(['knockout',
             tile.getWigetDataFromCache = function (wigetId,sccessCallback,failureCallback) {
                 new Builder.DashboardDataSource().fetchSelDbdSsData(wigetId,sccessCallback,failureCallback);
             };
+            
+            tile.getWidgetDataFromCache = function (widgetId,sccessCallback,failureCallback) {
+                new Builder.DashboardDataSource().fetchSelDbdSsData(widgetId,sccessCallback,failureCallback);
+            };
 
             if (loadImmediately) {
                 //Builder.eagerLoadDahshboardSingleTileAtPageLoad(dfu, ko, tile);

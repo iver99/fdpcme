@@ -131,6 +131,9 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                  * @returns {unresolved} true/false
                  */
                 function isValidFlexRelTimePeriod(timePeriod) {
+                    if(params.hideLastRange === true) {
+                        return false;
+                    }
                     return ctxUtil.isValidTimePeriod(timePeriod);
                 }
 
@@ -891,6 +894,11 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 if(params.enableTimeFilter && params.enableTimeFilter === true) {
                     self.enableTimeFilter(true);
                 }
+                
+                self.hideLastRange = ko.observable(false);
+                if(params.hideLastRange && params.hideLastRange === true) {
+                    self.hideLastRange(true);
+                }
 
                 if(!ko.components.isRegistered("time-filter")) {
                     ko.components.register("time-filter", {
@@ -961,12 +969,12 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
 
                 self.leftDrawerHeight = ko.computed(function() {
                     if(self.showRightPanel() === true) {
-                        return "499px"; //"412px";
+                        return "465px";
                     }else {
                         return "auto";
                     }
                 }, self);
-
+                
                 self.valueSubscriber = ko.computed(function () {
                     return self.random();
 //                    return self.value() + self.random();
@@ -2460,6 +2468,9 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 };
 
                 self.toggleTimeFilterInfo = function() {
+                    if(self.showTimeFilterInfoPopUp() === false) {
+                        self.showTimeFilterInfoPopUp(true);
+                    }
                     if($("#tfInfo_"+self.randomId).ojPopup("isOpen")) {
                         $("#tfInfo_"+self.randomId).ojPopup("close");
                     }else {
