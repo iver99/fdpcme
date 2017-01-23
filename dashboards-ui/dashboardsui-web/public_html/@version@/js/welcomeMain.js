@@ -376,7 +376,9 @@ require(['ojs/ojcore',
                         return;
                     }
                     if(data.value && data.value.indexOf("select")<0){
-                        self.landingHomeUrls[data.value] = self.getITAVerticalAppUrl(ITA_OPTION_MAP[data.value]);
+                        if(!self.landingHomeUrls[data.value]){
+                            self.landingHomeUrls[data.value] = self.getITAVerticalAppUrl(ITA_OPTION_MAP[data.value]);
+                        }
                         if(!self.landingHomeUrls[data.value]){
                             oj.Logger.error('Failed to open ' + data.value + '.');
                             //show error message to user when the link is empty
