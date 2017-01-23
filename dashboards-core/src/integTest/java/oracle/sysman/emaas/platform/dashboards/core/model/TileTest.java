@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
 public class TileTest
 {
 
-	@Test(groups = { "s2" })
+	@Test(groups = { "s1" })
 	public void testTile() throws DashboardException
 	{
 		Tile tile = new Tile();

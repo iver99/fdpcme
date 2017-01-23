@@ -182,7 +182,7 @@ task DEVTest(type:EMTest,dependsOn: QATest1){
   	include "oracle/sysman/emaas/platform/dashboards/core/persistence/DashboardServiceFacadeTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/PreferenceManagerTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/DashboardManagerTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/core/model/*"
+//	include "oracle/sysman/emaas/platform/dashboards/core/model/*"
 	include "oracle/sysman/emaas/platform/dashboards/core/wls/management/*"
 	useRestAssured=true
 	ext.set("testType", "unit")
@@ -190,16 +190,16 @@ task DEVTest(type:EMTest,dependsOn: QATest1){
 
 //Task is added from "emcpdf_dev_ui_test_3n"
 task DEVUiTest(type:EMTest,dependsOn: DEVTest){
-  	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/JsonUtilTest.class"
+//  	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/JsonUtilTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/wls/management/AppLoggingManageMXBeanTest.class"
  	useRestAssured=true
 	ext.set("testType", "unit")
 }
 
 //Task is added from "emcpdf_uifwk_dev_test_3n"
-task DEVTest2(type:EMTest,dependsOn: DEVUiTest){ 
-	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/util/StringUtilTest.class"
-	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/wls/management/AppLoggingManageMXBeanTest.class"	
+task DEVTest2(type:EMTest,dependsOn: DEVUiTest){
+//	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/util/StringUtilTest.class"
+	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/wls/management/AppLoggingManageMXBeanTest.class"
 	useRestAssured=true
 	ext.set("testType", "unit")
 }
