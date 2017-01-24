@@ -50,14 +50,9 @@ public class NLSFilter implements Filter
         // Chains with a wrapper which captures the response text
         final CaptureWrapper wrapper = new CaptureWrapper(httpResponse);
         chain.doFilter(request, wrapper);
+        final String langAttr = NLSFilter.getLangAttr(httpRequest);
 
-        // get the accept-language header
-        String alh = StringEscapeUtils.escapeHtml4(httpRequest.getHeader("Accept-Language"));
-        // calculate the UI locale
-        String locale = getSupportedLocale(alh);
 
-        // Replaces lang="en-US" by lang="xx" in response text
-        final String langAttr = "lang=\"" + locale + "\"";
         final String responseText = wrapper.getResponseText();
         assert (responseText != null);
         final String newResponseText = pattern.matcher(responseText).replaceFirst(langAttr);
@@ -68,12 +63,25 @@ public class NLSFilter implements Filter
         }
     }
 
+    public static String getLangAttr(HttpServletRequest httpRequest) {
+        if (httpRequest == null) {
+            return null;
+        }
+        // get the accept-language header
+        String alh = StringEscapeUtils.escapeHtml4(httpRequest.getHeader("Accept-Language"));
+        // calculate the UI locale
+        String locale = getSupportedLocale(alh);
+
+        // Replaces lang="en-US" by lang="xx" in response text
+        return "lang=\"" + locale + "\"";
+    }
+
     @Override
     public void destroy()
     {
     }
     
-    private String getSupportedLocale(String alh)
+    private static String getSupportedLocale(String alh)
     {
         if (alh != null && !alh.isEmpty()) {
             String locale = alh.split(",")[0].split(";")[0];
