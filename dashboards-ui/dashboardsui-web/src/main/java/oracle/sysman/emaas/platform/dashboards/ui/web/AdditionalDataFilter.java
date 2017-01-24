@@ -103,7 +103,7 @@ public class AdditionalDataFilter implements Filter {
             String langAttr = NLSFilter.getLangAttr(httpReq);
             String dashboardData = getDashboardData(httpReq);
             String newResponseText = getResponseText(langAttr, dashboardData);
-            LOGGER.info("After getting cached static html fragment, contactinating the data and inserting into html, the response text is {}", newResponseText);
+            LOGGER.debug("After getting cached static html fragment, contactinating the data and inserting into html, the response text is {}", newResponseText);
             updateResponseWithAdditionDataText(response, newResponseText);
             return;
         }
@@ -114,7 +114,7 @@ public class AdditionalDataFilter implements Filter {
         final String responseText = wrapper.getResponseText();
         assert (responseText != null);
         String newResponseText = responseText;
-        LOGGER.info("Before inserting additional data, the response text is {}", newResponseText);
+        LOGGER.debug("Before inserting additional data, the response text is {}", newResponseText);
 
         int idxLangAttr = responseText.indexOf(LANG_ATTR_TO_REPLACE);
         String beforeLangAttrPart = responseText.substring(0, idxLangAttr);
@@ -129,7 +129,7 @@ public class AdditionalDataFilter implements Filter {
         String langAttr = NLSFilter.getLangAttr(httpReq);
         String dashboardData = getDashboardData(httpReq);
         newResponseText = getResponseText(langAttr, dashboardData);
-        LOGGER.info("After inserting additional data, the response text is {}", newResponseText);
+        LOGGER.debug("After inserting additional data, the response text is {}", newResponseText);
 
         updateResponseWithAdditionDataText(response, newResponseText);
     }
