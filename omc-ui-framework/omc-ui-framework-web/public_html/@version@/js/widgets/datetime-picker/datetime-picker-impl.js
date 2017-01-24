@@ -138,7 +138,6 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 }
 
                 self.showPanel = ko.observable(false);
-                self.showTimeFilterInfoPopUp = ko.observable(false);
                 self.enableTimeFilter = ko.observable(false);
                 self.tfInfoIndicatorVisible = ko.observable(false);
                 self.timeFilterInfo = ko.observable();
@@ -2515,9 +2514,6 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 };
 
                 self.showTimeFilterInfo = function() {
-                    if(self.showTimeFilterInfoPopUp() === false) {
-                        self.showTimeFilterInfoPopUp(true);
-                    }
                     $("#tfInfo_"+self.randomId).ojPopup("open", "#tfInfoIndicator_"+self.randomId);
                     if ($(self.panelId).ojPopup('isOpen')) {
                         self.closeAllPopups();
