@@ -2521,9 +2521,6 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 };
 
                 self.toggleTimeFilterInfo = function() {
-                    if(self.showTimeFilterInfoPopUp() === false) {
-                        self.showTimeFilterInfoPopUp(true);
-                    }
                     if($("#tfInfo_"+self.randomId).ojPopup("isOpen")) {
                         $("#tfInfo_"+self.randomId).ojPopup("close");
                     }else {
