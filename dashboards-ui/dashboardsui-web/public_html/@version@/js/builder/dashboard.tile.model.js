@@ -137,6 +137,7 @@ define(['knockout',
             self.appendNewTile = function(name, description, width, height, widget) {
                 if (widget) {
                     var newTile = self.editor.createNewTile(name, description, width, height, widget, self.timeSelectorModel, self.targets, true, dashboardInst);
+                    Builder.eagerLoadDahshboardSingleTileAtPageLoad(dfu, ko, newTile);                    
                     if (newTile){
                        self.editor.tiles.push(newTile);
                        self.show();
