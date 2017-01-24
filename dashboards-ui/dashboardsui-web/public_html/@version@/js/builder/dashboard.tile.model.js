@@ -143,7 +143,7 @@ define(['knockout',
                        self.show();
                        Builder.getTileConfigure(self.editor.mode, self.dashboard, newTile, self.timeSelectorModel, self.targets, dashboardInst);
                        $b.triggerEvent($b.EVENT_TILE_ADDED, null, newTile);
-                       self.triggerTileTimeControlSupportEvent((newTile.type() === 'DEFAULT' && newTile.WIDGET_SUPPORT_TIME_CONTROL())?true:null);
+                       self.triggerTileTimeControlSupportEvent((newTile.type() === 'DEFAULT' && newTile.WIDGET_SUPPORT_TIME_CONTROL && newTile.WIDGET_SUPPORT_TIME_CONTROL())?true:null);
                     }
                 }
                 else {
@@ -554,7 +554,7 @@ define(['knockout',
                 }
                 for (var i = 0; i < self.editor.tiles().length; i++) {
                     var tile = self.editor.tiles()[i];
-                    if (tile && tile.type() === 'DEFAULT' && tile.WIDGET_SUPPORT_TIME_CONTROL()) {
+                    if (tile && tile.type() === 'DEFAULT' && tile.WIDGET_SUPPORT_TIME_CONTROL && tile.WIDGET_SUPPORT_TIME_CONTROL()) {
                         $b.triggerEvent($b.EVENT_EXISTS_TILE_SUPPORT_TIMECONTROL, null, true);
                         return;
                     }
