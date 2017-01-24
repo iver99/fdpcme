@@ -121,12 +121,12 @@ public class UifwkPartitionJsFilter implements Filter
 			}
 
 			String replacedToData = sb.toString();
-			LOGGER.info("!!!!!!!!!to be replaced data is {}", replacedToData);
+			LOGGER.debug("!!!!!!!!!to be replaced data is {}", replacedToData);
 			if (!StringUtil.isEmpty(replacedToData)) {
 				//Replace registration and/or subscribed app data
 				String tobeReplaced = "window\\._uifwk\\.cachedData\\.registrations=null";
 				wrapperString = wrapperString.replaceFirst(tobeReplaced, replacedToData);
-				LOGGER.info("The server side data to be replaced is {}", replacedToData);
+				LOGGER.debug("The server side data to be replaced is {}", replacedToData);
 			}
 		}
 
