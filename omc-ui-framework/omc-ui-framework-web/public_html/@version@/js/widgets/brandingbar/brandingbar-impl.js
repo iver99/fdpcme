@@ -49,7 +49,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 if (ko.isObservable(self.entityContextParams.enableReadOnlyRemove)) {
                     self.showReadOnlyPillRemove = self.entityContextParams.enableReadOnlyRemove;
                 } else {
-                    self.showReadOnlyPillRemove = ko.observable(ko.unwrap(self.entityContextParams.enableReadOnlyRemove) === false ? false : true);
+                    self.showReadOnlyPillRemove = ko.observable(ko.unwrap(self.entityContextParams.enableReadOnlyRemove) === true ? true : false);
                 }
             }
             if (!self.entityContextReadOnly) {
