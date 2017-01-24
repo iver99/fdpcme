@@ -1353,7 +1353,7 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Verify the current url");
 
 		//verify the url of opened page
-		DashBoardUtils.verifyURL(webd, "emcpdfui/builder.html?dashboardId=37");
+		DashBoardUtils.verifyURL_WithPara(webd, "emcpdfui/builder.html?dashboardId=37");
 	
 		DashboardBuilderUtil.verifyWidget(webd, "Summary");
 		DashboardBuilderUtil.verifyWidget(webd, "Workflow Submission Alerts");
