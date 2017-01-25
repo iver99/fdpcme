@@ -180,7 +180,8 @@ define(['knockout',
 
                     self.initEventHandlers();
                     
-                    if(self.rightPanelControl.completelyHidden() === false) { //load widgets only when right panel is editable
+                    if(self.rightPanelControl.completelyHidden() === false && self.rightPanelWidget.isWidgetLoaded()===false) { 
+                        //load widgets only when right panel is editable and have not loaded widget before
                         self.rightPanelWidget.loadWidgets();
                     }
                     self.initDraggable();
