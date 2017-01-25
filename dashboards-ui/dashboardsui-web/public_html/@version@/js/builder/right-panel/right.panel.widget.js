@@ -14,7 +14,7 @@ function (ko, $, oj, dfu) {
         self.isWidgetLoaded =ko.observable(false);
         self.tilesViewModel = ko.observable($b.getDashboardTilesViewModel && $b.getDashboardTilesViewModel());
 
-        self.loadWidgets = function (req) {
+        self.loadWidgets = function (req,successCallback) {
             var widgetDS = new Builder.WidgetDataSource();
 
             widgetDS.loadWidgetData(
@@ -43,7 +43,8 @@ function (ko, $, oj, dfu) {
                             }
                         }
                         self.initWidgetDraggable();
-                        self.isWidgetLoaded(true)
+                        self.isWidgetLoaded(true);
+                        successCallback();
                     }
             );
         };
