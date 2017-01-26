@@ -517,6 +517,9 @@ define(['knockout',
             wgtelem.append(el);
             document.body.appendChild(wgtelem[0]);
 
+            if (tile.widgetDeleted && tile.widgetDeleted()) {
+                return;
+            }
             var assetRoot = dfu.getAssetRootUrl(tile.PROVIDER_NAME(), true);
             var kocVM = tile.WIDGET_VIEWMODEL();
             if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
