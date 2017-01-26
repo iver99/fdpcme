@@ -2273,7 +2273,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             tp = self.timePeriodLast7days;
                             if($.inArray(tp, tpNotToShow) === -1) {
                                 self.setTimePeriodChosen(tp);
-                                self.setTimePeriodToLastX(tp, start, end, 1);
+                                self.setTimePeriodToLastX(tp, new Date(start), new Date(end), 1);
                             }else {
                                 customClick(0);
                             }
@@ -2281,7 +2281,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             tp = self.timePeriodLast60mins;
                             if($.inArray(tp, tpNotToShow) === -1) {
                                 self.setTimePeriodChosen(tp);
-                                self.setTimePeriodToLastX(tp, start, end, 1);
+                                self.setTimePeriodToLastX(tp, new Date(start), new Date(end), 1);
                             }else {
                                 customClick(0);
                             }
@@ -2441,6 +2441,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 };
 
                 self.applyClick = function (shouldSetOmcCtx) {
+                    console.log("in****");
                     var flexRelTimeVal = null;
                     var flexRelTimeOpt = null;
                     var flexRelTimePeriodId = null;
@@ -2851,7 +2852,11 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 
                 function convertTimeToDesiredPrecision(timeStamp) {
                     var resTime;
-                    if(!timeStamp || isNaN(parseInt(timeStamp))) {
+                    if(!timeStamp) {
+                        return;
+                    }
+                    timeStamp = newDateWithMilliseconds(timeStamp).getTime();
+                    if(isNaN(parseInt(timeStamp))) {
                         return;
                     }
                     timeStamp = parseInt(timeStamp);
@@ -2965,6 +2970,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     var ctxEnd = null;
                     var tp;
                     var ctxTime;
+                    var timeRange;
 //                    var timeRange;
 //                    var parsedTimePeriod;
                     //refresh time selector when time context is updated by ctxUtil setters
@@ -2999,11 +3005,18 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         if(ctxChangeEvent.contextName === "All") {
                             if(ctxChangeEvent.currentValue && ctxChangeEvent.currentValue.time) {
                                 ctxTime = ctxChangeEvent.currentValue.time;
+                                timeRange = {
+                                    start: ctxTime.startTime,
+                                    end: ctxTime.endTime
+                                };
+                                if(ctxTime.startTime && ctxTime.endTime && self.adjustLastX) {
+                                    timeRange = self.adjustLastX(new Date(ctxTime.startTime), new Date(ctxTime.endTime));
+                                }
                                 if(ctxTime.timePeriod && isValidFlexRelTimePeriod(ctxTime.timePeriod)) {
                                     if(ctxTime.timePeriod !== tp
-                                            || (ctxTime.startTime && convertTimeToDesiredPrecision(ctxTime.startTime) !== start)
-                                            || (ctxTime.endTime && convertTimeToDesiredPrecision(ctxTime.endTime) !== end)) {
-                                        setDateTimeForRelativeTime(ctxTime.timePeriod, ctxTime.startTime, ctxTime.endTime);
+                                            || (timeRange.start && convertTimeToDesiredPrecision(timeRange.start) !== start)
+                                            || (timeRange.end && convertTimeToDesiredPrecision(timeRange.end) !== end)) {
+                                        setDateTimeForRelativeTime(ctxTime.timePeriod, timeRange.start, timeRange.end);
                                         setTimeout(function() {self.applyClick(false);}, 0);
                                     }
                                 }else if(ctxTime.startTime && ctxTime.endTime && convertTimeToDesiredPrecision(ctxTime.startTime) !== start && convertTimeToDesiredPrecision(ctxTime.endTime) !== end){
@@ -3016,10 +3029,17 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                 return;
                             }
                         }else if(ctxChangeEvent.contextName === "timePeriod" && ctxChangeEvent.currentValue.timePeriod && isValidFlexRelTimePeriod(ctxChangeEvent.currentValue.timePeriod)) {
+                            timeRange = {
+                                start: ctxChangeEvent.currentValue.startTime,
+                                end: ctxChangeEvent.currentValue.endTime
+                            };
+                            if(timeRange.start && timeRange.end && self.adjustLastX) {
+                                timeRange = self.adjustLastX(new Date(timeRange.start), new Date(timeRange.end));
+                            }
                             if(ctxChangeEvent.currentValue.timePeriod !== tp
-                                    || (ctxChangeEvent.currentValue.startTime && convertTimeToDesiredPrecision(ctxChangeEvent.currentValue.startTime) !== start) 
-                                    || (ctxChangeEvent.currentValue.endTime && convertTimeToDesiredPrecision(ctxChangeEvent.currentValue.endTime) !== end)) {
-                                    setDateTimeForRelativeTime(ctxChangeEvent.currentValue.timePeriod, ctxChangeEvent.currentValue.startTime, ctxChangeEvent.currentValue.endTime);
+                                    || (timeRange.start && convertTimeToDesiredPrecision(timeRange.start) !== start) 
+                                    || (timeRange.end && convertTimeToDesiredPrecision(timeRange.end) !== end)) {
+                                    setDateTimeForRelativeTime(ctxChangeEvent.currentValue.timePeriod, timeRange.start, timeRange.end);
                                     setTimeout(function() {self.applyClick(false);}, 0);
                             }
                         }else if(ctxChangeEvent.contextName === "startEndTime" && ctxChangeEvent.currentValue.startTime && ctxChangeEvent.currentValue.endTime && 
