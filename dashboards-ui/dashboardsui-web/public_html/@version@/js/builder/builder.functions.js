@@ -557,7 +557,10 @@ define(['knockout',
         function attachEagerLoadedDahshboardSingleTileAtPageLoad(tile, appendToElem) {
             var clientGuid=tile.clientGuid;
             var wgtelem=$("#wgt"+clientGuid);
-            wgtelem.css({'z-index': 0});
+            wgtelem.css({'z-index': 0,
+                'width': '100%',
+                'height': '100%'
+            });
             wgtelem.show();
             wgtelem.detach().appendTo(appendToElem);
         }
