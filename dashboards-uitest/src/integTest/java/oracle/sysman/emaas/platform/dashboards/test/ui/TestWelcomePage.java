@@ -326,7 +326,7 @@ public class TestWelcomePage extends LoginAndLogout
 		WelcomeUtil.visitSecurity(webd);
 
 		//verify the url of opened page
-		DashBoardUtils.verifyURL_WithPara(webd, "saui/web/index.html?L0=userBehaviors&L1=Graphical");
+		DashBoardUtils.verifyURL_WithPara(webd, "saui/web/index.html");
 
 		webd.getLogger().info("Test open Security Analytics in welcome page finished!!!");
 	}
