@@ -31,9 +31,9 @@
 	},
 	"emaas-platform-tenant-sdk": {
 		"method": "artifactFilterSdkVersion",
-		"group": "com.oracle.emaas",
+		"group": "com.oracle.emaas.emcpsrvs.sdk",
 		"name": "emaas-platform-tenant-sdk",
-		"version": "0.2",
+		"version": "2.0.+",
 		"transitive": false
 	},
 	"security-client": {

@@ -183,10 +183,12 @@ define([
                     }                    
                 }else if(ctxUtil.formalizeTimePeriod(timePeriod) === "CUSTOM" && start instanceof Date && end instanceof Date) {
                     if(self.isDashboardSet) {
+                        dashboardTilesViewModel.timePeriod("CUSTOM");
                         dashboardTilesViewModel.initStart(start);
                         dashboardTilesViewModel.initEnd(end);
                     }else {
                         if(headerViewModel) {
+                            headerViewModel.brandingbarParams.timeSelectorParams.timePeriod("CUSTOM");
                             headerViewModel.brandingbarParams.timeSelectorParams.startDateTime(start);
                             headerViewModel.brandingbarParams.timeSelectorParams.endDateTime(end);
                         }

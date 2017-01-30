@@ -267,6 +267,7 @@ define({
 
       "LANDING_HOME_WINDOW_TITLE": "Landing Home",
       "LANDING_HOME_WELCOME_SLOGAN": "Welcome to Oracle Management Cloud",
+      "LANDING_HOME_URL_ERROR_MSG": "Failed to get url for {0}.",
       "LANDING_HOME_APM": "Application Performance Monitoring",
       "LANDING_HOME_APM_DESC": "Rapidly identify, response, and resolve your software roadblocks",
       "LANDING_HOME_LA": "Log Analytics",

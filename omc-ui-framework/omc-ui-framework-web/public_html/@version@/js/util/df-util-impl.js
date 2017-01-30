@@ -936,6 +936,60 @@ define(['knockout',
                 return assetRoot;
             }
 
+            self.getSubscribedAppsWithoutEdition = function(successCallback, errorCallback) {
+                if (window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.subscribedapps &&
+                        ($.isFunction(window._uifwk.cachedData.subscribedapps) ? window._uifwk.cachedData.subscribedapps() : true)) {
+                    successCallback($.isFunction(window._uifwk.cachedData.subscribedapps) ? window._uifwk.cachedData.subscribedapps() :
+                            window._uifwk.cachedData.subscribedapps);
+                } else {
+                    if (!window._uifwk) {
+                        window._uifwk = {};
+                    }
+                    if (!window._uifwk.cachedData) {
+                        window._uifwk.cachedData = {};
+                    }
+                    if (!window._uifwk.cachedData.isFetchingSubscribedApps) {
+                        window._uifwk.cachedData.isFetchingSubscribedApps = true;
+                        if (!window._uifwk.cachedData.subscribedapps) {
+                            window._uifwk.cachedData.subscribedapps = ko.observable();
+                        }
+
+                        function doneCallback(data, textStatus, jqXHR) {
+                            window._uifwk.cachedData.subscribedapps(data);
+                            window._uifwk.cachedData.isFetchingSubscribedApps = false;
+                            successCallback(data, textStatus, jqXHR);
+                        }
+                        var url = null;
+                        if (self.isDevMode()) {
+                            url = self.buildFullUrl(self.getDevData().dfRestApiEndPoint, "subscribedapps");
+                        } else {
+                            url = '/sso.static/dashboards.subscribedapps';
+                        }
+                        ajaxUtil.ajaxWithRetry({type: 'GET', contentType: 'application/json', url: url,
+                            dataType: 'json',
+                            headers: this.getDefaultHeader(),
+                            async: true,
+                            success: function (data, textStatus, jqXHR) {
+                                doneCallback(data, textStatus, jqXHR);
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                console.log('Failed to get subscribed app info!');
+                                window._uifwk.cachedData.isFetchingSubscribedApps = false;
+                                if (errorCallback) {
+                                    errorCallback(jqXHR, textStatus, errorThrown);
+                                }
+                            }
+                        });
+                    } else {
+                        window._uifwk.cachedData.subscribedapps.subscribe(function (data) {
+                            if (data) {
+                                successCallback(data);
+                            }
+                        });
+                    }
+                }
+            }
+
             self.getRegistrations = function (successCallback, toSendAsync, errorCallback) {
                 if (window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.registrations && 
                         ($.isFunction(window._uifwk.cachedData.registrations) ? window._uifwk.cachedData.registrations() : true)) {

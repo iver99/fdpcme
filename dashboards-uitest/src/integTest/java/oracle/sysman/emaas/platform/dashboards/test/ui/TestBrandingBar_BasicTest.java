@@ -207,6 +207,6 @@ public class TestBrandingBar_BasicTest extends LoginAndLogout
 		WaitUtil.waitForPageFullyLoaded(webd);
 
 		//verify the url of opened page
-		DashBoardUtils.verifyURL_WithPara(webd, "saui/web/index.html?L0=userBehaviors&L1=Graphical");
+		DashBoardUtils.verifyURL_WithPara(webd, "saui/web/index.html");
 	}
 }

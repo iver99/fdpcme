@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletResponseWrapper;
 import oracle.sysman.emaas.platform.uifwk.ui.webutils.util.DataFetcher;
 import oracle.sysman.emaas.platform.uifwk.ui.webutils.util.StringUtil;
 
+import oracle.sysman.emaas.platform.uifwk.ui.webutils.util.TenantSubscriptionUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -104,11 +105,28 @@ public class UifwkPartitionJsFilter implements Filter
 			String referer = httpReq.getHeader("referer");
 			String registrationData = DataFetcher.getRegistrationData(tenant, userTenant, referer, sessionExp);
 
+			StringBuilder sb = new StringBuilder();
 			if (!StringUtil.isEmpty(registrationData)) {
-				//Replace registration data
-				String registrationToBeReplaced = "window\\._uifwk\\.cachedData\\.registrations=null";
-				String newRegistrationString = "window\\._uifwk\\.cachedData\\.registrations=" + registrationData;
-				wrapperString = wrapperString.replaceFirst(registrationToBeReplaced, newRegistrationString);
+				sb.append("window\\._uifwk\\.cachedData\\.registrations=");
+				sb.append(registrationData);
+			}
+
+			String apps = TenantSubscriptionUtil.getTenantSubscribedServices(tenant, user);
+			if (!StringUtil.isEmpty(apps)) {
+				if (!StringUtil.isEmpty(registrationData)) {
+					sb.append(",");
+				}
+				sb.append("window\\._uifwk\\.cachedData\\.subscribedapps=");
+				sb.append(apps);
+			}
+
+			String replacedToData = sb.toString();
+			LOGGER.debug("!!!!!!!!!to be replaced data is {}", replacedToData);
+			if (!StringUtil.isEmpty(replacedToData)) {
+				//Replace registration and/or subscribed app data
+				String tobeReplaced = "window\\._uifwk\\.cachedData\\.registrations=null";
+				wrapperString = wrapperString.replaceFirst(tobeReplaced, replacedToData);
+				LOGGER.debug("The server side data to be replaced is {}", replacedToData);
 			}
 		}
 
