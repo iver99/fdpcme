@@ -708,8 +708,13 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                             start = new Date(end.getFullYear(), end.getMonth(), end.getDate() - 7 * num, end.getHours(), end.getMinutes(), end.getSeconds(), end.getMilliseconds());
                             break;
                         case self.OMCTimeConstants.TIME_UNIT.MONTH:
-                            start = new Date(end.getFullYear(), end.getMonth() - num, end.getDate(), end.getHours(), end.getMinutes(), end.getSeconds(), end.getMilliseconds());
-                            break;
+                            var startMonthLastDate = new Date(end.getFullYear(), end.getMonth() - num+1,0).getDate();
+                            if (startMonthLastDate>=end.getDate()){
+                                start = new Date(end.getFullYear(), end.getMonth() - num, end.getDate(), end.getHours(), end.getMinutes(), end.getSeconds(), end.getMilliseconds());
+                            }else{
+                                start = new Date(end.getFullYear(), end.getMonth() - num, startMonthLastDate, end.getHours(), end.getMinutes(), end.getSeconds(), end.getMilliseconds());
+                            }
+                             break;
                         case self.OMCTimeConstants.TIME_UNIT.YEAR:
                             start = new Date(end.getFullYear() - num, end.getMonth(), end.getDate(), end.getHours(), end.getMinutes(), end.getSeconds(), end.getMilliseconds());
                             break;
