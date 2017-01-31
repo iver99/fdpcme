@@ -716,7 +716,12 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                             }
                              break;
                         case self.OMCTimeConstants.TIME_UNIT.YEAR:
-                            start = new Date(end.getFullYear() - num, end.getMonth(), end.getDate(), end.getHours(), end.getMinutes(), end.getSeconds(), end.getMilliseconds());
+                            var startMonthLastDate = new Date(end.getFullYear() -num, end.getMonth()+1,0).getDate();
+                            if (startMonthLastDate>=end.getDate()){
+                                start = new Date(end.getFullYear() - num, end.getMonth(), end.getDate(), end.getHours(), end.getMinutes(), end.getSeconds(), end.getMilliseconds());
+                            }else{
+                                start = new Date(end.getFullYear() - num, end.getMonth(), startMonthLastDate, end.getHours(), end.getMinutes(), end.getSeconds(), end.getMilliseconds()); 
+                            }
                             break;
                         default:
                             throw new Error("Error in getStartEndTimeFromTimePeriod function: timePeriod - " + opt + " is invalid");
