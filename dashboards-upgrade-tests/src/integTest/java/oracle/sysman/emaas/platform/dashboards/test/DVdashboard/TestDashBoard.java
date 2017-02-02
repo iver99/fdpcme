@@ -208,7 +208,7 @@ public void testSetHome()
 			
 		//init test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start to test in testOpenLAWidget");
+		webd.getLogger().info("Start to test in testOpenUDEWidget");
 
 		//reset the home page
 		webd.getLogger().info("Reset all filter options in the home page");
@@ -229,7 +229,7 @@ public void testSetHome()
 		webd.switchToWindow();
 		webd.getLogger().info("Wait for the widget loading....");
 		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		wait1.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//button[contains(@id,'editButton')]")));
+		//wait1.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//button[contains(@id,'editButton')]")));
 
 }
 
