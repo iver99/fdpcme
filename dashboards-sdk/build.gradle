@@ -1,7 +1,7 @@
 apply from:'test.gradle'
 apply plugin: 'java'
 
-//version = "1.0.0" + "-$buildTimestamp"
+
 
 publishing.publications {
     integTest(MavenPublication) {
@@ -11,8 +11,9 @@ publishing.publications {
     }
     thisJarPublication(MavenPublication) {
         from project.components.java
-	setGroupId("${publishGroup}")
+	setGroupId("${publishGroup1}")
         //setArtifactId('dashboards-sdk')
+	setVersion  ("2.0.0" + "-$buildTimestamp")
     }
 }
 
