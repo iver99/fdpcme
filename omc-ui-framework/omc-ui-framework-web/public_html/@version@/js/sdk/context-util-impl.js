@@ -1223,17 +1223,18 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
             /**
              * set topologyParams in omcContext
              * @param {type} topologyParams
+             * @param {String} source Source name to tell where the API is called
              * @returns {undefined}
              */
-            self.setTopologyParams = function (topologyParams) {
-                setIndividualContext('topology', 'topologyParams', topologyParams, null, null, true);
+            self.setTopologyParams = function (topologyParams, source) {
+                setIndividualContext('topology', 'topologyParams', topologyParams, null, null, true, source);
                 // 
                 // it is possible that the brandingbar has not been instantiated yet, 
                 // during brandingbar instantiation, topologyParams will be cleared from global context, 
                 // so it is necessary to reset it after brandingbar is instantiated
                 //
                 afterBrandingBarInstantiated(function () {
-                    setIndividualContext('topology', 'topologyParams', topologyParams, null, null, true);
+                    setIndividualContext('topology', 'topologyParams', topologyParams, null, null, true, source);
                 });
             };
             /**
