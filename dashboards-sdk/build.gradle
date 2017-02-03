@@ -13,7 +13,7 @@ publishing.publications {
         from project.components.java
 	setGroupId("${publishGroup1}")
         //setArtifactId('dashboards-sdk')
-	setVersion  ("2.0.0" + "-$buildTimestamp")
+	setVersion  ("1.0.0" + "-$buildTimestamp")
     }
 }
 
