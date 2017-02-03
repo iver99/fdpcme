@@ -673,6 +673,14 @@ task prepareRequireJsConfig(type:Copy) {
 
 task individualMinify(dependsOn: [copyStagedJs, jsCodeCoverage, tasks.matching { Task task -> task.name.startsWith("dominify")}]){}
 
+
+task combineAppJsDebug(dependsOn: [copyStagedJs, jsCodeCoverage, prepareRequireJsConfig], type: com.eriwen.gradle.js.tasks.RequireJsTask) {
+    source = javascript.source.staticjs.js.files   //point to your source files
+    requirejs.buildprofile = file(buildDir.absolutePath+"/uifwk.build.js")
+    outputs.upToDateWhen { false }           //requireJs task does not know how to accurately determine if it is UP-TO-DATE so this line says the task is never up to date.
+}
+
+
 task combineAppJs(dependsOn: [individualMinify,prepareRequireJsConfig], type: com.eriwen.gradle.js.tasks.RequireJsTask) {
     source = javascript.source.staticjs.js.files   //point to your source files
     requirejs.buildprofile = file(buildDir.absolutePath+"/uifwk.build.js")
@@ -849,6 +857,9 @@ eclipse {
 
 if(project.hasProperty("devMode")){
 	war.dependsOn copyDevJs
+}
+else if(project.hasProperty("debugJs")){
+        war.dependsOn combineAppJsDebug
 }
 else
 {
