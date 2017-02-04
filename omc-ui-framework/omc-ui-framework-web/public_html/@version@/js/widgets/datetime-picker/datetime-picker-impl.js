@@ -2371,12 +2371,12 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
 
                         if(timePeriod === ctxUtil.OMCTimeConstants.QUICK_PICK.CUSTOM) {
                             if(flexRelTimeVal && flexRelTimeOpt) {
-                                ctxUtil.setTimePeriod(flexRelTimePeriodId);
+                                ctxUtil.setTimePeriod(flexRelTimePeriodId, eventSourceTimeSelector);
                             }else {
-                                ctxUtil.setStartAndEndTime(new Date(start).getTime(), new Date(end).getTime());
+                                ctxUtil.setStartAndEndTime(new Date(start).getTime(), new Date(end).getTime(), eventSourceTimeSelector);
                             }
                         }else {
-                            ctxUtil.setTimePeriod(timePeriod);
+                            ctxUtil.setTimePeriod(timePeriod, eventSourceTimeSelector);
                         }
                     }
 
@@ -2758,7 +2758,11 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     }
                 }
                 
+                var eventSourceTimeSelector = 'OMC_UIFWK_TIME_SELECTOR';
                 function callbackForOmcCtxChange(ctxChangeEvent) {
+                    if (ctxChangeEvent && ctxChangeEvent.source === eventSourceTimeSelector) {
+                        return;
+                    }
                     var start;
                     var end;
                     var ctxStart = null;
