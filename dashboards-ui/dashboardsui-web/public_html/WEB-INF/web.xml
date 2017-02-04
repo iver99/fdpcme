@@ -74,7 +74,7 @@
     <url-pattern>/welcome.html</url-pattern>
     <url-pattern>/home.html</url-pattern>
     <url-pattern>/error.html</url-pattern>
-    <url-pattern>/builder.html</url-pattern>
+    <!--<url-pattern>/builder.html</url-pattern>-->
   </filter-mapping>
   
   	<security-constraint>

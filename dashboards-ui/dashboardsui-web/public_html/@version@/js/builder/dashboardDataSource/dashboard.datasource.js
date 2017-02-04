@@ -108,6 +108,7 @@ define(['knockout',
                 if (_hasNoSsDataBefore) {
                     self.dataSource.savedSearchData = ssDataFormat;
                 } else {
+                    //for multiple tab in set
                     ssDataFormat.forEach(function (ssItem) {
                         self.dataSource.savedSearchData = updateNewestDataToObj(self.dataSource.savedSearchData, ssItem);
                     });
@@ -151,7 +152,7 @@ define(['knockout',
 
         self.fetchSelDbdSsData = function (widgetId, successCallback, errorCallback) {
             var foundSsDataInCache = false;
-            self.dataSource.savedSearchData.filter(function isMatched(cachedSsData) {
+            self.dataSource.savedSearchData && self.dataSource.savedSearchData.filter(function isMatched(cachedSsData) {
                 if (cachedSsData.id == widgetId) {
                     foundSsDataInCache = true;
                     successCallback && successCallback(cachedSsData);
@@ -305,14 +306,14 @@ define(['knockout',
         
         function updateNewestDataToObj(obj,newestData) {
             var replaceData = false;
-            obj.filter(function isMatched(oldData, index) {
+            obj&&obj.filter(function isMatched(oldData, index) {
                 if (oldData.name === newestData.name) {
                     obj.splice(index, 1, newestData);
                     replaceData = true;
                 }
             });
             if(!replaceData){
-                obj.push(newestData);
+                obj && obj.push(newestData);
             }
             return obj;
         }
