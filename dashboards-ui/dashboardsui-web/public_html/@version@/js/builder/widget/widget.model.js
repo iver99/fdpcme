@@ -13,14 +13,15 @@ define(['jquery',
 
         self.loadWidgetData = function(keyword, successCallback) {
             initialize();
-            loadWidgets(keyword,successCallback);
+            loadWidgets(keyword);
+            successCallback && successCallback(self.widget);
         };
 
         function initialize() {
             self.widget = [];
         }
 
-        function loadWidgets(keyword,successCallback) {
+        function loadWidgets(keyword) {
             var widgetsUrl = dfu.getWidgetsUrl();
 
             dfu.ajaxWithRetry({
@@ -30,12 +31,11 @@ define(['jquery',
                 success: function(data) {
                     sortWidgetsData(data);
                     data && data.length > 0 && (filterWidgetsData(data, keyword));
-                    successCallback && successCallback(self.widget);
                 },
                 error: function(){
                     oj.Logger.error('Error when fetching widgets by URL: '+ widgetsUrl + '.');
                 },
-                async: true
+                async: false
             });
         };
 
