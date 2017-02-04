@@ -10,7 +10,7 @@
 
         <script type="text/javascript">
             function serverSideInit() {
-                ////TODO////
+                ////ADDITIONALDATA////
             }
         </script>
         <script data-main="@version@/js/builderMain" src="libs/@version@/js/oraclejet/js/libs/require/require.js"></script>
@@ -392,10 +392,12 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="dbd-tile-element">
-                                            <div style="position: relative; width: 100%; height: 100%;">
-                                                <div data-bind="component:{name:WIDGET_KOC_NAME, params:{tile:$data }}" style="width: 100%; height: 100%;"></div>
+                                        <div class="dbd-tile-element" data-bind="css: loadEangerLoadedTile($element)">
+                                            <!-- ko stopBinding: true -->
+                                            <div class="dbd-tile-widget-wrapper" style="position: relative; width: 100%; height: 100%;">
+                                                <!--<div data-bind="component:{name:WIDGET_KOC_NAME, params:{tile:$data }}" style="width: 100%; height: 100%;"></div>-->
                                             </div>
+                                            <!-- /ko -->
                                         </div>
                                         <!--ko if:$root.dashboard.systemDashboard()===true-->
                                         <div class="dbd-resize-handler dbd-right-bottom-arrow-icon">
@@ -441,6 +443,10 @@
                     </div>
                 </div>
             </div>
+            </script>
+            
+            <script id="dashboard-tile-widget-template" type="text/html">
+                <div data-bind="component:{name:WIDGET_KOC_NAME, params:{tile:$data }}" style="width: 100%; height: 100%;"></div>
             </script>
 
             <script id="dashboard-include-template" type="text/html">

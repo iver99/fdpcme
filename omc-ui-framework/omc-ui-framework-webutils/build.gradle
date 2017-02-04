@@ -24,7 +24,8 @@ artifactoryPublish {
         publications('thisJarPublication')
 }
  
-dependencies { 
+dependencies {
+        compile project(':dashboards-sdk')
         compile getProjectArtifact('log4j-core')   
         compile getProjectArtifact('log4j-api')   
         compile getProjectArtifact('wls-api')   
