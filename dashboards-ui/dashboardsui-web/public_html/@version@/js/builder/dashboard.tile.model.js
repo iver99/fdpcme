@@ -47,8 +47,11 @@ define(['knockout',
 
             widgetAreaContainer = $b.findEl('.widget-area');
 
-            self.normalMode = new Builder.NormalEditorMode();
-            self.tabletMode = new Builder.TabletEditorMode();
+            self.dashboard = $b.dashboard;
+            var ddsDashboard = new Builder.DashboardDataSource().dataSource[self.dashboard.id()];
+            var eagerCreated = ddsDashboard.eagerCreated ? ddsDashboard.eagerCreated : null;
+            self.normalMode = eagerCreated ? eagerCreated.normalMode : new Builder.NormalEditorMode();
+            self.tabletMode = eagerCreated ? eagerCreated.tabletMode : new Builder.TabletEditorMode();
 
             self.editor = new Builder.TilesEditor($b, Builder.isSmallMediaQuery() ? self.tabletMode : self.normalMode);
             self.editor.tiles = $b.dashboard.tiles;
@@ -57,14 +60,13 @@ define(['knockout',
 
             self.previousDragCell = null;
 
-            self.dashboard = $b.dashboard;
             self.loginUser = ko.observable(dfu.getUserName());
             var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
 
-            self.targets = ko.observable({"criteria":"{\"version\":\"1.0\",\"criteriaList\":[]}"});
+            self.targets = eagerCreated ? eagerCreated.targets : ko.observable({"criteria":"{\"version\":\"1.0\",\"criteriaList\":[]}"});
 
 
-            self.timeSelectorModel = new Builder.TimeSelectorModel();
+            self.timeSelectorModel = eagerCreated ? eagerCreated.timeSelector : new Builder.TimeSelectorModel();
             self.tilesView = $b.getDashboardTilesView();
             self.isOnePageType = (self.dashboard.type() === Builder.SINGLEPAGE_TYPE);
 
@@ -135,12 +137,13 @@ define(['knockout',
             self.appendNewTile = function(name, description, width, height, widget) {
                 if (widget) {
                     var newTile = self.editor.createNewTile(name, description, width, height, widget, self.timeSelectorModel, self.targets, true, dashboardInst);
+                    Builder.eagerLoadDahshboardSingleTileAtPageLoad(dfu, ko, newTile);                    
                     if (newTile){
                        self.editor.tiles.push(newTile);
                        self.show();
                        Builder.getTileConfigure(self.editor.mode, self.dashboard, newTile, self.timeSelectorModel, self.targets, dashboardInst);
                        $b.triggerEvent($b.EVENT_TILE_ADDED, null, newTile);
-                       self.triggerTileTimeControlSupportEvent((newTile.type() === 'DEFAULT' && newTile.WIDGET_SUPPORT_TIME_CONTROL())?true:null);
+                       self.triggerTileTimeControlSupportEvent((newTile.type() === 'DEFAULT' && newTile.WIDGET_SUPPORT_TIME_CONTROL && newTile.WIDGET_SUPPORT_TIME_CONTROL())?true:null);
                     }
                 }
                 else {
@@ -551,7 +554,7 @@ define(['knockout',
                 }
                 for (var i = 0; i < self.editor.tiles().length; i++) {
                     var tile = self.editor.tiles()[i];
-                    if (tile && tile.type() === 'DEFAULT' && tile.WIDGET_SUPPORT_TIME_CONTROL()) {
+                    if (tile && tile.type() === 'DEFAULT' && tile.WIDGET_SUPPORT_TIME_CONTROL && tile.WIDGET_SUPPORT_TIME_CONTROL()) {
                         $b.triggerEvent($b.EVENT_EXISTS_TILE_SUPPORT_TIMECONTROL, null, true);
                         return;
                     }
@@ -734,6 +737,7 @@ define(['knockout',
                     }
                     if (!tile) {
                         tile = self.editor.createNewTile(widget.WIDGET_NAME, null, width, height, widget, self.timeSelectorModel, self.targets, true, dashboardInst);
+                        Builder.eagerLoadDahshboardSingleTileAtPageLoad(dfu, ko, tile);
                         u.helper.tile = tile;
                         self.editor.tiles.push(tile);
                         $b.triggerEvent($b.EVENT_TILE_ADDED, null, tile);
