@@ -25,18 +25,6 @@ public class EntitySelectorUtil
 	 * @param
 	 * @return
 	 */
-	//	public static int getCategories(WebDriver driver)
-	//	{
-	//		IEntitySelectorUtil esu = new UtilLoader<IEntitySelectorUtil>().loadUtil(driver, IEntitySelectorUtil.class);
-	//		return esu.getCategories(driver);
-	//
-	//	}
-
-	/**
-	 * @param driver
-	 * @param
-	 * @return
-	 */
 	public int getNumberOfPills(WebDriver driver)
 	{
 		IEntitySelectorUtil esu = new UtilLoader<IEntitySelectorUtil>().loadUtil(driver, IEntitySelectorUtil.class);
@@ -81,10 +69,10 @@ public class EntitySelectorUtil
 	 * @param
 	 * @return
 	 */
-	public void selectCompositeEntity(WebDriver driver, String text)
+	public void selectCompositeEntity(WebDriver driver, String text, String type)
 	{
 		IEntitySelectorUtil esu = new UtilLoader<IEntitySelectorUtil>().loadUtil(driver, IEntitySelectorUtil.class);
-		esu.selectCompositeEntity(driver, text);
+		esu.selectCompositeEntity(driver, text, type);
 	}
 
 	/**
@@ -92,33 +80,11 @@ public class EntitySelectorUtil
 	 * @param
 	 * @return
 	 */
-	public void selectEntity(WebDriver driver, String text)
+	public void selectEntity(WebDriver driver, String text, String type)
 	{
 		IEntitySelectorUtil esu = new UtilLoader<IEntitySelectorUtil>().loadUtil(driver, IEntitySelectorUtil.class);
-		esu.selectEntity(driver, text);
+		esu.selectEntity(driver, text, type);
 	}
-
-	/**
-	 * @param driver
-	 * @param
-	 * @return
-	 */
-	//	public void selectFirstSuggestionByCategory(WebDriver driver, String category)
-	//	{
-	//		IEntitySelectorUtil esu = new UtilLoader<IEntitySelectorUtil>().loadUtil(driver, IEntitySelectorUtil.class);
-	//		esu.selectFirstSuggestionByCategory(driver, category);
-	//	}
-
-	/**
-	 * @param driver
-	 * @param
-	 * @return
-	 */
-	//	public void selectItemById(WebDriver driver, int index)
-	//	{
-	//		IEntitySelectorUtil esu = new UtilLoader<IEntitySelectorUtil>().loadUtil(driver, IEntitySelectorUtil.class);
-	//		esu.selectItemById(driver, index);
-	//	}
 
 	/**
 	 * @param driver
@@ -130,37 +96,11 @@ public class EntitySelectorUtil
 		IEntitySelectorUtil esu = new UtilLoader<IEntitySelectorUtil>().loadUtil(driver, IEntitySelectorUtil.class);
 		return esu.validateReadOnlyMode(driver);
 	}
+        
+        public void clearContext(WebDriver driver)
+        {
+            IEntitySelectorUtil esu = new UtilLoader<IEntitySelectorUtil>().loadUtil(driver, IEntitySelectorUtil.class);
+            esu.clearContext(driver);
+        }
 
-	/**
-	 * @param driver
-	 * @param
-	 * @return
-	 */
-	//	public void verifyCategoryIsVisible(WebDriver driver, String text)
-	//	{
-	//		IEntitySelectorUtil esu = new UtilLoader<IEntitySelectorUtil>().loadUtil(driver, IEntitySelectorUtil.class);
-	//		esu.verifyCategoryIsVisible(driver, text);
-	//	}
-
-	/**
-	 * @param driver
-	 * @param
-	 * @return
-	 */
-	//	public void verifyCategoryNotVisible(WebDriver driver, List<String> categoryNames)
-	//	{
-	//		IEntitySelectorUtil esu = new UtilLoader<IEntitySelectorUtil>().loadUtil(driver, IEntitySelectorUtil.class);
-	//		esu.verifyCategoryNotVisible(driver, categoryNames);
-	//	}
-
-	/**
-	 * @param driver
-	 * @param
-	 * @return
-	 */
-	//	public void waitForNewPill(WebDriver driver, int prevPillCount)
-	//	{
-	//		IEntitySelectorUtil esu = new UtilLoader<IEntitySelectorUtil>().loadUtil(driver, IEntitySelectorUtil.class);
-	//		esu.waitForNewPill(driver, prevPillCount);
-	//	}
 }

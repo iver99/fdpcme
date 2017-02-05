@@ -22,13 +22,6 @@ public interface IEntitySelectorUtil extends IUiTestCommonAPI
 	 * @param
 	 * @return
 	 */
-	//	public int getCategories(WebDriver driver);
-
-	/**
-	 * @param driver
-	 * @param
-	 * @return
-	 */
 	public int getNumberOfPills(WebDriver driver);
 
 	/**
@@ -57,28 +50,14 @@ public interface IEntitySelectorUtil extends IUiTestCommonAPI
 	 * @param
 	 * @return
 	 */
-	public void selectCompositeEntity(WebDriver driver, String text);
+	public void selectCompositeEntity(WebDriver driver, String text, String type);
 
 	/**
 	 * @param driver
 	 * @param
 	 * @return
 	 */
-	public void selectEntity(WebDriver driver, String text);
-
-	/**
-	 * @param driver
-	 * @param
-	 * @return
-	 */
-	//	public void selectFirstSuggestionByCategory(WebDriver driver, String category);
-
-	/**
-	 * @param driver
-	 * @param
-	 * @return
-	 */
-	//	public void selectItemById(WebDriver driver, int index);
+	public void selectEntity(WebDriver driver, String text, String type);
 
 	/**
 	 * @param driver
@@ -86,26 +65,10 @@ public interface IEntitySelectorUtil extends IUiTestCommonAPI
 	 * @return
 	 */
 	public boolean validateReadOnlyMode(WebDriver driver);
-
-	/**
-	 * @param driver
-	 * @param
-	 * @return
-	 */
-	//	public void verifyCategoryIsVisible(WebDriver driver, String text);
-
-	/**
-	 * @param driver
-	 * @param
-	 * @return
-	 */
-	//	public void verifyCategoryNotVisible(WebDriver driver, List<String> categoryNames);
-
-	/**
-	 * @param driver
-	 * @param
-	 * @return
-	 */
-	//	public void waitForNewPill(WebDriver driver, int prevPillCount);
-
+        
+        /**
+         * 
+         * @param driver 
+         */
+        public void clearContext(WebDriver driver);
 }

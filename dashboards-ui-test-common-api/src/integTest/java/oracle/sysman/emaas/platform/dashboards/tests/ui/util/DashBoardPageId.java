@@ -461,19 +461,17 @@ public class DashBoardPageId
 	public static final String WIDGETSELECTOR_ADDBUTTONID = "add-widget-button";
 
 	//ude ID
-	public static final String EntSelCategories = "//div[@id='emcta-ctxtSel_suggestPopup']//ul//li[not(contains(@class,'oj-listbox-result-selectable'))]";
-	public static final String EntSelField = "//div[@id='emaas-appheader-globalcxt']//div[contains(@id,'pit_') and contains(@class,'dropZoneText')]";
-	public static final String EntSelSuggestionPopup = "//div[@id='emcta-ctxtSel_suggestPopup']";
-
-	public static final String EntSelSearchResults = "//div[@id=''emcta-ctxtSel_suggestPopup'']//ul//li[contains(@class,''oj-listbox-result-selectable'')]//span[contains(text(),''{0}'')]";
-	public static final String EntSelFieldInput = "//div[@id='emaas-appheader-globalcxt']//input[contains(@id, 'pit_')]";
-	public static final String EntSelPills = "//div[@id='emaas-appheader-globalcxt']//pill";
-	public static final String EntSelRemovePill = "//div[@id='emaas-appheader-globalcxt']//a[contains(@id,'_remove')])[{0}]";
-	public static final String EntSelSuggestionByCategory = "//div[@id=''emcta-ctxtSel_suggestPopup'']//ul//li[descendant::span[text()=''{0}'']]/following-sibling::li)[1]/div[1]";
-	public static final String EntSelSuggestionById = "(//div[@id='emcta-ctxtSel_suggestPopup']//ul//li[contains(@class,'oj-listbox-result-selectable')])[{0}]/div";
-	public static final String EntSelReadOnlyPill = "//div[@id='globalBar_pillWrapper']";
-
-	public static final String EntSelCategoryByText = "//div[@id=''emcta-ctxtSel_suggestPopup'']//ul//li[not(contains(@class,''oj-listbox-result-selectable''))]//span[text()=''{0}'']";
+        public static final String EntSelReadOnlyPill = "//div[@id='globalBar_pillWrapper']";
+        public static final String EntSelTypeAheadField = "//div[@id='emaas-appheader-globalcxt']//div[contains(@id,'pit_') and contains(@class,'dropZoneText')]";
+        public static final String EntSelTypeAheadFieldInput = "//div[@id='emaas-appheader-globalcxt']//input[contains(@id, 'pit_')]";
+        public static final String EntSelSuggestionPopup= "//div[@id='emcta-ctxtSel_suggestPopup']";
+        public static final String EntSelPills = "//div[@id='emaas-appheader-globalcxt']//pill";
+        public static final String EntSelSearchResultsItem = "//div[@id='emcta-ctxtSel_suggestPopup']//ul//li[contains(@class,'oj-listbox-result-selectable')]";
+        public static final String EntSelSearchResultsItemByText = "//div[@id=''emcta-ctxtSel_suggestPopup'']//ul//li[contains(@class,''oj-listbox-result-selectable'') and descendant::span[contains(text(),''{0}'')]]";
+        //To get Composite results, substract all the 'Entities' category results from the entire list since there's no other way to determine if a result belongs to a certain category
+        public static final String EntSelSuggestionByCompositeCategory = "((//div[@id=''emcta-ctxtSel_suggestPopup'']//ul//li[contains(@class,''oj-listbox-result-selectable'') and not(preceding-sibling::li[not(contains(@class,''oj-listbox-result-selectable''))]//span[text()=''Entities''])])/div[span[2]/descendant-or-self::span[normalize-space()=''{0}'']])[1]";
+        public static final String EntSelSuggestionByEntitiesCategory = "((//div[@id=''emcta-ctxtSel_suggestPopup'']//ul//li[contains(@class,''oj-listbox-result-selectable'') and preceding-sibling::li[not(contains(@class,''oj-listbox-result-selectable''))]//span[text()=''Entities'']])/div[span[2]/descendant-or-self::span[normalize-space()=''{0}'']])[1]";
+        public static final String EntSelPillToRemoveByIndex = "(//div[@id=''emaas-appheader-globalcxt'']//a[contains(@id,''_remove'')])[{0}]";
 
 	private DashBoardPageId()
 	{
