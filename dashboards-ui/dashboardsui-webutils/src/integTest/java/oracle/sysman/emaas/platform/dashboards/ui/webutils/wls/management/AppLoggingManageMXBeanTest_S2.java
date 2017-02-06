@@ -33,7 +33,7 @@ public class AppLoggingManageMXBeanTest_S2
 		LoggerContext context = (org.apache.logging.log4j.core.LoggerContext) LogManager.getContext(false);
 		oldUri = context.getConfigLocation();
 		URL url = AppLoggingManageMXBeanTest_S2.class.getResource(
-				"/oracle/sysman/emaas/platform/dashboards/ui/webutils/wls/management/log4j2_dsbui_logging_unittest.xml");
+				"/log4j2-test.xml");
 		Configurator.initialize("root", AppLoggingManageMXBeanTest_S2.class.getClassLoader(), url.toURI());
 	}
 
@@ -42,7 +42,7 @@ public class AppLoggingManageMXBeanTest_S2
 	{
 		AppLoggingManageMXBean almmxb = new AppLoggingManageMXBean();
 		String levels = almmxb.getLogLevels();
-		Assert.assertTrue(levels.contains("\"oracle.sysman.emaas.platform.dashboards.ui\":\"INFO\""));
+		Assert.assertTrue(levels.contains("\"oracle.sysman.emaas.platform.dashboards.ui\":\"FATAL\""));
 	}
 
 	@Test

@@ -1,16 +1,15 @@
 package oracle.sysman.emaas.platform.emcpdf.cache.support.lru;
 
-import java.util.LinkedHashMap;
-
 import oracle.sysman.emaas.platform.emcpdf.cache.api.CacheLoader;
 import oracle.sysman.emaas.platform.emcpdf.cache.config.CacheConfig;
 import oracle.sysman.emaas.platform.emcpdf.cache.exception.ExecutionException;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.AbstractCache;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.CachedItem;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.TimeUtil;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.LinkedHashMap;
 
 /**
  * Created by chehao on 2016/12/9.
@@ -26,8 +25,8 @@ public class LinkedHashMapCache extends AbstractCache{
 
     public LinkedHashMapCache(String name, Integer capacity, Long timeToLive){
         this.name=name;
-        this.capacity = capacity;
-        this.timeToLive=timeToLive;
+        this.capacity = capacity == null ? CacheConfig.DEFAULT_CAPACITY : capacity;
+        this.timeToLive = timeToLive == null ? CacheConfig.DEFAULT_EXPIRE_TIME : timeToLive;
         this.creationTime=System.currentTimeMillis();
         int hashTableSize = (int) Math.ceil(capacity/0.75f) + 1;
         cacheMap = new LinkedHashMap<Object,CachedItem>(hashTableSize, 0.75f, true) {//ordered by access time
@@ -85,7 +84,7 @@ public class LinkedHashMapCache extends AbstractCache{
 
     @Override
     public boolean isExpired(CachedItem cachedItem) {
-    	LOGGER.debug("time to live is {}, creation time is {}, current time si {}",timeToLive,cachedItem.getCreationTime(),System.currentTimeMillis());
+//    	LOGGER.debug("time to live is {}, creation time is {}, current time is {}",timeToLive,cachedItem.getCreationTime(),System.currentTimeMillis());
         if(timeToLive<=0){
             return false;
         }

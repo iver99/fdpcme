@@ -131,6 +131,9 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                  * @returns {unresolved} true/false
                  */
                 function isValidFlexRelTimePeriod(timePeriod) {
+                    if(params.hideLastRange === true) {
+                        return false;
+                    }
                     return ctxUtil.isValidTimePeriod(timePeriod);
                 }
 
@@ -889,6 +892,21 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 if(params.enableTimeFilter && params.enableTimeFilter === true) {
                     self.enableTimeFilter(true);
                 }
+                
+                self.hideLastRange = ko.observable(false);
+                if(params.hideLastRange && params.hideLastRange === true) {
+                    self.hideLastRange(true);
+                }
+                
+                self.defaultTimePeriod = ko.observable(ctxUtil.OMCTimeConstants.QUICK_PICK.LAST_15_MINUTE);
+                if(params.defaultTimePeriod) {
+                    var defaultTP = formalizeTimePeriod(ko.unwrap(params.defaultTimePeriod));
+                    if(defaultTP !== ctxUtil.OMCTimeConstants.QUICK_PICK.CUSTOM) {
+                        if(self.timePeriodsNlsObject[defaultTP] || isValidFlexRelTimePeriod(defaultTP)) {
+                            self.defaultTimePeriod(defaultTP);
+                        }
+                    }
+                }
 
                 if(!ko.components.isRegistered("time-filter")) {
                     ko.components.register("time-filter", {
@@ -959,12 +977,12 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
 
                 self.leftDrawerHeight = ko.computed(function() {
                     if(self.showRightPanel() === true) {
-                        return "499px"; //"412px";
+                        return "465px";
                     }else {
                         return "auto";
                     }
                 }, self);
-
+                
                 self.valueSubscriber = ko.computed(function () {
                     return self.random();
 //                    return self.value() + self.random();
@@ -1378,7 +1396,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             start = newDateWithMilliseconds(sdt);
                             end = new Date();
                         } else if(omcContext.time && omcContext.time.timePeriod && 
-                                ((tp = self.timePeriodsNlsObject[formalizeTimePeriod(omcContext.time.timePeriod)]) || isValidFlexRelTimePeriod(omcContext.time.timePeriod))) {
+                                (((tp = self.timePeriodsNlsObject[formalizeTimePeriod(omcContext.time.timePeriod)]) && tp !== self.timePeriodCustom) || isValidFlexRelTimePeriod(omcContext.time.timePeriod))) {
                             if(tp) {
                                 if(tp === self.timePeriodToday) {
                                     start = new Date(curDate.getFullYear(), curDate.getMonth(), curDate.getDate());
@@ -1390,17 +1408,6 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                     end = curDate;
                                     self.setTimePeriodChosen(tp);
                                     self.setTimePeriodToLastX(tp, start, end, 1);
-                                }else if(tp === self.timePeriodCustom) {
-                                    if(self.startDateTime && self.endDateTime) {
-                                        sdt = self.getParam(self.startDateTime);
-                                        edt = self.getParam(self.endDateTime);
-                                        start = newDateWithMilliseconds(sdt);
-                                        end = newDateWithMilliseconds(edt);
-                                        customClick(0);
-                                    }else {
-                                        throw new Error('Error: set timePeriod to "Custom" without time range specified!');
-                                        return;
-                                    }
                                 }else {
                                     if(tp === self.timePeriodLast1year) {
                                         start = new Date(curDate.getFullYear()-1, curDate.getMonth(), curDate.getDate(), curDate.getHours(), curDate.getMinutes(), curDate.getSeconds(), curDate.getMilliseconds());
@@ -1439,7 +1446,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                 self.timePeriod(self.timePeriodCustom);
                             }
                         } else if(omcContext.time && omcContext.time.startTime && omcContext.time.endTime && 
-                                !isNaN(parseInt(omcContext.time.startTime)) && isNaN(parseInt(omcContext.time.endTime))) {
+                                !isNaN(parseInt(omcContext.time.startTime)) && !isNaN(parseInt(omcContext.time.endTime))) {
                             curDate = new Date();
                             //users input start date and end date
                             sdt = new Date(parseInt(omcContext.time.startTime));
@@ -1464,14 +1471,65 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                 }
                             }
                         }else {
-                            //users input nothing
-                            if($.inArray(self.timePeriodLast15mins, tpNotToShow)<0) {
-                                self.setTimePeriodChosen(self.timePeriodLast15mins);
-                                range = self.setTimePeriodToLastX(self.timePeriodLast15mins, start, end, 0);
-                                start = range.start;
-                                end = range.end;
-                            }else{
-                                customClick(0);
+                            //set default time period if there is
+                            if(self.timePeriodsNlsObject[self.defaultTimePeriod()]) { //for quick picks
+                                tp = self.timePeriodsNlsObject[self.defaultTimePeriod()];
+                                if(tp === self.timePeriodToday) {
+                                    start = new Date(curDate.getFullYear(), curDate.getMonth(), curDate.getDate());
+                                    end = curDate;
+                                    self.setTimePeriodChosen(tp);
+                                    self.setTimePeriodToLastX(tp, start, end, 1);
+                                }else if(tp === self.timePeriodLatest) {
+                                    start = curDate;
+                                    end = curDate;
+                                    self.setTimePeriodChosen(tp);
+                                    self.setTimePeriodToLastX(tp, start, end, 1);
+                                }else {
+                                    if(tp === self.timePeriodLast1year) {
+                                        start = new Date(curDate.getFullYear()-1, curDate.getMonth(), curDate.getDate(), curDate.getHours(), curDate.getMinutes(), curDate.getSeconds(), curDate.getMilliseconds());
+                                        end = curDate;
+                                    }else if(self.isTimePeriodLessThan1day(tp)) {
+                                        start = newDateWithMilliseconds(new Date() - self.timePeriodObject()[tp][1]);
+                                        end = new Date();
+                                    }else {
+                                        start = newDateWithMilliseconds(new Date() - self.timePeriodObject()[tp][1]);
+                                        var timezoneDiffInMillis = (curDate.getTimezoneOffset() - start.getTimezoneOffset()) * 60 * 1000;
+                                        start = new Date(start.getTime() - timezoneDiffInMillis);
+                                        end = new Date();
+                                    }
+
+                                    if($.inArray(tp, tpNotToShow) === -1) {
+                                        self.setTimePeriodChosen(tp);
+                                        range = self.setTimePeriodToLastX(tp, start, end, 1);
+                                        start = range.start;
+                                        end = range.end;
+                                    }else {
+                                        customClick(0);
+                                    }
+                                }
+                            }else if(isValidFlexRelTimePeriod(self.defaultTimePeriod())){ //for flexibel relative time
+                                self.lrCtrlVal("flexRelTimeCtrl");
+                                
+                                var tp = ctxUtil.parseTimePeriodToUnitAndDuration(self.defaultTimePeriod());
+                                var tmp = self.getTimeRangeForFlexRelTime(self.defaultTimePeriod());
+                                start = oj.IntlConverterUtils.isoToLocalDate(tmp.start);
+                                end = oj.IntlConverterUtils.isoToLocalDate(tmp.end);
+                                
+                                if(tp) {
+                                    self.flexRelTimeVal(tp.duration);
+                                    self.flexRelTimeOpt([tp.unit]);
+                                }
+                                self.timePeriod(self.timePeriodCustom);
+                            }else {
+                                //users input nothing
+                                if($.inArray(self.timePeriodLast15mins, tpNotToShow)<0) {
+                                    self.setTimePeriodChosen(self.timePeriodLast15mins);
+                                    range = self.setTimePeriodToLastX(self.timePeriodLast15mins, start, end, 0);
+                                    start = range.start;
+                                    end = range.end;
+                                }else{
+                                    customClick(0);
+                                }
                             }
                         }
                     }
@@ -2313,12 +2371,12 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
 
                         if(timePeriod === ctxUtil.OMCTimeConstants.QUICK_PICK.CUSTOM) {
                             if(flexRelTimeVal && flexRelTimeOpt) {
-                                ctxUtil.setTimePeriod(flexRelTimePeriodId);
+                                ctxUtil.setTimePeriod(flexRelTimePeriodId, eventSourceTimeSelector);
                             }else {
-                                ctxUtil.setStartAndEndTime(new Date(start).getTime(), new Date(end).getTime());
+                                ctxUtil.setStartAndEndTime(new Date(start).getTime(), new Date(end).getTime(), eventSourceTimeSelector);
                             }
                         }else {
-                            ctxUtil.setTimePeriod(timePeriod);
+                            ctxUtil.setTimePeriod(timePeriod, eventSourceTimeSelector);
                         }
                     }
 
@@ -2619,14 +2677,114 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     tfChangedCallback: self.updateRange
                 };
                 
-                function callbackForOmcCtxChange(ctxChangeEvent) {
+                function convertTimeToDesiredPrecision(timeStamp) {
+                    var resTime;
+                    if(!timeStamp || isNaN(parseInt(timeStamp))) {
+                        return;
+                    }
+                    timeStamp = parseInt(timeStamp);
+                    if(self.hideTimeSelection() === false) {
+                        if(self.timeConverter() === self.timeConverterMillisecond) {
+                            return timeStamp;
+                        }else {
+                            resTime = oj.IntlConverterUtils.dateToLocalIso(new Date(timeStamp));
+                            resTime = oj.IntlConverterUtils.isoToLocalDate(resTime.slice(0, 10) + resTime.slice(10, 16));
+                        }
+                    }else {
+                        resTime = oj.IntlConverterUtils.dateToLocalIso(new Date(timeStamp));
+                        resTime = oj.IntlConverterUtils.isoToLocalDate(resTime.slice(0, 10));
+                    }
+                    
+                    return resTime.getTime();
+                }
+                
+                function setDateTimeForRelativeTime(ctxEventTp, ctxEventStart, ctxEventEnd) {
+                    var timeRange = null;
+                    var parsedTimePeriod = null;
+                    tp = self.timePeriodsNlsObject[ctxEventTp];
+                    timeRange = ctxUtil.getStartEndTimeFromTimePeriod(ctxEventTp);
+                    start = ctxEventStart ? new Date(ctxEventStart) : timeRange.start;
+                    end = ctxEventEnd ? new Date(ctxEventEnd) : timeRange.end;
+                    start = oj.IntlConverterUtils.dateToLocalIso(start);
+                    end = oj.IntlConverterUtils.dateToLocalIso(end);
+                    if (tp) { //For quick picks
+                        self.lrCtrlVal("timeLevelCtrl");
+                        self.selectByDrawer(true);
+                        self.timePeriod(tp);
+                        self.setTimePeriodChosen(self.timePeriod());
+                    } else { //for flexible time period
+                        parsedTimePeriod = ctxUtil.parseTimePeriodToUnitAndDuration(ctxEventTp);
+
+                        self.lrCtrlVal("flexRelTimeCtrl");
+                        if (parsedTimePeriod) {
+                            self.flexRelTimeVal(parsedTimePeriod.duration);
+                            self.flexRelTimeOpt([parsedTimePeriod.unit]);
+                        }
+                        self.timePeriod(self.timePeriodCustom);
+                    }
+
+                    self.startDate(self.dateConverter2.format(start));
+                    self.endDate(self.dateConverter2.format(end));
+
+                    if (self.timeConverter() === self.timeConverterMillisecond) {
+                        self.startTime(start.slice(10));
+                        self.endTime(end.slice(10));
+                    } else {
+                        self.startTime(start.slice(10, 16));
+                        self.endTime(end.slice(10, 16));
+                    }
+                }
+                
+                function setDateTimeForCustomTime(startTimeStamp, endTimeStamp) {
                     var start;
                     var end;
+                    self.lrCtrlVal("timeLevelCtrl");
+                    start = new Date(startTimeStamp);
+                    end = new Date(endTimeStamp);
+                    start = oj.IntlConverterUtils.dateToLocalIso(start);
+                    end = oj.IntlConverterUtils.dateToLocalIso(end);
+
+                    self.timePeriod(self.timePeriodCustom);
+
+                    self.startDate(self.dateConverter2.format(start));
+                    self.endDate(self.dateConverter2.format(end));
+
+                    if (self.timeConverter() === self.timeConverterMillisecond) {
+                        self.startTime(start.slice(10));
+                        self.endTime(end.slice(10));
+                    } else {
+                        self.startTime(start.slice(10, 16));
+                        self.endTime(end.slice(10, 16));
+                    }
+                }
+                
+                var eventSourceTimeSelector = 'OMC_UIFWK_TIME_SELECTOR';
+                function callbackForOmcCtxChange(ctxChangeEvent) {
+                    if (ctxChangeEvent && ctxChangeEvent.source === eventSourceTimeSelector) {
+                        return;
+                    }
+                    var start;
+                    var end;
+                    var ctxStart = null;
+                    var ctxEnd = null;
                     var tp;
-                    var timeRange;
-                    var parsedTimePeriod;
+                    var ctxTime;
+//                    var timeRange;
+//                    var parsedTimePeriod;
                     //refresh time selector when time context is updated by ctxUtil setters
                     if(ctxChangeEvent && ctxChangeEvent.tag && ctxChangeEvent.tag === "EMAAS_OMC_GLOBAL_CONTEXT_UPDATED") {
+                        if(ctxChangeEvent.contextName !== "All" && ctxChangeEvent.contextName !== "startTime" && ctxChangeEvent.contextName !== "endTime" 
+                                && ctxChangeEvent.contextName !== "timePeriod" && ctxChangeEvent.contextName!=="startEndTime") {
+                            return;
+                        }
+                        
+                        if(!ctxChangeEvent.currentValue) {
+                            return;
+                        }
+                        
+                        console.log("**********OMC context change event is ");
+                        console.log(ctxChangeEvent);
+                        
                         if(self.hideTimeSelection() === false) {
                             start = oj.IntlConverterUtils.isoToLocalDate(self.startDateISO().slice(0, 10) + self.startTime());
                             end = oj.IntlConverterUtils.isoToLocalDate(self.endDateISO().slice(0, 10) + self.endTime());
@@ -2642,111 +2800,46 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             tp = ctxUtil.generateTimePeriodFromUnitAndDuration(self.flexRelTimeOpt()[0], self.flexRelTimeVal());
                         }
                         
-                        if(ctxChangeEvent.contextName === "timePeriod") {
-                            if(ctxChangeEvent.currentValue.timePeriod !== tp
-                                    || (ctxChangeEvent.currentValue.startTime && ctxChangeEvent.currentValue.startTime !== start) 
-                                    || (ctxChangeEvent.currentValue.endTime && ctxChangeEvent.currentValue.endTime !== end)) {
-                                tp = self.timePeriodsNlsObject[ctxChangeEvent.currentValue.timePeriod];
-                                if((tp && tp !== self.timePeriodCustom) || isValidFlexRelTimePeriod(ctxChangeEvent.currentValue.timePeriod)) {
-                                    timeRange = ctxUtil.getStartEndTimeFromTimePeriod(ctxChangeEvent.currentValue.timePeriod);
-                                    start = ctxChangeEvent.currentValue.startTime ? new Date(ctxChangeEvent.currentValue.startTime) : timeRange.start;
-                                    end = ctxChangeEvent.currentValue.endTime ? new Date(ctxChangeEvent.currentValue.endTime) : timeRange.end;
-                                    start = oj.IntlConverterUtils.dateToLocalIso(start);
-                                    end = oj.IntlConverterUtils.dateToLocalIso(end);
-                                    
-                                    if(tp) { //For quick picks
-                                        self.lrCtrlVal("timeLevelCtrl");
-                                        self.selectByDrawer(true);
-                                        self.timePeriod(tp);
-                                        self.setTimePeriodChosen(self.timePeriod());
-                                    }else { //for flexible time period
-                                        parsedTimePeriod = ctxUtil.parseTimePeriodToUnitAndDuration(ctxChangeEvent.currentValue.timePeriod);
-                                        
-                                        self.lrCtrlVal("flexRelTimeCtrl");
-                                        if(parsedTimePeriod) {
-                                            self.flexRelTimeVal(parsedTimePeriod.duration);
-                                            self.flexRelTimeOpt([parsedTimePeriod.unit]);
-                                        }
-                                        self.timePeriod(self.timePeriodCustom);
+                        if(ctxChangeEvent.contextName === "All") {
+                            if(ctxChangeEvent.currentValue && ctxChangeEvent.currentValue.time) {
+                                ctxTime = ctxChangeEvent.currentValue.time;
+                                if(ctxTime.timePeriod && isValidFlexRelTimePeriod(ctxTime.timePeriod)) {
+                                    if(ctxTime.timePeriod !== tp
+                                            || (ctxTime.startTime && convertTimeToDesiredPrecision(ctxTime.startTime) !== start)
+                                            || (ctxTime.endTime && convertTimeToDesiredPrecision(ctxTime.endTime) !== end)) {
+                                        setDateTimeForRelativeTime(ctxTime.timePeriod, ctxTime.startTime, ctxTime.endTime);
+                                        setTimeout(function() {self.applyClick(false);}, 0);
                                     }
-                                    
-                                    self.startDate(self.dateConverter2.format(start));
-                                    self.endDate(self.dateConverter2.format(end));
-
-                                    if(self.timeConverter() === self.timeConverterMillisecond) {
-                                        self.startTime(start.slice(10));
-                                        self.endTime(end.slice(10));
-                                    }else {
-                                        self.startTime(start.slice(10, 16));
-                                        self.endTime(end.slice(10, 16));
-                                    }
-                                    
+                                }else if(ctxTime.startTime && ctxTime.endTime && convertTimeToDesiredPrecision(ctxTime.startTime) !== start && convertTimeToDesiredPrecision(ctxTime.endTime) !== end){
+                                    ctxStart = convertTimeToDesiredPrecision(ctxTime.startTime);
+                                    ctxEnd = convertTimeToDesiredPrecision(ctxTime.endTime)
+                                    setDateTimeForCustomTime(ctxStart, ctxEnd);
                                     setTimeout(function() {self.applyClick(false);}, 0);
                                 }
+                            }else {
+                                return;
+                            }
+                        }else if(ctxChangeEvent.contextName === "timePeriod" && ctxChangeEvent.currentValue.timePeriod && isValidFlexRelTimePeriod(ctxChangeEvent.currentValue.timePeriod)) {
+                            if(ctxChangeEvent.currentValue.timePeriod !== tp
+                                    || (ctxChangeEvent.currentValue.startTime && convertTimeToDesiredPrecision(ctxChangeEvent.currentValue.startTime) !== start) 
+                                    || (ctxChangeEvent.currentValue.endTime && convertTimeToDesiredPrecision(ctxChangeEvent.currentValue.endTime) !== end)) {
+                                    setDateTimeForRelativeTime(ctxChangeEvent.currentValue.timePeriod, ctxChangeEvent.currentValue.startTime, ctxChangeEvent.currentValue.endTime);
+                                    setTimeout(function() {self.applyClick(false);}, 0);
                             }
                         }else if(ctxChangeEvent.contextName === "startEndTime" && ctxChangeEvent.currentValue.startTime && ctxChangeEvent.currentValue.endTime && 
-                                (ctxChangeEvent.currentValue.startTime !== start || ctxChangeEvent.currentValue.endTime !== end)) {
-                            self.lrCtrlVal("timeLevelCtrl");
-                            start = new Date(ctxChangeEvent.currentValue.startTime);
-                            end = new Date(ctxChangeEvent.currentValue.endTime);
-                            start = oj.IntlConverterUtils.dateToLocalIso(start);
-                            end = oj.IntlConverterUtils.dateToLocalIso(end);
-                            
-                            self.timePeriod(self.timePeriodCustom);
-                            
-                            self.startDate(self.dateConverter2.format(start));
-                            self.endDate(self.dateConverter2.format(end));
-
-                            if(self.timeConverter() === self.timeConverterMillisecond) {
-                                self.startTime(start.slice(10));
-                                self.endTime(end.slice(10));
-                            }else {
-                                self.startTime(start.slice(10, 16));
-                                self.endTime(end.slice(10, 16));
-                            }
-                                    
+                                (convertTimeToDesiredPrecision(ctxChangeEvent.currentValue.startTime) < convertTimeToDesiredPrecision(ctxChangeEvent.currentValue.endTime)) && 
+                                (convertTimeToDesiredPrecision(ctxChangeEvent.currentValue.startTime) !== start || convertTimeToDesiredPrecision(ctxChangeEvent.currentValue.endTime) !== end)) {
+                            ctxStart = convertTimeToDesiredPrecision(ctxChangeEvent.currentValue.startTime);
+                            ctxEnd = convertTimeToDesiredPrecision(ctxChangeEvent.currentValue.endTime)
+                            setDateTimeForCustomTime(ctxStart, ctxEnd);
                             setTimeout(function() {self.applyClick(false);}, 0);
-                        }else if(ctxChangeEvent.contextName === "startTime" && (ctxUtil.getTimePeriod() === ctxUtil.OMCTimeConstants.QUICK_PICK.CUSTOM) && ctxUtil.getEndTime()) {
-                            self.lrCtrlVal("timeLevelCtrl");
-                            start = new Date(ctxChangeEvent.currentValue);
-                            end = new Date(ctxUtil.getEndTime());
-                            start = oj.IntlConverterUtils.dateToLocalIso(start);
-                            end = oj.IntlConverterUtils.dateToLocalIso(end);
-                            
-                            self.timePeriod(self.timePeriodCustom);
-                            
-                            self.startDate(self.dateConverter2.format(start));
-                            self.endDate(self.dateConverter2.format(end));
-
-                            if(self.timeConverter() === self.timeConverterMillisecond) {
-                                self.startTime(start.slice(10));
-                                self.endTime(end.slice(10));
-                            }else {
-                                self.startTime(start.slice(10, 16));
-                                self.endTime(end.slice(10, 16));
-                            }
-                            
+                        }else if(ctxChangeEvent.contextName === "startTime" && (ctxUtil.getTimePeriod() === ctxUtil.OMCTimeConstants.QUICK_PICK.CUSTOM) && ctxUtil.getEndTime() && 
+                                (parseInt(ctxChangeEvent.currentValue)<ctxUtil.getEndTime())) {
+                            setDateTimeForCustomTime(ctxChangeEvent.currentValue, ctxUtil.getEndTime());
                             setTimeout(function() {self.applyClick(false);}, 0);
-                        }else if(ctxChangeEvent.contextName === "endTime" && (ctxUtil.getTimePeriod() === ctxUtil.OMCTimeConstants.QUICK_PICK.CUSTOM) && ctxUtil.getStartTime()) {
-                            self.lrCtrlVal("timeLevelCtrl");
-                            start = new Date(ctxUtil.getStartTime());
-                            end = new Date(ctxChangeEvent.currentValue);
-                            start = oj.IntlConverterUtils.dateToLocalIso(start);
-                            end = oj.IntlConverterUtils.dateToLocalIso(end);
-                            
-                            self.timePeriod(self.timePeriodCustom);
-                            
-                            self.startDate(self.dateConverter2.format(start));
-                            self.endDate(self.dateConverter2.format(end));
-
-                            if(self.timeConverter() === self.timeConverterMillisecond) {
-                                self.startTime(start.slice(10));
-                                self.endTime(end.slice(10));
-                            }else {
-                                self.startTime(start.slice(10, 16));
-                                self.endTime(end.slice(10, 16));
-                            }
-                            
+                        }else if(ctxChangeEvent.contextName === "endTime" && (ctxUtil.getTimePeriod() === ctxUtil.OMCTimeConstants.QUICK_PICK.CUSTOM) && ctxUtil.getStartTime() && 
+                                (ctxUtil.getStartTime()<parseInt(ctxChangeEvent.currentValue))) {
+                            setDateTimeForCustomTime(ctxUtil.getStartTime(), ctxChangeEvent.currentValue);
                             setTimeout(function() {self.applyClick(false);}, 0);
                         }
                         

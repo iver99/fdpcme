@@ -297,13 +297,6 @@ require(['ojs/ojcore',
                             //change name of data explorer in ITA starting with "Data Explorer - "
                         }
                     }
-                    landingHomeUrls["DB_perf"] = self.getITAVerticalAppUrl("verticalApplication.db-perf");
-                    landingHomeUrls["DB_resource"] = self.getITAVerticalAppUrl("verticalApplication.db-resource");
-                    landingHomeUrls["mw_perf"] = self.getITAVerticalAppUrl("verticalApplication.mw-perf");
-                    landingHomeUrls["mw_resource"] = self.getITAVerticalAppUrl("verticalApplication.mw-resource");
-                    landingHomeUrls["svr_resource"] = self.getITAVerticalAppUrl("verticalApplication.svr-resource");
-                    landingHomeUrls["avail-analytics"] = self.getITAVerticalAppUrl("verticalApplication.avail-analytics");
-                    landingHomeUrls["app_perf"] = self.getITAVerticalAppUrl("verticalApplication.app-perf-analytics");
                     self.landingHomeUrls = landingHomeUrls;
                 }
                 self.getServiceUrls();
@@ -360,13 +353,45 @@ require(['ojs/ojcore',
                     }
                 };
                 self.ITAOptionChosen = function(event, data) {
+                    var ITA_OPTION_MAP = {
+                        "DB_perf": "verticalApplication.db-perf",
+                        "DB_resource": "verticalApplication.db-resource",
+                        "mw_perf": "verticalApplication.mw-perf",
+                        "mw_resource": "verticalApplication.mw-resource",
+                        "svr_resource": "verticalApplication.svr-resource",
+                        "avail-analytics": "verticalApplication.avail-analytics",
+                        "app_perf": "verticalApplication.app-perf-analytics"
+                    };
+                    var ITA_OPTION_NAME_MAP = {
+                        "DB_perf": self.ITA_DB_Performance,
+                        "DB_resource": self.ITA_DB_Resource,
+                        "mw_perf": self.ITA_Middleware_Performance,
+                        "mw_resource": self.ITA_Middleware_Resource,
+                        "svr_resource": self.ITA_Server_Resource,
+                        "avail-analytics": self.ITA_Avail_Analytics,
+                        "app_perf": self.ITA_Application_Performance
+                    };
                     if(!self.landingHomeUrls) {
                         console.log("---fetching service links is not finished yet!---");
                         return;
                     }
-                    if(data.value && self.landingHomeUrls[data.value]) {
-                        oj.Logger.info('Trying to open ' + data.value + ' by URL: ' + self.landingHomeUrls[data.value]);
-                        window.location.href = cxtUtil.appendOMCContext(self.landingHomeUrls[data.value]);
+                    if(data.value && data.value.indexOf("select")<0){
+                        if(!self.landingHomeUrls[data.value]){
+                            self.landingHomeUrls[data.value] = self.getITAVerticalAppUrl(ITA_OPTION_MAP[data.value]);
+                        }
+                        if(!self.landingHomeUrls[data.value]){
+                            oj.Logger.error('Failed to open ' + data.value + '.');
+                            //show error message to user when the link is empty
+                            dfu.showMessage({
+                                type: 'error',
+                                summary: getNlsString('LANDING_HOME_URL_ERROR_MSG', ITA_OPTION_NAME_MAP[data.value]),
+                                detail: '',
+                                removeDelayTime: 5000
+                            });
+                        }else{
+                            oj.Logger.info('Trying to open ' + data.value + ' by URL: ' + self.landingHomeUrls[data.value]);
+                            window.location.href = cxtUtil.appendOMCContext(self.landingHomeUrls[data.value]);
+                        }
                     }
                 };
                 self.openInfraMonitoring = function() {

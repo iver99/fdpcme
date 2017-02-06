@@ -42,8 +42,8 @@ public abstract class AbstractCache implements ICache{
                 LOGGER.error(e.getLocalizedMessage());
                 throw new ExecutionException(e);
             }
-            CachedItem ci = new CachedItem(key, valueFromFactory);
-            put(key, ci);
+//            CachedItem ci = new CachedItem(key, valueFromFactory);
+            put(key, valueFromFactory);
         }
         return valueFromFactory;
     }

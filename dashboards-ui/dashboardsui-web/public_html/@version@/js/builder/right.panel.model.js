@@ -180,9 +180,14 @@ define(['knockout',
 
                     self.initEventHandlers();
                     
-                    if(self.rightPanelControl.completelyHidden() === false) { //load widgets only when right panel is editable
-                        self.rightPanelWidget.loadWidgets();
-                    }
+                    if(self.rightPanelControl.completelyHidden() === false && self.rightPanelWidget.isWidgetLoaded()===false) { 
+                        //load widgets only when right panel is editable and have not loaded widget before
+                        self.rightPanelWidget.loadWidgets(null,function successCallback(){
+                            self.initDraggable();
+                            self.rightPanelWidget.tilesViewModel(self.tilesViewModel);
+                            ResizableView(self.$b);
+                        });
+                    }     
                     self.initDraggable();
                     self.rightPanelWidget.tilesViewModel(self.tilesViewModel);
                     ResizableView(self.$b);

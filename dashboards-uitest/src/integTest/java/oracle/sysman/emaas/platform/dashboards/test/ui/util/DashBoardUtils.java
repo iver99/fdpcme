@@ -327,15 +327,17 @@ public class DashBoardUtils
 	{
 		webdriver.takeScreenShot();
 
+		webdriver.getLogger().info("the expected relative url = " + url);
+		
 		String currurl = webdriver.getWebDriver().getCurrentUrl();
 
-		webdriver.getLogger().info("the origin url = " + currurl);
+		webdriver.getLogger().info("the current url = " + currurl);
 
 		String tmpurl = currurl.substring(currurl.indexOf("emsaasui") + 9);
 
-		webdriver.getLogger().info("the url want to compare = " + tmpurl);
+		webdriver.getLogger().info("the relative url to compare = " + tmpurl);
 
-		Assert.assertTrue(tmpurl.contains(url), "Not open the expected url: " + url);
+		Assert.assertTrue(tmpurl.contains(url), tmpurl+ " does NOT contain " + url);
 	}
 
 	private static String trimUrlParameters(String url)

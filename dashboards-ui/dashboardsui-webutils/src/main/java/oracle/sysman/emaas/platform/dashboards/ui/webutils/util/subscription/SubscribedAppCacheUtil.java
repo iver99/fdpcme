@@ -11,6 +11,7 @@ import java.util.List;
 /**
  * Created by guochen on 11/18/16.
  */
+@Deprecated
 public class SubscribedAppCacheUtil {
     private static Logger LOGGER = LogManager.getLogger(TenantSubscriptionUtil.class);
 
@@ -57,7 +58,7 @@ public class SubscribedAppCacheUtil {
     private SubscribedAppCacheUtil() {
 
     }
-
+    @Deprecated
     public List<String> put(String tenant, List<String> value) {
         if (StringUtil.isEmpty(tenant)) {
             LOGGER.error("Failed to put value {} into cache, as specified tenant is empty", value == null? null: value.toString());
@@ -71,7 +72,7 @@ public class SubscribedAppCacheUtil {
         container.put(tenant, co);
         return value;
     }
-
+    @Deprecated
     public List<String> get(String tenant) {
         if (StringUtil.isEmpty(tenant)) {
             LOGGER.error("Failed to getDashboardData value for tenant as it is null or empty: {}", tenant);
@@ -88,7 +89,7 @@ public class SubscribedAppCacheUtil {
         List<String> value = co.getObject();
         return value;
     }
-
+    @Deprecated
     public List<String> remove(String tenant) {
         if (StringUtil.isEmpty(tenant)) {
             LOGGER.error("Failed to remove value for tenant as tenant is null or empty: {}", tenant);
@@ -103,7 +104,7 @@ public class SubscribedAppCacheUtil {
         }
         return null;
     }
-
+    @Deprecated
     private boolean isValidValue(CachedObj co) {
         if (co == null) {
             return false;
