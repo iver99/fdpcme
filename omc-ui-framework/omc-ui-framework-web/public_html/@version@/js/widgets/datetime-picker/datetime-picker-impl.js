@@ -177,11 +177,14 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 self.timePeriodLast2hours = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_2_HOURS;
                 self.timePeriodLast4hours = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_4_HOURS;
                 self.timePeriodLast6hours = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_6_HOURS;
+                self.timePeriodLast8hours = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_8_HOURS;
+                self.timePeriodLast24hours = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_24_HOURS;
                 self.timePeriodLast1day = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_1_DAY;
                 self.timePeriodLast7days = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_7_DAYS;
                 self.timePeriodLast14days = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_14_DAYS;
                 self.timePeriodLast30days = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_30_DAYS;
                 self.timePeriodLast90days = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_90_DAYS;
+                self.timePeriodLast12months = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_12_MONTHS;
                 self.timePeriodLast1year = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_1_YEAR;
                 self.timePeriodToday = nls.DATETIME_PICKER_SHOW_TODAY;
                 self.timePeriodCustom = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_CUSTOM;
@@ -192,6 +195,9 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 self.tfHoursExcludedMsg = nls.DATETIME_PICKER_TIME_FILTER_INFO_HOURS_EXCLUDED;
                 self.tfDaysExcludedMsg = nls.DATETIME_PICKER_TIME_FILTER_INFO_DAYS_EXCLUDED;
                 self.tfMonthsExcludedMsg = nls.DATETIME_PICKER_TIME_FILTER_INFO_MONTHS_EXCLUDED;
+                
+                self.timePeriodSetShortTerm = "Short-Term";
+                self.timePeriodSetLongTerm = "Long-Term";
                 
                 self.lrCtrlVal = ko.observable("timeLevelCtrl");
                 self.flexRelTimeVal = ko.observable(1);
@@ -208,11 +214,14 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 self.timePeriodsNlsObject[ctxUtil.OMCTimeConstants.QUICK_PICK.LAST_2_HOUR] = self.timePeriodLast2hours;
                 self.timePeriodsNlsObject[ctxUtil.OMCTimeConstants.QUICK_PICK.LAST_4_HOUR] = self.timePeriodLast4hours;
                 self.timePeriodsNlsObject[ctxUtil.OMCTimeConstants.QUICK_PICK.LAST_6_HOUR] = self.timePeriodLast6hours;
+                self.timePeriodsNlsObject[ctxUtil.OMCTimeConstants.QUICK_PICK.LAST_8_HOUR] = self.timePeriodLast8hours;
+                self.timePeriodsNlsObject[ctxUtil.OMCTimeConstants.QUICK_PICK.LAST_24_HOUR] = self.timePeriodLast24hours;
                 self.timePeriodsNlsObject[ctxUtil.OMCTimeConstants.QUICK_PICK.LAST_1_DAY] = self.timePeriodLast1day;
                 self.timePeriodsNlsObject[ctxUtil.OMCTimeConstants.QUICK_PICK.LAST_7_DAY] = self.timePeriodLast7days;
                 self.timePeriodsNlsObject[ctxUtil.OMCTimeConstants.QUICK_PICK.LAST_14_DAY] = self.timePeriodLast14days;
                 self.timePeriodsNlsObject[ctxUtil.OMCTimeConstants.QUICK_PICK.LAST_30_DAY] = self.timePeriodLast30days;
                 self.timePeriodsNlsObject[ctxUtil.OMCTimeConstants.QUICK_PICK.LAST_90_DAY] = self.timePeriodLast90days;
+                self.timePeriodsNlsObject[ctxUtil.OMCTimeConstants.QUICK_PICK.LAST_12_MONTH] = self.timePeriodLast12months;
                 self.timePeriodsNlsObject[ctxUtil.OMCTimeConstants.QUICK_PICK.LAST_1_YEAR] = self.timePeriodLast1year;
                 self.timePeriodsNlsObject[ctxUtil.OMCTimeConstants.QUICK_PICK.LATEST] = self.timePeriodLatest;
                 self.timePeriodsNlsObject[ctxUtil.OMCTimeConstants.QUICK_PICK.CUSTOM] = self.timePeriodCustom;
@@ -223,11 +232,14 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 self.last2hoursNotToShow = ko.observable(false);
                 self.last4hoursNotToShow = ko.observable(false);
                 self.last6hoursNotToShow = ko.observable(false);
+                self.last8hoursNotToShow = ko.observable(false);
+                self.last24hoursNotToShow = ko.observable(false);
                 self.last1dayNotToShow = ko.observable(false);
                 self.last7daysNotToShow = ko.observable(false);
                 self.last14daysNotToShow = ko.observable(false);
                 self.last30daysNotToShow = ko.observable(false);
                 self.last90daysNotToShow = ko.observable(false);
+                self.last12monthsNotToShow = ko.observable(false);
                 self.last1yearNotToShow = ko.observable(false);
                 self.todayNotToShow = ko.observable(false);
                 self.latestNotToShow = ko.observable(false);
@@ -238,11 +250,14 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 self.last2hoursChosen = ko.observable(false);
                 self.last4hoursChosen = ko.observable(false);
                 self.last6hoursChosen = ko.observable(false);
+                self.last8hoursChosen = ko.observable(false);
+                self.last24hoursChosen = ko.observable(false);
                 self.last1dayChosen = ko.observable(false);
                 self.last7daysChosen = ko.observable(false);
                 self.last14daysChosen = ko.observable(false);
                 self.last30daysChosen = ko.observable(false);
                 self.last90daysChosen = ko.observable(false);
+                self.last12monthsChosen = ko.observable(false);
                 self.last1yearChosen = ko.observable(false);
                 self.todayChosen = ko.observable(false);
                 self.latestChosen = ko.observable(false);
@@ -292,6 +307,18 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     css += self.last6hoursChosen() ? (" "+self.drawerChosen()) : " drawerNotChosen";
                     return css;
                 }, self);
+                self.last8hoursCss = ko.computed(function() {
+                    var css = "drawer";
+                    css += self.last8hoursNotToShow() ? " drawerNotToShow": "";
+                    css += self.last8hoursChosen() ? (" "+self.drawerChosen()) : " drawerNotChosen";
+                    return css;
+                }, self);
+                self.last24hoursCss = ko.computed(function() {
+                    var css = "drawer";
+                    css += self.last24hoursNotToShow() ? " drawerNotToShow": "";
+                    css += self.last24hoursChosen() ? (" "+self.drawerChosen()) : " drawerNotChosen";
+                    return css;
+                }, self);
                 self.last1dayCss = ko.computed(function() {
                     var css = "drawer";
                     css  += self.last1dayNotToShow() ? " drawerNotToShow": "";
@@ -320,6 +347,12 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     var css = "drawer";
                     css += self.last90daysNotToShow() ? " drawerNotToShow": "";
                     css += self.last90daysChosen() ? (" "+self.drawerChosen()) : " drawerNotChosen";
+                    return css;
+                }, self);
+                self.last12monthsCss = ko.computed(function() {
+                    var css = "drawer";
+                    css += self.last12monthsNotToShow() ? " drawerNotToShow": "";
+                    css += self.last12monthsChosen() ? (" "+self.drawerChosen()) : " drawerNotChosen";
                     return css;
                 }, self);
                 self.last1yearCss = ko.computed(function() {
@@ -547,11 +580,14 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     self.last2hoursChosen(false);
                     self.last4hoursChosen(false);
                     self.last6hoursChosen(false);
+                    self.last8hoursChosen(false);
+                    self.last24hoursChosen(false);
                     self.last1dayChosen(false);
                     self.last7daysChosen(false);
                     self.last14daysChosen(false);
                     self.last30daysChosen(false);
                     self.last90daysChosen(false);
+                    self.last12monthsChosen(false);
                     self.last1yearChosen(false);
                     self.todayChosen(false);
                     self.latestChosen(false);
@@ -581,6 +617,12 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         case self.timePeriodLast6hours:
                             self.last6hoursChosen(true);
                             break;
+                        case self.timePeriodLast8hours:
+                            self.last8hoursChosen(true);
+                            break;
+                        case self.timePeriodLast24hours:
+                            self.last24hoursChosen(true);
+                            break;
                         case self.timePeriodLast1day:
                             self.last1dayChosen(true);
                             break;
@@ -595,6 +637,9 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             break;
                         case self.timePeriodLast90days:
                             self.last90daysChosen(true);
+                            break;
+                        case self.timePeriodLast12months:
+                            self.last12monthsChosen(true);
                             break;
                         case self.timePeriodLast1year:
                             self.last1yearChosen(true);
@@ -620,11 +665,14 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     self.last2hoursNotToShow(false);
                     self.last4hoursNotToShow(false);
                     self.last6hoursNotToShow(false);
+                    self.last8hoursNotToShow(false);
+                    self.last24hoursNotToShow(false);
                     self.last1dayNotToShow(false);
                     self.last7daysNotToShow(false);
                     self.last14daysNotToShow(false);
                     self.last30daysNotToShow(false);
                     self.last90daysNotToShow(false);
+                    self.last12monthsNotToShow(false);
                     self.last1yearNotToShow(false);
                     self.todayNotToShow(false);
                     self.latestNotToShow(false);
@@ -650,6 +698,12 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         case self.timePeriodLast6hours:
                             self.last6hoursNotToShow(true);
                             break;
+                        case self.timePeriodLast8hours:
+                            self.last8hoursNotToShow(true);
+                            break;
+                        case self.timePeriodLast24hours:
+                            self.last24hoursNotToShow(true);
+                            break;
                         case self.timePeriodLast1day:
                             self.last1dayNotToShow(true);
                             break;
@@ -664,6 +718,9 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             break;
                         case self.timePeriodLast90days:
                             self.last90daysNotToShow(true);
+                            break;
+                        case self.timePeriodLast12months:
+                            self.last12monthsNotToShow(true);
                             break;
                         case self.timePeriodLast1year:
                             self.last1yearNotToShow(true);
@@ -682,6 +739,16 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     var p = ko.isObservable(param) ? param() : param;
                     return p;
                 };
+
+                if(params.timePeriodsSet){
+                    if(params.timePeriodsSet === self.timePeriodSetShortTerm){
+                        params.timePeriod = "Last 60 mins";
+                        params.timePeriodsNotToShow = [self.timePeriodLast2hours, self.timePeriodLast4hours, self.timePeriodLast6hours, self.timePeriodLast1day, self.timePeriodLast30days, self.timePeriodLast90days, self.timePeriodLast12months, self.timePeriodLast1year];
+                    }else if(params.timePeriodsSet === self.timePeriodSetLongTerm){
+                        params.timePeriod = "Last 30 days";
+                        params.timePeriodsNotToShow = [self.timePeriodLast15mins, self.timePeriodLast30mins, self.timePeriodLast60mins, self.timePeriodLast2hours, self.timePeriodLast4hours, self.timePeriodLast6hours, self.timePeriodLast8hours, self.timePeriodLast1day, self.timePeriodLast1year];
+                    }
+                }
 
                 if(self.getParam(params.timePeriod)) {
                     if(ko.isObservable(params.timePeriod)) {
@@ -931,11 +998,14 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     tmp[self.timePeriodLast2hours] = [3, 2 * 60 * 60 * 1000];
                     tmp[self.timePeriodLast4hours] = [4, 4 * 60 * 60 * 1000];
                     tmp[self.timePeriodLast6hours] = [5, 6 * 60 * 60 * 1000];
+                    tmp[self.timePeriodLast8hours] = [12, 8 * 60 * 60 * 1000];
+                    tmp[self.timePeriodLast24hours] = [13, 24 * 60 * 60 * 1000];
                     tmp[self.timePeriodLast1day] = [6, 24 * 60 * 60 * 1000];
                     tmp[self.timePeriodLast7days] = [7, 7 * 24 * 60 * 60 * 1000];
                     tmp[self.timePeriodLast14days] = [8, 14 * 24 * 60 * 60 * 1000];
                     tmp[self.timePeriodLast30days] = [9, 30 * 24 * 60 * 60 * 1000];
                     tmp[self.timePeriodLast90days] = [10, 90 * 24 * 60 * 60 * 1000];
+                    tmp[self.timePeriodLast12months] = [14, 365 * 24 * 60 * 60 * 1000];
                     tmp[self.timePeriodLast1year] = [11, 365 * 24 * 60 * 60 * 1000]; //do not use this to calculate last a year
                     return tmp;
                 }, self);
@@ -1099,7 +1169,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
 
                 self.isTimePeriodLessThan1day = function(timePeriod) {
                     if(timePeriod===self.timePeriodLast15mins || timePeriod===self.timePeriodLast30mins || timePeriod===self.timePeriodLast60mins ||
-                                timePeriod===self.timePeriodLast2hours || timePeriod===self.timePeriodLast4hours || timePeriod===self.timePeriodLast6hours) {
+                                timePeriod===self.timePeriodLast2hours || timePeriod===self.timePeriodLast4hours || timePeriod===self.timePeriodLast6hours || timePeriod===self.timePeriodLast8hours) {
                         return true;
                     }
                     return false;

@@ -43,12 +43,15 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                     LAST_2_HOUR: 'LAST_2_HOUR',
                     LAST_4_HOUR: 'LAST_4_HOUR',
                     LAST_6_HOUR: 'LAST_6_HOUR',
-                    LAST_1_DAY: 'LAST_1_DAY',
+                    LAST_8_HOUR: 'LAST_8_HOUR',
+                    LAST_24_HOUR: 'LAST_24_HOUR',
+                    LAST_1_DAY: 'LAST_DAY',
                     LAST_7_DAY: 'LAST_7_DAY',
                     LAST_14_DAY: 'LAST_14_DAY',
                     LAST_30_DAY: 'LAST_30_DAY',
                     LAST_90_DAY: 'LAST_90_DAY',
-                    LAST_1_YEAR: 'LAST_1_YEAR',
+                    LAST_12_MONTH: 'LAST_12_MONTH',
+                    LAST_1_YEAR: 'LAST_YEAR',
                     LATEST: 'LATEST',
                     CUSTOM: 'CUSTOM'
                 }
@@ -609,6 +612,9 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                     tp = tp.slice(0, -1);
                 }
                 var arr = tp.split(" ");
+                if(arr[arr.length-1] === "MIN"){
+                    arr[arr.length-1] = "MINUTE";
+                }
                 tp = arr.join("_");
                 return tp;
             };
