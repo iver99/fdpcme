@@ -20,12 +20,18 @@ import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 public class EntitySelectorUtil
 {
 
+	public static void clearContext(WebDriver driver)
+	{
+		IEntitySelectorUtil esu = new UtilLoader<IEntitySelectorUtil>().loadUtil(driver, IEntitySelectorUtil.class);
+		esu.clearContext(driver);
+	}
+
 	/**
 	 * @param driver
 	 * @param
 	 * @return
 	 */
-	public int getNumberOfPills(WebDriver driver)
+	public static int getNumberOfPills(WebDriver driver)
 	{
 		IEntitySelectorUtil esu = new UtilLoader<IEntitySelectorUtil>().loadUtil(driver, IEntitySelectorUtil.class);
 		return esu.getNumberOfPills(driver);
@@ -36,7 +42,7 @@ public class EntitySelectorUtil
 	 * @param
 	 * @return
 	 */
-	public void openEntitySelector(WebDriver driver)
+	public static void openEntitySelector(WebDriver driver)
 	{
 		IEntitySelectorUtil esu = new UtilLoader<IEntitySelectorUtil>().loadUtil(driver, IEntitySelectorUtil.class);
 		esu.openEntitySelector(driver);
@@ -47,7 +53,7 @@ public class EntitySelectorUtil
 	 * @param
 	 * @return
 	 */
-	public void removePill(WebDriver driver, int index)
+	public static void removePill(WebDriver driver, int index)
 	{
 		IEntitySelectorUtil esu = new UtilLoader<IEntitySelectorUtil>().loadUtil(driver, IEntitySelectorUtil.class);
 		esu.removePill(driver, index);
@@ -58,7 +64,7 @@ public class EntitySelectorUtil
 	 * @param
 	 * @return
 	 */
-	public void searchText(WebDriver driver, String text)
+	public static void searchText(WebDriver driver, String text)
 	{
 		IEntitySelectorUtil esu = new UtilLoader<IEntitySelectorUtil>().loadUtil(driver, IEntitySelectorUtil.class);
 		esu.searchText(driver, text);
@@ -69,7 +75,7 @@ public class EntitySelectorUtil
 	 * @param
 	 * @return
 	 */
-	public void selectCompositeEntity(WebDriver driver, String text, String type)
+	public static void selectCompositeEntity(WebDriver driver, String text, String type)
 	{
 		IEntitySelectorUtil esu = new UtilLoader<IEntitySelectorUtil>().loadUtil(driver, IEntitySelectorUtil.class);
 		esu.selectCompositeEntity(driver, text, type);
@@ -80,7 +86,7 @@ public class EntitySelectorUtil
 	 * @param
 	 * @return
 	 */
-	public void selectEntity(WebDriver driver, String text, String type)
+	public static void selectEntity(WebDriver driver, String text, String type)
 	{
 		IEntitySelectorUtil esu = new UtilLoader<IEntitySelectorUtil>().loadUtil(driver, IEntitySelectorUtil.class);
 		esu.selectEntity(driver, text, type);
@@ -91,16 +97,10 @@ public class EntitySelectorUtil
 	 * @param
 	 * @return
 	 */
-	public boolean validateReadOnlyMode(WebDriver driver)
+	public static boolean validateReadOnlyMode(WebDriver driver)
 	{
 		IEntitySelectorUtil esu = new UtilLoader<IEntitySelectorUtil>().loadUtil(driver, IEntitySelectorUtil.class);
 		return esu.validateReadOnlyMode(driver);
 	}
-        
-        public void clearContext(WebDriver driver)
-        {
-            IEntitySelectorUtil esu = new UtilLoader<IEntitySelectorUtil>().loadUtil(driver, IEntitySelectorUtil.class);
-            esu.clearContext(driver);
-        }
 
 }
