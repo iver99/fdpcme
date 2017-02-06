@@ -17,11 +17,13 @@ import oracle.sysman.emaas.platform.dashboards.core.DataExportManager;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DatabaseDependencyUnavailableException;
 import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.ssfDatautil.SSFDataUtil;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 
 /**
  * 
@@ -33,6 +35,12 @@ import org.codehaus.jettison.json.JSONException;
 public class ExportDataAPI extends APIBase {
 	
 	private static final Logger LOGGER = LogManager.getLogger("ExportDataAPI");
+	
+	private static final String DASHBOARD_SET_TABLE_NAME = "EMS_DASHBOARD_SET";
+	private static final String DASHBOARD_TABLE_NAME = "EMS_DASHBOARD";
+	private static final String DASHBOARD_TILE_TABLE_NAME = "EMS_DASHBOARD_TILE";
+	private static final String DASHBOARD_TILE_PARAMS_TABLE_NAME = "EMS_DASHBOARD_TILE_PARAMS";
+	private static final String USER_OPTIONS_TABLE_NAME = "EMS_DASHBOARD_USER_OPTIONS";
 	
 	@PUT
 	@Path("dashboards")
@@ -58,9 +66,12 @@ public class ExportDataAPI extends APIBase {
 		} catch (BasicServiceMalfunctionException | DashboardException e) {
 			LOGGER.debug("could not get tenant ID from header");
 		}
+		JSONObject obj = new JSONObject();
 		DataExportManager exportManager = DataExportManager.getInstatnce();
 		//dashboard set table data
 		List<Map<String, Object>> dashboardSets = exportManager.getDashboardSetByDashboardSetIDs(dbdIds, tenantId);
+		JSONArray tableData = getJSONArrayForListOfObjects(DASHBOARD_SET_TABLE_NAME,dashboardSets);
+		obj.put(DASHBOARD_SET_TABLE_NAME, tableData);
 		List<BigInteger> subDbds = getSubDashboardIds(dashboardSets);
 		subDbds.addAll(dbdIds);
 		List<BigInteger> allDbds = getAllDashboardIds(subDbds);
@@ -76,10 +87,35 @@ public class ExportDataAPI extends APIBase {
 		}		
 		//dashboard user options table data
 		List<Map<String, Object>> userOptions = exportManager.getUserOptionsByDashboardIds(allDbds, tenantId);
+		//ssf data
 		List<BigInteger> widgetIds = getWidgetIds(tiles);
- 		
+ 		JSONArray requestEntity = new JSONArray();
+		requestEntity.put(widgetIds);
+		String ssfDataResponse = SSFDataUtil.getSSFData(userTenant, tenantIdParam, requestEntity);
+		
+		//response data
 		
 		
+	}
+	
+	
+	
+	/**
+	 * @param list
+	 * @return
+	 */
+	private JSONArray getJSONArrayForListOfObjects(String dataName, List<Map<String, Object>> list)
+	{
+		if (list == null) {
+			LOGGER.warn("Trying to get a JSON object for {} from a null object/list. Returning null JSON object", dataName);
+			return null;
+		}
+		JSONArray array = new JSONArray();
+		for (Map<String, Object> row : list) {
+			array.put(row);
+		}
+		LOGGER.debug("Retrieved table data for {} is \"{}\"", dataName, array.toString());
+		return array;
 	}
 	
 	private List<BigInteger> getIds(List<Map<String, Object>> tableData, String columnName) {

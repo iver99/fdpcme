@@ -25,17 +25,19 @@ public class SSFDataUtil {
 	private static final String VERSION = "1.0";
 	private static final String PATH = "search";
 	private static final String GET_SEARCH_DATA_URI = "all";
-	private static final String SAVE_SEARCH_DATA_URI = "import/searchData";
+	private static final String SAVE_SEARCH_DATA_URI = "import";
 	private final static Logger LOGGER = LogManager.getLogger(SSFDataUtil.class);
-	public static String getSSFData(String userTenant, String tenantIdParam) {
-		return accessSSFWebService(userTenant, tenantIdParam, GET_SEARCH_DATA_URI);
+	
+	public static String getSSFData(String userTenant, String tenantIdParam,Object requestEntity) {
+		return accessSSFWebService(userTenant, tenantIdParam, GET_SEARCH_DATA_URI,requestEntity);
 	}
 	
-	public static String saveSSFData(String userTenant, String tenantIdParam) {
-		return accessSSFWebService(userTenant, tenantIdParam, SAVE_SEARCH_DATA_URI);
+	public static String saveSSFData(String userTenant, String tenantIdParam,Object requestEntity) {
+		return accessSSFWebService(userTenant, tenantIdParam, SAVE_SEARCH_DATA_URI,requestEntity);
 	}
 	
-	private static String accessSSFWebService(String userTenant, String tenantIdParam, String uri)
+	private static String accessSSFWebService(String userTenant, String tenantIdParam, 
+			String uri, Object requestEntity)
 	{
 		String ssfData = "";
 		CloseableHttpClient client = HttpClients.createDefault();
@@ -48,7 +50,8 @@ public class SSFDataUtil {
         String ssfHref = link.getHref() + "/" + uri;
         TenantSubscriptionUtil.RestClient rc = new TenantSubscriptionUtil.RestClient();
         
-        String response = rc.get(ssfHref, tenantIdParam, userTenant);
+        String response = rc.put(ssfHref, null, requestEntity, tenantIdParam);
+        		//.get(ssfHref, tenantIdParam, userTenant);
         LOGGER.info("Retrieved ssf data is: {}", response);
         return response;
         /*

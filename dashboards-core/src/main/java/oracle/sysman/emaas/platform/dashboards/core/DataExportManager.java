@@ -113,7 +113,6 @@ public class DataExportManager {
 		return Collections.emptyList();
 	}
 	
-	
 	private List<Map<String, Object>> getTableData(String querySql)
 	{
 		if (StringUtil.isEmpty(querySql)) {
