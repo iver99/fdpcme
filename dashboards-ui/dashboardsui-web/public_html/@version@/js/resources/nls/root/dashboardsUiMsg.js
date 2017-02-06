@@ -75,6 +75,7 @@ define({
       "DBS_HOME_FILTER_SERVICE_APM_ABBR": "APM",
       "DBS_HOME_FILTER_SERVICE_ITA": "IT Analytics",
       "DBS_HOME_FILTER_SERVICE_OCS": "Orchestration",
+      "DBS_HOME_FILTER_SERVICE_SEC": "Security Analytics",
       "DBS_HOME_FILTER_CREATOR_LABEL": "Created By",
       "DBS_HOME_FILTER_CREATOR_ORACLE": "Oracle",
       "DBS_HOME_FILTER_FAVORITES_LABEL": "Favorites",
