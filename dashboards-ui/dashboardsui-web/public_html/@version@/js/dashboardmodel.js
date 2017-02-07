@@ -21,6 +21,7 @@ function(dfu, oj, ko, $, cxtModel)
             if (!__url) {
                 __url = null;
             }
+            __url = dfu.getRelUrlFromFullUrl(__url); 
             return {
                     url: __url,
                     headers: dfu.getDashboardsRequestHeader()
@@ -47,8 +48,8 @@ function(dfu, oj, ko, $, cxtModel)
         var self = this;
         var cxtUtil = new cxtModel();
         var url = self.getNavLink();
-        if (typeof url==="string"){
-            window.location = cxtUtil.appendOMCContext(self.getNavLink());
+        if (typeof url==="string"){        
+            window.location = cxtUtil.appendOMCContext(url);
         }
     };
 

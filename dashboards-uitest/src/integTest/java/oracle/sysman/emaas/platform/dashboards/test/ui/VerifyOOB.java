@@ -1231,7 +1231,7 @@ public class VerifyOOB extends LoginAndLogout
 
 		//verify UI Gallery
 		verifyUIGallery();
-	}
+	}	
 
 	@Test
 	public void verifyUIGallery_WithFilter_ListView()
@@ -1257,7 +1257,113 @@ public class VerifyOOB extends LoginAndLogout
 		//verify UI Gallery
 		verifyUIGallery();
 	}
+	
+	@Test
+	public void verifyOrchestration_GridView()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test in verifyOrchestration_GridView");
 
+		//click on Grid View
+		webd.getLogger().info("Click on Grid View icon");
+		DashboardHomeUtil.gridView(webd);
+
+		//Open the OOB dashboard---Orchestration Workflows
+		webd.getLogger().info("Open the OOB dashboard---Orchestration Workflows");
+		DashboardHomeUtil.selectDashboard(webd, "Orchestration Workflows");
+
+		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
+
+		//verify Orchestration Workflows
+		verifyOrchestration();
+	}
+	@Test
+	public void verifyOrchestration_ListView()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test in verifyOrchestration_ListView");
+
+		//click on List View
+		webd.getLogger().info("Click on List View icon");
+		DashboardHomeUtil.listView(webd);
+
+		//Open the OOB dashboard---Orchestration Workflows
+		webd.getLogger().info("Open the OOB dashboard---Orchestration Workflows");
+		DashboardHomeUtil.selectDashboard(webd, "Orchestration Workflows");
+
+		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
+
+		//verify Orchestration Workflows
+		verifyOrchestration();
+	}
+	@Test
+	public void verifyOrchestration_WithFilter_GridView()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test in verifyOrchestration_GridView");
+
+		//click Filter-orchestration
+		webd.getLogger().info("Click Cloud Services - orchestration");
+		DashboardHomeUtil.filterOptions(webd, "orchestration");
+
+		//click on Grid View
+		webd.getLogger().info("Click on Grid View icon");
+		DashboardHomeUtil.gridView(webd);
+
+		//Open the OOB dashboard---Orchestration Workflows
+		webd.getLogger().info("Open the OOB dashboard---Orchestration Workflows");
+		DashboardHomeUtil.selectDashboard(webd, "Orchestration Workflows");
+
+		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
+
+		//verify Orchestration Workflows
+		verifyOrchestration();
+	}
+	@Test
+	public void verifyOrchestration_WithFilter_ListView()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test in verifyOrchestration_ListView");
+
+		//click Filter-orchestration
+		webd.getLogger().info("Click Cloud Services - orchestration");
+		DashboardHomeUtil.filterOptions(webd, "orchestration");
+
+		//click on List View
+		webd.getLogger().info("Click on List View icon");
+		DashboardHomeUtil.listView(webd);
+
+		//Open the OOB dashboard---Orchestration Workflows
+		webd.getLogger().info("Open the OOB dashboard---Orchestration Workflows");
+		DashboardHomeUtil.selectDashboard(webd, "Orchestration Workflows");
+
+		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
+
+		//verify Orchestration Workflows
+		verifyOrchestration();
+	}
+	private void verifyOrchestration()
+	{
+		webd.getLogger().info("Start to verify the OOB Dashboard");
+		//verify the current url
+		webd.getLogger().info("Verify the current url");
+
+		//verify the url of opened page
+		DashBoardUtils.verifyURL_WithPara(webd, "emcpdfui/builder.html?dashboardId=37");
+	
+		DashboardBuilderUtil.verifyWidget(webd, "Summary");
+		DashboardBuilderUtil.verifyWidget(webd, "Workflow Submission Alerts");
+		DashboardBuilderUtil.verifyWidget(webd, "Submissions by User");
+		DashboardBuilderUtil.verifyWidget(webd, "Submissions by Type");
+		DashboardBuilderUtil.verifyWidget(webd, "Histogram of Submissions by Average Failed Steps");
+		DashboardBuilderUtil.verifyWidget(webd, "Workflow Submission Details");
+
+		webd.getLogger().info("Verification end...");
+	}
 	private void verifyAPM()
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");

@@ -62,22 +62,26 @@
                 </div>
             </div>
             
-            <!-- About box -->
+            <!-- About box -->    
+            <!-- ko if: aboutBoxImmediateLoading -->
             <div data-bind="component: {
                     name: 'df-oracle-about-box',
                     params: aboutBoxKocParams
                 }">
             </div>
+            <!-- /ko -->
             <!-- End of about box -->
-            
+               
             <!-- ko if: navLinksVisible -->
             <!--Navigation Menu: Quick Links/Favorites/Recent Dashboards etc.-->
             <div class="oj-component-initnode" id="links_menu">
+                <!-- ko if: navLinksImmediateLoading -->
                 <div data-bind="component: {
                     name: 'df-oracle-nav-links',
                     params: navLinksKocParams
                     }">
                 </div>
+                <!-- /ko -->
             </div>
             <!-- /ko -->
         </div>  
