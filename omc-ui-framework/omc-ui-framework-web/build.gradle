@@ -11,7 +11,8 @@ apply plugin: 'compass'
 apply from: 'test.gradle'
 
 jsversion = project.ext.getServiceVersion('OMC-UI-Framework')
-def versionPathElement = jsversion + "-"+ new SimpleDateFormat("yyMMdd.HHmmss").format(new Date())
+//def versionPathElement = jsversion + "-"+ new SimpleDateFormat("yyMMdd.HHmmss").format(new Date())
+def versionPathElement = jsversion + "-"+ rootProject.ext.get("appTimeStamp")
 
 // source 'webapp' directory
 def File sourceWebappDir = new File(project.projectDir, 'public_html')
@@ -28,6 +29,8 @@ def stagingDir = buildDir.absolutePath+'/staging/public_html'
 def compiledDir = buildDir.absolutePath+'/public_html'
 def File sourceTargetSelectorAPIDestDir = new File(buildDir.absolutePath+'/stage_tsel')
 def webRootSourceDir = 'public_html'
+
+def chefDir = project.rootDir.absolutePath +'/dashboards-chef/cookbook-emcs-omc-ui-framework/recipes'
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
@@ -277,7 +280,25 @@ clean.dependsOn cleanJet,cleanFont,cleanTargetSelector
 project.task("cleanCompassCss")<<{
 }
 
-task copyJsSource(type:Copy, dependsOn:[cleanJs,compileSass]) {
+project.task("prepareChef")<<{
+
+  File chefFile = new File(chefDir+"/default.rb")
+
+		String contents = chefFile.getText('UTF-8')
+		String replacereg = "@version@"
+		contents = contents.replaceAll(Pattern.quote(replacereg), versionPathElement)
+		chefFile.write(contents, 'UTF-8')
+   
+//   new File(chefDir).eachFile {
+	//filesMatching("**/*.rb"){
+
+  //     	    filter(ReplaceTokens, tokens: [version: versionPathElement])
+//    }
+//    into "../../dashboards-chef/cookbook-emcs-omc-ui-framework/recipes/"
+//}
+}
+
+task copyJsSource(type:Copy, dependsOn:[cleanJs,compileSass,prepareChef]) {
     from (webRootSourceDir) {
         include "**/*"
         exclude "**/uifwkCommonMsg.js"
@@ -687,8 +708,10 @@ task minifyUIFwkPartitionJs(dependsOn: [combineAppJs],type: com.eriwen.gradle.js
         //Inject contents of uifwk-load.js into uifwk-partition.js 
         File uifwkLoadJsFile = new File(compiledDir+'/'+versionPathElement+'/js/uifwk-load.js')
         String uifwkLoadJsContents = uifwkLoadJsFile.getText('UTF-8')
-        File uifwkPartitionJsFile = new File(compiledDir + '/js/uifwk-partition.js')
+        File uifwkPartitionJsFile = new File(compiledDir + '/js/uifwk-partition.js') 
         String uifwkPartitionJsContents = uifwkPartitionJsFile.getText('UTF-8')
+        File uifwkPartitionJsFile0 = new File(compiledDir + '/js/uifwk-partition0.js') 
+        uifwkPartitionJsFile0.write(uifwkPartitionJsContents, 'UTF-8')  
         uifwkPartitionJsContents =  uifwkLoadJsContents + uifwkPartitionJsContents
         uifwkPartitionJsFile.write(uifwkPartitionJsContents, 'UTF-8')
     }
@@ -719,6 +742,18 @@ task minifyUIFwkImplPartitionJs(dependsOn: [minifyUIFwkPartitionJs],type: com.er
         String absPath = compiledFile;
         contents = contents.replaceAll(Pattern.quote(absPath), "uifwk-impl-partition.orig.js")
         mapFile.write(contents, "UTF-8")
+
+        //include uifwk-partition0 in uifwk-impl-partition
+        text = new File(compiledDir+"/js/uifwk-partition0.js").getText()
+        compiledFile.append("\n"+text,'UTF-8')
+
+	////create cached.js file
+	////Files.copy(Paths.get(compiledDir+"/"+versionPathElement+"/js/uifwk-impl-partition.js"), Paths.get(compiledDir+"/"+versionPathElement+"/js/uifwk-impl-partition-cached.js"))
+	//Files.copy(Paths.get(compiledDir+"/js/uifwk-partition0.js"), Paths.get(compiledDir+"/"+versionPathElement+"/js/uifwk-impl-partition-cached.js"))
+
+	//text = new File(compiledDir+"/"+versionPathElement+"/js/uifwk-impl-partition.js").getText()
+	//File cachedFile = new File(compiledDir+"/"+versionPathElement+"/js/uifwk-impl-partition-cached.js")
+	//cachedFile.append("\n"+text,'UTF-8')
     }
 }
 //Combine end
