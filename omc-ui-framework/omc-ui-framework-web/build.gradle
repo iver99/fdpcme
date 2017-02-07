@@ -708,8 +708,10 @@ task minifyUIFwkPartitionJs(dependsOn: [combineAppJs],type: com.eriwen.gradle.js
         //Inject contents of uifwk-load.js into uifwk-partition.js 
         File uifwkLoadJsFile = new File(compiledDir+'/'+versionPathElement+'/js/uifwk-load.js')
         String uifwkLoadJsContents = uifwkLoadJsFile.getText('UTF-8')
-        File uifwkPartitionJsFile = new File(compiledDir + '/js/uifwk-partition.js')
+        File uifwkPartitionJsFile = new File(compiledDir + '/js/uifwk-partition.js') 
         String uifwkPartitionJsContents = uifwkPartitionJsFile.getText('UTF-8')
+        File uifwkPartitionJsFile0 = new File(compiledDir + '/js/uifwk-partition0.js') 
+        uifwkPartitionJsFile0.write(uifwkPartitionJsContents, 'UTF-8')  
         uifwkPartitionJsContents =  uifwkLoadJsContents + uifwkPartitionJsContents
         uifwkPartitionJsFile.write(uifwkPartitionJsContents, 'UTF-8')
     }
@@ -743,7 +745,7 @@ task minifyUIFwkImplPartitionJs(dependsOn: [minifyUIFwkPartitionJs],type: com.er
 
 	//create cached.js file
 	//Files.copy(Paths.get(compiledDir+"/"+versionPathElement+"/js/uifwk-impl-partition.js"), Paths.get(compiledDir+"/"+versionPathElement+"/js/uifwk-impl-partition-cached.js"))
-	Files.copy(Paths.get(compiledDir+"/js/uifwk-partition.js"), Paths.get(compiledDir+"/"+versionPathElement+"/js/uifwk-impl-partition-cached.js"))
+	Files.copy(Paths.get(compiledDir+"/js/uifwk-partition0.js"), Paths.get(compiledDir+"/"+versionPathElement+"/js/uifwk-impl-partition-cached.js"))
 
 	text = new File(compiledDir+"/"+versionPathElement+"/js/uifwk-impl-partition.js").getText()
 	File cachedFile = new File(compiledDir+"/"+versionPathElement+"/js/uifwk-impl-partition-cached.js")
