@@ -31,5 +31,16 @@ dependencies {
     testConfig getProjectArtifact('jackson-xc')
     testConfig getProjectArtifact('jmockit')
 
+    testConfig getProjectArtifact('log4j-core')
+    testConfig getProjectArtifact('log4j-api')
+    testConfig getProjectArtifact('registry-lookup-client')
+    testConfig getProjectArtifact('registry-client')
+    testConfig(group: 'org.codehaus.jackson', name: 'jackson-jaxrs', version: '1.9.2')
+    def securityClientVer=getDependentSdkVersion('com.oracle.emaas.emcpsf.sdk', 'security-client', '1.+')
+        compile (
+            group: 'com.oracle.emaas.emcpsf.sdk', name: 'security-client', version: securityClientVer )
+    testConfig getProjectArtifact('emaas-platform-tenant-sdk')
+
+    testCompile configurations.testNG
 }
 build.dependsOn integTestJar
