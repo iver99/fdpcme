@@ -88,23 +88,6 @@ public class GlobalContextUtil_1150 extends GlobalContextUtil_1130
 		// TODO Auto-generated method stub
 		return TimeSelectorUtil.setCustomTimeWithDateOnly(webd, startDate, endDate);
 	}
-	
-	@Override
-	public String setCustomTimeWithMillisecond(WebDriver webd, int index, String startDate, String endDate)
-	{
-		// TODO Auto-generated method stub
-		return TimeSelectorUtil.setCustomTimeWithMillisecond(webd, index, startDate, endDate);
-	}
-
-	/* (non-Javadoc)
-	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IGlobalContextUtil#setCustomTimeWithDateOnly(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String, java.lang.String)
-	 */
-	@Override
-	public String setCustomTimeWithMillisecond(WebDriver webd, String startDate, String endDate)
-	{
-		// TODO Auto-generated method stub
-		return TimeSelectorUtil.setCustomTimeWithMillisecond(webd, startDate, endDate);
-	}
 
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IGlobalContextUtil#setFlexibleRelativeTimeRange(oracle.sysman.qatool.uifwk.webdriver.WebDriver, int, int, oracle.sysman.emaas.platform.dashboards.tests.ui.util.IGlobalContextUtil.TimeUnit)
@@ -144,23 +127,6 @@ public class GlobalContextUtil_1150 extends GlobalContextUtil_1130
 	{
 		// TODO Auto-generated method stub
 		return TimeSelectorUtil.setFlexibleRelativeTimeRangeWithDateOnly(webd, relTimeVal, relTimeUnit);
-	}
-	
-	@Override
-	public String setFlexibleRelativeTimeRangeWithMillisecond(WebDriver webd, int index, int relTimeVal, TimeUnit relTimeUnit)
-	{
-		// TODO Auto-generated method stub
-		return TimeSelectorUtil.setFlexibleRelativeTimeRangeWithMillisecond(webd, index, relTimeVal, relTimeUnit);
-	}
-
-	/* (non-Javadoc)
-	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IGlobalContextUtil#setFlexibleRelativeTimeRange(oracle.sysman.qatool.uifwk.webdriver.WebDriver, int, oracle.sysman.emaas.platform.dashboards.tests.ui.util.IGlobalContextUtil.TimeUnit)
-	 */
-	@Override
-	public String setFlexibleRelativeTimeRangeWithMillisecond(WebDriver webd, int relTimeVal, TimeUnit relTimeUnit)
-	{
-		// TODO Auto-generated method stub
-		return TimeSelectorUtil.setFlexibleRelativeTimeRangeWithMillisecond(webd, relTimeVal, relTimeUnit);
 	}
 
 	/* (non-Javadoc)
@@ -223,22 +189,5 @@ public class GlobalContextUtil_1150 extends GlobalContextUtil_1130
 	{
 		// TODO Auto-generated method stub
 		return TimeSelectorUtil.setTimeRangeWithDateOnly(webd, rangeOption);
-	}
-	
-	@Override
-	public String setTimeRangeWithMillisecond(WebDriver webd, int index, TimeRange rangeOption)
-	{
-		// TODO Auto-generated method stub
-		return TimeSelectorUtil.setTimeRangeWithMillisecond(webd, index, rangeOption);
-	}
-
-	/* (non-Javadoc)
-	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IGlobalContextUtil#setTimeRangeWithDateOnly(oracle.sysman.qatool.uifwk.webdriver.WebDriver, oracle.sysman.emaas.platform.dashboards.tests.ui.util.IGlobalContextUtil.TimeRange)
-	 */
-	@Override
-	public String setTimeRangeWithMillisecond(WebDriver webd, TimeRange rangeOption)
-	{
-		// TODO Auto-generated method stub
-		return TimeSelectorUtil.setTimeRangeWithMillisecond(webd, rangeOption);
 	}
 }

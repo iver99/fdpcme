@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.testng.Assert;
+
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.IGlobalContextUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.ITimeSelectorUtil.TimeRange;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.ITimeSelectorUtil.TimeUnit;
@@ -144,8 +146,9 @@ public class GlobalContextUtil_1130 extends GlobalContextUtil_Version implements
 	@Override
 	public String getTimeRangeLabel(WebDriver webd)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		Assert.assertTrue(false, "This method is not available in the current version");
+		webd.getLogger().info("Method not available in the current version");
+		return "";
 	}
 
 	/* (non-Javadoc)
@@ -154,8 +157,9 @@ public class GlobalContextUtil_1130 extends GlobalContextUtil_Version implements
 	@Override
 	public String getTimeRangeLabel(WebDriver webd, int index)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		Assert.assertTrue(false, "This method is not available in the current version");
+		webd.getLogger().info("Method not available in the current version");
+		return "";
 	}
 
 	/* (non-Javadoc)
@@ -201,8 +205,9 @@ public class GlobalContextUtil_1130 extends GlobalContextUtil_Version implements
 	@Override
 	public String setCustomTime(WebDriver webd, int index, String startDateTime, String endDateTime)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		Assert.assertTrue(false, "This method is not available in the current version");
+		webd.getLogger().info("Method not available in the current version");
+		return "";
 	}
 
 	/* (non-Javadoc)
@@ -211,8 +216,9 @@ public class GlobalContextUtil_1130 extends GlobalContextUtil_Version implements
 	@Override
 	public String setCustomTime(WebDriver webd, String startDateTime, String endDateTime)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		Assert.assertTrue(false, "This method is not available in the current version");
+		webd.getLogger().info("Method not available in the current version");
+		return "";
 	}
 
 	/* (non-Javadoc)
@@ -221,8 +227,9 @@ public class GlobalContextUtil_1130 extends GlobalContextUtil_Version implements
 	@Override
 	public String setCustomTimeWithDateOnly(WebDriver webd, int index, String startDate, String endDate)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		Assert.assertTrue(false, "This method is not available in the current version");
+		webd.getLogger().info("Method not available in the current version");
+		return "";
 	}
 
 	/* (non-Javadoc)
@@ -231,8 +238,9 @@ public class GlobalContextUtil_1130 extends GlobalContextUtil_Version implements
 	@Override
 	public String setCustomTimeWithDateOnly(WebDriver webd, String startDate, String endDate)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		Assert.assertTrue(false, "This method is not available in the current version");
+		webd.getLogger().info("Method not available in the current version");
+		return "";
 	}
 	
 	/* (non-Javadoc)
@@ -241,8 +249,9 @@ public class GlobalContextUtil_1130 extends GlobalContextUtil_Version implements
 	@Override
 	public String setCustomTimeWithMillisecond(WebDriver webd, int index, String startDate, String endDate)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		Assert.assertTrue(false, "This method is not available in the current version");
+		webd.getLogger().info("Method not available in the current version");
+		return "";
 	}
 
 	/* (non-Javadoc)
@@ -251,8 +260,9 @@ public class GlobalContextUtil_1130 extends GlobalContextUtil_Version implements
 	@Override
 	public String setCustomTimeWithMillisecond(WebDriver webd, String startDate, String endDate)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		Assert.assertTrue(false, "This method is not available in the current version");
+		webd.getLogger().info("Method not available in the current version");
+		return "";
 	}
 
 	/* (non-Javadoc)
@@ -261,8 +271,9 @@ public class GlobalContextUtil_1130 extends GlobalContextUtil_Version implements
 	@Override
 	public String setFlexibleRelativeTimeRange(WebDriver webd, int index, int relTimeVal, TimeUnit relTimeUnit)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		Assert.assertTrue(false, "This method is not available in the current version");
+		webd.getLogger().info("Method not available in the current version");
+		return "";
 	}
 
 	/* (non-Javadoc)
@@ -271,8 +282,9 @@ public class GlobalContextUtil_1130 extends GlobalContextUtil_Version implements
 	@Override
 	public String setFlexibleRelativeTimeRange(WebDriver webd, int relTimeVal, TimeUnit relTimeUnit)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		Assert.assertTrue(false, "This method is not available in the current version");
+		webd.getLogger().info("Method not available in the current version");
+		return "";
 	}
 
 	/* (non-Javadoc)
@@ -281,8 +293,9 @@ public class GlobalContextUtil_1130 extends GlobalContextUtil_Version implements
 	@Override
 	public String setFlexibleRelativeTimeRangeWithDateOnly(WebDriver webd, int index, int relTimeVal, TimeUnit relTimeUnit)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		Assert.assertTrue(false, "This method is not available in the current version");
+		webd.getLogger().info("Method not available in the current version");
+		return "";
 	}
 
 	/* (non-Javadoc)
@@ -291,8 +304,9 @@ public class GlobalContextUtil_1130 extends GlobalContextUtil_Version implements
 	@Override
 	public String setFlexibleRelativeTimeRangeWithDateOnly(WebDriver webd, int relTimeVal, TimeUnit relTimeUnit)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		Assert.assertTrue(false, "This method is not available in the current version");
+		webd.getLogger().info("Method not available in the current version");
+		return "";
 	}
 
 	/* (non-Javadoc)
@@ -301,8 +315,9 @@ public class GlobalContextUtil_1130 extends GlobalContextUtil_Version implements
 	@Override
 	public String setFlexibleRelativeTimeRangeWithMillisecond(WebDriver webd, int index, int relTimeVal, TimeUnit relTimeUnit)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		Assert.assertTrue(false, "This method is not available in the current version");
+		webd.getLogger().info("Method not available in the current version");
+		return "";
 	}
 
 	/* (non-Javadoc)
@@ -311,8 +326,9 @@ public class GlobalContextUtil_1130 extends GlobalContextUtil_Version implements
 	@Override
 	public String setFlexibleRelativeTimeRangeWithMillisecond(WebDriver webd, int relTimeVal, TimeUnit relTimeUnit)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		Assert.assertTrue(false, "This method is not available in the current version");
+		webd.getLogger().info("Method not available in the current version");
+		return "";
 	}
 	
 	/* (non-Javadoc)
@@ -322,8 +338,9 @@ public class GlobalContextUtil_1130 extends GlobalContextUtil_Version implements
 	public String setTimeFilter(WebDriver webd, int index, String hoursToExclude, int[] daysToExclude, int[] monthsToExclude)
 			throws Exception
 	{
-		// TODO Auto-generated method stub
-		return null;
+		Assert.assertTrue(false, "This method is not available in the current version");
+		webd.getLogger().info("Method not available in the current version");
+		return "";
 	}
 
 	/* (non-Javadoc)
@@ -333,8 +350,9 @@ public class GlobalContextUtil_1130 extends GlobalContextUtil_Version implements
 	public String setTimeFilter(WebDriver webd, String hoursToExclude, int[] daysToExclude, int[] monthsToExclude)
 			throws Exception
 	{
-		// TODO Auto-generated method stub
-		return null;
+		Assert.assertTrue(false, "This method is not available in the current version");
+		webd.getLogger().info("Method not available in the current version");
+		return "";
 	}
 
 	/* (non-Javadoc)
@@ -343,8 +361,9 @@ public class GlobalContextUtil_1130 extends GlobalContextUtil_Version implements
 	@Override
 	public String setTimeRange(WebDriver webd, int Index, TimeRange rangeoption)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		Assert.assertTrue(false, "This method is not available in the current version");
+		webd.getLogger().info("Method not available in the current version");
+		return "";
 	}
 
 	/* (non-Javadoc)
@@ -353,8 +372,9 @@ public class GlobalContextUtil_1130 extends GlobalContextUtil_Version implements
 	@Override
 	public String setTimeRange(WebDriver webd, TimeRange rangeoption)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		Assert.assertTrue(false, "This method is not available in the current version");
+		webd.getLogger().info("Method not available in the current version");
+		return "";
 	}
 
 	/* (non-Javadoc)
@@ -363,8 +383,9 @@ public class GlobalContextUtil_1130 extends GlobalContextUtil_Version implements
 	@Override
 	public String setTimeRangeWithDateOnly(WebDriver webd, int index, TimeRange rangeOption)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		Assert.assertTrue(false, "This method is not available in the current version");
+		webd.getLogger().info("Method not available in the current version");
+		return "";
 	}
 
 	/* (non-Javadoc)
@@ -373,8 +394,9 @@ public class GlobalContextUtil_1130 extends GlobalContextUtil_Version implements
 	@Override
 	public String setTimeRangeWithDateOnly(WebDriver webd, TimeRange rangeOption)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		Assert.assertTrue(false, "This method is not available in the current version");
+		webd.getLogger().info("Method not available in the current version");
+		return "";
 	}
 	
 	/* (non-Javadoc)
@@ -383,8 +405,9 @@ public class GlobalContextUtil_1130 extends GlobalContextUtil_Version implements
 	@Override
 	public String setTimeRangeWithMillisecond(WebDriver webd, int index, TimeRange rangeOption)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		Assert.assertTrue(false, "This method is not available in the current version");
+		webd.getLogger().info("Method not available in the current version");
+		return "";
 	}
 
 	/* (non-Javadoc)
@@ -393,8 +416,9 @@ public class GlobalContextUtil_1130 extends GlobalContextUtil_Version implements
 	@Override
 	public String setTimeRangeWithMillisecond(WebDriver webd, TimeRange rangeOption)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		Assert.assertTrue(false, "This method is not available in the current version");
+		webd.getLogger().info("Method not available in the current version");
+		return "";
 	}
 
 	/* (non-Javadoc)
