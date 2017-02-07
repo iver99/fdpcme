@@ -44,7 +44,7 @@ function (ko, $, oj, dfu) {
                         }
                         self.initWidgetDraggable();
                         self.isWidgetLoaded(true);
-                        successCallback();
+                        successCallback && successCallback();
                     }
             );
         };
