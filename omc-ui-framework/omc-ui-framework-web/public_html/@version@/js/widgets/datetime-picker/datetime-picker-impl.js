@@ -742,11 +742,11 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
 
                 if(params.timePeriodsSet){
                     if(params.timePeriodsSet === self.timePeriodSetShortTerm){
-                        params.timePeriod = "Last 60 mins";
-                        params.timePeriodsNotToShow = [self.timePeriodLast2hours, self.timePeriodLast4hours, self.timePeriodLast6hours, self.timePeriodLast1day, self.timePeriodLast30days, self.timePeriodLast90days, self.timePeriodLast12months, self.timePeriodLast1year];
+                        params.timePeriod = "Last 60 minutes";
+                        params.timePeriodsNotToShow = ["Last 2 hours", "Last 4 hours", "Last 6 hours", "Last 1 day", "Last 30 days", "Last 90 days", "Last 12 months", "Last 1 year"];
                     }else if(params.timePeriodsSet === self.timePeriodSetLongTerm){
                         params.timePeriod = "Last 30 days";
-                        params.timePeriodsNotToShow = [self.timePeriodLast15mins, self.timePeriodLast30mins, self.timePeriodLast60mins, self.timePeriodLast2hours, self.timePeriodLast4hours, self.timePeriodLast6hours, self.timePeriodLast8hours, self.timePeriodLast1day, self.timePeriodLast1year];
+                        params.timePeriodsNotToShow = ["Last 15 minutes", "Last 30 minutes", "Last 60 minutes", "Last 2 hours", "Last 4 hours", "Last 6 hours", "Last 8 hours", "Last 1 day", "Last 1 year"];
                     }
                 }
 
