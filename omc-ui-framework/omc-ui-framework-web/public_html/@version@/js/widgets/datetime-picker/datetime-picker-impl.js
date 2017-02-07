@@ -789,6 +789,9 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     return self.timeConverter();
                 }
                 
+                //Call this first as popup binding is deferred. getDateTimeInfo function need this to know how to show time label(minite ot millisecond)
+                self.getTimeConverter();
+                
                 self.convertWindowSizeToDays = function(nls) {
                     var windowSize;
                     var totalMins = self.customWindowLimit / (60*1000);
@@ -2378,7 +2381,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             if(flexRelTimeVal && flexRelTimeOpt) {
                                 ctxUtil.setTimePeriod(flexRelTimePeriodId, eventSourceTimeSelector);
                             }else {
-                                ctxUtil.setStartAndEndTime(new Date(start).getTime(), new Date(end).getTime(), eventSourceTimeSelector);
+                                ctxUtil.setStartAndEndTime(newDateWithMilliseconds(start).getTime(), newDateWithMilliseconds(end).getTime(),eventSourceTimeSelector);
                             }
                         }else {
                             ctxUtil.setTimePeriod(timePeriod, eventSourceTimeSelector);

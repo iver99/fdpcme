@@ -68,7 +68,7 @@
                         <select data-bind="ojComponent: {component: 'ojSelect', value: flexRelTimeOpt,
                             rootAttributes: {style: 'max-width: 108px;', id: 'flexRelTimeOpt_' + randomId}, 
                             optionChange: flexRelTimeOptChanged, disabled: lrCtrlVal()!=='flexRelTimeCtrl'}">
-                            <!-- ko if: (shouldShowTimeLevel("second") && hideTimeSelection() !== true && showTimeAtMillisecond === true) -->
+                            <!-- ko if: (shouldShowTimeLevel("second") && hideTimeSelection() !== true && showTimeAtMillisecond() === true) -->
                                 <!-- ko if: flexRelTimeVal() === 1 -->
                                     <option value="SECOND" data-bind="text: nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_SECOND"></option>
                                 <!-- /ko -->
