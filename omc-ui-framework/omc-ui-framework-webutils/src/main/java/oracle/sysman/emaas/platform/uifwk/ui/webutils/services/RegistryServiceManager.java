@@ -348,7 +348,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 			
 			final String buildId = serviceProps.getProperty("buildId");
 			final String sdkRel = "versionLookupSDK/emsaasui/uifwk/js/uifwk-partition";
-			final String sdkImplUrl = NAV_BASE+"/"+buildId+"/js/uifwk-impl-partition-cached";
+			final String sdkImplUrl = NAV_BASE+"/"+buildId+"/js/uifwk-impl-partition";
 			if (buildId ==null){
 				LOGGER.error("buildId is null, please check /opt/ORCLemaas/Applications/OMC-UI-Framework/init/servicemanager.properties file!");
 			}else{

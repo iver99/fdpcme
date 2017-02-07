@@ -5,7 +5,7 @@
 requirejs.config({
     bundles: ((window.DEV_MODE !==null && typeof window.DEV_MODE ==="object") ||
                 (window.gradleDevMode !==null && typeof window.gradleDevMode ==="boolean")) ? undefined : {
-        'uifwk/@version@/js/uifwk-impl-partition-cached':
+        'uifwk/@version@/js/uifwk-impl-partition':
             [
             'uifwk/js/util/ajax-util',
             'uifwk/js/util/df-util',
