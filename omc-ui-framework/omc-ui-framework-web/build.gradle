@@ -743,17 +743,17 @@ task minifyUIFwkImplPartitionJs(dependsOn: [minifyUIFwkPartitionJs],type: com.er
         contents = contents.replaceAll(Pattern.quote(absPath), "uifwk-impl-partition.orig.js")
         mapFile.write(contents, "UTF-8")
 
-        //include uifwk-partition0 in uifwk-impl-partition
-        text = new File(compiledDir+"/js/uifwk-partition0.js").getText()
-        compiledFile.append("\n"+text,'UTF-8')
+        ////include uifwk-partition0 in uifwk-impl-partition
+        //text = new File(compiledDir+"/js/uifwk-partition0.js").getText()
+        //compiledFile.append("\n"+text,'UTF-8')
 
-	////create cached.js file
-	////Files.copy(Paths.get(compiledDir+"/"+versionPathElement+"/js/uifwk-impl-partition.js"), Paths.get(compiledDir+"/"+versionPathElement+"/js/uifwk-impl-partition-cached.js"))
+	//create cached.js file
+	Files.copy(Paths.get(compiledDir+"/"+versionPathElement+"/js/uifwk-impl-partition.js"), Paths.get(compiledDir+"/"+versionPathElement+"/js/uifwk-impl-partition-cached.js"))
 	//Files.copy(Paths.get(compiledDir+"/js/uifwk-partition0.js"), Paths.get(compiledDir+"/"+versionPathElement+"/js/uifwk-impl-partition-cached.js"))
 
-	//text = new File(compiledDir+"/"+versionPathElement+"/js/uifwk-impl-partition.js").getText()
-	//File cachedFile = new File(compiledDir+"/"+versionPathElement+"/js/uifwk-impl-partition-cached.js")
-	//cachedFile.append("\n"+text,'UTF-8')
+	text = new File(compiledDir+"/js/uifwk-partition0.js").getText()
+	File cachedFile = new File(compiledDir+"/"+versionPathElement+"/js/uifwk-impl-partition-cached.js")
+	cachedFile.append("\n"+text,'UTF-8')
     }
 }
 //Combine end

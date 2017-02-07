@@ -49,7 +49,7 @@ requirejs.config({
     },
     bundles: ((window.DEV_MODE !==null && typeof window.DEV_MODE ==="object") ||
                 (window.gradleDevMode !==null && typeof window.gradleDevMode ==="boolean")) ? undefined : {
-        'uifwk/@version@/js/uifwk-impl-partition':
+        'uifwk/@version@/js/uifwk-impl-partition-cached':
             [
             'uifwk/js/util/ajax-util',
             'uifwk/js/util/df-util',
@@ -407,6 +407,12 @@ require(['knockout',
                     }
                 );
 
+            }, function(e) {
+                console.log(e.errorMessage());
+                if (e.errorCode && e.errorCode() === 20001) {
+                    oj.Logger.error("Dashboard not found. Redirect to dashboard error page", true);
+                    location.href = "./error.html?invalidUrl=" + encodeURIComponent(location.href);
+                }
             });
         });
     }
