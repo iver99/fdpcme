@@ -451,6 +451,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.notificationDisabled = ko.observable(true);
             self.notificationPageUrl = null;
             self.navLinksVisible = true;
+            self.navLinksImmediateLoading = ko.observable(false);
 
             var isAppIdNotEmpty = self.appId && $.trim(self.appId) !== "";
             var appProperties = isAppIdNotEmpty && appMap[self.appId] ? appMap[self.appId] : {};
@@ -568,6 +569,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             //Open about box
             //aboutbox id
             self.aboutBoxId = 'aboutBox';
+            self.aboutBoxImmediateLoading = ko.observable(false);
             self.openAboutBox = function () {
                 $('#' + self.aboutBoxId).ojDialog('open');
             };
@@ -620,6 +622,12 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         break;
                 }
             };
+            
+            $("#emaasAppheaderGlobalNavMenuId").ojMenu({
+                "beforeOpen": function (event, ui) {
+                    self.aboutBoxImmediateLoading(true);
+                }
+            });
 
             var templatePath = "uifwk/js/widgets/navlinks/html/navigation-links.html";
             var vmPath = "uifwk/js/widgets/navlinks/js/navigation-links";
@@ -691,6 +699,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
              */
             self.linkMenuHandler = function (event, item) {
                 self.navLinksNeedRefresh(true);
+                self.navLinksImmediateLoading(true);
                 $("#links_menu").slideToggle('normal');
                 item.stopImmediatePropagation();
             };
@@ -1394,6 +1403,13 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             var zdtUtil = new zdtUtilModel();
             zdtUtil.detectPlannedDowntime(function () {
             });
+            
+            ko.bindingHandlers.stopDataBinding = {
+                init: function (elem, valueAccessor) {
+                    var value = ko.unwrap(valueAccessor());
+                    return {controlsDescendantBindings: value};
+                }
+            };
         }
 
         return BrandingBarViewModel;
