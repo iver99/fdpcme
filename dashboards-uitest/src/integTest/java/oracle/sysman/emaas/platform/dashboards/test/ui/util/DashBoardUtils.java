@@ -3,6 +3,7 @@ package oracle.sysman.emaas.platform.dashboards.test.ui.util;
 import java.util.List;
 
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_190;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
@@ -57,15 +58,23 @@ public class DashBoardUtils
 	public static void deleteDashboard(WebDriver webdriver, String DashboardName)
 	{
 		DashboardHomeUtil.search(webdriver, DashboardName);
-		if (DashboardHomeUtil.isDashboardExisted(webdriver, DashboardName)) {
-			webdriver.getLogger().info("Start to delete the dashboard: " + DashboardName);
-			DashboardHomeUtil.deleteDashboard(webdriver, DashboardName, DashboardHomeUtil.DASHBOARDS_GRID_VIEW);
-			webdriver.getLogger().info("Verify the dashboard: " + DashboardName + " has been deleted");
-			Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(webdriver, DashboardName), "Delete dashboard "
-					+ DashboardName + " failed!");
-			webdriver.getLogger().info("Delete the dashboard: " + DashboardName + " finished");
+		String searchresult = webdriver.getElement("css=" + PageId.DASHBOARDDISPLAYPANELCSS).getAttribute("childElementCount");
+		int dbnumber = Integer.parseInt(searchresult);
+		for (int i = 0; i < dbnumber; i++) {
+			if (DashboardHomeUtil.isDashboardExisted(webdriver, DashboardName)) {
+				webdriver.getLogger().info("Start to delete the dashboard: " + DashboardName);
+				DashboardHomeUtil.deleteDashboard(webdriver, DashboardName, DashboardHomeUtil.DASHBOARDS_GRID_VIEW);
+			}
 		}
+		webdriver.getLogger().info("Verify the dashboard: " + DashboardName + " has been deleted");
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(webdriver, DashboardName), "Delete dashboard " + DashboardName
+				+ " failed!");
+		webdriver.getLogger().info("Delete the dashboard: " + DashboardName + " finished");
+	}
 
+	public static String generateTimeStamp()
+	{
+		return String.valueOf(System.currentTimeMillis());
 	}
 
 	public static void handleAlert(WebDriver webdriver)
@@ -222,6 +231,39 @@ public class DashBoardUtils
 		}
 	}
 
+	public static boolean verifyDashboardInfoInHomePage(WebDriver driver, String Name, String Description, String view)
+	{
+		//click the info icon
+		driver.click(DashBoardPageId.INFOBTNID);
+
+		//verify the name and description displayed in the info box
+		String str_name = "";
+		String str_desc = "";
+
+		if (view.equals("gridview")) {
+			str_name = driver.getText("css=" + PageId.DASHBOARDINFO_NAME_CSS).trim();
+			str_desc = driver.getText("css=" + PageId.DASHBOARDINFO_DESC_CSS).trim();
+			if (str_name.equals(Name) && str_desc.equals(Description)) {
+				return true;
+
+			}
+			else {
+				return false;
+			}
+		}
+		else if (view.equals("listview")) {
+			str_desc = driver.getText("css=" + PageId.DASHBOARDINFO_DESC_CSS).trim();
+			if (str_desc.equals(Description)) {
+				return true;
+
+			}
+			else {
+				return false;
+			}
+		}
+		return false;
+	}
+
 	public static boolean verifyOpenInIconExist(WebDriver driver, String widgetName, int index)
 	{
 		//find the widget
@@ -285,15 +327,17 @@ public class DashBoardUtils
 	{
 		webdriver.takeScreenShot();
 
+		webdriver.getLogger().info("the expected relative url = " + url);
+		
 		String currurl = webdriver.getWebDriver().getCurrentUrl();
 
-		webdriver.getLogger().info("the origin url = " + currurl);
+		webdriver.getLogger().info("the current url = " + currurl);
 
 		String tmpurl = currurl.substring(currurl.indexOf("emsaasui") + 9);
 
-		webdriver.getLogger().info("the url want to compare = " + tmpurl);
+		webdriver.getLogger().info("the relative url to compare = " + tmpurl);
 
-		Assert.assertTrue(tmpurl.contains(url), "Not open the expected url: " + url);
+		Assert.assertTrue(tmpurl.contains(url), tmpurl+ " does NOT contain " + url);
 	}
 
 	private static String trimUrlParameters(String url)
@@ -306,10 +350,4 @@ public class DashBoardUtils
 
 		return baseUrl;
 	}
-
-	private DashBoardUtils()
-	{
-
-	}
-
 }

@@ -101,6 +101,23 @@ define(['knockout',
             } else {
             	self.dataSource[dashboardId].preference = undefined;
             }
+            
+            if (dsb && dsb.selectedSsData) {
+                var ssDataFormat = JSON.parse(dsb.selectedSsData);
+                var _hasNoSsDataBefore = !self.dataSource.savedSearchData;
+                if (_hasNoSsDataBefore) {
+                    self.dataSource.savedSearchData = ssDataFormat;
+                } else {
+                    //for multiple tab in set
+                    ssDataFormat.forEach(function (ssItem) {
+                        self.dataSource.savedSearchData = updateNewestDataToObj(self.dataSource.savedSearchData, ssItem);
+                    });
+                }
+            } else {
+                //when first enter the fetch the set data will enter this
+                self.dataSource.savedSearchData = undefined;
+            }
+            
             if (dsb.selected) {
                 initializeDashboardAfterLoad(dsb.selected.id, kodsb.selected, dsb.selected);
             }
@@ -132,7 +149,42 @@ define(['knockout',
                 successCallback && successCallback(self.dataSource[dashboardId].dashboard);
             }
         };
-        
+
+        self.fetchSelDbdSsData = function (widgetId, successCallback, errorCallback) {
+            var foundSsDataInCache = false;
+            self.dataSource.savedSearchData && self.dataSource.savedSearchData.filter(function isMatched(cachedSsData) {
+                if (cachedSsData.id == widgetId) {
+                    foundSsDataInCache = true;
+                    successCallback && successCallback(cachedSsData);
+                }
+            });
+            if (!self.dataSource.savedSearchData || !foundSsDataInCache) {
+                //post request to savedsearch
+                var url = '/sso.static/savedsearch.search';
+                if (dfu.isDevMode()) {
+                    url = dfu.buildFullUrl(dfu.getDevData().ssfRestApiEndPoint, 'search');
+                }
+                url += '/' + widgetId;
+                dfu.ajaxWithRetry(url, {
+                    type: 'get',
+                    dataType: "json",
+                    contentType: 'application/json',
+                    headers: dfu.getSavedSearchRequestHeader(),
+                    success: function (data) {
+                        if (successCallback) {
+                            self.dataSource.savedSearchData.push(data);
+                            successCallback && successCallback(data);
+                        }
+                    },
+                    error: function (e) {
+                        oj.Logger.error("Error to load savedsearch Data: " + e.responseText);
+                        if (errorCallback) {
+                            errorCallback(ko.mapping.fromJSON(e.responseText));
+                        }
+                    }
+                });
+            }
+        };
         
         
         self.updateDashboardData = function(dashboardId,dashboard,successCallback,errorCallback){
@@ -252,6 +304,20 @@ define(['knockout',
             return !0;
         };
         
+        function updateNewestDataToObj(obj,newestData) {
+            var replaceData = false;
+            obj&&obj.filter(function isMatched(oldData, index) {
+                if (oldData.name === newestData.name) {
+                    obj.splice(index, 1, newestData);
+                    replaceData = true;
+                }
+            });
+            if(!replaceData){
+                obj && obj.push(newestData);
+            }
+            return obj;
+        }
+                
         //convert dashboard returned from datebase to knockout obaservable for UI use
         function getKODashboardForUI(data) {
             // If dashboad is single page app, success callback will be ignored

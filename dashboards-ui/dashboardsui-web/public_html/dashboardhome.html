@@ -1,7 +1,7 @@
     <!-- Home toolbar start -->
-    <div aria-label="Searching toolbar" class="oj-toolbar-row" style="min-height: 50px;padding-left: 5px" data-testapiversion="1.13.0">
+    <div aria-label="Searching toolbar" class="oj-toolbar-row" style="min-height: 50px;padding-left: 5px" data-testapiversion="1.15.0">
         <button style=" margin-right: 5px;" data-bind="visible: (isMobileDevice() !== true && isDashboardSet === true), attr: { 'title': getNlsString('DBS_HOME_CREATE_BTN_TT_CONTENT') }, click: createDashboardClicked, 
-                                         ojComponent: { component:'ojButton', rootAttributes: {'class': 'dbs-home-blue-button'}, label: getNlsString('DBS_HOME_CREATE_BTN_LABEL')}"></button>
+                                         ojComponent: { component:'ojButton', rootAttributes: {'class': 'dbs-home-blue-button'}, label: getNlsString('DBS_HOME_CREATE_BTN_LABEL'),disabled: zdtStatus}"></button>
         <span class="dbs-search-box oj-sm-1 oj-md-3 oj-lg-3 oj-xl-6">
             <input class="dbs-sinput" id="dbs-sinput" type="text" name="searchInput"
                data-bind="ojComponent:{component:'ojInputText', value: null, placeholder: getNlsString('DBS_HOME_SEARCH_PLACE_HODE'), rootAttributes: {'class': 'dbs-search-box-input'}}
@@ -68,7 +68,8 @@
     </div>
     <div class="dbs-summaries-container" style="margin-bottom: 2%">
         <!-- ko foreach: dashboards -->
-        <div tabindex="0" class="oj-panel dbs-summary-container" 
+        <a class = "dbs-nav-link" data-bind="attr:{'href':buildPageUrl}">
+        <div tabindex="0" class="oj-panel dbs-summary-container"
              data-tag data-bind="dbsDashboardPanel: {
                                                 activated: null,
                                                 deactivated: null,
@@ -78,6 +79,7 @@
                                                 data: $data
                                                        },attr:{'data-home-name':name}">    
         </div>
+        </a>
         <!-- /ko -->
     </div>
     <!-- /ko -->
@@ -121,7 +123,7 @@
         <div  style="border-top: 1px solid #d6dfe6; margin-top: 10px; padding-top: 5px; "> 
             <button name="dsbinfopop_delete" class="oj-button-half-chrome" data-bind="ojComponent: {component:'ojButton', label: getNlsString('DBS_HOME_DSB_PAGE_INFO_DELETE_LABEL'), 
                                                                                                        icons: {start:'oj-fwk-icon icon-trashcan-ena-16 dbs-icon-size-16'}, 
-                                                                                                       disabled: (dashboard.systemDashboard || $component.userName !== dashboard.owner || $component.dashboardInTabs)}, 
+                                                                                                       disabled: (dashboard.systemDashboard || $component.userName !== dashboard.owner ||$component.dashboardInTabs || $component.zdtStatus)}, 
                                                                                          click: $component.handleDashboardDeleted"></button>
             <!--button class="oj-button-half-chrome oj-sm-float-end" data-bind="ojComponent: {component:'ojButton', label: 'Close'}, click: $component.handleCloseDashboardPop"></button-->
         </div>

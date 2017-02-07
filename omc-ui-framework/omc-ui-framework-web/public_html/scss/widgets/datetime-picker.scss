@@ -34,7 +34,7 @@
     /*width: 630px;*/
 }
 .drawers {
-    width: 104px;
+    width: inline-block;
     /*float: left;*/
     /*border: 1px solid #F0F0F0;*/
     /*height: 396px;*/
@@ -57,9 +57,10 @@
     border-color: #FFFFFF; //#dfe4e7;*/
     padding-left: 10px;
     padding-top: 7px;
+    padding-right: 10px;
     padding-bottom: 6px;
     height: 18px; //20px;
-    width: 104px;
+    width: inline-block;
     display: block;
 }
 
@@ -107,9 +108,9 @@
 
 .pickerPanel {
     width: 550px; //510px;
-    height: 489px; //402px;
+    height: 449px; //402px;
     /*float: right;*/
-    padding-top: 10px;
+    padding-top: 16px;
     /*padding-left: 10px;*/
     margin-top: -1px;
     
@@ -160,6 +161,8 @@
 }
 .buttons {
     margin: 10px;
+    position: absolute;
+    bottom: 20px;
 }
 .errorMsg {
     margin: 10px;
@@ -167,6 +170,8 @@
     color: red;
     /*font-weight: bold;*/
     width: 510px;
+    position: absolute;
+    bottom: 0px;
 }
 .datePicker {
     font-size: 15px;
@@ -283,4 +288,8 @@ html[dir="rtl"] .time-filter-indicator{
 /* remove search bar in time unit selection*/
 div[id^='pickerPanel'] .oj-listbox-search-wrapper {
     display: none;
+}
+
+.cancel-button {
+    margin-left: 4px;
 }

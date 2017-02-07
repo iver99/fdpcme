@@ -21,17 +21,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
+import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.DefaultKeyGenerator;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
+import oracle.sysman.emaas.platform.emcpdf.cache.api.CacheLoader;
+import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.SanitizedInstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter.ApplicationOPCName;
-import oracle.sysman.emaas.platform.dashboards.core.cache.CacheManager;
-import oracle.sysman.emaas.platform.dashboards.core.cache.ICacheFetchFactory;
-import oracle.sysman.emaas.platform.dashboards.core.cache.Tenant;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.EntityNamingDependencyUnavailableException;
+import oracle.sysman.emaas.platform.dashboards.core.model.DashboardApplicationType;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil.VersionedLink;
@@ -40,7 +45,6 @@ import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
-import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.PrivilegeChecker;
 
 import org.apache.logging.log4j.LogManager;
@@ -71,16 +75,16 @@ public class RegistrationEntity implements Serializable
 
 	public static final String NAME_REGISTRY_REL_SSO = "sso.endpoint/virtual";
 	public static final String APM_SERVICENAME = "ApmUI";
-	public static final String APM_VERSION = "1.0+";
+	public static final String APM_VERSION = "1.0";
 	public static final String APM_HOME_LINK = "sso.home";
 	//	public static final String APM_URL = "/emsaasui/apmUi/index.html";
 	public static final String LA_SERVICENAME = "LogAnalyticsUI";
-	public static final String LA_VERSION = "1.0+";
+	public static final String LA_VERSION = "1.0";
 	public static final String LA_HOME_LINK = "sso.search";
 	//no home link is needed
 	//	public static final String LA_URL = "/emsaasui/emlacore/html/log-analytics-search.html";
 	public static final String ITA_SERVICENAME = "emcitas-ui-apps";
-	public static final String ITA_VERSION = "1.0+";
+	public static final String ITA_VERSION = "1.0";
 	public static final String ITA_URL = "/emsaasui/emcpdfui/home.html?filter=ita";
 	public static final String TA_SERVICENAME = "TargetAnalytics";
 	//	public static final String TA_URL = "/emsaasui/emcta/ta/analytics.html";
@@ -157,12 +161,13 @@ public class RegistrationEntity implements Serializable
 	@SuppressWarnings("unchecked")
 	public List<LinkEntity> getAdminLinks()
 	{
+		ICacheManager cm= CacheManagers.getInstance().build();
 		Tenant cacheTenant = new Tenant(TenantContext.getCurrentTenant());
 		try {
-			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_ADMIN_LINK_CACHE,
-					CacheManager.LOOKUP_CACHE_KEY_ADMIN_LINKS+"-"+UserContext.getCurrentUser(), new ICacheFetchFactory() {
+			return (List<LinkEntity>) cm.getCache(CacheConstants.CACHES_ADMIN_LINK_CACHE).get(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_ADMIN_LINKS,UserContext.getCurrentUser())),
+					new CacheLoader() {
 						@Override
-						public Object fetchCachable(Object key) throws Exception
+						public Object load(Object key) throws Exception
 						{
 							List<String> userRoles = PrivilegeChecker.getUserRoles(TenantContext.getCurrentTenant(),
 							UserContext.getCurrentUser());
@@ -211,12 +216,12 @@ public class RegistrationEntity implements Serializable
 	@SuppressWarnings("unchecked")
 	public List<LinkEntity> getCloudServices()
 	{
+		ICacheManager cm= CacheManagers.getInstance().build();
 		String tenantName = TenantContext.getCurrentTenant();
 		Tenant cacheTenant = new Tenant(tenantName);
 		List<LinkEntity> list = null;
 		try {
-			list = (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_CLOUD_SERVICE_LINK_CACHE,
-					CacheManager.LOOKUP_CACHE_KEY_CLOUD_SERVICE_LINKS);
+			list = (List<LinkEntity>) cm.getCache(CacheConstants.CACHES_CLOUD_SERVICE_LINK_CACHE).get(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_CLOUD_SERVICE_LINKS)));
 			if (list != null) {
 				return list;
 			}
@@ -304,8 +309,7 @@ public class RegistrationEntity implements Serializable
 			}
 		}
 		list = sortServiceLinks(list);
-		CacheManager.getInstance().putCacheable(cacheTenant, CacheManager.CACHES_CLOUD_SERVICE_LINK_CACHE,
-				CacheManager.LOOKUP_CACHE_KEY_CLOUD_SERVICE_LINKS, list);
+		cm.getCache(CacheConstants.CACHES_CLOUD_SERVICE_LINK_CACHE).put(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_CLOUD_SERVICE_LINKS)),list);
 		return list;
 	}
 
@@ -330,12 +334,13 @@ public class RegistrationEntity implements Serializable
 	@SuppressWarnings("unchecked")
 	public List<LinkEntity> getHomeLinks()
 	{
+		ICacheManager cm= CacheManagers.getInstance().build();
 		Tenant cacheTenant = new Tenant(TenantContext.getCurrentTenant());
 		try {
-			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_HOME_LINK_CACHE,
-					CacheManager.LOOKUP_CACHE_KEY_HOME_LINKS, new ICacheFetchFactory() {
+			return (List<LinkEntity>) cm.getCache(CacheConstants.CACHES_HOME_LINK_CACHE).get(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_HOME_LINKS)),
+						new CacheLoader() {
 						@Override
-						public Object fetchCachable(Object key) throws Exception
+						public Object load(Object key) throws Exception
 						{
 							return sortServiceLinks(lookupLinksWithRelPrefix(NAME_HOME_LINK, true));
 						}
@@ -354,13 +359,14 @@ public class RegistrationEntity implements Serializable
 
 	public String getSsoLogoutUrl()
 	{
+		ICacheManager cm= CacheManagers.getInstance().build();
 		final String tenantName = TenantContext.getCurrentTenant();
 		Tenant cacheTenant = new Tenant(tenantName);
 		try {
-			return (String) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_SSO_LOGOUT_CACHE,
-					CacheManager.LOOKUP_CACHE_KEY_SSO_LOGOUT_URL, new ICacheFetchFactory() {
+			return (String) cm.getCache(CacheConstants.CACHES_SSO_LOGOUT_CACHE).get(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_SSO_LOGOUT_URL)),
+					new CacheLoader() {
 						@Override
-						public Object fetchCachable(Object key) throws Exception
+						public Object load(Object key) throws Exception
 						{
 							if (!DependencyStatus.getInstance().isEntityNamingUp())  {
 								LOGGER.error("Error to get SSO logout url: EntityNaming service is down");
@@ -380,10 +386,6 @@ public class RegistrationEntity implements Serializable
 							}
 						}
 					});
-		}
-		catch(DashboardException e){
-			LOGGER.error(e.getLocalizedMessage(), e);
-			return "";
 		}
 		catch (Exception e) {
 			LOGGER.error(e);
@@ -456,13 +458,13 @@ public class RegistrationEntity implements Serializable
 	@SuppressWarnings("all")
 	public List<LinkEntity> getVisualAnalyzers()
 	{
+		ICacheManager cm= CacheManagers.getInstance().build();
 		Tenant cacheTenant = new Tenant(TenantContext.getCurrentTenant());
 		try {
-
-			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_VISUAL_ANALYZER_LINK_CACHE,
-					CacheManager.LOOKUP_CACHE_KEY_VISUAL_ANALYZER, new ICacheFetchFactory() {
+			return (List<LinkEntity>) cm.getCache(CacheConstants.CACHES_VISUAL_ANALYZER_LINK_CACHE).get(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_VISUAL_ANALYZER)),
+					 new CacheLoader() {
 						@Override
-						public Object fetchCachable(Object key) throws Exception
+						public Object load(Object key) throws Exception
 						{
 							if (!DependencyStatus.getInstance().isEntityNamingUp())  {
 								LOGGER.error("Error to get Visual Analyzers link: EntityNaming service is down");
@@ -471,10 +473,6 @@ public class RegistrationEntity implements Serializable
 							return sortServiceLinks(lookupLinksWithRelPrefix(NAME_VISUAL_ANALYZER, true));
 						}
 					});
-		}
-		catch(DashboardException e){
-			LOGGER.error(e.getLocalizedMessage(), e);
-			return Collections.emptyList();
 		}
 		catch (Exception e) {
 			LOGGER.error(e);
@@ -488,12 +486,13 @@ public class RegistrationEntity implements Serializable
 	@SuppressWarnings("all")
 	public List<LinkEntity> getAssetRoots()
 	{
+		ICacheManager cm= CacheManagers.getInstance().build();
 		Tenant cacheTenant = new Tenant(TenantContext.getCurrentTenant());
 		try {
-			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_ASSET_ROOT_CACHE,
-					CacheManager.LOOKUP_CACHE_KEY_ASSET_ROOTS, new ICacheFetchFactory() {
+			return (List<LinkEntity>)cm.getCache(CacheConstants.CACHES_ASSET_ROOT_CACHE).get(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_ASSET_ROOTS)),
+					new CacheLoader() {
 						@Override
-						public Object fetchCachable(Object key) throws Exception
+						public Object load(Object key) throws Exception
 						{
 							if (!DependencyStatus.getInstance().isEntityNamingUp())  {
 								LOGGER.error("Error to get Asset Roots link: EntityNaming service is down");
@@ -508,10 +507,6 @@ public class RegistrationEntity implements Serializable
 							return links;
 						}
 					});
-		}
-		catch(DashboardException e) {
-			LOGGER.error(e.getLocalizedMessage(), e);
-			return Collections.emptyList();
 		}
 		catch (Exception e) {
 			LOGGER.error(e);
@@ -632,6 +627,23 @@ public class RegistrationEntity implements Serializable
 			return appSet;
 		}
 		for (String app : apps) {
+			// in case any bundle service is subscribed, all 7 (actually 8 plus TA) services are subscribed
+			if (DashboardApplicationType.OMCSE_STRING.equals(app) ||
+					DashboardApplicationType.OMCEE_STRING.equals(app) ||
+					DashboardApplicationType.OMCLOG_STRING.equals(app) ||
+					DashboardApplicationType.SECSE_STRING.equals(app) ||
+					DashboardApplicationType.SECSMA_STRING.equals(app)) {
+				appSet.add(APM_SERVICENAME);
+				appSet.add(ITA_SERVICENAME);
+				appSet.add(TA_SERVICENAME);
+				appSet.add(LA_SERVICENAME);
+				appSet.add(MONITORING_SERVICENAME);
+				appSet.add(SECURITY_ANALYTICS_SERVICENAME);
+				appSet.add(COMPLIANCE_SERVICENAME);
+				appSet.add(ORCHESTRATION_SERVICENAME);
+				LOGGER.info("Checking subscribed app set for app {}, it is a bundle service, so return all individual services", app);
+				break;
+			}
 			if (ApplicationOPCName.APM.toString().equals(app)) {
 				appSet.add(APM_SERVICENAME);
 			}

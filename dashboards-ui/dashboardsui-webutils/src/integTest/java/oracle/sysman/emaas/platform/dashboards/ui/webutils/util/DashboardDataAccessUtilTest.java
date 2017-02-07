@@ -1,5 +1,11 @@
 package oracle.sysman.emaas.platform.dashboards.ui.webutils.util;
 
+import java.math.BigInteger;
+
+import oracle.sysman.emaas.platform.emcpdf.cache.api.ICache;
+import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
+import oracle.sysman.emaas.platform.emcpdf.cache.exception.ExecutionException;
+import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -26,7 +32,7 @@ public class DashboardDataAccessUtilTest {
                 result = dashboard;
             }
         };
-        String dsb = DashboardDataAccessUtil.getDashboardData("tenant", "tenant.user", null, 1L);
+        String dsb = DashboardDataAccessUtil.getDashboardData("tenant", "tenant.user", null, BigInteger.ONE);
         Assert.assertEquals(dsb, dashboard);
     }
 
@@ -38,20 +44,24 @@ public class DashboardDataAccessUtilTest {
                 result = null;
             }
         };
-        String dsb = DashboardDataAccessUtil.getDashboardData("tenant", "tenant.user", null, 1L);
+        String dsb = DashboardDataAccessUtil.getDashboardData("tenant", "tenant.user", null, BigInteger.ONE);
         Assert.assertNull(dsb);
     }
 
     @Test(groups = { "s2" })
-    public void testGetUserTenantInfo(@Mocked final StringCacheUtil anyStringCacheUtil, @Mocked final RegistryLookupUtil anyRegistryLookupUtil, @Mocked final Link anyLink,
-                                      @Mocked final TenantSubscriptionUtil.RestClient anyRestClient) {
+    public void testGetUserTenantInfo(@Mocked final CacheManagers anyCacheManagers, @Mocked final ICacheManager anyCacheManager,
+                                      @Mocked final ICache anyCache, @Mocked final RegistryLookupUtil anyRegistryLookupUtil,
+                                      @Mocked final Link anyLink, @Mocked final TenantSubscriptionUtil.RestClient anyRestClient) throws ExecutionException {
         final String userInfo = "{\"currentUser\":\"emaastesttenant1.emcsadmin\",\"userRoles\":[\"APM Administrator\",\"APM User\",\"IT Analytics Administrator\",\"Log Analytics Administrator\",\"Log Analytics User\",\"IT Analytics User\"]}";
         new Expectations() {
             {
-                StringCacheUtil.getUserInfoCacheInstance();
-                result = anyStringCacheUtil;
-                anyStringCacheUtil.get(anyString);
+                CacheManagers.getInstance().build();
+                result = anyCacheManager;
+                anyCacheManager.getCache(anyString);
+                result = anyCache;
+                anyCache.get(any);
                 result = null;
+
                 RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, anyString);
                 result = anyLink;
                 anyLink.getHref();
@@ -95,12 +105,15 @@ public class DashboardDataAccessUtilTest {
     }
 
     @Test(groups = { "s2" })
-    public void testGetRegistrationDataNullLink(@Mocked final StringCacheUtil anyStringCacheUtil, @Mocked final RegistryLookupUtil anyRegistryLookupUtil) {
+    public void testGetRegistrationDataNullLink(@Mocked final CacheManagers anyCacheManagers, @Mocked final ICacheManager anyCacheManager,
+                                                @Mocked final ICache anyCache, @Mocked final RegistryLookupUtil anyRegistryLookupUtil) throws ExecutionException {
         new Expectations() {
             {
-                StringCacheUtil.getRegistrationCacheInstance();
-                result = anyStringCacheUtil;
-                anyStringCacheUtil.get(anyString);
+                CacheManagers.getInstance().build();
+                result = anyCacheManager;
+                anyCacheManager.getCache(anyString);
+                result = anyCache;
+                anyCache.get(any);
                 result = null;
                 RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, anyString);
                 result = null;

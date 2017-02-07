@@ -84,8 +84,8 @@ public class Dashboard
 
 	public static enum EnableEntityFilterState
 	{
-		FALSE("FALSE", 0), TRUE("TRUE", 1), AUTO("AUTO", 2);
-
+		FALSE("FALSE", 0), TRUE("TRUE", 1),GC("GC", 2);
+	
 		@JsonCreator
 		public static EnableEntityFilterState fromName(String name)
 		{
@@ -135,7 +135,7 @@ public class Dashboard
 
 	public static enum EnableTimeRangeState
 	{
-		FALSE("FALSE", 0), TRUE("TRUE", 1), AUTO("AUTO", 2);
+		FALSE("FALSE", 0), TRUE("TRUE", 1), GC("GC", 2);
 
 		@JsonCreator
 		public static EnableTimeRangeState fromName(String name)
@@ -191,8 +191,8 @@ public class Dashboard
 	public static final String DASHBOARD_TYPE_SET = "SET";
 	public static final Integer DASHBOARD_TYPE_CODE_SET = Integer.valueOf(2);
 
-	public static final EnableTimeRangeState DASHBOARD_ENABLE_TIME_RANGE_DEFAULT = EnableTimeRangeState.FALSE;
-	public static final EnableEntityFilterState DASHBOARD_ENABLE_ENTITY_FILTER_DEFAULT = EnableEntityFilterState.FALSE;
+	public static final EnableTimeRangeState DASHBOARD_ENABLE_TIME_RANGE_DEFAULT = EnableTimeRangeState.TRUE;
+	public static final EnableEntityFilterState DASHBOARD_ENABLE_ENTITY_FILTER_DEFAULT = EnableEntityFilterState.TRUE;
 	public static final EnableDescriptionState DASHBOARD_ENABLE_DESCRIPTION_DEFAULT = EnableDescriptionState.FALSE;
 	public static final boolean DASHBOARD_ENABLE_REFRESH_DEFAULT = Boolean.FALSE;
 
@@ -252,7 +252,7 @@ public class Dashboard
 		to.setApplicationType(from.getApplicationType());
 		if (from.getType().equals(DASHBOARD_TYPE_CODE_SET)) {
 			to.setEnableTimeRange(null);
-			to.setIsSystem(null);
+			to.setIsSystem(DataFormatUtils.integer2Boolean(from.getIsSystem()));
 			if (loadSubDashboards) {
 				List<EmsSubDashboard> emsSubDashboards = from
 						.getSubDashboardList();
@@ -874,10 +874,24 @@ public class Dashboard
 
 		Map<Dashboard, EmsSubDashboard> rows = new HashMap<Dashboard, EmsSubDashboard>();
 		List<EmsSubDashboard> subDashboardList = ed.getSubDashboardList();
+		DashboardServiceFacade dsf = new DashboardServiceFacade(ed.getTenantId());
+		List<BigInteger> originSubList=new ArrayList<>();
+		for(EmsSubDashboard dbd: subDashboardList){
+			originSubList.add(dbd.getSubDashboardId());
+		}
+		List<BigInteger> newSubList=new ArrayList<>();
+		for(Dashboard d:dashboards){
+			newSubList.add(d.getDashboardId());
+		}
+		originSubList.removeAll(newSubList);
+		//EMCPDF-2709
+		if(originSubList.size()>0){
+			dsf.updateSubDashboardVisibleInHome(ed,originSubList);
+		}
 		if (subDashboardList != null) {
 			for (int i = subDashboardList.size() - 1; i >= 0; i--) {
 				EmsSubDashboard emsSubDashboard = subDashboardList.get(i);
-				
+
 				ed.removeEmsSubDashboard(emsSubDashboard);
 			}
 		}
@@ -886,7 +900,6 @@ public class Dashboard
 			Dashboard subDashboard = dashboards.get(index);
 
 			Long tenantId = ed.getTenantId();
-			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 
 			BigInteger subDashboardId = subDashboard.getDashboardId();
 			EmsDashboard subbed = dsf.getEmsDashboardById(subDashboardId);

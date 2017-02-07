@@ -15,11 +15,12 @@ define(['knockout',
         'builder/right-panel/right.panel.filter',
         'builder/right-panel/right.panel.widget',
         'builder/right-panel/right.panel.edit',
+        'uifwk/js/util/zdt-util',
         'jqueryui',
         'builder/builder.core',
         'builder/widget/widget.model'
     ],
-    function(ko, $, dfu, mbu, uiutil, oj, ed, ssu, rpc, rpf, rpw,rpe) {
+    function(ko, $, dfu, mbu, uiutil, oj, ed, ssu, rpc, rpf, rpw,rpe,zdtUtilModel) {
         function ResizableView($b) {
             var self = this;
 
@@ -60,16 +61,14 @@ define(['knockout',
                 self.$list = $([].concat.apply($b.findEl(".fit-size"),$(".df-right-panel .fit-size")));
             };
 
-            if(!window.DEV_MODE && !self.brandingbarCssLoaded){
-                var brandingbarOldHeight = $(".emaas-appheader").height();
-                self.brandingbarCssLoaded = setInterval(function(){
-                    if(brandingbarOldHeight !== $(".emaas-appheader").height()){
-                        $b.triggerBuilderResizeEvent('uifwk-common-alta.css loaded');
-                        clearInterval(self.brandingbarCssLoaded);
-                    }
-                });
+            if(!window._uifwk){
+                window._uifwk={};
             }
-
+            if (!window._uifwk.brandingbar_css_load_callback) {
+                window._uifwk.brandingbar_css_load_callback = function(){
+                    $b.triggerBuilderResizeEvent('uifwk-common-alta.css loaded');
+                };
+            }
             self.initialize();
         }
 
@@ -101,8 +100,9 @@ define(['knockout',
             $b.registerObject(this, 'RightPanelModel');
 
             self.$b = $b;
+            self.isDashboardSet = dashboardsetToolBarModel.isDashboardSet;
             self.rightPanelControl=new rpc.rightPanelControl(self.$b);
-            self.rightPanelFilter = new rpf.RightPanelFilterModel(self.$b);
+            self.rightPanelFilter = new rpf.RightPanelFilterModel(self.$b, ko.unwrap(self.isDashboardSet));
             self.rightPanelWidget= new rpw.rightPanelWidget(self.$b);
             self.rightPanelEdit=new rpe.rightPanelEditModel(self.$b,self.dashboardsetToolBarModel);
             self.selectedDashboard = ko.observable(self.dashboard);
@@ -110,10 +110,15 @@ define(['knockout',
             self.tabletMode = new Builder.TabletEditorMode();
             self.modeType = Builder.isSmallMediaQuery() ? self.tabletMode : self.normalMode;
             self.isMobileDevice = self.modeType.editable === true ? 'false' : 'true';
-            self.isDashboardSet = dashboardsetToolBarModel.isDashboardSet;
             self.isOobDashboardset=dashboardsetToolBarModel.isOobDashboardset; 
             self.emptyDashboard = tilesViewModel && tilesViewModel.isEmpty();
             self.maximized = ko.observable(false);
+            var zdtUtil = new zdtUtilModel();
+            self.zdtStatus = ko.observable(false);
+            zdtUtil.detectPlannedDowntime(function (isUnderPlannedDowntime) {
+                self.zdtStatus(isUnderPlannedDowntime);
+//                self.zdtStatus(true)
+            });
 
             self.loadToolBarModel = function(toolBarModel,_$b){
                 self.toolBarModel = toolBarModel;
@@ -146,7 +151,7 @@ define(['knockout',
             };
           
             self.initialize = function() {
-                    if (self.isMobileDevice === 'true' || self.isOobDashboardset()) {
+                    if (self.isMobileDevice === 'true' || self.isOobDashboardset() || self.zdtStatus()) {
                         self.rightPanelControl.completelyHidden(true);
                         self.$b.triggerBuilderResizeEvent('OOB dashboard detected and hide right panel');
                     } else {
@@ -174,9 +179,15 @@ define(['knockout',
 
 
                     self.initEventHandlers();
-                    if(self.rightPanelControl.completelyHidden() === false) { //load widgets only when right panel is editable
-                        self.rightPanelWidget.loadWidgets();
-                    }
+                    
+                    if(self.rightPanelControl.completelyHidden() === false && self.rightPanelWidget.isWidgetLoaded()===false) { 
+                        //load widgets only when right panel is editable and have not loaded widget before
+                        self.rightPanelWidget.loadWidgets(null,function successCallback(){
+                            self.initDraggable();
+                            self.rightPanelWidget.tilesViewModel(self.tilesViewModel);
+                            ResizableView(self.$b);
+                        });
+                    }     
                     self.initDraggable();
                     self.rightPanelWidget.tilesViewModel(self.tilesViewModel);
                     ResizableView(self.$b);
@@ -216,7 +227,7 @@ define(['knockout',
 
             self.tileRestoredHandler = function() {
                 self.maximized(false);
-                if(self.isMobileDevice !== 'true' && !self.isOobDashboardset()) {
+                if(self.isMobileDevice !== 'true' && !self.isOobDashboardset() && !self.zdtStatus()) {
                     self.rightPanelControl.completelyHidden(false);
                 }
 
@@ -233,11 +244,17 @@ define(['knockout',
                 }
             };
             
+            self.zdtStatus.subscribe(function (newZdtStatus) {
+                if (newZdtStatus) {
+                    self.rightPanelControl.completelyHidden(true);
+                    self.$b.triggerBuilderResizeEvent('OOB dashboard detected and hide right panel');
+                }
+            });
+            
             function resetRightPanelWidth() {
                 $('.dbd-left-panel-show').css('width', '320px');
                 $('.dbd-left-panel-hide').css('width', '0');
             }
-          
         }
 
         Builder.registerModule(RightPanelModel, 'RightPanelModel');

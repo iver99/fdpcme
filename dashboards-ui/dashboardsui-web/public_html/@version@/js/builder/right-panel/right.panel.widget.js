@@ -11,9 +11,10 @@ function (ko, $, oj, dfu) {
         self.keywordInput=ko.observable('');
         self.keywordInput.extend({rateLimit: 700, method: 'notifyWhenChangesStop '});
         self.clearRightPanelSearch = ko.observable(false);
+        self.isWidgetLoaded =ko.observable(false);
         self.tilesViewModel = ko.observable($b.getDashboardTilesViewModel && $b.getDashboardTilesViewModel());
 
-        self.loadWidgets = function (req) {
+        self.loadWidgets = function (req,successCallback) {
             var widgetDS = new Builder.WidgetDataSource();
 
             widgetDS.loadWidgetData(
@@ -42,6 +43,8 @@ function (ko, $, oj, dfu) {
                             }
                         }
                         self.initWidgetDraggable();
+                        self.isWidgetLoaded(true);
+                        successCallback();
                     }
             );
         };
@@ -94,7 +97,7 @@ function (ko, $, oj, dfu) {
         self.keywordInput.subscribe(function () {
             self.keyword(self.keywordInput());
             self.searchWidgetsClicked();
-            setInputClearIcon()
+            setInputClearIcon();
         });
         
         self.searchWidgetsInputKeypressed = function (e, d) {
@@ -106,6 +109,7 @@ function (ko, $, oj, dfu) {
             return true;
         };
         self.searchWidgetsClicked = function () {
+            setInputClearIcon();
             self.loadWidgets();
         };
 

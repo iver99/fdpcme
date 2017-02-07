@@ -93,7 +93,15 @@ END;
 @&EMSAAS_SQL_ROOT/1.13.0/emaas_dashboards_seed_data_ta.sql &TENANT_ID
 @&EMSAAS_SQL_ROOT/1.13.0/emaas_dashboards_orchestration_dashboards_update.sql &TENANT_ID
 
-@&EMSAAS_SQL_ROOT/1.14.0/emaas_dashboards_widget_desc_update.sql &TENANT_ID
+ 
+@&EMSAAS_SQL_ROOT/1.14.0/emaas_dashboards_cos_oob_widget_update.sql &TENANT_ID
+@&EMSAAS_SQL_ROOT/1.14.0/emaas_dashboards_update_orchetration_workflows.sql &TENANT_ID
+
+@&EMSAAS_SQL_ROOT/1.15.0/emaas_dashboards_widget_desc_update.sql &TENANT_ID
+@&EMSAAS_SQL_ROOT/1.15.0/emaas_dashboards_cos_remove.sql &TENANT_ID
+@&EMSAAS_SQL_ROOT/1.15.0/emaas_dashboards_seed_data_ita.sql &TENANT_ID
+@&EMSAAS_SQL_ROOT/1.15.0/emaas_dashboards_update_orchetration_timesel.sql &TENANT_ID
+
 COMMIT;
 /
 BEGIN

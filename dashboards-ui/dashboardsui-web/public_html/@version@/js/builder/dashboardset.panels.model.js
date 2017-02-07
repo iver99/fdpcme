@@ -50,7 +50,7 @@ define([
             };
             
             self.showDashboard = function (dashboardsetToolBarModel) {
-                document.activeElement.blur();//to blur the focused item on another tab
+                document.activeElement && document.activeElement.blur();//to blur the focused item on another tab
                 var dashboardItem=dashboardsetToolBarModel.selectedDashboardItem(),               
                     dashboardId = dashboardItem.dashboardId,
                     divId = "dashboard-" + dashboardId,
@@ -64,12 +64,32 @@ define([
                     $(".dashboard-picker-container").removeClass("df-collaps");
                 }
                 
-                //show globalcontext banner for dashboards except Orchestration OOB dashboards
-                if(!(dashboardsetToolBarModel.dashboardExtendedOptions && dashboardsetToolBarModel.dashboardExtendedOptions.showGlobalContextBanner === false)) {                
-                    var headerWrapper = $("#headerWrapper")[0];
-                    if(headerWrapper) {
-                        var headerViewModel = ko.dataFor(headerWrapper);
-                        headerViewModel.brandingbarParams.showGlobalContextBanner(true);
+                var headerWrapper = $("#headerWrapper")[0];
+                if(headerWrapper) {
+                    var headerViewModel = ko.dataFor(headerWrapper);
+                }
+                
+                if(dashboardsetToolBarModel.isDashboardSet()) {
+                    headerViewModel && headerViewModel.brandingbarParams.showGlobalContextBanner(false);
+                    headerViewModel && headerViewModel.brandingbarParams.showTimeSelector(false);
+                    headerViewModel && headerViewModel.brandingbarParams.showEntitySelector(false);
+                }else {
+                    if(dashboardsetToolBarModel.dashboardInst.enableEntityFilter()!=="FALSE" || dashboardsetToolBarModel.dashboardInst.enableTimeRange()!=="FALSE") {    
+                        headerViewModel && headerViewModel.brandingbarParams.showGlobalContextBanner(true);
+                        if(dashboardsetToolBarModel.dashboardInst.enableTimeRange()==="FALSE") {
+                            headerViewModel && headerViewModel.brandingbarParams.showTimeSelector(false);
+                        }else {
+                            headerViewModel && headerViewModel.brandingbarParams.showTimeSelector(true);
+                        }
+                        if(dashboardsetToolBarModel.dashboardInst.enableEntityFilter()==="FALSE" || dashboardsetToolBarModel.dashboardInst.enableEntityFilter()==="TRUE") {
+                            headerViewModel && headerViewModel.brandingbarParams.showEntitySelector(false);
+                        }else {
+                            headerViewModel && headerViewModel.brandingbarParams.showEntitySelector(true);
+                        }
+                    }else {
+                        headerViewModel && headerViewModel.brandingbarParams.showGlobalContextBanner(false);
+                        headerViewModel && headerViewModel.brandingbarParams.showTimeSelector(false);
+                        headerViewModel && headerViewModel.brandingbarParams.showEntitySelector(false);
                     }
                 }
 
@@ -120,7 +140,9 @@ define([
                     dashboardsViewModle.showExploreDataBtn(false);
 
                     dashboardsViewModle.handleDashboardClicked = function(event, data) {
-
+                        if(event){
+                            event.preventDefault();
+                        }
                         var hasDuplicatedDashboard = false;
                         var isCreator=dashboardsetToolBarModel.dashboardsetConfig.isCreator();
                         var dataId;
@@ -215,7 +237,16 @@ define([
                     var tilesViewModel = new Builder.DashboardTilesViewModel($b, dashboardsetToolBarModel.dashboardInst/*, tilesView, urlChangeView*/);
                     var toolBarModel = new Builder.ToolBarModel($b, options);
                     tilesViewModel.toolbarModel = toolBarModel;
+                    /*var wrapperEleemnt = $b.find('.dbd-tile-widget-wrapper');
+                    if (wrapperEleemnt) {
+                        var el = $($("#dashboard-tile-widget-template").text());
+                        el.appendTo(wrapperEleemnt[0]);
+                    }*/
 
+                    var mode = tilesViewModel.editor.mode;
+                    var normalMode = tilesViewModel.editor.normalMode;
+                    var tabletMode = tilesViewModel.editor.tabletMode;
+                    Builder.eagerLoadDahshboardTilesAtPageLoad(dfu, ko, normalMode, tabletMode, mode, tilesViewModel.timeSelectorModel, tilesViewModel.targets);
                     //change dashboard name
                     toolBarModel.dashboardName.subscribe(function (dashboardName) {
                         var currentDashboardId = self.selectedDashboardInst().toolBarModel.dashboardId;
@@ -240,7 +271,7 @@ define([
                             if (tile.type() === "TEXT_WIDGET") {
                                 Builder.initializeTextTileAfterLoad(tilesViewModel.editor.mode, $b, tile, tilesViewModel.show, tilesViewModel.editor.tiles.deleteTile, Builder.isContentLengthValid);
                             } else {
-                                Builder.initializeTileAfterLoad(tilesViewModel.editor.mode, dashboard, tile, tilesViewModel.timeSelectorModel, tilesViewModel.targets, true, dashboardsetToolBarModel.dashboardInst);
+                                //Builder.initializeTileAfterLoad(tilesViewModel.editor.mode, dashboard, tile, tilesViewModel.timeSelectorModel, tilesViewModel.targets, true, dashboardsetToolBarModel.dashboardInst);
                                 Builder.getTileConfigure(tilesViewModel.editor.mode, dashboard, tile, tilesViewModel.timeSelectorModel, tilesViewModel.targets, dashboardsetToolBarModel.dashboardInst);
                             }
                         }

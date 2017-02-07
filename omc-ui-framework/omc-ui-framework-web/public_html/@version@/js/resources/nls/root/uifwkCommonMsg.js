@@ -21,9 +21,9 @@ define({
       "BRANDING_BAR_NAV_FAVORITES_LABEL": "My Favorites",
       "BRANDING_BAR_NAV_WELCOME_LABEL": "Welcome",
       "BRANDING_BAR_NAV_ALERTS_LABEL": "Alerts",
-      "BRANDING_BAR_NAV_VISUAL_ANALYZER_LABEL": "Visual Analyzers",
-      "BRANDING_BAR_NAV_LOG_LABEL": "Log",
-      "BRANDING_BAR_NAV_SEARCH_LABEL": "Search",
+      "BRANDING_BAR_NAV_VISUAL_ANALYZER_LABEL": "Explorers",
+      "BRANDING_BAR_NAV_LOG_LABEL": "Log Explorer",
+      "BRANDING_BAR_NAV_SEARCH_LABEL": "Data Explorer",
       "BRANDING_BAR_NAV_ADMIN_LABEL": "Administration",
       "BRANDING_BAR_NAV_ADMINISTRATION_LABEL": "Administration",
       "BRANDING_BAR_NAV_AGENTS_LABEL": "Agents",
@@ -67,6 +67,8 @@ define({
       "BRANDING_BAR_GLOBAL_CONTEXT_TIME":"{0} - {1}",
       "BRANDING_BAR_GLOBAL_CONTEXT_TIME_ALL":"All Time",
       "BRANDING_BAR_GLOBAL_CONTEXT_TOPOLOGY":"Topology",
+      "BRANDING_BAR_TOPOLOGY_MAXIMIZE": "Maximize",
+      "BRANDING_BAR_TOPOLOGY_RESTORE": "Restore",
       "WIDGET_SELECTOR_DEFAULT_DIALOG_TITLE": "Open",
       "WIDGET_SELECTOR_WIDGET_GROUP_LABEL": "Widget Group",
       "WIDGET_SELECTOR_SEARCH_BOX_PLACEHOLDER": " Search widgets.",
@@ -144,10 +146,10 @@ define({
       "DATETIME_PICKER_ERROR": "Error!",
       "DATETIME_PICKER_FORMAT_ERROR_MSG": "Please enter valid \"mm/dd/yyyy\" for date or \"hh:mm AM/PM\" for time.",
       "DATETIME_PICKER_TIME_VALIDATE_ERROR_MSG": "The start date/time is after the end date/time.",
-      "DATETIME_PICKER_BEYOND_WINDOW_LIMIT_ERROR_MSG": "The selected time range exceeds the maximum time range of ",
-      "DATETIME_PICKER_WINDOW_SIZE_WITH_DAYS": "{0} day(s) {1} hour(s) {2} minute(s).",
-      "DATETIME_PICKER_WINDOW_SIZE_WITH_HOURS": "{0} hour(s) {1} minute(s).",
-      "DATETIME_PICKER_WINDOW_SIZE_WITH_MINUTES": "{0} minute(s).",
+      "DATETIME_PICKER_BEYOND_WINDOW_LIMIT_ERROR_MSG": "The selected time range should not exceed ",
+      "DATETIME_PICKER_WINDOW_SIZE_WITH_DAYS": "{0} days {1} hours {2} minutes.",
+      "DATETIME_PICKER_WINDOW_SIZE_WITH_HOURS": "{0} hours {1} minutes.",
+      "DATETIME_PICKER_WINDOW_SIZE_WITH_MINUTES": "{0} minutes.",
       "DATETIME_PICKER_SHOW_TODAY": "Today",
       "DATETIME_PICKER_SHOW_YESTERDAY": "Yesterday",
       "DATETIME_PICKER_TIME_FILTER_INFO_HOURS_EXCLUDED": "Hours excluded: ",
@@ -164,6 +166,9 @@ define({
       "TIME_FILTER_OPTION_ALL": "All",
       "TIME_FILTER_HOURS_FILTER_ERRMSG": "Time range format invalid. Re-enter time range(s).",
       "TIME_FILTER_DAYS_FILTER_ERRMSG": "Select at least one day.",
-      "TIME_FILTER_MONTHS_FILTER_ERRMSG": "Select at least one month."
+      "TIME_FILTER_MONTHS_FILTER_ERRMSG": "Select at least one month.",
+
+      //Misc messages
+      "PILL_REMOVE_TITLE": "Remove"
 });
 
