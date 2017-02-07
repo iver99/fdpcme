@@ -407,6 +407,12 @@ require(['knockout',
                     }
                 );
 
+            }, function(e) {
+                console.log(e.errorMessage());
+                if (e.errorCode && e.errorCode() === 20001) {
+                    oj.Logger.error("Dashboard not found. Redirect to dashboard error page", true);
+                    location.href = "./error.html?invalidUrl=" + encodeURIComponent(location.href);
+                }
             });
         });
     }
