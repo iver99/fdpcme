@@ -92,16 +92,18 @@ public class HtmlBootstrapJsUtil {
             instanceList = lookUpClient.getInstancesWithLinkRelPrefix(linkPrefix, protocol);
         }
         // TODO: Maybe check for app subbscriptions??
-        for (InstanceInfo internalInstance : instanceList) {
-            LOGGER.info("lookupLinksWithRelPrefix for Service: " + internalInstance.getServiceName() + ", protocol: " + protocol);
-            List<Link> links;
-            if (protocol == null || protocol.isEmpty()) {
-                links = internalInstance.getLinksWithRelPrefix(linkPrefix);
-            } else {
-                links = internalInstance.getLinksWithRelPrefixWithProtocol(linkPrefix, protocol);
-            }
-            if (links != null && !links.isEmpty()) {
-                linkList.addAll(links);
+        if (instanceList != null && !instanceList.isEmpty()) {
+            for (InstanceInfo internalInstance : instanceList) {
+                LOGGER.info("lookupLinksWithRelPrefix for Service: " + internalInstance.getServiceName() + ", protocol: " + protocol);
+                List<Link> links;
+                if (protocol == null || protocol.isEmpty()) {
+                    links = internalInstance.getLinksWithRelPrefix(linkPrefix);
+                } else {
+                    links = internalInstance.getLinksWithRelPrefixWithProtocol(linkPrefix, protocol);
+                }
+                if (links != null && !links.isEmpty()) {
+                    linkList.addAll(links);
+                }
             }
         }
         LOGGER.debug("lookupLinksWithRelPrefix(" + linkPrefix + "): ", linkList.toString());
@@ -134,21 +136,23 @@ public class HtmlBootstrapJsUtil {
      */
     private static Map<String, String> getSdkFilesMap(List<Link> relLinks) {
         Map<String, String> sdkVersionFilesMap = new HashMap<>();
-        for (Link link : relLinks) {
-            try {
-                URL url = new URL(link.getHref());
-                String path = url.getPath();
-                String key = link.getRel().substring(SDK_FILE.length() + 1);    // plus one to accomodate "/"
-                LOGGER.info("getSdkFilesMap() key: " + key);
-                String value = path.substring(1);   // to neglect the preceeding "/"
-                if (!sdkVersionFilesMap.containsKey(key)) {
-                    sdkVersionFilesMap.put(key, value);
-                    LOGGER.info("getSdkFilesMap() value: " + value);
-                } else {
-                    LOGGER.info("getSdkFilesMap() key-value is present already: " + sdkVersionFilesMap.get(key));
+        if (relLinks != null && !relLinks.isEmpty()) {
+            for (Link link : relLinks) {
+                try {
+                    URL url = new URL(link.getHref());
+                    String path = url.getPath();
+                    String key = link.getRel().substring(SDK_FILE.length() + 1);    // plus one to accomodate "/"
+                    LOGGER.info("getSdkFilesMap() key: " + key);
+                    String value = path.substring(1);   // to neglect the preceeding "/"
+                    if (!sdkVersionFilesMap.containsKey(key)) {
+                        sdkVersionFilesMap.put(key, value);
+                        LOGGER.info("getSdkFilesMap() value: " + value);
+                    } else {
+                        LOGGER.info("getSdkFilesMap() key-value is present already: " + sdkVersionFilesMap.get(key));
+                    }
+                } catch (MalformedURLException me) {
+                    LOGGER.error("Malformed URL getSdkFilesMap(" + relLinks.toString() + "): ", me);
                 }
-            } catch (MalformedURLException me) {
-                LOGGER.error("Malformed URL getSdkFilesMap(" + relLinks.toString() + "): ", me);
             }
         }
         LOGGER.debug("getSdkFilesMap(" + relLinks.toString() + ") for: ", sdkVersionFilesMap.toString());
