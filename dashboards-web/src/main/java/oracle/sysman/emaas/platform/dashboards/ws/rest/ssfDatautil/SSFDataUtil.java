@@ -5,20 +5,32 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
 
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
+import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil.RestClient;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * 
+ * @author pingwu
+ *
+ */
 public class SSFDataUtil {
 	
 	private static final String SERVICE_NAME = "SavedSearch";
@@ -28,14 +40,19 @@ public class SSFDataUtil {
 	private static final String SAVE_SEARCH_DATA_URI = "import";
 	private final static Logger LOGGER = LogManager.getLogger(SSFDataUtil.class);
 	
-	public static String getSSFData(String userTenant, String tenantIdParam,Object requestEntity) {
-		return accessSSFWebService(userTenant, tenantIdParam, GET_SEARCH_DATA_URI,requestEntity);
+	private static final String USER_IDENTITY_DOMAIN_NAME = "X-USER-IDENTITY-DOMAIN-NAME";
+	private static final String REMOTE_USER = "X-REMOTE-USER";
+	private static final String AUTHORIZATION = "Authorization";
+	
+	
+	public static String getSSFData(String userTenant, String requestEntity) {
+		return accessSSFWebService(userTenant,GET_SEARCH_DATA_URI,requestEntity);
 	}
 	
-	public static String saveSSFData(String userTenant, String tenantIdParam,Object requestEntity) {
-		return accessSSFWebService(userTenant, tenantIdParam, SAVE_SEARCH_DATA_URI,requestEntity);
+	public static String saveSSFData(String userTenant, String requestEntity) {
+		return accessSSFWebService(userTenant, SAVE_SEARCH_DATA_URI,requestEntity);
 	}
-	
+	/*
 	private static String accessSSFWebService(String userTenant, String tenantIdParam, 
 			String uri, Object requestEntity)
 	{
@@ -49,22 +66,47 @@ public class SSFDataUtil {
         LOGGER.info("SSF REST API href is: " + link.getHref());
         String ssfHref = link.getHref() + "/" + uri;
         TenantSubscriptionUtil.RestClient rc = new TenantSubscriptionUtil.RestClient();
+        Map<String, Object> headers = new HashMap<String, Object>();
+        headers.put("X-USER-IDENTITY-DOMAIN-NAME", tenantIdParam);
+        headers.put("X-REMOTE-USER", userTenant);
         
-        String response = rc.put(ssfHref, null, requestEntity, tenantIdParam);
+        String response = rc.put(ssfHref, headers, requestEntity, tenantIdParam);
         		//.get(ssfHref, tenantIdParam, userTenant);
         LOGGER.info("Retrieved ssf data is: {}", response);
         return response;
-        /*
+       
+	}
+	*/
+	private static String accessSSFWebService(String remoteUser,String uri,String data)
+	{
+		String value = "";
+		CloseableHttpClient client = HttpClients.createDefault();
+		Link link = RegistryLookupUtil.getServiceInternalLink(SERVICE_NAME, VERSION, PATH, null);
+		if (link == null || StringUtils.isEmpty(link.getHref())) {
+            LOGGER.warn("Retrieving ssf data for tenant {}: null/empty ssfLink retrieved from service registry.");
+            return null;
+        }
+        LOGGER.info("SSF REST API href is: " + link.getHref());
+        String ssfHref = link.getHref() + "/" + uri;
 		if (link != null) {
-			String href = link.getHref();
-			String url = href + "/" + uri;
-			HttpGet get = new HttpGet(url);
-			get.addHeader(USER_IDENTITY_DOMAIN_NAME, domainName);
-			get.addHeader(AUTHORIZATION, authorization);
-			get.addHeader(REMOTE_USER, remoteUser);
+			HttpPut put = new HttpPut(ssfHref);
+			try {
+				StringEntity params = new StringEntity(data,"UTF-8");
+			    params.setContentType("application/json");
+			    put.setEntity(params);
+			} catch (UnsupportedEncodingException e) {
+				LOGGER.error(e.getLocalizedMessage(), e);
+			}
+			
+		    char[] authToken = RegistrationManager.getInstance().getAuthorizationToken();
+			String authorization = String.copyValueOf(authToken);
+			String domainName = remoteUser.substring(0, remoteUser.indexOf("."));
+			put.addHeader(USER_IDENTITY_DOMAIN_NAME, domainName);
+			put.addHeader(AUTHORIZATION, authorization);
+			put.addHeader(REMOTE_USER, remoteUser);
 			CloseableHttpResponse response = null;
 			try {
-				response = client.execute(get);
+				response = client.execute(put);
 			}
 			catch (ClientProtocolException e) {
 				LOGGER.error(e.getLocalizedMessage(), e);
@@ -78,7 +120,7 @@ public class SSFDataUtil {
 				if (entity != null) {
 					try {
 						instream = entity.getContent();
-						ssfData = getStrFromInputSteam(instream);
+						value = getStrFromInputSteam(instream);
 					}
 					catch (IllegalStateException e) {
 						LOGGER.error(e.getLocalizedMessage(), e);
@@ -102,10 +144,9 @@ public class SSFDataUtil {
 				}
 			}
 		}
-		return ssfData; */
+		return value;
 	}
-	
-	/*
+
 	private static String getStrFromInputSteam(InputStream in)
 	{
 		BufferedReader bf = null;
@@ -139,5 +180,4 @@ public class SSFDataUtil {
 
 		return buffer.toString();
 	}
-*/
 }

@@ -40,7 +40,7 @@ public class DataExportManager {
 	 */	
 	public List<Map<String,Object>> getDashboardSetByDashboardSetIDs(List<BigInteger> ids, Long tenantId) {
 		if (ids != null && !ids.isEmpty()) {
-			String sql = "SELECT * FROM EMS_DASHBOARD_SET WHERE TENANT_ID = ? AND DASHBOARD_SET_ID IN ("
+			String sql = "SELECT * FROM EMS_DASHBOARD_SET WHERE TENANT_ID = " + tenantId + " AND DASHBOARD_SET_ID IN ("
 					+ generateQueryCondition(ids) + ")";
 			return getTableData(sql);
 		}
@@ -54,7 +54,7 @@ public class DataExportManager {
 	 */
 	public List<Map<String,Object>> getDashboardByDashboardIDs(List<BigInteger> ids, Long tenantId) {
 		if (ids != null && !ids.isEmpty()) {
-			String sql = "SELECT * FROM EMS_DASHBOARD WHERE TENANT_ID = ? AND DASHBOARD_ID IN ("
+			String sql = "SELECT * FROM EMS_DASHBOARD WHERE TENANT_ID = " + tenantId + "AND DASHBOARD_ID IN ("
 					+ generateQueryCondition(ids) + ")";
 			return getTableData(sql);
 		}
@@ -68,7 +68,7 @@ public class DataExportManager {
 	 */
 	public List<Map<String,Object>> getTileByDashboardIDs(List<BigInteger> ids, Long tenantId) {
 		if (ids != null && !ids.isEmpty()) {
-			String sql = "SELECT * FROM EMS_DASHBOARD_TILE WHERE TENANT_ID = ? AND DASHBOARD_ID IN ("
+			String sql = "SELECT * FROM EMS_DASHBOARD_TILE WHERE TENANT_ID = " + tenantId + " AND DASHBOARD_ID IN ("
 					+ generateQueryCondition(ids) + ")";
 			return getTableData(sql);
 		}
@@ -82,7 +82,7 @@ public class DataExportManager {
 	 */
 	public List<Map<String,Object>> getTileParamsByTileIDs(List<BigInteger> ids, Long tenantId) {
 		if (ids != null && !ids.isEmpty()) {
-			String sql = "SELECT * FROM EMS_DASHBOARD_TILE_PARAMS WHERE TENANT_ID = ? AND TILE_ID IN ("
+			String sql = "SELECT * FROM EMS_DASHBOARD_TILE_PARAMS WHERE TENANT_ID = " + tenantId + " AND TILE_ID IN ("
 					+ generateQueryCondition(ids) + ")";
 			return getTableData(sql);
 		}
@@ -96,7 +96,7 @@ public class DataExportManager {
 	 */
 	public List<Map<String,Object>> getUserOptionsByDashboardIds(List<BigInteger> ids, Long tenantId) {
 		if (ids != null && !ids.isEmpty()) {
-			String sql = "SELECT * FROM EMS_DASHBOARD_USER_OPTIONS WHERE TENANT_ID = ? AND DASHBOARD_ID IN ("
+			String sql = "SELECT * FROM EMS_DASHBOARD_USER_OPTIONS WHERE TENANT_ID = " + tenantId + " AND DASHBOARD_ID IN ("
 					+ generateQueryCondition(ids) + ")";
 			return getTableData(sql);
 		}

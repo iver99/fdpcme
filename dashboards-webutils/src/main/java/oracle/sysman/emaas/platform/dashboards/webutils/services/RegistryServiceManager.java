@@ -414,7 +414,6 @@ public class RegistryServiceManager implements ApplicationServiceManager
 			}
 			if (applicationUrlHttps != null) {
 				links.add(new Link().withRel("zdt/counts").withHref(applicationUrlHttps + NAV_ZDT_COUNTS));
-				links.add(new Link().withRel("ssf.widget.changed").withHref(applicationUrlHttp + NAV_WIDGET_NOTIFY));
 			}
 			if (applicationUrlHttps != null) {
 				links.add(new Link().withRel("ssf.widget.changed").withHref(applicationUrlHttps + NAV_WIDGET_NOTIFY));

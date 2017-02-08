@@ -85,7 +85,7 @@ public class DataImportManager
 		}
 	}
 
-	public int syncDashboardTileParam( BigInteger tileId, String paramName,
+	public int saveDashboardTileParam( BigInteger tileId, String paramName,
 									  Long tenantId, Integer isSystem, Long paramType, String paramValueStr,
 									  Long paramValueNum, String paramValueTimestamp, String creationDate, String lastModificationDate) {
 		LOGGER.debug("Calling DataImportManager.saveDashboardTileParam");

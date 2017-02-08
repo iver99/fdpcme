@@ -14,6 +14,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -42,8 +47,11 @@ import oracle.sysman.emaas.platform.dashboards.core.exception.resource.UserOptio
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.ScreenshotPathGenerator;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import com.sun.jersey.core.util.Base64;
@@ -52,6 +60,8 @@ import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionE
 import oracle.sysman.emaas.platform.dashboards.core.DashboardConstants;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardManager;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardsFilter;
+import oracle.sysman.emaas.platform.dashboards.core.DataExportManager;
+import oracle.sysman.emaas.platform.dashboards.core.DataImportManager;
 import oracle.sysman.emaas.platform.dashboards.core.UserOptionsManager;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DatabaseDependencyUnavailableException;
@@ -66,9 +76,18 @@ import oracle.sysman.emaas.platform.dashboards.core.model.UserOptions;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
+import oracle.sysman.emaas.platform.dashboards.importDataEntity.DataRowsEntity;
 import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.ssfDatautil.SSFDataUtil;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.DashboardAPIUtil;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.util.ExportDataUtil;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.util.ImportDataUtil;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.DashboardRowEntity;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.DashboardSetRowEntity;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.DashboardTileParamsRowEntity;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.DashboardTileRowEntity;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.DashboardUserOptionsRowEntity;
 
 /**
  * @author wenjzhu
@@ -788,6 +807,97 @@ public class DashboardAPI extends APIBase
 			clearUserContext();
 		}
 	}
+	
+
+	private static final String DASHBOARD_SET_TABLE_NAME = "EMS_DASHBOARD_SET";
+	private static final String DASHBOARD_TABLE_NAME = "EMS_DASHBOARD";
+	private static final String DASHBOARD_TILE_TABLE_NAME = "EMS_DASHBOARD_TILE";
+	private static final String DASHBOARD_TILE_PARAMS_TABLE_NAME = "EMS_DASHBOARD_TILE_PARAMS";
+	private static final String USER_OPTIONS_TABLE_NAME = "EMS_DASHBOARD_USER_OPTIONS";
+	
+	@PUT
+	@Path("/export")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response exportDashboards(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
+			@HeaderParam(value = "X-REMOTE-USER") String userTenant, 
+			@HeaderParam(value = "Referer") String referer,
+			JSONArray array){
+		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [PUT] /v1/dashboards/export");
+		List<BigInteger> dbdIds = new ArrayList<BigInteger>();
+		if (array != null && array.length() > 0) {
+			for (int i = 0; i < array.length(); i++) {
+				try {
+					dbdIds.add(new BigInteger(array.getString(i)));
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		} 
+		Long tenantId = null;
+		try {
+			tenantId = getTenantId(tenantIdParam);
+		} catch (BasicServiceMalfunctionException | DashboardException e) {
+			LOGGER.debug("could not get tenant ID from header");
+		}
+		JSONObject obj = new JSONObject();
+		DataExportManager exportManager = DataExportManager.getInstatnce();
+		ExportDataUtil exportUtil = new ExportDataUtil();
+		
+		try {
+			//dashboard set table data
+			List<Map<String, Object>> dashboardSets = exportManager.getDashboardSetByDashboardSetIDs(dbdIds, tenantId);
+			JSONArray tableData = exportUtil.getJSONArrayForListOfObjects(DASHBOARD_SET_TABLE_NAME,dashboardSets);
+			obj.put(DASHBOARD_SET_TABLE_NAME, tableData);
+			
+			List<BigInteger> subDbds = exportUtil.getSubDashboardIds(dashboardSets);
+			subDbds.addAll(dbdIds);
+			List<BigInteger> allDbds = exportUtil.getAllDashboardIds(subDbds);
+			//dashboard table data
+			List<Map<String, Object>> dashboards = exportManager.getDashboardByDashboardIDs(allDbds, tenantId);
+			tableData = exportUtil.getJSONArrayForListOfObjects(DASHBOARD_TABLE_NAME,dashboards);
+			obj.put(DASHBOARD_TABLE_NAME, tableData);
+			//dashboard tile table data
+			List<Map<String, Object>> tiles = exportManager.getTileByDashboardIDs(allDbds, tenantId);
+			tableData = exportUtil.getJSONArrayForListOfObjects(DASHBOARD_TILE_TABLE_NAME,tiles);
+			obj.put(DASHBOARD_TILE_TABLE_NAME, tableData);
+			List<BigInteger> tileIds = exportUtil.getTileIds(tiles);
+			//dashboard tile params table data
+			List<Map<String, Object>> tileParams = null;
+			if (tileIds != null && !tileIds.isEmpty()) {			
+				tileParams = exportManager.getTileParamsByTileIDs(tileIds, tenantId);
+			}
+			tableData = exportUtil.getJSONArrayForListOfObjects(DASHBOARD_TILE_PARAMS_TABLE_NAME,tileParams);
+			obj.put(DASHBOARD_TILE_PARAMS_TABLE_NAME, tableData);
+			//dashboard user options table data
+			List<Map<String, Object>> userOptions = exportManager.getUserOptionsByDashboardIds(allDbds, tenantId);
+			tableData = exportUtil.getJSONArrayForListOfObjects(USER_OPTIONS_TABLE_NAME,userOptions);
+			obj.put(USER_OPTIONS_TABLE_NAME, tableData);
+			//ssf data
+			List<BigInteger> widgetIds = exportUtil.getWidgetIds(tiles);
+	 		JSONArray requestEntity = new JSONArray();
+			if (widgetIds != null) {
+				for (BigInteger widgetId : widgetIds) {
+					requestEntity.put(widgetId.toString());
+				}
+			}
+			String ssfDataResponse = SSFDataUtil.getSSFData(userTenant, requestEntity.toString());
+			JSONObject ssfObject = new JSONObject(ssfDataResponse);
+			JSONArray savedSearchArray = ssfObject.optJSONArray("EMS_ANALYTICS_SEARCH");
+			JSONArray savedSearchParamsArray = ssfObject.optJSONArray("EMS_ANALYTICS_SEARCH_PARAMS");
+			obj.put("EMS_ANALYTICS_SEARCH", savedSearchArray);
+			obj.put("EMS_ANALYTICS_SEARCH_PARAMS", savedSearchParamsArray);
+			//response data
+			
+		} catch (JSONException e) {
+			LOGGER.error(e.getLocalizedMessage(), e);
+		}
+		
+		return Response.status(Status.OK).entity(obj).build();
+	}
+	
+	
 
 	private void logkeyHeaders(String api, String x_remote_user, String domain_name)
 	{
@@ -841,4 +951,39 @@ public class DashboardAPI extends APIBase
 		dbd.setScreenShotHref(screenShotUrl);
 		return dbd;
 	}
+	
+	@PUT
+	@Path("/import")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response importDashboards(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
+			@HeaderParam(value = "X-REMOTE-USER") String userTenant,
+			JSONObject jsonObject){
+		
+		infoInteractionLogAPIIncomingCall(null, null, "Service call to [PUT] /v1/dashboards/import");
+		LOGGER.info("Service call to /v1/import/dashboards");
+		ImportDataUtil importUtil = new ImportDataUtil();
+		try {
+			DataRowsEntity data = getJsonUtil().fromJson(jsonObject.toString(), DataRowsEntity.class);
+			//save dashboard data
+			importUtil.saveDashboardData(data);
+			//save savedsearch data
+			JSONArray savedSearchObject = jsonObject.getJSONArray("EMS_ANALYTICS_SEARCH");
+			JSONArray savedSearchParamObject = jsonObject.getJSONArray("EMS_ANALYTICS_SEARCH_PARAMS");
+			JSONObject obj = new JSONObject();
+			obj.put("", savedSearchObject);
+			obj.put("", savedSearchParamObject);
+			SSFDataUtil.saveSSFData(userTenant, obj.toString());
+			return Response.status(Status.NO_CONTENT).build();
+		}
+		catch (IOException e) {
+			LOGGER.error(e.getLocalizedMessage(), e);
+			ErrorEntity error = new ErrorEntity(e);
+			return buildErrorResponse(error);
+		} catch (JSONException e) {
+			LOGGER.error(e.getLocalizedMessage(), e);
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e).build();
+		}
+		
+	}
+
 }
