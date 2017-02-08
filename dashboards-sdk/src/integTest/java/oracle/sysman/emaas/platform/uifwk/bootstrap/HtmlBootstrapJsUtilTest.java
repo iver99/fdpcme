@@ -24,7 +24,7 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 
 public class HtmlBootstrapJsUtilTest {
 
-    @Test
+    @Test(groups = { "s2" })
     public void testGetSDKVersionJSWithLinks(
                                 @Mocked final LookupManager lookupManager,
                                 @Mocked final LookupClient lookupClient,
@@ -45,7 +45,7 @@ public class HtmlBootstrapJsUtilTest {
         Assert.assertEquals(newJs, expectedJs);
     }
     
-    @Test
+    @Test(groups = { "s2" })
     public void testGetSDKVersionJSToAddNoLinks(
                                 @Mocked final LookupManager lookupManager,
                                 @Mocked final LookupClient lookupClient,
@@ -70,11 +70,11 @@ public class HtmlBootstrapJsUtilTest {
         ArrayList<Link> al = new ArrayList<Link>();
         Link link1 = new Link();
         link1.withHref("https://den02dtb.us.oracle.com:7004/emsaasui/emcta/ta/1.15.0-170202.111534/js/shared-components/emcta-topology-impl");
-        link1.withRel("sdkVersionFile/emsaasui/emcta/ta/js/sdk/topology/emcta-topology");
+        link1.withRel("versionLookupSDK/emsaasui/emcta/ta/js/sdk/topology/emcta-topology");
         al.add(link1);
         Link link2 = new Link();
         link2.withHref("https://den02dtb.us.oracle.com:7004/emsaasui/emcta/ta/1.15.0-170202.111534/js/entitycard/EntityCardRegistryImpl");
-        link2.withRel("sdkVersionFile/emsaasui/emcta/ta/js/sdk/entitycard/EntityCardUtil");
+        link2.withRel("versionLookupSDK/emsaasui/emcta/ta/js/sdk/entitycard/EntityCardUtil");
         al.add(link2);
         return al;
     }

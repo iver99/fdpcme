@@ -200,6 +200,7 @@ task DEVTest(type:EMTest,dependsOn: DEVTest_ws){
 	include "oracle/sysman/emaas/platform/emcpdf/cache/tool/*.class"
 	include "oracle/sysman/emaas/platform/emcpdf/cache/util/*.class"
 	include "oracle/sysman/emaas/platform/uifwk/nls/filter/NLSFilterTest.class"
+        include "oracle/sysman/emaas/platform/uifwk/bootstrap/HtmlBootstrapJsUtilTest.class"
 	
 	useRestAssured=true
 	ext.set("testType", "unit")
