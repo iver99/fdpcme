@@ -55,6 +55,7 @@ public class BugVerification extends LoginAndLogout
 		webd.getLogger().info("Start to remove the test data...");
 
 		DashBoardUtils.deleteDashboard(webd, "Dashboard_EMCPDF2040");
+		DashBoardUtils.deleteDashboard(webd, "Dashboard_EMCPDF2856");
 
 		webd.getLogger().info("All test data have been removed");
 
@@ -219,6 +220,48 @@ public class BugVerification extends LoginAndLogout
 		WelcomeUtil.isServiceExistedInWelcome(webd, WelcomeUtil.SERVICE_NAME_DASHBOARDS);
 		webd.getLogger().info("welcome page is verified successfully");
 		webd.getLogger().info("complete testing in testEMPCDF_832");
+	}
+	
+	@Test
+	public void testEMCPDF_2856()
+	{
+		//Initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test case: testEMCPDF_2856");
+
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//create dashboard
+		BrandingBarUtil.visitDashboardHome(webd);
+		DashboardHomeUtil.gridView(webd);
+		DashboardHomeUtil.createDashboard(webd, "Dashboard_EMCPDF2856", null);
+		DashboardBuilderUtil.verifyDashboard(webd, "Dashboard_EMCPDF2856", null, false);
+		
+		//verify dashboard in builder page
+		webd.getLogger().info("verify the dashboard created Successfully");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, "Dashboard_EMCPDF2856", null, true), "Create dashboard failed!");
+		
+		//set it as home
+		webd.getLogger().info("Set home page");
+		Assert.assertTrue(DashboardBuilderUtil.toggleHome(webd), "Set the Dashboard_EMCPDF2856 as Home failed!");
+		
+		//check home page
+		webd.getLogger().info("Access to the home page");
+		BrandingBarUtil.visitMyHome(webd);
+		webd.getLogger().info("Verfiy the home page");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd,  "Dashboard_EMCPDF2856", null, true), "It is NOT the home page!");
+		
+		//logout and login 
+		LoginAndLogout.logoutMethod();
+		LoginAndLogout.loginMethod();
+		
+		//go to the home page and check GlobalContext exist
+		webd.getLogger().info("Access to the home page");
+		BrandingBarUtil.visitMyHome(webd);
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd,  "Dashboard_EMCPDF2856", null, true), "It is NOT the home page!");
+
 	}
 
 }
