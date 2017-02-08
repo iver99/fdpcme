@@ -857,20 +857,12 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                 if (compositeEntity) {
                     return compositeEntity;
                 }
-                var compositeName = getIndividualContext('composite', 'compositeName');
-                if (!compositeName) {
-                    if (self.getCompositeMeId() && getIndividualContext('composite', 'compositeNeedRefresh') !== 'false') {
-                        //Fetch composite name/type
-                        queryODSEntitiesByMeIds([self.getCompositeMeId()], fetchCompositeCallback);
-                    }
-
-                }
                 var entity = new EntityObject();
-                entity['meId'] = getIndividualContext('composite', 'compositeMEID');
-                entity['displayName'] = getIndividualContext('composite', 'compositeDisplayName');
-                entity['entityName'] = getIndividualContext('composite', 'compositeName');
-                entity['entityType'] = getIndividualContext('composite', 'compositeType');
-                entity['meClass'] = getIndividualContext('composite', 'compositeClass');
+                entity['meId'] = self.getCompositeMeId();
+                entity['displayName'] = self.getCompositeDisplayName();
+                entity['entityName'] = self.getCompositeName();
+                entity['entityType'] = self.getCompositeType();
+                entity['meClass'] = self.getCompositeClass();
                 compositeEntity = entity;
 
                 //Cache the entities data
