@@ -29,6 +29,7 @@ define([
 
             var dashboardInstMap =dashboardsetToolBarModel.dashboardInstMap = {};
             var options = {"autoRefreshInterval":dashboardsetToolBarModel.autoRefreshInterval};
+            var hasPopDialogBinded = false;
 
             window.selectedDashboardInst = self.selectedDashboardInst = ko.observable(null);
 
@@ -407,6 +408,16 @@ define([
                 var $container = $('#dashboards-tabs-contents');
                 $container.removeAttr("style");
             }
+            
+            //binding pop-up dialog
+            function startBindingPopupDialog() {
+                if(!hasPopDialogBinded){
+                   ko.applyBindings(self, document.getElementById('popUp-dialog'));
+                   hasPopDialogBinded=true;
+                }             
+            }
+
+            Builder.registerFunction(startBindingPopupDialog, 'startBindingPopupDialog');
         };
         Builder.registerModule(DashboardsetPanelsModel, 'DashboardsetPanelsModel');
         return DashboardsetPanelsModel;
