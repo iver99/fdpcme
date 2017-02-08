@@ -255,8 +255,9 @@ public class BugVerification extends LoginAndLogout
 		
 		//logout and login 
 		LoginAndLogout.logoutMethod();
-		LoginAndLogout.loginMethod();
-		
+                initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+                webd.getLogger().info("Logout and login");
+	
 		//go to the home page and check GlobalContext exist
 		webd.getLogger().info("Access to the home page");
 		BrandingBarUtil.visitMyHome(webd);
