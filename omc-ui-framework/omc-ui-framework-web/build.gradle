@@ -663,23 +663,23 @@ task copyStagedJs(type:Copy, dependsOn:[stageJs]) {
 }
 
 task prepareRequireJsConfig(type:Copy) {
-    from ('.') {
-        include "uifwk.build.js"
-            //replace @version@ with versionPathElement
-            filter(ReplaceTokens, tokens: [version: versionPathElement])
+    if(!project.hasProperty("devMode")){
+        from ('.') {
+            include "uifwk.build.js"
+                //replace @version@ with versionPathElement
+                filter(ReplaceTokens, tokens: [version: versionPathElement])
+        }
+        into buildDir
     }
-    into buildDir
+    else {
+        from ('.') {
+            include "uifwk.build.js"
+        }
+        into buildDir
+    }
 }
 
 task individualMinify(dependsOn: [copyStagedJs, jsCodeCoverage, tasks.matching { Task task -> task.name.startsWith("dominify")}]){}
-
-
-task combineAppJsDebug(dependsOn: [copyStagedJs, jsCodeCoverage, prepareRequireJsConfig], type: com.eriwen.gradle.js.tasks.RequireJsTask) {
-    source = javascript.source.staticjs.js.files   //point to your source files
-    requirejs.buildprofile = file(buildDir.absolutePath+"/uifwk.build.js")
-    outputs.upToDateWhen { false }           //requireJs task does not know how to accurately determine if it is UP-TO-DATE so this line says the task is never up to date.
-}
-
 
 task combineAppJs(dependsOn: [individualMinify,prepareRequireJsConfig], type: com.eriwen.gradle.js.tasks.RequireJsTask) {
     source = javascript.source.staticjs.js.files   //point to your source files
@@ -838,6 +838,19 @@ task copyDevJs(type:Copy, dependsOn: [cleanJs, unpackJETFromArtifactory, unpackJ
     }  
 }
 
+task copyStagedDevJs(type:Copy, dependsOn:[copyDevJs]) {
+    from (stagingDir) {
+	include "**/*"	
+    }
+    into compiledDir
+}
+
+task combineAppJsDebug(dependsOn: [copyStagedDevJs, prepareRequireJsConfig], type: com.eriwen.gradle.js.tasks.RequireJsTask) {
+    source = javascript.source.staticjs.js.files   //point to your source files
+    requirejs.buildprofile = file(buildDir.absolutePath+"/uifwk.build.js")
+    outputs.upToDateWhen { false }           //requireJs task does not know how to accurately determine if it is UP-TO-DATE so this line says the task is never up to date.
+}
+
 test {
         classpath = sourceSets.test.compileClasspath + sourceSets.test.output
         useTestNG()
@@ -856,11 +869,11 @@ eclipse {
 }
 
 if(project.hasProperty("devMode")){
-	war.dependsOn copyDevJs
+	war.dependsOn combineAppJsDebug   //copyDevJs
 }
-else if(project.hasProperty("debugJs")){
-        war.dependsOn combineAppJsDebug
-}
+//else if(project.hasProperty("debugJs")){
+//        war.dependsOn combineAppJsDebug
+//}
 else
 {
 	war.dependsOn minifyUIFwkImplPartitionJs
@@ -868,20 +881,20 @@ else
 }
 
 war {
-    if(project.hasProperty("devMode")){
-	from(stagingDir) {
-	    include '**/*'
-	    exclude '**/*.orig.js','**/*.map'
-	    into('/')
-	}
-
-	from('src/main/java') { 
-		include '**/*.properties'
-		into('WEB-INF/classes') 
-	}
-    }
-    else
-    {
+//    if(project.hasProperty("devMode")){
+//	from(stagingDir) {
+//	    include '**/*'
+//	    exclude '**/*.orig.js','**/*.map'
+//	    into('/')
+//	}
+//
+//	from('src/main/java') { 
+//		include '**/*.properties'
+//		into('WEB-INF/classes') 
+//	}
+//    }
+//    else
+//    {
 	from(compiledDir) {
 	    include '**/*'
 	    exclude '**/*.orig.js','**/*.map','**/scss'
@@ -892,7 +905,7 @@ war {
 		include '**/*.properties'
 		into('WEB-INF/classes') 
 	}
-    }
+//    }
 
 	//rootSpec.exclude("**/*.zip")
 }
