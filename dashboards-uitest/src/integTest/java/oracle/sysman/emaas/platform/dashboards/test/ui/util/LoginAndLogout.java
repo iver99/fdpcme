@@ -40,7 +40,23 @@ public class LoginAndLogout
 		login(testName, username, "Welcome1!", tenantID, "home", "Dashboard-UI");
 
 	}
+	//added by Iris begin
+	public void customlogin(String testName, String customUser, String newTenantID)
+	{
+		String tenantID = null, username = null;
+		try {
+			tenantID = newTenantID;
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			tenantID = "emaastesttenant1";
+		}
+		username = customUser;
+		login(testName, username, "Welcome1!", tenantID, "home", "Dashboard-UI");
 
+	}
+	//added by Iris end
+	
 	public void login(String testName)
 	{
 		login(testName, "home");
