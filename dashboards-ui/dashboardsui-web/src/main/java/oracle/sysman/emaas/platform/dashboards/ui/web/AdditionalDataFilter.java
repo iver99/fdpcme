@@ -92,6 +92,7 @@ public class AdditionalDataFilter implements Filter {
         LOGGER.debug("Now enter the AdditionalDataFilter");
         HttpServletRequest httpReq = (HttpServletRequest) request;
         final HttpServletResponse httpResponse = (HttpServletResponse) response;
+
         httpResponse.setCharacterEncoding("utf-8");
         httpResponse.setContentType("text/html;charset=utf-8");
 
