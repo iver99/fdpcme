@@ -163,7 +163,7 @@ public class AdditionalDataFilter implements Filter {
             sb.append(langAttr);
         }
         sb.append(CACHED_BEFORE_DASHBOARD_DATA_PART);
-        if (!StringUtil.isEmpty(langAttr)) {
+        if (!StringUtil.isEmpty(dashboardData)) {
             sb.append(dashboardData);
         }
         sb.append(CACHED_AFTER_DASHBOARD_DATA_PART);

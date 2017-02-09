@@ -680,6 +680,7 @@
                 <div class="dbd-left-panel no-print fit-size"
                         data-bind="stopDataBinding: isDashboardSet ? isOobDashboardset() : ($b.dashboard.systemDashboard&&$b.dashboard.systemDashboard()),css: {'dbd-left-panel-show' : rightPanelControl.showRightPanel(), 'dbd-left-panel-hide' : !rightPanelControl.showRightPanel()},
                                    style: {right: rightPanelControl.scrollbarWidth + 'px'}">
+                    <!-- ko if: rightPanelControl.initializeRightPanel() === true -->
                     <div class="dbd-right-panel-contents">
                         <!-- ko if: $data.isDashboardSet -->
                         <div class="dbd-right-panel-editdashboardset" data-bind="visible:rightPanelControl.rightPanelIcon()=='pencil'&&$data.rightPanelControl.editPanelContent()=='editset'">
@@ -1081,7 +1082,8 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                    <!-- /ko -->
+                </div> 
             </div>
 
         </div>
