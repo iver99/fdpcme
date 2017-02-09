@@ -75,6 +75,9 @@ public class DashboardRowEntity implements RowEntity
 
 	@JsonProperty("EXTENDED_OPTIONS")
 	private String extendedOptions;
+	
+	@JsonProperty("SHOW_INHOME")
+	private Integer showInHome;
 
 	public DashboardRowEntity()
 	{
@@ -602,6 +605,16 @@ public class DashboardRowEntity implements RowEntity
 	public void setType(Long type)
 	{
 		this.type = type;
+	}
+	
+	
+
+	public Integer getShowInHome() {
+		return showInHome;
+	}
+
+	public void setShowInHome(Integer showInHome) {
+		this.showInHome = showInHome;
 	}
 
 	/* (non-Javadoc)

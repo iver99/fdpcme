@@ -36,6 +36,9 @@ public class DashboardSetRowEntity implements RowEntity
 
 	@JsonProperty("LAST_MODIFICATION_DATE")
 	private String lastModificationDate;
+	
+	@JsonProperty("DELETED")
+	private BigInteger deleted;
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
@@ -103,6 +106,20 @@ public class DashboardSetRowEntity implements RowEntity
 		}
 		return true;
 	}
+	
+	
+
+	public BigInteger getDeleted() {
+		return deleted;
+	}
+
+
+
+	public void setDeleted(BigInteger deleted) {
+		this.deleted = deleted;
+	}
+
+
 
 	/**
 	 * @return the dashboardSetId

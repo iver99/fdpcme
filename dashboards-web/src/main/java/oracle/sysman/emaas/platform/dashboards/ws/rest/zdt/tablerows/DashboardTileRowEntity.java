@@ -114,6 +114,41 @@ public class DashboardTileRowEntity implements RowEntity
 
 	@JsonProperty("WIDGET_LINKED_DASHBOARD")
 	private Long widgetLinkedDashboard;
+	
+	@JsonProperty("WIDGET_DELETED")
+	private Integer widgetDeleted;
+	
+	@JsonProperty("WIDGET_DELETION_DATE")
+	private String widgetDeletionDate;
+	
+	@JsonProperty("DELETED")
+	private Integer deleted;
+	
+	
+
+	public Integer getWidgetDeleted() {
+		return widgetDeleted;
+	}
+
+	public void setWidgetDeleted(Integer widgetDeleted) {
+		this.widgetDeleted = widgetDeleted;
+	}
+
+	public String getWidgetDeletionDate() {
+		return widgetDeletionDate;
+	}
+
+	public void setWidgetDeletionDate(String widgetDeletionDate) {
+		this.widgetDeletionDate = widgetDeletionDate;
+	}
+
+	public Integer getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(Integer deleted) {
+		this.deleted = deleted;
+	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
