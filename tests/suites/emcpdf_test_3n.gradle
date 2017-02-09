@@ -48,7 +48,6 @@ def emcpsmRegLookupClientVer = getDependentSdkVersion('com.oracle.emaas.emcpsm',
 
 //Setup gradle to onboard a new tenant
 apply from: 'onboard_tenant.gradle'
-//apply from: 'onboard_tenant_noITA.gradle'
 
 //Update the lrgConfig configuration to specify where the test jar is.
 dependencies{
@@ -119,7 +118,6 @@ dependencies{
 project.ext.omctf_omcCloudSetup_additionalParam = "-skipagents -skipomr"
 
 //Task added from "emcpdf_qa_test_3n"  
-// by Iris: task QATest(type:EMTest,dependsOn:[omcSetup, onboardTenant]) 
 task QATest(type:EMTest,dependsOn:[omcSetup, onboardNewTenant]) {
 	include "oracle/sysman/emaas/platform/dashboards/test/dashboard/*"
 	include "oracle/sysman/emaas/platform/dashboards/test/common/*"
@@ -140,7 +138,7 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n','parallel':
         test('name': 'DashboardUITest', 'preserve-order':'true') {
             classes([:]) {
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboard')
-/*		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestGlobalContext')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestGlobalContext')
                 'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashBoard_SimpleCRUD')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashBoard_OtherFeatures')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.BugVerification')
@@ -149,7 +147,7 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n','parallel':
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet_DashboardRelated_CreatedInsideSet')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet_DashboardRelated_CreatedOutsideSet')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet_DuplicateDashboard')
-		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboard_NegativeCases')*/
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboard_NegativeCases')
             }
 	}
 	test('name': 'DashboardUITest_testDashboardSet_SetHome', 'preserve-order':'true'){
