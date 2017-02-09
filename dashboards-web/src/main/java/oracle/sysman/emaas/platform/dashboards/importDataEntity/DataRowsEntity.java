@@ -97,6 +97,12 @@ public class DataRowsEntity {
 			List<SavedSearchSearchParamRowEntity> emsSavedSearchParams) {
 		this.emsSavedSearchParams = emsSavedSearchParams;
 	}
+	
+	
+
+	public DataRowsEntity() {
+		super();
+	}
 
 	public DataRowsEntity(List<DashboardRowEntity> emsDashboard,
 			List<DashboardSetRowEntity> emsDashboardSet,
