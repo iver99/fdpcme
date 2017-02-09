@@ -1,8 +1,7 @@
 apply from:'test.gradle'
 //Security client version
 ext.emaasSecurityClientVersion = getDependentSdkVersion('com.oracle.emaas.emcpsf.sdk', 'security-client', '1.+')
-publishing {
-    publications {
+project.publishing.publications {
      integTest(MavenPublication) {
                 setArtifactId(project.name)
                 setGroupId(project.zdtTasksGroup)
@@ -19,7 +18,6 @@ publishing {
                 extension "gradle"
             }
         }
-    }
 }
 
 ext.customPomDefinition = {
