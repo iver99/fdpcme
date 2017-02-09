@@ -251,8 +251,8 @@ public class BugVerification extends LoginAndLogout
 		
 		//logout and login 
 		LoginAndLogout.logoutMethod();
-        initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-        webd.getLogger().info("Logout and login");
+	        initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+        	webd.getLogger().info("Logout and login");
 	
 		//visit welcome page
 		webd.getLogger().info("Visit Welcome Page");
