@@ -237,10 +237,6 @@ public class BugVerification extends LoginAndLogout
 		BrandingBarUtil.visitDashboardHome(webd);
 		DashboardHomeUtil.gridView(webd);
 		DashboardHomeUtil.createDashboard(webd, "Dashboard_EMCPDF2856", null);
-		DashboardBuilderUtil.verifyDashboard(webd, "Dashboard_EMCPDF2856", null, false);
-		
-		//verify dashboard in builder page
-		webd.getLogger().info("verify the dashboard created Successfully");
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, "Dashboard_EMCPDF2856", null, true), "Create dashboard failed!");
 		
 		//set it as home
@@ -255,14 +251,19 @@ public class BugVerification extends LoginAndLogout
 		
 		//logout and login 
 		LoginAndLogout.logoutMethod();
-                initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-                webd.getLogger().info("Logout and login");
+        initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+        webd.getLogger().info("Logout and login");
 	
-		//go to the home page and check GlobalContext exist
-		webd.getLogger().info("Access to the home page");
-		BrandingBarUtil.visitMyHome(webd);
-		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd,  "Dashboard_EMCPDF2856", null, true), "It is NOT the home page!");
-
+		//visit welcome page
+		webd.getLogger().info("Visit Welcome Page");
+		BrandingBarUtil.visitWelcome(webd);
+		Assert.assertFalse(GlobalContextUtil.isGlobalContextExisted(webd), "The global context exists in Welcome Page");
+				
+		//verify omcCtx exist in the url
+		String wCtx_url = webd.getWebDriver().getCurrentUrl();		
+		webd.getLogger().info("start to verify omcCtx exist in the welcome page url");	
+		Assert.assertTrue(wCtx_url.contains("omcCtx="), "The global context infomation in URL is lost");		
+		
 	}
 
 }
