@@ -15,6 +15,7 @@ function (ko, $, oj, dfu, mbu, uiutil) {
         self.isMobileDevice = self.modeType.editable === true ? 'false' : 'true';
         self.dashboardEditDisabled = ko.observable(self.$b().getToolBarModel&&self.$b().getToolBarModel() ? self.$b().getToolBarModel().editDisabled() : true);
         self.showRightPanelToggler = ko.observable(self.isMobileDevice !== 'true');
+        self.initializeRightPanel= ko.observable(false);
         self.showRightPanel = ko.observable(false);
         self.rightPanelIcon = ko.observable(self.$b().getToolBarModel && self.$b().getToolBarModel() && $b.getDashboardTilesViewModel().isEmpty() ? "wrench" : "none");
         self.completelyHidden = ko.observable(false);
@@ -78,10 +79,11 @@ function (ko, $, oj, dfu, mbu, uiutil) {
                 $(".dbd-left-panel").animate({width: "320px"}, "normal");
                 $(".right-panel-toggler").animate({right: (323 + self.scrollbarWidth) + 'px'}, 'normal', function () {
                     self.showRightPanel(true);
+                    self.initializeRightPanel(true);
                     $(".dashboard-picker-container:visible").addClass("df-collaps");
                     self.$b().triggerBuilderResizeEvent('show right panel');
                 });
-            } else {
+            } else {            
                 $(".dbd-left-panel").animate({width: 0});
                 $(".right-panel-toggler").animate({right: self.scrollbarWidth + 3 + 'px'}, 'normal', function () {
                     self.expandDBEditor(true);
@@ -111,7 +113,10 @@ function (ko, $, oj, dfu, mbu, uiutil) {
                 self.completelyHidden(true);
                 self.$b().triggerBuilderResizeEvent('hide right panel');
             }else{
-                self.editRightpanelLinkage(status);
+                if (!self.initializeRightPanel()) {
+                    self.initializeRightPanel(true);
+                }
+                self.editRightpanelLinkage(status);               
             }          
         }
         
@@ -135,45 +140,47 @@ function (ko, $, oj, dfu, mbu, uiutil) {
                     self.$b().triggerEvent(self.$b().EVENT_NEW_WIDGET_STOP_DRAGGING, null, e, t);
                 }
             });
-        };    
+        }; 
+                
+        self.initializeCollapsible = function(){     
+            $('.dbd-right-panel-editdashboard-filters').ojCollapsible({"expanded": false});
+            $('.dbd-right-panel-editdashboard-share').ojCollapsible({"expanded": false});
+            $('.dbd-right-panel-editdashboard-general').ojCollapsible({"expanded": false});
 
-        $('.dbd-right-panel-editdashboard-filters').ojCollapsible({"expanded": false});
-        $('.dbd-right-panel-editdashboard-share').ojCollapsible({"expanded": false});
-        $('.dbd-right-panel-editdashboard-general').ojCollapsible({"expanded": false});
+            $('.dbd-right-panel-editdashboard-general').on({
+                "ojexpand": function (event, ui) {
+                    $('.dbd-right-panel-editdashboard-filters').ojCollapsible("option", "expanded", false);
+                    $('.dbd-right-panel-editdashboard-share').ojCollapsible("option", "expanded", false);
+                }
+            });
 
-        $('.dbd-right-panel-editdashboard-general').on({
-            "ojexpand": function (event, ui) {
-                $('.dbd-right-panel-editdashboard-filters').ojCollapsible("option", "expanded", false);
-                $('.dbd-right-panel-editdashboard-share').ojCollapsible("option", "expanded", false);
-            }
-        });
+            $('.dbd-right-panel-editdashboard-set-general').on({
+                "ojexpand": function (event, ui) {
+                    $('.dbd-right-panel-editdashboard-set-share').ojCollapsible("option", "expanded", false);
+                }
+            });
 
-        $('.dbd-right-panel-editdashboard-set-general').on({
-            "ojexpand": function (event, ui) {
-                $('.dbd-right-panel-editdashboard-set-share').ojCollapsible("option", "expanded", false);
-            }
-        });
+            $('.dbd-right-panel-editdashboard-filters').on({
+                "ojexpand": function (event, ui) {
+                    $('.dbd-right-panel-editdashboard-general').ojCollapsible("option", "expanded", false);
+                    $('.dbd-right-panel-editdashboard-share').ojCollapsible("option", "expanded", false);
+                }
+            });
 
-        $('.dbd-right-panel-editdashboard-filters').on({
-            "ojexpand": function (event, ui) {
-                $('.dbd-right-panel-editdashboard-general').ojCollapsible("option", "expanded", false);
-                $('.dbd-right-panel-editdashboard-share').ojCollapsible("option", "expanded", false);
-            }
-        });
+            $('.dbd-right-panel-editdashboard-share').on({
+                "ojexpand": function (event, ui) {
+                    $('.dbd-right-panel-editdashboard-filters').ojCollapsible("option", "expanded", false);
+                    $('.dbd-right-panel-editdashboard-general').ojCollapsible("option", "expanded", false);
+                }
+            });
 
-        $('.dbd-right-panel-editdashboard-share').on({
-            "ojexpand": function (event, ui) {
-                $('.dbd-right-panel-editdashboard-filters').ojCollapsible("option", "expanded", false);
-                $('.dbd-right-panel-editdashboard-general').ojCollapsible("option", "expanded", false);
-            }
-        });
+            $('.dbd-right-panel-editdashboard-set-share').on({
+                "ojexpand": function (event, ui) {
+                    $('.dbd-right-panel-editdashboard-set-general').ojCollapsible("option", "expanded", false);
+                }
+            });
 
-        $('.dbd-right-panel-editdashboard-set-share').on({
-            "ojexpand": function (event, ui) {
-                $('.dbd-right-panel-editdashboard-set-general').ojCollapsible("option", "expanded", false);
-            }
-        });
-
+        };
     }
     return {"rightPanelControl": rightPanelControl};
 }
