@@ -1,6 +1,18 @@
 apply from:'test.gradle'
 //Security client version
 ext.emaasSecurityClientVersion = getDependentSdkVersion('com.oracle.emaas.emcpsf.sdk', 'security-client', '1.+')
+ext.customPomDefinition = {
+    def dependencies = asNode().appendNode('dependencies')
+    configurations.testConfig.allDependencies.each { dep ->
+        if (dep.name != 'unspecified') {
+            def dependency = dependencies.appendNode('dependency')
+            dependency.appendNode('groupId', dep.group)
+            dependency.appendNode('artifactId', dep.name)
+            dependency.appendNode('version', dep.version)
+        }
+    }
+}
+
 project.publishing.publications {
      integTest(MavenPublication) {
                 setArtifactId(project.name)
@@ -19,21 +31,6 @@ project.publishing.publications {
             }
         }
 }
-
-ext.customPomDefinition = {
-    def dependencies = asNode().appendNode('dependencies')
-    configurations.testConfig.allDependencies.each { dep ->
-        if (dep.name != 'unspecified') {
-            def dependency = dependencies.appendNode('dependency')
-            dependency.appendNode('groupId', dep.group)
-            dependency.appendNode('artifactId', dep.name)
-            dependency.appendNode('version', dep.version)
-        }
-    }
-}
-
-
-
 
 artifactoryPublish{
     publications('zdtTasksPub')
