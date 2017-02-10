@@ -183,6 +183,7 @@ task DEVTest(type:EMTest,dependsOn: QATest1){
 	include "oracle/sysman/emaas/platform/dashboards/core/DashboardManagerTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/model/*"
 	include "oracle/sysman/emaas/platform/dashboards/core/wls/management/*"
+    include "oracle/sysman/emaas/platform/dashboards/ws/rest/OOBDashboardTest.class"
 	useRestAssured=true
 	ext.set("testType", "unit")
 }
