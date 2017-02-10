@@ -345,15 +345,30 @@ public class RegistryServiceManager implements ApplicationServiceManager
 
 			LOGGER.info("Initializing RegistrationManager");
 			RegistrationManager.getInstance().initComponent(builder.build());
+			
+			final String buildId = serviceProps.getProperty("buildId");
+			final String sdkRel = "versionLookupSDK/emsaasui/uifwk/js/uifwk-partition";
+			final String sdkImplUrl = NAV_BASE+"/"+buildId+"/js/uifwk-impl-partition-cached";
+			if (buildId ==null){
+				LOGGER.error("buildId is null, please check /opt/ORCLemaas/Applications/OMC-UI-Framework/init/servicemanager.properties file!");
+			}else{
+				LOGGER.info("buildId is "+buildId);
+			}
 
 			List<Link> links = new ArrayList<Link>();
 			if (applicationUrlHttp != null) {
+				if (buildId!=null){
+					links.add(new Link().withRel(sdkRel).withHref(applicationUrlHttp + sdkImplUrl));
+				}
 				links.add(new Link().withRel("test").withHref(applicationUrlHttp + NAV_BASE_HOME));
 			}
 			if (applicationUrlHttps != null) {
+				if (buildId!=null){
+					links.add(new Link().withRel(sdkRel).withHref(applicationUrlHttps + sdkImplUrl));					
+				}
 				links.add(new Link().withRel("test").withHref(applicationUrlHttps + NAV_BASE_HOME));
 			}
-
+			
 			InfoManager.getInstance().getInfo().setLinks(links);
 
 			LOGGER.info("Registering service with 'Service Registry'");

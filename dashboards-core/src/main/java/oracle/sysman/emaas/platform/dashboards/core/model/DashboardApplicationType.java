@@ -51,7 +51,9 @@ public enum DashboardApplicationType
 	OMCEE(101, true),
 	OMCLOG(102, true),
 	SECSE(103, true),
-	SECSMA(104, true);
+	SECSMA(104, true),
+	OMC(105, true), // OMC is the combination of OMCSE, OMCEE, OMCLOG
+	OSMACC(106, true); // OSMACC is the combination of SECSE and SECSMA
 
 	public static final String APM_STRING = "APM";
 	public static final String ITA_SRING = "ITAnalytics";
@@ -65,6 +67,8 @@ public enum DashboardApplicationType
 	public static final String OMCLOG_STRING = "OMCLOG";
 	public static final String SECSE_STRING = "SECSE";
 	public static final String SECSMA_STRING = "SECSMA";
+	public static final String OMC_STRING = "OMC";
+	public static final String OSMACC_STRING = "OSMACC";
 
 	private static final Logger LOGGER = LogManager.getLogger(DashboardApplicationType.class);
 	public static final List<DashboardApplicationType> allBasicService = Arrays.asList(APM, ITAnalytics, LogAnalytics, Monitoring, SecurityAnalytics, Orchestration, Compliance);
@@ -93,6 +97,12 @@ public enum DashboardApplicationType
         if (COMPLIANCE_STRING.equals(value)) {
             return Compliance;
         }
+		if (OMC_STRING.equals(value)) {
+			return OMC;
+		}
+		if (OSMACC_STRING.equals(value)) {
+			return OSMACC;
+		}
 		if (OMCSE_STRING.equals(value)) {
 			return OMCSE;
 		}
@@ -154,6 +164,12 @@ public enum DashboardApplicationType
         if (value == Compliance.value) {
         	return COMPLIANCE_STRING;
         }
+		if (value == OMC.value) {
+			return OMC_STRING;
+		}
+		if (value == OSMACC.value) {
+			return OSMACC_STRING;
+		}
 		if (value == OMCSE.value) {
 			return OMCSE_STRING;
 		}

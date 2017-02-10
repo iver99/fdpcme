@@ -129,6 +129,18 @@ public class GlobalContextUtil
 		IGlobalContextUtil tsu = new UtilLoader<IGlobalContextUtil>().loadUtil(webd, IGlobalContextUtil.class);
 		return tsu.setCustomTimeWithDateOnly(webd, startDateTime, endDateTime);
 	}
+	
+	public static String setCustomTimeWithMillisecond(WebDriver webd, int index, String startDateTime, String endDateTime)
+	{
+		IGlobalContextUtil tsu = new UtilLoader<IGlobalContextUtil>().loadUtil(webd, IGlobalContextUtil.class);
+		return tsu.setCustomTimeWithMillisecond(webd, index, startDateTime, endDateTime);
+	}
+
+	public static String setCustomTimeWithMillisecond(WebDriver webd, String startDateTime, String endDateTime)
+	{
+		IGlobalContextUtil tsu = new UtilLoader<IGlobalContextUtil>().loadUtil(webd, IGlobalContextUtil.class);
+		return tsu.setCustomTimeWithMillisecond(webd, startDateTime, endDateTime);
+	}
 
 	public static String setFlexibleRelativeTimeRange(WebDriver webd, int index, int relTimeVal, TimeUnit relTimeUnit)
 	{
@@ -152,6 +164,18 @@ public class GlobalContextUtil
 	{
 		IGlobalContextUtil tsu = new UtilLoader<IGlobalContextUtil>().loadUtil(webd, IGlobalContextUtil.class);
 		return tsu.setFlexibleRelativeTimeRangeWithDateOnly(webd, relTimeVal, relTimeUnit);
+	}
+	
+	public static String setFlexibleRelativeTimeRangeWithMillisecond(WebDriver webd, int index, int relTimeVal, TimeUnit relTimeUnit)
+	{
+		IGlobalContextUtil tsu = new UtilLoader<IGlobalContextUtil>().loadUtil(webd, IGlobalContextUtil.class);
+		return tsu.setFlexibleRelativeTimeRangeWithMillisecond(webd, index, relTimeVal, relTimeUnit);
+	}
+
+	public static String setFlexibleRelativeTimeRangeWithMillisecond(WebDriver webd, int relTimeVal, TimeUnit relTimeUnit)
+	{
+		IGlobalContextUtil tsu = new UtilLoader<IGlobalContextUtil>().loadUtil(webd, IGlobalContextUtil.class);
+		return tsu.setFlexibleRelativeTimeRangeWithMillisecond(webd, relTimeVal, relTimeUnit);
 	}
 
 	public static String setTimeFilter(WebDriver webd, int index, String hoursToExclude, int[] daysToExclude,
@@ -191,6 +215,18 @@ public class GlobalContextUtil
 	{
 		IGlobalContextUtil tsu = new UtilLoader<IGlobalContextUtil>().loadUtil(webd, IGlobalContextUtil.class);
 		return tsu.setTimeRangeWithDateOnly(webd, rangeOption);
+	}
+	
+	public static String setTimeRangeWithMillisecond(WebDriver webd, int index, TimeRange rangeOption)
+	{
+		IGlobalContextUtil tsu = new UtilLoader<IGlobalContextUtil>().loadUtil(webd, IGlobalContextUtil.class);
+		return tsu.setTimeRangeWithMillisecond(webd, index, rangeOption);
+	}
+
+	public static String setTimeRangeWithMillisecond(WebDriver webd, TimeRange rangeOption)
+	{
+		IGlobalContextUtil tsu = new UtilLoader<IGlobalContextUtil>().loadUtil(webd, IGlobalContextUtil.class);
+		return tsu.setTimeRangeWithMillisecond(webd, rangeOption);
 	}
 
 	/**
