@@ -10,7 +10,10 @@
 
 package oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows;
 
+import oracle.sysman.emaas.platform.dashboards.core.util.BigIntegerSerializer;
+
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import java.math.BigInteger;
 
@@ -20,6 +23,7 @@ import java.math.BigInteger;
 public class DashboardTileParamsRowEntity implements RowEntity
 {
 	@JsonProperty("TILE_ID")
+	@JsonSerialize(using = BigIntegerSerializer.class)
 	private BigInteger tileId;
 
 	@JsonProperty("PARAM_NAME")

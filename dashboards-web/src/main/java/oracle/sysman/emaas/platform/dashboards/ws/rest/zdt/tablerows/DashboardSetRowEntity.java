@@ -10,7 +10,10 @@
 
 package oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows;
 
+import oracle.sysman.emaas.platform.dashboards.core.util.BigIntegerSerializer;
+
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import java.math.BigInteger;
 
@@ -20,12 +23,14 @@ import java.math.BigInteger;
 public class DashboardSetRowEntity implements RowEntity
 {
 	@JsonProperty("DASHBOARD_SET_ID")
+	@JsonSerialize(using = BigIntegerSerializer.class)
 	private BigInteger dashboardSetId;
 
 	@JsonProperty("TENANT_ID")
 	private Long tenantId;
 
 	@JsonProperty("SUB_DASHBOARD_ID")
+	@JsonSerialize(using = BigIntegerSerializer.class)
 	private BigInteger subDashboardId;
 
 	@JsonProperty("POSITION")
@@ -38,6 +43,7 @@ public class DashboardSetRowEntity implements RowEntity
 	private String lastModificationDate;
 	
 	@JsonProperty("DELETED")
+	@JsonSerialize(using = BigIntegerSerializer.class)
 	private BigInteger deleted;
 
 	/* (non-Javadoc)
