@@ -2977,7 +2977,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     }
                 }
                 
-                var eventSourceTimeSelector = 'OMC_UIFWK_TIME_SELECTOR';
+                var eventSourceTimeSelector = ctxUtil.OMCEventSourceConstants.GLOBAL_TIME_SELECTOR;
                 function callbackForOmcCtxChange(ctxChangeEvent) {
                     if (ctxChangeEvent && ctxChangeEvent.source === eventSourceTimeSelector) {
                         return;

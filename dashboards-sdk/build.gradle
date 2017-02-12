@@ -23,7 +23,13 @@ dependencies {
     compile getProjectArtifact('jackson-core-asl')
     compile getProjectArtifact('servlet-api')
     compile getProjectArtifact('commons-lang3')
+    compile getProjectArtifact('jackson-mapper-asl')
+    compile getProjectArtifact('jackson-xc')
+    compile getProjectArtifact('registry-lookup-client')
+    compile getProjectArtifact('registry-client')
+    compile getProjectArtifact('emaas-platform-tenant-sdk')
     testCompile getProjectArtifact('jmockit')
+    
 }
 sourceSets {
     main {
