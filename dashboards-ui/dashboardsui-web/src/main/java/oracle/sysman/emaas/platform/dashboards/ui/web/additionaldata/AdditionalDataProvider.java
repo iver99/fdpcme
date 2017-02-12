@@ -31,14 +31,12 @@ public class AdditionalDataProvider {
                 return null;
             }
 
-            final String dashboardIdStr = httpReq.getParameter("dashboardId");
-            BigInteger dashboardId = new BigInteger(dashboardIdStr);
-            return getAdditionalData(tenant, user, dashboardId, httpReq.getHeader("referer"), sesExp, httpReq.getRequestURI());
+            return getAdditionalData(httpReq, tenant, user, httpReq.getHeader("referer"), sesExp, httpReq.getRequestURI());
         }
         return null;
     }
 
-    private static String getAdditionalData(String tenant, String user, BigInteger dashboardId, String referer, String sessionExp, String uri) {
+    private static String getAdditionalData(HttpServletRequest httpReq, String tenant, String user, String referer, String sessionExp, String uri) {
         if (StringUtil.isEmpty(tenant) || StringUtil.isEmpty(user)) {
             LOGGER.warn("tenant {}/user {} is null or empty or invalid, so do not update additional data for dashboard page then", tenant, user);
             return null;
@@ -46,6 +44,12 @@ public class AdditionalDataProvider {
         //long start =System.currentTimeMillis();
         StringBuilder sb = new StringBuilder();
         if (AdditionalDataFilter.BUILDER_URI.equals(uri)) { // only builder page needs dashbaord data
+            final String dashboardIdStr = httpReq.getParameter("dashboardId");
+            if (StringUtil.isEmpty(dashboardIdStr)) {
+                LOGGER.error("Unexpected: retrieved empty dashboardID from the http request parameter!");
+                return null;
+            }
+            BigInteger dashboardId = new BigInteger(dashboardIdStr);
             if (BigInteger.ZERO.compareTo(dashboardId) < 0) {
                 String dashboardString = DashboardDataAccessUtil.getDashboardData(tenant, tenant + "." + user, referer, dashboardId);
                 if (StringUtil.isEmpty(dashboardString)) {
@@ -57,7 +61,7 @@ public class AdditionalDataProvider {
                     sb.append("window._dashboardServerCache=").append(dashboardString).append(";");
                 }
             } else {
-                LOGGER.warn("dashboardId {} is invalid, so do not update dashboard page for dashboard data then", dashboardId);
+                LOGGER.error("dashboardId {} is invalid, so do not update dashboard page for dashboard data then", dashboardId);
             }
         }
 
