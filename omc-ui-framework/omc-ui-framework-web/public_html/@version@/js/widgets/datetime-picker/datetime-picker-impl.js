@@ -84,7 +84,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 var msgUtil = new msgUtilModel();
                 var ctxUtil = new contextModel();
                 var omcContext = ctxUtil.getOMCContext();
-                self.badgeTimePeriod = ko.observable(ctxUtil.getBadgeInfo());
+                self.badgeTimePeriod = ko.observable();
                 console.log("Initialize date time picker! The params are: ");
                 if(ko.mapping && ko.mapping.toJS) {
                     console.log(ko.mapping.toJS(params));
@@ -979,7 +979,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     self.hideLastRange(true);
                 }
                 
-                if(params.timePeriodSet){
+                if(params.timePeriodsSet){
                     if(params.timePeriodsSet === self.timePeriodSetShortTerm){
                         self.defaultTimePeriod = ko.observable(ctxUtil.OMCTimeConstants.QUICK_PICK.LAST_60_MINUTE);
                     }else if(params.timePeriodsSet === self.timePeriodSetLongTerm){
@@ -994,6 +994,14 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         if(self.timePeriodsNlsObject[defaultTP] || isValidFlexRelTimePeriod(defaultTP)) {
                             self.defaultTimePeriod(defaultTP);
                         }
+                    }
+                }
+
+                if(params.showBadge){
+                    var defaultTP = formalizeTimePeriod(ko.unwrap(params.defaultTimePeriod));
+                    debugger;
+                    if(self.timePeriodsNlsObject[defaultTP] || isValidFlexRelTimePeriod(defaultTP)) {
+                        self.badgeTimePeriod(defaultTP);
                     }
                 }
 

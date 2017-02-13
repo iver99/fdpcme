@@ -218,6 +218,22 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
              * @returns {Object} OMC global context in json format
              */
             self.getOMCContext = function (respectOmcAppCtx, respectOmcEntityCtx, respectOmcTimeCtx) {
+                return {
+                "time": {
+                    "startTime": 1478776210123,
+                    "endTime": 1479975751500,
+                    "timePeriod": "LAST_1_DAY"
+                },
+                "composite": {
+                    "compositeMEID": "7F97169E4D8D7A05715DBFA7F83995F4",
+                    "compositeType": "omc_group",
+                    "compositeName": "group_1020"
+                },
+                "entity": {
+                    "entityMEIDs": ["EA908BB62D8C2399B132B716335ED786","34D21A9DE8567CB2D489E6B2BB5D22FB"],
+                    "entitiesType": "omc_oracle_db"
+                }
+            };
                 var omcContext = null;
                 if (respectOmcAppCtx === null || typeof respectOmcAppCtx === 'undefined') {
                     respectOmcAppCtx = window._uifwk.respectOMCApplicationContext;
@@ -1337,33 +1353,6 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                 }
                 window.addEventListener("message", receiveMessage, false);
             }
-            
-            self.setBadgeShow = function(toShowBadge, badgeTimePeriod){
-                if(!window._uifwk.badgeInfo){
-                    window._uifwk.badgeInfo = {};
-                }
-                if(!self.isValidTimePeriod(badgeTimePeriod)){
-                    return false;
-                }
-                window._uifwk.badgeInfo.isBadgeShown = toShowBadge;
-                if(toShowBadge){
-                    window._uifwk.badgeInfo.badgeTimePeriod = badgeTimePeriod;
-                }else{
-                    window._uifwk.badgeInfo.badgeTimePeriod = null;
-                }
-                return true;
-            };
-            
-            self.getBadgeInfo = function(){
-                window._uifwk.badgeInfo = {};
-                window._uifwk.badgeInfo.toShowBadge = true;
-                window._uifwk.badgeInfo.badgeTimePeriod = "Last 7 days";
-                if(window._uifwk && window._uifwk.badgeInfo && window._uifwk.badgeInfo.toShowBadge){
-                    return window._uifwk.badgeInfo.badgeTimePeriod;
-                }else{
-                    return null;
-                }
-            };
 
             /**
              * Fire OMC change event when omc context is updated.
