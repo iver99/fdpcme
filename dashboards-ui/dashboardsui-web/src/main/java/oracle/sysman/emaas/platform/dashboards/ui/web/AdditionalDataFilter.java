@@ -172,7 +172,6 @@ public class AdditionalDataFilter implements Filter {
         }
         sb.append(CACHED_AFTER_DASHBOARD_DATA_PART);
         newResponseText = sb.toString();
-        LOGGER.info("newResponseText = sb.toString(); {}", newResponseText);
         return newResponseText;
     }
 
@@ -208,49 +207,8 @@ public class AdditionalDataFilter implements Filter {
 
             final String dashboardIdStr = httpReq.getParameter("dashboardId");
             BigInteger dashboardId = new BigInteger(dashboardIdStr);
-            return getDashboardData(tenant, user, dashboardId, httpReq.getHeader("referer"), sesExp);
+            return DashboardDataAccessUtil.getCombinedData(tenant, tenant + "." + user, httpReq.getHeader("referer"), sesExp, dashboardId);
         }
         return null;
-    }
-
-    private String getDashboardData(String tenant, String user, BigInteger dashboardId, String referer, String sessionExp) {
-        if (StringUtil.isEmpty(tenant) || StringUtil.isEmpty(user)) {
-            LOGGER.warn("tenant {}/user {} is null or empty or invalid, so do not update dashboard page then", tenant, user);
-            return null;
-        }
-        /*long start =System.currentTimeMillis();
-        StringBuilder sb = new StringBuilder();
-        if (BigInteger.ZERO.compareTo(dashboardId) < 0) {
-            String dashboardString = DashboardDataAccessUtil.getDashboardData(tenant, tenant + "." + user, referer, dashboardId);
-            if (StringUtil.isEmpty(dashboardString)) {
-                LOGGER.warn("Retrieved null or empty dashboard for tenant {} user {} and dashboardId {}, so do not update page data then", tenant, user, dashboardId);
-            } else {
-                //we do not need to escape the string, as we don't use regexp any more, but string concatenation
-                //dashboardString = formatJsonString(dashboardString);
-                //LOGGER.info("Escaping retrieved data before inserting to html. Vlaue now is: {}", dashboardString);
-                sb.append("window._dashboardServerCache=").append(dashboardString).append(";");
-            }
-        } else {
-            LOGGER.warn("dashboardId {} is invalid, so do not update dashboard page for dashboard data then", dashboardId);
-        }
-
-        String userInfoString = DashboardDataAccessUtil.getUserTenantInfo(tenant, tenant + "." + user, referer, sessionExp);
-        if (StringUtil.isEmpty(userInfoString)) {
-            LOGGER.warn("Retrieved null or empty user info for tenant {} user {}", tenant, user);
-        }
-        else {
-            sb.append("window._userInfoServerCache=").append(userInfoString).append(";");
-        }
-
-        String regString = DashboardDataAccessUtil.getRegistrationData(tenant, tenant + "." + user, referer, sessionExp);
-        if (StringUtil.isEmpty(regString)) {
-            LOGGER.warn("Retrieved null or empty registration for tenant {} user {}", tenant, user);
-        }
-        else {
-            sb.append("window._registrationServerCache=").append(regString).append(";");
-        }*/
-        String result =DashboardDataAccessUtil.getCombinedData(tenant, tenant + "." + user, referer, sessionExp, dashboardId);
-        LOGGER.info("Additional filter "+result);
-        return result;
     }
 }
