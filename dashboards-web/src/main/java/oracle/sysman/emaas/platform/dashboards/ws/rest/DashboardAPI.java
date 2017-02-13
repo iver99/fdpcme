@@ -474,6 +474,7 @@ public class DashboardAPI extends APIBase
 			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
 			@PathParam("id") BigInteger dashboardId,@HeaderParam(value = "SESSION_EXP") String sessionExpiryTime)
 	{
+		Long begin=System.currentTimeMillis();
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [GET] /v1/dashboards/{}", dashboardId);
 		DashboardManager dm = DashboardManager.getInstance();
 		StringBuilder sb=new StringBuilder();
@@ -490,7 +491,7 @@ public class DashboardAPI extends APIBase
 			String userName = UserContext.getCurrentUser();
 			start=System.currentTimeMillis();
 			Dashboard dbd = dm.getCombinedDashboardById(dashboardId, tenantId, userName);
-			LOGGER.info("Retrieving dashboard data cost {}ms"+(System.currentTimeMillis()-start));
+			LOGGER.info("Retrieving dashboard data cost {}ms",(System.currentTimeMillis()-start));
 			updateDashboardAllHref(dbd, tenantIdParam);
 			sb.append(getJsonUtil().toJson(dbd));
 		}
@@ -512,18 +513,30 @@ public class DashboardAPI extends APIBase
 		}
 		sb.append(";window._userInfoServerCache=");
 		//retrieve user info
-		start =System.currentTimeMillis();
-		String userInfoEntity = JsonUtil.buildNormalMapper().toJson(new UserInfoEntity());
-		LOGGER.info("Retrieving user info data cost {}ms"+(System.currentTimeMillis()-start));
-		sb.append(userInfoEntity);
+		try {
+			initializeUserContext(tenantIdParam, userTenant);
+			start =System.currentTimeMillis();
+			String userInfoEntity = JsonUtil.buildNormalMapper().toJson(new UserInfoEntity());
+			LOGGER.info("Retrieving user info data cost {}ms",(System.currentTimeMillis()-start));
+			sb.append(userInfoEntity);
+		}
+		catch (CommonSecurityException e) {
+			LOGGER.error(e.getLocalizedMessage(),e);
+		}
 
 		sb.append(";window._registrationServerCache=");
 		//retrieve registration info
-		start =System.currentTimeMillis();
-		String regEntity = JsonUtil.buildNonNullMapper().toJson(new RegistrationEntity(sessionExpiryTime));
-		LOGGER.info("Retrieving registry data cost {}ms"+(System.currentTimeMillis()-start));
-		sb.append(regEntity).append(";");
-
+		try {
+			initializeUserContext(tenantIdParam, userTenant);
+			start =System.currentTimeMillis();
+			String regEntity = JsonUtil.buildNonNullMapper().toJson(new RegistrationEntity(sessionExpiryTime));
+			LOGGER.info("Retrieving registry data cost {}ms",(System.currentTimeMillis()-start));
+			sb.append(regEntity).append(";");
+		}
+		catch (CommonSecurityException e) {
+			LOGGER.error(e.getLocalizedMessage(),e);
+		}
+		LOGGER.info("Retrieving combined data cost {}ms",(System.currentTimeMillis()-begin));
 		return Response.ok(sb.toString()).build();
 	}
 
