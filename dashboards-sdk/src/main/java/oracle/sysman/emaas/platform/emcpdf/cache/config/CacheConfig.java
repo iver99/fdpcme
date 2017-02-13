@@ -1,5 +1,6 @@
 package oracle.sysman.emaas.platform.emcpdf.cache.config;
 
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
@@ -7,7 +8,7 @@ import java.util.ResourceBundle;
  */
 public class CacheConfig {
     //if you want to run local test, please comment this line of below code.
-    public static ResourceBundle conf = ResourceBundle.getBundle("cache_config");
+    public static ResourceBundle conf = ResourceBundle.getBundle("cache_config", Locale.US);
     //all cache group's expiration time
     public static final Long ADMIN_LINK_CACHE_EXPIRE_TIME = Long.valueOf(conf.getString("ADMIN_LINK_CACHE_EXPIRE_TIME"));
     public static final Long CLOUD_SERVICE_LINK_EXPIRE_TIME = Long.valueOf(conf.getString("CLOUD_SERVICE_LINK_EXPIRE_TIME"));
