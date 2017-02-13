@@ -45,7 +45,6 @@ import oracle.sysman.emaas.platform.dashboards.core.UserOptionsManager;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DatabaseDependencyUnavailableException;
-import oracle.sysman.emaas.platform.dashboards.core.exception.resource.EntityNamingDependencyUnavailableException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.UserOptionsNotFoundException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.DeleteSystemDashboardException;
@@ -65,7 +64,7 @@ import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.model.RegistrationEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.model.UserInfoEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.DashboardAPIUtil;
-import oracle.sysman.emaas.platform.dashboards.ws.rest.util.ParallelThreadPool;
+import oracle.sysman.emaas.platform.dashboards.webutils.ParallelThreadPool;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.Binary;
@@ -510,8 +509,10 @@ public class DashboardAPI extends APIBase
 				}
 			});
 
-			LOGGER.info("Retrieving dashboard data cost {}ms",(System.currentTimeMillis()-start));
+			LOGGER.info("Retrieving dashboard data cost {}ms, data is {}",(System.currentTimeMillis()-start), getJsonUtil().toJson(dbd));
+			updateDashboardAllHref(dbd, tenantIdParam);
 		}
+		
 		catch (DashboardException e) {
 			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
