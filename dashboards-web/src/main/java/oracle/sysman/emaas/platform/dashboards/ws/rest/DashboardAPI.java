@@ -507,7 +507,7 @@ public class DashboardAPI extends APIBase
 				}
 			});
 
-			LOGGER.info("Retrieving dashboard data cost {}ms",(System.currentTimeMillis()-start));
+			LOGGER.info("Retrieving dashboard data cost {}ms, data is {}",(System.currentTimeMillis()-start), getJsonUtil().toJson(dbd));
 			updateDashboardAllHref(dbd, tenantIdParam);
 		}
 		catch(DashboardNotFoundException e){

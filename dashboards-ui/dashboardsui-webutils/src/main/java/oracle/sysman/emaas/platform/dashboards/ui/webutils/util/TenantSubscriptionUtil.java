@@ -52,6 +52,8 @@ public class TenantSubscriptionUtil
 {
 	public static class RestClient
 	{
+		private static final Integer DEFAULT_TIMEOUT = 3000;
+
 		private Map<String, Object> headers;
 
 		public RestClient()
@@ -65,6 +67,8 @@ public class TenantSubscriptionUtil
 
 			ClientConfig cc = new DefaultClientConfig();
 			Client client = Client.create(cc);
+			client.setConnectTimeout(DEFAULT_TIMEOUT);
+			client.setReadTimeout(DEFAULT_TIMEOUT);
 			char[] authToken = RegistrationManager.getInstance().getAuthorizationToken();
 			String auth = String.copyValueOf(authToken);
 			if (StringUtil.isEmpty(auth)) {
