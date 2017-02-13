@@ -14,6 +14,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -61,6 +65,7 @@ import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.model.RegistrationEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.model.UserInfoEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.DashboardAPIUtil;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.util.ParallelThreadPool;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.Binary;
@@ -472,28 +477,38 @@ public class DashboardAPI extends APIBase
 	@Produces(MediaType.TEXT_PLAIN)
 	public Response queryCombinedData(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
-			@PathParam("id") BigInteger dashboardId,@HeaderParam(value = "SESSION_EXP") String sessionExpiryTime)
+			@PathParam("id") final BigInteger dashboardId,@HeaderParam(value = "SESSION_EXP") final String sessionExpiryTime)
 	{
 		Long begin=System.currentTimeMillis();
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [GET] /v1/dashboards/{}", dashboardId);
-		DashboardManager dm = DashboardManager.getInstance();
+		final DashboardManager dm = DashboardManager.getInstance();
 		StringBuilder sb=new StringBuilder();
-		sb.append("window._dashboardServerCache=");
+		ExecutorService pool = ParallelThreadPool.getThreadPool();
+
+		Dashboard dbd =null;
 		Long start=null;
+		Future<Dashboard> futureDashboard=null;
+		Future<String> futureUserInfo =null;
+		Future<String> futureReg =null;
 		try {
 			if (!DependencyStatus.getInstance().isDatabaseUp())  {
 				LOGGER.error("Error to call [GET] /v1/dashboards/{}/combinedData: database is down", dashboardId);
 				throw new DatabaseDependencyUnavailableException();
 			}
 			logkeyHeaders("combinedData()", userTenant, tenantIdParam);
-			Long tenantId = getTenantId(tenantIdParam);
+			final Long tenantId = getTenantId(tenantIdParam);
 			initializeUserContext(tenantIdParam, userTenant);
-			String userName = UserContext.getCurrentUser();
+			final String userName = UserContext.getCurrentUser();
 			start=System.currentTimeMillis();
-			Dashboard dbd = dm.getCombinedDashboardById(dashboardId, tenantId, userName);
+			futureDashboard = pool.submit(new Callable<Dashboard>() {
+				@Override
+				public Dashboard call() throws Exception {
+					return dm.getCombinedDashboardById(dashboardId, tenantId, userName);
+				}
+			});
+
 			LOGGER.info("Retrieving dashboard data cost {}ms",(System.currentTimeMillis()-start));
 			updateDashboardAllHref(dbd, tenantIdParam);
-			sb.append(getJsonUtil().toJson(dbd));
 		}
 		catch(DashboardNotFoundException e){
 			//suppress error information in log file
@@ -511,31 +526,63 @@ public class DashboardAPI extends APIBase
 		finally {
 			clearUserContext();
 		}
-		sb.append(";window._userInfoServerCache=");
 		//retrieve user info
+		String userInfoEntity = null;
 		try {
 			initializeUserContext(tenantIdParam, userTenant);
 			start =System.currentTimeMillis();
-			String userInfoEntity = JsonUtil.buildNormalMapper().toJson(new UserInfoEntity());
+			futureUserInfo= pool.submit(new Callable<String>() {
+				@Override
+				public String call() throws Exception {
+					return JsonUtil.buildNormalMapper().toJson(new UserInfoEntity());
+				}
+			});
 			LOGGER.info("Retrieving user info data cost {}ms",(System.currentTimeMillis()-start));
-			sb.append(userInfoEntity);
 		}
 		catch (CommonSecurityException e) {
 			LOGGER.error(e.getLocalizedMessage(),e);
 		}
 
-		sb.append(";window._registrationServerCache=");
 		//retrieve registration info
+		String regEntity=null;
 		try {
 			initializeUserContext(tenantIdParam, userTenant);
 			start =System.currentTimeMillis();
-			String regEntity = JsonUtil.buildNonNullMapper().toJson(new RegistrationEntity(sessionExpiryTime));
+			futureReg = pool.submit(new Callable<String>() {
+				@Override
+				public String call() throws Exception {
+					return JsonUtil.buildNonNullMapper().toJson(new RegistrationEntity(sessionExpiryTime));
+				}
+			});
 			LOGGER.info("Retrieving registry data cost {}ms",(System.currentTimeMillis()-start));
-			sb.append(regEntity).append(";");
 		}
 		catch (CommonSecurityException e) {
 			LOGGER.error(e.getLocalizedMessage(),e);
 		}
+		//get all data
+		try {
+			if(futureReg!=null){
+				sb.append("window._registrationServerCache=");
+				regEntity = futureReg.get();
+				sb.append(regEntity).append(";");
+			}
+			if(futureUserInfo!=null){
+				sb.append(";window._userInfoServerCache=");
+				userInfoEntity = futureUserInfo.get();
+				sb.append(userInfoEntity).append(";");
+			}
+			if(futureDashboard!=null){
+				sb.append("window._dashboardServerCache=");
+				dbd=futureDashboard.get();
+				sb.append(getJsonUtil().toJson(dbd)).append(";");
+			}
+
+		} catch (InterruptedException e) {
+			LOGGER.error(e.getLocalizedMessage(),e);
+		} catch (ExecutionException e) {
+			LOGGER.error(e.getLocalizedMessage(),e);
+		}
+
 		LOGGER.info("Retrieving combined data cost {}ms",(System.currentTimeMillis()-begin));
 		return Response.ok(sb.toString()).build();
 	}
