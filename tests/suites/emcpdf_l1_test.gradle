@@ -199,6 +199,7 @@ task DEVUiWebTest(type:EMTest,dependsOn: DEVUiTest){
 	include "oracle/sysman/emaas/platform/dashboards/ui/web/*.class"
 	include "oracle/sysman/emaas/platform/dashboards/ui/web/gzip/*.class"
 	include "oracle/sysman/emaas/platform/dashboards/ui/web/context/*.class"
+	include "oracle/sysman/emaas/platform/dashboards/ui/web/additionaldata/*.class"
 
 }
 
