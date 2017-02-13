@@ -23,8 +23,7 @@ import java.math.BigInteger;
 public class DashboardTileParamsRowEntity implements RowEntity
 {
 	@JsonProperty("TILE_ID")
-	@JsonSerialize(using = BigIntegerSerializer.class)
-	private BigInteger tileId;
+	private String tileId;
 
 	@JsonProperty("PARAM_NAME")
 	private String paramName;
@@ -224,7 +223,7 @@ public class DashboardTileParamsRowEntity implements RowEntity
 	/**
 	 * @return the tileId
 	 */
-	public BigInteger getTileId()
+	public String getTileId()
 	{
 		return tileId;
 	}
@@ -334,7 +333,7 @@ public class DashboardTileParamsRowEntity implements RowEntity
 	 * @param tileId
 	 *            the tileId to set
 	 */
-	public void setTileId(BigInteger tileId)
+	public void setTileId(String tileId)
 	{
 		this.tileId = tileId;
 	}

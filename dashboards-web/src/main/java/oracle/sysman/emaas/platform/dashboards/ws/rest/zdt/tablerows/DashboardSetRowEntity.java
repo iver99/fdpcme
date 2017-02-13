@@ -23,15 +23,13 @@ import java.math.BigInteger;
 public class DashboardSetRowEntity implements RowEntity
 {
 	@JsonProperty("DASHBOARD_SET_ID")
-	@JsonSerialize(using = BigIntegerSerializer.class)
-	private BigInteger dashboardSetId;
+	private String dashboardSetId;
 
 	@JsonProperty("TENANT_ID")
 	private Long tenantId;
 
 	@JsonProperty("SUB_DASHBOARD_ID")
-	@JsonSerialize(using = BigIntegerSerializer.class)
-	private BigInteger subDashboardId;
+	private String subDashboardId;
 
 	@JsonProperty("POSITION")
 	private Long position;
@@ -43,8 +41,7 @@ public class DashboardSetRowEntity implements RowEntity
 	private String lastModificationDate;
 	
 	@JsonProperty("DELETED")
-	@JsonSerialize(using = BigIntegerSerializer.class)
-	private BigInteger deleted;
+	private String deleted;
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
@@ -115,13 +112,13 @@ public class DashboardSetRowEntity implements RowEntity
 	
 	
 
-	public BigInteger getDeleted() {
+	public String getDeleted() {
 		return deleted;
 	}
 
 
 
-	public void setDeleted(BigInteger deleted) {
+	public void setDeleted(String deleted) {
 		this.deleted = deleted;
 	}
 
@@ -130,7 +127,7 @@ public class DashboardSetRowEntity implements RowEntity
 	/**
 	 * @return the dashboardSetId
 	 */
-	public BigInteger getDashboardSetId()
+	public String getDashboardSetId()
 	{
 		return dashboardSetId;
 	}
@@ -146,7 +143,7 @@ public class DashboardSetRowEntity implements RowEntity
 	/**
 	 * @return the subDashboardId
 	 */
-	public BigInteger getSubDashboardId()
+	public String getSubDashboardId()
 	{
 		return subDashboardId;
 	}
@@ -197,7 +194,7 @@ public class DashboardSetRowEntity implements RowEntity
 	 * @param dashboardSetId
 	 *            the dashboardSetId to set
 	 */
-	public void setDashboardSetId(BigInteger dashboardSetId)
+	public void setDashboardSetId(String dashboardSetId)
 	{
 		this.dashboardSetId = dashboardSetId;
 	}
@@ -215,7 +212,7 @@ public class DashboardSetRowEntity implements RowEntity
 	 * @param subDashboardId
 	 *            the subDashboardId to set
 	 */
-	public void setSubDashboardId(BigInteger subDashboardId)
+	public void setSubDashboardId(String subDashboardId)
 	{
 		this.subDashboardId = subDashboardId;
 	}
