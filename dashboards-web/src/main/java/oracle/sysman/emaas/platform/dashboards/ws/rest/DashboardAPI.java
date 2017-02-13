@@ -33,28 +33,16 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.StreamingOutput;
 
-import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
-import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
-import oracle.sysman.emaas.platform.emcpdf.cache.support.screenshot.LRUScreenshotCacheManager;
-import oracle.sysman.emaas.platform.emcpdf.cache.tool.*;
-import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
-import oracle.sysman.emaas.platform.dashboards.core.exception.resource.UserOptionsNotFoundException;
-import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
-import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
-import oracle.sysman.emaas.platform.emcpdf.cache.util.ScreenshotPathGenerator;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.codehaus.jettison.json.JSONObject;
-
-import com.sun.jersey.core.util.Base64;
-
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardConstants;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardManager;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardsFilter;
 import oracle.sysman.emaas.platform.dashboards.core.UserOptionsManager;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DatabaseDependencyUnavailableException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.resource.EntityNamingDependencyUnavailableException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.resource.UserOptionsNotFoundException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.DeleteSystemDashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
@@ -63,12 +51,32 @@ import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableEntity
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableTimeRangeState;
 import oracle.sysman.emaas.platform.dashboards.core.model.PaginatedDashboards;
 import oracle.sysman.emaas.platform.dashboards.core.model.UserOptions;
+import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
+import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.model.RegistrationEntity;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.model.UserInfoEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.DashboardAPIUtil;
+import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
+import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Binary;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.DefaultKeyGenerator;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.ScreenshotData;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.ScreenshotElement;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
+import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
+import oracle.sysman.emaas.platform.emcpdf.cache.util.ScreenshotPathGenerator;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.codehaus.jettison.json.JSONObject;
+
+import com.sun.jersey.core.util.Base64;
 
 /**
  * @author wenjzhu
@@ -458,6 +466,65 @@ public class DashboardAPI extends APIBase
 		finally {
 			clearUserContext();
 		}
+	}
+	@GET
+	@Path("{id: [1-9][0-9]*}/combinedData")
+	@Produces(MediaType.TEXT_PLAIN)
+	public Response queryCombinedData(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
+			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
+			@PathParam("id") BigInteger dashboardId,@HeaderParam(value = "SESSION_EXP") String sessionExpiryTime)
+	{
+		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [GET] /v1/dashboards/{}", dashboardId);
+		DashboardManager dm = DashboardManager.getInstance();
+		StringBuilder sb=new StringBuilder();
+		sb.append("window._dashboardServerCache=");
+		Long start=null;
+		try {
+			if (!DependencyStatus.getInstance().isDatabaseUp())  {
+				LOGGER.error("Error to call [GET] /v1/dashboards/{}/combinedData: database is down", dashboardId);
+				throw new DatabaseDependencyUnavailableException();
+			}
+			logkeyHeaders("combinedData()", userTenant, tenantIdParam);
+			Long tenantId = getTenantId(tenantIdParam);
+			initializeUserContext(tenantIdParam, userTenant);
+			String userName = UserContext.getCurrentUser();
+			start=System.currentTimeMillis();
+			Dashboard dbd = dm.getCombinedDashboardById(dashboardId, tenantId, userName);
+			LOGGER.info("Retrieving dashboard data cost {}ms"+(System.currentTimeMillis()-start));
+			updateDashboardAllHref(dbd, tenantIdParam);
+			sb.append(getJsonUtil().toJson(dbd));
+		}
+		catch(DashboardNotFoundException e){
+			//suppress error information in log file
+			LOGGER.warn("Specific dashboard not found for id {}", dashboardId);
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+		catch (DashboardException e) {
+			LOGGER.error(e.getLocalizedMessage(), e);
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+		catch (BasicServiceMalfunctionException e) {
+			LOGGER.error(e.getLocalizedMessage(), e);
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+		finally {
+			clearUserContext();
+		}
+		sb.append(";window._userInfoServerCache=");
+		//retrieve user info
+		start =System.currentTimeMillis();
+		String userInfoEntity = JsonUtil.buildNormalMapper().toJson(new UserInfoEntity());
+		LOGGER.info("Retrieving user info data cost {}ms"+(System.currentTimeMillis()-start));
+		sb.append(userInfoEntity);
+
+		sb.append(";window._registrationServerCache=");
+		//retrieve registration info
+		start =System.currentTimeMillis();
+		String regEntity = JsonUtil.buildNonNullMapper().toJson(new RegistrationEntity(sessionExpiryTime));
+		LOGGER.info("Retrieving registry data cost {}ms"+(System.currentTimeMillis()-start));
+		sb.append(regEntity).append(";");
+
+		return Response.ok(sb.toString()).build();
 	}
 
 	@GET

@@ -89,6 +89,7 @@ public class AdditionalDataFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response,
                          FilterChain chain) throws IOException, ServletException {
+    	try{
         LOGGER.debug("Now enter the AdditionalDataFilter");
         HttpServletRequest httpReq = (HttpServletRequest) request;
         final HttpServletResponse httpResponse = (HttpServletResponse) response;
@@ -129,9 +130,12 @@ public class AdditionalDataFilter implements Filter {
         String langAttr = NLSFilter.getLangAttr(httpReq);
         String dashboardData = getDashboardData(httpReq);
         newResponseText = getResponseText(langAttr, dashboardData);
-        LOGGER.debug("After inserting additional data, the response text is {}", newResponseText);
 
         updateResponseWithAdditionDataText(response, newResponseText);
+    	}
+    	catch(Exception e){
+            LOGGER.error(e.getLocalizedMessage(), e);
+    	}
     }
 
     /**
@@ -168,6 +172,7 @@ public class AdditionalDataFilter implements Filter {
         }
         sb.append(CACHED_AFTER_DASHBOARD_DATA_PART);
         newResponseText = sb.toString();
+        LOGGER.info("newResponseText = sb.toString(); {}", newResponseText);
         return newResponseText;
     }
 
@@ -213,7 +218,7 @@ public class AdditionalDataFilter implements Filter {
             LOGGER.warn("tenant {}/user {} is null or empty or invalid, so do not update dashboard page then", tenant, user);
             return null;
         }
-        long start =System.currentTimeMillis();
+        /*long start =System.currentTimeMillis();
         StringBuilder sb = new StringBuilder();
         if (BigInteger.ZERO.compareTo(dashboardId) < 0) {
             String dashboardString = DashboardDataAccessUtil.getDashboardData(tenant, tenant + "." + user, referer, dashboardId);
@@ -243,7 +248,9 @@ public class AdditionalDataFilter implements Filter {
         }
         else {
             sb.append("window._registrationServerCache=").append(regString).append(";");
-        }
-        return sb.toString();
+        }*/
+        String result =DashboardDataAccessUtil.getCombinedData(tenant, tenant + "." + user, referer, sessionExp, dashboardId);
+        LOGGER.info("Additional filter "+result);
+        return result;
     }
 }

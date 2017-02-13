@@ -18,7 +18,7 @@ import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.registration.Str
  * Created by guochen on 11/19/16.
  */
 public class DashboardDataAccessUtilTest {
-    @Test(groups = { "s2" })
+    /*@Test(groups = { "s2" })
     public void testGetDashboardData(@Mocked final RegistryLookupUtil anyRegistryLookupUtil, @Mocked final Link anyLink,
                                      @Mocked final TenantSubscriptionUtil.RestClient anyRestClient) {
         final String dashboard = "{dashboardId: 1, name: 'test'}";
@@ -121,5 +121,5 @@ public class DashboardDataAccessUtilTest {
         };
         String res = DashboardDataAccessUtil.getRegistrationData("tenant", "tenant.user", null, null);
         Assert.assertNull(res);
-    }
+    }*/
 }

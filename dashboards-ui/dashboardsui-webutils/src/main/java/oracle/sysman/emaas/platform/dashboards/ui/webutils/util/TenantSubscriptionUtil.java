@@ -58,8 +58,7 @@ public class TenantSubscriptionUtil
 		{
 		}
 
-		public String get(String url, String tenant)
-		{
+		public String get(String url, String tenant,String accept) {
 			if (StringUtils.isEmpty(url)) {
 				return null;
 			}
@@ -78,7 +77,7 @@ public class TenantSubscriptionUtil
 			}
 			Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
 					.header(HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME, tenant).type(MediaType.APPLICATION_JSON)
-					.accept(MediaType.APPLICATION_JSON);
+					.accept(accept);
 			if (headers != null && !headers.isEmpty()) {
 				for (String key : headers.keySet()) {
 					if (HttpHeaders.AUTHORIZATION.equals(key) || HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME.equals(key)) {
@@ -89,6 +88,11 @@ public class TenantSubscriptionUtil
 				}
 			}
 			return builder.get(String.class);
+		}
+		
+		public String get(String url, String tenant)
+		{
+			return get(url, tenant,MediaType.APPLICATION_JSON);
 		}
 
 		public void setHeader(String header, Object value)

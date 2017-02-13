@@ -35,12 +35,14 @@ public class AdditionalDataFilterTest {
                 result = "<BEFORE_PART lang=\"en-US\">INTER_PART////ADDITIONALDATA////END_PART";
                 NLSFilter.getLangAttr((HttpServletRequest)any);
                 result = "lang=\"en\"";
-                DashboardDataAccessUtil.getDashboardData(anyString, anyString, anyString, (BigInteger) any);
+               /* DashboardDataAccessUtil.getDashboardData(anyString, anyString, anyString, (BigInteger) any);
                 result = "{value: 123abc??$^-[]|(&!~@#%^&*+{}<>\\_,.;`':\"}";
                 DashboardDataAccessUtil.getRegistrationData(anyString, anyString, anyString, anyString);
                 result = "{registration data}";
                 DashboardDataAccessUtil.getUserTenantInfo(anyString, anyString, anyString, anyString);
-                result = "{user tenant data}";
+                result = "{user tenant data}";*/
+                DashboardDataAccessUtil.getCombinedData(anyString, anyString, anyString,anyString, (BigInteger) any);
+                result = "{combined data}";
             }
         };
         filter.doFilter(httpReq, response, chain);
