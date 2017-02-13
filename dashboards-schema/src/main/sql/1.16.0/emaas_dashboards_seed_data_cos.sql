@@ -1,14 +1,14 @@
 Rem
-Rem emaas_dashboards_seed_data_os.sql
+Rem emaas_dashboards_seed_data_cos.sql
 Rem
 Rem Copyright (c) 2013, 2014, 2015, 2016, 2017 Oracle and/or its affiliates.
 Rem All rights reserved.
 Rem
 Rem    NAME
-Rem      emaas_dashboards_seed_data_os.sql
+Rem      emaas_dashboards_seed_data_cos.sql
 Rem
 Rem    DESCRIPTION
-Rem      Seed data for ITAUPDATE
+Rem      Seed data for COSUPDATE
 Rem
 Rem    NOTES
 Rem      None
