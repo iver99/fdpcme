@@ -999,9 +999,8 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
 
                 if(params.showBadge){
                     var defaultTP = formalizeTimePeriod(ko.unwrap(params.defaultTimePeriod));
-                    debugger;
                     if(self.timePeriodsNlsObject[defaultTP] || isValidFlexRelTimePeriod(defaultTP)) {
-                        self.badgeTimePeriod(defaultTP);
+                        self.badgeTimePeriod(self.timePeriodsNlsObject[defaultTP]);
                     }
                 }
 
