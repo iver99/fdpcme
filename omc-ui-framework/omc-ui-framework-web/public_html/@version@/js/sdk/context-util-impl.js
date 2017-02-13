@@ -218,22 +218,6 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
              * @returns {Object} OMC global context in json format
              */
             self.getOMCContext = function (respectOmcAppCtx, respectOmcEntityCtx, respectOmcTimeCtx) {
-                return {
-                "time": {
-                    "startTime": 1478776210123,
-                    "endTime": 1479975751500,
-                    "timePeriod": "LAST_1_DAY"
-                },
-                "composite": {
-                    "compositeMEID": "7F97169E4D8D7A05715DBFA7F83995F4",
-                    "compositeType": "omc_group",
-                    "compositeName": "group_1020"
-                },
-                "entity": {
-                    "entityMEIDs": ["EA908BB62D8C2399B132B716335ED786","34D21A9DE8567CB2D489E6B2BB5D22FB"],
-                    "entitiesType": "omc_oracle_db"
-                }
-            };
                 var omcContext = null;
                 if (respectOmcAppCtx === null || typeof respectOmcAppCtx === 'undefined') {
                     respectOmcAppCtx = window._uifwk.respectOMCApplicationContext;
