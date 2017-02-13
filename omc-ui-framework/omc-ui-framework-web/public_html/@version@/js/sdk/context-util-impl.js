@@ -1337,6 +1337,33 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                 }
                 window.addEventListener("message", receiveMessage, false);
             }
+            
+            self.setBadgeShow = function(toShowBadge, badgeTimePeriod){
+                if(!window._uifwk.badgeInfo){
+                    window._uifwk.badgeInfo = {};
+                }
+                if(!self.isValidTimePeriod(badgeTimePeriod)){
+                    return false;
+                }
+                window._uifwk.badgeInfo.isBadgeShown = toShowBadge;
+                if(toShowBadge){
+                    window._uifwk.badgeInfo.badgeTimePeriod = badgeTimePeriod;
+                }else{
+                    window._uifwk.badgeInfo.badgeTimePeriod = null;
+                }
+                return true;
+            };
+            
+            self.getBadgeInfo = function(){
+                window._uifwk.badgeInfo = {};
+                window._uifwk.badgeInfo.toShowBadge = true;
+                window._uifwk.badgeInfo.badgeTimePeriod = "Last 7 days";
+                if(window._uifwk && window._uifwk.badgeInfo && window._uifwk.badgeInfo.toShowBadge){
+                    return window._uifwk.badgeInfo.badgeTimePeriod;
+                }else{
+                    return null;
+                }
+            };
 
             /**
              * Fire OMC change event when omc context is updated.
