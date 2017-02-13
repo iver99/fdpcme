@@ -1,16 +1,16 @@
 package oracle.sysman.emaas.platform.dashboards.ui.webutils.wls.management;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-
+ 
+import mockit.Expectations;
+import mockit.Mocked;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LoggerContext;
-import org.apache.logging.log4j.core.config.Configurator;
-import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
+import org.apache.logging.log4j.core.config.Configuration;
+import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.testng.annotations.Test;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author guobaochen
@@ -18,55 +18,37 @@ import org.testng.annotations.Test;
 @Test(groups = { "s2" })
 public class AppLoggingManageMXBeanTest_S2
 {
-	private URI oldUri;
-
-	@AfterMethod
-	public void afterMethod() throws URISyntaxException
-	{
-		LoggerContext context = (org.apache.logging.log4j.core.LoggerContext) LogManager.getContext(false);
-		context.setConfigLocation(oldUri);
-	}
-
-	@BeforeMethod
-	public void beforeMethod() throws URISyntaxException
-	{
-		LoggerContext context = (org.apache.logging.log4j.core.LoggerContext) LogManager.getContext(false);
-		oldUri = context.getConfigLocation();
-		URL url = AppLoggingManageMXBeanTest_S2.class.getResource(
-				"/log4j2-test.xml");
-		Configurator.initialize("root", AppLoggingManageMXBeanTest_S2.class.getClassLoader(), url.toURI());
+	private AppLoggingManageMXBean appLoggingManageMXBean = new AppLoggingManageMXBean();
+	@Mocked
+	LoggerContext loggerContext;
+	@Mocked
+	LogManager logManager;
+	@Mocked
+	LoggerConfig loggerConfig;
+	@Mocked
+	Configuration configuration;
+	@Test
+	public void testGetLogLevels(){
+		final Map<String, LoggerConfig> stringLoggerConfigMap = new HashMap<>();
+		stringLoggerConfigMap.put("1", loggerConfig);
+		new Expectations(){
+			{
+				LogManager.getContext(false);
+				result = loggerContext;
+				configuration.getLoggers();
+				result = stringLoggerConfigMap;
+			}
+		};
+		appLoggingManageMXBean.getLogLevels();
 	}
 
 	@Test
-	public void testGetLogLevels()
-	{
-		AppLoggingManageMXBean almmxb = new AppLoggingManageMXBean();
-		String levels = almmxb.getLogLevels();
-		Assert.assertTrue(levels.contains("\"oracle.sysman.emaas.platform.dashboards.ui\":\"FATAL\""));
-	}
-
-	@Test
-	public void testSetLogLevels()
-	{
-		AppLoggingManageMXBean almmxb = new AppLoggingManageMXBean();
-		almmxb.setLogLevel("oracle.sysman.emaas.platform.dashboards.ui", "DEBUG");
-		String levels = almmxb.getLogLevels();
-		Assert.assertTrue(levels.contains("\"oracle.sysman.emaas.platform.dashboards.ui\":\"DEBUG\""));
-
-		almmxb.setLogLevel("oracle.sysman.emaas.platform.dashboards.ui", "WARN");
-		levels = almmxb.getLogLevels();
-		Assert.assertTrue(levels.contains("\"oracle.sysman.emaas.platform.dashboards.ui\":\"WARN\""));
-
-		almmxb.setLogLevel("oracle.sysman.emaas.platform.dashboards.ui", "ERROR");
-		levels = almmxb.getLogLevels();
-		Assert.assertTrue(levels.contains("\"oracle.sysman.emaas.platform.dashboards.ui\":\"ERROR\""));
-
-		almmxb.setLogLevel("oracle.sysman.emaas.platform.dashboards.ui", "FATAL");
-		levels = almmxb.getLogLevels();
-		Assert.assertTrue(levels.contains("\"oracle.sysman.emaas.platform.dashboards.ui\":\"FATAL\""));
-
-		almmxb.setLogLevel("oracle.sysman.emaas.platform.dashboards.ui", "INFO");
-		levels = almmxb.getLogLevels();
-		Assert.assertTrue(levels.contains("\"oracle.sysman.emaas.platform.dashboards.ui\":\"INFO\""));
+	public void testSetLogLevel(){
+		appLoggingManageMXBean.setLogLevel("web", "DEBUG");
+		appLoggingManageMXBean.setLogLevel("web", "INFO");
+		appLoggingManageMXBean.setLogLevel("web", "WARN");
+		appLoggingManageMXBean.setLogLevel("web", "ERROR");
+		appLoggingManageMXBean.setLogLevel("web", "FATAL");
 	}
 }
+
