@@ -25,6 +25,13 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                 window._uifwk.respectOMCEntityContext = true;
                 window._uifwk.respectOMCTimeContext = true;
             }
+            
+            self.OMCEventSourceConstants = {
+                GLOBAL_TIME_SELECTOR: 'OMC_UIFWK_TIME_SELECTOR',
+                GLOBAL_ENTITY_SELECTOR: 'OMC_UIFWK_ENTITY_SELECTOR',
+                GLOBAL_APPLICATION_SELECTOR: 'OMC_UIFWK_APPLICATION_SELECTOR',
+                GLOBAL_TOPOLOGY: 'OMC_UIFWK_TOPOLOGY'
+            };
 
             self.OMCTimeConstants = {
                 TIME_UNIT: {
