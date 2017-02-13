@@ -1,7 +1,15 @@
         <div data-testapiversion="1.13.0" data-bind="attr: {id: 'dateTimePicker_' + randomId}" style="display: table">
             <label for="dropdown" data-bind="attr: {id: 'dropdownLabel_'+randomId}" style="font-weight: bold; font-size: 14px; vertical-align: middle; padding-right: 5px;" data-bind="text: timeRangeMsg, style: {display: hideMainLabel}"></label>
-            <span class="oj-select-choice"  style="width: auto; display: inline-block" data-bind="attr: {id: 'dropDown_'+randomId}, click: panelControl, event: {keypress: function(data, event) {if(isEnterPressed(data, event)) {panelControl();}}}" aria-label="Pick datetime"> 
-                <span class="oj-select-chosen" style="padding-right: 24px;" data-bind="html: dateTimeInfo"></span>
+            <span class="oj-select-choice"  style="width: auto; display: inline-block;" data-bind="attr: {id: 'dropDown_'+randomId}, click: panelControl, event: {keypress: function(data, event) {if(isEnterPressed(data, event)) {panelControl();}}}" aria-label="Pick datetime"> 
+                <img class="info-badge" src="@version@/images/imgbackground.png" style="height:16px;width:16px;vertical-align:top;margin-top:8px;background: url('@version@/images/uifwkSprite.png') no-repeat 0px -46px;" data-bind="style: {display: badgeTimePeriod()?'inline':'none'},event: {mouseover: badgeMouseOverHandler, mouseout: badgeMouseOutHandler}"/>
+                <div data-bind="ojComponent:{component: 'ojPopup',tail: 'simple'}" class="badge-popup-message" style="display: block;padding:0; max-width: 340px;">
+                    <img src="@version@/images/imgbackground.png" style="height:16px;width:16px;vertical-align:top;background: url('@version@/images/uifwkSprite.png') no-repeat 0px -46px;"/>
+                    <div style="margin: 0 0 0 7px; padding: 0; display: inline-block;">
+                        <span data-bind="text: 'Showing data for '+badgeTimePeriod()" class="badge-message-summary"></span><br>
+                        <span class="badge-message-detail" data-bind="text: badgeStartTime()+' - '+badgeEndTime()"></span>
+                    </div>
+                </div>
+                <span class="oj-select-chosen" style="padding-right: 24px; font-size: 10px; color: #666666;" data-bind="html: dateTimeInfo"></span>
                 <span class="time-filter-indicator fa-icon-font" 
                   data-bind="event: {mouseover: showTimeFilterInfo, mouseout: hideTimeFilterInfo, 
                               keypress: function(data, event) {event.stopPropagation(); if(isEnterPressed(data, event)) {toggleTimeFilterInfo();}}},

@@ -966,11 +966,19 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 }
                 
                 self.defaultTimePeriod = ko.observable(ctxUtil.OMCTimeConstants.QUICK_PICK.LAST_15_MINUTE);
+                self.badgeTimePeriod = ko.observable();
                 if(params.defaultTimePeriod) {
                     var defaultTP = formalizeTimePeriod(ko.unwrap(params.defaultTimePeriod));
                     if(defaultTP !== ctxUtil.OMCTimeConstants.QUICK_PICK.CUSTOM) {
                         if(self.timePeriodsNlsObject[defaultTP] || isValidFlexRelTimePeriod(defaultTP)) {
                             self.defaultTimePeriod(defaultTP);
+                        }
+                    }
+                    var tp;
+                    if(omcContext.time && omcContext.time.timePeriod && 
+                                ((tp = self.timePeriodsNlsObject[formalizeTimePeriod(omcContext.time.timePeriod)]) || isValidFlexRelTimePeriod(omcContext.time.timePeriod))){
+                        if(params.defaultTimePeriod !== tp){
+                            self.badgeTimePeriod(self.timePeriodsNlsObject[defaultTP]);
                         }
                     }
                 }
@@ -1282,7 +1290,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
 
                     //For "Latest" quick pick
                     if(timePeriod === self.timePeriodLatest) {
-                        dateTimeInfo = "<span style='font-weight: bold; padding-right: 5px; display: inline-block;'>" + timePeriod + "</span>";
+                        dateTimeInfo = "<span style='font-weight: bold; padding-right: 5px; display: inline-block;' "+ (self.badgeTimePeriod()?"class='show-individual-time-span1'>":">") + timePeriod + "</span>";
                         return dateTimeInfo;
                     }
 
@@ -1293,17 +1301,17 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             if(self.getParam(self.timeDisplay) === "short") {
                                 dateTimeInfo = "<span style='font-weight:bold; padding-right: 5px; display: inline-block;'>" + self.getFlexTimePeriod(self.flexRelTimeVal(), self.flexRelTimeOpt()[0])  + "</span>";
                             }else {
-                                dateTimeInfo = "<span style='font-weight:bold; padding-right: 5px; display:" + self.hideRangeLabel + ";'>" + self.getFlexTimePeriod(self.flexRelTimeVal(), self.flexRelTimeOpt()[0]) + ": </span>";
-                                dateTimeInfo += start + "<span style='font-weight:bold; " + hyphenDisplay + "'> - </span>" + end;
+                                dateTimeInfo = "<span style='font-weight:bold; padding-right: 5px; display:" + self.hideRangeLabel + ";' "+ (self.badgeTimePeriod()?"class='show-individual-time-span1'>":">") + self.getFlexTimePeriod(self.flexRelTimeVal(), self.flexRelTimeOpt()[0]) + ": </span>";
+                                dateTimeInfo += start + "<span style='font-weight:bold; " + hyphenDisplay + "' "+ (self.badgeTimePeriod()?"class='show-individual-time-span2'>":">") +" - </span>" + end;
                             }
                         }else {
                         
                             if(self.getParam(self.timeDisplay) === "short") {
                                 dateTimeInfo = start + "<span style='font-weight:bold; " + hyphenDisplay + "'> - </span>" + end;
                             }else {
-                                dateTimeInfo = "<span style='font-weight:bold; padding-right: 5px; display:" + self.hideRangeLabel + ";'>" + timePeriod + ": </span>" +
+                                dateTimeInfo = "<span style='font-weight:bold; padding-right: 5px; display:" + self.hideRangeLabel + ";' "+ (self.badgeTimePeriod()?"class='show-individual-time-span1'>":">") + timePeriod + ": </span>" +
                                     start +
-                                    "<span style='font-weight:bold; " + hyphenDisplay + "'> - </span>" +
+                                    "<span style='font-weight:bold; " + hyphenDisplay + "' "+ (self.badgeTimePeriod()?"class='show-individual-time-span2'>":">") +" - </span>" +
                                     end;
                             }
                         }
@@ -1312,15 +1320,15 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     
                     //generate dateTimeInfo for "Recent" List
                     if(!timePeriod) {
-                        dateTimeInfo = dateTimeInfo = start + "<span style='font-weight:bold; " + hyphenDisplay + "'> - </span>" + end;
+                        dateTimeInfo = dateTimeInfo = start + "<span style='font-weight:bold; " + hyphenDisplay + "' "+ (self.badgeTimePeriod()?"class='show-individual-time-span2'>":">") +" - </span>" + end;
                         return dateTimeInfo;
                     }
 
                     if(self.getParam(self.timeDisplay) === "short") {
                         dateTimeInfo = "<span style='font-weight:bold; padding-right: 5px; display: inline-block;'>" + timePeriod + "</span>";
                     }else {
-                        dateTimeInfo = "<span style='font-weight:bold; padding-right: 5px; display:" + self.hideRangeLabel + ";'>" + timePeriod + ": </span>";
-                        dateTimeInfo += start + "<span style='font-weight:bold; " + hyphenDisplay + "'> - </span>" + end;
+                        dateTimeInfo = "<span style='font-weight:bold; padding-right: 5px; display:" + self.hideRangeLabel + ";' "+ (self.badgeTimePeriod()?"class='show-individual-time-span1'>":">") + timePeriod + ": </span>";
+                        dateTimeInfo += start + "<span style='font-weight:bold; " + hyphenDisplay + "' "+ (self.badgeTimePeriod()?"class='show-individual-time-span2'>":">") +" - </span>" + end;
                     }
                     return dateTimeInfo;
                 };
@@ -1765,7 +1773,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 }
                 
                 self.setFlexRelTime = function(num, opt) {
-                    var timeRange = self.getTimeRangeForFlexRelTime(ctxUtil.generateTimePeriodFromUnitAndDuration(opt, num));
+                    var timeRange = self.timeTimeRangeForFlexRelTime(ctxUtil.generateTimePeriodFromUnitAndDuration(opt, num));
 //                    var timeRange = self.getTimeRangeForFlexRelTime("LAST_"+num+"_"+opt);
                     var start = timeRange.start;
                     var end = timeRange.end;
@@ -2915,6 +2923,42 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         
                     }
                 }
+
+                self.badgeStartTime = ko.observable();
+                self.badgeEndTime = ko.observable();
+                self.badgeMouseOverHandler = function (widget, event) {
+                    var _time = self.getTimeRangeForFlexRelTime(self.badgeTimePeriod());
+                    var _startTime,_endTime;
+                    if(self.timeConverter() === self.timeConverterMillisecond) {
+                        _startTime = _time.start.slice(10);
+                        _endTime = _time.end.slice(10);
+                    }else {
+                        _startTime = _time.start.slice(10, 16);
+                        _endTime = _time.end.slice(10, 16);
+                    }
+                    var _timeInfoStr = self.getDateTimeInfo(_time.start.slice(0, 10), _time.end.slice(0, 10), _startTime, _endTime, self.badgeTimePeriod());
+                    var _timeInfoNode = $("<div>" + _timeInfoStr + "</div>")[0];
+                    self.badgeStartTime(_timeInfoNode.childNodes[1].nodeValue);
+                    self.badgeEndTime(_timeInfoNode.childNodes[3].nodeValue);
+                    
+                    var popupContent = $('.badge-popup-message');
+                    popupContent.ojPopup("close");
+                    if (!popupContent.ojPopup("isOpen")) {
+                        $(popupContent).ojPopup("open", $(".info-badge"),
+                                {
+                                    my: "end top", at: "left bottom"
+                                });
+                        setTimeout(function(){
+                            self.badgeMouseOutHandler();
+                        },4000);
+                    }
+                };
+                self.badgeMouseOutHandler = function (widget, event) {
+                    if ($($('.badge-popup-message')).ojPopup("isOpen")) {
+                        $('.badge-popup-message').ojPopup("close");
+                    }
+                };
+                
                 ctxUtil.subscribeOMCContextChangeEvent(callbackForOmcCtxChange);
                 
                 self.initialize();
