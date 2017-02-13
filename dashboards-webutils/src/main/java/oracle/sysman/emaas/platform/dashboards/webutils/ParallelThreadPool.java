@@ -1,4 +1,4 @@
-package oracle.sysman.emaas.platform.dashboards.ws.rest.util;
+package oracle.sysman.emaas.platform.dashboards.webutils;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
