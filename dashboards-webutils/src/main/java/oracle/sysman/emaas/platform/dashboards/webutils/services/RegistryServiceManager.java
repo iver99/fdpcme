@@ -279,6 +279,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	{
 		LOGGER.info("Post-starting 'Service Registry' application service");
 		registerService();
+		ParallelThreadPool.init();
 	}
 
 	@Override
