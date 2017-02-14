@@ -28,15 +28,6 @@ public class ParallelThreadPool {
         }
     }
 
-   /* public static void init(){
-    	//make the number of threads in pool to cpu core * 2
-//        int size = Runtime.getRuntime().availableProcessors() * 2;
-
-//        pool = Executors.newFixedThreadPool(size);
-    	initCustomThreadPool();
-        LOGGER.info("Dashboards-API: Thread pool is initialized!");
-    }*/
-
     public static void init(){
         int cpuCore = Runtime.getRuntime().availableProcessors();
         pool = new ThreadPoolExecutor(cpuCore*2,			//Core thread size
@@ -53,7 +44,7 @@ public class ParallelThreadPool {
     private static class CustomRejectedExecutionHandler implements RejectedExecutionHandler {
         @Override
         public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
-            LOGGER.fatal("Task queue of thread pool if full! Task is rejected!");
+            LOGGER.fatal("Task queue of thread pool is full! Task is rejected!");
             throw new RejectedExecutionException("Task " + r.toString() +
                     " rejected from " +
                     executor.toString());
