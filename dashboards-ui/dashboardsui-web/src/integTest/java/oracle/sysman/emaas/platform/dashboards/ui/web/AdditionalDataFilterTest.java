@@ -31,7 +31,7 @@ public class AdditionalDataFilterTest {
                 result = "tenant.user";
                 httpReq.getParameter(anyString);
                 result = "1";
-                anyByteArrayOutputStream.toString();
+                anyByteArrayOutputStream.toString("UTF-8");
                 result = "<BEFORE_PART lang=\"en-US\">INTER_PART////ADDITIONALDATA////END_PART";
                 NLSFilter.getLangAttr((HttpServletRequest)any);
                 result = "lang=\"en\"";
