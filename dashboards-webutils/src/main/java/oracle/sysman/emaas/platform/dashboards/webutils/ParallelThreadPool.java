@@ -28,17 +28,20 @@ public class ParallelThreadPool {
         }
     }
 
-    public static void init(){
+    public synchronized static void init(){
         int cpuCore = Runtime.getRuntime().availableProcessors();
-        pool = new ThreadPoolExecutor(cpuCore*2,			//Core thread size
-                cpuCore*3,									//max thread size
+        if(pool != null){
+            return;
+        }
+        pool = new ThreadPoolExecutor(cpuCore * 2,			//Core thread size
+                cpuCore * 3,								//max thread size
                 60,											//keep alived time for idle thread
                 TimeUnit.SECONDS,
-                new LinkedBlockingQueue<Runnable>(10000),	//bounded queue with capacity 10000
+                new ArrayBlockingQueue<Runnable>(1000),	    //bounded queue with capacity 1000
                 Executors.defaultThreadFactory(),			//default thread factory
                 new CustomRejectedExecutionHandler()		//Custom Rejected execution handler
                 );
-        LOGGER.info("Dashboards-API: Thread pool with core size {} initialized!",cpuCore*2);
+        LOGGER.info("Dashboards-API: Thread pool with core size {} and max size {} and queue size {} is initialized!", cpuCore * 2, cpuCore * 3 ,1000);
     }
 
     private static class CustomRejectedExecutionHandler implements RejectedExecutionHandler {
