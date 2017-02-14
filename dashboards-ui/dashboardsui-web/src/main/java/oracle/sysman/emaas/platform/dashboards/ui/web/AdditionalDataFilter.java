@@ -59,7 +59,7 @@ public class AdditionalDataFilter implements Filter {
             try {
             	outputStream.flush();
                 outputStream.close();
-                result = byteStream.toString();
+                result = byteStream.toString("UTF-8");
             }
             catch (IOException e) {
                 LOGGER.error("Failed to decode outputStream", e);
