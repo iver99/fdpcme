@@ -10,33 +10,7 @@
 
 package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.math.BigInteger;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.CacheControl;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.core.StreamingOutput;
-
+import com.sun.jersey.core.util.Base64;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardConstants;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardManager;
@@ -54,34 +28,37 @@ import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableEntity
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableTimeRangeState;
 import oracle.sysman.emaas.platform.dashboards.core.model.PaginatedDashboards;
 import oracle.sysman.emaas.platform.dashboards.core.model.UserOptions;
-import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
-import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
-import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
-import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
-import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
+import oracle.sysman.emaas.platform.dashboards.core.util.*;
+import oracle.sysman.emaas.platform.dashboards.webutils.ParallelThreadPool;
 import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.model.RegistrationEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.model.UserInfoEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.DashboardAPIUtil;
-import oracle.sysman.emaas.platform.dashboards.webutils.ParallelThreadPool;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
-import oracle.sysman.emaas.platform.emcpdf.cache.tool.Binary;
-import oracle.sysman.emaas.platform.emcpdf.cache.tool.DefaultKeyGenerator;
-import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
-import oracle.sysman.emaas.platform.emcpdf.cache.tool.ScreenshotData;
-import oracle.sysman.emaas.platform.emcpdf.cache.tool.ScreenshotElement;
-import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.*;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.ScreenshotPathGenerator;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.jettison.json.JSONObject;
 
-import com.sun.jersey.core.util.Base64;
+import javax.ws.rs.*;
+import javax.ws.rs.core.CacheControl;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.StreamingOutput;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 
 /**
  * @author wenjzhu
@@ -486,7 +463,6 @@ public class DashboardAPI extends APIBase
 		ExecutorService pool = ParallelThreadPool.getThreadPool();
 
 		Dashboard dbd =null;
-		Long start=null;
 		Future<Dashboard> futureDashboard=null;
 		Future<String> futureUserInfo =null;
 		Future<String> futureReg =null;
@@ -497,7 +473,6 @@ public class DashboardAPI extends APIBase
 			}
 			logkeyHeaders("combinedData()", userTenant, tenantIdParam);
 			
-			start=System.currentTimeMillis();
 			futureDashboard = pool.submit(new Callable<Dashboard>() {
 				@Override
 				public Dashboard call() throws Exception {
@@ -508,9 +483,6 @@ public class DashboardAPI extends APIBase
 					return dm.getCombinedDashboardById(dashboardId, tenantId, userName);
 				}
 			});
-
-			LOGGER.info("Retrieving dashboard data cost {}ms, data is {}",(System.currentTimeMillis()-start), getJsonUtil().toJson(dbd));
-			updateDashboardAllHref(dbd, tenantIdParam);
 		}
 		
 		catch (DashboardException e) {
@@ -522,7 +494,6 @@ public class DashboardAPI extends APIBase
 		}
 		//retrieve user info
 		String userInfoEntity = null;
-		start =System.currentTimeMillis();
 		futureUserInfo= pool.submit(new Callable<String>() {
 				@Override
 				public String call() throws Exception {
@@ -531,11 +502,9 @@ public class DashboardAPI extends APIBase
 					return JsonUtil.buildNormalMapper().toJson(new UserInfoEntity());
 				}
 		});
-		LOGGER.info("Retrieving user info data cost {}ms",(System.currentTimeMillis()-start));
 
 		//retrieve registration info
 		String regEntity=null;
-		start =System.currentTimeMillis();
 			futureReg = pool.submit(new Callable<String>() {
 				@Override
 				public String call() throws Exception {
@@ -544,44 +513,51 @@ public class DashboardAPI extends APIBase
 					return JsonUtil.buildNonNullMapper().toJson(new RegistrationEntity(sessionExpiryTime));
 				}
 			});
-		LOGGER.info("Retrieving registry data cost {}ms",(System.currentTimeMillis()-start));
-		//get all data
+		//get data
 		try {
 			if(futureReg!=null){
-				sb.append("window._registrationServerCache=");
 				regEntity = futureReg.get();
 				if(regEntity !=null && !StringUtils.isEmpty(regEntity)){
+					sb.append("window._registrationServerCache=");
 					sb.append(regEntity).append(";");
 				}
-				LOGGER.info("reg information is "+regEntity);
+				LOGGER.debug("Registration data is "+regEntity);
 			}
-			if(futureUserInfo!=null){
-				sb.append("window._userInfoServerCache=");
-				userInfoEntity = futureUserInfo.get();
-				if(userInfoEntity !=null && !StringUtils.isEmpty(userInfoEntity)){
-					sb.append(userInfoEntity).append(";");
-				}
-				LOGGER.info("user information is "+regEntity);
-			}
-			if(futureDashboard!=null){
-				sb.append("window._dashboardServerCache=");
-				try {
-					dbd = futureDashboard.get();
-				} catch (ExecutionException e) {
-					if (e.getCause() instanceof DashboardNotFoundException) {
-						LOGGER.error(e.getCause().getLocalizedMessage(), e);
-					}
-					throw e;
-				}
-				if(dbd !=null){
-					sb.append(getJsonUtil().toJson(dbd)).append(";");
-				}
-				updateDashboardAllHref(dbd, tenantIdParam);
-			}
-
 		} catch (InterruptedException e) {
 			LOGGER.error(e.getLocalizedMessage(),e);
 		} catch (ExecutionException e) {
+			LOGGER.error(e.getLocalizedMessage(),e);
+		}
+
+		try {
+			if (futureUserInfo != null) {
+				userInfoEntity = futureUserInfo.get();
+				if (userInfoEntity != null && !StringUtils.isEmpty(userInfoEntity)) {
+					sb.append("window._userInfoServerCache=");
+					sb.append(userInfoEntity).append(";");
+				}
+				LOGGER.debug("User info data is " + regEntity);
+			}
+		} catch (InterruptedException e) {
+			LOGGER.error(e.getLocalizedMessage(),e);
+		} catch (ExecutionException e) {
+			LOGGER.error(e.getLocalizedMessage(),e);
+		}
+
+		try {
+			if(futureDashboard!=null){
+				dbd = futureDashboard.get();
+				if(dbd !=null){
+					sb.append("window._dashboardServerCache=");
+					sb.append(getJsonUtil().toJson(dbd)).append(";");
+				}
+				LOGGER.debug("Dashboard data is " + getJsonUtil().toJson(dbd));
+				updateDashboardAllHref(dbd, tenantIdParam);
+			}
+		} catch (ExecutionException e) {
+			LOGGER.error(e.getLocalizedMessage(),e);
+		}
+		catch (InterruptedException e) {
 			LOGGER.error(e.getLocalizedMessage(),e);
 		}
 
