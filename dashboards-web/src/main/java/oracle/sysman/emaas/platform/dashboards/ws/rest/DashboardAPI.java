@@ -565,7 +565,14 @@ public class DashboardAPI extends APIBase
 			}
 			if(futureDashboard!=null){
 				sb.append("window._dashboardServerCache=");
-				dbd=futureDashboard.get();
+				try {
+					dbd = futureDashboard.get();
+				} catch (ExecutionException e) {
+					if (e.getCause() instanceof DashboardNotFoundException) {
+						LOGGER.error(e.getCause().getLocalizedMessage(), e);
+					}
+					throw e;
+				}
 				if(dbd !=null){
 					sb.append(getJsonUtil().toJson(dbd)).append(";");
 				}
