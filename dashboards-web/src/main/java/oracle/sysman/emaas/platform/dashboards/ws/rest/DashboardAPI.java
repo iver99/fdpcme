@@ -422,7 +422,8 @@ public class DashboardAPI extends APIBase
 
 	@GET
 	@Path("{id: [1-9][0-9]*}")
-	@Produces(MediaType.APPLICATION_JSON)
+	//@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public Response queryDashboardById(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
 			@PathParam("id") BigInteger dashboardId)
