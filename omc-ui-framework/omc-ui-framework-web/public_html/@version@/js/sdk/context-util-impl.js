@@ -25,6 +25,13 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                 window._uifwk.respectOMCEntityContext = true;
                 window._uifwk.respectOMCTimeContext = true;
             }
+            
+            self.OMCEventSourceConstants = {
+                GLOBAL_TIME_SELECTOR: 'OMC_UIFWK_TIME_SELECTOR',
+                GLOBAL_ENTITY_SELECTOR: 'OMC_UIFWK_ENTITY_SELECTOR',
+                GLOBAL_APPLICATION_SELECTOR: 'OMC_UIFWK_APPLICATION_SELECTOR',
+                GLOBAL_TOPOLOGY: 'OMC_UIFWK_TOPOLOGY'
+            };
 
             self.OMCTimeConstants = {
                 TIME_UNIT: {
@@ -43,11 +50,14 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                     LAST_2_HOUR: 'LAST_2_HOUR',
                     LAST_4_HOUR: 'LAST_4_HOUR',
                     LAST_6_HOUR: 'LAST_6_HOUR',
+                    LAST_8_HOUR: 'LAST_8_HOUR',
+                    LAST_24_HOUR: 'LAST_24_HOUR',
                     LAST_1_DAY: 'LAST_1_DAY',
                     LAST_7_DAY: 'LAST_7_DAY',
                     LAST_14_DAY: 'LAST_14_DAY',
                     LAST_30_DAY: 'LAST_30_DAY',
                     LAST_90_DAY: 'LAST_90_DAY',
+                    LAST_12_MONTH: 'LAST_12_MONTH',
                     LAST_1_YEAR: 'LAST_1_YEAR',
                     LATEST: 'LATEST',
                     CUSTOM: 'CUSTOM'
