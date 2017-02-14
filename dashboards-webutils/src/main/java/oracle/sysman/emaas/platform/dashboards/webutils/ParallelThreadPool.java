@@ -28,24 +28,26 @@ public class ParallelThreadPool {
         }
     }
 
+   /* public static void init(){
+    	//make the number of threads in pool to cpu core * 2
+//        int size = Runtime.getRuntime().availableProcessors() * 2;
+
+//        pool = Executors.newFixedThreadPool(size);
+    	initCustomThreadPool();
+        LOGGER.info("Dashboards-API: Thread pool is initialized!");
+    }*/
+
     public static void init(){
-        int size = Runtime.getRuntime().availableProcessors() * 2;
-        LOGGER.info("Dashboards-API: Thread pool with size {} is initialized!",size);
-        //make the number of threads in pool to cpu core * 2
-
-        pool = Executors.newFixedThreadPool(size);
-    }
-
-    public static void initCustomThreadPool(){
         int cpuCore = Runtime.getRuntime().availableProcessors();
-        pool = new ThreadPoolExecutor(cpuCore*2,
-                cpuCore*3,
-                60,
+        pool = new ThreadPoolExecutor(cpuCore*2,			//Core thread size
+                cpuCore*3,									//max thread size
+                60,											//keep alived time for idle thread
                 TimeUnit.SECONDS,
-                new LinkedBlockingQueue<Runnable>(10000),
-                Executors.defaultThreadFactory(),
-                new CustomRejectedExecutionHandler()
+                new LinkedBlockingQueue<Runnable>(10000),	//bounded queue with capacity 10000
+                Executors.defaultThreadFactory(),			//default thread factory
+                new CustomRejectedExecutionHandler()		//Custom Rejected execution handler
                 );
+        LOGGER.info("Dashboards-API: Thread pool with core size {} initialized!",cpuCore*2);
     }
 
     private static class CustomRejectedExecutionHandler implements RejectedExecutionHandler {
