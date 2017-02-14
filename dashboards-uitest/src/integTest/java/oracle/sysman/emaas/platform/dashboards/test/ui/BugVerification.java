@@ -249,9 +249,6 @@ public class BugVerification extends LoginAndLogout
 		Assert.assertTrue(laCtx_url.contains("omcCtx="), "The global context infomation in URL is lost");
 				
 		//find notification button and click it to open notification page
-		webd.getLogger().info("start to verify omcCtx exist in the Notification page url");	
-		Assert.assertTrue(laCtx_url.contains("omcCtx="), "The global context infomation in URL is lost");
-		
 		WebElement ntButton = webd.getWebDriver().findElement(By.xpath(PageId.NOTIFICATIONBUTTON_LA));		
 		Assert.assertTrue(ntButton.isDisplayed(), "Notiification button isn't displayed in the page.");
 		webd.click(PageId.NOTIFICATIONBUTTON_LA);
