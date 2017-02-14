@@ -492,7 +492,11 @@ define(['knockout',
         
         function requireTargetSelectorUtils(needLoad, callback) {
             if (needLoad) {
-                require(['emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils'], function(TargetSelectorUtils) {
+                var versionedTargetSelectorUtils = window.getSDKVersionFile ? 
+                    window.getSDKVersionFile('emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils') : null;
+                var targetSelectorUtilsModel = versionedTargetSelectorUtils ? versionedTargetSelectorUtils : 
+                        'emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils';
+                require([targetSelectorUtilsModel], function(TargetSelectorUtils) {
                   if (callback) {
                       callback(TargetSelectorUtils);
                   }
