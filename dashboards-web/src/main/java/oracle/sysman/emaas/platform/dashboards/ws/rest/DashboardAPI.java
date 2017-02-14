@@ -446,6 +446,7 @@ public class DashboardAPI extends APIBase
 			clearUserContext();
 		}
 	}
+
 	@GET
 	@Path("{id: [1-9][0-9]*}/combinedData")
 	@Produces(MediaType.TEXT_PLAIN)
@@ -524,7 +525,7 @@ public class DashboardAPI extends APIBase
 		} catch (InterruptedException e) {
 			LOGGER.error(e.getStackTrace());
 		} catch (ExecutionException e) {
-			LOGGER.error(e.getCause().getStackTrace());
+			LOGGER.error(e.getCause() == null? e.getStackTrace() : e.getCause().getStackTrace());
 		}catch(TimeoutException e){
 			LOGGER.error(e.getStackTrace());
 		}
