@@ -115,10 +115,14 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 
             if (!ko.components.isRegistered('emctas-globalbar'))
             {
+                var versionedTemplate = window.getSDKVersionFile ? 
+                    window.getSDKVersionFile('emsaasui/emcta/ta/js/sdk/globalcontextbar/emctas-globalbar.html') : null;
+                var template = versionedTemplate ? versionedTemplate : 
+                        'emsaasui/emcta/ta/js/sdk/globalcontextbar/emctas-globalbar.html';
                 ko.components.register('emctas-globalbar', {
                     viewModel: function () {
                     },
-                    template: {require: 'text!/emsaasui/emcta/ta/js/sdk/globalcontextbar/emctas-globalbar.html'}
+                    template: {require: 'text!' + template}
                 });
             }
 
@@ -211,9 +215,17 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 if (!self.isTopologyCompRegistered()) {
                     require(['ojs/ojdiagram'], function () {
                         if (!ko.components.isRegistered('emctas-topology')) {
+                            var versionedTopoViewModel = window.getSDKVersionFile ? 
+                                window.getSDKVersionFile('emsaasui/emcta/ta/js/sdk/topology/emcta-topology') : null;
+                            var topoViewModel = versionedTopoViewModel ? versionedTopoViewModel : 
+                                    'emsaasui/emcta/ta/js/sdk/topology/emcta-topology';
+                            var versionedTopoTemplate = window.getSDKVersionFile ? 
+                                window.getSDKVersionFile('emsaasui/emcta/ta/js/sdk/topology/emcta-topology.html') : null;
+                            var topoTemplate = versionedTopoTemplate ? versionedTopoTemplate : 
+                                    'emsaasui/emcta/ta/js/sdk/topology/emcta-topology.html';
                             ko.components.register('emctas-topology', {
-                                viewModel: {require: '/emsaasui/emcta/ta/js/sdk/topology/emcta-topology.js'},
-                                template: {require: 'text!/emsaasui/emcta/ta/js/sdk/topology/emcta-topology.html'}
+                                viewModel: {require: topoViewModel},
+                                template: {require: 'text!' + topoTemplate}
                             });
                         }
                         self.isTopologyCompRegistered(true);
