@@ -5,19 +5,13 @@ import java.math.BigInteger;
 import javax.ws.rs.core.MediaType;
 
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
-import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.registration.StringCacheUtil;
-import oracle.sysman.emaas.platform.emcpdf.cache.api.ICache;
-import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
-import oracle.sysman.emaas.platform.emcpdf.cache.exception.ExecutionException;
-import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
-import oracle.sysman.emaas.platform.emcpdf.cache.tool.DefaultKeyGenerator;
-import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
-import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
-import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import com.sun.jersey.api.client.ClientHandlerException;
+import com.sun.jersey.api.client.UniformInterfaceException;
 
 /**
  * Created by guochen on 11/18/16.
@@ -165,10 +159,22 @@ public class DashboardDataAccessUtil {
         rc.setHeader("X-REMOTE-USER", userTenant);
         rc.setHeader("SESSION_EXP", sessionExp);
         rc.setHeader("Referer", referer);
-        String response = rc.get(dashboardHref, tenantIdParam,MediaType.TEXT_PLAIN);
-        LOGGER.info("Retrieved combined data is: {}", response);
-        LOGGER.info("It takes {}ms to retrieve dashboard data from Dashboard-API", (System.currentTimeMillis() - start));
-        return response;
+        try{
+        	String response = rc.get(dashboardHref, tenantIdParam,MediaType.TEXT_PLAIN);
+        	LOGGER.info("Retrieved combined data is: {}", response);
+            LOGGER.info("It takes {}ms to retrieve dashboard data from Dashboard-API", (System.currentTimeMillis() - start));
+            return response;
+        }catch(UniformInterfaceException e){
+        	LOGGER.error("Error occurred: status code of the HTTP response indicates a response that is not expected");
+        	LOGGER.error(e.getLocalizedMessage(),e);
+        }catch(ClientHandlerException e){//RestClient may timeout, so catch this runtime exception to make sure the response can return.
+        	LOGGER.error("Error occurred: Signals a failure to process the HTTP request or HTTP response");
+        	LOGGER.error(e.getLocalizedMessage(),e);
+        }
+        
+        LOGGER.warn("Error occurred when retrieve combined data, returning empty string now...");
+        return "";
+        
     	
     }
 }
