@@ -148,7 +148,7 @@ public class AdditionalDataFilter implements Filter {
     private void updateResponseWithAdditionDataText(ServletResponse response, String newResponseText) throws IOException {
         response.setCharacterEncoding("utf-8");
         response.setContentType("text/html;charset=utf-8");
-        try (PrintWriter writer = new PrintWriter(response.getOutputStream())) {
+        try (PrintWriter writer = new PrintWriter(response.getWriter())) {
             writer.println(newResponseText);
         }
     }
