@@ -207,7 +207,7 @@ public class AdditionalDataFilter implements Filter {
 
             final String dashboardIdStr = httpReq.getParameter("dashboardId");
             BigInteger dashboardId = new BigInteger(dashboardIdStr);
-            return DashboardDataAccessUtil.getCombinedData(tenant, tenant + "." + user, httpReq.getHeader("referer"), sesExp, dashboardId);
+            return DashboardDataAccessUtil.getCombinedData(tenant, userTenant, httpReq.getHeader("referer"), sesExp, dashboardId);
         }
         return null;
     }

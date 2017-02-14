@@ -41,13 +41,13 @@ public class DashboardDataAccessUtil {
             return response;
         }catch(UniformInterfaceException e){
         	LOGGER.error("Error occurred: status code of the HTTP response indicates a response that is not expected");
-        	LOGGER.error(e.getLocalizedMessage(),e);
+        	LOGGER.error(e.getStackTrace());
         }catch(ClientHandlerException e){//RestClient may timeout, so catch this runtime exception to make sure the response can return.
         	LOGGER.error("Error occurred: Signals a failure to process the HTTP request or HTTP response");
-        	LOGGER.error(e.getLocalizedMessage(),e);
+        	LOGGER.error(e.getStackTrace());
         }catch(Exception e){
             LOGGER.error("Error occurred when retrieving combined data from Dashboard-UI!");
-            LOGGER.error(e.getLocalizedMessage(),e);
+            LOGGER.error(e.getStackTrace());
         }
         
         LOGGER.warn("Error occurred when retrieve combined data, returning empty string now...");

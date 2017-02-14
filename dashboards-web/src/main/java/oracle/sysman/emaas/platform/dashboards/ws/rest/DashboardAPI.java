@@ -484,7 +484,7 @@ public class DashboardAPI extends APIBase
 		}
 		
 		catch (DashboardException e) {
-			LOGGER.error(e.getLocalizedMessage(), e);
+			LOGGER.error(e.getStackTrace());
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		finally {
@@ -522,11 +522,11 @@ public class DashboardAPI extends APIBase
 				LOGGER.debug("Registration data is "+regEntity);
 			}
 		} catch (InterruptedException e) {
-			LOGGER.error(e.getLocalizedMessage(),e);
+			LOGGER.error(e.getStackTrace());
 		} catch (ExecutionException e) {
-			LOGGER.error(e.getCause().getLocalizedMessage(), e);
+			LOGGER.error(e.getCause().getStackTrace());
 		}catch(TimeoutException e){
-			LOGGER.error(e.getLocalizedMessage(),e);
+			LOGGER.error(e.getStackTrace());
 		}
 
 		try {
@@ -539,11 +539,11 @@ public class DashboardAPI extends APIBase
 				LOGGER.debug("User info data is " + regEntity);
 			}
 		} catch (InterruptedException e) {
-			LOGGER.error(e.getLocalizedMessage(),e);
+			LOGGER.error(e.getStackTrace());
 		} catch (ExecutionException e) {
-			LOGGER.error(e.getCause().getLocalizedMessage(), e);
+			LOGGER.error(e.getCause().getStackTrace());
 		}catch(TimeoutException e){
-			LOGGER.error(e.getLocalizedMessage(),e);
+			LOGGER.error(e.getStackTrace());
 		}
 
 		try {
@@ -557,11 +557,11 @@ public class DashboardAPI extends APIBase
 				updateDashboardAllHref(dbd, tenantIdParam);
 			}
 		} catch (ExecutionException e) {
-			LOGGER.error(e.getCause().getLocalizedMessage(), e);
+			LOGGER.error(e.getCause().getStackTrace());
 		}catch (InterruptedException e) {
-			LOGGER.error(e.getLocalizedMessage(),e);
+			LOGGER.error(e.getStackTrace());
 		}catch(TimeoutException e){
-			LOGGER.error(e.getLocalizedMessage(),e);
+			LOGGER.error(e.getStackTrace());
 		}
 
 		LOGGER.info("Retrieving combined data cost {}ms",(System.currentTimeMillis()-begin));
