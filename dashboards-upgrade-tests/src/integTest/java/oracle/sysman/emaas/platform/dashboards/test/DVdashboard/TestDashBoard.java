@@ -6,19 +6,17 @@ import oracle.sysman.emaas.platform.dashboards.test.util.LoginAndLogout;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.GlobalContextUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.WelcomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-
-
 
 /**
  * @version
@@ -28,13 +26,11 @@ import org.testng.annotations.Test;
 
 public class TestDashBoard extends LoginAndLogout
 {
-         //private String dbName_withWidgetGrid = "";
-         private String dbName_setHome = "";
-         private String dbName_favorite = "";
-  
+	//private String dbName_withWidgetGrid = "";
+	private String dbName_setHome = "";
+	private String dbName_favorite = "";
 
-
-	public void initTest(String testName) 
+	public void initTest(String testName)
 	{
 		login(this.getClass().getName() + "." + testName);
 		try {
@@ -45,56 +41,9 @@ public class TestDashBoard extends LoginAndLogout
 			e.printStackTrace();
 		}
 	}
-@Test
-public void testSetHome() 
-	{
-		dbName_setHome = "setHomeDashboard-" + generateTimeStamp();
-		String dbDesc = "SetHome_testDashboard desc";
 
-		//Initialize the test
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start to test in testCreateDashboad_noWidget_GridView");
-
-		//reset the home page
-		webd.getLogger().info("Reset all filter options in the home page");
-		DashboardHomeUtil.resetFilterOptions(webd);
-
-		//switch to Grid View
-		webd.getLogger().info("Switch to grid view");
-		DashboardHomeUtil.gridView(webd);
-
-		//create dashboard
-		webd.getLogger().info("create a dashboard: with description, time refresh");
-		DashboardHomeUtil.createDashboard(webd, dbName_setHome, dbDesc, DashboardHomeUtil.DASHBOARD);
-
-		//verify dashboard in builder page
-		webd.getLogger().info("Verify the dashboard created Successfully");
-		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_setHome, dbDesc, true), "Create dashboard failed!");
-
-		//set it as home
-		webd.getLogger().info("Set home page");
-		Assert.assertTrue(DashboardBuilderUtil.toggleHome(webd), "Set the dasbhoard as Home failed!");
-
-		//check home page
-		webd.getLogger().info("Access to the home page");
-		BrandingBarUtil.visitMyHome(webd);
-		webd.getLogger().info("Verfiy the home page");
-		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_setHome, dbDesc, true), "It is NOT the home page!");
-
-		//set it not home
-		webd.getLogger().info("Set not home page");
-		Assert.assertFalse(DashboardBuilderUtil.toggleHome(webd), "Remove the dasbhoard as Home failed!");
-
-		//check home page
-		webd.getLogger().info("Access to the home page");
-		BrandingBarUtil.visitMyHome(webd);
-		webd.getLogger().info("Verfiy the home page");
-		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, WelcomeUtil.SERVICE_NAME_DASHBOARDS),
-				"It is NOT the home page!");
- 
-	}
 	@Test
-	public void testFavorite() 
+	public void testFavorite()
 	{
 		dbName_favorite = "favoriteDashboard-" + generateTimeStamp();
 		String dbDesc = "favorite_testDashboard desc";
@@ -155,9 +104,9 @@ public void testSetHome()
 		webd.getLogger().info("Verfiy the dashboard is not favorite");
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(webd, dbName_favorite),
 				"The dashboard is still my favorite dashboard");
-				//		DashboardHomeUtil.search(webd, dbName_favorite);
-				//		Assert.assertEquals(webd.getAttribute(DashBoardPageId.DashboardSerachResult_panelID + "@childElementCount"), "0");
-				//		webd.getLogger().info("no favorite dashboard");
+		//		DashboardHomeUtil.search(webd, dbName_favorite);
+		//		Assert.assertEquals(webd.getAttribute(DashBoardPageId.DashboardSerachResult_panelID + "@childElementCount"), "0");
+		//		webd.getLogger().info("no favorite dashboard");
 
 		//delete the dashboard
 		webd.getLogger().info("start to delete the dashboard");
@@ -170,13 +119,13 @@ public void testSetHome()
 		webd.getLogger().info("the dashboard has been deleted");
 	}
 
-         @Test
-          public void testModifyDashboard_LA() 
-		{
-					
+	@Test
+	public void testModifyDashboard_LA()
+	{
+
 		//init test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start to test in testOpenLAWidget");
+		webd.getLogger().info("Start to test in testModifyDashboard_LA");
 
 		//reset the home page
 		webd.getLogger().info("Reset all filter options in the home page");
@@ -185,30 +134,31 @@ public void testSetHome()
 		//switch to Grid View
 		webd.getLogger().info("Switch to Grid view");
 		DashboardHomeUtil.gridView(webd);
-		
-      //open the dashboard
+
+		//open the dashboard
 		webd.getLogger().info("Open the dashboard");
-		DashboardHomeUtil.selectDashboard(webd, oracle.sysman.emaas.platform.dashboards.test.DPdashboard.TestDashBoard.dbName_WithWidget);
+		DashboardHomeUtil.selectDashboard(webd,
+				oracle.sysman.emaas.platform.dashboards.test.DPdashboard.TestDashBoard.dbName_WithWidget);
 
 		//open the widget
 		webd.getLogger().info("Open the widget");
-		DashboardBuilderUtil.openWidget(webd, oracle.sysman.emaas.platform.dashboards.test.DPdashboard.TestDashBoard.WidgetName_LA);
-				
+		DashboardBuilderUtil.openWidget(webd,
+				oracle.sysman.emaas.platform.dashboards.test.DPdashboard.TestDashBoard.WidgetName_LA);
+
 		webd.switchToWindow();
 		webd.getLogger().info("Wait for the widget loading....");
 		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 		wait1.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id='srchSrch']")));
 
-}
+	}
 
-                  @Test
-                 public void testModifyDashboard_UDE() 
-		{
-			
-			
+	@Test
+	public void testModifyDashboard_UDE()
+	{
+
 		//init test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start to test in testOpenUDEWidget");
+		webd.getLogger().info("Start to test in testModifyDashboard_UDE");
 
 		//reset the home page
 		webd.getLogger().info("Reset all filter options in the home page");
@@ -217,30 +167,102 @@ public void testSetHome()
 		//switch to Grid View
 		webd.getLogger().info("Switch to Grid view");
 		DashboardHomeUtil.gridView(webd);
-		
-              //open the dashboard
+
+		//open the dashboard
 		webd.getLogger().info("Open the dashboard");
-		DashboardHomeUtil.selectDashboard(webd, oracle.sysman.emaas.platform.dashboards.test.DPdashboard.TestDashBoard.dbName_WithWidget);
+		DashboardHomeUtil.selectDashboard(webd,
+				oracle.sysman.emaas.platform.dashboards.test.DPdashboard.TestDashBoard.dbName_WithWidget);
 
 		//open the widget
 		webd.getLogger().info("Open the widget");
-		DashboardBuilderUtil.openWidget(webd, oracle.sysman.emaas.platform.dashboards.test.DPdashboard.TestDashBoard.WidgetName_UDE);
-				
+		DashboardBuilderUtil.openWidget(webd,
+				oracle.sysman.emaas.platform.dashboards.test.DPdashboard.TestDashBoard.WidgetName_UDE);
+
 		webd.switchToWindow();
 		webd.getLogger().info("Wait for the widget loading....");
 		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 		//wait1.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//button[contains(@id,'editButton')]")));
 
-}
+	}
 
+	@Test
+	public void testNoGCinURL()
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test in testNoGCinURL");
 
-      private String generateTimeStamp()
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//switch to Grid View
+		webd.getLogger().info("Switch to Grid view");
+		DashboardHomeUtil.gridView(webd);
+
+		//open the dashboard
+		webd.getLogger().info("Open the dashboard");
+		DashboardHomeUtil.selectDashboard(webd,
+				oracle.sysman.emaas.platform.dashboards.test.DPdashboard.TestDashBoard.dbName_DisableEntitiesTime);
+
+		Assert.assertFalse(GlobalContextUtil.isGlobalContextExisted(webd));
+
+		String currenturl = webd.getWebDriver().getCurrentUrl();
+
+		Assert.assertFalse(currenturl.contains("omcCtx="), "The global context infomation is in URL");
+	}
+
+	@Test
+	public void testSetHome()
+	{
+		dbName_setHome = "setHomeDashboard-" + generateTimeStamp();
+		String dbDesc = "SetHome_testDashboard desc";
+
+		//Initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test in testSetHome");
+
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//switch to Grid View
+		webd.getLogger().info("Switch to grid view");
+		DashboardHomeUtil.gridView(webd);
+
+		//create dashboard
+		webd.getLogger().info("create a dashboard: with description, time refresh");
+		DashboardHomeUtil.createDashboard(webd, dbName_setHome, dbDesc, DashboardHomeUtil.DASHBOARD);
+
+		//verify dashboard in builder page
+		webd.getLogger().info("Verify the dashboard created Successfully");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_setHome, dbDesc, true), "Create dashboard failed!");
+
+		//set it as home
+		webd.getLogger().info("Set home page");
+		Assert.assertTrue(DashboardBuilderUtil.toggleHome(webd), "Set the dasbhoard as Home failed!");
+
+		//check home page
+		webd.getLogger().info("Access to the home page");
+		BrandingBarUtil.visitMyHome(webd);
+		webd.getLogger().info("Verfiy the home page");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_setHome, dbDesc, true), "It is NOT the home page!");
+
+		//set it not home
+		webd.getLogger().info("Set not home page");
+		Assert.assertFalse(DashboardBuilderUtil.toggleHome(webd), "Remove the dasbhoard as Home failed!");
+
+		//check home page
+		webd.getLogger().info("Access to the home page");
+		BrandingBarUtil.visitMyHome(webd);
+		webd.getLogger().info("Verfiy the home page");
+		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, WelcomeUtil.SERVICE_NAME_DASHBOARDS),
+				"It is NOT the home page!");
+
+	}
+
+	private String generateTimeStamp()
 	{
 		return String.valueOf(System.currentTimeMillis());
 	}
 
-	
-
 }
-
-
