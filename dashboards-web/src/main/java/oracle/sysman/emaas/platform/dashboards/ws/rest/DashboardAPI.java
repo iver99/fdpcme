@@ -55,10 +55,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 
 /**
  * @author wenjzhu
@@ -456,6 +453,7 @@ public class DashboardAPI extends APIBase
 			@HeaderParam(value = "X-REMOTE-USER") final String userTenant, @HeaderParam(value = "Referer") String referer,
 			@PathParam("id") final BigInteger dashboardId,@HeaderParam(value = "SESSION_EXP") final String sessionExpiryTime)
 	{
+		final long TIMEOUT=5000;
 		Long begin=System.currentTimeMillis();
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [GET] /v1/dashboards/{}", dashboardId);
 		final DashboardManager dm = DashboardManager.getInstance();
@@ -516,7 +514,7 @@ public class DashboardAPI extends APIBase
 		//get data
 		try {
 			if(futureReg!=null){
-				regEntity = futureReg.get();
+				regEntity = futureReg.get(TIMEOUT, TimeUnit.MILLISECONDS);
 				if(regEntity !=null && !StringUtils.isEmpty(regEntity)){
 					sb.append("window._registrationServerCache=");
 					sb.append(regEntity).append(";");
@@ -526,12 +524,14 @@ public class DashboardAPI extends APIBase
 		} catch (InterruptedException e) {
 			LOGGER.error(e.getLocalizedMessage(),e);
 		} catch (ExecutionException e) {
+			LOGGER.error(e.getCause().getLocalizedMessage(), e);
+		}catch(TimeoutException e){
 			LOGGER.error(e.getLocalizedMessage(),e);
 		}
 
 		try {
 			if (futureUserInfo != null) {
-				userInfoEntity = futureUserInfo.get();
+				userInfoEntity = futureUserInfo.get(TIMEOUT, TimeUnit.MILLISECONDS);
 				if (userInfoEntity != null && !StringUtils.isEmpty(userInfoEntity)) {
 					sb.append("window._userInfoServerCache=");
 					sb.append(userInfoEntity).append(";");
@@ -541,12 +541,14 @@ public class DashboardAPI extends APIBase
 		} catch (InterruptedException e) {
 			LOGGER.error(e.getLocalizedMessage(),e);
 		} catch (ExecutionException e) {
+			LOGGER.error(e.getCause().getLocalizedMessage(), e);
+		}catch(TimeoutException e){
 			LOGGER.error(e.getLocalizedMessage(),e);
 		}
 
 		try {
 			if(futureDashboard!=null){
-				dbd = futureDashboard.get();
+				dbd = futureDashboard.get(TIMEOUT, TimeUnit.MILLISECONDS);
 				if(dbd !=null){
 					sb.append("window._dashboardServerCache=");
 					sb.append(getJsonUtil().toJson(dbd)).append(";");
@@ -555,9 +557,10 @@ public class DashboardAPI extends APIBase
 				updateDashboardAllHref(dbd, tenantIdParam);
 			}
 		} catch (ExecutionException e) {
+			LOGGER.error(e.getCause().getLocalizedMessage(), e);
+		}catch (InterruptedException e) {
 			LOGGER.error(e.getLocalizedMessage(),e);
-		}
-		catch (InterruptedException e) {
+		}catch(TimeoutException e){
 			LOGGER.error(e.getLocalizedMessage(),e);
 		}
 

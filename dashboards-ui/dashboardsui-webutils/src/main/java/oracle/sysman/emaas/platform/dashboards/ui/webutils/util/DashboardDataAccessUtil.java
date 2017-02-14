@@ -170,6 +170,9 @@ public class DashboardDataAccessUtil {
         }catch(ClientHandlerException e){//RestClient may timeout, so catch this runtime exception to make sure the response can return.
         	LOGGER.error("Error occurred: Signals a failure to process the HTTP request or HTTP response");
         	LOGGER.error(e.getLocalizedMessage(),e);
+        }catch(Exception e){
+            LOGGER.error("Error occurred when retrieving combined data from Dashboard-UI!");
+            LOGGER.error(e.getLocalizedMessage(),e);
         }
         
         LOGGER.warn("Error occurred when retrieve combined data, returning empty string now...");
