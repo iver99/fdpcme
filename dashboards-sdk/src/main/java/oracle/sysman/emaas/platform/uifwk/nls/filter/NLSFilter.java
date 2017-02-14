@@ -4,27 +4,17 @@
  */
 package oracle.sysman.emaas.platform.uifwk.nls.filter;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.regex.Pattern;
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.logging.log4j.LogManager;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
-
-import org.apache.commons.lang3.StringEscapeUtils;
+import java.io.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 public class NLSFilter implements Filter
 {
@@ -32,7 +22,7 @@ public class NLSFilter implements Filter
     private static final Pattern pattern = Pattern.compile("lang=\"en(-US)?\"");
     private static final String defaultLocale = "en-US";
     private static final String[] supportedLanguages = new String[]{"en", "fr", "ko", "zh-Hans", "zh-Hant", "zh"};
-
+    private static org.apache.logging.log4j.Logger LOGGER = LogManager.getLogger(NLSFilter.class);
     @Override
     public void init(FilterConfig filterConfig) throws ServletException
     {
@@ -42,9 +32,10 @@ public class NLSFilter implements Filter
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
             ServletException
     {
-        assert (request instanceof HttpServletRequest);
+        if (!(request instanceof HttpServletRequest) || !(response instanceof HttpServletResponse)) {
+            LOGGER.error("Error occurred in NLS filter!");
+        }
         final HttpServletRequest httpRequest = (HttpServletRequest) request;
-        assert (response instanceof HttpServletResponse);
         final HttpServletResponse httpResponse = (HttpServletResponse) response;
 
         // Chains with a wrapper which captures the response text
@@ -54,7 +45,10 @@ public class NLSFilter implements Filter
 
 
         final String responseText = wrapper.getResponseText();
-        assert (responseText != null);
+        if(responseText == null){
+            LOGGER.error("Response Text is null in NLS filter!");
+            return;
+        }
         final String newResponseText = pattern.matcher(responseText).replaceFirst(langAttr);
 
         // Writes the updated response text to the response object
