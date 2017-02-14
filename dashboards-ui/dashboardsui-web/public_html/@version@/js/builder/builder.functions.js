@@ -525,13 +525,18 @@ define(['knockout',
                 return;
             }
             var assetRoot = dfu.getAssetRootUrl(tile.PROVIDER_NAME(), true);
+            var assetRootForVerisonedFile = assetRoot.substring(1);
             var kocVM = tile.WIDGET_VIEWMODEL();
             if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
-                kocVM = assetRoot + kocVM;
+                var versionedViewModel = window.getSDKVersionFile ? 
+                    window.getSDKVersionFile(assetRootForVerisonedFile + kocVM) : null;
+                kocVM = versionedViewModel ? versionedViewModel : assetRoot + kocVM;
             }
             var kocTemplate = tile.WIDGET_TEMPLATE();
             if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
-                kocTemplate = assetRoot + kocTemplate;
+                var versionedTemplate = window.getSDKVersionFile ? 
+                    window.getSDKVersionFile(assetRootForVerisonedFile + kocTemplate) : null;
+                kocTemplate = versionedTemplate ? versionedTemplate : assetRoot + kocTemplate;
             }
             Builder.registerComponent(tile.WIDGET_KOC_NAME(), kocVM, kocTemplate);
                     ko.applyBindings(tile, wgtelem[0]);
