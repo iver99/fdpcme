@@ -14,6 +14,8 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.GlobalContextUtil;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 
 /**
  * @version
