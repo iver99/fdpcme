@@ -37,7 +37,7 @@ public class ParallelThreadPool {
                 cpuCore * 3,								//max thread size
                 60,											//keep alived time for idle thread
                 TimeUnit.SECONDS,
-                new ArrayBlockingQueue<Runnable>(1000),	    //bounded queue with capacity 1000
+                new LinkedBlockingQueue<Runnable>(1000),	 //bounded queue with capacity 1000
                 Executors.defaultThreadFactory(),			//default thread factory
                 new CustomRejectedExecutionHandler()		//Custom Rejected execution handler
                 );
