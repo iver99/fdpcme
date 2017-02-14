@@ -10,10 +10,12 @@
 
 package oracle.sysman.emaas.platform.dashboards.ws.rest.zdt;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
 import oracle.sysman.emaas.platform.dashboards.core.zdt.DataManager;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -59,8 +61,8 @@ public class TableRowsSynchronizer {
         }
         int result = 0;
         for (DashboardSetRowEntity dashboardSetRowEntity : rows) {
-            result += DataManager.getInstance().syncDashboardSet(dashboardSetRowEntity.getDashboardSetId(), dashboardSetRowEntity.getTenantId(),
-                    dashboardSetRowEntity.getSubDashboardId(), dashboardSetRowEntity.getPosition(), dashboardSetRowEntity.getCreationDate(), dashboardSetRowEntity.getLastModificationDate());
+            result += DataManager.getInstance().syncDashboardSet(new BigInteger(dashboardSetRowEntity.getDashboardSetId()), dashboardSetRowEntity.getTenantId(),
+            		new BigInteger(dashboardSetRowEntity.getSubDashboardId()), dashboardSetRowEntity.getPosition(), dashboardSetRowEntity.getCreationDate(), dashboardSetRowEntity.getLastModificationDate());
         }
         return result;
     }
@@ -72,10 +74,10 @@ public class TableRowsSynchronizer {
         }
         int result = 0;
         for (DashboardRowEntity dashboardRowEntity : dashboardRows) {
-            result += DataManager.getInstance().syncDashboardTableRow(dashboardRowEntity.getDashboardId(), dashboardRowEntity.getName(), dashboardRowEntity.getType(), dashboardRowEntity.getDescription()
+            result += DataManager.getInstance().syncDashboardTableRow(new BigInteger(dashboardRowEntity.getDashboardId()), dashboardRowEntity.getName(), dashboardRowEntity.getType(), dashboardRowEntity.getDescription()
                     , dashboardRowEntity.getCreationDate(), dashboardRowEntity.getLastModificationDate(), dashboardRowEntity.getLastModifiedBy(), dashboardRowEntity.getOwner()
                     , dashboardRowEntity.getIsSystem(), dashboardRowEntity.getApplicationType(), dashboardRowEntity.getEnableTimeRange(), dashboardRowEntity.getScreenShot()
-                    , dashboardRowEntity.getDeleted(), dashboardRowEntity.getTenantId(), dashboardRowEntity.getEnableRefresh(), dashboardRowEntity.getSharePublic()
+                    , new BigInteger(dashboardRowEntity.getDeleted()), dashboardRowEntity.getTenantId(), dashboardRowEntity.getEnableRefresh(), dashboardRowEntity.getSharePublic()
                     , dashboardRowEntity.getEnableEntityFilter(), dashboardRowEntity.getEnableDescription(), dashboardRowEntity.getExtendedOptions());
         }
         return result;
@@ -89,7 +91,7 @@ public class TableRowsSynchronizer {
         }
         int result = 0;
         for (DashboardTileParamsRowEntity dashboardTileParamsRowEntity : rows) {
-            result += DataManager.getInstance().syncDashboardTileParam(dashboardTileParamsRowEntity.getTileId(), dashboardTileParamsRowEntity.getParamName()
+            result += DataManager.getInstance().syncDashboardTileParam(new BigInteger(dashboardTileParamsRowEntity.getTileId()), dashboardTileParamsRowEntity.getParamName()
                     , dashboardTileParamsRowEntity.getTenantId(), dashboardTileParamsRowEntity.getIsSystem(), dashboardTileParamsRowEntity.getParamType()
                     , dashboardTileParamsRowEntity.getParamValueStr(), dashboardTileParamsRowEntity.getParamValueNum(), dashboardTileParamsRowEntity.getParamValueTimestamp()
                     , dashboardTileParamsRowEntity.getCreationDate(), dashboardTileParamsRowEntity.getLastModificationDate());
@@ -104,7 +106,7 @@ public class TableRowsSynchronizer {
         }
         int result = 0;
         for (DashboardTileRowEntity dashboardTileRowEntity : rows) {
-            result += DataManager.getInstance().syncDashboardTile(dashboardTileRowEntity.getTileId(), dashboardTileRowEntity.getDashboardId(), dashboardTileRowEntity.getCreationDate()
+            result += DataManager.getInstance().syncDashboardTile(new BigInteger(dashboardTileRowEntity.getTileId()), new BigInteger(dashboardTileRowEntity.getDashboardId()), dashboardTileRowEntity.getCreationDate()
                     , dashboardTileRowEntity.getLastModificationDate(), dashboardTileRowEntity.getLastModifiedBy(), dashboardTileRowEntity.getOwner(), dashboardTileRowEntity.getTitle()
                     , dashboardTileRowEntity.getHeight(), dashboardTileRowEntity.getWidth(), dashboardTileRowEntity.getIsMaximized(), dashboardTileRowEntity.getPosition()
                     , dashboardTileRowEntity.getTenantId(), dashboardTileRowEntity.getWidgetUniqueId(), dashboardTileRowEntity.getWidgetName(), dashboardTileRowEntity.getWidgetDescription()
@@ -125,7 +127,7 @@ public class TableRowsSynchronizer {
         int result = 0;
         for (DashboardUserOptionsRowEntity dashboardUserOptionsRowEntity : rows) {
             result += DataManager.getInstance().syncDashboardUserOption(dashboardUserOptionsRowEntity.getUserName(), dashboardUserOptionsRowEntity.getTenantId()
-                    , dashboardUserOptionsRowEntity.getDashboardId(), dashboardUserOptionsRowEntity.getAutoRefreshInterval(), dashboardUserOptionsRowEntity.getAccessDate()
+                    , new BigInteger(dashboardUserOptionsRowEntity.getDashboardId()), dashboardUserOptionsRowEntity.getAutoRefreshInterval(), dashboardUserOptionsRowEntity.getAccessDate()
                     , dashboardUserOptionsRowEntity.getIsFavorite(), dashboardUserOptionsRowEntity.getExtendedOptions(), dashboardUserOptionsRowEntity.getCreationDate(), dashboardUserOptionsRowEntity.getLastModificationDate());
         }
         return result;

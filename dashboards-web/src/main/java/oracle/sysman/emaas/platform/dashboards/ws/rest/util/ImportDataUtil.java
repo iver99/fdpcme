@@ -1,5 +1,6 @@
 package oracle.sysman.emaas.platform.dashboards.ws.rest.util;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import oracle.sysman.emaas.platform.dashboards.core.DataImportManager;
@@ -42,10 +43,10 @@ public class ImportDataUtil {
 	private void saveDashboard(List<DashboardRowEntity> dashboardData, DataImportManager dim, Long tenantId) {
 		if (dashboardData != null) {
 			for (DashboardRowEntity dashboardRowEntity : dashboardData) {
-				dim.saveDashboards(dashboardRowEntity.getDashboardId(), dashboardRowEntity.getName(), dashboardRowEntity.getType(), dashboardRowEntity.getDescription()
+				dim.saveDashboards(new BigInteger(dashboardRowEntity.getDashboardId()), dashboardRowEntity.getName(), dashboardRowEntity.getType(), dashboardRowEntity.getDescription()
 	                    , dashboardRowEntity.getCreationDate(), dashboardRowEntity.getLastModificationDate(), dashboardRowEntity.getLastModifiedBy(), dashboardRowEntity.getOwner()
 	                    , dashboardRowEntity.getIsSystem(), dashboardRowEntity.getApplicationType(), dashboardRowEntity.getEnableTimeRange(), dashboardRowEntity.getScreenShot()
-	                    , dashboardRowEntity.getDeleted(), tenantId, dashboardRowEntity.getEnableRefresh(), dashboardRowEntity.getSharePublic()
+	                    , new BigInteger(dashboardRowEntity.getDeleted()), tenantId, dashboardRowEntity.getEnableRefresh(), dashboardRowEntity.getSharePublic()
 	                    , dashboardRowEntity.getEnableEntityFilter(), dashboardRowEntity.getEnableDescription(), dashboardRowEntity.getExtendedOptions());
 			}
 		}
@@ -54,8 +55,8 @@ public class ImportDataUtil {
 	private void saveDashboardSet(List<DashboardSetRowEntity> dashboardSetData, DataImportManager dim, Long tenantId) {
 		if (dashboardSetData != null) {
 			for (DashboardSetRowEntity dashboardSetRowEntity : dashboardSetData) {
-				dim.saveDashboardSet(dashboardSetRowEntity.getDashboardSetId(), tenantId,
-	                    dashboardSetRowEntity.getSubDashboardId(), dashboardSetRowEntity.getPosition(), dashboardSetRowEntity.getCreationDate(), dashboardSetRowEntity.getLastModificationDate());
+				dim.saveDashboardSet(new BigInteger(dashboardSetRowEntity.getDashboardSetId()), tenantId,
+						new BigInteger(dashboardSetRowEntity.getSubDashboardId()), dashboardSetRowEntity.getPosition(), dashboardSetRowEntity.getCreationDate(), dashboardSetRowEntity.getLastModificationDate());
 			}
 		}
 	}
@@ -63,7 +64,7 @@ public class ImportDataUtil {
 	private void saveDashboardTile(List<DashboardTileRowEntity> dashboardTile, DataImportManager dim, Long tenantId) {
 		if (dashboardTile != null) {
 			for (DashboardTileRowEntity dashboardTileRowEntity : dashboardTile) {
-				dim.saveDashboardTile(dashboardTileRowEntity.getTileId(), dashboardTileRowEntity.getDashboardId(), dashboardTileRowEntity.getCreationDate()
+				dim.saveDashboardTile(new BigInteger(dashboardTileRowEntity.getTileId()), new BigInteger(dashboardTileRowEntity.getDashboardId()), dashboardTileRowEntity.getCreationDate()
 	                    , dashboardTileRowEntity.getLastModificationDate(), dashboardTileRowEntity.getLastModifiedBy(), dashboardTileRowEntity.getOwner(), dashboardTileRowEntity.getTitle()
 	                    , dashboardTileRowEntity.getHeight(), dashboardTileRowEntity.getWidth(), dashboardTileRowEntity.getIsMaximized(), dashboardTileRowEntity.getPosition()
 	                    , tenantId, dashboardTileRowEntity.getWidgetUniqueId(), dashboardTileRowEntity.getWidgetName(), dashboardTileRowEntity.getWidgetDescription()
@@ -79,7 +80,7 @@ public class ImportDataUtil {
 	private void saveDashboardTileParams(List<DashboardTileParamsRowEntity> dashboardTileParams, DataImportManager dim, Long tenantId) {
 		if (dashboardTileParams != null) {
 			for (DashboardTileParamsRowEntity dashboardTileParamsRowEntity : dashboardTileParams) {
-				dim.saveDashboardTileParam(dashboardTileParamsRowEntity.getTileId(), dashboardTileParamsRowEntity.getParamName()
+				dim.saveDashboardTileParam(new BigInteger(dashboardTileParamsRowEntity.getTileId()), dashboardTileParamsRowEntity.getParamName()
 	                    , tenantId, dashboardTileParamsRowEntity.getIsSystem(), dashboardTileParamsRowEntity.getParamType()
 	                    , dashboardTileParamsRowEntity.getParamValueStr(), dashboardTileParamsRowEntity.getParamValueNum(), dashboardTileParamsRowEntity.getParamValueTimestamp()
 	                    , dashboardTileParamsRowEntity.getCreationDate(), dashboardTileParamsRowEntity.getLastModificationDate());
@@ -91,7 +92,7 @@ public class ImportDataUtil {
 		if (userOptions != null) {
 			for (DashboardUserOptionsRowEntity dashboardUserOptionsRowEntity : userOptions) {
 				dim.saveDashboardUserOption(dashboardUserOptionsRowEntity.getUserName(), tenantId
-	                    , dashboardUserOptionsRowEntity.getDashboardId(), dashboardUserOptionsRowEntity.getAutoRefreshInterval(), dashboardUserOptionsRowEntity.getAccessDate()
+	                    , new BigInteger(dashboardUserOptionsRowEntity.getDashboardId()), dashboardUserOptionsRowEntity.getAutoRefreshInterval(), dashboardUserOptionsRowEntity.getAccessDate()
 	                    , dashboardUserOptionsRowEntity.getIsFavorite(), dashboardUserOptionsRowEntity.getExtendedOptions(), dashboardUserOptionsRowEntity.getCreationDate(), 
 	                    dashboardUserOptionsRowEntity.getLastModificationDate());
 			}

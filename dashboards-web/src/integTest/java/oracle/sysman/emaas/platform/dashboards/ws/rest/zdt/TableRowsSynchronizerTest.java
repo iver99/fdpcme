@@ -39,7 +39,7 @@ public class TableRowsSynchronizerTest {
         DashboardTileParamsRowEntity dashboardTileParamsRowEntity = new DashboardTileParamsRowEntity();
         DashboardRowEntity dashboardRowEntity = new DashboardRowEntity();
 
-        dashboardRowEntity.setDashboardId(new BigInteger("1"));
+        dashboardRowEntity.setDashboardId("1");
         dashboardRowEntity.setName("name");
         dashboardRowEntity.setType(1L);
         dashboardRowEntity.setDescription("desciption") ;
@@ -51,7 +51,7 @@ public class TableRowsSynchronizerTest {
         dashboardRowEntity.setApplicationType(1);
         dashboardRowEntity.setEnableTimeRange(1);
         dashboardRowEntity.setScreenShot("") ;
-        dashboardRowEntity.setDeleted(new BigInteger("0"));
+        dashboardRowEntity.setDeleted("0");
         dashboardRowEntity.setTenantId(1L);
         dashboardRowEntity.setEnableRefresh(1);
         dashboardRowEntity.setSharePublic(1) ;
@@ -59,7 +59,7 @@ public class TableRowsSynchronizerTest {
         dashboardRowEntity.setEnableDescription(1);
         dashboardRowEntity.setExtendedOptions("options");
 
-        dashboardTileParamsRowEntity.setTileId(new BigInteger("1"));
+        dashboardTileParamsRowEntity.setTileId("1");
         dashboardTileParamsRowEntity.setParamName("name");
         dashboardTileParamsRowEntity.setTenantId(1L);
         dashboardTileParamsRowEntity.setIsSystem(1);
@@ -70,8 +70,8 @@ public class TableRowsSynchronizerTest {
         dashboardTileParamsRowEntity.setCreationDate("2016-08-11 13:31:00");
         dashboardTileParamsRowEntity.setLastModificationDate("2016-08-11 13:31:00");
 
-        dashboardTileRowEntity.setTileId(new BigInteger("1"));
-        dashboardTileRowEntity.setDashboardId(new BigInteger("1"));
+        dashboardTileRowEntity.setTileId("1");
+        dashboardTileRowEntity.setDashboardId("1");
         dashboardTileRowEntity.setCreationDate("2016-08-11 13:31:00");
         dashboardTileRowEntity.setLastModificationDate("2016-08-11 13:31:00");
         dashboardTileRowEntity.setLastModifiedBy("ORACLE");
@@ -105,7 +105,7 @@ public class TableRowsSynchronizerTest {
 
         dashboardUserOptionsRowEntity.setUserName("name");
         dashboardUserOptionsRowEntity.setTenantId(1L);
-        dashboardUserOptionsRowEntity.setDashboardId(new BigInteger("1"));
+        dashboardUserOptionsRowEntity.setDashboardId("1");
         dashboardUserOptionsRowEntity.setAutoRefreshInterval(1L);
         dashboardUserOptionsRowEntity.setAccessDate("2016-08-11 13:31:00");
         dashboardUserOptionsRowEntity.setIsFavorite(1);
@@ -120,9 +120,9 @@ public class TableRowsSynchronizerTest {
         preferenceRowEntity.setCreationDate("2016-08-11 13:31:00");
         preferenceRowEntity.setLastModificationDate("2016-08-11 13:31:00");
 
-        dashboardSetRowEntity.setDashboardSetId(new BigInteger("1"));
+        dashboardSetRowEntity.setDashboardSetId("1");
         dashboardSetRowEntity.setTenantId(1L);
-        dashboardSetRowEntity.setSubDashboardId(new BigInteger("1"));
+        dashboardSetRowEntity.setSubDashboardId("1");
         dashboardSetRowEntity.setPosition(1L);
         dashboardSetRowEntity.setCreationDate("2016-08-11 13:31:00");
         dashboardSetRowEntity.setLastModificationDate("2016-08-11 13:31:00");
