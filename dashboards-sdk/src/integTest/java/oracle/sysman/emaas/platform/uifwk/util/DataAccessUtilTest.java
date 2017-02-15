@@ -67,6 +67,46 @@ public class DataAccessUtilTest
 	}
 
 	@Test(groups = { "s2" })
+	public void testGetTenantSubscribedApps(@Mocked final RegistryLookupUtil anyRegistryLookupUtil, @Mocked final Link anyLink,
+			@Mocked final DataAccessUtil.RestClient anyRestClient)
+	{
+		final String reg = "{\"applications\":[\"APM\",\"LogAnalytics\",\"ITAnalytics\"]}";
+		new Expectations() {
+			{
+				RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, anyString);
+				result = anyLink;
+				anyLink.getHref();
+				result = "https://slc04pgi.us.oracle.com:4443//sso.static/dashboards.subscribedapps";
+				anyRestClient.get(anyString, anyString);
+				result = reg;
+			}
+		};
+		String res = DataAccessUtil.getTenantSubscribedServices("tenant", "user");
+		Assert.assertEquals(res, reg);
+	}
+
+	@Test(groups = { "s2" })
+	public void testGetTenantSubscribedAppsNullLink(@Mocked final CacheManagers anyCacheManagers,
+			@Mocked final ICacheManager anyCacheManager, @Mocked final ICache anyCache,
+			@Mocked final RegistryLookupUtil anyRegistryLookupUtil) throws ExecutionException
+	{
+		new Expectations() {
+			{
+				CacheManagers.getInstance().build();
+				result = anyCacheManager;
+				anyCacheManager.getCache(anyString);
+				result = anyCache;
+				anyCache.get(any);
+				result = null;
+				RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, anyString);
+				result = null;
+			}
+		};
+		String res = DataAccessUtil.getTenantSubscribedServices("tenant", "user");
+		Assert.assertNull(res);
+	}
+
+	@Test(groups = { "s2" })
 	public void testGetUserTenantInfo(@Mocked final CacheManagers anyCacheManagers, @Mocked final ICacheManager anyCacheManager,
 			@Mocked final ICache anyCache, @Mocked final RegistryLookupUtil anyRegistryLookupUtil, @Mocked final Link anyLink,
 			@Mocked final DataAccessUtil.RestClient anyRestClient) throws ExecutionException

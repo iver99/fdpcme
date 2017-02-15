@@ -146,6 +146,53 @@ public class DataAccessUtil
 		}
 	}
 
+	public static String getTenantSubscribedServices(String tenant, String user)
+	{
+		if (tenant == null) {
+			return null;
+		}
+
+		long startTime = System.currentTimeMillis();
+		Tenant cacheTenant = new Tenant(tenant);
+		Object tenantKey = DefaultKeyGenerator.getInstance().generate(cacheTenant,
+				new Keys(CacheConstants.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS_UIFWK));
+		ICacheManager cm = CacheManagers.getInstance().build();
+		ICache cache = cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE);
+		if (cache != null) {
+			try {
+				String data = (String) cache.get(tenantKey);
+				if (data != null) {
+					LOGGER.info("Retrieved subscribed app information from cache for tenant {}, cached data is {}", tenant, data);
+					return data;
+				}
+			}
+			catch (ExecutionException e) {
+				// for cache issue, we'll continue retrieve data and just log a warning message
+				LOGGER.warn(e.getLocalizedMessage(), e);
+			}
+		}
+
+		// instead of retrieving subscribed apps from entitynaming, we get that from dashboard api
+		Link subAppLink = RegistryLookupUtil.getServiceInternalLink("Dashboard-API", "1.0+", "static/dashboards.subscribedapps",
+				null);
+		if (subAppLink == null || StringUtil.isEmpty(subAppLink.getHref())) {
+			LOGGER.warn("Checking tenant (" + tenant
+					+ ") subscriptions: null/empty subscribedapp link retrieved from dashboard-api.");
+			return null;
+		}
+		LOGGER.info("Checking tenant (" + tenant + ") subscriptions. Subscribedapp link retrieved from dashboard-api href is "
+				+ subAppLink.getHref());
+		String subAppHref = subAppLink.getHref();
+		RestClient rc = new RestClient();
+		rc.setHeader(HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME, tenant);
+		rc.setHeader("X-REMOTE-USER", tenant + "." + user);
+		String subAppResponse = rc.get(subAppHref, tenant);
+		cache.put(tenantKey, subAppResponse);
+		LOGGER.info("Checking tenant (" + tenant + ") subscriptions. Dashboard-API subscribed app response is " + subAppResponse);
+		LOGGER.info("It takes {}ms to retrieve subscribed app data from Dashboard-API", System.currentTimeMillis() - startTime);
+		return subAppResponse;
+	}
+
 	public static String getUserTenantInfo(String tenantName, String userName, String referer, String sessionExp)
 	{
 		String userTenant = tenantName + "." + userName;

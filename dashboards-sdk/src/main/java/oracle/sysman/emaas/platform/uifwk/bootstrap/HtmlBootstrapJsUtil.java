@@ -116,6 +116,15 @@ public class HtmlBootstrapJsUtil
 		else {
 			LOGGER.warn("Retrieved empty registration data.");
 		}
+		//subscribed apps
+		LOGGER.debug("Start to get subscribed services.");
+		String subscribedApps = DataAccessUtil.getTenantSubscribedServices(tenant, user);
+		if (!StringUtil.isEmpty(subscribedApps)) {
+			sb.append("window._uifwk.cachedData.subscribedapps=").append(subscribedApps).append(";");
+		}
+		else {
+			LOGGER.warn("Retrieved empty subscribed services.");
+		}
 
 		String injectableJS = sb.toString();
 		LOGGER.debug("getBrandingDataJS(), injectableJS: " + injectableJS);
