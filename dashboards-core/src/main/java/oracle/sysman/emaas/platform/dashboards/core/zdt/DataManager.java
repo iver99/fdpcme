@@ -236,7 +236,7 @@ public class DataManager
 			entityManager.getTransaction().begin();
 		}		
 		try {
-			if (isDashboardExist(entityManager, dashboardId, tenantId)) {
+			if (isDashboardExist(entityManager, dashboardId, tenantId, description, owner, deleted)) {
 				logger.debug("Dashboard with id {} exists", dashboardId);
 				if (isAfter(getDashboardLastModifiedDate(entityManager, dashboardId, tenantId), lastModificationDate)) {
 					logger.debug("This lastModificationDate is earlier, there is no need to update");
@@ -258,7 +258,7 @@ public class DataManager
 		}
 	}
 
-	public int syncDashboardTile(BigInteger tileId, BigInteger dashboardId, String creationDate, String lastModificationDate, String lastModifiedBy, String owner, String title, Long height,
+	public int syncDashboardTile(String tileId, BigInteger dashboardId, String creationDate, String lastModificationDate, String lastModifiedBy, String owner, String title, Long height,
 								 Long width, Integer isMaximized, Long position, Long tenantId, String widgetUniqueId, String widgetName, String widgetDescription, String widgetGroupName,
 								 String widgetIcon, String widgetHistogram, String widgetOwner, String widgetCreationTime, Long widgetSource, String widgetKocName, String widgetViewmode, String widgetTemplate,
 								 String providerName, String providerVersion, String providerAssetRoot, Long tileRow, Long tileColumn, Long type, Integer widgetSupportTimeControl, Long widgetLinkedDashboard) {
@@ -328,7 +328,7 @@ public class DataManager
 			entityManager.getTransaction().begin();
 		}
 		try {
-			if (isDashboardTileExist(entityManager, tileId, dashboardId, tenantId)) {
+			if (isDashboardTileExist(entityManager, tileId, tenantId)) {
 				logger.debug("Dashboard Tile with id {} exists", tileId);
 
 				if (isAfter(getDashboardTileLastModifiedDate(entityManager, tileId, dashboardId, tenantId),lastModificationDate)) {
@@ -355,7 +355,7 @@ public class DataManager
 		}
 	}
 
-	public int syncDashboardTileParam( BigInteger tileId, String paramName,
+	public int syncDashboardTileParam( String tileId, String paramName,
 									  Long tenantId, Integer isSystem, Long paramType, String paramValueStr,
 									  Long paramValueNum, String paramValueTimestamp, String creationDate, String lastModificationDate) {
 		logger.debug("Calling DataManager.syncDashboardTileParam");
@@ -571,7 +571,7 @@ public class DataManager
 		return result;
 	}
 
-	private int insertDashboardTile(EntityManager entityManager, BigInteger tileId, BigInteger dashboardId, String creationDate, String lastModificationDate, String lastModifiedBy, String owner, String title, Long height,
+	private int insertDashboardTile(EntityManager entityManager, String tileId, BigInteger dashboardId, String creationDate, String lastModificationDate, String lastModifiedBy, String owner, String title, Long height,
 									Long width, Integer isMaximized, Long position, Long tenantId, String widgetUniqueId, String widgetName, String widgetDescription, String widgetGroupName,
 									String widgetIcon, String widgetHistogram, String widgetOwner, String widgetCreationTime, Long widgetSource, String widgetKocName, String widgetViewmode, String widgetTemplate,
 									String providerName, String providerVersion, String providerAssetRoot, Long tileRow, Long tileColumn, Long type, Integer widgetSupportTimeControl, Long widgetLinkedDashboard) {
@@ -599,7 +599,7 @@ public class DataManager
 		return result;
 	}
 
-	private int insertDashboardTileParam(EntityManager entityManager, BigInteger tileId, String paramName, Long tenantId, Integer isSystem, Long paramType, String paramValueStr, Long paramValueNum, String paramValueTimestamp, String creationDate, String lastModificationDate) {
+	private int insertDashboardTileParam(EntityManager entityManager, String tileId, String paramName, Long tenantId, Integer isSystem, Long paramType, String paramValueStr, Long paramValueNum, String paramValueTimestamp, String creationDate, String lastModificationDate) {
 		logger.debug("Calling DataManager.insertDashboardTileParam");
 		int result;
 		String sql = "INSERT INTO EMS_DASHBOARD_TILE_PARAMS(TILE_ID, PARAM_NAME, TENANT_ID, IS_SYSTEM, PARAM_TYPE, PARAM_VALUE_STR, PARAM_VALUE_NUM, PARAM_VALUE_TIMESTAMP, CREATION_DATE, LAST_MODIFICATION_DATE)values(?, ?, ?, ?, ?, ?, ?, to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'), to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'), to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'))";
@@ -696,7 +696,7 @@ public class DataManager
 		return result;
 	}
 
-	private int updateDashboardTile(EntityManager entityManager, BigInteger tileId, BigInteger dashboardId, String creationDate, String lastModificationDate, String lastModifiedBy, String owner, String title, Long height,
+	private int updateDashboardTile(EntityManager entityManager, String tileId, BigInteger dashboardId, String creationDate, String lastModificationDate, String lastModifiedBy, String owner, String title, Long height,
                                     Long width, Integer isMaximized, Long position, Long tenantId, String widgetUniqueId, String widgetName, String widgetDescription, String widgetGroupName,
                                     String widgetIcon, String widgetHistogram, String widgetOwner, String widgetCreationTime, Long widgetSource, String widgetKocName, String widgetViewmode, String widgetTemplate,
                                     String providerName, String providerVersion, String providerAssetRoot, Long tileRow, Long tileColumn, Long type, Integer widgetSupportTimeControl, Long widgetLinkedDashboard) {
@@ -740,7 +740,7 @@ public class DataManager
 		return result;
 	}
 
-	private int updateDashboardTileParam(EntityManager entityManager, BigInteger tileId, String paramName, Long tenantId,
+	private int updateDashboardTileParam(EntityManager entityManager, String tileId, String paramName, Long tenantId,
 										 Integer isSystem, Long paramType, String paramValueStr, Long paramValueNum,
 										 String paramValueTimestamp, String creationDate, String lastModificationDate) {
 		logger.debug("Calling DataManager.updateDashboardTileParam");
@@ -813,28 +813,32 @@ public class DataManager
 		return result;
 	}
 
-	private boolean isDashboardExist(EntityManager entityManager, BigInteger dashboardId, Long tenantId) {
+	private boolean isDashboardExist(EntityManager entityManager, BigInteger dashboardId, Long tenantId, String description, String owner, BigInteger deleted) {
 		logger.debug("Calling the Datamanager.isDashboardsExist");
-		String sql = "SELECT COUNT(1) FROM EMS_DASHBOARD WHERE DASHBOARD_ID=? AND TENANT_ID=?";
+		String sql = "SELECT COUNT(1) FROM EMS_DASHBOARD WHERE (DASHBOARD_ID=? AND TENANT_ID=?) "
+				+ "or (DESCRIPTION=? and OWNER=? AND TENANT_ID =? AND DELETED=?)";
 		Query query = entityManager.createNativeQuery(sql)
 				.setParameter(1, dashboardId)
+				.setParameter(2, tenantId)
+				.setParameter(3, description)
+		.setParameter(4, owner)
+		.setParameter(5, tenantId)
+		.setParameter(6, deleted);
+		long count = ((Number) query.getSingleResult()).longValue();
+		return count > 0;
+	}
+
+	private boolean isDashboardTileExist(EntityManager entityManager, String tileId, Long tenantId) {
+		logger.debug("Calling Datamanager.isDashboardTileExist");
+		String sql = "SELECT COUNT(1) FROM EMS_DASHBOARD_TILE WHERE TILE_ID=? AND TENANT_ID=?";
+		Query query = entityManager.createNativeQuery(sql)
+				.setParameter(1, tileId)
 				.setParameter(2, tenantId);
 		long count = ((Number) query.getSingleResult()).longValue();
 		return count > 0;
 	}
 
-	private boolean isDashboardTileExist(EntityManager entityManager, BigInteger tileId, BigInteger dashboardId, Long tenantId) {
-		logger.debug("Calling Datamanager.isDashboardTileExist");
-		String sql = "SELECT COUNT(1) FROM EMS_DASHBOARD_TILE WHERE TILE_ID=? AND DASHBOARD_ID=? AND TENANT_ID=?";
-		Query query = entityManager.createNativeQuery(sql)
-				.setParameter(1, tileId)
-				.setParameter(2, dashboardId)
-				.setParameter(3, tenantId);
-		long count = ((Number) query.getSingleResult()).longValue();
-		return count > 0;
-	}
-
-	private boolean isDashboardTileParamExist(EntityManager entityManager, BigInteger tileId, String paramName, Long tenantId) {
+	private boolean isDashboardTileParamExist(EntityManager entityManager, String tileId, String paramName, Long tenantId) {
 		logger.debug("Calling DataManager.isDashboardTileParamExit");
 		String sql = "SELECT COUNT(1) FROM EMS_DASHBOARD_TILE_PARAMS WHERE TILE_ID=? AND PARAM_NAME=? AND TENANT_ID=?";
 		Query query = entityManager.createNativeQuery(sql)
@@ -890,7 +894,7 @@ public class DataManager
 
 	}
 
-	private String getDashboardTileLastModifiedDate(EntityManager entityManager, BigInteger tileId, BigInteger dashboardId, Long tenantId) {
+	private String getDashboardTileLastModifiedDate(EntityManager entityManager, String tileId, BigInteger dashboardId, Long tenantId) {
 		logger.debug("Calling Datamanager.getDashboardTileLastModifiedDate");
 		String sql = "SELECT LAST_MODIFICATION_DATE FROM EMS_DASHBOARD_TILE WHERE TILE_ID=? AND DASHBOARD_ID=? AND TENANT_ID=?";
 		Query query = entityManager.createNativeQuery(sql)
@@ -900,7 +904,7 @@ public class DataManager
 		return query.getSingleResult().toString();
 	}
 
-	private String getDashboardTileParamLastModifiedDate(EntityManager entityManager, BigInteger tileId, String paramName, Long tenantId){
+	private String getDashboardTileParamLastModifiedDate(EntityManager entityManager, String tileId, String paramName, Long tenantId){
 		logger.debug("Calling DataManager.getDashboardTileParamLastModifiedDate");
 		String sql = "SELECT LAST_MODIFICATION_DATE FROM EMS_DASHBOARD_TILE_PARAMS WHERE TILE_ID=? AND PARAM_NAME=? AND TENANT_ID=?";
 		Query query = entityManager.createNativeQuery(sql)

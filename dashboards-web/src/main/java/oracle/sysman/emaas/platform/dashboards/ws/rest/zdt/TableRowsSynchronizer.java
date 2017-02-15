@@ -91,7 +91,7 @@ public class TableRowsSynchronizer {
         }
         int result = 0;
         for (DashboardTileParamsRowEntity dashboardTileParamsRowEntity : rows) {
-            result += DataManager.getInstance().syncDashboardTileParam(new BigInteger(dashboardTileParamsRowEntity.getTileId()), dashboardTileParamsRowEntity.getParamName()
+            result += DataManager.getInstance().syncDashboardTileParam(dashboardTileParamsRowEntity.getTileId(), dashboardTileParamsRowEntity.getParamName()
                     , dashboardTileParamsRowEntity.getTenantId(), dashboardTileParamsRowEntity.getIsSystem(), dashboardTileParamsRowEntity.getParamType()
                     , dashboardTileParamsRowEntity.getParamValueStr(), dashboardTileParamsRowEntity.getParamValueNum(), dashboardTileParamsRowEntity.getParamValueTimestamp()
                     , dashboardTileParamsRowEntity.getCreationDate(), dashboardTileParamsRowEntity.getLastModificationDate());
@@ -106,7 +106,7 @@ public class TableRowsSynchronizer {
         }
         int result = 0;
         for (DashboardTileRowEntity dashboardTileRowEntity : rows) {
-            result += DataManager.getInstance().syncDashboardTile(new BigInteger(dashboardTileRowEntity.getTileId()), new BigInteger(dashboardTileRowEntity.getDashboardId()), dashboardTileRowEntity.getCreationDate()
+            result += DataManager.getInstance().syncDashboardTile(dashboardTileRowEntity.getTileId(), new BigInteger(dashboardTileRowEntity.getDashboardId()), dashboardTileRowEntity.getCreationDate()
                     , dashboardTileRowEntity.getLastModificationDate(), dashboardTileRowEntity.getLastModifiedBy(), dashboardTileRowEntity.getOwner(), dashboardTileRowEntity.getTitle()
                     , dashboardTileRowEntity.getHeight(), dashboardTileRowEntity.getWidth(), dashboardTileRowEntity.getIsMaximized(), dashboardTileRowEntity.getPosition()
                     , dashboardTileRowEntity.getTenantId(), dashboardTileRowEntity.getWidgetUniqueId(), dashboardTileRowEntity.getWidgetName(), dashboardTileRowEntity.getWidgetDescription()

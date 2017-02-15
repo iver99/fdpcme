@@ -293,7 +293,7 @@ public void getSyncDashboardTableRowInsert(){
 
 	@Test
 	public void testSyncDashboardTile(){
-		BigInteger tileId = new BigInteger("1");
+		String tileId = "1";
 		BigInteger dashboardId = new BigInteger("1");
 		String creationDate = "creationdate";
 		String lastModificationDate = "last_modified_date";
@@ -395,7 +395,7 @@ public void getSyncDashboardTableRowInsert(){
 	}
 	@Test
 	public void testSyncDashboardTileInsert() {
-		BigInteger tileId = new BigInteger("1");
+		String tileId = "1";
 		BigInteger dashboardId = new BigInteger("1");
 		String creationDate = "creationdate";
 		String lastModificationDate = "last_modified_date";
@@ -442,7 +442,7 @@ public void getSyncDashboardTableRowInsert(){
 	}
 	@Test
 	public void testSyncDashboardTileParam(){
-		BigInteger tileId = new BigInteger("1");
+		String tileId = "1";
 		String paramName = "paramName";
 		Long tenantId = 1L;
 		Integer isSystem = 1;
@@ -481,7 +481,7 @@ public void getSyncDashboardTableRowInsert(){
 	}
 	@Test
 	public void testSyncDashboardTileParamInsert(){
-		BigInteger tileId = new BigInteger("1");
+		String tileId = "1";
 		String paramName = "paramName";
 		Long tenantId = 1L;
 		Integer isSystem = 1;

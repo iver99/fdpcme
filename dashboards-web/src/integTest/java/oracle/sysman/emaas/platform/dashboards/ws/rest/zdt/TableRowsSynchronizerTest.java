@@ -148,12 +148,12 @@ public class TableRowsSynchronizerTest {
                 result = 1;
                 dataManager.syncDashboardTableRow((BigInteger)any, anyString, anyLong, anyString, anyString,anyString, anyString, anyString, (Integer)any, (Integer)any,(Integer)any, anyString, (BigInteger)any, anyLong, (Integer)any, (Integer)any,(Integer)any, (Integer)any, anyString);
                 result = 1;
-                dataManager.syncDashboardTile((BigInteger)any, (BigInteger)any, anyString, anyString, anyString, anyString, anyString, anyLong, anyLong, (Integer)any, anyLong,anyLong, anyString, anyString, anyString, anyString, anyString,anyString, anyString, anyString, anyLong,
+                dataManager.syncDashboardTile(anyString, (BigInteger)any, anyString, anyString, anyString, anyString, anyString, anyLong, anyLong, (Integer)any, anyLong,anyLong, anyString, anyString, anyString, anyString, anyString,anyString, anyString, anyString, anyLong,
                         anyString, anyString, anyString, anyString, anyString, anyString, anyLong, anyLong, anyLong, (Integer)any, anyLong);
                 result = 1;
                 dataManager.syncDashboardSet((BigInteger)any, anyLong, (BigInteger)any, anyLong, anyString, anyString);
                 result = 1;
-                dataManager.syncDashboardTileParam((BigInteger)any, anyString, anyLong, (Integer)any, anyLong, anyString, anyLong, anyString, anyString, anyString);
+                dataManager.syncDashboardTileParam(anyString, anyString, anyLong, (Integer)any, anyLong, anyString, anyLong, anyString, anyString, anyString);
                 result = 1;
                 dataManager.syncDashboardUserOption(anyString,anyLong, (BigInteger)any, anyLong, anyString, (Integer)any, anyString, anyString, anyString);
                 result = 1;
