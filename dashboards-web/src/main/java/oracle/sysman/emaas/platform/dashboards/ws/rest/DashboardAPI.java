@@ -976,8 +976,8 @@ public class DashboardAPI extends APIBase
 			JSONArray savedSearchObject = jsonObject.getJSONArray("EMS_ANALYTICS_SEARCH");
 			JSONArray savedSearchParamObject = jsonObject.getJSONArray("EMS_ANALYTICS_SEARCH_PARAMS");
 			JSONObject obj = new JSONObject();
-			obj.put("", savedSearchObject);
-			obj.put("", savedSearchParamObject);
+			obj.put("EMS_ANALYTICS_SEARCH", savedSearchObject);
+			obj.put("EMS_ANALYTICS_SEARCH_PARAMS", savedSearchParamObject);
 			SSFDataUtil.saveSSFData(userTenant, obj.toString());
 			return Response.status(Status.NO_CONTENT).build();
 		}
