@@ -38,6 +38,7 @@ public class HtmlBootstrapJsUtilTest
 		final String userInfo = "{\"currentUser\":\"emaastesttenant1.emcsadmin\",\"userRoles\":[\"APM Administrator\",\"APM User\"]}";
 		final String registration = "{\"cloudServices\":[],\"visualAnalyzers\":[],\"assetRoots\":[],\"adminLinks\":[],\"homeLinks\":[],\"sessionExpiryTime\":\"20170214103126\",\"ssoLogoutUrl\":\"https://host:port/ssoLogout\"}";
 		final String sdkVersionJS = "if(!window.sdkFilePath){window.sdkFilePath={};}window.sdkFilePath={};window.getSDKVersionFile=function(nonCacheableVersion){console.log(\"getSDKVersionFile() for: \"+nonCacheableVersion);var versionFile=nonCacheableVersion;if(window.sdkFilePath){versionFile=window.sdkFilePath[nonCacheableVersion];}if(!versionFile){versionFile=nonCacheableVersion;}console.log(\"getSDKVersionFile(), found version: \"+versionFile);return versionFile;};";
+		final String subscribedApps = "{\"applications\":[\"APM\",\"LogAnalytics\",\"ITAnalytics\"]}";
 		new Expectations() {
 			{
 				httpReq.getHeader("referer");
@@ -50,6 +51,8 @@ public class HtmlBootstrapJsUtilTest
 				result = userInfo;
 				DataAccessUtil.getRegistrationData(anyString, anyString, anyString, anyString);
 				result = registration;
+				DataAccessUtil.getTenantSubscribedServices(anyString, anyString);
+				result = subscribedApps;
 
 				lookupClient.getInstancesWithLinkRelPrefix(anyString, anyString);
 				result = new ArrayList<>(Arrays.asList(instanceInfo));
@@ -63,7 +66,7 @@ public class HtmlBootstrapJsUtilTest
 		String expectedJs = sdkVersionJS
 				+ "if(!window._uifwk){window._uifwk={};}if(!window._uifwk.cachedData){window._uifwk.cachedData={};}"
 				+ "window._uifwk.cachedData.userInfo=" + userInfo + ";window._uifwk.cachedData.registrations=" + registration
-				+ ";";
+				+ ";window._uifwk.cachedData.subscribedapps=" + subscribedApps + ";";
 		Assert.assertEquals(newJs, expectedJs);
 	}
 
@@ -72,6 +75,7 @@ public class HtmlBootstrapJsUtilTest
 	{
 		final String userInfo = "{\"currentUser\":\"emaastesttenant1.emcsadmin\",\"userRoles\":[\"APM Administrator\",\"APM User\"]}";
 		final String registration = "{\"cloudServices\":[],\"visualAnalyzers\":[],\"assetRoots\":[],\"adminLinks\":[],\"homeLinks\":[],\"sessionExpiryTime\":\"20170214103126\",\"ssoLogoutUrl\":\"https://host:port/ssoLogout\"}";
+		final String subscribedApps = "{\"applications\":[\"APM\",\"LogAnalytics\",\"ITAnalytics\"]}";
 		new Expectations() {
 			{
 				httpReq.getHeader("referer");
@@ -84,12 +88,14 @@ public class HtmlBootstrapJsUtilTest
 				result = userInfo;
 				DataAccessUtil.getRegistrationData(anyString, anyString, anyString, anyString);
 				result = registration;
+				DataAccessUtil.getTenantSubscribedServices(anyString, anyString);
+				result = subscribedApps;
 			}
 		};
 		String newJs = HtmlBootstrapJsUtil.getBrandingDataJS(httpReq);
 		String expectedJs = "if(!window._uifwk){window._uifwk={};}if(!window._uifwk.cachedData){window._uifwk.cachedData={};}"
 				+ "window._uifwk.cachedData.userInfo=" + userInfo + ";window._uifwk.cachedData.registrations=" + registration
-				+ ";";
+				+ ";window._uifwk.cachedData.subscribedapps=" + subscribedApps + ";";
 		Assert.assertEquals(newJs, expectedJs);
 
 		new Expectations() {
