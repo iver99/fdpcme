@@ -193,7 +193,7 @@ public class DashboardsUiCORSFilter implements Filter
 		}
 		chain.doFilter(request, response);
 		long end = System.currentTimeMillis();
-		LOGGER.info("Time for dashboard filters to handle request takes {}ms, and the URI is ", (end - start), hReq.getRequestURI());
+		LOGGER.info("Time for dashboard filters to handle request takes {}ms, and the URI is {}", (end - start), hReq.getRequestURI());
 	}
 
 	@Override
