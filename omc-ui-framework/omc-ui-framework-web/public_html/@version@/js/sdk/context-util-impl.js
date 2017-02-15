@@ -25,6 +25,13 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                 window._uifwk.respectOMCEntityContext = true;
                 window._uifwk.respectOMCTimeContext = true;
             }
+            
+            self.OMCEventSourceConstants = {
+                GLOBAL_TIME_SELECTOR: 'OMC_UIFWK_TIME_SELECTOR',
+                GLOBAL_ENTITY_SELECTOR: 'OMC_UIFWK_ENTITY_SELECTOR',
+                GLOBAL_APPLICATION_SELECTOR: 'OMC_UIFWK_APPLICATION_SELECTOR',
+                GLOBAL_TOPOLOGY: 'OMC_UIFWK_TOPOLOGY'
+            };
 
             self.OMCTimeConstants = {
                 TIME_UNIT: {
@@ -294,9 +301,10 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
              * the time range, or selects a new entity to investigate.
              * 
              * @param {Object} context Context object in json format
+             * @param {String} source Source name to tell where the API is called
              * @returns 
              */
-            self.setOMCContext = function (context) {
+            self.setOMCContext = function (context, source) {
                 //In case the input context object refers to the same object with window._uifwk.omcContext, 
                 //and the context is updated directly by modifying context object rather than call our set methods, 
                 //we will never get the previous value by getCompositeMeId. In order to solve this issue, we
@@ -313,7 +321,7 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                 if (isGlobalContextRespected()) {
                     updateCurrentURL();
                     //Fire change event. Need to parse json to avoid data clone error when post message.
-                    fireOMCContextChangeEvent('All', JSON.parse(JSON.stringify(prevCtx)), JSON.parse(JSON.stringify(context)));
+                    fireOMCContextChangeEvent('All', JSON.parse(JSON.stringify(prevCtx)), JSON.parse(JSON.stringify(context)), null, source);
                 }
             };
 
@@ -474,11 +482,12 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
              * Set OMC global context of start time.
              * 
              * @param {Number} startTime Start time
+             * @param {String} source Source name to tell where the API is called
              * @returns 
              */
-            self.setStartTime = function (startTime) {
+            self.setStartTime = function (startTime, source) {
                 if (self.getStartTime() !== parseInt(startTime)) {
-                    setIndividualContext('time', 'startTime', parseInt(startTime));
+                    setIndividualContext('time', 'startTime', parseInt(startTime), true, true, false, source);
                 }
             };
 
@@ -501,11 +510,12 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
              * Set OMC global context of end time.
              * 
              * @param {Number} endTime End time
+             * @param {String} source Source name to tell where the API is called
              * @returns 
              */
-            self.setEndTime = function (endTime) {
+            self.setEndTime = function (endTime, source) {
                 if (self.getEndTime() !== parseInt(endTime)) {
-                    setIndividualContext('time', 'endTime', parseInt(endTime));
+                    setIndividualContext('time', 'endTime', parseInt(endTime), true, true, false, source);
                 }
             };
 
@@ -528,12 +538,13 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
              * Set OMC global context of time period.
              * 
              * @param {String} timePeriod Time period like 'Last 1 Week' etc.
+             * @param {String} source Source name to tell where the API is called
              * @returns 
              */
-            self.setTimePeriod = function (timePeriod) {
+            self.setTimePeriod = function (timePeriod, source) {
                 setIndividualContext('time', 'startTime', null, false, false);
                 setIndividualContext('time', 'endTime', null, false, false);
-                setIndividualContext('time', 'timePeriod', timePeriod, true, true);
+                setIndividualContext('time', 'timePeriod', timePeriod, true, true, false, source);
             };
 
             /**
@@ -541,9 +552,10 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
              * 
              * @param {Number} start Start time.
              * @param {Number} end End time.
+             * @param {String} source Source name to tell where the API is called
              * @returns 
              */
-            self.setStartAndEndTime = function (start, end) {
+            self.setStartAndEndTime = function (start, end, source) {
                 var prevStartTime = self.getStartTime();
                 var prevEndTime = self.getEndTime();
                 if (prevStartTime !== start || prevEndTime !== end) {
@@ -554,7 +566,7 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                         updateCurrentURL();
                         fireOMCContextChangeEvent('startEndTime',
                             {'startTime': prevStartTime, 'endTime': prevEndTime},
-                        {'startTime': start, 'endTime': end});
+                        {'startTime': start, 'endTime': end}, null, source);
                     }
                 }
             };
@@ -764,12 +776,13 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
              * Set OMC context of time period duration
              * 
              * @param {type} duration
+             * @param {String} source Source name to tell where the API is called
              * @returns {undefined}
              */
-            self.setTimePeriodDuration = function (duration) {
+            self.setTimePeriodDuration = function (duration, source) {
                 var tp = self.parseTimePeriodToUnitAndDuration();
                 tp && (tp = self.generateTimePeriodFromUnitAndDuration(tp.unit, parseInt(duration)));
-                tp && self.setTimePeriod(tp);
+                tp && self.setTimePeriod(tp, source);
             };
 
             /**
@@ -790,12 +803,13 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
              * Set OMC context of time period unit
              * 
              * @param {type} unit
+             * @param {String} source Source name to tell where the API is called
              * @returns {undefined}
              */
-            self.setTimePeriodUnit = function (unit) {
+            self.setTimePeriodUnit = function (unit, source) {
                 var tp = self.parseTimePeriodToUnitAndDuration();
                 tp && (tp = self.generateTimePeriodFromUnitAndDuration(unit, tp.duration));
-                tp && self.setTimePeriod(tp);
+                tp && self.setTimePeriod(tp, source);
             };
 
             /**
@@ -803,20 +817,22 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
              * 
              * @param {type} unit
              * @param {type} duration
+             * @param {String} source Source name to tell where the API is called
              * @returns {undefined}
              */
-            self.setTimePeriodUnitAndDuration = function (unit, duration) {
+            self.setTimePeriodUnitAndDuration = function (unit, duration, source) {
                 var tp = self.generateTimePeriodFromUnitAndDuration(unit, duration);
-                tp && self.setTimePeriod(tp);
+                tp && self.setTimePeriod(tp, source);
             };
 
             /**
              * Set OMC global context of composite guid.
              * 
              * @param {String} compositeMEID Composite GUID
+             * @param {String} source Source name to tell where the API is called
              * @returns 
              */
-            self.setCompositeMeId = function (compositeMEID) {
+            self.setCompositeMeId = function (compositeMEID, source) {
                 if (compositeMEID !== self.getCompositeMeId()) {
                     var omcContext = self.getOMCContext();
                     omcContext.previousCompositeMeId = self.getCompositeMeId();
@@ -829,7 +845,7 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                     setIndividualContext('composite', 'compositeDisplayName', null, false, false);
                     setIndividualContext('composite', 'compositeEntity', null, false, false);
                     setIndividualContext('composite', 'compositeNeedRefresh', true, false, false);
-                    setIndividualContext('composite', 'compositeMEID', compositeMEID, true, false);
+                    setIndividualContext('composite', 'compositeMEID', compositeMEID, true, false, false, source);
                 }
             };
 
@@ -848,20 +864,12 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                 if (compositeEntity) {
                     return compositeEntity;
                 }
-                var compositeName = getIndividualContext('composite', 'compositeName');
-                if (!compositeName) {
-                    if (self.getCompositeMeId() && getIndividualContext('composite', 'compositeNeedRefresh') !== 'false') {
-                        //Fetch composite name/type
-                        queryODSEntitiesByMeIds([self.getCompositeMeId()], fetchCompositeCallback);
-                    }
-
-                }
                 var entity = new EntityObject();
-                entity['meId'] = getIndividualContext('composite', 'compositeMEID');
-                entity['displayName'] = getIndividualContext('composite', 'compositeDisplayName');
-                entity['entityName'] = getIndividualContext('composite', 'compositeName');
-                entity['entityType'] = getIndividualContext('composite', 'compositeType');
-                entity['meClass'] = getIndividualContext('composite', 'compositeClass');
+                entity['meId'] = self.getCompositeMeId();
+                entity['displayName'] = self.getCompositeDisplayName();
+                entity['entityName'] = self.getCompositeName();
+                entity['entityType'] = self.getCompositeType();
+                entity['meClass'] = self.getCompositeClass();
                 compositeEntity = entity;
 
                 //Cache the entities data
@@ -1020,9 +1028,10 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
              * Set OMC global context of multiple entity GUIDs.
              * 
              * @param {Array} entityMEIDs A list of Entity GUIDs
+             * @param {String} source Source name to tell where the API is called
              * @returns 
              */
-            self.setEntityMeIds = function (entityMEIDs) {
+            self.setEntityMeIds = function (entityMEIDs, source) {
 //                var omcContext = self.getOMCContext();
 //                var ids = self.getEntityMeIds();
 //                omcContext.previousEntityMeIds = ids ? ids : [];
@@ -1040,7 +1049,7 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                 var currentEntityIds = self.getEntityMeIds();
                 if (meIds !== (currentEntityIds ? currentEntityIds.sort().join() : null)) {
                     console.log("****************** updating entity ids");
-                    setIndividualContext('entity', 'entityMEIDs', meIds, true, true);
+                    setIndividualContext('entity', 'entityMEIDs', meIds, true, true, false, source);
                     //Set entity meIds will reset the cached entity objects, 
                     //next time you get the entities will return the new ones
                     setIndividualContext('entity', 'entities', null, false, false);
@@ -1069,11 +1078,12 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
              * Set OMC global context of entities type.
              * 
              * @param {String} entitiesType Entities type
+             * @param {String} source Source name to tell where the API is called
              * @returns 
              */
-            self.setEntitiesType = function (entitiesType) {
+            self.setEntitiesType = function (entitiesType, source) {
                 if (self.getEntitiesType() !== entitiesType) {
-                    setIndividualContext('entity', 'entitiesType', entitiesType);
+                    setIndividualContext('entity', 'entitiesType', entitiesType, true, true, false, source);
                 }
             };
 
@@ -1110,42 +1120,42 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
             /**
              * Clear OMC global composite context.
              * 
-             * @param 
+             * @param {String} source Source name to tell where the API is called
              * @returns 
              */
-            self.clearCompositeContext = function () {
+            self.clearCompositeContext = function (source) {
                 var compositeCacheKey = self.getCompositeMeId();
                 if (compositeCacheKey) {
                     sessionCaches[0].updateCacheData(compositeCacheKey, 'compositeDisplayName', null);
                     sessionCaches[0].updateCacheData(compositeCacheKey, 'compositeName', null);
                     sessionCaches[0].updateCacheData(compositeCacheKey, 'compositeType', null);
                     sessionCaches[0].updateCacheData(compositeCacheKey, 'compositeClass', null);
-                    clearIndividualContext('composite');
+                    clearIndividualContext('composite', source);
                 }
             };
 
             /**
              * Clear OMC global time context.
              * 
-             * @param 
+             * @param {String} source Source name to tell where the API is called
              * @returns 
              */
-            self.clearTimeContext = function () {
-                clearIndividualContext('time');
+            self.clearTimeContext = function (source) {
+                clearIndividualContext('time', source);
             };
 
             /**
              * Clear OMC global entity context.
              * 
-             * @param 
+             * @param {String} source Source name to tell where the API is called
              * @returns 
              */
-            self.clearEntityContext = function () {
+            self.clearEntityContext = function (source) {
                 var entityCacheKey = getEntityCacheKey();
                 if (entityCacheKey) {
                     sessionCaches[1].updateCacheData(entityCacheKey, 'entities', null);
                 }
-                clearIndividualContext('entity');
+                clearIndividualContext('entity', source);
             };
 
             /**
@@ -1208,20 +1218,22 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                     return entities;
                 }
             };
+            
             /**
              * set topologyParams in omcContext
              * @param {type} topologyParams
+             * @param {String} source Source name to tell where the API is called
              * @returns {undefined}
              */
-            self.setTopologyParams = function (topologyParams) {
-                setIndividualContext('topology', 'topologyParams', topologyParams, null, null, true);
+            self.setTopologyParams = function (topologyParams, source) {
+                setIndividualContext('topology', 'topologyParams', topologyParams, null, null, true, source);
                 // 
                 // it is possible that the brandingbar has not been instantiated yet, 
                 // during brandingbar instantiation, topologyParams will be cleared from global context, 
                 // so it is necessary to reset it after brandingbar is instantiated
                 //
                 afterBrandingBarInstantiated(function () {
-                    setIndividualContext('topology', 'topologyParams', topologyParams, null, null, true);
+                    setIndividualContext('topology', 'topologyParams', topologyParams, null, null, true, source);
                 });
             };
             /**
@@ -1329,11 +1341,13 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
              * @param {Object or String} previousValue Value before change
              * @param {Object or String} currentValue Value after change
              * @param {boolean} ignoreContextInfo if true, don't include context info since context info may contain functions
+             * @param {String} source Source name to tell where the event is fired
              * @returns 
              */
-            function fireOMCContextChangeEvent(contextName, previousValue, currentValue, ignoreContextInfo) {
+            function fireOMCContextChangeEvent(contextName, previousValue, currentValue, ignoreContextInfo, source) {
                 var message = {'tag': 'EMAAS_OMC_GLOBAL_CONTEXT_UPDATED'};
                 message.contextName = contextName;
+                message.source = source;
                 if (!ignoreContextInfo) {
                     message.previousValue = previousValue;
                     message.currentValue = currentValue;
@@ -1345,9 +1359,10 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
              * Clear individual OMC global context.
              * 
              * @param {String} contextName Context definition name
+             * @param {String} source Source name to tell where the API is called
              * @returns 
              */
-            function clearIndividualContext(contextName) {
+            function clearIndividualContext(contextName, source) {
                 if (contextName) {
                     var omcContext = self.getOMCContext();
                     if (omcContext[contextName]) {
@@ -1356,7 +1371,7 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                         storeContext(omcContext);
                         if (isGlobalContextRespected()) {
                             updateCurrentURL();
-                            fireOMCContextChangeEvent(contextName, JSON.parse(JSON.stringify(previousValue)), null);
+                            fireOMCContextChangeEvent(contextName, JSON.parse(JSON.stringify(previousValue)), null, null, source);
                         }
                     }
                 }
@@ -1371,9 +1386,10 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
              * @param {Boolean} fireChangeEvent Flag to determine whether to fire change event
              * @param {Boolean} replaceState Flag to determine whether to replace history state
              * @param {Boolean} raw true if raw set the context parameter with the raw value
+             * @param {String} source Source name to tell where the API is called
              * @returns 
              */
-            function setIndividualContext(contextName, paramName, value, fireChangeEvent, replaceState, raw) {
+            function setIndividualContext(contextName, paramName, value, fireChangeEvent, replaceState, raw, source) {
                 if (contextName && paramName) {
                     var omcContext = self.getOMCContext();
                     var previousValue = null;
@@ -1428,7 +1444,7 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                             if (contextName === 'topology') {
                                 ignoreContextInfo = true;
                             }
-                            fireOMCContextChangeEvent(paramName, previousValue, currentValue, ignoreContextInfo);
+                            fireOMCContextChangeEvent(paramName, previousValue, currentValue, ignoreContextInfo, source);
                         }
                     }
 

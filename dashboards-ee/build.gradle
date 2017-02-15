@@ -42,6 +42,7 @@ dependencies
 	earlib getProjectArtifact('commons-logging')   
         earlib  getProjectArtifact('zookeeper')   
         earlib getProjectArtifact('commons-lang3')   
+	earlib getProjectArtifact('security-client')
 }
 
 // All WLS Related things
