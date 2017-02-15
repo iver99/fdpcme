@@ -28,6 +28,7 @@ dependencies {
     compile getProjectArtifact('registry-lookup-client')
     compile getProjectArtifact('registry-client')
     compile getProjectArtifact('emaas-platform-tenant-sdk')
+    compile getProjectArtifact('security-client')
     testCompile getProjectArtifact('jmockit')
     
 }

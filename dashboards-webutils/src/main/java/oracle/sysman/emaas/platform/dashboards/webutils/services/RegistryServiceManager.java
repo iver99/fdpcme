@@ -29,6 +29,7 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.NonServiceResource;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
+import oracle.sysman.emaas.platform.dashboards.webutils.ParallelThreadPool;
 import oracle.sysman.emaas.platform.dashboards.webutils.wls.lifecycle.AbstractApplicationLifecycleService;
 import oracle.sysman.emaas.platform.dashboards.webutils.wls.lifecycle.ApplicationServiceManager;
 
@@ -278,6 +279,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	{
 		LOGGER.info("Post-starting 'Service Registry' application service");
 		registerService();
+		ParallelThreadPool.init();
 	}
 
 	@Override
@@ -298,6 +300,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 		LOGGER.info("Pre-stopping 'Service Registry' application service");
 		RegistrationManager.getInstance().getRegistrationClient().shutdown();
 		LOGGER.debug("Pre-stopped 'Service Regsitry'");
+		ParallelThreadPool.close();
 	}
 
 	public boolean registerService()

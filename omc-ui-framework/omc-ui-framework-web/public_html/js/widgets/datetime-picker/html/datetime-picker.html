@@ -1,9 +1,9 @@
         <div data-testapiversion="1.16.0" data-bind="attr: {id: 'dateTimePicker_' + randomId}" style="display: table">
             <label for="dropdown" data-bind="attr: {id: 'dropdownLabel_'+randomId}" style="font-weight: bold; font-size: 14px; vertical-align: middle; padding-right: 5px;" data-bind="text: timeRangeMsg, style: {display: hideMainLabel}"></label>
             <span class="oj-select-choice"  style="width: auto; display: inline-block;" data-bind="attr: {id: 'dropDown_'+randomId}, click: panelControl, event: {keypress: function(data, event) {if(isEnterPressed(data, event)) {panelControl();}}}" aria-label="Pick datetime">
-                <img class="info-badge" src="@version@/images/imgbackground.png" style="height:16px;width:16px;vertical-align:top;margin-top:8px;background: url('@version@/images/uifwkSprite.png') no-repeat 0px -46px;" data-bind="style: {display: badgeTimePeriod()?'inline':'none'},event: {mouseover: badgeMouseOverHandler, mouseout: badgeMouseOutHandler}"/>
+                <img class="info-badge" src="/emsaasui/uifwk/@version@/images/imgbackground.png" style="height:16px;width:16px;vertical-align:top;margin-top:8px;background: url('/emsaasui/uifwk/@version@/images/uifwkSprite.png') no-repeat 0px -46px;" data-bind="style: {display: badgeTimePeriod()?'inline':'none'},event: {mouseover: badgeMouseOverHandler, mouseout: badgeMouseOutHandler}"/>
                 <div data-bind="ojComponent:{component: 'ojPopup',tail: 'simple'}" class="badge-popup-message" style="display: block;padding:0; max-width: 340px;">
-                    <img src="@version@/images/imgbackground.png" style="height:16px;width:16px;vertical-align:top;background: url('@version@/images/uifwkSprite.png') no-repeat 0px -46px;"/>
+                    <img src="/emsaasui/uifwk/@version@/images/imgbackground.png" style="height:16px;width:16px;vertical-align:top;background: url('/emsaasui/uifwk/@version@/images/uifwkSprite.png') no-repeat 0px -46px;"/>
                     <div style="margin: 0 0 0 7px; padding: 0; display: inline-block;">
                         <span data-bind="text: nls.DATETIME_PICKER_BADGE_MESSAGE_TITLE + badgeTimePeriod()" class="badge-message-summary"></span><br>
                         <span class="badge-message-detail" data-bind="text: badgeStartTime()+' - '+badgeEndTime()"></span>
