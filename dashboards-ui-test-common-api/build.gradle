@@ -2,7 +2,7 @@
 //1. remove greenchannel before merge into master
 //2. replace greenchannel with other name if you don't want to conflict with greenchannel
 //3. you also need to update emcpdf_test_3n.gradle and emcpdf_upgrade_test_3n.gradle if you do #1 or #2
-version = "2.1.0-greenchannel-feb13" + "-$buildTimestamp"
+version = "2.0.0" + "-$buildTimestamp"
 
 project.ext.intgRun = hasProperty('IFARM_RUN') && IFARM_RUN != '' ? IFARM_RUN : 0
 project.ext.buildBranch = hasProperty('BUILD_BRANCH') && BUILD_BRANCH != '' ? BUILD_BRANCH : 'master'
