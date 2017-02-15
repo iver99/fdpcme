@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by chehao on 2017/2/13 22:20.
@@ -39,7 +40,7 @@ public class ParallelThreadPool {
                 60,											//keep alived time for idle thread
                 TimeUnit.SECONDS,
                 new LinkedBlockingQueue<Runnable>(1000),	 //bounded queue with capacity 1000
-                Executors.defaultThreadFactory(),			//default thread factory
+                new CustomThreadFactory(),			//default thread factory
                 new CustomRejectedExecutionHandler()		//Custom Rejected execution handler
                 );
         LOGGER.info("Dashboards-API: Thread pool with core size {} and max size {} and queue size {} is initialized!", cpuCore * 2, cpuCore * 3 ,1000);
@@ -52,6 +53,36 @@ public class ParallelThreadPool {
             throw new RejectedExecutionException("Task " + r.toString() +
                     " rejected from " +
                     executor.toString());
+        }
+    }
+
+    /**
+     * The default thread factory
+     */
+    static class CustomThreadFactory implements ThreadFactory {
+        private static final AtomicInteger poolNumber = new AtomicInteger(1);
+        private final ThreadGroup group;
+        private final AtomicInteger threadNumber = new AtomicInteger(1);
+        private final String namePrefix;
+
+        CustomThreadFactory() {
+            SecurityManager s = System.getSecurityManager();
+            group = (s != null) ? s.getThreadGroup() :
+                    Thread.currentThread().getThreadGroup();
+            namePrefix = "Dashboard-API thread pool-" +
+                    poolNumber.getAndIncrement() +
+                    "-thread-";
+        }
+        @Override
+        public Thread newThread(Runnable r) {
+            Thread t = new Thread(group, r,
+                    namePrefix + threadNumber.getAndIncrement(),
+                    0);
+            if (t.isDaemon())
+                t.setDaemon(false);
+            if (t.getPriority() != Thread.NORM_PRIORITY)
+                t.setPriority(Thread.NORM_PRIORITY);
+            return t;
         }
     }
 }
