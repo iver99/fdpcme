@@ -50,7 +50,7 @@ public class EntitySelectorUtil_1140 extends EntitySelectorUtil_Version implemen
 	}
 
 	/* (non-Javadoc)
-	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IEntitySelectorUtil#openEnitySelector(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
+	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IEntitySelectorUtil#openEntitySelector(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
 	@Override
 	public void openEntitySelector(WebDriver driver)
@@ -72,15 +72,15 @@ public class EntitySelectorUtil_1140 extends EntitySelectorUtil_Version implemen
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IEntitySelectorUtil#removePill(oracle.sysman.qatool.uifwk.webdriver.WebDriver, int)
 	 */
 	@Override
-	public void removePill(WebDriver driver, int index)
+	public void removePill(WebDriver driver, int indexOfPillToRemove)
 	{
                 LOGGER.log(Level.INFO, "Remove pill from Entity Selector");
                 //Take in consideration that XPath uses 1-based indexing
-                index++;
+                indexOfPillToRemove++;
                 final int prevPillCount = getNumberOfPills(driver);
                 WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), UNTIL_TIMEOUT);
                 WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(MessageFormat.format(
-                                DashBoardPageId.EntSelPillToRemoveByIndex, index))));
+                                DashBoardPageId.EntSelPillToRemoveByIndex, indexOfPillToRemove))));
                 LOGGER.log(Level.INFO, "Click button to remove pill from Entity Selector ");
                 element.click();
                 //Wait until the pill is removed
@@ -93,7 +93,8 @@ public class EntitySelectorUtil_1140 extends EntitySelectorUtil_Version implemen
                         return getNumberOfPills(finalDriver) < prevPillCount;
                     }
                 });
-                LOGGER.log(Level.INFO, "The pill at index {0} has been removed", new Object[] { index });
+                driver.takeScreenShot();
+                LOGGER.log(Level.INFO, "The pill at index {0} has been removed", new Object[] { indexOfPillToRemove });
 
 	}
 
@@ -137,13 +138,13 @@ public class EntitySelectorUtil_1140 extends EntitySelectorUtil_Version implemen
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IEntitySelectorUtil#selectCompositeEntity(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
 	@Override
-	public void selectCompositeEntity(WebDriver driver, String text, String type)
+	public void selectCompositeEntity(WebDriver driver, String text, String entityType)
 	{
                 //search text in entity selector
                 searchText(driver, text);
 
                 //select the first composite entity found with that description
-                selectFirstSuggestionByCategory(driver, CATEGORY_COMPOSITE, type);
+                selectFirstSuggestionByCategory(driver, CATEGORY_COMPOSITE, entityType);
 
 	}
 
@@ -151,13 +152,13 @@ public class EntitySelectorUtil_1140 extends EntitySelectorUtil_Version implemen
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IEntitySelectorUtil#selectEntity(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
 	@Override
-	public void selectEntity(WebDriver driver, String text, String type)
+	public void selectEntity(WebDriver driver, String text, String entityType)
 	{
                 //search text in entity selector
                 searchText(driver, text);
 
                 //select the first entity found with that description
-                selectFirstSuggestionByCategory(driver, CATEGORY_ENTITIES, type);
+                selectFirstSuggestionByCategory(driver, CATEGORY_ENTITIES, entityType);
 
 	}
 
@@ -185,8 +186,9 @@ public class EntitySelectorUtil_1140 extends EntitySelectorUtil_Version implemen
                 for (int i = total - 1; i >= 0; i--) {
                     removePill(driver, i);
                 }
-
-                LOGGER.log(Level.INFO, "Global context has been cleared, all pills removed.");
+                
+                int pillCountAfterClear = getNumberOfPills(driver);
+                LOGGER.log(Level.INFO, "Global context has been cleared, current pill count: {0}", new Object[] { pillCountAfterClear });
         }
 
 	/* (non-Javadoc)

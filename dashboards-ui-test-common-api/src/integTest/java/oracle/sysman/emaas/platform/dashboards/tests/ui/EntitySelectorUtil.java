@@ -47,10 +47,10 @@ public class EntitySelectorUtil
 	 * @param
 	 * @return
 	 */
-	public void removePill(WebDriver driver, int index)
+	public void removePill(WebDriver driver, int indexOfPillToRemove)
 	{
 		IEntitySelectorUtil esu = new UtilLoader<IEntitySelectorUtil>().loadUtil(driver, IEntitySelectorUtil.class);
-		esu.removePill(driver, index);
+		esu.removePill(driver, indexOfPillToRemove);
 	}
 
 	/**
@@ -69,10 +69,10 @@ public class EntitySelectorUtil
 	 * @param
 	 * @return
 	 */
-	public void selectCompositeEntity(WebDriver driver, String text, String type)
+	public void selectCompositeEntity(WebDriver driver, String text, String entityType)
 	{
 		IEntitySelectorUtil esu = new UtilLoader<IEntitySelectorUtil>().loadUtil(driver, IEntitySelectorUtil.class);
-		esu.selectCompositeEntity(driver, text, type);
+		esu.selectCompositeEntity(driver, text, entityType);
 	}
 
 	/**
@@ -80,10 +80,10 @@ public class EntitySelectorUtil
 	 * @param
 	 * @return
 	 */
-	public void selectEntity(WebDriver driver, String text, String type)
+	public void selectEntity(WebDriver driver, String text, String entityType)
 	{
 		IEntitySelectorUtil esu = new UtilLoader<IEntitySelectorUtil>().loadUtil(driver, IEntitySelectorUtil.class);
-		esu.selectEntity(driver, text, type);
+		esu.selectEntity(driver, text, entityType);
 	}
 
 	/**
