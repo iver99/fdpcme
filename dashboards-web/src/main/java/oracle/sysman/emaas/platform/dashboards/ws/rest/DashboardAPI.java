@@ -531,11 +531,12 @@ public class DashboardAPI extends APIBase
 			LOGGER.error(e.getStackTrace());
 		}
 
+		sb.append("if(!window._uifwk){window._uifwk={};}if(!window._uifwk.cachedData){window._uifwk.cachedData={};}");
 		try {
 			if (futureUserInfo != null) {
 				userInfoEntity = futureUserInfo.get(TIMEOUT, TimeUnit.MILLISECONDS);
 				if (userInfoEntity != null && !StringUtils.isEmpty(userInfoEntity)) {
-					sb.append("window._userInfoServerCache=");
+					sb.append("window._uifwk.cachedData.userInfo=");
 					sb.append(userInfoEntity).append(";");
 				}
 				LOGGER.debug("User info data is " + regEntity);
