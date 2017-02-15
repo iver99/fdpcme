@@ -279,6 +279,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	{
 		LOGGER.info("Post-starting 'Service Registry' application service");
 		registerService();
+		LOGGER.info("Post-starting thread pool.");
 		ParallelThreadPool.init();
 	}
 
@@ -297,10 +298,12 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	@Override
 	public void preStop(ApplicationLifecycleEvent evt) throws Exception
 	{
+		LOGGER.info("Pre-closing thread pool.");
+		ParallelThreadPool.close();
+		LOGGER.debug("Pre-stopped thread pool");
 		LOGGER.info("Pre-stopping 'Service Registry' application service");
 		RegistrationManager.getInstance().getRegistrationClient().shutdown();
 		LOGGER.debug("Pre-stopped 'Service Regsitry'");
-		ParallelThreadPool.close();
 	}
 
 	public boolean registerService()

@@ -11,8 +11,9 @@ import java.util.concurrent.*;
 public class ParallelThreadPool {
     private final static Logger LOGGER = LogManager.getLogger(ParallelThreadPool.class);
     private static ExecutorService pool = null;
+    private static long rejectTaskNumber = 0l;
 
-    public static  ExecutorService  getThreadPool(){
+    public synchronized static  ExecutorService  getThreadPool(){
         if(pool != null){
             return pool;
         }
@@ -34,7 +35,7 @@ public class ParallelThreadPool {
             return;
         }
         pool = new ThreadPoolExecutor(cpuCore * 2,			//Core thread size
-                cpuCore * 3,								//max thread size
+                cpuCore * 4,								//max thread size
                 60,											//keep alived time for idle thread
                 TimeUnit.SECONDS,
                 new LinkedBlockingQueue<Runnable>(1000),	 //bounded queue with capacity 1000
@@ -47,7 +48,7 @@ public class ParallelThreadPool {
     private static class CustomRejectedExecutionHandler implements RejectedExecutionHandler {
         @Override
         public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
-            LOGGER.fatal("Task queue of thread pool is full! Task is rejected!");
+            LOGGER.fatal("Task queue of thread pool is full! Task {} is rejected!",rejectTaskNumber++);
             throw new RejectedExecutionException("Task " + r.toString() +
                     " rejected from " +
                     executor.toString());

@@ -54,7 +54,7 @@ public class TenantSubscriptionUtil
 {
 	public static class RestClient
 	{
-		private static final Integer DEFAULT_TIMEOUT = 3000;
+		private static final Integer DEFAULT_TIMEOUT = 30000;
 
 		private Map<String, Object> headers;
 
