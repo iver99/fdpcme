@@ -260,11 +260,24 @@ public class BugVerification extends LoginAndLogout
 		BrandingBarUtil.visitWelcome(webd);
 		Assert.assertFalse(GlobalContextUtil.isGlobalContextExisted(webd), "The global context exists in Welcome Page");
 				
-		//verify omcCtx exist in the url
+		//verify omcCtx exist in the Welcome page url
 		String wCtx_url = webd.getWebDriver().getCurrentUrl();		
 		webd.getLogger().info("start to verify omcCtx exist in the welcome page url");	
 		Assert.assertTrue(wCtx_url.contains("omcCtx="), "The global context infomation in URL is lost");		
+	
+		//visit home page
+		webd.getLogger().info("Access to the home page");
+                BrandingBarUtil.visitMyHome(webd);
 		
+		//set it not "home"
+		webd.getLogger().info("Set Dashboard_EMCPDF2856 not home page");
+		Assert.assertFalse(DashboardBuilderUtil.toggleHome(webd), "Remove the dasbhoard Dashboard_EMCPDF2856 as Home failed!");
+		
+		//check home page
+		webd.getLogger().info("Access to the home page");
+		BrandingBarUtil.visitMyHome(webd);
+		webd.getLogger().info("Verfiy the home page");
+		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, WelcomeUtil.SERVICE_NAME_DASHBOARDS), "It is NOT the home page!");
 	}
 
 }
