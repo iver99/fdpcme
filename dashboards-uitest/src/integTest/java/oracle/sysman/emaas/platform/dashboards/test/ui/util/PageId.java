@@ -45,6 +45,19 @@ public class PageId
 	public static final String DATABASE_OPERATIONS_ID = "//div[@aria-dashboard='15']";
 	public static final String HOST_OPERATIONS_ID = "//div[@aria-dashboard='16']";
 	public static final String MIDDLEWARE_OPERATIONS_ID = "//div[@aria-dashboard='17']";
+	
+	public static final String DASHBOARDEDITBUTTON = "//button[@title='Edit Settings']";
+	public static final String DASHBOARDNAME = ".//*[@id='dbd-edit-settings-container']/span[2]";
+	public static final String DASHBOARDNAME_CSS = ".edit-setting-link.edit-dsb-link";
+	public static final String DASHBOARDFILTERS = "//span[contains(text(),'Dashboard Filters')]";
+	public static final String DASHBOARDENTITIES = "//label[text()='Entities']";
+	
+	public static final String ENABLEENTITYFILTER = "//*[@id='enableEntityFilter']";
+	public static final String ENABLEGCENTITYFILTER = "//*[@id='enableGCEntities']";
+	public static final String DISABLEENTITYFILTER = "//*[@id='disableEntityFilter']";
+	public static final String ENTITYBUTTON = "//*[@id='emcta_tgtSel0_dropDown']";
+	
+	
 	//check box
 	public static final String ITA_BOXID = "itaopt";
 
@@ -88,4 +101,9 @@ public class PageId
 	public static final String ERRORURL_CSS = "div[data-bind=\"visible: invalidUrl\"]";
 	public static final String DEFAULTHOME_CSS = "div[data-bind=\"visible: defaultHomeLinkVisible\"]";
 	public static final String DEFAULTHOMEURL_CSS = ".dbd-error-url[href=\"/emsaasui/emcpdfui/welcome.html\"]";
+	
+	//UDE page
+	public static final String SAVEBUTTON_UDE = "//*[@id='save_widget_btn']";
+	//LA page
+	public static final String RUNBUTTON_LA = "//*[@id='srchSrch']";
 }

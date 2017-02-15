@@ -81,44 +81,50 @@ define([
             
             self.enableEntityFilter.subscribe(function(val){
                 val = self.getFilterEnabledValue(val);
-                //1. reset respectOMCApplicationContext flag and respectOMCEntityContext flag, get entity context info
-                //2. update/refresh value of entity seletor accordingly
-                //3. fire event to widgets
-                //
-                //1. reset respectOMCApplicationContext flag and respectOMCEntityContext flag, get entity context info
-                var dashboardTilesViewModel = self.tilesViewModel;                
-                $.when(dashboardTilesViewModel.getEntityContext(dashboardTilesViewModel, val)).done(function(entityContext) {
-                    //show/hide GC bar accordingly
-                    var headerWrapper = $("#headerWrapper")[0];
-                    var headerViewModel =  null;
-                    if(headerWrapper) {
-                        headerViewModel = ko.dataFor(headerWrapper);
+                
+                Builder.requireTargetSelectorUtils((val==="TRUE" || val==="GC"), function(TargetSelectorUtils) {
+                    if (TargetSelectorUtils) {
+                        TargetSelectorUtils.registerComponents();
                     }
-                    
-                    if(self.isDashboardSet) {
-                        self.dashboard.enableEntityFilter(val);
-                        headerViewModel.brandingbarParams.showGlobalContextBanner(false);
-                        headerViewModel.brandingbarParams.showTimeSelector(false);
-                        headerViewModel.brandingbarParams.showEntitySelector(false);
-                    }else {
-			self.dashboard.enableEntityFilter(val);
-                        if(val === "FALSE") {
-                            headerViewModel && headerViewModel.brandingbarParams.showEntitySelector(false);
-                        }else {
-                            headerViewModel && headerViewModel.brandingbarParams.showEntitySelector(true);
-                        }
-
-                        if(val === "FALSE" && self.getFilterEnabledValue(self.enableTimeRangeFilter()) === "FALSE" && headerViewModel) {
-                            headerViewModel.brandingbarParams.showGlobalContextBanner(false);
-                        }else {
-                            headerViewModel.brandingbarParams.showGlobalContextBanner(true);
-                        }
-                    }
-
+                    self.dashboard.enableEntityFilter(val);
+                
+                    //1. reset respectOMCApplicationContext flag and respectOMCEntityContext flag, get entity context info
                     //2. update/refresh value of entity seletor accordingly
-                    entityContext && dashboardTilesViewModel.targets(entityContext);
                     //3. fire event to widgets
-                    dashboardTilesViewModel.timeSelectorModel.timeRangeChange(true);
+                    //
+                    //1. reset respectOMCApplicationContext flag and respectOMCEntityContext flag, get entity context info
+                    var dashboardTilesViewModel = self.tilesViewModel;                
+                    $.when(dashboardTilesViewModel.getEntityContext(dashboardTilesViewModel, val)).done(function(entityContext) {
+                        //show/hide GC bar accordingly
+                        var headerWrapper = $("#headerWrapper")[0];
+                        var headerViewModel =  null;
+                        if(headerWrapper) {
+                            headerViewModel = ko.dataFor(headerWrapper);
+                        }
+
+                        if(self.isDashboardSet) {
+                            headerViewModel.brandingbarParams.showGlobalContextBanner(false);
+                            headerViewModel.brandingbarParams.showTimeSelector(false);
+                            headerViewModel.brandingbarParams.showEntitySelector(false);
+                        }else {
+                            if(val === "FALSE" || val === "TRUE") {
+                                headerViewModel && headerViewModel.brandingbarParams.showEntitySelector(false);
+                            }else {
+                                headerViewModel && headerViewModel.brandingbarParams.showEntitySelector(true);
+                            }
+
+                            if(val === "FALSE" && self.getFilterEnabledValue(self.enableTimeRangeFilter()) === "FALSE" && headerViewModel) {
+                                headerViewModel.brandingbarParams.showGlobalContextBanner(false);
+                            }else {
+                                headerViewModel.brandingbarParams.showGlobalContextBanner(true);
+                            }
+                        }
+
+                        //2. update/refresh value of entity seletor accordingly
+                        entityContext && dashboardTilesViewModel.targets(entityContext);
+                        //3. fire event to widgets
+                        dashboardTilesViewModel.timeSelectorModel.timeRangeChange(true);
+                    });
                 });
             });
             
@@ -177,10 +183,12 @@ define([
                     }                    
                 }else if(ctxUtil.formalizeTimePeriod(timePeriod) === "CUSTOM" && start instanceof Date && end instanceof Date) {
                     if(self.isDashboardSet) {
+                        dashboardTilesViewModel.timePeriod("CUSTOM");
                         dashboardTilesViewModel.initStart(start);
                         dashboardTilesViewModel.initEnd(end);
                     }else {
                         if(headerViewModel) {
+                            headerViewModel.brandingbarParams.timeSelectorParams.timePeriod("CUSTOM");
                             headerViewModel.brandingbarParams.timeSelectorParams.startDateTime(start);
                             headerViewModel.brandingbarParams.timeSelectorParams.endDateTime(end);
                         }

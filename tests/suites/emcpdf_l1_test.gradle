@@ -28,6 +28,9 @@ buildscript {
 apply from: 'test-project-apply.gradle'
 apply from: 'setup.gradle'
 import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
+
+project.ext.omctf_omcCloudSetup_deployArgs= "-skipOpssConfig true -skipRestartServerOpss true " 
+
 /* *************************************************************************************************
  *                   END OF TEST-INFRA-BLOCK
  ***************************************************************************************************/
@@ -46,10 +49,12 @@ dependencies {
 	exclude('module':'groovy')}
 	testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-webutils-integ-tests', version: "${REPO_BID}") {
 	exclude('module':'groovy')}
+/*
 	testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardscomparator-web-integ-tests', version: "${REPO_BID}") {
 		exclude('module':'groovy')}
 	testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardscomparator-webutils-integ-tests', version: "${REPO_BID}") {
 		exclude('module':'groovy')}
+*/
 	testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-core-integ-tests', version: "${REPO_BID}") {
 	exclude('module':'groovy')}
 	testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-sdk-integ-tests', version: "${REPO_BID}") {
@@ -63,15 +68,16 @@ dependencies {
     testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-core', version: "${REPO_BID}") {transitive=false}
     testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-entities', version: "${REPO_BID}") {transitive=false}
     testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-webutils', version: "${REPO_BID}") {transitive=false}
-	testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardscomparator-web', version: "${REPO_BID}") {transitive=false}
+/*	testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardscomparator-web', version: "${REPO_BID}") {transitive=false}
 	testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardscomparator-webutils', version: "${REPO_BID}") {transitive=false}
-    testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardsui-web', version: "${REPO_BID}") {transitive=false}
+*/  
+  testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardsui-web', version: "${REPO_BID}") {transitive=false}
     testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardsui-webutils', version: "${REPO_BID}") {transitive=false}
     testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'omc-ui-framework-webutils', version:"${REPO_BID}") {transitive=false}
 	testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'omc-ui-framework-web', version:"${REPO_BID}") {transitive=false}
     testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-sdk', version:"${REPO_BID}") {transitive=false}
     
-    testConfig(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2') { transitive = false }
+    testConfig(group: 'com.oracle.emaas.emcpsrvs.sdk', name:'emaas-platform-tenant-sdk', version:'2.0.+') { transitive = false }
     testConfig(group: 'com.oracle.emaas.emcpsm', name: 'registry-lookup-client', version: emcpsmRegLookupClientVer){ transitive = false }
     testConfig(group: 'com.oracle.emaas.emcpsm', name: 'registry-client', version: emcpsmRegClientVer){ transitive = false }
     
@@ -159,14 +165,13 @@ task DEVTest(type:EMTest,dependsOn: DEVTest_ws){
 	include "oracle/sysman/emaas/platform/dashboards/core/restclient/*.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/util/*.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/wls/management/AppLoggingManageMXBeanTest_S2.class"
-	include "oracle/sysman/emaas/platform/dashboards/core/zdt/*.class"
+	include "oracle/sysman/emaas/platform/dashboards/core/zdt/DataManagerTest.class"
 
+	//below are comparator web utils test cases
+	//include "oracle/sysman/emaas/platform/dashboards/comparator/targetmodel/services/*.class"
+	//include "oracle/sysman/emaas/platform/dashboards/comparator/webutils/**/*.class"
 
-	//***************below are dashboardscomparator-webutils project test cases***************//
-	include "oracle/sysman/emaas/platform/dashboards/comparator/targetmodel/services/*.class"
-	include "oracle/sysman/emaas/platform/dashboards/comparator/webutils/**/*.class"
-
-	//***************below are dashboards-sdk project test cases***************//
+	//below are sdk project test cases
 	include "oracle/sysman/emaas/platform/emcpdf/cache/screenshot/*.class"
 	include "oracle/sysman/emaas/platform/emcpdf/cache/exception/*.class"
 	include "oracle/sysman/emaas/platform/emcpdf/cache/support/**/*.class"

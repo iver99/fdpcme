@@ -23,6 +23,7 @@ public class CacheConstants {
 
 
     public static final String LOOKUP_CACHE_KEY_SUBSCRIBED_APPS = "subscribedApps";
+    public static final String LOOKUP_CACHE_KEY_SUBSCRIBED_APPS_UIFWK = "subscribedApps_uifwk";
     public static final String LOOKUP_CACHE_KEY_EXTERNAL_LINK = "externalLink";
     public static final String LOOKUP_CACHE_KEY_INTERNAL_LINK = "internalLink";
     public static final String LOOKUP_CACHE_KEY_VANITY_BASE_URL = "vanityBaseUrl";

@@ -50,7 +50,7 @@ define([
             };
             
             self.showDashboard = function (dashboardsetToolBarModel) {
-                document.activeElement.blur();//to blur the focused item on another tab
+                document.activeElement && document.activeElement.blur();//to blur the focused item on another tab
                 var dashboardItem=dashboardsetToolBarModel.selectedDashboardItem(),               
                     dashboardId = dashboardItem.dashboardId,
                     divId = "dashboard-" + dashboardId,
@@ -81,7 +81,7 @@ define([
                         }else {
                             headerViewModel && headerViewModel.brandingbarParams.showTimeSelector(true);
                         }
-                        if(dashboardsetToolBarModel.dashboardInst.enableEntityFilter()==="FALSE") {
+                        if(dashboardsetToolBarModel.dashboardInst.enableEntityFilter()==="FALSE" || dashboardsetToolBarModel.dashboardInst.enableEntityFilter()==="TRUE") {
                             headerViewModel && headerViewModel.brandingbarParams.showEntitySelector(false);
                         }else {
                             headerViewModel && headerViewModel.brandingbarParams.showEntitySelector(true);
@@ -237,7 +237,16 @@ define([
                     var tilesViewModel = new Builder.DashboardTilesViewModel($b, dashboardsetToolBarModel.dashboardInst/*, tilesView, urlChangeView*/);
                     var toolBarModel = new Builder.ToolBarModel($b, options);
                     tilesViewModel.toolbarModel = toolBarModel;
+                    /*var wrapperEleemnt = $b.find('.dbd-tile-widget-wrapper');
+                    if (wrapperEleemnt) {
+                        var el = $($("#dashboard-tile-widget-template").text());
+                        el.appendTo(wrapperEleemnt[0]);
+                    }*/
 
+                    var mode = tilesViewModel.editor.mode;
+                    var normalMode = tilesViewModel.editor.normalMode;
+                    var tabletMode = tilesViewModel.editor.tabletMode;
+                    Builder.eagerLoadDahshboardTilesAtPageLoad(dfu, ko, normalMode, tabletMode, mode, tilesViewModel.timeSelectorModel, tilesViewModel.targets);
                     //change dashboard name
                     toolBarModel.dashboardName.subscribe(function (dashboardName) {
                         var currentDashboardId = self.selectedDashboardInst().toolBarModel.dashboardId;
@@ -262,7 +271,7 @@ define([
                             if (tile.type() === "TEXT_WIDGET") {
                                 Builder.initializeTextTileAfterLoad(tilesViewModel.editor.mode, $b, tile, tilesViewModel.show, tilesViewModel.editor.tiles.deleteTile, Builder.isContentLengthValid);
                             } else {
-                                Builder.initializeTileAfterLoad(tilesViewModel.editor.mode, dashboard, tile, tilesViewModel.timeSelectorModel, tilesViewModel.targets, true, dashboardsetToolBarModel.dashboardInst);
+                                //Builder.initializeTileAfterLoad(tilesViewModel.editor.mode, dashboard, tile, tilesViewModel.timeSelectorModel, tilesViewModel.targets, true, dashboardsetToolBarModel.dashboardInst);
                                 Builder.getTileConfigure(tilesViewModel.editor.mode, dashboard, tile, tilesViewModel.timeSelectorModel, tilesViewModel.targets, dashboardsetToolBarModel.dashboardInst);
                             }
                         }

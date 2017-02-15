@@ -17,7 +17,7 @@ public class TileParamTest
 {
 
 	private static final Logger LOGGER = LogManager.getLogger(TileParamTest.class);
-	@Test(groups = { "s2" })
+	@Test(groups = { "s1" })
 	public void testGetValue()
 	{
 		//Logger LOGGER = EMTestLogger.getLogger("testGetValue");
@@ -45,7 +45,7 @@ public class TileParamTest
 		Assert.assertNull(tp.getValue());
 	}
 
-	@Test(groups = { "s2" })
+	@Test(groups = { "s1" })
 	public void testSetValue() throws CommonFunctionalException
 	{
 		//Logger LOGGER = EMTestLogger.getLogger("testSetValue");

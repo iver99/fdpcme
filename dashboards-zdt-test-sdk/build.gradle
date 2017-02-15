@@ -1,6 +1,6 @@
 apply from:'test.gradle'
 //Security client version
-ext.emaasSecurityClientVersion = getDependentSdkVersion('com.oracle.emaas.emcpsf.sdk', 'security-client', '1.1+')
+ext.emaasSecurityClientVersion = getDependentSdkVersion('com.oracle.emaas.emcpsf.sdk', 'security-client', '1.+')
 publishing {
     publications {
      integTest(MavenPublication) {
