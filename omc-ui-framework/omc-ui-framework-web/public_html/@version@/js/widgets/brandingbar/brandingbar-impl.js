@@ -217,7 +217,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         if (!ko.components.isRegistered('emctas-topology')) {
                             var versionedTopoViewModel = window.getSDKVersionFile ? 
                                 window.getSDKVersionFile('emsaasui/emcta/ta/js/sdk/topology/emcta-topology.js') : null;
-                            var topoViewModel = versionedTopoViewModel ? (versionedTopoViewModel.indexOf('.js') ===  versionedTopoViewModel.length - 3 ? 
+                            var topoViewModel = versionedTopoViewModel ? (versionedTopoViewModel.lastIndexOf('.js') ===  versionedTopoViewModel.length - 3 ? 
                                                 versionedTopoViewModel.substring(0, versionedTopoViewModel.length - 3) : versionedTopoViewModel) : 
                                     'emsaasui/emcta/ta/js/sdk/topology/emcta-topology';
                             var versionedTopoTemplate = window.getSDKVersionFile ? 
