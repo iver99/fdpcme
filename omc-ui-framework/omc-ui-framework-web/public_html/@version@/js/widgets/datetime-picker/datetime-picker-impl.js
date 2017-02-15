@@ -199,8 +199,8 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 self.tfDaysExcludedMsg = nls.DATETIME_PICKER_TIME_FILTER_INFO_DAYS_EXCLUDED;
                 self.tfMonthsExcludedMsg = nls.DATETIME_PICKER_TIME_FILTER_INFO_MONTHS_EXCLUDED;
                 
-                self.timePeriodSetShortTerm = "Short-Term";
-                self.timePeriodSetLongTerm = "Long-Term";
+                self.timePeriodSetShortTerm = "SHORT_TERM";
+                self.timePeriodSetLongTerm = "LONG_TERM";
 
                 self.lrCtrlVal = ko.observable("timeLevelCtrl");
                 self.flexRelTimeVal = ko.observable(1);

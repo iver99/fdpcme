@@ -20,8 +20,35 @@ import org.testng.annotations.Test;
 /**
  * Created by guochen on 11/29/16.
  */
-public class AdditionalDataFilterTest
-{
+public class AdditionalDataFilterTest {
+   /* @Test(groups = { "s2" })
+    public void testDoFilter(@Mocked final FilterChain chain, @Mocked final HttpServletRequest httpReq, @Mocked final HttpServletResponse response,
+                             @Mocked final ByteArrayOutputStream anyByteArrayOutputStream, @Mocked final NLSFilter nlsf,
+                             @Mocked final DashboardDataAccessUtil dashboardDataAccessUtil) throws Exception
+    {
+        final AdditionalDataFilter filter = new AdditionalDataFilter();
+        new Expectations() {
+            {
+                httpReq.getHeader(anyString);
+                result = "tenant.user";
+                httpReq.getParameter(anyString);
+                result = "1";
+                anyByteArrayOutputStream.toString("UTF-8");
+                result = "<BEFORE_PART lang=\"en-US\">INTER_PART////ADDITIONALDATA////END_PART";
+                NLSFilter.getLangAttr((HttpServletRequest)any);
+                result = "lang=\"en\"";
+               *//* DashboardDataAccessUtil.getDashboardData(anyString, anyString, anyString, (BigInteger) any);
+                result = "{value: 123abc??$^-[]|(&!~@#%^&*+{}<>\\_,.;`':\"}";
+                DashboardDataAccessUtil.getRegistrationData(anyString, anyString, anyString, anyString);
+                result = "{registration data}";
+                DashboardDataAccessUtil.getUserTenantInfo(anyString, anyString, anyString, anyString);
+                result = "{user tenant data}";*//*
+                DashboardDataAccessUtil.getCombinedData(anyString, anyString, anyString,anyString, (BigInteger) any);
+                result = "{combined data}";
+            }
+        };
+        filter.doFilter(httpReq, response, chain);
+    }
 	@Test(groups = { "s2" })
 	public void testDoFilter(@Mocked final FilterChain chain, @Mocked final HttpServletRequest httpReq,
 			@Mocked final HttpServletResponse response, @Mocked final ByteArrayOutputStream anyByteArrayOutputStream,
@@ -61,7 +88,7 @@ public class AdditionalDataFilterTest
 			}
 		};
 		filter.doFilter(httpReq, response, chain);
-	}
+	}*/
 
 	/*@Test(groups = { "s2" })
 	public void testFormatJsonString() {

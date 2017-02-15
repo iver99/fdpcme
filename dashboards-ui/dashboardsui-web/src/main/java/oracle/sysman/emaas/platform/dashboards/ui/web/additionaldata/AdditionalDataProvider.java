@@ -54,57 +54,59 @@ public class AdditionalDataProvider
 		//long start =System.currentTimeMillis();
 		StringBuilder sb = new StringBuilder();
 		if (AdditionalDataFilter.BUILDER_URI.equals(uri)) { // only builder page needs dashbaord data
-			final String dashboardIdStr = httpReq.getParameter("dashboardId");
-			if (StringUtil.isEmpty(dashboardIdStr)) {
-				LOGGER.error("Unexpected: retrieved empty dashboardID from the http request parameter!");
-				return null;
-			}
-			BigInteger dashboardId = new BigInteger(dashboardIdStr);
-			if (BigInteger.ZERO.compareTo(dashboardId) < 0) {
-				String dashboardString = DashboardDataAccessUtil.getDashboardData(tenant, tenant + "." + user, referer,
-						dashboardId);
-				if (StringUtil.isEmpty(dashboardString)) {
-					LOGGER.warn(
-							"Retrieved null or empty dashboard for tenant {} user {} and dashboardId {}, so do not update page data then",
-							tenant, user, dashboardId);
-				}
-				else {
-					//we do not need to escape the string, as we don't use regexp any more, but string concatenation
-					//dashboardString = formatJsonString(dashboardString);
-					//LOGGER.info("Escaping retrieved data before inserting to html. Vlaue now is: {}", dashboardString);
-					sb.append("window._dashboardServerCache=").append(dashboardString).append(";");
-				}
+			String result = getDashboardData(httpReq) + HtmlBootstrapJsUtil.getSDKVersionJS();
+			LOGGER.info("Builder page data is {}",result);
+			return result;
+		}else{
+
+			//Get necessary data for branding bar
+			String bootstrapJS = HtmlBootstrapJsUtil.getAllBootstrapJS(httpReq);
+			if (StringUtil.isEmpty(bootstrapJS)) {
+				LOGGER.warn("Retrieved null or empty bootstrap JS for tenant {} user {}", tenant, user);
 			}
 			else {
-				LOGGER.error("dashboardId {} is invalid, so do not update dashboard page for dashboard data then", dashboardId);
+				LOGGER.info("Retrieved bootstrap js: " + bootstrapJS);
+				sb.append(bootstrapJS);
 			}
+
+			//        String userInfoString = DashboardDataAccessUtil.getUserTenantInfo(tenant, tenant + "." + user, referer, sessionExp);
+			//        if (StringUtil.isEmpty(userInfoString)) {
+			//            LOGGER.warn("Retrieved null or empty user info for tenant {} user {}", tenant, user);
+			//        }
+			//        else {
+			//            sb.append("window._userInfoServerCache=").append(userInfoString).append(";");
+			//        }
+			//
+			//        String regString = DashboardDataAccessUtil.getRegistrationData(tenant, tenant + "." + user, referer, sessionExp);
+			//        if (StringUtil.isEmpty(regString)) {
+			//            LOGGER.warn("Retrieved null or empty registration for tenant {} user {}", tenant, user);
+			//        }
+			//        else {
+			//            sb.append("window._registrationServerCache=").append(regString).append(";");
+			//        }
+			return sb.toString();
 		}
 
-		//Get necessary data for branding bar
-		String bootstrapJS = HtmlBootstrapJsUtil.getAllBootstrapJS(httpReq);
-		if (StringUtil.isEmpty(bootstrapJS)) {
-			LOGGER.warn("Retrieved null or empty bootstrap JS for tenant {} user {}", tenant, user);
-		}
-		else {
-			LOGGER.info("Retrieved bootstrap js: " + bootstrapJS);
-			sb.append(bootstrapJS);
-		}
+	}
+	private static String getDashboardData(HttpServletRequest httpReq) {
+		String userTenant = httpReq.getHeader(DashboardsUiCORSFilter.OAM_REMOTE_USER_HEADER);
+		// TODO: check session expiry header
+		String sesExp = httpReq.getHeader("SESSION_EXP");
+		LOGGER.debug("Trying to get SESSION_EXP from builder.html file, its value is: {}", sesExp);
+		if (!StringUtil.isEmpty(userTenant) && userTenant.indexOf(".") > 0) {
+			int pos = userTenant.indexOf(".");
+			String tenant = userTenant.substring(0, pos);
+			String user = userTenant.substring(pos + 1);
+			LOGGER.info("Retrieved tenant is {} and user is {} from userTenant {}", tenant, user, userTenant);
+			if (StringUtil.isEmpty(tenant) || StringUtil.isEmpty(user)) {
+				LOGGER.warn("Retrieved null tenant or user");
+				return null;
+			}
 
-		//        String userInfoString = DashboardDataAccessUtil.getUserTenantInfo(tenant, tenant + "." + user, referer, sessionExp);
-		//        if (StringUtil.isEmpty(userInfoString)) {
-		//            LOGGER.warn("Retrieved null or empty user info for tenant {} user {}", tenant, user);
-		//        }
-		//        else {
-		//            sb.append("window._userInfoServerCache=").append(userInfoString).append(";");
-		//        }
-		//
-		//        String regString = DashboardDataAccessUtil.getRegistrationData(tenant, tenant + "." + user, referer, sessionExp);
-		//        if (StringUtil.isEmpty(regString)) {
-		//            LOGGER.warn("Retrieved null or empty registration for tenant {} user {}", tenant, user);
-		//        }
-		//        else {
-		//            sb.append("window._registrationServerCache=").append(regString).append(";");
-		//        }
-		return sb.toString();
+			final String dashboardIdStr = httpReq.getParameter("dashboardId");
+			BigInteger dashboardId = new BigInteger(dashboardIdStr);
+			return DashboardDataAccessUtil.getCombinedData(tenant, userTenant, httpReq.getHeader("referer"), sesExp, dashboardId);
+		}
+		return null;
 	}
 }

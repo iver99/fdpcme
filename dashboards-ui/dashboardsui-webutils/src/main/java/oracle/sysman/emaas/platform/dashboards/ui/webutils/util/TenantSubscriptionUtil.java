@@ -17,8 +17,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
@@ -52,20 +54,23 @@ public class TenantSubscriptionUtil
 {
 	public static class RestClient
 	{
+		private static final Integer DEFAULT_TIMEOUT = 3000;
+
 		private Map<String, Object> headers;
 
 		public RestClient()
 		{
 		}
 
-		public String get(String url, String tenant)
-		{
+		public String get(String url, String tenant,String accept) {
 			if (StringUtils.isEmpty(url)) {
 				return null;
 			}
 
 			ClientConfig cc = new DefaultClientConfig();
 			Client client = Client.create(cc);
+			client.setConnectTimeout(DEFAULT_TIMEOUT);
+			client.setReadTimeout(DEFAULT_TIMEOUT);
 			char[] authToken = RegistrationManager.getInstance().getAuthorizationToken();
 			String auth = String.copyValueOf(authToken);
 			if (StringUtil.isEmpty(auth)) {
@@ -78,7 +83,7 @@ public class TenantSubscriptionUtil
 			}
 			Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
 					.header(HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME, tenant).type(MediaType.APPLICATION_JSON)
-					.accept(MediaType.APPLICATION_JSON);
+					.accept(accept);
 			if (headers != null && !headers.isEmpty()) {
 				for (String key : headers.keySet()) {
 					if (HttpHeaders.AUTHORIZATION.equals(key) || HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME.equals(key)) {
@@ -89,6 +94,11 @@ public class TenantSubscriptionUtil
 				}
 			}
 			return builder.get(String.class);
+		}
+		
+		public String get(String url, String tenant)
+		{
+			return get(url, tenant,MediaType.APPLICATION_JSON);
 		}
 
 		public void setHeader(String header, Object value)

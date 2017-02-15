@@ -62,7 +62,7 @@ public class AdditionalDataFilter implements Filter {
             try {
             	outputStream.flush();
                 outputStream.close();
-                result = byteStream.toString();
+                result = byteStream.toString("UTF-8");
             }
             catch (IOException e) {
                 LOGGER.error("Failed to decode outputStream", e);
@@ -92,9 +92,11 @@ public class AdditionalDataFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response,
                          FilterChain chain) throws IOException, ServletException {
+    	try{
         LOGGER.debug("Now enter the AdditionalDataFilter");
         HttpServletRequest httpReq = (HttpServletRequest) request;
         final HttpServletResponse httpResponse = (HttpServletResponse) response;
+
         httpResponse.setCharacterEncoding("utf-8");
         httpResponse.setContentType("text/html;charset=utf-8");
 
@@ -138,6 +140,10 @@ public class AdditionalDataFilter implements Filter {
         LOGGER.debug("After inserting additional data, the response text is {}", newResponseText);
 
         updateResponseWithAdditionDataText(response, newResponseText);
+    	}
+    	catch(Exception e){
+            LOGGER.error(e.getLocalizedMessage(), e);
+    	}
     }
 
     /**
@@ -150,7 +156,7 @@ public class AdditionalDataFilter implements Filter {
     private void updateResponseWithAdditionDataText(ServletResponse response, String newResponseText) throws IOException {
         response.setCharacterEncoding("utf-8");
         response.setContentType("text/html;charset=utf-8");
-        try (PrintWriter writer = new PrintWriter(response.getOutputStream())) {
+        try (PrintWriter writer = new PrintWriter(response.getWriter())) {
             writer.println(newResponseText);
         }
     }

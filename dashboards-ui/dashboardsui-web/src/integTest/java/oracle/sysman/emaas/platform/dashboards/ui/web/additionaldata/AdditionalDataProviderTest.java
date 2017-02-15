@@ -19,7 +19,7 @@ import org.testng.annotations.Test;
  */
 public class AdditionalDataProviderTest
 {
-	@Test(groups = { "s2" })
+	/*@Test(groups = { "s2" })
 	public void testGetAdditionalDataForRequest(@Mocked final HttpServletRequest httpReq,
 			@Mocked final HttpServletResponse response, @Mocked final DashboardDataAccessUtil dashboardDataAccessUtil,
 			@Mocked final DataAccessUtil dataAccessUtil, @Mocked final HtmlBootstrapJsUtil bootstrapUtil)
@@ -45,5 +45,5 @@ public class AdditionalDataProviderTest
 			}
 		};
 		AdditionalDataProvider.getAdditionalDataForRequest(httpReq);
-	}
+	}*/
 }
