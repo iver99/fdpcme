@@ -733,7 +733,8 @@ define(['knockout',
                                 var assetRootForVerisonedFile = assetRoot.substring(1);
                                 var versionedViewModel = window.getSDKVersionFile ? 
                                     window.getSDKVersionFile(assetRootForVerisonedFile + viewmodel) : null;
-                                viewmodel = versionedViewModel ? versionedViewModel : assetRoot + viewmodel;
+                                viewmodel = versionedViewModel ? (versionedViewModel.indexOf('.js') ===  versionedViewModel.length - 3 ? 
+                                                versionedViewModel.substring(0, versionedViewModel.length - 3) : versionedViewModel) : assetRoot + viewmodel;
                                 var versionedTemplate = window.getSDKVersionFile ? 
                                     window.getSDKVersionFile(assetRootForVerisonedFile + template) : null;
                                 template = versionedTemplate ? versionedTemplate : assetRoot + template;

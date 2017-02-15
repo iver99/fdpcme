@@ -530,7 +530,8 @@ define(['knockout',
             if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
                 var versionedViewModel = window.getSDKVersionFile ? 
                     window.getSDKVersionFile(assetRootForVerisonedFile + kocVM) : null;
-                kocVM = versionedViewModel ? versionedViewModel : assetRoot + kocVM;
+                kocVM = versionedViewModel ? (versionedViewModel.indexOf('.js') ===  versionedViewModel.length - 3 ? 
+                            versionedViewModel.substring(0, versionedViewModel.length - 3) : versionedViewModel)  : assetRoot + kocVM;
             }
             var kocTemplate = tile.WIDGET_TEMPLATE();
             if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
