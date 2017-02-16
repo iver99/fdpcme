@@ -47,7 +47,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 	private String dbName_duplicateOOB = "";
 	private String dbName_saveConfirmation = "";
 
-	private final String customWidgetName = "Workflow Submission Details";
+	private final String customWidgetName = "Execution Details";
 	private final String OOBName = "Middleware Operations";
 
 	@BeforeClass
