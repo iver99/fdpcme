@@ -232,13 +232,13 @@ require(['knockout',
             Builder.initializeFromCookie();
             new Builder.DashboardDataSource().loadDashboardData(dsbId, function (kodb) {
                 dashboard = kodb;
-                var isUderSet = ko.unwrap(dashboard.type) === "SET" ? true : false;;
+                var isUnderSet = ko.unwrap(dashboard.type) === "SET" ? true : false;;
                 normalMode = new Builder.NormalEditorMode();
                 tabletMode = new Builder.TabletEditorMode();
 
                 mode = Builder.isSmallMediaQuery() ? tabletMode : normalMode;
                 timeSelectorModel = new Builder.TimeSelectorModel();
-                Builder.eagerLoadDahshboardTilesAtPageLoad(dfu, ko, normalMode, tabletMode, mode, isUderSet, timeSelectorModel, targets);
+                Builder.eagerLoadDahshboardTilesAtPageLoad(dfu, ko, normalMode, tabletMode, mode, isUnderSet, timeSelectorModel, targets);
 
                 require(['uifwk/js/util/df-util',
                     'uifwk/js/util/logging-util',

@@ -908,7 +908,7 @@ define(['knockout',
                 //apply criteriaList to widgets at load time
                 for(var i=0; i<self.dashboard.tiles().length; i++) {
                     var tile = self.dashboard.tiles()[i]; 
-                    tile.dashboardItemChangeEvent.targets = self.targets();
+                    tile.dashboardItemChangeEvent && (tile.dashboardItemChangeEvent.targets = self.targets());
                 }
                 self.entitySelectorInited = true;
             };

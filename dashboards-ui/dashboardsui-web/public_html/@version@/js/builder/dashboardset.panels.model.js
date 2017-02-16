@@ -235,19 +235,23 @@ define([
 
                     var $b = new Builder.DashboardBuilder(dashboard, $dashboardEl);
                     var tilesView = new Builder.DashboardTilesView($b);
-                    var tilesViewModel = new Builder.DashboardTilesViewModel($b, dashboardsetToolBarModel.dashboardInst/*, tilesView, urlChangeView*/);
-                    var toolBarModel = new Builder.ToolBarModel($b, options);
-                    tilesViewModel.toolbarModel = toolBarModel;
                     /*var wrapperEleemnt = $b.find('.dbd-tile-widget-wrapper');
                     if (wrapperEleemnt) {
                         var el = $($("#dashboard-tile-widget-template").text());
                         el.appendTo(wrapperEleemnt[0]);
                     }*/
 
-                    var mode = tilesViewModel.editor.mode;
-                    var normalMode = tilesViewModel.editor.normalMode;
-                    var tabletMode = tilesViewModel.editor.tabletMode;
-                    Builder.eagerLoadDahshboardTilesAtPageLoad(dfu, ko, normalMode, tabletMode, mode, dashboardsetToolBarModel.isDashboardSet(), tilesViewModel.timeSelectorModel, tilesViewModel.targets);
+                    var normalMode = new Builder.NormalEditorMode();
+                    var tabletMode = new Builder.TabletEditorMode();
+                    var mode = Builder.isSmallMediaQuery() ? tabletMode : normalMode;
+                    var timeSelectorModel = new Builder.TimeSelectorModel();
+                    var targets = ko.observable({"criteria":"{\"version\":\"1.0\",\"criteriaList\":[]}"});
+
+                $.when(Builder.eagerLoadDahshboardTilesAtPageLoad(dfu, ko, normalMode, tabletMode, mode, dashboardsetToolBarModel.isDashboardSet(), timeSelectorModel, targets)).done(function() {
+                    var tilesViewModel = new Builder.DashboardTilesViewModel($b, dashboardsetToolBarModel.dashboardInst/*, tilesView, urlChangeView*/);
+                    var toolBarModel = new Builder.ToolBarModel($b, options);
+                    tilesViewModel.toolbarModel = toolBarModel;
+                        
                     //change dashboard name
                     toolBarModel.dashboardName.subscribe(function (dashboardName) {
                         var currentDashboardId = self.selectedDashboardInst().toolBarModel.dashboardId;
@@ -265,7 +269,7 @@ define([
                             }
                         });
                     });
-
+                    
                     if (dashboard.tiles && dashboard.tiles()) {
                         for (var i = 0; i < dashboard.tiles().length; i++) {
                             var tile = dashboard.tiles()[i];
@@ -356,6 +360,7 @@ define([
                     });
 
                     $("#loading").hide();
+                });
                     /*
                      * Code to test df_util_widget_lookup_assetRootUrl
                      var testvalue = df_util_widget_lookup_assetRootUrl('SavedSearch','0.1','search');

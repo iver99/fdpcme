@@ -549,16 +549,19 @@ define(['knockout',
         Builder.registerFunction(eagerLoadDahshboardSingleTileAtPageLoad, "eagerLoadDahshboardSingleTileAtPageLoad");
 
         function eagerLoadDahshboardTilesAtPageLoad(dfu, ko, normalMode, tabletMode, mode, isUnderSet, timeSelector, targets) {
+          return $.Deferred(function(dtd) {
             var self = this;
             var current = new Date();
             var initStart = null;
             var initEnd = null;
             var timePeriod = null;
             var dds = new Builder.DashboardDataSource().dataSource;
+            var shouldResolve = true;
             for (var prop in dds) {
                 if (!dds[prop] || !dds[prop].dashboard || !dds[prop].dashboard.tiles || dds[prop].eagerLoaded) {
                     continue;
                 }
+                shouldResolve = false;
                 var dashboard = dds[prop].dashboard;
 
                 //get time and entity context for widgets when page is loaded
@@ -592,22 +595,28 @@ define(['knockout',
                 /******************get time context end ***************/
 
                 /****************get entity context start *****************/
-                var entityContext = Builder.loadEntityContext(self, dashboard.enableEntityFilter(), isUnderSet);
-                targets(entityContext);
-                /***************get entity context end *******************/
+                $.when(Builder.loadEntityContext(self, dashboard.enableEntityFilter(), isUnderSet)).done(function(entityContext) {
+                    entityContext && targets(entityContext);
 
-
-                if (dashboard.tiles && dashboard.tiles() &&dashboard.tiles().length > 0){
-                    for (var i=0;i<dashboard.tiles().length;i++){
-                        var tile=dashboard.tiles()[i];
-                        Builder.initializeTileAfterLoad(mode, dashboard, tile, timeSelector, targets, true);
-                        Builder.eagerLoadDahshboardSingleTileAtPageLoad(dfu, ko, tile);
+                    if (dashboard.tiles && dashboard.tiles() &&dashboard.tiles().length > 0){
+                        for (var i=0;i<dashboard.tiles().length;i++){
+                            var tile=dashboard.tiles()[i];
+                            Builder.initializeTileAfterLoad(mode, dashboard, tile, timeSelector, targets, true);
+                            Builder.eagerLoadDahshboardSingleTileAtPageLoad(dfu, ko, tile);
+                        }
                     }
-                }
-                dds[prop].eagerLoaded = true;
-                dds[prop].eagerCreated = {normalMode: normalMode, tabletMode: tabletMode, timeSelector: timeSelector, targets: targets};
+                    dds[prop].eagerLoaded = true;
+                    dds[prop].eagerCreated = {normalMode: normalMode, tabletMode: tabletMode, timeSelector: timeSelector, targets: targets};
+                    dtd.resolve();
+                });
+                /***************get entity context end *******************/
                 break;
             }
+            
+            if(shouldResolve === true) {
+                dtd.resolve();
+            }
+          });
         }
         Builder.registerFunction(eagerLoadDahshboardTilesAtPageLoad, "eagerLoadDahshboardTilesAtPageLoad");
 
@@ -736,7 +745,7 @@ define(['knockout',
                         end = new Date(parseInt(model.userExtendedOptions.timeSel.end));
                         var tp = (model.userExtendedOptions.timeSel.timePeriod === "custom1") ? "custom" : model.userExtendedOptions.timeSel.timePeriod;
                         timePeriod = Builder.getTimePeriodString(tp) ? Builder.getTimePeriodString(tp) : tp;
-                    } else if (model.dashboardExtendedOptions && !$.isEmptyObject(dashboardTilesViewModel.dashboardExtendedOptions.timeSel)) {
+                    } else if (model.dashboardExtendedOptions && !$.isEmptyObject(model.dashboardExtendedOptions.timeSel)) {
                         start = new Date(parseInt(model.dashboardExtendedOptions.timeSel.start));
                         end = new Date(parseInt(model.dashboardExtendedOptions.timeSel.end));
                         var tp = (model.dashboardExtendedOptions.timeSel.defaultValue === "custom1") ? "custom" : model.dashboardExtendedOptions.timeSel.defaultValue;
