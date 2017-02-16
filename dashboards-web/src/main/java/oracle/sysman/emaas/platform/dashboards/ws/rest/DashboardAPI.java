@@ -466,6 +466,7 @@ public class DashboardAPI extends APIBase
 		Future<Dashboard> futureDashboard=null;
 		Future<String> futureUserInfo =null;
 		Future<String> futureReg =null;
+		Future<String> futureSubscried =null;
 		try {
 			if (!DependencyStatus.getInstance().isDatabaseUp())  {
 				LOGGER.error("Error to call [GET] /v1/dashboards/{}/combinedData: database is down", dashboardId);
@@ -513,6 +514,17 @@ public class DashboardAPI extends APIBase
 					return JsonUtil.buildNonNullMapper().toJson(new RegistrationEntity(sessionExpiryTime));
 				}
 			});
+
+		//retrieve subscribed apps info
+		String subscribedApps=null;
+		futureSubscried = pool.submit(new Callable<String>() {
+			@Override
+			public String call() throws Exception {
+				LOGGER.info("Parallel request subscribed apps info...");
+				return TenantSubscriptionUtil.getTenantSubscribedServicesString(tenantIdParam);
+			}
+		});
+
 		//get data
 		try {
 			if(futureReg!=null){
@@ -540,6 +552,23 @@ public class DashboardAPI extends APIBase
 					sb.append(userInfoEntity).append(";");
 				}
 				LOGGER.debug("User info data is " + regEntity);
+			}
+		} catch (InterruptedException e) {
+			LOGGER.error(e.getStackTrace());
+		} catch (ExecutionException e) {
+			LOGGER.error(e.getCause().getStackTrace());
+		}catch(TimeoutException e){
+			LOGGER.error(e.getStackTrace());
+		}
+
+		try {
+			if (futureSubscried != null) {
+				subscribedApps = futureSubscried.get(TIMEOUT, TimeUnit.MILLISECONDS);
+				if (!StringUtils.isEmpty(subscribedApps)) {
+					sb.append("window._uifwk.cachedData.subscribedapps=");
+					sb.append(subscribedApps).append(";");
+				}
+				LOGGER.debug("Subscribed applications data is " + subscribedApps);
 			}
 		} catch (InterruptedException e) {
 			LOGGER.error(e.getStackTrace());
