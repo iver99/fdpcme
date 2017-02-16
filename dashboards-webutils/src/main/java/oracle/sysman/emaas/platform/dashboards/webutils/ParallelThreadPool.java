@@ -14,7 +14,7 @@ public class ParallelThreadPool {
     private static ExecutorService pool = null;
     private static long rejectTaskNumber = 0l;
 
-    public synchronized static  ExecutorService  getThreadPool(){
+    public static  ExecutorService  getThreadPool(){
         if(pool != null){
             return pool;
         }
@@ -30,7 +30,7 @@ public class ParallelThreadPool {
         }
     }
 
-    public synchronized static void init(){
+    public static void init(){
         int cpuCore = Runtime.getRuntime().availableProcessors();
         int coreSize = cpuCore * 2;
         int maxSize = cpuCore * 4;

@@ -36,18 +36,18 @@ public class DashboardDataAccessUtil {
         rc.setHeader("Referer", referer);
         try{
         	String response = rc.get(dashboardHref, tenantIdParam,MediaType.TEXT_PLAIN);
-        	LOGGER.info("Retrieved combined data is: {}", response);
+        	LOGGER.debug("Retrieved combined data is: {}", response);
             LOGGER.info("It takes {}ms to retrieve dashboard data from Dashboard-API", (System.currentTimeMillis() - start));
             return response;
         }catch(UniformInterfaceException e){
         	LOGGER.error("Error occurred: status code of the HTTP response indicates a response that is not expected");
-        	LOGGER.error(e.getStackTrace());
+        	LOGGER.error(e);
         }catch(ClientHandlerException e){//RestClient may timeout, so catch this runtime exception to make sure the response can return.
         	LOGGER.error("Error occurred: Signals a failure to process the HTTP request or HTTP response");
-        	LOGGER.error(e.getStackTrace());
+        	LOGGER.error(e);
         }catch(Exception e){
             LOGGER.error("Error occurred when retrieving combined data from Dashboard-UI!");
-            LOGGER.error(e.getStackTrace());
+            LOGGER.error(e);
         }
         
         LOGGER.warn("Error occurred when retrieve combined data, returning empty string now...");
