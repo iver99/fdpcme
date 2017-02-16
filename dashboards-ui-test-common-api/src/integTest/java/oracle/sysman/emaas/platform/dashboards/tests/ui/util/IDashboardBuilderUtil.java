@@ -97,6 +97,10 @@ public interface IDashboardBuilderUtil extends IUiTestCommonAPI
 
 	public void resizeWidget(WebDriver driver, String widgetName, String resizeOptions);
 
+	public boolean respectGCForEntity(WebDriver driver);
+
+	public boolean respectGCForTimeRange(WebDriver driver);
+
 	/**
 	 * @param driver
 	 * @param widgetName
