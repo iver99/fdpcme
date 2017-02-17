@@ -19,7 +19,7 @@ public class DashboardBuilderUtil_1150 extends DashboardBuilderUtil_1100
 	@Override
 	public boolean respectGCForEntity(WebDriver driver)
 	{
-		driver.getLogger().info("DashboardBuilderUtil.respectGCForTimeRange started");
+		driver.getLogger().info("DashboardBuilderUtil.respectGCForEntity started");
 		driver.waitForElementPresent("css=" + DashBoardPageId_190.BUILDEROPTIONSMENULOCATOR);
 		WaitUtil.waitForPageFullyLoaded(driver);
 
@@ -44,7 +44,7 @@ public class DashboardBuilderUtil_1150 extends DashboardBuilderUtil_1100
 		driver.waitForElementPresent("css=" + DashBoardPageId_1150.RIGHTDRAWEREDITDBENABLEGCTIMERANGECSS);
 		driver.click("css=" + DashBoardPageId_1150.RIGHTDRAWEREDITDBENABLEGCTIMERANGECSS);
 		driver.takeScreenShot();
-		driver.getLogger().info("DashboardBuilderUtil show entity filter finished!!!");
+		driver.getLogger().info("DashboardBuilderUtil show time range finished!!!");
 		return true;
 	}
 
