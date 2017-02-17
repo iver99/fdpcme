@@ -65,6 +65,8 @@ public class ParallelThreadPool {
                 );
         //all core thread timeout
         pool.allowCoreThreadTimeOut(Boolean.TRUE);
+        // pre start one thread in pool
+        pool.prestartCoreThread();
         LOGGER.info("Dashboards-API: Thread pool with core size {} and max size {} and queue size {} is initialized!", coreSize, maxSize ,1000);
     }
 

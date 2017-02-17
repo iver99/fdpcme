@@ -477,11 +477,17 @@ public class DashboardAPI extends APIBase
 			futureDashboard = pool.submit(new Callable<Dashboard>() {
 				@Override
 				public Dashboard call() throws Exception {
-					LOGGER.info("Parallel request dashboard data info...");
-					Long tenantId = getTenantId(tenantIdParam);
-					initializeUserContext(tenantIdParam, userTenant);
-					String userName = UserContext.getCurrentUser();
-					return dm.getCombinedDashboardById(dashboardId, tenantId, userName);
+					try{
+						LOGGER.info("Parallel request dashboard data info...");
+						Long tenantId = getTenantId(tenantIdParam);
+						initializeUserContext(tenantIdParam, userTenant);
+						String userName = UserContext.getCurrentUser();
+						return dm.getCombinedDashboardById(dashboardId, tenantId, userName);
+					}catch(Exception e){
+						LOGGER.error("Error occurred when retrieving dashboard meta data using parallel request!");
+						LOGGER.error(e);
+					}
+					return null;
 				}
 			});
 		}
@@ -498,9 +504,15 @@ public class DashboardAPI extends APIBase
 		futureUserInfo= pool.submit(new Callable<String>() {
 				@Override
 				public String call() throws Exception {
-					LOGGER.info("Parallel request user info...");
-					initializeUserContext(tenantIdParam, userTenant);
-					return JsonUtil.buildNormalMapper().toJson(new UserInfoEntity());
+					try{
+						LOGGER.info("Parallel request user info...");
+						initializeUserContext(tenantIdParam, userTenant);
+						return JsonUtil.buildNormalMapper().toJson(new UserInfoEntity());
+					}catch(Exception e){
+						LOGGER.error("Error occurred when retrieving userInfo data using parallel request!");
+						LOGGER.error(e);
+					}
+					return null;
 				}
 		});
 
@@ -509,9 +521,15 @@ public class DashboardAPI extends APIBase
 			futureReg = pool.submit(new Callable<String>() {
 				@Override
 				public String call() throws Exception {
-					LOGGER.info("Parallel request registry info...");
-					initializeUserContext(tenantIdParam, userTenant);
-					return JsonUtil.buildNonNullMapper().toJson(new RegistrationEntity(sessionExpiryTime));
+					try{
+						LOGGER.info("Parallel request registry info...");
+						initializeUserContext(tenantIdParam, userTenant);
+						return JsonUtil.buildNonNullMapper().toJson(new RegistrationEntity(sessionExpiryTime));
+					}catch(Exception e){
+						LOGGER.error("Error occurred when retrieving registration data using parallel request!");
+						LOGGER.error(e);
+					}
+					return null;
 				}
 			});
 
@@ -520,8 +538,14 @@ public class DashboardAPI extends APIBase
 		futureSubscried = pool.submit(new Callable<String>() {
 			@Override
 			public String call() throws Exception {
-				LOGGER.info("Parallel request subscribed apps info...");
-				return TenantSubscriptionUtil.getTenantSubscribedServicesString(tenantIdParam);
+				try{
+					LOGGER.info("Parallel request subscribed apps info...");
+					return TenantSubscriptionUtil.getTenantSubscribedServicesString(tenantIdParam);
+				}catch(Exception e){
+					LOGGER.error("Error occurred when retrieving subscribed data using parallel request!");
+					LOGGER.error(e);
+				}
+				return null;
 			}
 		});
 
