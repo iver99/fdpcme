@@ -235,14 +235,14 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 self.last2hoursNotToShow = ko.observable(false);
                 self.last4hoursNotToShow = ko.observable(false);
                 self.last6hoursNotToShow = ko.observable(false);
-                self.last8hoursNotToShow = ko.observable(false);
-                self.last24hoursNotToShow = ko.observable(false);
+                self.last8hoursNotToShow = ko.observable(true);
+                self.last24hoursNotToShow = ko.observable(true);
                 self.last1dayNotToShow = ko.observable(false);
                 self.last7daysNotToShow = ko.observable(false);
                 self.last14daysNotToShow = ko.observable(false);
                 self.last30daysNotToShow = ko.observable(false);
                 self.last90daysNotToShow = ko.observable(false);
-                self.last12monthsNotToShow = ko.observable(false);
+                self.last12monthsNotToShow = ko.observable(true);
                 self.last1yearNotToShow = ko.observable(false);
                 self.todayNotToShow = ko.observable(false);
                 self.latestNotToShow = ko.observable(false);
@@ -679,6 +679,11 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     self.last1yearNotToShow(false);
                     self.todayNotToShow(false);
                     self.latestNotToShow(false);
+                    if(!params.timePeriodsSet) {
+                        self.last8hoursNotToShow(true);
+                        self.last24hoursNotToShow(true);
+                        self.last12monthsNotToShow(true);
+                    }
                 };
 
                 self.setTimePeriodNotToShow = function(timePeriod) {
@@ -745,6 +750,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
 
                 if(params.timePeriodsSet){
                     if(params.timePeriodsSet === self.timePeriodSetShortTerm){
+                        self.setAllTimePeriodsToShow();
                         params.timePeriodsNotToShow = [ctxUtil.OMCTimeConstants.QUICK_PICK.LAST_2_HOUR,
                                                     ctxUtil.OMCTimeConstants.QUICK_PICK.LAST_4_HOUR,
                                                     ctxUtil.OMCTimeConstants.QUICK_PICK.LAST_6_HOUR,
@@ -755,6 +761,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                                     ctxUtil.OMCTimeConstants.QUICK_PICK.LAST_1_YEAR,
                                                     ctxUtil.OMCTimeConstants.QUICK_PICK.LATEST];
                     }else if(params.timePeriodsSet === self.timePeriodSetLongTerm){
+                        self.setAllTimePeriodsToShow();
                         params.timePeriodsNotToShow = [ctxUtil.OMCTimeConstants.QUICK_PICK.LAST_15_MINUTE,
                                                     ctxUtil.OMCTimeConstants.QUICK_PICK.LAST_30_MINUTE,
                                                     ctxUtil.OMCTimeConstants.QUICK_PICK.LAST_60_MINUTE,
