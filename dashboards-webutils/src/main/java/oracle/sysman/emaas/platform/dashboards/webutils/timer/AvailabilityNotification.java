@@ -62,11 +62,6 @@ public class AvailabilityNotification implements NotificationListener
 					"Dashboards service registration is not completed. Ignore database or other dependant services availability checking");
 			return;
 		}
-		//check thread pool status
-		ThreadPoolExecutor pool = ParallelThreadPool.getThreadPool();
-		LOGGER.info("Dashboard-API thread pool status: Active count is {}, core pool size is {}, largest pool size is {}, " +
-				"maximum pool size is {}, pool size is {}, completed task count is {},queue size is {}",
-				pool.getActiveCount(),pool.getCorePoolSize(),pool.getLargestPoolSize(),pool.getMaximumPoolSize(),pool.getPoolSize(),pool.getCompletedTaskCount(),pool.getQueue().size());
 		// check database available
 		boolean isDBAvailable = true;
 		try {
