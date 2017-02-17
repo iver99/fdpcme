@@ -1039,7 +1039,7 @@
                                     </div>
                                 </div>
                                 <div class="dbd-left-panel-widgets fit-size" data-bind="event:{scroll: rightPanelWidget.widgetListScroll}" style="overflow-y: scroll">
-                                    <div class="oj-col stretch-width" data-bind="foreach: rightPanelWidget.widgets">
+                                    <div class="oj-col stretch-width" data-bind="foreach: rightPanelWidget.widgets,attr:{'searchStaus':rightPanelWidget.searchStaus}">
                                         <div class="dbd-left-panel-widget" data-bind="css: 'widget-item-'+WIDGET_UNIQUE_ID()">
                                             <div data-bind="event: {mouseover: $root.rightPanelWidget.widgetMouseOverHandler, mouseout: $root.rightPanelWidget.widgetMouseOutHandler}">
                                                 <div class="dbd-left-panel-widget-text">
