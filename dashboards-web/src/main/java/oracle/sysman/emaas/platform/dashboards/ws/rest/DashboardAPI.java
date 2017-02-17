@@ -486,8 +486,8 @@ public class DashboardAPI extends APIBase
 					}catch(Exception e){
 						LOGGER.error("Error occurred when retrieving dashboard meta data using parallel request!");
 						LOGGER.error(e);
+						throw e;
 					}
-					return null;
 				}
 			});
 		}
@@ -511,8 +511,8 @@ public class DashboardAPI extends APIBase
 					}catch(Exception e){
 						LOGGER.error("Error occurred when retrieving userInfo data using parallel request!");
 						LOGGER.error(e);
+						throw e;
 					}
-					return null;
 				}
 		});
 
@@ -528,8 +528,8 @@ public class DashboardAPI extends APIBase
 					}catch(Exception e){
 						LOGGER.error("Error occurred when retrieving registration data using parallel request!");
 						LOGGER.error(e);
+						throw e;
 					}
-					return null;
 				}
 			});
 
@@ -544,8 +544,8 @@ public class DashboardAPI extends APIBase
 				}catch(Exception e){
 					LOGGER.error("Error occurred when retrieving subscribed data using parallel request!");
 					LOGGER.error(e);
+					throw e;
 				}
-				return null;
 			}
 		});
 
