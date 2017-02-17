@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class ParallelThreadPool {
     private final static Logger LOGGER = LogManager.getLogger(ParallelThreadPool.class);
-    private static ExecutorService pool = null;
+    private static ThreadPoolExecutor pool = null;
     private static long rejectTaskNumber = 0l;
     private static final int cpuCore = Runtime.getRuntime().availableProcessors();
     /**
@@ -32,7 +32,7 @@ public class ParallelThreadPool {
 
     private static final int queueSize = 375;
 
-    public static  ExecutorService  getThreadPool(){
+    public static  ThreadPoolExecutor  getThreadPool(){
         if(pool != null){
             return pool;
         }
@@ -63,6 +63,8 @@ public class ParallelThreadPool {
                 new CustomThreadFactory(),			//default thread factory
                 new CustomRejectedExecutionHandler()		//Custom Rejected execution handler
                 );
+        //all core thread timeout
+        pool.allowCoreThreadTimeOut(Boolean.TRUE);
         LOGGER.info("Dashboards-API: Thread pool with core size {} and max size {} and queue size {} is initialized!", coreSize, maxSize ,1000);
     }
 
