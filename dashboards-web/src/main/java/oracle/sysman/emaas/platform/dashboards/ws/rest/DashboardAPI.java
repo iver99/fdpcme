@@ -571,11 +571,11 @@ public class DashboardAPI extends APIBase
 				LOGGER.debug("Subscribed applications data is " + subscribedApps);
 			}
 		} catch (InterruptedException e) {
-			LOGGER.error(e.getStackTrace());
+			LOGGER.error(e);
 		} catch (ExecutionException e) {
-			LOGGER.error(e.getCause().getStackTrace());
+			LOGGER.error(e.getCause());
 		}catch(TimeoutException e){
-			LOGGER.error(e.getStackTrace());
+			LOGGER.error(e);
 		}
 
 		try {
