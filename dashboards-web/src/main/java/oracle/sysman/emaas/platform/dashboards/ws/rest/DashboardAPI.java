@@ -455,7 +455,7 @@ public class DashboardAPI extends APIBase
 			@HeaderParam(value = "X-REMOTE-USER") final String userTenant, @HeaderParam(value = "Referer") String referer,
 			@PathParam("id") final BigInteger dashboardId,@HeaderParam(value = "SESSION_EXP") final String sessionExpiryTime)
 	{
-		final long TIMEOUT=5000;
+		final long TIMEOUT=30000;
 		Long begin=System.currentTimeMillis();
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [GET] /v1/dashboards/{}", dashboardId);
 		final DashboardManager dm = DashboardManager.getInstance();
