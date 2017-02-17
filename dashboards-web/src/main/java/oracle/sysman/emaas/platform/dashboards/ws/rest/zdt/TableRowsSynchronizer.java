@@ -62,7 +62,7 @@ public class TableRowsSynchronizer {
         int result = 0;
         for (DashboardSetRowEntity dashboardSetRowEntity : rows) {
             result += DataManager.getInstance().syncDashboardSet(new BigInteger(dashboardSetRowEntity.getDashboardSetId()), dashboardSetRowEntity.getTenantId(),
-            		new BigInteger(dashboardSetRowEntity.getSubDashboardId()), dashboardSetRowEntity.getPosition(), dashboardSetRowEntity.getCreationDate(), dashboardSetRowEntity.getLastModificationDate());
+            		new BigInteger(dashboardSetRowEntity.getSubDashboardId()), dashboardSetRowEntity.getPosition(), dashboardSetRowEntity.getCreationDate(), dashboardSetRowEntity.getLastModificationDate(), new BigInteger(dashboardSetRowEntity.getDeleted()));
         }
         return result;
     }
@@ -78,7 +78,7 @@ public class TableRowsSynchronizer {
                     , dashboardRowEntity.getCreationDate(), dashboardRowEntity.getLastModificationDate(), dashboardRowEntity.getLastModifiedBy(), dashboardRowEntity.getOwner()
                     , dashboardRowEntity.getIsSystem(), dashboardRowEntity.getApplicationType(), dashboardRowEntity.getEnableTimeRange(), dashboardRowEntity.getScreenShot()
                     , new BigInteger(dashboardRowEntity.getDeleted()), dashboardRowEntity.getTenantId(), dashboardRowEntity.getEnableRefresh(), dashboardRowEntity.getSharePublic()
-                    , dashboardRowEntity.getEnableEntityFilter(), dashboardRowEntity.getEnableDescription(), dashboardRowEntity.getExtendedOptions());
+                    , dashboardRowEntity.getEnableEntityFilter(), dashboardRowEntity.getEnableDescription(), dashboardRowEntity.getExtendedOptions(), dashboardRowEntity.getShowInHome());
         }
         return result;
     }
@@ -94,7 +94,7 @@ public class TableRowsSynchronizer {
             result += DataManager.getInstance().syncDashboardTileParam(dashboardTileParamsRowEntity.getTileId(), dashboardTileParamsRowEntity.getParamName()
                     , dashboardTileParamsRowEntity.getTenantId(), dashboardTileParamsRowEntity.getIsSystem(), dashboardTileParamsRowEntity.getParamType()
                     , dashboardTileParamsRowEntity.getParamValueStr(), dashboardTileParamsRowEntity.getParamValueNum(), dashboardTileParamsRowEntity.getParamValueTimestamp()
-                    , dashboardTileParamsRowEntity.getCreationDate(), dashboardTileParamsRowEntity.getLastModificationDate());
+                    , dashboardTileParamsRowEntity.getCreationDate(), dashboardTileParamsRowEntity.getLastModificationDate(),dashboardTileParamsRowEntity.getDeleted());
         }
         return result;
     }
@@ -114,7 +114,7 @@ public class TableRowsSynchronizer {
                     , dashboardTileRowEntity.getWidgetCreationTime(), dashboardTileRowEntity.getWidgetSource(), dashboardTileRowEntity.getWidgetKocName(), dashboardTileRowEntity.getWidgetViewmode()
                     , dashboardTileRowEntity.getWidgetTemplate(), dashboardTileRowEntity.getProviderName(), dashboardTileRowEntity.getProviderVersion(), dashboardTileRowEntity.getProviderAssetRoot()
                     , dashboardTileRowEntity.getTileRow(), dashboardTileRowEntity.getTileColumn(), dashboardTileRowEntity.getType(), dashboardTileRowEntity.getWidgetSupportTimeControl()
-                    , dashboardTileRowEntity.getWidgetLinkedDashboard());
+                    , dashboardTileRowEntity.getWidgetLinkedDashboard(),  dashboardTileRowEntity.getWidgetDeleted(),dashboardTileRowEntity.getWidgetDeletionDate(),dashboardTileRowEntity.getDeleted());
         }
         return result;
     }
@@ -128,7 +128,7 @@ public class TableRowsSynchronizer {
         for (DashboardUserOptionsRowEntity dashboardUserOptionsRowEntity : rows) {
             result += DataManager.getInstance().syncDashboardUserOption(dashboardUserOptionsRowEntity.getUserName(), dashboardUserOptionsRowEntity.getTenantId()
                     , new BigInteger(dashboardUserOptionsRowEntity.getDashboardId()), dashboardUserOptionsRowEntity.getAutoRefreshInterval(), dashboardUserOptionsRowEntity.getAccessDate()
-                    , dashboardUserOptionsRowEntity.getIsFavorite(), dashboardUserOptionsRowEntity.getExtendedOptions(), dashboardUserOptionsRowEntity.getCreationDate(), dashboardUserOptionsRowEntity.getLastModificationDate());
+                    , dashboardUserOptionsRowEntity.getIsFavorite(), dashboardUserOptionsRowEntity.getExtendedOptions(), dashboardUserOptionsRowEntity.getCreationDate(), dashboardUserOptionsRowEntity.getLastModificationDate(),dashboardUserOptionsRowEntity.getDeleted());
         }
         return result;
     }
@@ -141,7 +141,7 @@ public class TableRowsSynchronizer {
         int result = 0;
         for (PreferenceRowEntity preferenceRowEntity : rows) {
             result += DataManager.getInstance().syncPreferences(preferenceRowEntity.getUserName(), preferenceRowEntity.getPrefKey(), preferenceRowEntity.getPrefValue()
-                    , preferenceRowEntity.getTenantId(), preferenceRowEntity.getCreationDate(), preferenceRowEntity.getLastModificationDate());
+                    , preferenceRowEntity.getTenantId(), preferenceRowEntity.getCreationDate(), preferenceRowEntity.getLastModificationDate(), new Integer(preferenceRowEntity.getDeleted()));
         }
         return result;
     }
