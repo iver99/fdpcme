@@ -65,8 +65,8 @@ public class AvailabilityNotification implements NotificationListener
 		//check thread pool status
 		ThreadPoolExecutor pool = ParallelThreadPool.getThreadPool();
 		LOGGER.info("Dashboard-API thread pool status: Active count is {}, core pool size is {}, largest pool size is {}, " +
-				"maximum pool size is {}, pool size is {}, completed task count is {}",
-				pool.getActiveCount(),pool.getCorePoolSize(),pool.getLargestPoolSize(),pool.getMaximumPoolSize(),pool.getPoolSize(),pool.getCompletedTaskCount());
+				"maximum pool size is {}, pool size is {}, completed task count is {},queue size is {}",
+				pool.getActiveCount(),pool.getCorePoolSize(),pool.getLargestPoolSize(),pool.getMaximumPoolSize(),pool.getPoolSize(),pool.getCompletedTaskCount(),pool.getQueue().size());
 		// check database available
 		boolean isDBAvailable = true;
 		try {
