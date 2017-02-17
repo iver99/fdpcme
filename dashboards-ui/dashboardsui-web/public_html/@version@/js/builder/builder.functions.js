@@ -605,6 +605,7 @@ define(['knockout',
                             Builder.eagerLoadDahshboardSingleTileAtPageLoad(dfu, ko, tile);
                         }
                     }
+                    window._contextPassedToWidgetsAtPageLoad = {timeSelector: timeSelector, targets: targets};
                     dds[prop].eagerLoaded = true;
                     dds[prop].eagerCreated = {normalMode: normalMode, tabletMode: tabletMode, timeSelector: timeSelector, targets: targets};
                     dtd.resolve();
