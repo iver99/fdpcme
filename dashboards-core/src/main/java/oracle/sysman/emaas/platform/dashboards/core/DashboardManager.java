@@ -437,7 +437,7 @@ public class DashboardManager
 						ep = null;
 						edbdtList = ed.getDashboardTileList();
 					} catch (DashboardException e) {
-						LOGGER.error(e.getStackTrace());
+						LOGGER.error(e);
 						return cdSet;
 					}
 				}
