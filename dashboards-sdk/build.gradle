@@ -11,9 +11,8 @@ publishing.publications {
     }
     thisJarPublication(MavenPublication) {
         from project.components.java
-	setGroupId("${publishGroup1}")
-        //setArtifactId('dashboards-sdk')
-	setVersion  ("1.0.0" + "-$buildTimestamp")
+	groupId "${publishGroup1}"
+        version "1.0.0-" + sdkPubTimestamp
     }
 }
 
