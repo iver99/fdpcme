@@ -37,15 +37,6 @@ BEGIN
   WHEN VALUE_ERROR THEN
     RAISE_APPLICATION_ERROR(-21000, ' Please  specify valid internal tenant id');
   END;
-  SELECT COUNT(*)
-  INTO oob_dsb_count
-  FROM EMS_DASHBOARD
-  WHERE DASHBOARD_ID <=1000
-  AND TENANT_ID       ='&TENANT_ID';
-  IF oob_dsb_count    >0 THEN
-    DBMS_OUTPUT.PUT_LINE('OOB dashboards for &TENANT_ID are already present');
-    RAISE_APPLICATION_ERROR(-20000, ' OOB dashboards for &TENANT_ID are already present');
-  END IF; 
 END;
 /
 @&EMSAAS_SQL_ROOT/1.10.0/emaas_create_tables.sql

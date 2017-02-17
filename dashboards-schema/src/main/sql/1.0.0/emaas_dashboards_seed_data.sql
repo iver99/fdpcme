@@ -545,250 +545,713 @@ la_mwoperations_screenshot CLOB:='data:image/png;base64,'||
 'DDt85IjVSx65chBw+YL5p59+argzRhmPH374Ybh27ZqNr3379plcILOLFy+Gv/3tb+HOnTs2HpETBIqR8v777wfkynjdu3dvGBsbC4cPHzY/F1bGMOnRH+RKHtoAKR+J8kWX0DG/CJZ98Vs2bcrBr2Epe/bsCadOnQowP1YCg4grBQBwtUfZL1++bOFYiIDB4GDQjGwbsTwAjYUImJSBBYkQKIurFOVhLV756kr45ptvzBJFmF988YUNSK50fnUCaLnyEMAK+O53v2uWBLJBpjgGD3JigCBfrENky4WK49///neTHXL87W9/a8SIrjAIsA5Jg9UBYWJJohtYFJQ1MTFhdeB/GHUFS5X0DBTJ16Ap9Q9khDwhL+TI2ELuyHsiyhg5MO7mZudsTBLP+MXYwfr77LPPTC+4QEKSzAaRKzIjDfIlD3InH7MMxjW6wzlH6uICiiubEK3MqDgrmIGg+cWlMBwbHXWrNIdiw/woP1d3rvQACkkCNOT4y1/+MnzyySdhfHy8Ou2iAW5FkA6rkoHBoMKPVQKwEChl4piGY5m+e/Zdu6K8nH1pdQPsRx99ZPnoZxmgUs7iUiTkONVztxDxGxoaNJPcw/r2mM3UTCZutSFjlH737t12kXL/b37zG5PfD3/4QxtUKDwyQL7In/zIE7kySNAXLBD8DAgGTXYhnY+D7+tw/PjxAIEib8IZlO+9957VW5Z8e0Fu6NumqG+uz4sRN6bPhK3ZVeSLDBl3kJZZ5rEOZl2MPS5gjOV//vOfdqH66U9/avJjzKMHyAZZkw55MUNkvCJvLEJIEqMIOaMLpMUCRd5wAWMdUiWMOplllinf+YVFu/3FmB2IBa8bKRYRjk9zMY3X6hCiW4WUBdCEIbwyHRBuaFJsAkwGEIPEr/RNZF2RNC9fEmBxlFH2isq6PKCtpNhE38EfwuRW1Vod5UCSTvSUR/mQI+Fluo6SonMwHeXcj3Qw7Xw+LgXA01maeDXkYYvnT8sn'||
 'zP0ez7FsRx0ixQzVFG9CUvm6nyPp4mOoquwIc5fK18M4NirL49P0G+l8vUixqHzBPp/W5YHc+Z+PX02+5Hfd8LLKOqakuK4PWvKd8g76kXifTnmYH2t13uMM5EoCD8NrAy+Sb+pqhaXxOl8bAin+XlIatkK+jI46Ls3nSdIwl2WtME+vY7kIpFh7yWkYMuGXt/A8bXpM83l4GkY5uNXCPG9Zx3UnxdUaXqZZnILp9dYK8zgd24+A5Nt+jDtZA+OrrDFWq5xaYWX3t9yJedmtU3lCQAgIgXVGQKS4zoCrOiEgBLobAZFim+Sz4pF+m+pRsUJACJSLQNfdUyy3e50rzW4Sw4z1nyN0rnGque8RyJ5R6NLciqBlKbaCWoE84sICICmJEOhCBESKXSgUNUkICIHOISBS7Bz2qlkICIEuRECk2IVCUZOEgBDoHAIixc5hr5qFgBDoQgREil0oFDVJCAiBziEgUuwc9qpZCAiBLkRApFiCUFgN5i+vl1CcihACTSOA/mlVYtOw1cwgUqwJS5OBURsrG3o0mVHJhUA5CIgQy8GRUkSK5WGpkoSAEOgDBESKfSBEdUEICIHyEBAploelShICQqAPEBAp9oEQ1QUhIATKQ0CkWB6WKkkICIE+QKAuKbLLS+7zJn3Q3fZ0wXCqsS2O8GsP3ip1JQI11E/jdyVMdUPSzxzU2U9xIH5A6nX8VGH8Ju9ghNvWm8RjLeTrVtNHEXXWO7AybDAyHzi9jnil7lXEjC/88R3ZKn5pAj/fqJh6/zfy8U2VaQEJCsi+iMh4TR3rFuMXfeO3jOMxnlc/7rYR9e1NaFKYsvOIyVIEa6DyWeWapIiFw28ufiA6Y9AM/CEIcgO6JVO4eshmn2rNf3ScDzTx2UmIMbJiXdSyr541TFI3ryJ6GwHIau2L/jP9G4xjkwu0u6Gof4zf2Xl0L9M/xjLpGqijZ++fI92N4xesazswy+IMm+j7f96oRDAppY7RAAAAAElF'||
 'TkSuQmCC';
-
+V_COUNT NUMBER;
 BEGIN  
 
 --Rem SEED DATA FOR OOB Dashboards
-Insert into EMS_DASHBOARD (DASHBOARD_ID,NAME,TYPE,DESCRIPTION,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,IS_SYSTEM,APPLICATION_TYPE,ENABLE_TIME_RANGE,DELETED,TENANT_ID,SCREEN_SHOT) 
-values (1,'Enterprise Overview',0,' ',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle',1,2,0,0,'&TENANT_ID',
-em_overview_screenshot);
-
-Insert into EMS_DASHBOARD (DASHBOARD_ID,NAME,TYPE,DESCRIPTION,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,IS_SYSTEM,APPLICATION_TYPE,ENABLE_TIME_RANGE,DELETED,TENANT_ID,SCREEN_SHOT) 
-values (2,'Performance Analytics: Database',1,'Database Performance Analytics',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle',1,2,0,0,'&TENANT_ID',
-dbperf_screenshot);
-
-Insert into EMS_DASHBOARD (DASHBOARD_ID,NAME,TYPE,DESCRIPTION,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,IS_SYSTEM,APPLICATION_TYPE,ENABLE_TIME_RANGE,DELETED,TENANT_ID,SCREEN_SHOT) 
-values (3,'Resource Analytics: Database',1,'Database Resource Planning',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle',1,2,0,0,'&TENANT_ID',
-dbhealth_screenshot);
-
-Insert into EMS_DASHBOARD (DASHBOARD_ID,NAME,TYPE,DESCRIPTION,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,IS_SYSTEM,APPLICATION_TYPE,ENABLE_TIME_RANGE,DELETED,TENANT_ID,SCREEN_SHOT) 
-values (4,'Performance Analytics: Middleware',1,'Analyze overhead of Garbage Collection and its impact of WebLogic performance',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle',1,2,0,0,'&TENANT_ID',
-mwperf_screenshot);
-
-Insert into EMS_DASHBOARD (DASHBOARD_ID,NAME,TYPE,DESCRIPTION,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,IS_SYSTEM,APPLICATION_TYPE,ENABLE_TIME_RANGE,DELETED,TENANT_ID,SCREEN_SHOT) 
-values (5,'Host Inventory By Platform',0,'Shows CPU Implementation, Total CPU Cores/Sockets/Threads and Memory Size for Hosts grouped by Operating System',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle',1,2,0,0,'&TENANT_ID',
-ta_hostbyplt_screenshot);
-
-Insert into EMS_DASHBOARD (DASHBOARD_ID,NAME,TYPE,DESCRIPTION,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,IS_SYSTEM,APPLICATION_TYPE,ENABLE_TIME_RANGE,DELETED,TENANT_ID,SCREEN_SHOT) 
-values (6,'Database Configuration and Storage By Version',0,'Shows Total CPU Cores, Patch IDs, Tablespace Size and SGA Size for Databases grouped by their version',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle',1,2,0,0,'&TENANT_ID',
-ta_dbcfgbyver_screenshot);
-
-Insert into EMS_DASHBOARD (DASHBOARD_ID,NAME,TYPE,DESCRIPTION,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,IS_SYSTEM,APPLICATION_TYPE,ENABLE_TIME_RANGE,DELETED,TENANT_ID,SCREEN_SHOT) 
-values (7,'WebLogic Servers by JDK Version',0,'Shows the Java VM Vendor, Target Version and Platform for WebLogic Servers grouped by Java version',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle',1,2,0,0,'&TENANT_ID',
-ta_wlsbyjdk_screenshot);
-
-Insert into EMS_DASHBOARD (DASHBOARD_ID,NAME,TYPE,DESCRIPTION,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,IS_SYSTEM,APPLICATION_TYPE,ENABLE_TIME_RANGE,DELETED,TENANT_ID,SCREEN_SHOT) 
-values (8,'Top 25 Databases by Resource Consumption',0,'Shows the status, Database CPU Time, CPU Utilization, Total Memory Usage and Number of Transactions per second for Top 25 Databases (by Resource Consumption)',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle',1,2,0,0,'&TENANT_ID',
-ta_top25dbbyrc_screenshot);
-
-Insert into EMS_DASHBOARD (DASHBOARD_ID,NAME,TYPE,DESCRIPTION,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,IS_SYSTEM,APPLICATION_TYPE,ENABLE_TIME_RANGE,DELETED,TENANT_ID,SCREEN_SHOT) 
-values (9,'Top 25 WebLogic Servers by Heap Usage',0,'Shows the status, Heap Usage, Current Memory Pool Usage and Garbage Collection Invocation time and frequency for Top 25 WebLogic Servers (by Heap Usage)',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle',1,2,0,0,'&TENANT_ID',
-ta_top25wlsbyheap_screenshot);
-
-Insert into EMS_DASHBOARD (DASHBOARD_ID,NAME,TYPE,DESCRIPTION,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,IS_SYSTEM,APPLICATION_TYPE,ENABLE_TIME_RANGE,DELETED,TENANT_ID,SCREEN_SHOT) 
-values (10,'Top 25 WebLogic Servers by Load',0,'Shows the status, CPU Usage, Active Sessions, Request Processing Time, Requests per minute and Heap Usage for Top 25 WebLogic Servers (by Load)',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle',1,2,0,0,'&TENANT_ID',
-ta_top25wlsbyload_screenshot);
-
-Insert into EMS_DASHBOARD (DASHBOARD_ID,NAME,TYPE,DESCRIPTION,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,IS_SYSTEM,APPLICATION_TYPE,ENABLE_TIME_RANGE,DELETED,TENANT_ID,SCREEN_SHOT) 
-values (11,'Database Health Summary',1,'Database Health Summary',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle',1,2,0,0,'&TENANT_ID',
-ita_dbhealth_screenshot);
-
-Insert into EMS_DASHBOARD (DASHBOARD_ID,NAME,TYPE,DESCRIPTION,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,IS_SYSTEM,APPLICATION_TYPE,ENABLE_TIME_RANGE,DELETED,TENANT_ID,SCREEN_SHOT) 
-values (12,'WebLogic Health Summary',1,'WebLogic Health Summary',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle',1,2,0,0,'&TENANT_ID',
-ita_wlshealth_screenshot);
-
-Insert into EMS_DASHBOARD (DASHBOARD_ID,NAME,TYPE,DESCRIPTION,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,IS_SYSTEM,APPLICATION_TYPE,ENABLE_TIME_RANGE,DELETED,TENANT_ID,SCREEN_SHOT) 
-values (13,'Host Health Summary',1,'Host Health Summary',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle',1,2,0,0,'&TENANT_ID',
-ita_hosthealth_screenshot);
-
-Insert into EMS_DASHBOARD (DASHBOARD_ID,NAME,TYPE,DESCRIPTION,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,IS_SYSTEM,APPLICATION_TYPE,ENABLE_TIME_RANGE,DELETED,TENANT_ID,SCREEN_SHOT) 
-values (14,'Application Performance Monitoring',1,'Monitor performance of your applications, view response times, invocation counts across all pages of your application.',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle',1,1,0,0,'&TENANT_ID',
-apm_screenshot);
-
-Insert into EMS_DASHBOARD (DASHBOARD_ID,NAME,TYPE,DESCRIPTION,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,IS_SYSTEM,APPLICATION_TYPE,ENABLE_TIME_RANGE,DELETED,TENANT_ID,SCREEN_SHOT) 
-values (15,'Database Operations',0,'Displays the current health of your database ecosystem',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle',1,3,1,0,'&TENANT_ID',
-la_dboperations_screenshot);
-
-Insert into EMS_DASHBOARD (DASHBOARD_ID,NAME,TYPE,DESCRIPTION,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,IS_SYSTEM,APPLICATION_TYPE,ENABLE_TIME_RANGE,DELETED,TENANT_ID,SCREEN_SHOT) 
-values (16,'Host Operations',0,'Displays the current health of your monitored hosts',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle',1,3,1,0,'&TENANT_ID',
-la_hostoperations_screenshot);
-
-Insert into EMS_DASHBOARD (DASHBOARD_ID,NAME,TYPE,DESCRIPTION,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,IS_SYSTEM,APPLICATION_TYPE,ENABLE_TIME_RANGE,DELETED,TENANT_ID,SCREEN_SHOT) 
-values (17,'Middleware Operations',0,'Displays the current health of your Oracle middleware ecosystem',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle',1,3,1,0,'&TENANT_ID',
-la_mwoperations_screenshot);
-
-Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
-  WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT) 
-values (14,1,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Top 5 WebLogic Servers',220,2,0,2,'&TENANT_ID','3026','Top 5 WebLogic Servers','Shows the status, CPU Usage, Active Sessions and Heap Usage for Top 5 WebLogic Servers','Target Analytics','/../images/func_horibargraph_24_ena.png','js/../emcsDependencies/dfcommon/images/sample-widget-histogram.png','Oracle',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),1,'emcta-visualization','/widget/visualizationWidget/js/VisualizationWidget.js','/widget/visualizationWidget/visualizationWidget.html','TargetAnalytics','0.1','assetRoot');
-
-Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
-  WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT) 
-values (15,1,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Top 5 Hosts',220,2,0,3,'&TENANT_ID','3025','Top 5 Hosts','Shows the status, CPU Utilization, Total Disk I/O per second and Memory Utilization for Top 5 Hosts','Target Analytics','/../images/func_horibargraph_24_ena.png','js/../emcsDependencies/dfcommon/images/sample-widget-histogram.png','Oracle',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),1,'emcta-visualization','/widget/visualizationWidget/js/VisualizationWidget.js','/widget/visualizationWidget/visualizationWidget.html','TargetAnalytics','0.1','assetRoot');
-
-Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
-  WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT) 
-values (16,1,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Top 5 Databases',220,2,0,1,'&TENANT_ID','3024','Top 5 Databases','Shows the status, Database CPU Time, I/O Megabytes per second and Total Memory Usage for Top 5 Databases','Target Analytics','/../images/func_horibargraph_24_ena.png','js/../emcsDependencies/dfcommon/images/sample-widget-histogram.png','Oracle',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),1,'emcta-visualization','/widget/visualizationWidget/js/VisualizationWidget.js','/widget/visualizationWidget/visualizationWidget.html','TargetAnalytics','0.1','assetRoot');
-
-Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
-  WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT) 
-values (17,1,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Top 5 Application Deployments ',220,2,0,4,'&TENANT_ID','3027','Top 5 Application Deployments ','Shows the status, Requests per minute, Request Processing Time and Active Sessions for Top 5 Application Deployments','Target Analytics','/../images/func_horibargraph_24_ena.png','js/../emcsDependencies/dfcommon/images/sample-widget-histogram.png','Oracle',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),1,'emcta-visualization','/widget/visualizationWidget/js/VisualizationWidget.js','/widget/visualizationWidget/visualizationWidget.html','TargetAnalytics','0.1','assetRoot');
-
-Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
-  WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT) 
-values (18,1,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Targets Status',220,4,0,0,'&TENANT_ID','3028','Targets Status','Shows the distribution of targets that are up grouped by target type Categories and target types.','Target Analytics','/../images/func_horibargraph_24_ena.png','js/../emcsDependencies/dfcommon/images/sample-widget-histogram.png','Oracle',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),1,'emcta-visualization','/widget/visualizationWidget/js/VisualizationWidget.js','/widget/visualizationWidget/visualizationWidget.html','TargetAnalytics','0.1','assetRoot');
-
-Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
-  WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT) 
-values (2,2,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Home',220,2,0,0,'&TENANT_ID',
-  '0','Invisible Name','Invisible Description','Invisible Widget Group','Invisible icon','Invisible historgram','Oracle',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),0,'DF_V1_WIDGET_ONEPAGE','../emcsDependencies/widgets/onepage/js/onepageModel','../emcsDependencies/widgets/onepage/onepageTemplate.html','EmcitasApplications','0.1','verticalApplication.db-perf');
-
-Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
-  WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT) 
-values (3,3,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Home',220,2,0,0,'&TENANT_ID',
-  '0','Invisible Name','Invisible Description','Invisible Widget Group','Invisible icon','Invisible historgram','Oracle',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),0,'DF_V1_WIDGET_ONEPAGE','../emcsDependencies/widgets/onepage/js/onepageModel','../emcsDependencies/widgets/onepage/onepageTemplate.html','EmcitasApplications','0.1','verticalApplication.db-resource');
-
-Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
-  WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT) 
-values (4,4,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Home',220,2,0,0,'&TENANT_ID',
-  '0','Invisible Name','Invisible Description','Invisible Widget Group','Invisible icon','Invisible historgram','Oracle',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),0,'DF_V1_WIDGET_ONEPAGE','../emcsDependencies/widgets/onepage/js/onepageModel','../emcsDependencies/widgets/onepage/onepageTemplate.html','EmcitasApplications','0.1','verticalApplication.mw-perf');
-
-Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT) 
-values (5,5,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Host Inventory By Platform',220,2,1,0,'&TENANT_ID','3018','Host Inventory By Platform','Shows CPU Implementation, Total CPU Cores/Sockets/Threads and Memory Size for Hosts grouped by Operating System','Target Analytics','/../images/func_horibargraph_24_ena.png',null,'Oracle',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),1,'emcta-visualization','/widget/visualizationWidget/js/VisualizationWidget.js','/widget/visualizationWidget/visualizationWidget.html','TargetAnalytics','0.1','assetRoot');
-
-Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT) 
-values (6,6,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Database Configuration and Storage By Version',220,2,1,0,'&TENANT_ID','3020','Database Configuration and Storage By Version','Shows Total CPU Cores, Patch IDs, Tablespace Size and SGA Size for Databases grouped by their version','Target Analytics','/../images/func_horibargraph_24_ena.png',null,'Oracle',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),1,'emcta-visualization','/widget/visualizationWidget/js/VisualizationWidget.js','/widget/visualizationWidget/visualizationWidget.html','TargetAnalytics','0.1','assetRoot');
-
-Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT) 
-values (7,7,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','WebLogic Servers by JDK Version',220,2,1,0,'&TENANT_ID','3023','WebLogic Servers by JDK Version','Shows the Java VM Vendor, Target Version and Platform for WebLogic Servers grouped by Java version','Target Analytics','/../images/func_horibargraph_24_ena.png',null,'Oracle',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),1,'emcta-visualization','/widget/visualizationWidget/js/VisualizationWidget.js','/widget/visualizationWidget/visualizationWidget.html','TargetAnalytics','0.1','assetRoot');
-
-Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT) 
-values (8,8,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Top 25 Databases by Resource Consumption',220,2,1,0,'&TENANT_ID','3019','Top 25 Databases by Resource Consumption','Shows the status, Database CPU Time, CPU Utilization, Total Memory Usage and Number of Transactions per second for Top 25 Databases (by Resource Consumption)','Target Analytics','/../images/func_horibargraph_24_ena.png',null,'Oracle',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),1,'emcta-visualization','/widget/visualizationWidget/js/VisualizationWidget.js','/widget/visualizationWidget/visualizationWidget.html','TargetAnalytics','0.1','assetRoot');
-
-Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT) 
-values (9,9,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Top 25 WebLogic Servers by Heap Usage',220,2,1,0,'&TENANT_ID','3021','Top 25 WebLogic Servers by Heap Usage','Shows the status, Heap Usage, Current Memory Pool Usage and Garbage Collection Invocation time and frequency for Top 25 WebLogic Servers (by Heap Usage)','Target Analytics','/../images/func_horibargraph_24_ena.png',null,'Oracle',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),1,'emcta-visualization','/widget/visualizationWidget/js/VisualizationWidget.js','/widget/visualizationWidget/visualizationWidget.html','TargetAnalytics','0.1','assetRoot');
-
-Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT) 
-values (10,10,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Top 25 WebLogic Servers by Load',220,2,1,0,'&TENANT_ID','3022','Top 25 WebLogic Servers by Load','Shows the status, CPU Usage, Active Sessions, Request Processing Time, Requests per minute and Heap Usage for Top 25 WebLogic Servers (by Load)','Target Analytics','/../images/func_horibargraph_24_ena.png',null,'Oracle',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),1,'emcta-visualization','/widget/visualizationWidget/js/VisualizationWidget.js','/widget/visualizationWidget/visualizationWidget.html','TargetAnalytics','0.1','assetRoot');
-
-Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
-  WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT) 
-values (11,11,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Home',220,2,0,0,'&TENANT_ID',
-  '0','Invisible Name','Invisible Description','Invisible Widget Group','Invisible icon','Invisible historgram','Oracle',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),0,'DF_V1_WIDGET_ONEPAGE','../emcsDependencies/widgets/onepage/js/onepageModel','../emcsDependencies/widgets/onepage/onepageTemplate.html','EmcitasApplications','0.1','ita-dashboard');
-
-Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
-  WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT) 
-values (12,12,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Home',220,2,0,0,'&TENANT_ID',
-  '0','Invisible Name','Invisible Description','Invisible Widget Group','Invisible icon','Invisible historgram','Oracle',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),0,'DF_V1_WIDGET_ONEPAGE','../emcsDependencies/widgets/onepage/js/onepageModel','../emcsDependencies/widgets/onepage/onepageTemplate.html','EmcitasApplications','0.1','ita-dashboard');
-
-Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
-  WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT) 
-values (13,13,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Home',220,2,0,0,'&TENANT_ID',
-  '0','Invisible Name','Invisible Description','Invisible Widget Group','Invisible icon','Invisible historgram','Oracle',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),0,'DF_V1_WIDGET_ONEPAGE','../emcsDependencies/widgets/onepage/js/onepageModel','../emcsDependencies/widgets/onepage/onepageTemplate.html','EmcitasApplications','0.1','ita-dashboard');
-
-Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
-  WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT) 
-values (1,14,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Home',220,2,0,0,'&TENANT_ID',
-  '0','Invisible Name','Invisible Description','Invisible Widget Group','Invisible icon','Invisible historgram','Oracle',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),0,'DF_V1_WIDGET_ONEPAGE','../emcsDependencies/widgets/onepage/js/onepageModel','../emcsDependencies/widgets/onepage/onepageTemplate.html','ApmUI','0.1','home');
-
-
-Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
-  WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT) 
-values (19,15,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Database Log Trends',220,4,0,0,'&TENANT_ID','2002','Database Log Trends','Time-based histogram of all log entries from Database targets.','Log Analytics',null,'js/../emcsDependencies/dfcommon/images/sample-widget-histogram.png','ORACLE',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),1,'LA_WIDGET_HISTOGRAM','/js/viewmodel/search/results/loganSearchChartsViewModel.js','/html/search/widgets/loganHistogram.html','LoganService','0.1','assetRoot');
-
-Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
-  WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT) 
-values (20,15,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Database Critical Incidents by Target Type',220,1,0,1,'&TENANT_ID','2016','Database Critical Incidents by Target Type','Database critical errors based on Error ID grouped by by target type','Log Analytics',null,'js/../emcsDependencies/dfcommon/images/sample-widget-histogram.png','ORACLE',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),1,'LA_WIDGET_BAR','/js/viewmodel/search/visualization/loganVisStatsViewModel.js','/html/search/widgets/loganBarChart.html','LoganService','0.1','assetRoot');
-
-Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
-  WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT) 
-values (21,15,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Top Database Targets with Log Errors',220,2,0,2,'&TENANT_ID','2005','Top Database Targets with Log Errors','Top 10 Database targets that have the most log entries with ERROR or SEVERE severity.','Log Analytics',null,'js/../emcsDependencies/dfcommon/images/sample-widget-histogram.png','ORACLE',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),1,'LA_WIDGET_PIE','/js/viewmodel/search/visualization/loganVisStatsViewModel.js','/html/search/widgets/loganPieChart.html','LoganService','0.1','assetRoot');
-
-Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
-  WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT) 
-values (22,15,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Database Top Errors',220,1,0,3,'&TENANT_ID','2015','Database Top Errors','Top 10 Database Errors that have recently occurred.','Log Analytics',null,'js/../emcsDependencies/dfcommon/images/sample-widget-histogram.png','ORACLE',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),1,'LA_WIDGET_BAR','/js/viewmodel/search/visualization/loganVisStatsViewModel.js','/html/search/widgets/loganBarChart.html','LoganService','0.1','assetRoot');
-
-Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
-  WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT) 
-values (23,16,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Top SUDO Users',220,1,0,3,'&TENANT_ID','2022','Top SUDO Users','Top 10 recent users initiating SUDO requests.','Log Analytics',null,'js/../emcsDependencies/dfcommon/images/sample-widget-histogram.png','ORACLE',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),1,'LA_WIDGET_PIE','/js/viewmodel/search/visualization/loganVisStatsViewModel.js','/html/search/widgets/loganPieChart.html','LoganService','0.1','assetRoot');
-
-Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
-  WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT) 
-values (24,16,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Top Host Log Sources',220,1,0,1,'&TENANT_ID','2020','Top Host Log Sources','Top 10 Log Sources for Host Target Type by number of log entries','Log Analytics',null,'js/../emcsDependencies/dfcommon/images/sample-widget-histogram.png','ORACLE',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),1,'LA_WIDGET_BAR','/js/viewmodel/search/visualization/loganVisStatsViewModel.js','/html/search/widgets/loganBarChart.html','LoganService','0.1','assetRoot');
-
-Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
-  WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT) 
-values (25,16,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Host Logs Trend',220,4,0,0,'&TENANT_ID','2004','Host Logs Trend','Time-based histogram of all log entries from Host targets','Log Analytics',null,'js/../emcsDependencies/dfcommon/images/sample-widget-histogram.png','ORACLE',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),1,'LA_WIDGET_HISTOGRAM','/js/viewmodel/search/results/loganSearchChartsViewModel.js','/html/search/widgets/loganHistogram.html','LoganService','0.1','assetRoot');
-
-Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
-  WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT) 
-values (26,16,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Top Host Log Entries by Service',220,2,0,2,'&TENANT_ID','2026','Top Host Log Entries by Service','Distribution of log entries across all monitored hosts by service','Log Analytics',null,'js/../emcsDependencies/dfcommon/images/sample-widget-histogram.png','Oracle',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),1,'LA_WIDGET_PIE','/js/viewmodel/search/visualization/loganVisStatsViewModel.js','/html/search/widgets/loganPieChart.html','LoganService','0.1','assetRoot');
-
-Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
-  WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT) 
-values (27,17,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Web Server Top Accessed Pages',220,1,0,3,'&TENANT_ID','2007','Web Server Top Accessed Pages','Top 10 recently accessed web pages in Middleware access logs.','Log Analytics',null,'js/../emcsDependencies/dfcommon/images/sample-widget-histogram.png','ORACLE',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),1,'LA_WIDGET_BAR','/js/viewmodel/search/visualization/loganVisStatsViewModel.js','/html/search/widgets/loganBarChart.html','LoganService','0.1','assetRoot');
-
-Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
-  WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT) 
-values (28,17,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Top Middleware Error Codes',220,1,0,1,'&TENANT_ID','2010','Top Middleware Error Codes','Top 10 most common recent Middleware errors codes (such as BEA-XXXXXX).','Log Analytics',null,'js/../emcsDependencies/dfcommon/images/sample-widget-histogram.png','ORACLE',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),1,'LA_WIDGET_PIE','/js/viewmodel/search/visualization/loganVisStatsViewModel.js','/html/search/widgets/loganPieChart.html','LoganService','0.1','assetRoot');
-
-Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
-  WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT) 
-values (29,17,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Middleware Logs Trend',220,4,0,0,'&TENANT_ID','2006','Middleware Logs Trend','Time-based histogram of all log entries from Middleware targets','Log Analytics',null,'js/../emcsDependencies/dfcommon/images/sample-widget-histogram.png','ORACLE',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),1,'LA_WIDGET_HISTOGRAM','/js/viewmodel/search/results/loganSearchChartsViewModel.js','/html/search/widgets/loganHistogram.html','LoganService','0.1','assetRoot');
-
-Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
-  WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT) 
-values (30,17,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Top Middleware Targets with Errors',220,2,0,2,'&TENANT_ID','2012','Top Middleware Targets with Errors','Top 10 Middleware targets that have the most log entries with ERROR or SEVERE severity.','Log Analytics',null,'js/../emcsDependencies/dfcommon/images/sample-widget-histogram.png','ORACLE',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),1,'LA_WIDGET_PIE','/js/viewmodel/search/visualization/loganVisStatsViewModel.js','/html/search/widgets/loganPieChart.html','LoganService','0.1','assetRoot');
-
-Insert into EMS_DASHBOARD_LAST_ACCESS (DASHBOARD_ID,ACCESSED_BY,ACCESS_DATE,TENANT_ID) 
-values (1,'Oracle',SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID');
-
-Insert into EMS_DASHBOARD_LAST_ACCESS (DASHBOARD_ID,ACCESSED_BY,ACCESS_DATE,TENANT_ID) 
-values (2,'Oracle',SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID');
-
-Insert into EMS_DASHBOARD_LAST_ACCESS (DASHBOARD_ID,ACCESSED_BY,ACCESS_DATE,TENANT_ID) 
-values (3,'Oracle',SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID');
-
-Insert into EMS_DASHBOARD_LAST_ACCESS (DASHBOARD_ID,ACCESSED_BY,ACCESS_DATE,TENANT_ID) 
-values (4,'Oracle',SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID');
-
-Insert into EMS_DASHBOARD_LAST_ACCESS (DASHBOARD_ID,ACCESSED_BY,ACCESS_DATE,TENANT_ID) 
-values (5,'Oracle',SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID');
-
-Insert into EMS_DASHBOARD_LAST_ACCESS (DASHBOARD_ID,ACCESSED_BY,ACCESS_DATE,TENANT_ID) 
-values (6,'Oracle',SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID');
-
-Insert into EMS_DASHBOARD_LAST_ACCESS (DASHBOARD_ID,ACCESSED_BY,ACCESS_DATE,TENANT_ID) 
-values (7,'Oracle',SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID');
-
-Insert into EMS_DASHBOARD_LAST_ACCESS (DASHBOARD_ID,ACCESSED_BY,ACCESS_DATE,TENANT_ID) 
-values (8,'Oracle',SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID');
-
-Insert into EMS_DASHBOARD_LAST_ACCESS (DASHBOARD_ID,ACCESSED_BY,ACCESS_DATE,TENANT_ID) 
-values (9,'Oracle',SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID');
-
-Insert into EMS_DASHBOARD_LAST_ACCESS (DASHBOARD_ID,ACCESSED_BY,ACCESS_DATE,TENANT_ID) 
-values (10,'Oracle',SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID');
-
-Insert into EMS_DASHBOARD_LAST_ACCESS (DASHBOARD_ID,ACCESSED_BY,ACCESS_DATE,TENANT_ID) 
-values (11,'Oracle',SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID');
-
-Insert into EMS_DASHBOARD_LAST_ACCESS (DASHBOARD_ID,ACCESSED_BY,ACCESS_DATE,TENANT_ID) 
-values (12,'Oracle',SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID');
-
-Insert into EMS_DASHBOARD_LAST_ACCESS (DASHBOARD_ID,ACCESSED_BY,ACCESS_DATE,TENANT_ID) 
-values (13,'Oracle',SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID');
-
-Insert into EMS_DASHBOARD_LAST_ACCESS (DASHBOARD_ID,ACCESSED_BY,ACCESS_DATE,TENANT_ID) 
-values (14,'Oracle',SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID');
-
-Insert into EMS_DASHBOARD_LAST_ACCESS (DASHBOARD_ID,ACCESSED_BY,ACCESS_DATE,TENANT_ID) 
-values (15,'Oracle',SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID');
-
-Insert into EMS_DASHBOARD_LAST_ACCESS (DASHBOARD_ID,ACCESSED_BY,ACCESS_DATE,TENANT_ID) 
-values (16,'Oracle',SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID');
-
-Insert into EMS_DASHBOARD_LAST_ACCESS (DASHBOARD_ID,ACCESSED_BY,ACCESS_DATE,TENANT_ID) 
-values (17,'Oracle',SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID');
-
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD WHERE TENANT_ID = '&TENANT_ID' AND DASHBOARD_ID = 1;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('Enterprise Overview have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD (DASHBOARD_ID,NAME,TYPE,DESCRIPTION,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,IS_SYSTEM,APPLICATION_TYPE,ENABLE_TIME_RANGE,DELETED,TENANT_ID,SCREEN_SHOT)
+    values (1,'Enterprise Overview',0,' ',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle',1,2,0,0,'&TENANT_ID',
+    em_overview_screenshot);
+    DBMS_OUTPUT.PUT_LINE('Enterprise Overview have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD WHERE TENANT_ID = '&TENANT_ID' AND DASHBOARD_ID = 2;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('Performance Analytics: Database have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD (DASHBOARD_ID,NAME,TYPE,DESCRIPTION,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,IS_SYSTEM,APPLICATION_TYPE,ENABLE_TIME_RANGE,DELETED,TENANT_ID,SCREEN_SHOT)
+    values (2,'Performance Analytics: Database',1,'Database Performance Analytics',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle',1,2,0,0,'&TENANT_ID',
+    dbperf_screenshot);
+    DBMS_OUTPUT.PUT_LINE('Performance Analytics: Database have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD WHERE TENANT_ID = '&TENANT_ID' AND DASHBOARD_ID = 3;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('Resource Analytics: Database have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD (DASHBOARD_ID,NAME,TYPE,DESCRIPTION,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,IS_SYSTEM,APPLICATION_TYPE,ENABLE_TIME_RANGE,DELETED,TENANT_ID,SCREEN_SHOT)
+    values (3,'Resource Analytics: Database',1,'Database Resource Planning',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle',1,2,0,0,'&TENANT_ID',
+    dbhealth_screenshot);
+    DBMS_OUTPUT.PUT_LINE('Performance Analytics: Database have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD WHERE TENANT_ID = '&TENANT_ID' AND DASHBOARD_ID = 4;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('Resource Analytics: Database have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD (DASHBOARD_ID,NAME,TYPE,DESCRIPTION,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,IS_SYSTEM,APPLICATION_TYPE,ENABLE_TIME_RANGE,DELETED,TENANT_ID,SCREEN_SHOT)
+    values (4,'Performance Analytics: Middleware',1,'Analyze overhead of Garbage Collection and its impact of WebLogic performance',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle',1,2,0,0,'&TENANT_ID',
+    mwperf_screenshot);
+    DBMS_OUTPUT.PUT_LINE('Performance Analytics: Middleware have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD WHERE TENANT_ID = '&TENANT_ID' AND DASHBOARD_ID = 5;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('Host Inventory By Platform have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD (DASHBOARD_ID,NAME,TYPE,DESCRIPTION,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,IS_SYSTEM,APPLICATION_TYPE,ENABLE_TIME_RANGE,DELETED,TENANT_ID,SCREEN_SHOT)
+    values (5,'Host Inventory By Platform',0,'Shows CPU Implementation, Total CPU Cores/Sockets/Threads and Memory Size for Hosts grouped by Operating System',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle',1,2,0,0,'&TENANT_ID',
+    ta_hostbyplt_screenshot);
+    DBMS_OUTPUT.PUT_LINE('Host Inventory By Platform have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD WHERE TENANT_ID = '&TENANT_ID' AND DASHBOARD_ID = 6;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('Database Configuration and Storage By Version have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD (DASHBOARD_ID,NAME,TYPE,DESCRIPTION,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,IS_SYSTEM,APPLICATION_TYPE,ENABLE_TIME_RANGE,DELETED,TENANT_ID,SCREEN_SHOT)
+    values (6,'Database Configuration and Storage By Version',0,'Shows Total CPU Cores, Patch IDs, Tablespace Size and SGA Size for Databases grouped by their version',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle',1,2,0,0,'&TENANT_ID',
+    ta_dbcfgbyver_screenshot);
+    DBMS_OUTPUT.PUT_LINE('Database Configuration and Storage By Version have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD WHERE TENANT_ID = '&TENANT_ID' AND DASHBOARD_ID = 7;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('WebLogic Servers by JDK Versionhave  have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD (DASHBOARD_ID,NAME,TYPE,DESCRIPTION,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,IS_SYSTEM,APPLICATION_TYPE,ENABLE_TIME_RANGE,DELETED,TENANT_ID,SCREEN_SHOT)
+    values (7,'WebLogic Servers by JDK Version',0,'Shows the Java VM Vendor, Target Version and Platform for WebLogic Servers grouped by Java version',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle',1,2,0,0,'&TENANT_ID',
+    ta_wlsbyjdk_screenshot);
+    DBMS_OUTPUT.PUT_LINE('WebLogic Servers by JDK Version have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD WHERE TENANT_ID = '&TENANT_ID' AND DASHBOARD_ID = 8;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('Top 25 Databases by Resource Consumption have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD (DASHBOARD_ID,NAME,TYPE,DESCRIPTION,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,IS_SYSTEM,APPLICATION_TYPE,ENABLE_TIME_RANGE,DELETED,TENANT_ID,SCREEN_SHOT)
+    values (8,'Top 25 Databases by Resource Consumption',0,'Shows the status, Database CPU Time, CPU Utilization, Total Memory Usage and Number of Transactions per second for Top 25 Databases (by Resource Consumption)',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle',1,2,0,0,'&TENANT_ID',
+    ta_top25dbbyrc_screenshot);
+    DBMS_OUTPUT.PUT_LINE('Top 25 Databases by Resource Consumption have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD WHERE TENANT_ID = '&TENANT_ID' AND DASHBOARD_ID = 9;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('Top 25 WebLogic Servers by Heap Usage have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD (DASHBOARD_ID,NAME,TYPE,DESCRIPTION,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,IS_SYSTEM,APPLICATION_TYPE,ENABLE_TIME_RANGE,DELETED,TENANT_ID,SCREEN_SHOT)
+    values (9,'Top 25 WebLogic Servers by Heap Usage',0,'Shows the status, Heap Usage, Current Memory Pool Usage and Garbage Collection Invocation time and frequency for Top 25 WebLogic Servers (by Heap Usage)',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle',1,2,0,0,'&TENANT_ID',
+    ta_top25wlsbyheap_screenshot);
+    DBMS_OUTPUT.PUT_LINE('Top 25 WebLogic Servers by Heap Usage have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD WHERE TENANT_ID = '&TENANT_ID' AND DASHBOARD_ID = 10;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('Top 25 WebLogic Servers by Load have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD (DASHBOARD_ID,NAME,TYPE,DESCRIPTION,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,IS_SYSTEM,APPLICATION_TYPE,ENABLE_TIME_RANGE,DELETED,TENANT_ID,SCREEN_SHOT)
+    values (10,'Top 25 WebLogic Servers by Load',0,'Shows the status, CPU Usage, Active Sessions, Request Processing Time, Requests per minute and Heap Usage for Top 25 WebLogic Servers (by Load)',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle',1,2,0,0,'&TENANT_ID',
+    ta_top25wlsbyload_screenshot);
+    DBMS_OUTPUT.PUT_LINE('Top 25 WebLogic Servers by Load have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD WHERE TENANT_ID = '&TENANT_ID' AND DASHBOARD_ID = 11;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('Database Health Summary by Load have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD (DASHBOARD_ID,NAME,TYPE,DESCRIPTION,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,IS_SYSTEM,APPLICATION_TYPE,ENABLE_TIME_RANGE,DELETED,TENANT_ID,SCREEN_SHOT)
+    values (11,'Database Health Summary',1,'Database Health Summary',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle',1,2,0,0,'&TENANT_ID',
+    ita_dbhealth_screenshot);
+    DBMS_OUTPUT.PUT_LINE('Database Health Summary have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD WHERE TENANT_ID = '&TENANT_ID' AND DASHBOARD_ID = 12;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('Database Health Summary by Load have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD (DASHBOARD_ID,NAME,TYPE,DESCRIPTION,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,IS_SYSTEM,APPLICATION_TYPE,ENABLE_TIME_RANGE,DELETED,TENANT_ID,SCREEN_SHOT)
+    values (12,'WebLogic Health Summary',1,'WebLogic Health Summary',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle',1,2,0,0,'&TENANT_ID',
+    ita_wlshealth_screenshot);
+    DBMS_OUTPUT.PUT_LINE('WebLogic Health Summary have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD WHERE TENANT_ID = '&TENANT_ID' AND DASHBOARD_ID = 13;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('Host Health Summary by Load have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD (DASHBOARD_ID,NAME,TYPE,DESCRIPTION,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,IS_SYSTEM,APPLICATION_TYPE,ENABLE_TIME_RANGE,DELETED,TENANT_ID,SCREEN_SHOT)
+    values (13,'Host Health Summary',1,'Host Health Summary',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle',1,2,0,0,'&TENANT_ID',
+    ita_hosthealth_screenshot);
+    DBMS_OUTPUT.PUT_LINE('Host Health Summary have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD WHERE TENANT_ID = '&TENANT_ID' AND DASHBOARD_ID = 14;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('Application Performance Monitoring have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD (DASHBOARD_ID,NAME,TYPE,DESCRIPTION,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,IS_SYSTEM,APPLICATION_TYPE,ENABLE_TIME_RANGE,DELETED,TENANT_ID,SCREEN_SHOT)
+    values (14,'Application Performance Monitoring',1,'Monitor performance of your applications, view response times, invocation counts across all pages of your application.',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle',1,1,0,0,'&TENANT_ID',
+    apm_screenshot);
+    DBMS_OUTPUT.PUT_LINE('Application Performance Monitoring have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD WHERE TENANT_ID = '&TENANT_ID' AND DASHBOARD_ID = 15;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('Database Operations have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD (DASHBOARD_ID,NAME,TYPE,DESCRIPTION,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,IS_SYSTEM,APPLICATION_TYPE,ENABLE_TIME_RANGE,DELETED,TENANT_ID,SCREEN_SHOT)
+    values (15,'Database Operations',0,'Displays the current health of your database ecosystem',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle',1,3,1,0,'&TENANT_ID',
+    la_dboperations_screenshot);
+    DBMS_OUTPUT.PUT_LINE('Database Operations have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD WHERE TENANT_ID = '&TENANT_ID' AND DASHBOARD_ID = 16;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('Host Operations have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD (DASHBOARD_ID,NAME,TYPE,DESCRIPTION,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,IS_SYSTEM,APPLICATION_TYPE,ENABLE_TIME_RANGE,DELETED,TENANT_ID,SCREEN_SHOT)
+    values (16,'Host Operations',0,'Displays the current health of your monitored hosts',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle',1,3,1,0,'&TENANT_ID',
+    la_hostoperations_screenshot);
+    DBMS_OUTPUT.PUT_LINE('Host Operations have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD WHERE TENANT_ID = '&TENANT_ID' AND DASHBOARD_ID = 17;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('Middleware Operations have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD (DASHBOARD_ID,NAME,TYPE,DESCRIPTION,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,IS_SYSTEM,APPLICATION_TYPE,ENABLE_TIME_RANGE,DELETED,TENANT_ID,SCREEN_SHOT)
+    values (17,'Middleware Operations',0,'Displays the current health of your Oracle middleware ecosystem',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle',1,3,1,0,'&TENANT_ID',
+    la_mwoperations_screenshot);
+    DBMS_OUTPUT.PUT_LINE('Middleware Operations have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD_TILE WHERE TENANT_ID = '&TENANT_ID' AND TILE_ID = 14 AND DASHBOARD_ID = 1;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('TILE 14 have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
+    WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT)
+    values (14,1,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Top 5 WebLogic Servers',220,2,0,2,'&TENANT_ID','3026','Top 5 WebLogic Servers','Shows the status, CPU Usage, Active Sessions and Heap Usage for Top 5 WebLogic Servers','Target Analytics','/../images/func_horibargraph_24_ena.png','js/../emcsDependencies/dfcommon/images/sample-widget-histogram.png','Oracle',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),1,'emcta-visualization','/widget/visualizationWidget/js/VisualizationWidget.js','/widget/visualizationWidget/visualizationWidget.html','TargetAnalytics','0.1','assetRoot');
+    DBMS_OUTPUT.PUT_LINE('TILE 14 have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD_TILE WHERE TENANT_ID = '&TENANT_ID' AND TILE_ID = 15 AND DASHBOARD_ID = 1;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('TILE 15 have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
+    WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT)
+    values (15,1,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Top 5 Hosts',220,2,0,3,'&TENANT_ID','3025','Top 5 Hosts','Shows the status, CPU Utilization, Total Disk I/O per second and Memory Utilization for Top 5 Hosts','Target Analytics','/../images/func_horibargraph_24_ena.png','js/../emcsDependencies/dfcommon/images/sample-widget-histogram.png','Oracle',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),1,'emcta-visualization','/widget/visualizationWidget/js/VisualizationWidget.js','/widget/visualizationWidget/visualizationWidget.html','TargetAnalytics','0.1','assetRoot');
+    DBMS_OUTPUT.PUT_LINE('TILE 15 have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD_TILE WHERE TENANT_ID = '&TENANT_ID' AND TILE_ID = 16 AND DASHBOARD_ID = 1;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('TILE 16 have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
+    WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT)
+    values (16,1,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Top 5 Databases',220,2,0,1,'&TENANT_ID','3024','Top 5 Databases','Shows the status, Database CPU Time, I/O Megabytes per second and Total Memory Usage for Top 5 Databases','Target Analytics','/../images/func_horibargraph_24_ena.png','js/../emcsDependencies/dfcommon/images/sample-widget-histogram.png','Oracle',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),1,'emcta-visualization','/widget/visualizationWidget/js/VisualizationWidget.js','/widget/visualizationWidget/visualizationWidget.html','TargetAnalytics','0.1','assetRoot');
+    DBMS_OUTPUT.PUT_LINE('TILE 16 have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD_TILE WHERE TENANT_ID = '&TENANT_ID' AND TILE_ID = 17 AND DASHBOARD_ID = 1;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('TILE 17 have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
+    WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT)
+    values (17,1,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Top 5 Application Deployments ',220,2,0,4,'&TENANT_ID','3027','Top 5 Application Deployments ','Shows the status, Requests per minute, Request Processing Time and Active Sessions for Top 5 Application Deployments','Target Analytics','/../images/func_horibargraph_24_ena.png','js/../emcsDependencies/dfcommon/images/sample-widget-histogram.png','Oracle',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),1,'emcta-visualization','/widget/visualizationWidget/js/VisualizationWidget.js','/widget/visualizationWidget/visualizationWidget.html','TargetAnalytics','0.1','assetRoot');
+    DBMS_OUTPUT.PUT_LINE('TILE 17 have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD_TILE WHERE TENANT_ID = '&TENANT_ID' AND TILE_ID = 18 AND DASHBOARD_ID = 1;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('TILE 18 have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
+    WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT)
+    values (18,1,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Targets Status',220,4,0,0,'&TENANT_ID','3028','Targets Status','Shows the distribution of targets that are up grouped by target type Categories and target types.','Target Analytics','/../images/func_horibargraph_24_ena.png','js/../emcsDependencies/dfcommon/images/sample-widget-histogram.png','Oracle',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),1,'emcta-visualization','/widget/visualizationWidget/js/VisualizationWidget.js','/widget/visualizationWidget/visualizationWidget.html','TargetAnalytics','0.1','assetRoot');
+    DBMS_OUTPUT.PUT_LINE('TILE 18 have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD_TILE WHERE TENANT_ID = '&TENANT_ID' AND TILE_ID = 2 AND DASHBOARD_ID = 2;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('TILE 2 have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
+    WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT)
+    values (2,2,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Home',220,2,0,0,'&TENANT_ID',
+    '0','Invisible Name','Invisible Description','Invisible Widget Group','Invisible icon','Invisible historgram','Oracle',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),0,'DF_V1_WIDGET_ONEPAGE','../emcsDependencies/widgets/onepage/js/onepageModel','../emcsDependencies/widgets/onepage/onepageTemplate.html','EmcitasApplications','0.1','verticalApplication.db-perf');
+    DBMS_OUTPUT.PUT_LINE('TILE 2 have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD_TILE WHERE TENANT_ID = '&TENANT_ID' AND TILE_ID = 3 AND DASHBOARD_ID = 3;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('TILE 3 have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
+    WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT)
+    values (3,3,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Home',220,2,0,0,'&TENANT_ID',
+    '0','Invisible Name','Invisible Description','Invisible Widget Group','Invisible icon','Invisible historgram','Oracle',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),0,'DF_V1_WIDGET_ONEPAGE','../emcsDependencies/widgets/onepage/js/onepageModel','../emcsDependencies/widgets/onepage/onepageTemplate.html','EmcitasApplications','0.1','verticalApplication.db-resource');
+    DBMS_OUTPUT.PUT_LINE('TILE 3 have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD_TILE WHERE TENANT_ID = '&TENANT_ID' AND TILE_ID = 4 AND DASHBOARD_ID = 4;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('TILE 4 have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
+    WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT)
+    values (4,4,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Home',220,2,0,0,'&TENANT_ID',
+    '0','Invisible Name','Invisible Description','Invisible Widget Group','Invisible icon','Invisible historgram','Oracle',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),0,'DF_V1_WIDGET_ONEPAGE','../emcsDependencies/widgets/onepage/js/onepageModel','../emcsDependencies/widgets/onepage/onepageTemplate.html','EmcitasApplications','0.1','verticalApplication.mw-perf');
+    DBMS_OUTPUT.PUT_LINE('TILE 4 have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD_TILE WHERE TENANT_ID = '&TENANT_ID' AND TILE_ID = 5 AND DASHBOARD_ID = 5;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('TILE 5 have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT)
+    values (5,5,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Host Inventory By Platform',220,2,1,0,'&TENANT_ID','3018','Host Inventory By Platform','Shows CPU Implementation, Total CPU Cores/Sockets/Threads and Memory Size for Hosts grouped by Operating System','Target Analytics','/../images/func_horibargraph_24_ena.png',null,'Oracle',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),1,'emcta-visualization','/widget/visualizationWidget/js/VisualizationWidget.js','/widget/visualizationWidget/visualizationWidget.html','TargetAnalytics','0.1','assetRoot');
+    DBMS_OUTPUT.PUT_LINE('TILE 5 have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD_TILE WHERE TENANT_ID = '&TENANT_ID' AND TILE_ID = 6 AND DASHBOARD_ID = 6;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('TILE 6 have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT)
+    values (6,6,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Database Configuration and Storage By Version',220,2,1,0,'&TENANT_ID','3020','Database Configuration and Storage By Version','Shows Total CPU Cores, Patch IDs, Tablespace Size and SGA Size for Databases grouped by their version','Target Analytics','/../images/func_horibargraph_24_ena.png',null,'Oracle',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),1,'emcta-visualization','/widget/visualizationWidget/js/VisualizationWidget.js','/widget/visualizationWidget/visualizationWidget.html','TargetAnalytics','0.1','assetRoot');
+    DBMS_OUTPUT.PUT_LINE('TILE 6 have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD_TILE WHERE TENANT_ID = '&TENANT_ID' AND TILE_ID = 7 AND DASHBOARD_ID = 7;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('TILE 7 have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT)
+    values (7,7,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','WebLogic Servers by JDK Version',220,2,1,0,'&TENANT_ID','3023','WebLogic Servers by JDK Version','Shows the Java VM Vendor, Target Version and Platform for WebLogic Servers grouped by Java version','Target Analytics','/../images/func_horibargraph_24_ena.png',null,'Oracle',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),1,'emcta-visualization','/widget/visualizationWidget/js/VisualizationWidget.js','/widget/visualizationWidget/visualizationWidget.html','TargetAnalytics','0.1','assetRoot');
+    DBMS_OUTPUT.PUT_LINE('TILE 7 have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD_TILE WHERE TENANT_ID = '&TENANT_ID' AND TILE_ID = 8 AND DASHBOARD_ID = 8;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('TILE 8 have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT)
+    values (8,8,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Top 25 Databases by Resource Consumption',220,2,1,0,'&TENANT_ID','3019','Top 25 Databases by Resource Consumption','Shows the status, Database CPU Time, CPU Utilization, Total Memory Usage and Number of Transactions per second for Top 25 Databases (by Resource Consumption)','Target Analytics','/../images/func_horibargraph_24_ena.png',null,'Oracle',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),1,'emcta-visualization','/widget/visualizationWidget/js/VisualizationWidget.js','/widget/visualizationWidget/visualizationWidget.html','TargetAnalytics','0.1','assetRoot');
+    DBMS_OUTPUT.PUT_LINE('TILE 8 have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD_TILE WHERE TENANT_ID = '&TENANT_ID' AND TILE_ID = 9 AND DASHBOARD_ID = 9;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('TILE 9 have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT)
+    values (9,9,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Top 25 WebLogic Servers by Heap Usage',220,2,1,0,'&TENANT_ID','3021','Top 25 WebLogic Servers by Heap Usage','Shows the status, Heap Usage, Current Memory Pool Usage and Garbage Collection Invocation time and frequency for Top 25 WebLogic Servers (by Heap Usage)','Target Analytics','/../images/func_horibargraph_24_ena.png',null,'Oracle',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),1,'emcta-visualization','/widget/visualizationWidget/js/VisualizationWidget.js','/widget/visualizationWidget/visualizationWidget.html','TargetAnalytics','0.1','assetRoot');
+    DBMS_OUTPUT.PUT_LINE('TILE 9 have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD_TILE WHERE TENANT_ID = '&TENANT_ID' AND TILE_ID = 10 AND DASHBOARD_ID = 10;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('TILE 10 have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT)
+    values (10,10,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Top 25 WebLogic Servers by Load',220,2,1,0,'&TENANT_ID','3022','Top 25 WebLogic Servers by Load','Shows the status, CPU Usage, Active Sessions, Request Processing Time, Requests per minute and Heap Usage for Top 25 WebLogic Servers (by Load)','Target Analytics','/../images/func_horibargraph_24_ena.png',null,'Oracle',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),1,'emcta-visualization','/widget/visualizationWidget/js/VisualizationWidget.js','/widget/visualizationWidget/visualizationWidget.html','TargetAnalytics','0.1','assetRoot');
+    DBMS_OUTPUT.PUT_LINE('TILE 10 have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD_TILE WHERE TENANT_ID = '&TENANT_ID' AND TILE_ID = 11 AND DASHBOARD_ID = 11;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('TILE 11 have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
+    WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT)
+    values (11,11,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Home',220,2,0,0,'&TENANT_ID',
+    '0','Invisible Name','Invisible Description','Invisible Widget Group','Invisible icon','Invisible historgram','Oracle',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),0,'DF_V1_WIDGET_ONEPAGE','../emcsDependencies/widgets/onepage/js/onepageModel','../emcsDependencies/widgets/onepage/onepageTemplate.html','EmcitasApplications','0.1','ita-dashboard');
+    DBMS_OUTPUT.PUT_LINE('TILE 11 have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD_TILE WHERE TENANT_ID = '&TENANT_ID' AND TILE_ID = 12 AND DASHBOARD_ID = 12;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('TILE 12 have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
+    WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT)
+    values (12,12,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Home',220,2,0,0,'&TENANT_ID',
+    '0','Invisible Name','Invisible Description','Invisible Widget Group','Invisible icon','Invisible historgram','Oracle',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),0,'DF_V1_WIDGET_ONEPAGE','../emcsDependencies/widgets/onepage/js/onepageModel','../emcsDependencies/widgets/onepage/onepageTemplate.html','EmcitasApplications','0.1','ita-dashboard');
+    DBMS_OUTPUT.PUT_LINE('TILE 12 have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD_TILE WHERE TENANT_ID = '&TENANT_ID' AND TILE_ID = 13 AND DASHBOARD_ID = 13;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('TILE 13 have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
+    WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT)
+    values (13,13,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Home',220,2,0,0,'&TENANT_ID',
+    '0','Invisible Name','Invisible Description','Invisible Widget Group','Invisible icon','Invisible historgram','Oracle',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),0,'DF_V1_WIDGET_ONEPAGE','../emcsDependencies/widgets/onepage/js/onepageModel','../emcsDependencies/widgets/onepage/onepageTemplate.html','EmcitasApplications','0.1','ita-dashboard');
+    DBMS_OUTPUT.PUT_LINE('TILE 13 have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD_TILE WHERE TENANT_ID = '&TENANT_ID' AND TILE_ID = 1 AND DASHBOARD_ID = 14;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('TILE 1 have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
+    WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT)
+    values (1,14,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Home',220,2,0,0,'&TENANT_ID',
+    '0','Invisible Name','Invisible Description','Invisible Widget Group','Invisible icon','Invisible historgram','Oracle',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),0,'DF_V1_WIDGET_ONEPAGE','../emcsDependencies/widgets/onepage/js/onepageModel','../emcsDependencies/widgets/onepage/onepageTemplate.html','ApmUI','0.1','home');
+    DBMS_OUTPUT.PUT_LINE('TILE 1 have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD_TILE WHERE TENANT_ID = '&TENANT_ID' AND TILE_ID = 19 AND DASHBOARD_ID = 15;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('TILE 19 have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
+    WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT)
+    values (19,15,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Database Log Trends',220,4,0,0,'&TENANT_ID','2002','Database Log Trends','Time-based histogram of all log entries from Database targets.','Log Analytics',null,'js/../emcsDependencies/dfcommon/images/sample-widget-histogram.png','ORACLE',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),1,'LA_WIDGET_HISTOGRAM','/js/viewmodel/search/results/loganSearchChartsViewModel.js','/html/search/widgets/loganHistogram.html','LoganService','0.1','assetRoot');
+    DBMS_OUTPUT.PUT_LINE('TILE 19 have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD_TILE WHERE TENANT_ID = '&TENANT_ID' AND TILE_ID = 20 AND DASHBOARD_ID = 15;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('TILE 20 have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
+    WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT)
+    values (20,15,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Database Critical Incidents by Target Type',220,1,0,1,'&TENANT_ID','2016','Database Critical Incidents by Target Type','Database critical errors based on Error ID grouped by by target type','Log Analytics',null,'js/../emcsDependencies/dfcommon/images/sample-widget-histogram.png','ORACLE',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),1,'LA_WIDGET_BAR','/js/viewmodel/search/visualization/loganVisStatsViewModel.js','/html/search/widgets/loganBarChart.html','LoganService','0.1','assetRoot');
+    DBMS_OUTPUT.PUT_LINE('TILE 20 have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD_TILE WHERE TENANT_ID = '&TENANT_ID' AND TILE_ID = 21 AND DASHBOARD_ID = 15;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('TILE 21 have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
+    WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT)
+    values (21,15,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Top Database Targets with Log Errors',220,2,0,2,'&TENANT_ID','2005','Top Database Targets with Log Errors','Top 10 Database targets that have the most log entries with ERROR or SEVERE severity.','Log Analytics',null,'js/../emcsDependencies/dfcommon/images/sample-widget-histogram.png','ORACLE',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),1,'LA_WIDGET_PIE','/js/viewmodel/search/visualization/loganVisStatsViewModel.js','/html/search/widgets/loganPieChart.html','LoganService','0.1','assetRoot');
+    DBMS_OUTPUT.PUT_LINE('TILE 21 have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD_TILE WHERE TENANT_ID = '&TENANT_ID' AND TILE_ID = 22 AND DASHBOARD_ID = 15;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('TILE 22 have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
+    WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT)
+    values (22,15,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Database Top Errors',220,1,0,3,'&TENANT_ID','2015','Database Top Errors','Top 10 Database Errors that have recently occurred.','Log Analytics',null,'js/../emcsDependencies/dfcommon/images/sample-widget-histogram.png','ORACLE',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),1,'LA_WIDGET_BAR','/js/viewmodel/search/visualization/loganVisStatsViewModel.js','/html/search/widgets/loganBarChart.html','LoganService','0.1','assetRoot');
+    DBMS_OUTPUT.PUT_LINE('TILE 22 have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD_TILE WHERE TENANT_ID = '&TENANT_ID' AND TILE_ID = 23 AND DASHBOARD_ID = 16;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('TILE 23 have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
+    WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT)
+    values (23,16,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Top SUDO Users',220,1,0,3,'&TENANT_ID','2022','Top SUDO Users','Top 10 recent users initiating SUDO requests.','Log Analytics',null,'js/../emcsDependencies/dfcommon/images/sample-widget-histogram.png','ORACLE',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),1,'LA_WIDGET_PIE','/js/viewmodel/search/visualization/loganVisStatsViewModel.js','/html/search/widgets/loganPieChart.html','LoganService','0.1','assetRoot');
+    DBMS_OUTPUT.PUT_LINE('TILE 23 have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD_TILE WHERE TENANT_ID = '&TENANT_ID' AND TILE_ID = 24 AND DASHBOARD_ID = 16;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('TILE 24 have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
+    WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT)
+    values (24,16,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Top Host Log Sources',220,1,0,1,'&TENANT_ID','2020','Top Host Log Sources','Top 10 Log Sources for Host Target Type by number of log entries','Log Analytics',null,'js/../emcsDependencies/dfcommon/images/sample-widget-histogram.png','ORACLE',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),1,'LA_WIDGET_BAR','/js/viewmodel/search/visualization/loganVisStatsViewModel.js','/html/search/widgets/loganBarChart.html','LoganService','0.1','assetRoot');
+    DBMS_OUTPUT.PUT_LINE('TILE 24 have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD_TILE WHERE TENANT_ID = '&TENANT_ID' AND TILE_ID = 25 AND DASHBOARD_ID = 16;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('TILE 24 have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
+    WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT)
+    values (25,16,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Host Logs Trend',220,4,0,0,'&TENANT_ID','2004','Host Logs Trend','Time-based histogram of all log entries from Host targets','Log Analytics',null,'js/../emcsDependencies/dfcommon/images/sample-widget-histogram.png','ORACLE',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),1,'LA_WIDGET_HISTOGRAM','/js/viewmodel/search/results/loganSearchChartsViewModel.js','/html/search/widgets/loganHistogram.html','LoganService','0.1','assetRoot');
+    DBMS_OUTPUT.PUT_LINE('TILE 25 have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD_TILE WHERE TENANT_ID = '&TENANT_ID' AND TILE_ID = 26 AND DASHBOARD_ID = 16;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('TILE 24 have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
+    WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT)
+    values (26,16,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Top Host Log Entries by Service',220,2,0,2,'&TENANT_ID','2026','Top Host Log Entries by Service','Distribution of log entries across all monitored hosts by service','Log Analytics',null,'js/../emcsDependencies/dfcommon/images/sample-widget-histogram.png','Oracle',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),1,'LA_WIDGET_PIE','/js/viewmodel/search/visualization/loganVisStatsViewModel.js','/html/search/widgets/loganPieChart.html','LoganService','0.1','assetRoot');
+    DBMS_OUTPUT.PUT_LINE('TILE 26 have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD_TILE WHERE TENANT_ID = '&TENANT_ID' AND TILE_ID = 27 AND DASHBOARD_ID = 17;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('TILE 27 have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
+     WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT)
+    values (27,17,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Web Server Top Accessed Pages',220,1,0,3,'&TENANT_ID','2007','Web Server Top Accessed Pages','Top 10 recently accessed web pages in Middleware access logs.','Log Analytics',null,'js/../emcsDependencies/dfcommon/images/sample-widget-histogram.png','ORACLE',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),1,'LA_WIDGET_BAR','/js/viewmodel/search/visualization/loganVisStatsViewModel.js','/html/search/widgets/loganBarChart.html','LoganService','0.1','assetRoot');
+    DBMS_OUTPUT.PUT_LINE('TILE 27 have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD_TILE WHERE TENANT_ID = '&TENANT_ID' AND TILE_ID = 28 AND DASHBOARD_ID = 17;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('TILE 28 have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
+    WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT)
+    values (28,17,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Top Middleware Error Codes',220,1,0,1,'&TENANT_ID','2010','Top Middleware Error Codes','Top 10 most common recent Middleware errors codes (such as BEA-XXXXXX).','Log Analytics',null,'js/../emcsDependencies/dfcommon/images/sample-widget-histogram.png','ORACLE',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),1,'LA_WIDGET_PIE','/js/viewmodel/search/visualization/loganVisStatsViewModel.js','/html/search/widgets/loganPieChart.html','LoganService','0.1','assetRoot');
+    DBMS_OUTPUT.PUT_LINE('TILE 28 have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD_TILE WHERE TENANT_ID = '&TENANT_ID' AND TILE_ID = 29 AND DASHBOARD_ID = 17;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('TILE 29 have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
+    WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT)
+    values (29,17,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Middleware Logs Trend',220,4,0,0,'&TENANT_ID','2006','Middleware Logs Trend','Time-based histogram of all log entries from Middleware targets','Log Analytics',null,'js/../emcsDependencies/dfcommon/images/sample-widget-histogram.png','ORACLE',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),1,'LA_WIDGET_HISTOGRAM','/js/viewmodel/search/results/loganSearchChartsViewModel.js','/html/search/widgets/loganHistogram.html','LoganService','0.1','assetRoot');
+    DBMS_OUTPUT.PUT_LINE('TILE 29 have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD_TILE WHERE TENANT_ID = '&TENANT_ID' AND TILE_ID = 30 AND DASHBOARD_ID = 17;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('TILE 30 have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
+    WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT)
+    values (30,17,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Top Middleware Targets with Errors',220,2,0,2,'&TENANT_ID','2012','Top Middleware Targets with Errors','Top 10 Middleware targets that have the most log entries with ERROR or SEVERE severity.','Log Analytics',null,'js/../emcsDependencies/dfcommon/images/sample-widget-histogram.png','ORACLE',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),1,'LA_WIDGET_PIE','/js/viewmodel/search/visualization/loganVisStatsViewModel.js','/html/search/widgets/loganPieChart.html','LoganService','0.1','assetRoot');
+    DBMS_OUTPUT.PUT_LINE('TILE 30 have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD_LAST_ACCESS WHERE TENANT_ID = '&TENANT_ID' AND DASHBOARD_ID = 1;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('Dashboard 1 Last Access have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD_LAST_ACCESS (DASHBOARD_ID,ACCESSED_BY,ACCESS_DATE,TENANT_ID)
+    values (1,'Oracle',SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID');
+    DBMS_OUTPUT.PUT_LINE('Dashboard 1 Last Access have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD_LAST_ACCESS WHERE TENANT_ID = '&TENANT_ID' AND DASHBOARD_ID = 2;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('Dashboard 2 Last Access have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD_LAST_ACCESS (DASHBOARD_ID,ACCESSED_BY,ACCESS_DATE,TENANT_ID)
+    values (2,'Oracle',SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID');
+    DBMS_OUTPUT.PUT_LINE('Dashboard 2 Last Access have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD_LAST_ACCESS WHERE TENANT_ID = '&TENANT_ID' AND DASHBOARD_ID = 3;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('Dashboard 3 Last Access have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD_LAST_ACCESS (DASHBOARD_ID,ACCESSED_BY,ACCESS_DATE,TENANT_ID)
+    values (3,'Oracle',SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID');
+    DBMS_OUTPUT.PUT_LINE('Dashboard 3 Last Access have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD_LAST_ACCESS WHERE TENANT_ID = '&TENANT_ID' AND DASHBOARD_ID = 4;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('Dashboard 4 Last Access have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD_LAST_ACCESS (DASHBOARD_ID,ACCESSED_BY,ACCESS_DATE,TENANT_ID)
+    values (4,'Oracle',SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID');
+    DBMS_OUTPUT.PUT_LINE('Dashboard 4 Last Access have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD_LAST_ACCESS WHERE TENANT_ID = '&TENANT_ID' AND DASHBOARD_ID = 5;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('Dashboard 4 Last Access have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD_LAST_ACCESS (DASHBOARD_ID,ACCESSED_BY,ACCESS_DATE,TENANT_ID)
+    values (5,'Oracle',SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID');
+    DBMS_OUTPUT.PUT_LINE('Dashboard 5 Last Access have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD_LAST_ACCESS WHERE TENANT_ID = '&TENANT_ID' AND DASHBOARD_ID = 6;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('Dashboard 6 Last Access have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD_LAST_ACCESS (DASHBOARD_ID,ACCESSED_BY,ACCESS_DATE,TENANT_ID)
+    values (6,'Oracle',SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID');
+    DBMS_OUTPUT.PUT_LINE('Dashboard 6 Last Access have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD_LAST_ACCESS WHERE TENANT_ID = '&TENANT_ID' AND DASHBOARD_ID = 7;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('Dashboard 7 Last Access have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD_LAST_ACCESS (DASHBOARD_ID,ACCESSED_BY,ACCESS_DATE,TENANT_ID)
+    values (7,'Oracle',SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID');
+    DBMS_OUTPUT.PUT_LINE('Dashboard 7 Last Access have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD_LAST_ACCESS WHERE TENANT_ID = '&TENANT_ID' AND DASHBOARD_ID = 8;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('Dashboard 8 Last Access have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD_LAST_ACCESS (DASHBOARD_ID,ACCESSED_BY,ACCESS_DATE,TENANT_ID)
+    values (8,'Oracle',SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID');
+    DBMS_OUTPUT.PUT_LINE('Dashboard 8 Last Access have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD_LAST_ACCESS WHERE TENANT_ID = '&TENANT_ID' AND DASHBOARD_ID = 9;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('Dashboard 9 Last Access have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD_LAST_ACCESS (DASHBOARD_ID,ACCESSED_BY,ACCESS_DATE,TENANT_ID)
+    values (9,'Oracle',SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID');
+    DBMS_OUTPUT.PUT_LINE('Dashboard 9 Last Access have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD_LAST_ACCESS WHERE TENANT_ID = '&TENANT_ID' AND DASHBOARD_ID = 10;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('Dashboard 10 Last Access have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD_LAST_ACCESS (DASHBOARD_ID,ACCESSED_BY,ACCESS_DATE,TENANT_ID)
+    values (10,'Oracle',SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID');
+    DBMS_OUTPUT.PUT_LINE('Dashboard 10 Last Access have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD_LAST_ACCESS WHERE TENANT_ID = '&TENANT_ID' AND DASHBOARD_ID = 11;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('Dashboard 11 Last Access have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD_LAST_ACCESS (DASHBOARD_ID,ACCESSED_BY,ACCESS_DATE,TENANT_ID)
+    values (11,'Oracle',SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID');
+    DBMS_OUTPUT.PUT_LINE('Dashboard 11 Last Access have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD_LAST_ACCESS WHERE TENANT_ID = '&TENANT_ID' AND DASHBOARD_ID = 12;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('Dashboard 12 Last Access have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD_LAST_ACCESS (DASHBOARD_ID,ACCESSED_BY,ACCESS_DATE,TENANT_ID)
+    values (12,'Oracle',SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID');
+    DBMS_OUTPUT.PUT_LINE('Dashboard 12 Last Access have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD_LAST_ACCESS WHERE TENANT_ID = '&TENANT_ID' AND DASHBOARD_ID = 13;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('Dashboard 13 Last Access have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD_LAST_ACCESS (DASHBOARD_ID,ACCESSED_BY,ACCESS_DATE,TENANT_ID)
+    values (13,'Oracle',SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID');
+    DBMS_OUTPUT.PUT_LINE('Dashboard 13 Last Access have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD_LAST_ACCESS WHERE TENANT_ID = '&TENANT_ID' AND DASHBOARD_ID = 14;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('Dashboard 14 Last Access have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD_LAST_ACCESS (DASHBOARD_ID,ACCESSED_BY,ACCESS_DATE,TENANT_ID)
+    values (14,'Oracle',SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID');
+    DBMS_OUTPUT.PUT_LINE('Dashboard 14 Last Access have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD_LAST_ACCESS WHERE TENANT_ID = '&TENANT_ID' AND DASHBOARD_ID = 15;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('Dashboard 15 Last Access have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD_LAST_ACCESS (DASHBOARD_ID,ACCESSED_BY,ACCESS_DATE,TENANT_ID)
+    values (15,'Oracle',SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID');
+    DBMS_OUTPUT.PUT_LINE('Dashboard 15 Last Access have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD_LAST_ACCESS WHERE TENANT_ID = '&TENANT_ID' AND DASHBOARD_ID = 16;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('Dashboard 16 Last Access have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD_LAST_ACCESS (DASHBOARD_ID,ACCESSED_BY,ACCESS_DATE,TENANT_ID)
+    values (16,'Oracle',SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID');
+    DBMS_OUTPUT.PUT_LINE('Dashboard 16 Last Access have been added successfully.For '||'&TENANT_ID');
+END IF;
+
+
+
+SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD_LAST_ACCESS WHERE TENANT_ID = '&TENANT_ID' AND DASHBOARD_ID = 17;
+IF V_COUNT > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('Dashboard 17 Last Access have been added before, no need to add again.For '||'&TENANT_ID');
+ELSE
+    Insert into EMS_DASHBOARD_LAST_ACCESS (DASHBOARD_ID,ACCESSED_BY,ACCESS_DATE,TENANT_ID)
+    values (17,'Oracle',SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID');
+    DBMS_OUTPUT.PUT_LINE('Dashboard 17 Last Access have been added successfully.For '||'&TENANT_ID');
+END IF;
+COMMIT;
+EXCEPTION
+WHEN OTHERS THEN
+  ROLLBACK;
+  DBMS_OUTPUT.PUT_LINE('>>>DF DML ERROR<<<');
+  DBMS_OUTPUT.PUT_LINE('Failed to update Screenshot of some TA OOB widget according to EMCPDF-2411 due to '||SQLERRM);
+  RAISE;
 END;
 /
