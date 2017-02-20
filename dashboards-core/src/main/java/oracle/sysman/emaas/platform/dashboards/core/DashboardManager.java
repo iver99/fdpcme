@@ -1101,9 +1101,9 @@ public class DashboardManager
 				EmsDashboard emsd=dsf.getEmsDashboardById(dupId);
 				ed.setScreenShot(emsd.getScreenShot());
 			}
-			String dbdName = dbd.getName().replace("&amp;", "&");
+			String dbdName = (dbd.getName() !=null? dbd.getName().replace("&amp;", "&"):dbd.getName());
 			ed.setName(dbdName);
-			String dbdDes = dbd.getDescription().replace("&amp;", "&");
+			String dbdDes = (dbd.getDescription() !=null? dbd.getDescription().replace("&amp;", "&"):dbd.getDescription());
 			ed.setDescription(dbdDes);
 			dsf.persistEmsDashboard(ed);
 			updateLastAccessDate(ed.getDashboardId(), tenantId);
