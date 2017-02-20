@@ -75,7 +75,7 @@ dependencies {
     testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardsui-webutils', version: "${REPO_BID}") {transitive=false}
     testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'omc-ui-framework-webutils', version:"${REPO_BID}") {transitive=false}
 	testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'omc-ui-framework-web', version:"${REPO_BID}") {transitive=false}
-    testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-sdk', version:"${REPO_BID}") {transitive=false}
+    testConfig(group: 'com.oracle.emaas.emcpdf', name: 'dashboards-sdk', version:"1.0.0-feb20+") {transitive=false}
     
     testConfig(group: 'com.oracle.emaas.emcpsrvs.sdk', name:'emaas-platform-tenant-sdk', version:'2.0.+') { transitive = false }
     testConfig(group: 'com.oracle.emaas.emcpsm', name: 'registry-lookup-client', version: emcpsmRegLookupClientVer){ transitive = false }
@@ -108,6 +108,7 @@ dependencies {
     testConfig(group: 'org.apache.httpcomponents', name:'httpmime', version:'4.3.1') { transitive = false }
     testConfig(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1')  { transitive = false }
     testConfig(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1')  { transitive = false }
+    testConfig(group: 'com.oracle.emaas.emcpsf.sdk', name:'security-client', version:'1.+')  { transitive = false }
 }
 
 
@@ -178,6 +179,9 @@ task DEVTest(type:EMTest,dependsOn: DEVTest_ws){
 	include "oracle/sysman/emaas/platform/emcpdf/cache/tool/*.class"
 	include "oracle/sysman/emaas/platform/emcpdf/cache/util/*.class"
 	include "oracle/sysman/emaas/platform/uifwk/nls/filter/NLSFilterTest.class"
+        include "oracle/sysman/emaas/platform/uifwk/bootstrap/HtmlBootstrapJsUtilTest.class"
+        include "oracle/sysman/emaas/platform/uifwk/util/DataAccessUtilTest.class"
+        include "oracle/sysman/emaas/platform/uifwk/util/RegistryLookupUtilTest.class"
 	
 	useRestAssured=true
 	ext.set("testType", "unit")
@@ -199,6 +203,7 @@ task DEVUiWebTest(type:EMTest,dependsOn: DEVUiTest){
 	include "oracle/sysman/emaas/platform/dashboards/ui/web/*.class"
 	include "oracle/sysman/emaas/platform/dashboards/ui/web/gzip/*.class"
 	include "oracle/sysman/emaas/platform/dashboards/ui/web/context/*.class"
+	include "oracle/sysman/emaas/platform/dashboards/ui/web/additionaldata/*.class"
 
 }
 

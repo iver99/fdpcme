@@ -90,8 +90,11 @@ define(['knockout',
                 }
                 else {
                     if (newDashboard.tiles() && newDashboard.tiles().length > 0) {
-                        ssu.getBase64ScreenShot($b.findEl('.tiles-wrapper'), 314, 165, 0.8, function(data) {
+                        var elem = $b.findEl('.tiles-wrapper');
+                        var clone = Builder.createScreenshotElementClone(elem);
+                        ssu.getBase64ScreenShot(clone, 314, 165, 0.8, function(data) {
                             newDashboard.screenShot = data;
+                            Builder.removeScreenshotElementClone(clone);
                             self.saveDuplicatedDashboardToServer(newDashboard);
                         });
                     }

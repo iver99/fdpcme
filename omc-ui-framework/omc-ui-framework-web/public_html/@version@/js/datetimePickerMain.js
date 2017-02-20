@@ -6,7 +6,7 @@
 requirejs.config({
     bundles: ((window.DEV_MODE !==null && typeof window.DEV_MODE ==="object") ||
                 (window.gradleDevMode !==null && typeof window.gradleDevMode ==="boolean")) ? undefined : {
-        'uifwk/js/uifwk-partition': 
+        'uifwk/@version@/js/uifwk-impl-partition-cached': 
             [
             'uifwk/js/util/ajax-util',
             'uifwk/js/util/df-util',
@@ -212,7 +212,10 @@ require(['ojs/ojcore',
                             self.start(self.dateTimeConverter1.format(appliedStart));
                             self.end(self.dateTimeConverter1.format(appliedEnd));
                         }
-                        var eles = $('div').filter(function(){return this.id.match(/tfInfo_.*\d$/);});
+                        var eles = $('span').filter(function() {return this.id.match(/tfInfoIndicator_.*\d$/);});
+                        $(eles[0]).click();
+                        $(eles[0]).click();
+                        eles = $('div').filter(function(){return this.id.match(/tfInfo_.*\d$/);});
                         self.filterInfo($(eles[0]).find("span").text());
                         self.generateData(start, end);
                     },
@@ -239,9 +242,12 @@ require(['ojs/ojcore',
                             self.start3(self.dateTimeConverter1.format(appliedStart));
                             self.end3(self.dateTimeConverter1.format(appliedEnd));
                         }
-                        var eles = $('div').filter(function(){return this.id.match(/tfInfo_.*\d$/);});
-                        console.log($(eles[1]).find("span").text());
-                        self.filterInfo3($(eles[1]).find("span").text());
+                        var eles = $('span').filter(function() {return this.id.match(/tfInfoIndicator_.*\d$/);});
+                        $(eles[0]).click();
+                        $(eles[0]).click();
+                        eles = $('div').filter(function(){return this.id.match(/tfInfo_.*\d$/);});
+                        console.log($(eles[0]).find("span").text());
+                        self.filterInfo3($(eles[0]).find("span").text());
                     }
                 };
 

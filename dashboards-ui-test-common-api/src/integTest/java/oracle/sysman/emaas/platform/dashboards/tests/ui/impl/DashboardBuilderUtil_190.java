@@ -157,8 +157,10 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 		Actions builder = new Actions(driver.getWebDriver());
 		try {
 			wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(DashBoardPageId_190.RIGHTDRAWERWIDGETCSS)));
-			builder.moveToElement(driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId_190.RIGHTDRAWERWIDGETCSS))).build().perform();
-		}catch (IllegalArgumentException e){
+			builder.moveToElement(driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId_190.RIGHTDRAWERWIDGETCSS)))
+					.build().perform();
+		}
+		catch (IllegalArgumentException e) {
 			throw new NoSuchElementException("Widget for " + searchString + " is not found");
 		}
 
@@ -834,7 +836,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 
 		driver.getLogger().info(
 				"DashboardBuilderUtil.removeDashboardFromSet has found and removed the dashboard named with \"" + dashboardName
-				+ "\"");
+						+ "\"");
 
 		String closeBtnLocator = DashBoardPageId_190.DASHBOARDSETTABNAMECSS.replace("_name_", dashboardName);
 		driver.waitForElementPresent("css=" + closeBtnLocator);
@@ -936,15 +938,16 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	@Override
 	public void saveDashboard(WebDriver driver)
 	{
-	   driver.getLogger().info("DashboardBuilderUtil.save started");
-	   driver.waitForElementPresent("css=" + DashBoardPageId_190.DASHBOARDSAVECSS);
-	   WaitUtil.waitForPageFullyLoaded(driver);
-	   WebElement selectedDashboardEl = getSelectedDashboardEl(driver);
-	   WebElement saveButton = selectedDashboardEl.findElement(By.cssSelector(DashBoardPageId_190.DASHBOARDSAVECSS));
-	   saveButton.click();
-	   driver.takeScreenShot();
-	   driver.getLogger().info("save compelted");
+		driver.getLogger().info("DashboardBuilderUtil.save started");
+		driver.waitForElementPresent("css=" + DashBoardPageId_190.DASHBOARDSAVECSS);
+		WaitUtil.waitForPageFullyLoaded(driver);
+		WebElement selectedDashboardEl = getSelectedDashboardEl(driver);
+		WebElement saveButton = selectedDashboardEl.findElement(By.cssSelector(DashBoardPageId_190.DASHBOARDSAVECSS));
+		saveButton.click();
+		driver.takeScreenShot();
+		driver.getLogger().info("save compelted");
 	}
+
 	@Override
 	public void search(WebDriver driver, String searchString)
 	{
@@ -1092,7 +1095,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	{
 		driver.getLogger().info(
 				"DashboardBuilderUtil.showWidgetTitle started for widgetName=" + widgetName + ", index=" + index
-				+ ", visibility=" + visibility);
+						+ ", visibility=" + visibility);
 		Validator.notEmptyString("widgetName", widgetName);
 		Validator.equalOrLargerThan0("index", index);
 
@@ -1286,7 +1289,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	{
 		driver.getLogger().info(
 				"DashboardBuilderUtil.verifyDashboard started for name=\"" + dashboardName + "\", description=\"" + description
-				+ "\", showTimeSelector=\"" + showTimeSelector + "\"");
+						+ "\", showTimeSelector=\"" + showTimeSelector + "\"");
 		Validator.notEmptyString("dashboardName", dashboardName);
 
 		driver.waitForElementPresent(DashBoardPageId_190.BUILDERNAMETEXTLOCATOR);
@@ -1667,26 +1670,6 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 		return isDisplayed && isWidthValid;
 	}
 
-	private void openFiltersInRightPanel(WebDriver driver)
-	{
-		driver.getLogger().info("DashboardBuilderUtil.openFiltersInRightPanel start");
-		//click Options to open Options menu
-		WebElement selectedDashboardEl = getSelectedDashboardEl(driver);
-		WebElement editOption = selectedDashboardEl.findElement(By.cssSelector(DashBoardPageId_190.BUILDEROPTIONSMENULOCATOR));
-		editOption.click();
-		driver.takeScreenShot();
-
-		//click Options->edit to open right panel
-		driver.waitForElementPresent("css=" + DashBoardPageId_190.BUILDEROPTIONSEDITLOCATORCSS);
-		driver.click("css=" + DashBoardPageId_190.BUILDEROPTIONSEDITLOCATORCSS);
-		driver.takeScreenShot();
-
-		//click Right panel->filters
-		driver.waitForElementPresent("css=" + DashBoardPageId_190.RIGHTDRAWEREDITDBFILTERCSS);
-		driver.click("css=" + DashBoardPageId_190.RIGHTDRAWEREDITDBFILTERCSS);
-		driver.takeScreenShot();
-	}
-
 	//to open right drawer and show build dashboard
 	private void showRightDrawer(WebDriver driver, String buttonName)
 	{
@@ -1728,6 +1711,26 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 			driver.waitForElementPresent("css=" + DashBoardPageId_190.RIGHTDRAWERPANELHIDECSS);
 			driver.getLogger().info("[DashboardBuilderUtil] triggered hideRightDrawer.");
 		}
+		driver.takeScreenShot();
+	}
+
+	protected void openFiltersInRightPanel(WebDriver driver)
+	{
+		driver.getLogger().info("DashboardBuilderUtil.openFiltersInRightPanel start");
+		//click Options to open Options menu
+		WebElement selectedDashboardEl = getSelectedDashboardEl(driver);
+		WebElement editOption = selectedDashboardEl.findElement(By.cssSelector(DashBoardPageId_190.BUILDEROPTIONSMENULOCATOR));
+		editOption.click();
+		driver.takeScreenShot();
+
+		//click Options->edit to open right panel
+		driver.waitForElementPresent("css=" + DashBoardPageId_190.BUILDEROPTIONSEDITLOCATORCSS);
+		driver.click("css=" + DashBoardPageId_190.BUILDEROPTIONSEDITLOCATORCSS);
+		driver.takeScreenShot();
+
+		//click Right panel->filters
+		driver.waitForElementPresent("css=" + DashBoardPageId_190.RIGHTDRAWEREDITDBFILTERCSS);
+		driver.click("css=" + DashBoardPageId_190.RIGHTDRAWEREDITDBFILTERCSS);
 		driver.takeScreenShot();
 	}
 }

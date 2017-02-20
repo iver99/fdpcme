@@ -493,7 +493,8 @@
                 <!-- /ko -->
             </script>
 
-            <div id="popUp-dialog" data-bind="with:selectedDashboardInst">
+            <div id="popUp-dialog">
+                <!--ko with: selectedDashboardInst-->
                 <!--ko if: $data.type === 'included'-->
                 <!-- delete dilog start -->
                 <div style="display:none" id="delete-dashboard"
@@ -628,6 +629,7 @@
                 </div>
                 <!-- set as home confirm dilog end -->
                 <!--/ko-->
+                <!--/ko-->            
             </div>
 
             <div class="df-right-panel no-print" data-bind="stopDataBinding:isDashboardSet ? isOobDashboardset() : ($b.dashboard.systemDashboard&&$b.dashboard.systemDashboard()),style:{top:isDashboardSet() ?'100px':'91px'},visible:!rightPanelControl.completelyHidden()">
@@ -680,6 +682,7 @@
                 <div class="dbd-left-panel no-print fit-size"
                         data-bind="stopDataBinding: isDashboardSet ? isOobDashboardset() : ($b.dashboard.systemDashboard&&$b.dashboard.systemDashboard()),css: {'dbd-left-panel-show' : rightPanelControl.showRightPanel(), 'dbd-left-panel-hide' : !rightPanelControl.showRightPanel()},
                                    style: {right: rightPanelControl.scrollbarWidth + 'px'}">
+                    <!-- ko if: rightPanelControl.initializeRightPanel() === true -->
                     <div class="dbd-right-panel-contents">
                         <!-- ko if: $data.isDashboardSet -->
                         <div class="dbd-right-panel-editdashboardset" data-bind="visible:rightPanelControl.rightPanelIcon()=='pencil'&&$data.rightPanelControl.editPanelContent()=='editset'">
@@ -1081,7 +1084,8 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                    <!-- /ko -->
+                </div> 
             </div>
 
         </div>

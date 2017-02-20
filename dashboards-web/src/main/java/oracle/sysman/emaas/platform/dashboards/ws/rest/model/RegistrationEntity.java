@@ -627,8 +627,10 @@ public class RegistrationEntity implements Serializable
 			return appSet;
 		}
 		for (String app : apps) {
-			// in case any bundle service is subscribed, all 7 (actually 8 plus TA) services are subscribed
-			if (DashboardApplicationType.OMCSE_STRING.equals(app) ||
+			// in case any bundle service is subscribed, all 7 (actually 8 including TA) services are subscribed
+			if (DashboardApplicationType.OMC_STRING.equals(app) ||
+					DashboardApplicationType.OSMACC_STRING.equals(app) ||
+					DashboardApplicationType.OMCSE_STRING.equals(app) ||
 					DashboardApplicationType.OMCEE_STRING.equals(app) ||
 					DashboardApplicationType.OMCLOG_STRING.equals(app) ||
 					DashboardApplicationType.SECSE_STRING.equals(app) ||

@@ -36,7 +36,7 @@ define(['knockout',
             self.toolBarGuid = Builder.getGuid();
             self.isUnderSet = ko.dataFor($("#dbd-set-tabs")[0]).isDashboardSet();
             self.isInOOBDashboardSet=ko.dataFor($("#dbd-set-tabs")[0]).isOobDashboardset();
-            self.duplicateInSet = ko.observable(false);
+            self.duplicateInSet = ko.observable(false); 
             var zdtUtil = new zdtUtilModel();
             self.zdtStatus = ko.observable(false);
             self.notZdtStatus = ko.observable(true);
@@ -424,10 +424,15 @@ define(['knockout',
                 Builder.rightPanelChange(changeEvent);
             };
             
+            self.notifyBindingPopupDialog = function () {
+                Builder.startBindingPopupDialog();
+            };
+            
             self.openDashboardDuplicateDialog = function() {
                 $('#duplicateDsbDialog').ojDialog('open');
             };
             self.openDashboardDeleteConfirmDialog = function() {
+                self.notifyBindingPopupDialog();
                 self.isDeletingDbd(true);
                 $('#delete-dashboard').ojDialog( "open" );
                 $('#delete-dashboard').focus();
@@ -637,6 +642,7 @@ define(['knockout',
             self.optionMenuItemSelect = function (event,data) {
                 var $clickTarget=data.item;
                 var clickTargetName = $clickTarget.attr('data-singledb-option');
+                self.notifyBindingPopupDialog();
                 switch (clickTargetName) {
                     case "Edit":
                         self.editDisabled() === true ? "" : self.openDashboardEditDialog();

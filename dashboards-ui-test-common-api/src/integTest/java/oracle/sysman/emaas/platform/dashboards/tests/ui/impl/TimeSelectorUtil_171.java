@@ -24,8 +24,10 @@ import java.util.regex.Pattern;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.ITimeSelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.TimeSelectorExludedDayMonth;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.TimeSelectorUIControls;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.UtilLoader;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.ITimeSelectorUtil.TimeRange;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 import org.openqa.selenium.By;
@@ -255,6 +257,20 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 	{
 		return setCustomTimeWithDateOnly(webd, 1, startDate, endDate);
 	}
+	
+	@Override
+	public String setCustomTimeWithMillisecond(WebDriver webd, int index, String startDateTime, String endDateTime)
+	{
+		Assert.assertTrue(false, "This method is not available in the current version");
+		webd.getLogger().info("Method not available in the current version");
+		return "";
+	}
+
+	@Override
+	public String setCustomTimeWithMillisecond(WebDriver webd, String startDateTime, String endDateTime)
+	{
+		return setCustomTimeWithMillisecond(webd, 1, startDateTime, endDateTime);
+	}
 
 	@Override
 	public String setFlexibleRelativeTimeRange(WebDriver webd, int index, int relTimeVal, TimeUnit relTimeUnit)
@@ -282,6 +298,20 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 	public String setFlexibleRelativeTimeRangeWithDateOnly(WebDriver webd, int relTimeVal, TimeUnit relTimeUnit)
 	{
 		return setFlexibleRelativeTimeRangeWithDateOnly(webd, 1, relTimeVal, relTimeUnit);
+	}
+	
+	@Override
+	public String setFlexibleRelativeTimeRangeWithMillisecond(WebDriver webd, int index, int relTimeVal, TimeUnit relTimeUnit)
+	{
+		Assert.assertTrue(false, "This method is not available in the current version");
+		webd.getLogger().info("Method not available in the current version");
+		return "";
+	}
+
+	@Override
+	public String setFlexibleRelativeTimeRangeWithMillisecond(WebDriver webd, int relTimeVal, TimeUnit relTimeUnit)
+	{
+		return setFlexibleRelativeTimeRangeWithMillisecond(webd, 1, relTimeVal, relTimeUnit);
 	}
 
 	/* (non-Javadoc)
@@ -568,6 +598,18 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 	public String setTimeRangeWithDateOnly(WebDriver webd, TimeRange rangeOption)
 	{
 		return setTimeRangeWithDateOnly(webd, 1, rangeOption);
+	}
+	
+	@Override
+	public String setTimeRangeWithMillisecond(WebDriver webd, int index, TimeRange rangeOption) {
+		Assert.assertTrue(false, "This method is not available in the current version");
+		webd.getLogger().info("Method not available in the current version");
+		return "";
+	}
+	
+	@Override
+	public String setTimeRangeWithMillisecond(WebDriver webd, TimeRange rangeOption) {
+		return setTimeRangeWithMillisecond(webd, 1, rangeOption);
 	}
 
 	private void clickCancleButton(WebDriver webd)

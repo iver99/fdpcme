@@ -185,7 +185,7 @@ public class TestDashboardSet_OtherFeatures extends LoginAndLogout
 
 		//add the ITA dashboard into the dashboard set
 		webd.getLogger().info("Add a ITA oob dashboard into the set");
-		DashboardBuilderUtil.addNewDashboardToSet(webd, "Categorical");
+		DashboardBuilderUtil.addNewDashboardToSet(webd, "Categorical - Basic");
 
 		//back to the home page
 		webd.getLogger().info("Back to dashboard home page");
@@ -456,7 +456,7 @@ public class TestDashboardSet_OtherFeatures extends LoginAndLogout
 
 		//add the ITA dashboard into the dashboard set
 		webd.getLogger().info("Add a ITA oob dashboard into the set");
-		DashboardBuilderUtil.addNewDashboardToSet(webd, "Categorical");
+		DashboardBuilderUtil.addNewDashboardToSet(webd, "Categorical - Basic");
 
 		//back to the home page
 		webd.getLogger().info("Back to dashboard home page");

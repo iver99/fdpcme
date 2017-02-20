@@ -25,6 +25,13 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                 window._uifwk.respectOMCEntityContext = true;
                 window._uifwk.respectOMCTimeContext = true;
             }
+            
+            self.OMCEventSourceConstants = {
+                GLOBAL_TIME_SELECTOR: 'OMC_UIFWK_TIME_SELECTOR',
+                GLOBAL_ENTITY_SELECTOR: 'OMC_UIFWK_ENTITY_SELECTOR',
+                GLOBAL_APPLICATION_SELECTOR: 'OMC_UIFWK_APPLICATION_SELECTOR',
+                GLOBAL_TOPOLOGY: 'OMC_UIFWK_TOPOLOGY'
+            };
 
             self.OMCTimeConstants = {
                 TIME_UNIT: {
@@ -43,11 +50,14 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                     LAST_2_HOUR: 'LAST_2_HOUR',
                     LAST_4_HOUR: 'LAST_4_HOUR',
                     LAST_6_HOUR: 'LAST_6_HOUR',
+                    LAST_8_HOUR: 'LAST_8_HOUR',
+                    LAST_24_HOUR: 'LAST_24_HOUR',
                     LAST_1_DAY: 'LAST_1_DAY',
                     LAST_7_DAY: 'LAST_7_DAY',
                     LAST_14_DAY: 'LAST_14_DAY',
                     LAST_30_DAY: 'LAST_30_DAY',
                     LAST_90_DAY: 'LAST_90_DAY',
+                    LAST_12_MONTH: 'LAST_12_MONTH',
                     LAST_1_YEAR: 'LAST_1_YEAR',
                     LATEST: 'LATEST',
                     CUSTOM: 'CUSTOM'
@@ -857,20 +867,12 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                 if (compositeEntity) {
                     return compositeEntity;
                 }
-                var compositeName = getIndividualContext('composite', 'compositeName');
-                if (!compositeName) {
-                    if (self.getCompositeMeId() && getIndividualContext('composite', 'compositeNeedRefresh') !== 'false') {
-                        //Fetch composite name/type
-                        queryODSEntitiesByMeIds([self.getCompositeMeId()], fetchCompositeCallback);
-                    }
-
-                }
                 var entity = new EntityObject();
-                entity['meId'] = getIndividualContext('composite', 'compositeMEID');
-                entity['displayName'] = getIndividualContext('composite', 'compositeDisplayName');
-                entity['entityName'] = getIndividualContext('composite', 'compositeName');
-                entity['entityType'] = getIndividualContext('composite', 'compositeType');
-                entity['meClass'] = getIndividualContext('composite', 'compositeClass');
+                entity['meId'] = self.getCompositeMeId();
+                entity['displayName'] = self.getCompositeDisplayName();
+                entity['entityName'] = self.getCompositeName();
+                entity['entityType'] = self.getCompositeType();
+                entity['meClass'] = self.getCompositeClass();
                 compositeEntity = entity;
 
                 //Cache the entities data

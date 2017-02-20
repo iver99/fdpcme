@@ -49,7 +49,7 @@ requirejs.config({
     },
     bundles: ((window.DEV_MODE !==null && typeof window.DEV_MODE ==="object") ||
                 (window.gradleDevMode !==null && typeof window.gradleDevMode ==="boolean")) ? undefined : {
-        'uifwk/js/uifwk-partition':
+        'uifwk/@version@/js/uifwk-impl-partition-cached':
             [
             'uifwk/js/util/ajax-util',
             'uifwk/js/util/df-util',
@@ -232,12 +232,13 @@ require(['knockout',
             Builder.initializeFromCookie();
             new Builder.DashboardDataSource().loadDashboardData(dsbId, function (kodb) {
                 dashboard = kodb;
+                var isUnderSet = ko.unwrap(dashboard.type) === "SET" ? true : false;;
                 normalMode = new Builder.NormalEditorMode();
                 tabletMode = new Builder.TabletEditorMode();
 
                 mode = Builder.isSmallMediaQuery() ? tabletMode : normalMode;
                 timeSelectorModel = new Builder.TimeSelectorModel();
-                Builder.eagerLoadDahshboardTilesAtPageLoad(dfu, ko, normalMode, tabletMode, mode, timeSelectorModel, targets);
+                Builder.eagerLoadDahshboardTilesAtPageLoad(dfu, ko, normalMode, tabletMode, mode, isUnderSet, timeSelectorModel, targets);
 
                 require(['uifwk/js/util/df-util',
                     'uifwk/js/util/logging-util',
@@ -292,7 +293,7 @@ require(['knockout',
                         if (!ko.components.isRegistered('df-oracle-dashboard-list')) {
                             ko.components.register("df-oracle-dashboard-list",{
                                 viewModel:dashboardhome_impl,
-                                template:{require:'text!/emsaasui/emcpdfui/dashboardhome.html'}
+                                template:{require:'text!/emsaasui/emcpdfui/@version@/html/dashboardhome.html'}
                             });
                         }
 
@@ -389,7 +390,6 @@ require(['knockout',
                                     var dashboardsetToolBarModel = new Builder.DashboardsetToolBarModel(dashboard);
                                     var dashboardsetPanelsModel = new Builder.DashboardsetPanelsModel(dashboardsetToolBarModel);
                                     ko.applyBindings(dashboardsetToolBarModel, document.getElementById('dbd-set-tabs'));
-                                    ko.applyBindings(dashboardsetPanelsModel, document.getElementById('popUp-dialog'));
                                     dashboardsetToolBarModel.initializeDashboardset();
                                     //Builder.attachEagerLoadedDahshboardTilesAtPageLoad();
 
@@ -408,6 +408,12 @@ require(['knockout',
                     }
                 );
 
+            }, function(e) {
+                console.log(e.errorMessage());
+                if (e.errorCode && e.errorCode() === 20001) {
+                    oj.Logger.error("Dashboard not found. Redirect to dashboard error page", true);
+                    location.href = "./error.html?invalidUrl=" + encodeURIComponent(location.href);
+                }
             });
         });
     }
