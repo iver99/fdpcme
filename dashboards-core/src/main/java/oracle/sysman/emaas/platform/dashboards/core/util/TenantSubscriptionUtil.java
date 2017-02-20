@@ -180,8 +180,8 @@ public class TenantSubscriptionUtil
 
 	public static String getTenantSubscribedServicesString(final String tenant) {
 		List<String> apps = TenantSubscriptionUtil.getTenantSubscribedServices(tenant);
-		if (apps == null || apps.isEmpty()) {
-			return null;
+		if (apps == null) {
+			apps = Collections.<String>emptyList();
 		}
 		StringBuilder sb = new StringBuilder();
 		sb.append("{\"applications\":[");

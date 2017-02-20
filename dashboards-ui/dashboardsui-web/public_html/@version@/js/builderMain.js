@@ -229,6 +229,19 @@ require(['knockout',
         var targets = ko.observable({"criteria":"{\"version\":\"1.0\",\"criteriaList\":[]}"});
         
         $(document).ready(function () {
+            dfu.getSubscribedAppsWithoutEdition(function(apps) {
+                if (apps && (!apps.applications || apps.applications.length == 0)) {
+                    oj.Logger.error("Tenant subscribes to no service. Redirect to dashboard error page", true);
+                    location.href = "./error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_NO_SUBS_MSG";
+                }
+            }, function(e) {
+                console.log(e.responseText);
+                if (e.responseJSON && e.responseJSON.errorCode == 20002) {
+                    oj.Logger.error("Tenant subscribes to no service. Redirect to dashboard error page", true);
+                    location.href = "./error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_NO_SUBS_MSG";
+                }
+            });
+
             Builder.initializeFromCookie();
             new Builder.DashboardDataSource().loadDashboardData(dsbId, function (kodb) {
                 dashboard = kodb;

@@ -126,6 +126,11 @@ define(['knockout',
                     return '/sso.static/dashboards.subscribedapps';
                 }
             };
+
+            self.getSubscribedAppsWithoutEdition = function(successCallback, errorCallback) {
+                dfu.getSubscribedAppsWithoutEdition(successCallback, errorCallback);
+            };
+
             /**
              * Discover available quick links
              * @returns {Array} quickLinks
