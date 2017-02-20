@@ -58,6 +58,7 @@ public class TableRowsSynchronizerTest {
         dashboardRowEntity.setEnableEntityFilter(1);
         dashboardRowEntity.setEnableDescription(1);
         dashboardRowEntity.setExtendedOptions("options");
+        dashboardRowEntity.setShowInHome(1);
 
         dashboardTileParamsRowEntity.setTileId("1");
         dashboardTileParamsRowEntity.setParamName("name");
@@ -69,6 +70,7 @@ public class TableRowsSynchronizerTest {
         dashboardTileParamsRowEntity.setParamValueTimestamp("2016-08-11 13:31:00");
         dashboardTileParamsRowEntity.setCreationDate("2016-08-11 13:31:00");
         dashboardTileParamsRowEntity.setLastModificationDate("2016-08-11 13:31:00");
+        dashboardTileParamsRowEntity.setDeleted(0);
 
         dashboardTileRowEntity.setTileId("1");
         dashboardTileRowEntity.setDashboardId("1");
@@ -102,6 +104,9 @@ public class TableRowsSynchronizerTest {
         dashboardTileRowEntity.setType(1L);
         dashboardTileRowEntity.setWidgetSupportTimeControl(1);
         dashboardTileRowEntity.setWidgetLinkedDashboard(1L);
+        dashboardTileRowEntity.setWidgetDeletionDate("2016-08-11 13:31:00");
+        dashboardTileRowEntity.setWidgetDeleted(0);
+        dashboardTileRowEntity.setDeleted(0);
 
         dashboardUserOptionsRowEntity.setUserName("name");
         dashboardUserOptionsRowEntity.setTenantId(1L);
@@ -112,6 +117,7 @@ public class TableRowsSynchronizerTest {
         dashboardUserOptionsRowEntity.setExtendedOptions("options");
         dashboardUserOptionsRowEntity.setCreationDate("2016-08-11 13:31:00");
         dashboardUserOptionsRowEntity.setLastModificationDate("2016-08-11 13:31:00");
+        dashboardUserOptionsRowEntity.setDeleted(0);
 
         preferenceRowEntity.setUserName("name");
         preferenceRowEntity.setPrefKey("key");
