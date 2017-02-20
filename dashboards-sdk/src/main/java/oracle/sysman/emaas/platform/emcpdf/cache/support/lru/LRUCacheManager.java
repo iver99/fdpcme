@@ -58,6 +58,7 @@ public class LRUCacheManager extends AbstractCacheManager{
         getCache(CacheConstants.CACHES_ASSET_ROOT_CACHE, CacheConfig.ASSET_ROOT_CAPACITY, CacheConfig.ASSET_ROOT_EXPIRE_TIME);
         getCache(CacheConstants.CACHES_REGISTRY_CACHE, CacheConfig.REGISTRY_CAPACITY, CacheConfig.REGISTRY_EXPIRE_TIME);
         getCache(CacheConstants.CACHES_TENANT_USER_CACHE, CacheConfig.TENANT_USER_CAPACITY, CacheConfig.TENANT_USER_EXPIRE_TIME);
+        getCache(CacheConstants.CACHES_OOB_DASHBOARD_SAVEDSEARCH_CACHE, CacheConfig.OOB_DASHBOARD_SAVEDSEARCH_CAPACITY, CacheConfig.OOB_DASHBOARD_SAVEDSEARCH_EXPIRE_TIME);
     }
 
     /**
