@@ -65,6 +65,8 @@ public class TestDashboard extends LoginAndLogout
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName, null, true),
 				"Create dashboard failed!");
 		
+		DashboardBuilderUtil.respectGCForEntity(webd);
+		/*
 		//find edit button and click it
 		WebElement editButton = webd.getWebDriver().findElement(By.xpath(PageId.DASHBOARDEDITBUTTON));	
 		Assert.assertTrue(editButton.isDisplayed(), "Edit button isn't displayed in self dashboard");
@@ -73,7 +75,7 @@ public class TestDashboard extends LoginAndLogout
 		//find the dashboard name and click it
 		WebElement dashboardName = webd.getWebDriver().findElement(By.xpath(PageId.DASHBOARDNAME));
 		Assert.assertTrue(dashboardName.isDisplayed(), "dashboardName isn't displayed in self dashboard");
-		webd.click("css="+ PageId.DASHBOARDNAME_CSS);
+		webd.click("css="+ PageId.DASHBOARDNAME_CSS);		
 		
 		//find Dashboard Filters and click it
 		WebElement dashboardFilters = webd.getWebDriver().findElement(By.xpath(PageId.DASHBOARDFILTERS));
@@ -88,10 +90,11 @@ public class TestDashboard extends LoginAndLogout
 		WebElement useGCEntities = webd.getWebDriver().findElement(By.xpath(PageId.ENABLEGCENTITYFILTER));
 		Assert.assertTrue(useGCEntities.isDisplayed(), "GC entities filter isn't displayed in self dashboard");
 		webd.click(PageId.ENABLEGCENTITYFILTER);		
+		*/
 		
 		//find "All Entities (102)" button and click it
 		WebElement entitiesBtn = webd.getWebDriver().findElement(By.xpath(PageId.ENTITYBUTTON));
-		Assert.assertTrue(entitiesBtn.isDisplayed(), "All Entities (102) button isn't displayed in self dashboard");
+		Assert.assertTrue(entitiesBtn.isDisplayed(), "'All Entities' button isn't displayed in self dashboard");
 		webd.click(PageId.ENTITYBUTTON);		
 		
 		//find Select button and click it
@@ -112,6 +115,8 @@ public class TestDashboard extends LoginAndLogout
 		webd.getLogger().info("open the created dashboard");
 		DashboardHomeUtil.selectDashboard(webd, dbName);
 		
+		DashboardBuilderUtil.showEntityFilter(webd, true);
+		/*
 		//find edit button and click it
 		WebElement editButton = webd.getWebDriver().findElement(By.xpath(PageId.DASHBOARDEDITBUTTON));		
 		Assert.assertTrue(editButton.isDisplayed(), "Edit button isn't displayed in self dashboard");
@@ -135,10 +140,11 @@ public class TestDashboard extends LoginAndLogout
 		WebElement useDbEntities = webd.getWebDriver().findElement(By.xpath(PageId.ENABLEENTITYFILTER));
 		Assert.assertTrue(useDbEntities.isDisplayed(), "Use dashboard entities isn't displayed in self dashboard");
 		webd.click(PageId.ENABLEENTITYFILTER);		
+		*/
 		
 		//find "All Entities (102)" button and click it
 		WebElement entitiesBtn = webd.getWebDriver().findElement(By.xpath(PageId.ENTITYBUTTON));
-		Assert.assertTrue(entitiesBtn.isDisplayed(), "All Entities (102) button isn't displayed in self dashboard");
+		Assert.assertTrue(entitiesBtn.isDisplayed(), "'All Entities' button isn't displayed in self dashboard");
 		webd.click(PageId.ENTITYBUTTON);	
 		
 		//find Cancel(Select) button and click it  //*[@id='emcta_tgtSel0_cancel']    //*[@id='emcta_tgtSel0_ok']
