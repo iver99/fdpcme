@@ -18,7 +18,6 @@ import java.util.concurrent.ConcurrentMap;
 public abstract class AbstractCacheManager implements ICacheManager{
     private final ConcurrentMap<String, ICache> cacheMap = new ConcurrentHashMap<>(16);
     private final Logger LOGGER= LogManager.getLogger(AbstractCacheManager.class);
-    private Timer timer=new Timer();
     /**
      * Return the cache associated with the given name.
      *

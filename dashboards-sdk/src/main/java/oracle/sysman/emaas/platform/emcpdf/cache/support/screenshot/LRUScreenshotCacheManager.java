@@ -37,8 +37,8 @@ public class LRUScreenshotCacheManager extends AbstractCacheManager{
     @Override
     public void init() {
         super.init();
-        LOGGER.info("Initialing Screenshot CacheManager....");
-        getCache(CacheConstants.CACHES_SCREENSHOT_CACHE, CacheConfig.SCREENSHOT_CAPACITY, CacheConfig.SCREENSHOT_EXPIRE_TIME);
+        /*LOGGER.info("Initialing Screenshot CacheManager....");
+        getCache(CacheConstants.CACHES_SCREENSHOT_CACHE, CacheConfig.SCREENSHOT_CAPACITY, CacheConfig.SCREENSHOT_EXPIRE_TIME);*/
     }
 
     @Override
