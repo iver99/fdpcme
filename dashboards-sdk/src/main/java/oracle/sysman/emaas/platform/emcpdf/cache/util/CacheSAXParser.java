@@ -36,26 +36,30 @@ public class CacheSAXParser extends DefaultHandler {
 
     @Override
     public void startDocument() throws SAXException {
-        LOGGER.info("…………Begin to parse cache configuration file…………\n");
+        LOGGER.info("…………Begin to parse cache configuration file…………");
     }
 
     @Override
     public void startElement(String uri, String localName, String qName,
                              Attributes attributes) throws SAXException {
-        LOGGER.info("Begin to parsing tag " + qName);
+        LOGGER.debug("Begin to parsing tag " + qName);
         if(qName.equals(ROOT_TAG))
             return;
         if(qName.equals(CACHE_GROUP_TAG)){
             cacheConfig = new CacheConfig();
+            return;
         }
         if(qName.equals(NAME_TAG)){
             currentState = NAME_STATE;
+            return;
         }
         if(qName.equals(CAPACITY_TAG)){
             currentState = CAPACITY_STATE;
+            return;
         }
         if(qName.equals(EXPIRY_TAG)){
             currentState = EXPIRY_STATE;
+            return;
         }
     }
 
@@ -73,13 +77,14 @@ public class CacheSAXParser extends DefaultHandler {
      */
     @Override
     public void endDocument() throws SAXException {
-        System.out.println("\n…………结束解析文档…………");
+        LOGGER.info("…………End to parse cache configuration file…………");
         super.endDocument();
     }
 
     @Override
     public void endElement(String uri, String localName, String qName)
             throws SAXException {
+    	LOGGER.debug("End to parse tag {}",qName);
         if(qName.equals(CACHE_GROUP_TAG)){
             CacheConfig.cacheConfigList.add(cacheConfig);
         }
@@ -91,33 +96,18 @@ public class CacheSAXParser extends DefaultHandler {
         String elementValue = new String(ch, start, length);
         switch(currentState){
             case NAME_STATE:
-                LOGGER.info("Name: "+elementValue);
                 cacheConfig.setName(elementValue);
+                currentState = 0;
                 break;
             case CAPACITY_STATE:
-                LOGGER.info("Capacity: "+elementValue);
                 cacheConfig.setCapacity(Integer.valueOf(elementValue));
+                currentState = 0;
                 break;
             case EXPIRY_STATE:
-                LOGGER.info("Expiry: "+elementValue);
                 cacheConfig.setExpiry(Long.valueOf(elementValue));
+                currentState = 0;
                 break;
 
-        }
-    }
-    public void parser(File xmlFile) throws SAXException, IOException,
-            ParserConfigurationException {
-        if (xmlFile == null) {
-            throw new IllegalArgumentException(
-                    "parameter 'xmlFile' must not null !");
-        }
-        SAXParserFactory factory = SAXParserFactory.newInstance();
-        SAXParser parser = factory.newSAXParser();
-        try {
-            parser.parse(xmlFile, this);
-        } catch (SAXException e) {
-            LOGGER.error("Cann't parse " + xmlFile.getAbsolutePath());
-            throw e;
         }
     }
 }

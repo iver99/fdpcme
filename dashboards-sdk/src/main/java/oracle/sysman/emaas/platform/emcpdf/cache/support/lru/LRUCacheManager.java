@@ -1,18 +1,20 @@
 package oracle.sysman.emaas.platform.emcpdf.cache.support.lru;
 
-import oracle.sysman.emaas.platform.emcpdf.cache.api.ICache;
-import oracle.sysman.emaas.platform.emcpdf.cache.support.AbstractCacheManager;
-import oracle.sysman.emaas.platform.emcpdf.cache.tool.CacheConfig;
-import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheSAXParser;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.xml.sax.SAXException;
+import java.io.IOException;
+import java.io.InputStream;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import java.io.File;
-import java.io.IOException;
+
+import oracle.sysman.emaas.platform.emcpdf.cache.api.ICache;
+import oracle.sysman.emaas.platform.emcpdf.cache.support.AbstractCacheManager;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.CacheConfig;
+import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheSAXParser;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.xml.sax.SAXException;
 
 /**
  * Created by chehao on 2016/12/22.
@@ -52,7 +54,9 @@ public class LRUCacheManager extends AbstractCacheManager{
         SAXParserFactory factory = SAXParserFactory.newInstance();
         try {
             SAXParser parser = factory.newSAXParser();
-            File f = new File("cache-config.xml");
+            InputStream f = LRUCacheManager.class.getClassLoader().getResourceAsStream("cache-config.xml");
+//            InputStream f2 = LRUCacheManager.class.getClassLoader().getResourceAsStream("/cache-config.xml");
+			
             CacheSAXParser dh = new CacheSAXParser();
             parser.parse(f, dh);
         } catch (ParserConfigurationException e) {
@@ -62,24 +66,10 @@ public class LRUCacheManager extends AbstractCacheManager{
         } catch (IOException e) {
             LOGGER.error(e);
         }
+        LOGGER.info("cache config size "+CacheConfig.cacheConfigList.size());
         for(CacheConfig cacheConfig : CacheConfig.cacheConfigList){
             getCache(cacheConfig.getName(), cacheConfig.getCapacity(), cacheConfig.getExpiry());
-            LOGGER.info("Cache group with name {} and capacity {} and expiry {} is created",cacheConfig.getName(), cacheConfig.getCapacity(), cacheConfig.getExpiry() );
         }
-       /* getCache(CacheConstants.CACHES_ADMIN_LINK_CACHE, CacheConfig.ADMIN_LINK_CACHE_CAPACITY, CacheConfig.ADMIN_LINK_CACHE_EXPIRE_TIME);
-        getCache(CacheConstants.CACHES_CLOUD_SERVICE_LINK_CACHE, CacheConfig.CLOUD_SERVICE_LINK_CAPACITY, CacheConfig.CLOUD_SERVICE_LINK_EXPIRE_TIME);
-        getCache(CacheConstants.CACHES_HOME_LINK_CACHE, CacheConfig.HOME_LINK_EXPIRE_CAPACITY, CacheConfig.HOME_LINK_EXPIRE_TIME);
-        getCache(CacheConstants.CACHES_VISUAL_ANALYZER_LINK_CACHE, CacheConfig.VISUAL_ANALYZER_LINK_CAPACITY, CacheConfig.VISUAL_ANALYZER_LINK_EXPIRE_TIME);
-        getCache(CacheConstants.CACHES_SERVICE_EXTERNAL_LINK_CACHE, CacheConfig.SERVICE_EXTERNAL_LINK_CAPACITY, CacheConfig.SERVICE_EXTERNAL_LINK_EXPIRE_TIME);
-        getCache(CacheConstants.CACHES_SERVICE_INTERNAL_LINK_CACHE, CacheConfig.SERVICE_INTERNAL_LINK_CAPACITY, CacheConfig.SERVICE_INTERNAL_LINK_EXPIRE_TIME);
-        getCache(CacheConstants.CACHES_VANITY_BASE_URL_CACHE, CacheConfig.VANITY_BASE_URL_CAPACITY, CacheConfig.VANITY_BASE_URL_EXPIRE_TIME);
-        getCache(CacheConstants.CACHES_DOMAINS_DATA_CACHE, CacheConfig.DOMAINS_DATA_CAPACITY, CacheConfig.DOMAINS_DATA_EXPIRE_TIME);
-        getCache(CacheConstants.CACHES_TENANT_APP_MAPPING_CACHE, CacheConfig.TENANT_APP_MAPPING_CAPACITY, CacheConfig.TENANT_APP_MAPPING_EXPIRE_TIME);
-        getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE, CacheConfig.TENANT_SUBSCRIBED_SERVICES_CAPACITY, CacheConfig.TENANT_SUBSCRIBED_SERVICES_EXPIRE_TIME);
-        getCache(CacheConstants.CACHES_SSO_LOGOUT_CACHE, CacheConfig.SSO_LOGOUT_CAPACITY, CacheConfig.SSO_LOGOUT_EXPIRE_TIME);
-        getCache(CacheConstants.CACHES_ASSET_ROOT_CACHE, CacheConfig.ASSET_ROOT_CAPACITY, CacheConfig.ASSET_ROOT_EXPIRE_TIME);
-        getCache(CacheConstants.CACHES_REGISTRY_CACHE, CacheConfig.REGISTRY_CAPACITY, CacheConfig.REGISTRY_EXPIRE_TIME);
-        getCache(CacheConstants.CACHES_TENANT_USER_CACHE, CacheConfig.TENANT_USER_CAPACITY, CacheConfig.TENANT_USER_EXPIRE_TIME);*/
     }
 
     /**
