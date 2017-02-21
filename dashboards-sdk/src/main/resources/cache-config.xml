@@ -1,0 +1,20 @@
+<root>
+    <cache-group>
+        <name>cachegroup1</name>
+        <capacity>1000</capacity>
+        <expiry>60</expiry>
+    </cache-group>
+
+    <cache-group>
+        <name>cachegroup2</name>
+        <capacity>1000</capacity>
+        <expiry>60000</expiry>
+    </cache-group>
+
+    <cache-group>
+        <name>cachegroup3</name>
+        <capacity>1000</capacity>
+        <expiry>60000</expiry>
+    </cache-group>
+
+</root>

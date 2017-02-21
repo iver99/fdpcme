@@ -1,12 +1,17 @@
 package oracle.sysman.emaas.platform.emcpdf.cache.support.lru;
 
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICache;
-import oracle.sysman.emaas.platform.emcpdf.cache.config.CacheConfig;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.AbstractCacheManager;
-import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.CacheConfig;
+import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheSAXParser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -31,7 +36,7 @@ public class LRUCacheManager extends AbstractCacheManager{
     }
     @Override
     public ICache createNewCache(String name){
-      return this.createNewCache(name, CacheConfig.DEFAULT_CAPACITY,CacheConfig.DEFAULT_EXPIRE_TIME);
+      return this.createNewCache(name, 5000,0L);
     }
 
     /**
@@ -44,7 +49,24 @@ public class LRUCacheManager extends AbstractCacheManager{
         super.init();
         //init default cache group
         LOGGER.info("Initialing LRU CacheManager...");
-        getCache(CacheConstants.CACHES_ADMIN_LINK_CACHE, CacheConfig.ADMIN_LINK_CACHE_CAPACITY, CacheConfig.ADMIN_LINK_CACHE_EXPIRE_TIME);
+        SAXParserFactory factory = SAXParserFactory.newInstance();
+        try {
+            SAXParser parser = factory.newSAXParser();
+            File f = new File("cache-config.xml");
+            CacheSAXParser dh = new CacheSAXParser();
+            parser.parse(f, dh);
+        } catch (ParserConfigurationException e) {
+            LOGGER.error(e);
+        } catch (SAXException e) {
+            LOGGER.error(e);
+        } catch (IOException e) {
+            LOGGER.error(e);
+        }
+        for(CacheConfig cacheConfig : CacheConfig.cacheConfigList){
+            getCache(cacheConfig.getName(), cacheConfig.getCapacity(), cacheConfig.getExpiry());
+            LOGGER.info("Cache group with name {} and capacity {} and expiry {} is created",cacheConfig.getName(), cacheConfig.getCapacity(), cacheConfig.getExpiry() );
+        }
+       /* getCache(CacheConstants.CACHES_ADMIN_LINK_CACHE, CacheConfig.ADMIN_LINK_CACHE_CAPACITY, CacheConfig.ADMIN_LINK_CACHE_EXPIRE_TIME);
         getCache(CacheConstants.CACHES_CLOUD_SERVICE_LINK_CACHE, CacheConfig.CLOUD_SERVICE_LINK_CAPACITY, CacheConfig.CLOUD_SERVICE_LINK_EXPIRE_TIME);
         getCache(CacheConstants.CACHES_HOME_LINK_CACHE, CacheConfig.HOME_LINK_EXPIRE_CAPACITY, CacheConfig.HOME_LINK_EXPIRE_TIME);
         getCache(CacheConstants.CACHES_VISUAL_ANALYZER_LINK_CACHE, CacheConfig.VISUAL_ANALYZER_LINK_CAPACITY, CacheConfig.VISUAL_ANALYZER_LINK_EXPIRE_TIME);
@@ -57,7 +79,7 @@ public class LRUCacheManager extends AbstractCacheManager{
         getCache(CacheConstants.CACHES_SSO_LOGOUT_CACHE, CacheConfig.SSO_LOGOUT_CAPACITY, CacheConfig.SSO_LOGOUT_EXPIRE_TIME);
         getCache(CacheConstants.CACHES_ASSET_ROOT_CACHE, CacheConfig.ASSET_ROOT_CAPACITY, CacheConfig.ASSET_ROOT_EXPIRE_TIME);
         getCache(CacheConstants.CACHES_REGISTRY_CACHE, CacheConfig.REGISTRY_CAPACITY, CacheConfig.REGISTRY_EXPIRE_TIME);
-        getCache(CacheConstants.CACHES_TENANT_USER_CACHE, CacheConfig.TENANT_USER_CAPACITY, CacheConfig.TENANT_USER_EXPIRE_TIME);
+        getCache(CacheConstants.CACHES_TENANT_USER_CACHE, CacheConfig.TENANT_USER_CAPACITY, CacheConfig.TENANT_USER_EXPIRE_TIME);*/
     }
 
     /**
