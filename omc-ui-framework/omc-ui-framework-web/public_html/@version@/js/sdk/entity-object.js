@@ -29,6 +29,18 @@ define([
             };
         }
 
+        EntityObject.prototype.createFromObject = function (data)
+        {
+            var entity = new EntityObject();
+            entity['meId'] = data.meId;
+            entity['displayName'] = data.displayName;
+            entity['entityName'] = data.entityName;
+            entity['entityType'] = data.entityType;
+            entity['meClass'] = data.meClass;
+
+            return entity;
+        };
+
         return EntityObject;
     }
 );
