@@ -4,6 +4,8 @@ define([
 'text!uifwk/js/widgets/aboutbox/html/aboutbox.html',
 'uifwk/@version@/js/widgets/navlinks/navigation-links-impl',
 'text!uifwk/js/widgets/navlinks/html/navigation-links.html',
+'uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl',
+'text!uifwk/js/widgets/hamburger-menu/html/hamburger-menu.html',
 'uifwk/@version@/js/widgets/brandingbar/brandingbar-impl',
 'text!uifwk/js/widgets/brandingbar/html/brandingbar.html',
 'uifwk/@version@/js/widgets/widgetselector/widget-selector-impl',

@@ -13,6 +13,7 @@ define([
 'uifwk/js/widgets/brandingbar/js/brandingbar',
 'uifwk/js/widgets/datetime-picker/js/datetime-picker',
 'uifwk/js/widgets/navlinks/js/navigation-links',
+'uifwk/js/widgets/hamburger-menu/js/hamburger-menu',
 'uifwk/js/widgets/timeFilter/js/timeFilter',
 'uifwk/js/widgets/widgetselector/js/widget-selector',
 'uifwk/js/util/zdt-util'
