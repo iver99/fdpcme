@@ -2,13 +2,10 @@ package oracle.sysman.emaas.platform.emcpdf.cache.support;
 
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICache;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
-import oracle.sysman.emaas.platform.emcpdf.cache.config.CacheConfig;
-import oracle.sysman.emaas.platform.emcpdf.cache.support.lru.LinkedHashMapCache;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 

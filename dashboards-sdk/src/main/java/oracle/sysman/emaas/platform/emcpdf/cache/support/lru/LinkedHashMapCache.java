@@ -1,10 +1,10 @@
 package oracle.sysman.emaas.platform.emcpdf.cache.support.lru;
 
 import oracle.sysman.emaas.platform.emcpdf.cache.api.CacheLoader;
-import oracle.sysman.emaas.platform.emcpdf.cache.config.CacheConfig;
 import oracle.sysman.emaas.platform.emcpdf.cache.exception.ExecutionException;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.AbstractCache;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.CachedItem;
+import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.TimeUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,8 +25,8 @@ public class LinkedHashMapCache extends AbstractCache{
 
     public LinkedHashMapCache(String name, Integer capacity, Long timeToLive){
         this.name=name;
-        this.capacity = capacity == null ? CacheConfig.DEFAULT_CAPACITY : capacity;
-        this.timeToLive = timeToLive == null ? CacheConfig.DEFAULT_EXPIRE_TIME : timeToLive;
+        this.capacity = capacity == null ? CacheConstants.DEFAULT_CAPACITY : capacity;
+        this.timeToLive = timeToLive == null ? CacheConstants.DEFAULT_EXPIRATION : timeToLive;
         this.creationTime=System.currentTimeMillis();
         int hashTableSize = (int) Math.ceil(capacity/0.75f) + 1;
         cacheMap = new LinkedHashMap<Object,CachedItem>(hashTableSize, 0.75f, true) {//ordered by access time
@@ -40,7 +40,7 @@ public class LinkedHashMapCache extends AbstractCache{
     }
 
     public LinkedHashMapCache(String name) {
-        this(name, CacheConfig.DEFAULT_CAPACITY,CacheConfig.DEFAULT_EXPIRE_TIME);
+        this(name, CacheConstants.DEFAULT_CAPACITY,CacheConstants.DEFAULT_EXPIRATION);
     }
 
 

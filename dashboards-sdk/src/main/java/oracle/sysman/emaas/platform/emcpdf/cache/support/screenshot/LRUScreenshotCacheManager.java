@@ -1,7 +1,6 @@
 package oracle.sysman.emaas.platform.emcpdf.cache.support.screenshot;
 
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICache;
-import oracle.sysman.emaas.platform.emcpdf.cache.config.CacheConfig;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.AbstractCacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.lru.LinkedHashMapCache;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
@@ -31,7 +30,7 @@ public class LRUScreenshotCacheManager extends AbstractCacheManager{
 
     @Override
     public ICache createNewCache(String name) {
-        return this.createNewCache(name, CacheConfig.DEFAULT_CAPACITY,CacheConfig.DEFAULT_EXPIRE_TIME);
+        return this.createNewCache(name, CacheConstants.DEFAULT_CAPACITY,CacheConstants.DEFAULT_EXPIRATION);
     }
 
     @Override

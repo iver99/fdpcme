@@ -10,6 +10,7 @@ import javax.xml.parsers.SAXParserFactory;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICache;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.AbstractCacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.CacheConfig;
+import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheSAXParser;
 
 import org.apache.logging.log4j.LogManager;
@@ -38,7 +39,7 @@ public class LRUCacheManager extends AbstractCacheManager{
     }
     @Override
     public ICache createNewCache(String name){
-      return this.createNewCache(name, 5000,0L);
+      return this.createNewCache(name, CacheConstants.DEFAULT_CAPACITY,CacheConstants.DEFAULT_EXPIRATION);
     }
 
     /**
