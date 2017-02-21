@@ -24,7 +24,7 @@ public class ImportDataUtil {
 	}
 	
 
-	public void saveDashboardData(DataRowsEntity data, Long tenantId) {
+	public void saveDashboardData(DataRowsEntity data, Long tenantId, String userName) {
 		DataImportManager dim = DataImportManager.getInstance();
 		//save to dashboard table
 		saveDashboard(data.getEmsDashboard(), dim, tenantId);

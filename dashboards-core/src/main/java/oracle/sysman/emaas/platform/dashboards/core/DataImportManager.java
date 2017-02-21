@@ -54,6 +54,37 @@ public class DataImportManager
 			entityManager.close();
 		}
 	}
+	
+	private int updateDashboard(EntityManager entityManager, BigInteger dashboardId, String name, Long type, String description, String creationDate, String lastModificationDate, String lastModifiedBy, String owner,
+			Integer isSystem, Integer applicationType, Integer enableTimeRange, String screenShot, BigInteger deleted, Long tenantId, Integer enableRefresh, Integer sharePublic,
+			Integer enableEntityFilter, Integer enableDescription, String extendedOptions, Integer showInHome) {
+		LOGGER.debug("Calling the DataImportManager.updateDashboard");
+		int result;
+		String sql = "UPDATE EMS_DASHBOARD SET  NAME=?, TYPE=?, DESCRIPTION=?, CREATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'), LAST_MODIFICATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'), LAST_MODIFIED_BY=?, OWNER=?, IS_SYSTEM=?, APPLICATION_TYPE=?, ENABLE_TIME_RANGE=?, SCREEN_SHOT=?, DELETED=?, ENABLE_REFRESH=?, SHARE_PUBLIC=?, ENABLE_ENTITY_FILTER=?, ENABLE_DESCRIPTION=?, EXTENDED_OPTIONS=?, SHOW_INHOME=? WHERE DASHBOARD_ID=? AND TENANT_ID=?";
+		Query query = entityManager.createNativeQuery(sql)
+				.setParameter(1, name)
+				.setParameter(2, type)
+				.setParameter(3, description)
+				.setParameter(4, creationDate)
+				.setParameter(5, lastModificationDate)
+				.setParameter(6, lastModifiedBy)
+				.setParameter(7, owner)
+				.setParameter(8, isSystem)
+				.setParameter(9, applicationType)
+				.setParameter(10, enableTimeRange)
+				.setParameter(11, screenShot)
+				.setParameter(12, deleted)
+				.setParameter(13, enableRefresh)
+				.setParameter(14, sharePublic)
+	.setParameter(15, enableEntityFilter)
+	.setParameter(16, enableDescription)
+	.setParameter(17, extendedOptions)
+	.setParameter(18, dashboardId)
+	.setParameter(19, tenantId)
+	.setParameter(20, showInHome);
+		result = query.executeUpdate();
+		return result;
+	}
 
 	public int saveDashboardTile(String tileId, BigInteger dashboardId, String creationDate, String lastModificationDate, String lastModifiedBy, String owner, String title, Long height,
 								 Long width, Integer isMaximized, Long position, Long tenantId, String widgetUniqueId, String widgetName, String widgetDescription, String widgetGroupName,

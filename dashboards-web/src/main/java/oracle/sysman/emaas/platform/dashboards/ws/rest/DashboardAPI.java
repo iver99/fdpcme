@@ -967,11 +967,16 @@ public class DashboardAPI extends APIBase
         } catch (BasicServiceMalfunctionException | DashboardException e) {
             LOGGER.debug("could not get tenant ID from header");
         }
+        String user = null;
+        if (userTenant != null) {
+        	user = userTenant.substring(userTenant.indexOf(".")-1,userTenant.length()-1);
+        }
+        
 		ImportDataUtil importUtil = new ImportDataUtil();
 		try {
 			DataRowsEntity data = getJsonUtil().fromJson(jsonObject.toString(), DataRowsEntity.class);
 			//save dashboard data
-			importUtil.saveDashboardData(data,tenantId);
+			importUtil.saveDashboardData(data,tenantId, user);
 			//save savedsearch data
 			JSONArray savedSearchObject = jsonObject.getJSONArray("EMS_ANALYTICS_SEARCH");
 			JSONArray savedSearchParamObject = jsonObject.getJSONArray("EMS_ANALYTICS_SEARCH_PARAMS");
