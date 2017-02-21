@@ -3005,7 +3005,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                 if(ctxTime.startTime && ctxTime.endTime && self.adjustLastX) {
                                     timeRange = self.adjustLastX(new Date(ctxTime.startTime), new Date(ctxTime.endTime));
                                 }
-                                if(ctxTime.timePeriod && isValidFlexRelTimePeriod(ctxTime.timePeriod)) {
+                                if(ctxTime.timePeriod && (isValidFlexRelTimePeriod(ctxTime.timePeriod) || ctxTime.timePeriod === "LATEST")) {
                                     if(ctxTime.timePeriod !== tp
                                             || (timeRange.start && convertTimeToDesiredPrecision(timeRange.start) !== start)
                                             || (timeRange.end && convertTimeToDesiredPrecision(timeRange.end) !== end)) {
@@ -3021,7 +3021,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             }else {
                                 return;
                             }
-                        }else if(ctxChangeEvent.contextName === "timePeriod" && ctxChangeEvent.currentValue.timePeriod && isValidFlexRelTimePeriod(ctxChangeEvent.currentValue.timePeriod)) {
+                        }else if(ctxChangeEvent.contextName === "timePeriod" && ctxChangeEvent.currentValue.timePeriod && (isValidFlexRelTimePeriod(ctxChangeEvent.currentValue.timePeriod) || ctxChangeEvent.currentValue.timePeriod === "LATEST")) {
                             timeRange = {
                                 start: ctxChangeEvent.currentValue.startTime,
                                 end: ctxChangeEvent.currentValue.endTime
