@@ -1,0 +1,29 @@
+<div id="hamburger-menu">
+    <div id="navlistcontainer" class="hamburger-menu-container">
+        <div data-bind="ojComponent:{
+                            component:'ojNavigationList',
+                            rootLabel: 'Oracle Management Cloud',
+                            drillMode: 'sliding',
+                            selection: 'selectedListItem',
+                            data : dataSource,
+                            item: { template: function(itemContext) {
+                                           return itemContext['name'] !== 'hr'?'hamburger_menu_item_template':'hamburger_menu_divider_template';},
+                                    'selectable': function(itemContext) {
+                                           return itemContext['name'] !== 'hr';} }
+                            },css:{'oj-hicontrast':true}">
+        </div>
+    </div>
+</div>
+<script type="text/html" id="hamburger_menu_item_template">
+    <li data-bind="attr: {id: $data['id']">
+        <div class="container">
+            <div>
+                <strong> <span data-bind="text: $data['name']" class="oj-navigationlist-item-title"><a data-bind="attr: {href: $data['link']}"></a></span> </strong>
+            </div>
+        </div>
+        <hr class="oj-navigationlist-category-divider">
+	</li>
+</script>
+<script type="text/html" id="hamburger_menu_divider_template">
+    <hr class="oj-navigationlist-category-divider">
+</script>
