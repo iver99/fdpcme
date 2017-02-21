@@ -111,6 +111,33 @@ public class EntitySelectorUtil_1140 extends EntitySelectorUtil_Version implemen
 		LOGGER.log(Level.INFO, "The pill at index {0} has been removed", new Object[] { indexOfPillToRemove });
 
 	}
+        
+        /* (non-Javadoc)
+	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IEntitySelectorUtil#replacePillSelection(oracle.sysman.qatool.uifwk.webdriver.WebDriver, int, String, String, String)
+	 */
+	@Override
+        public void replacePillSelection(WebDriver driver, int pillIndex, String entityName, String entityType, String category) 
+        {
+		LOGGER.log(Level.INFO, "Replace selection from pill [{0}]. Number of pills before replace = {1}", new Object[]{ pillIndex, getNumberOfPills(driver) });
+                
+                //Find pill at desired position
+                WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), UNTIL_TIMEOUT);
+                //Check if pill can be edited: If link is not clickable, then the pill cannot be edited
+                LOGGER.log(Level.INFO, "Check if pill [{0}] is editable. If the link is not available the pill cannot be edited.", new Object[]{pillIndex});
+                //Take in consideration that XPath uses 1-based indexing
+                pillIndex++;
+                WebElement pill = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(MessageFormat.format(DashBoardPageId.EntSelPillLinkToReplaceByIndex, pillIndex))));
+                LOGGER.log(Level.INFO, "Click pill to enable editing mode");
+                pill.click();
+                
+                //Write the new entity name
+                searchText(driver, entityName);
+                
+                //Select first option matching entity name, type and category
+                selectFirstSuggestionByCategory(driver, category, entityName, entityType, true);
+                driver.takeScreenShot();
+                LOGGER.log(Level.INFO, "New selection for pill is ''{0}''.", new Object[]{entityName});
+        }
 
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IEntitySelectorUtil#searchText(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
@@ -120,18 +147,20 @@ public class EntitySelectorUtil_1140 extends EntitySelectorUtil_Version implemen
 	{
 		//Write text in entity selector
 		LOGGER.log(Level.INFO, "Waiting for Entity Selector input to be clickable");
-		WebDriverWait waitEntSel = new WebDriverWait(driver.getWebDriver(), UNTIL_TIMEOUT);
-		WebElement element = waitEntSel.until(ExpectedConditions.elementToBeClickable(By
+		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), UNTIL_TIMEOUT);
+		WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By
 				.xpath(DashBoardPageId.EntSelTypeAheadFieldInput)));
 		LOGGER.log(Level.INFO, "Searching value ''{0}'' in Entity Selector", text);
 		element.click();
+                //Wait until suggestions are displayed before typing the text to avoid timing issues
+                wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(DashBoardPageId.EntSelSuggestionPopup)));
 		element.clear();
 		element.sendKeys(text);
 		driver.takeScreenShot();
 
 		//Wait until the results are displayed
 		LOGGER.log(Level.INFO, "Waiting for results to be displayed for text ''{0}''", text);
-		waitEntSel.until(new ExpectedCondition<Boolean>() {
+		wait.until(new ExpectedCondition<Boolean>() {
 			@Override
 			public Boolean apply(org.openqa.selenium.WebDriver webdriver)
 			{
@@ -154,13 +183,13 @@ public class EntitySelectorUtil_1140 extends EntitySelectorUtil_Version implemen
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IEntitySelectorUtil#selectCompositeEntity(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
 	@Override
-	public void selectCompositeEntity(WebDriver driver, String text, String entityType)
+	public void selectCompositeEntity(WebDriver driver, String entityName, String entityType)
 	{
 		//search text in entity selector
-		searchText(driver, text);
+		searchText(driver, entityName);
 
 		//select the first composite entity found with that description
-		selectFirstSuggestionByCategory(driver, CATEGORY_COMPOSITE, entityType);
+		selectFirstSuggestionByCategory(driver, CATEGORY_COMPOSITE, entityName, entityType, false);
 
 	}
 
@@ -168,13 +197,13 @@ public class EntitySelectorUtil_1140 extends EntitySelectorUtil_Version implemen
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IEntitySelectorUtil#selectEntity(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
 	@Override
-	public void selectEntity(WebDriver driver, String text, String entityType)
+	public void selectEntity(WebDriver driver, String entityName, String entityType)
 	{
 		//search text in entity selector
-		searchText(driver, text);
+		searchText(driver, entityName);
 
 		//select the first entity found with that description
-		selectFirstSuggestionByCategory(driver, CATEGORY_ENTITIES, entityType);
+		selectFirstSuggestionByCategory(driver, CATEGORY_ENTITIES, entityName, entityType, false);
 
 	}
 
@@ -195,23 +224,57 @@ public class EntitySelectorUtil_1140 extends EntitySelectorUtil_Version implemen
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IEntitySelectorUtil#selectFirstSuggestionByCategory(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
-	private void selectFirstSuggestionByCategory(WebDriver driver, String category, String type)
+	private void selectFirstSuggestionByCategory(WebDriver driver, String category, String entityName, String entityType, boolean isEditingPill)
 	{
 		//select the first composite entity that matches category and entity type
-		LOGGER.log(Level.INFO, "Waiting for the first suggestion to be clickable");
-		// TODO Auto-generated method stub
-		final int prevCount = getNumberOfPills(driver);
+		LOGGER.log(Level.INFO, "Waiting for the matching suggestion to be clickable");
 		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), UNTIL_TIMEOUT);
 		String xpath = category == CATEGORY_COMPOSITE ? MessageFormat.format(DashBoardPageId.EntSelSuggestionByCompositeCategory,
-				type) : MessageFormat.format(DashBoardPageId.EntSelSuggestionByEntitiesCategory, type);
+				entityType) : MessageFormat.format(DashBoardPageId.EntSelSuggestionByEntitiesCategory, entityType);
 		WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(xpath)));
 		LOGGER.log(Level.INFO, "Click on first available suggestion");
+                // TODO Auto-generated method stub
+		final int prevCount = getNumberOfPills(driver);
 		element.click();
+                
+                if (!isEditingPill) {
+                    //Wait until the page is done loading and the new pill is displayed
+                    waitForNewPill(driver, prevCount);
+                } else {
+                    //Wait for the edited pill to be refreshed
+                    waitForEditedPill(driver, prevCount, entityName);
+                }
 
-		//Wait until the page is done loading and pill is displayed
-		waitForNewPill(driver, prevCount);
-
+		LOGGER.log(Level.INFO, "Option ''{0}'' (''{1}'') was successfully selected.", new Object[]{ entityName, entityType });
 	}
+        
+        /* (non-Javadoc)
+	* @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IEntitySelectorUtil#waitForEditedPill(oracle.sysman.qatool.uifwk.webdriver.WebDriver, int, String)
+	*/
+        private void waitForEditedPill(WebDriver driver, final int pillCount, String text) 
+        {
+                LOGGER.log(Level.INFO, "Waiting for the type ahead input to disappear");
+                //Wait for typeahead input to dissappear
+                driver.waitForElementNotVisible("xpath=" + DashBoardPageId.EntSelTypeAheadFieldInput);
+                
+                LOGGER.log(Level.INFO, "Waiting for the edited pill to be updated");
+                WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), UNTIL_TIMEOUT);
+                final WebDriver finalDriver = driver;
+                //make sure the amount of pills didn't change
+                wait.until(new ExpectedCondition<Boolean>() {
+
+			@Override
+			public Boolean apply(org.openqa.selenium.WebDriver driver)
+			{
+                                return getNumberOfPills(finalDriver) == pillCount;
+			}
+		});
+                
+                //search for the new value in the edited pill
+                driver.waitForElementVisible("xpath=" + MessageFormat.format(DashBoardPageId.EntSelEditedPillByText, text));
+                LOGGER.log(Level.INFO, "The pill was successfully edited with value: ''{0}''.", new Object[]{text});
+                driver.takeScreenShot();
+        }
 
 	/* (non-Javadoc)
 	* @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IEntitySelectorUtil#waitForNewPill(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
@@ -221,6 +284,7 @@ public class EntitySelectorUtil_1140 extends EntitySelectorUtil_Version implemen
 		LOGGER.log(Level.INFO, "Waiting for new pill to be displayed");
 		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), UNTIL_TIMEOUT);
 		final WebDriver finalDriver = driver;
+                //wait until the number of pills is updated
 		wait.until(new ExpectedCondition<Boolean>() {
 
 			@Override

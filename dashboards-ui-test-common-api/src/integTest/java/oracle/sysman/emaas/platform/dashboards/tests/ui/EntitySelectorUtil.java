@@ -58,6 +58,19 @@ public class EntitySelectorUtil
 		IEntitySelectorUtil esu = new UtilLoader<IEntitySelectorUtil>().loadUtil(driver, IEntitySelectorUtil.class);
 		esu.removePill(driver, indexOfPillToRemove);
 	}
+        
+        /**
+         * 
+         * @param driver
+         * @param pillIndex
+         * @param entityName
+         * @param entityType
+         * @param category 
+         */
+        public static void replacePillSelection(WebDriver driver, int pillIndex, String entityName, String entityType, String category) {
+		IEntitySelectorUtil esu = new UtilLoader<IEntitySelectorUtil>().loadUtil(driver, IEntitySelectorUtil.class);
+                esu.replacePillSelection(driver, pillIndex, entityName, entityType, category);
+        }
 
 	/**
 	 * @param driver
@@ -75,10 +88,10 @@ public class EntitySelectorUtil
 	 * @param
 	 * @return
 	 */
-	public static void selectCompositeEntity(WebDriver driver, String text, String entityType)
+	public static void selectCompositeEntity(WebDriver driver, String entityName, String entityType)
 	{
 		IEntitySelectorUtil esu = new UtilLoader<IEntitySelectorUtil>().loadUtil(driver, IEntitySelectorUtil.class);
-		esu.selectCompositeEntity(driver, text, entityType);
+		esu.selectCompositeEntity(driver, entityName, entityType);
 	}
 
 	/**
@@ -86,10 +99,10 @@ public class EntitySelectorUtil
 	 * @param
 	 * @return
 	 */
-	public static void selectEntity(WebDriver driver, String text, String entityType)
+	public static void selectEntity(WebDriver driver, String entityName, String entityType)
 	{
 		IEntitySelectorUtil esu = new UtilLoader<IEntitySelectorUtil>().loadUtil(driver, IEntitySelectorUtil.class);
-		esu.selectEntity(driver, text, entityType);
+		esu.selectEntity(driver, entityName, entityType);
 	}
 
 	/**

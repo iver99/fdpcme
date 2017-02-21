@@ -37,6 +37,16 @@ public interface IEntitySelectorUtil extends IUiTestCommonAPI
 	 * @return
 	 */
 	public void removePill(WebDriver driver, int indexOfPillToRemove);
+        
+        /**
+         * 
+         * @param driver
+         * @param pillIndex
+         * @param entityName
+         * @param entityType
+         * @param category 
+         */
+        public void replacePillSelection(WebDriver driver, int pillIndex, String entityName, String entityType, String category);
 
 	/**
 	 * @param driver
@@ -50,14 +60,14 @@ public interface IEntitySelectorUtil extends IUiTestCommonAPI
 	 * @param
 	 * @return
 	 */
-	public void selectCompositeEntity(WebDriver driver, String text, String entityType);
+	public void selectCompositeEntity(WebDriver driver, String entityName, String entityType);
 
 	/**
 	 * @param driver
 	 * @param
 	 * @return
 	 */
-	public void selectEntity(WebDriver driver, String text, String entityType);
+	public void selectEntity(WebDriver driver, String entityName, String entityType);
 
 	/**
 	 * @param driver
