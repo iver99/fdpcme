@@ -1728,9 +1728,17 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 		driver.click("css=" + DashBoardPageId_190.BUILDEROPTIONSEDITLOCATORCSS);
 		driver.takeScreenShot();
 
+		WaitUtil.waitForPageFullyLoaded(driver);
+
 		//click Right panel->filters
-		driver.waitForElementPresent("css=" + DashBoardPageId_190.RIGHTDRAWEREDITDBFILTERCSS);
-		driver.click("css=" + DashBoardPageId_190.RIGHTDRAWEREDITDBFILTERCSS);
-		driver.takeScreenShot();
+		if (driver.isElementPresent("css=" + DashBoardPageId_190.RIGHTDRAWEREDITDBFILTERCOLLAPSEDCSS)) {
+			driver.waitForElementPresent("css=" + DashBoardPageId_190.RIGHTDRAWEREDITDBFILTERCSS);
+			driver.click("css=" + DashBoardPageId_190.RIGHTDRAWEREDITDBFILTERCSS);
+			driver.takeScreenShot();
+		}
+		else if (driver.isElementPresent("css=" + DashBoardPageId_190.RIGHTDRAWEREDITDBFILTEREXPANDCSS)) {
+			driver.getLogger().info("Dashboar Filter has been expanded");
+			driver.takeScreenShot();
+		}
 	}
 }

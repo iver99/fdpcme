@@ -429,6 +429,7 @@ public class DashBoardPageId
 	public static final String WIDGET_SELECTOR_OK_BTN_LOCATOR = "//button[@id='widget-selector-okbtn' and not(contains(@class, 'oj-disabled'))]";
 	public static final String WIDGET_SELECTOR_CLOSE_BTN_LOCATOR = "//div[contains(@class, 'oj-dialog') and not(contains(@style, 'display: none'))]/div[contains(@class, 'widget-selector-main')]/preceding-sibling::div[contains(@class, 'oj-dialog-header')]/div[contains(@class, 'oj-dialog-header-close-wrapper')]";
 	//Branding bar links id
+	public static final String BRANDINGBARICON ="#emaas-appheader-bar";
 	public static final String BRANDINGBARMYHOMELINKID = "obbNavHome";
 
 	public static final String BRANDINGBARDASHBOARDHOMELINKID = "obbNavDsbHome";
