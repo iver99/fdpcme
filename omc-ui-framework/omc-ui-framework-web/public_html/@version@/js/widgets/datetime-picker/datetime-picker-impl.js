@@ -3052,6 +3052,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             self.setTimePeriodChosen(self.timePeriod());
                         }else {
                             self.timePeriod(self.timePeriodCustom);
+                            self.setTimePeriodChosen(self.timePeriod());
                         }
                     }
 
