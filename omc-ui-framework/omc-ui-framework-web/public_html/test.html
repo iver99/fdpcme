@@ -32,7 +32,7 @@ role value for that section to represent the appropriate content type.
     </head>
     <body>
         <div class="loadingIndicator" id="loading">Loading</div>
-        <div id="globalBody" style="display: none">
+        <div id="globalBody" style="display:none;">
             <header id="headerWrapper" role="banner">
                 <div data-bind="component: {
                         name: 'df-oracle-branding-bar',
@@ -42,6 +42,14 @@ role value for that section to represent the appropriate content type.
             </header>
             
             <div id="main-container">
+                <!--Hamburger Menu-->
+                <div id="hamburger_menu" style="display:none; width:310px;">
+                    <div data-bind="component: {
+                        name: 'df-oracle-hamburger-menu',
+                        params: {}
+                        }">
+                    </div>
+                </div>
                 <div id="head-bar-container" class="oj-col oj-sm-12 oj-toolbars oj-toolbar-bottom-border oj-btton-half-chrome" style="padding-left: 30px;">
                     <div id="index-toolbar" aria-label="Index page toolbar" 
                            data-bind="ojComponent: {component:'ojToolbar'}" 

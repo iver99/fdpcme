@@ -133,6 +133,17 @@ require(['knockout',
                 oj.Logger.error(msg, true);
 
                 return false; 
+            };
+            
+            var hamburgerVMPath = "uifwk/js/widgets/hamburger-menu/js/hamburger-menu";
+            var hamburgerTemplatePath = "uifwk/js/widgets/hamburger-menu/html/hamburger-menu.html";
+            
+            //Register a Knockout component for hamburger menu
+            if (!ko.components.isRegistered('df-oracle-hamburger-menu')) {
+                ko.components.register("df-oracle-hamburger-menu", {
+                    viewModel: {require: hamburgerVMPath},
+                    template: {require: 'text!' + hamburgerTemplatePath}
+                });
             }
 
             if (!ko.components.isRegistered('df-oracle-branding-bar')) {

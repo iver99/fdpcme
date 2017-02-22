@@ -623,16 +623,6 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 
             var templatePath = "uifwk/js/widgets/navlinks/html/navigation-links.html";
             var vmPath = "uifwk/js/widgets/navlinks/js/navigation-links";
-            var hamburgerVMPath = "uifwk/js/widgets/hamburger-menu/js/hamburger-menu";
-            var hamburgerTemplatePath = "uifwk/js/widgets/hamburger-menu/html/hamburger-menu.html";
-            
-            //Register a Knockout component for hamburger menu
-            if (!ko.components.isRegistered('df-oracle-hamburger-menu')) {
-                ko.components.register("df-oracle-hamburger-menu", {
-                    viewModel: {require: hamburgerVMPath},
-                    template: {require: 'text!' + hamburgerTemplatePath}
-                });
-            }
 
             //Parameters for navigation links ko component
             self.navLinksKocParams = {
@@ -709,7 +699,6 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
              * Navigation links button click handler
              */
             self.hamburgerMenuHandler = function (event, item) {
-                self.navLinksNeedRefresh(true);
                 $("#hamburger_menu").toggle('normal');
                 item.stopImmediatePropagation();
             };

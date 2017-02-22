@@ -1,5 +1,5 @@
-<div id="hamburger-menu">
-    <div id="navlistcontainer" class="hamburger-menu-container">
+<div id="hamburger-menu11" style="min-height: 1200px;background-color: #313334;color: #fff;zborder: 1px solid red;">
+    <div id="navlistcontainer" class="demo-panel-contrast1 oj-contrast-marker">
         <div data-bind="ojComponent:{
                             component:'ojNavigationList',
                             rootLabel: 'Oracle Management Cloud',
@@ -15,10 +15,10 @@
     </div>
 </div>
 <script type="text/html" id="hamburger_menu_item_template">
-    <li data-bind="attr: {id: $data['id']">
+    <li data-bind="attr: {id: $data['id']" class="oj-navigationlist-item-element oj-navigationlist-item oj-default">
         <div class="container">
             <div>
-                <strong> <span data-bind="text: $data['name']" class="oj-navigationlist-item-title"><a data-bind="attr: {href: $data['link']}"></a></span> </strong>
+                <span data-bind="text: $data['name']" class="oj-navigationlist-item-title"><a data-bind="attr: {href: $data['link']}"></a></span>
             </div>
         </div>
         <hr class="oj-navigationlist-category-divider">
