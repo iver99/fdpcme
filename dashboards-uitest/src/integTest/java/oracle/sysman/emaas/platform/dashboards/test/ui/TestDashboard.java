@@ -7,6 +7,7 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -66,33 +67,10 @@ public class TestDashboard extends LoginAndLogout
 				"Create dashboard failed!");
 		
 		DashboardBuilderUtil.respectGCForEntity(webd);
-		/*
-		//find edit button and click it
-		WebElement editButton = webd.getWebDriver().findElement(By.xpath(PageId.DASHBOARDEDITBUTTON));	
-		Assert.assertTrue(editButton.isDisplayed(), "Edit button isn't displayed in self dashboard");
-		webd.click(PageId.DASHBOARDEDITBUTTON);
 		
-		//find the dashboard name and click it
-		WebElement dashboardName = webd.getWebDriver().findElement(By.xpath(PageId.DASHBOARDNAME));
-		Assert.assertTrue(dashboardName.isDisplayed(), "dashboardName isn't displayed in self dashboard");
-		webd.click("css="+ PageId.DASHBOARDNAME_CSS);		
+		((JavascriptExecutor) webd.getWebDriver()).executeScript("scroll(0,0)");
 		
-		//find Dashboard Filters and click it
-		WebElement dashboardFilters = webd.getWebDriver().findElement(By.xpath(PageId.DASHBOARDFILTERS));
-		Assert.assertTrue(dashboardFilters.isDisplayed(), "Dashboard Filters isn't displayed in self dashboard");
-		webd.click(PageId.DASHBOARDFILTERS);
-		
-		//make sure Entities label is displayed
-		WebElement entitiesLabel = webd.getWebDriver().findElement(By.xpath(PageId.DASHBOARDENTITIES));
-		Assert.assertTrue(entitiesLabel.isDisplayed(), "Entities Label isn't displayed in self dashboard");
-		
-		//find "GC entities" radio button, then select it
-		WebElement useGCEntities = webd.getWebDriver().findElement(By.xpath(PageId.ENABLEGCENTITYFILTER));
-		Assert.assertTrue(useGCEntities.isDisplayed(), "GC entities filter isn't displayed in self dashboard");
-		webd.click(PageId.ENABLEGCENTITYFILTER);		
-		*/
-		
-		//find "All Entities (102)" button and click it
+		//find "All Entities " button and click it
 		WebElement entitiesBtn = webd.getWebDriver().findElement(By.xpath(PageId.ENTITYBUTTON));
 		Assert.assertTrue(entitiesBtn.isDisplayed(), "'All Entities' button isn't displayed in self dashboard");
 		webd.click(PageId.ENTITYBUTTON);		
@@ -116,38 +94,15 @@ public class TestDashboard extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, dbName);
 		
 		DashboardBuilderUtil.showEntityFilter(webd, true);
-		/*
-		//find edit button and click it
-		WebElement editButton = webd.getWebDriver().findElement(By.xpath(PageId.DASHBOARDEDITBUTTON));		
-		Assert.assertTrue(editButton.isDisplayed(), "Edit button isn't displayed in self dashboard");
-		webd.click(PageId.DASHBOARDEDITBUTTON);
 		
-		//find the dashboard name and click it
-		WebElement dashboardName = webd.getWebDriver().findElement(By.xpath(PageId.DASHBOARDNAME));		
-		Assert.assertTrue(dashboardName.isDisplayed(), "dashboardName isn't displayed in self dashboard");
-		webd.click("css="+ PageId.DASHBOARDNAME_CSS);
+		((JavascriptExecutor) webd.getWebDriver()).executeScript("scroll(0,0)");
 		
-		//find Dashboard Filters and click it
-		WebElement dashboardFilters = webd.getWebDriver().findElement(By.xpath(PageId.DASHBOARDFILTERS));
-		Assert.assertTrue(dashboardFilters.isDisplayed(), "Dashboard Filters isn't displayed in self dashboard");
-		webd.click(PageId.DASHBOARDFILTERS);
-		
-		//make sure Entities label is displayed
-		WebElement entitiesLabel = webd.getWebDriver().findElement(By.xpath(PageId.DASHBOARDENTITIES));
-		Assert.assertTrue(entitiesLabel.isDisplayed(), "Entities Label isn't displayed in self dashboard");
-		
-		//find "Use dashboard entities" radio button, then select it
-		WebElement useDbEntities = webd.getWebDriver().findElement(By.xpath(PageId.ENABLEENTITYFILTER));
-		Assert.assertTrue(useDbEntities.isDisplayed(), "Use dashboard entities isn't displayed in self dashboard");
-		webd.click(PageId.ENABLEENTITYFILTER);		
-		*/
-		
-		//find "All Entities (102)" button and click it
+		//find "All Entities" button and click it
 		WebElement entitiesBtn = webd.getWebDriver().findElement(By.xpath(PageId.ENTITYBUTTON));
 		Assert.assertTrue(entitiesBtn.isDisplayed(), "'All Entities' button isn't displayed in self dashboard");
 		webd.click(PageId.ENTITYBUTTON);	
 		
-		//find Cancel(Select) button and click it  //*[@id='emcta_tgtSel0_cancel']    //*[@id='emcta_tgtSel0_ok']
+		//find Cancel(Select) button and click it  
 		WebElement cancelButton = webd.getWebDriver().findElement(By.xpath(PageId.CANCELBUTTON));
 		Assert.assertTrue(cancelButton.isDisplayed(), "Cancel/Select button isn't displayed in Select Entities dialog");
 		webd.click(PageId.CANCELBUTTON);
