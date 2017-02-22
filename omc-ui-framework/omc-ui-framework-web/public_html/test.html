@@ -41,15 +41,16 @@ role value for that section to represent the appropriate content type.
                 </div>
             </header>
             
-            <div id="main-container">
+            <div id="main-container" style="height: auto;overflow: hidden;">
                 <!--Hamburger Menu-->
-                <div id="hamburger_menu" style="display:none; width:310px;">
+                <div id="hamburger_menu" style="display:none; width:310px;float:left;height:100%;">
                     <div data-bind="component: {
                         name: 'df-oracle-hamburger-menu',
                         params: {}
                         }">
                     </div>
                 </div>
+                <div style="width: auto;overflow: hidden;">
                 <div id="head-bar-container" class="oj-col oj-sm-12 oj-toolbars oj-toolbar-bottom-border oj-btton-half-chrome" style="padding-left: 30px;">
                     <div id="index-toolbar" aria-label="Index page toolbar" 
                            data-bind="ojComponent: {component:'ojToolbar'}" 
@@ -84,6 +85,7 @@ role value for that section to represent the appropriate content type.
                         </div>
                     </div>
                     <!-- /ko -->
+                </div>
                 </div>
             </div>
         </div>

@@ -1,4 +1,4 @@
-<div id="hamburger-menu11" style="min-height: 1200px;background-color: #313334;color: #fff;zborder: 1px solid red;">
+<div id="hamburger-menu11" style="height:100%;background-color: #313334;color: #fff;zborder: 1px solid red;">
     <div id="navlistcontainer" class="demo-panel-contrast1 oj-contrast-marker">
         <div data-bind="ojComponent:{
                             component:'ojNavigationList',
@@ -10,19 +10,16 @@
                                            return itemContext['name'] !== 'hr'?'hamburger_menu_item_template':'hamburger_menu_divider_template';},
                                     'selectable': function(itemContext) {
                                            return itemContext['name'] !== 'hr';} }
-                            },css:{'oj-hicontrast':true}">
+                            }">
         </div>
     </div>
 </div>
 <script type="text/html" id="hamburger_menu_item_template">
-    <li data-bind="attr: {id: $data['id']" class="oj-navigationlist-item-element oj-navigationlist-item oj-default">
-        <div class="container">
-            <div>
-                <span data-bind="text: $data['name']" class="oj-navigationlist-item-title"><a data-bind="attr: {href: $data['link']}"></a></span>
-            </div>
-        </div>
-        <hr class="oj-navigationlist-category-divider">
-	</li>
+    <li data-bind="attr: {id: $data['id']" class="oj-navigationlist-item-element oj-collapsed">
+        <a data-bind="attr: {href: $data['link']},text: $data['name']">
+        <!--<div data-bind="text: $data['name']" style="vertical-align: middle; display:inline-block;white-space: normal;word-break: break-all;"></div>-->
+        </a>
+    </li>
 </script>
 <script type="text/html" id="hamburger_menu_divider_template">
     <hr class="oj-navigationlist-category-divider">
