@@ -52,12 +52,19 @@ public class LRUCacheManager extends AbstractCacheManager{
         super.init();
         //init default cache group
         LOGGER.info("Initialing LRU CacheManager...");
+        //parse cache config
+        parseCacheConfig();
+        LOGGER.info("cache config size "+CacheConfig.cacheConfigList.size());
+        for(CacheConfig cacheConfig : CacheConfig.cacheConfigList){
+            getCache(cacheConfig.getName(), cacheConfig.getCapacity(), cacheConfig.getExpiry());
+        }
+    }
+
+    private void parseCacheConfig() {
         SAXParserFactory factory = SAXParserFactory.newInstance();
         try {
             SAXParser parser = factory.newSAXParser();
             InputStream f = LRUCacheManager.class.getClassLoader().getResourceAsStream("cache-config.xml");
-//            InputStream f2 = LRUCacheManager.class.getClassLoader().getResourceAsStream("/cache-config.xml");
-			
             CacheSAXParser dh = new CacheSAXParser();
             parser.parse(f, dh);
         } catch (ParserConfigurationException e) {
@@ -66,10 +73,6 @@ public class LRUCacheManager extends AbstractCacheManager{
             LOGGER.error(e);
         } catch (IOException e) {
             LOGGER.error(e);
-        }
-        LOGGER.info("cache config size "+CacheConfig.cacheConfigList.size());
-        for(CacheConfig cacheConfig : CacheConfig.cacheConfigList){
-            getCache(cacheConfig.getName(), cacheConfig.getCapacity(), cacheConfig.getExpiry());
         }
     }
 
