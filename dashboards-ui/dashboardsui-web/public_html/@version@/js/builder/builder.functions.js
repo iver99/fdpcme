@@ -492,7 +492,11 @@ define(['knockout',
         
         function requireTargetSelectorUtils(needLoad, callback) {
             if (needLoad) {
-                require(['emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils'], function(TargetSelectorUtils) {
+                var versionedTargetSelectorUtils = window.getSDKVersionFile ? 
+                    window.getSDKVersionFile('emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils') : null;
+                var targetSelectorUtilsModel = versionedTargetSelectorUtils ? versionedTargetSelectorUtils : 
+                        'emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils';
+                require([targetSelectorUtilsModel], function(TargetSelectorUtils) {
                   if (callback) {
                       callback(TargetSelectorUtils);
                   }
@@ -521,13 +525,19 @@ define(['knockout',
                 return;
             }
             var assetRoot = dfu.getAssetRootUrl(tile.PROVIDER_NAME(), true);
+            var assetRootForVerisonedFile = assetRoot.substring(1);
             var kocVM = tile.WIDGET_VIEWMODEL();
             if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
-                kocVM = assetRoot + kocVM;
+                var versionedViewModel = window.getSDKVersionFile ? 
+                    window.getSDKVersionFile(assetRootForVerisonedFile + kocVM) : null;
+                kocVM = versionedViewModel ? (versionedViewModel.lastIndexOf('.js') ===  versionedViewModel.length - 3 ? 
+                            versionedViewModel.substring(0, versionedViewModel.length - 3) : versionedViewModel)  : assetRoot + kocVM;
             }
             var kocTemplate = tile.WIDGET_TEMPLATE();
             if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
-                kocTemplate = assetRoot + kocTemplate;
+                var versionedTemplate = window.getSDKVersionFile ? 
+                    window.getSDKVersionFile(assetRootForVerisonedFile + kocTemplate) : null;
+                kocTemplate = versionedTemplate ? versionedTemplate : assetRoot + kocTemplate;
             }
             Builder.registerComponent(tile.WIDGET_KOC_NAME(), kocVM, kocTemplate);
                     ko.applyBindings(tile, wgtelem[0]);

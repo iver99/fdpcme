@@ -199,8 +199,8 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 self.tfDaysExcludedMsg = nls.DATETIME_PICKER_TIME_FILTER_INFO_DAYS_EXCLUDED;
                 self.tfMonthsExcludedMsg = nls.DATETIME_PICKER_TIME_FILTER_INFO_MONTHS_EXCLUDED;
                 
-                self.timePeriodSetShortTerm = "Short-Term";
-                self.timePeriodSetLongTerm = "Long-Term";
+                self.timePeriodSetShortTerm = "SHORT_TERM";
+                self.timePeriodSetLongTerm = "LONG_TERM";
 
                 self.lrCtrlVal = ko.observable("timeLevelCtrl");
                 self.flexRelTimeVal = ko.observable(1);
@@ -752,7 +752,8 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                                     ctxUtil.OMCTimeConstants.QUICK_PICK.LAST_30_DAY,
                                                     ctxUtil.OMCTimeConstants.QUICK_PICK.LAST_90_DAY,
                                                     ctxUtil.OMCTimeConstants.QUICK_PICK.LAST_12_MONTH,
-                                                    ctxUtil.OMCTimeConstants.QUICK_PICK.LAST_1_YEAR];
+                                                    ctxUtil.OMCTimeConstants.QUICK_PICK.LAST_1_YEAR,
+                                                    ctxUtil.OMCTimeConstants.QUICK_PICK.LATEST];
                     }else if(params.timePeriodsSet === self.timePeriodSetLongTerm){
                         params.timePeriodsNotToShow = [ctxUtil.OMCTimeConstants.QUICK_PICK.LAST_15_MINUTE,
                                                     ctxUtil.OMCTimeConstants.QUICK_PICK.LAST_30_MINUTE,
@@ -762,7 +763,8 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                                     ctxUtil.OMCTimeConstants.QUICK_PICK.LAST_6_HOUR,
                                                     ctxUtil.OMCTimeConstants.QUICK_PICK.LAST_8_HOUR,
                                                     ctxUtil.OMCTimeConstants.QUICK_PICK.LAST_1_DAY,
-                                                    ctxUtil.OMCTimeConstants.QUICK_PICK.LAST_1_YEAR];
+                                                    ctxUtil.OMCTimeConstants.QUICK_PICK.LAST_1_YEAR,
+                                                    ctxUtil.OMCTimeConstants.QUICK_PICK.LATEST];
                     }
                 }
 
@@ -1336,7 +1338,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
 
                     //For "Latest" quick pick
                     if(timePeriod === self.timePeriodLatest) {
-                        dateTimeInfo = "<span style='font-weight: bold; padding-right: 5px; display: inline-block;' "+ (self.badgeTimePeriod()?"class='show-individual-time-span1'>":">") + timePeriod + "</span>";
+                        dateTimeInfo = "<span style='font-weight: bold; padding-right: 5px; display: inline-block;' >" + timePeriod + "</span>";
                         return dateTimeInfo;
                     }
 
@@ -1347,17 +1349,17 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             if(self.getParam(self.timeDisplay) === "short") {
                                 dateTimeInfo = "<span style='font-weight:bold; padding-right: 5px; display: inline-block;'>" + self.getFlexTimePeriod(self.flexRelTimeVal(), self.flexRelTimeOpt()[0])  + "</span>";
                             }else {
-                                dateTimeInfo = "<span style='font-weight:bold; padding-right: 5px; display:" + self.hideRangeLabel + ";' "+ (self.badgeTimePeriod()?"class='show-individual-time-span1'>":">") + self.getFlexTimePeriod(self.flexRelTimeVal(), self.flexRelTimeOpt()[0]) + ": </span>";
-                                dateTimeInfo += start + "<span style='font-weight:bold; " + hyphenDisplay + "' "+ (self.badgeTimePeriod()?"class='show-individual-time-span2'>":">") +" - </span>" + end;
+                                dateTimeInfo = "<span style='font-weight:bold; padding-right: 5px; display:" + self.hideRangeLabel + ";' " + "class='show-individual-time-span1'>" + self.getFlexTimePeriod(self.flexRelTimeVal(), self.flexRelTimeOpt()[0]) + ": </span>";
+                                dateTimeInfo += start + "<span style='font-weight:bold; " + hyphenDisplay + "' "+ "class='show-individual-time-span2'>" +" - </span>" + end;
                             }
                         }else {
                         
                             if(self.getParam(self.timeDisplay) === "short") {
                                 dateTimeInfo = start + "<span style='font-weight:bold; " + hyphenDisplay + "'> - </span>" + end;
                             }else {
-                                dateTimeInfo = "<span style='font-weight:bold; padding-right: 5px; display:" + self.hideRangeLabel + ";' "+ (self.badgeTimePeriod()?"class='show-individual-time-span1'>":">") + timePeriod + ": </span>" +
+                                dateTimeInfo = "<span style='font-weight:bold; padding-right: 5px; display:" + self.hideRangeLabel + ";' " + "class='show-individual-time-span1'>" + timePeriod + ": </span>" +
                                     start +
-                                    "<span style='font-weight:bold; " + hyphenDisplay + "' "+ (self.badgeTimePeriod()?"class='show-individual-time-span2'>":">") +" - </span>" +
+                                    "<span style='font-weight:bold; " + hyphenDisplay + "' " + "class='show-individual-time-span2'>" +" - </span>" +
                                     end;
                             }
                         }
@@ -1366,15 +1368,15 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     
                     //generate dateTimeInfo for "Recent" List
                     if(!timePeriod) {
-                        dateTimeInfo = dateTimeInfo = start + "<span style='font-weight:bold; " + hyphenDisplay + "' "+ (self.badgeTimePeriod()?"class='show-individual-time-span2'>":">") +" - </span>" + end;
+                        dateTimeInfo = dateTimeInfo = start + "<span style='font-weight:bold; " + hyphenDisplay + "' " + "class='show-individual-time-span2'>" +" - </span>" + end;
                         return dateTimeInfo;
                     }
 
                     if(self.getParam(self.timeDisplay) === "short") {
                         dateTimeInfo = "<span style='font-weight:bold; padding-right: 5px; display: inline-block;'>" + timePeriod + "</span>";
                     }else {
-                        dateTimeInfo = "<span style='font-weight:bold; padding-right: 5px; display:" + self.hideRangeLabel + ";' "+ (self.badgeTimePeriod()?"class='show-individual-time-span1'>":">") + timePeriod + ": </span>";
-                        dateTimeInfo += start + "<span style='font-weight:bold; " + hyphenDisplay + "' "+ (self.badgeTimePeriod()?"class='show-individual-time-span2'>":">") +" - </span>" + end;
+                        dateTimeInfo = "<span style='font-weight:bold; padding-right: 5px; display:" + self.hideRangeLabel + ";' " + "class='show-individual-time-span1'>" + timePeriod + ": </span>";
+                        dateTimeInfo += start + "<span style='font-weight:bold; " + hyphenDisplay + "' " + "class='show-individual-time-span2'>" +" - </span>" + end;
                     }
                     return dateTimeInfo;
                 };

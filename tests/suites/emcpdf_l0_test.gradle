@@ -172,6 +172,8 @@ task DEVTest(type:EMTest,dependsOn: DEVTest_ws){
 	include "oracle/sysman/emaas/platform/emcpdf/cache/util/*.class"
 	include "oracle/sysman/emaas/platform/uifwk/nls/filter/NLSFilterTest.class"
         include "oracle/sysman/emaas/platform/uifwk/bootstrap/HtmlBootstrapJsUtilTest.class"
+        include "oracle/sysman/emaas/platform/uifwk/util/DataAccessUtilTest.class"
+        include "oracle/sysman/emaas/platform/uifwk/util/RegistryLookupUtilTest.class"
 	
 	useRestAssured=true
 	ext.set("testType", "unit")
@@ -192,6 +194,7 @@ task DEVUiWebTest(type:EMTest,dependsOn: DEVUiTest){
 	include "oracle/sysman/emaas/platform/dashboards/ui/web/*.class"
 	include "oracle/sysman/emaas/platform/dashboards/ui/web/gzip/*.class"
 	include "oracle/sysman/emaas/platform/dashboards/ui/web/context/*.class"
+	include "oracle/sysman/emaas/platform/dashboards/ui/web/additionaldata/*.class"
 
 }
 
