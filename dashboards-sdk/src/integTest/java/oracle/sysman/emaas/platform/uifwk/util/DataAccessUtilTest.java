@@ -18,6 +18,7 @@ import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.exception.ExecutionException;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
 
+import oracle.sysman.emaas.platform.emcpdf.cache.util.StringUtil;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -144,5 +145,31 @@ public class DataAccessUtilTest
 		};
 		String ui = DataAccessUtil.getUserTenantInfo("tenant", "user", null, null);
 		Assert.assertNull(ui);
+	}
+
+	@Mocked final Link anyLink = new Link();
+
+	@Test(groups = { "s2" })
+	public void testGetTenantSubscribedServices(@Mocked final RegistryLookupUtil anyRegistryLookupUtil,@Mocked final ICache cache,
+												@Mocked final DataAccessUtil.RestClient rs,@Mocked final StringUtil stringUtil,
+												@Mocked final CacheManagers cacheManagers, @Mocked final ICacheManager cacheManager) throws ExecutionException {
+		anyLink.withHref("testHref");
+		new Expectations(){
+			{
+				cacheManagers.build();
+				result = cacheManager;
+				cacheManager.getCache(anyString);
+				result =cache;
+				cache.get(any);
+				result = null;
+				anyRegistryLookupUtil.getServiceInternalLink(anyString,anyString,anyString,null);
+				result = anyLink;
+				stringUtil.isEmpty(anyString);
+				result = false;
+				rs.get(anyString,anyString);
+				result = "response data";
+			}
+		};
+		DataAccessUtil.getTenantSubscribedServices("tenant","user");
 	}
 }
