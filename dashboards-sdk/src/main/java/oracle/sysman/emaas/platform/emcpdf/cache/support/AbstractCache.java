@@ -7,6 +7,7 @@ import oracle.sysman.emaas.platform.emcpdf.cache.tool.CacheThreadPools;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.text.DecimalFormat;
 import java.util.TimerTask;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -139,8 +140,13 @@ public abstract class AbstractCache implements ICache{
 
         @Override
         public String getHitRate() {
-            //TODO
-            return "0%";
+            if(hitCount > requestCount){
+                return "100.00%";
+            }
+            Double rate =  Double.valueOf(hitCount) / Double.valueOf(requestCount);
+            rate *=100;
+            DecimalFormat df = new DecimalFormat("0.00");
+            return df.format(rate) + "%";
         }
 
         @Override
