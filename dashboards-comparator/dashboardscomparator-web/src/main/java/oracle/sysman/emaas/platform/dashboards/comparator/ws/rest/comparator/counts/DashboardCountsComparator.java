@@ -32,7 +32,7 @@ public class DashboardCountsComparator extends AbstractComparator
 {
 	private static final Logger logger = LogManager.getLogger(DashboardCountsComparator.class);
 
-	public InstancesComparedData<CountsEntity> compare()
+	public InstancesComparedData<CountsEntity> compare(String tenantId, String userTenant)
 	{
 		try {
 			logger.info("Starts to compare the two DF OMC instances");
@@ -56,14 +56,14 @@ public class DashboardCountsComparator extends AbstractComparator
 				}
 			}
 
-			CountsEntity ze1 = retrieveCountsForSingleInstance(client1);
+			CountsEntity ze1 = retrieveCountsForSingleInstance(tenantId, userTenant,client1);
 			if (ze1 == null) {
 				logger.error("Failed to retrieve ZDT count entity for instance {}", key1);
 				logger.info("Completed to compare the two DF OMC instances");
 				return null;
 			}
 
-			CountsEntity ze2 = retrieveCountsForSingleInstance(client2);
+			CountsEntity ze2 = retrieveCountsForSingleInstance(tenantId, userTenant,client2);
 			if (ze2 == null) {
 				logger.error("Failed to retrieve ZDT count entity for instance {}", key2);
 				logger.info("Completed to compare the two DF OMC instances");
@@ -114,7 +114,7 @@ public class DashboardCountsComparator extends AbstractComparator
 			logger.error("Preferences count does not match. In instance \"{}\", count is {}. In instance \"{}\", count is {}",
 					key1, ze1.getCountOfPreference(), key2, ze2.getCountOfPreference());
 			differentCountsForInstance1.setCountOfPreference(ze1.getCountOfPreference());
-			differentCountsForInstance2.setCountOfPreference(ze2.getCountOfFavorite());
+			differentCountsForInstance2.setCountOfPreference(ze2.getCountOfPreference());
 			allMatch = false;
 		}
 		if (allMatch) {
@@ -131,7 +131,7 @@ public class DashboardCountsComparator extends AbstractComparator
 	 * @throws Exception
 	 * @throws IOException
 	 */
-	private CountsEntity retrieveCountsForSingleInstance(LookupClient lc) throws Exception, IOException
+	private CountsEntity retrieveCountsForSingleInstance(String tenantId, String userTenant,LookupClient lc) throws Exception, IOException
 	{
 		Link lk = getSingleInstanceUrl(lc, "zdt/counts", "http");
 		if (lk == null) {
@@ -139,7 +139,8 @@ public class DashboardCountsComparator extends AbstractComparator
 			return null;
 		}
 		logger.info("lookup link is {}", lk.getHref());
-		String response = new TenantSubscriptionUtil.RestClient().get(lk.getHref(), null);
+		
+		String response = new TenantSubscriptionUtil.RestClient().get(lk.getHref(), tenantId, userTenant);
 		logger.info("Checking dashboard OMC instance counts. Response is " + response);
 		JsonUtil ju = JsonUtil.buildNormalMapper();
 		CountsEntity ze = ju.fromJson(response, CountsEntity.class);

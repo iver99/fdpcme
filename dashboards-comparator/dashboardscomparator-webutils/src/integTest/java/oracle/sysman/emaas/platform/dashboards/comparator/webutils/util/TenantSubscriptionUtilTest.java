@@ -346,7 +346,7 @@ public class TenantSubscriptionUtilTest {
 
     @Test(groups = {"s2"})
     public void testRestClientGetNull() {
-        String res = new TenantSubscriptionUtil.RestClient().get(null, null);
+        String res = new TenantSubscriptionUtil.RestClient().get(null, null, null);
         org.testng.Assert.assertNull(res);
     }
 
@@ -364,7 +364,7 @@ public class TenantSubscriptionUtilTest {
                 result = false;
             }
         };
-        new TenantSubscriptionUtil.RestClient().get("http://test.link.com", "emaastesttenant1");
+        new TenantSubscriptionUtil.RestClient().get("http://test.link.com", "emaastesttenant1", null);
         new Verifications() {
             {
                 RegistrationManager.getInstance().getAuthorizationToken();
@@ -386,7 +386,7 @@ public class TenantSubscriptionUtilTest {
                 Client.create(anyClientConfig);
             }
         };
-        new TenantSubscriptionUtil.RestClient().get("http://test.link.com", "emaastesttenant1");
+        new TenantSubscriptionUtil.RestClient().get("http://test.link.com", "emaastesttenant1", null);
         new Verifications() {
             {
                 RegistrationManager.getInstance().getAuthorizationToken();
@@ -434,7 +434,7 @@ public class TenantSubscriptionUtilTest {
                 result = link;
                 jsonUtil.fromJson(anyString,DomainsEntity.class);
                 result=de;
-                rs.get(anyString, "emaastesttenant1");
+                rs.get(anyString, "emaastesttenant1", anyString);
                 result =appMappingJson;
                 jsonUtil.fromJson(anyString, AppMappingCollection.class);
                 result=ac;
@@ -482,7 +482,7 @@ public class TenantSubscriptionUtilTest {
             }
         };
 
-        new TenantSubscriptionUtil.RestClient().put("url",new Object(),"emaastesttenant1");
+        new TenantSubscriptionUtil.RestClient().put("url",new Object(),"emaastesttenant1", null);
     }
 
 

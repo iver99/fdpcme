@@ -39,7 +39,7 @@ public class DashboardRowsComparator extends AbstractComparator
 {
 	private static final Logger logger = LogManager.getLogger(DashboardRowsComparator.class);
 
-	public InstancesComparedData<TableRowsEntity> compare()
+	public InstancesComparedData<TableRowsEntity> compare(String tenantId, String userTenant)
 	{
 		try {
 			logger.info("Starts to compare the two DF OMC instances: table by table and row by row");
@@ -64,14 +64,14 @@ public class DashboardRowsComparator extends AbstractComparator
 				}
 			}
 			
-			TableRowsEntity tre1 = retrieveRowsForSingleInstance(client1);
+			TableRowsEntity tre1 = retrieveRowsForSingleInstance(client1, tenantId, userTenant);
 			if (tre1 == null) {
 				logger.error("Failed to retrieve ZDT table rows entity for instance {}", key1);
 				logger.info("Completed to compare the two DF OMC instances");
 				return null;
 			}
 
-			TableRowsEntity tre2 = retrieveRowsForSingleInstance(client2);
+			TableRowsEntity tre2 = retrieveRowsForSingleInstance(client2, tenantId, userTenant);
 			if (tre2 == null) {
 				logger.error("Failed to retrieve ZDT table rows entity for instance {}", key2);
 				logger.info("Completed to compare the two DF OMC instances");
@@ -88,7 +88,7 @@ public class DashboardRowsComparator extends AbstractComparator
 		}
 	}
 
-	public void sync(InstancesComparedData<TableRowsEntity> instancesData) throws Exception
+	public void sync(InstancesComparedData<TableRowsEntity> instancesData,String tenantId, String userTenant) throws Exception
 	{
 		if (instancesData == null) {
 			return;
@@ -101,8 +101,8 @@ public class DashboardRowsComparator extends AbstractComparator
 				instancesData.getInstance2().getClient(),
 				instancesData.getInstance1().getData());
 		InstancesComparedData<TableRowsEntity> syncData = new InstancesComparedData<TableRowsEntity>(instance1, instance2);
-		syncForInstance(syncData.getInstance1());
-		syncForInstance(syncData.getInstance2());
+		syncForInstance(syncData.getInstance1(), tenantId, userTenant);
+		syncForInstance(syncData.getInstance2(),  tenantId, userTenant);
 	}
 
 	/**
@@ -263,26 +263,26 @@ public class DashboardRowsComparator extends AbstractComparator
 	 * @throws Exception
 	 * @throws IOException
 	 */
-	private TableRowsEntity retrieveRowsForSingleInstance(LookupClient lc) throws Exception, IOException
+	private TableRowsEntity retrieveRowsForSingleInstance(LookupClient lc, String tenantId, String userTenant) throws Exception, IOException
 	{
 		Link lk = getSingleInstanceUrl(lc, "zdt/tablerows", "http");
 		if (lk == null) {
 			logger.warn("Get a null or empty link for one single instance!");
 			return null;
 		}
-		String response = new TenantSubscriptionUtil.RestClient().get(lk.getHref(), null);
+		String response = new TenantSubscriptionUtil.RestClient().get(lk.getHref(), tenantId, userTenant);
 		logger.info("Checking dashboard OMC instance table rows. Response is " + response);
 		return retrieveRowsEntityFromJsonForSingleInstance(response);
 	}
 
-	private String syncForInstance(InstanceData<TableRowsEntity> instance) throws Exception
+	private String syncForInstance(InstanceData<TableRowsEntity> instance, String tenantId, String userTenant) throws Exception
 	{
 		Link lk = getSingleInstanceUrl(instance.getClient(), "zdt/sync", "http");
 		if (lk == null) {
 			logger.warn("Get a null or empty link for one single instance!");
 			return null;
 		}
-		String response = new TenantSubscriptionUtil.RestClient().put(lk.getHref(), instance.getData(), null);
+		String response = new TenantSubscriptionUtil.RestClient().put(lk.getHref(), instance.getData(), tenantId, userTenant);
 		logger.info("Checking dashboard OMC instance table rows. Response is " + response);
 		return response;
 	}

@@ -47,7 +47,7 @@ public class TenantSubscriptionUtil
 		{
 		}
 
-		public String get(String url, String tenant)
+		public String get(String url, String tenant, String userTenant)
 		{
 			if (StringUtils.isEmpty(url)) {
 				return null;
@@ -65,8 +65,17 @@ public class TenantSubscriptionUtil
 				itrLogger.info(
 						"RestClient is connecting to get response after getting authorization token from registration manager.");
 			}
-			Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
-					.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
+			Builder builder = null;
+			if (userTenant != null && tenant != null) {
+				builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
+						.header("X-USER-IDENTITY-DOMAIN-NAME", tenant)
+						.header("X-REMOTE-USER", userTenant)
+						.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
+			} else {
+				builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
+						.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
+			}
+			
 			return builder.get(String.class);
 		}
 
@@ -79,7 +88,7 @@ public class TenantSubscriptionUtil
 		 * @param tenant
 		 * @return
 		 */
-		public String put(String url, Object requestEntity, String tenant)
+		public String put(String url, Object requestEntity, String tenant, String userTenant)
 		{
 			if (StringUtils.isEmpty(url)) {
 				logger.error("Unable to put to an empty URL");
@@ -102,8 +111,17 @@ public class TenantSubscriptionUtil
 				itrLogger.info(
 						"RestClient is connecting to get response after getting authorization token from registration manager.");
 			}
-			Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
-					.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
+			Builder builder = null;
+			if (tenant != null && userTenant != null) {
+				builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
+						.header("X-USER-IDENTITY-DOMAIN-NAME", tenant)
+						.header("X-REMOTE-USER", userTenant)
+						.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
+			} else {
+				builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
+						.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
+			}
+			
 			return builder.put(String.class, requestEntity);
 		}
 	}
@@ -125,7 +143,7 @@ public class TenantSubscriptionUtil
 		logger.info("Checking tenant (" + tenant + ") subscriptions. The entity naming href is " + domainLink.getHref());
 		String domainHref = domainLink.getHref();
 		RestClient rc = new RestClient();
-		String domainsResponse = rc.get(domainHref, tenant);
+		String domainsResponse = rc.get(domainHref, tenant, null);
 		logger.info("Checking tenant (" + tenant + ") subscriptions. Domains list response is " + domainsResponse);
 		JsonUtil ju = JsonUtil.buildNormalMapper();
 		try {
@@ -149,7 +167,7 @@ public class TenantSubscriptionUtil
 			String appMappingUrl = tenantAppUrl + "/lookups?opcTenantId=" + tenant;
 			logger.info(
 					"Checking tenant (" + tenant + ") subscriptions. tenant application mapping lookup URL is " + appMappingUrl);
-			String appMappingJson = rc.get(appMappingUrl, tenant);
+			String appMappingJson = rc.get(appMappingUrl, tenant, null);
 			logger.info("Checking tenant (" + tenant + ") subscriptions. application lookup response json is " + appMappingJson);
 			if (appMappingJson == null || "".equals(appMappingJson)) {
 				return null;

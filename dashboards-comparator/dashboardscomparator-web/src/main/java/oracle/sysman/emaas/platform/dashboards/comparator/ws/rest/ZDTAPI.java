@@ -11,6 +11,7 @@
 package oracle.sysman.emaas.platform.dashboards.comparator.ws.rest;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -21,6 +22,8 @@ import javax.ws.rs.core.Response.Status;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
+import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.tenant.TenantIdProcessor;
 import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.counts.CountsEntity;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.counts.DashboardCountsComparator;
@@ -141,12 +144,15 @@ public class ZDTAPI
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response compareOnDF()
+	public Response compareOnDF(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
+            @HeaderParam(value = "X-REMOTE-USER") String userTenant)
 	{
 		logger.info("There is an incoming call from ZDT comparator API to compare");
 		// this comparator invokes the 2 instances REST APIs and retrieves the counts for objects (like dashboards), and return the counts for each instance
+		/*Long tenantId = null;
+        tenantId = getTenantId(tenantIdParam);*/
 		DashboardCountsComparator dcc = new DashboardCountsComparator();
-		InstancesComparedData<CountsEntity> result = dcc.compare();
+		InstancesComparedData<CountsEntity> result = dcc.compare(tenantIdParam, userTenant);
 		InstancesComapredCounts ic = new InstancesComapredCounts(new InstanceCounts(result.getInstance1()),
 				new InstanceCounts(result.getInstance2()));
 
@@ -156,19 +162,41 @@ public class ZDTAPI
 	@PUT
 	@Path("sync")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response syncOnDF()
+	public Response syncOnDF(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
+            @HeaderParam(value = "X-REMOTE-USER") String userTenant)
 	{
 		logger.info("There is an incoming call from ZDT comparator API to sync");
 		// this comparator invokes the 2 instances REST APIs and retrieves the different table rows for the 2 instances, and update the 2 instances accordingly
 		DashboardRowsComparator dcc = new DashboardRowsComparator();
-		InstancesComparedData<TableRowsEntity> result = dcc.compare();
+		InstancesComparedData<TableRowsEntity> result = dcc.compare(tenantIdParam, userTenant);
 		try {
-			dcc.sync(result);
+			dcc.sync(result, tenantIdParam, userTenant);
 			return Response.status(Status.NO_CONTENT).build();
 		}
 		catch (Exception e) {
 			logger.error(e.getLocalizedMessage(), e);
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Failed to sync data for the 2 instances").build();
 		}
+	}
+	
+	public Long getTenantId(String tenantId)
+	{
+		if (tenantId == null) {
+			logger.error("No tenant information");
+			return null;
+		}
+					
+			try {
+				long internalTenantId = TenantIdProcessor.getInternalTenantIdFromOpcTenantId(tenantId);
+				logger.info("Get internal tenant id {} from opc tenant id {}", internalTenantId, tenantId);
+				return internalTenantId;
+			} catch (BasicServiceMalfunctionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			return null;
+		
+
 	}
 }
