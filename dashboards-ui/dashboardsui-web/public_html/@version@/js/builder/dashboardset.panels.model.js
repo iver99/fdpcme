@@ -416,10 +416,10 @@ define([
             
             //binding pop-up dialog
             function startBindingPopupDialog() {
-                if(!hasPopDialogBinded){
-                   ko.applyBindings(self, document.getElementById('popUp-dialog'));
-                   hasPopDialogBinded=true;
-                }             
+//                if(!hasPopDialogBinded){
+//                   ko.applyBindings(self, document.getElementById('popUp-dialog'));
+//                   hasPopDialogBinded=true;
+//                }             
             }
 
             Builder.registerFunction(startBindingPopupDialog, 'startBindingPopupDialog');
