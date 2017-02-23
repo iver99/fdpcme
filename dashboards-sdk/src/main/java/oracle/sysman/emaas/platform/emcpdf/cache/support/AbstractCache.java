@@ -17,6 +17,8 @@ import java.util.concurrent.TimeUnit;
 public abstract class AbstractCache implements ICache{
     Logger LOGGER=LogManager.getLogger(AbstractCache.class);
 
+    protected SimpleCacheCounter cacheCounter = new SimpleCacheCounter();
+
     @Override
     public Object get(Object key) throws ExecutionException {
         return get(key,null);
@@ -27,10 +29,12 @@ public abstract class AbstractCache implements ICache{
         checkNotNull(key);
         CachedItem value=lookup(key);
         Object valueFromFactory= null;
+        cacheCounter.recordRequest(1L);
         if(value!=null ){
             if(isExpired(value)){
                 evict(key);
             }else{
+                cacheCounter.recordHit(1L);
                 return value.getValue();
             }
         }
@@ -69,6 +73,17 @@ public abstract class AbstractCache implements ICache{
         return get(key,factory);
     }
 
+    @Override
+    public void evict(Object key) {
+        cacheCounter.recordEviction(1L);
+    }
+
+    @Override
+    public void clear() {
+        LOGGER.debug("All Cache status data is reset!");
+        cacheCounter.reset();
+    }
+
     protected abstract CachedItem lookup(Object key);
 
     private  <T> T checkNotNull(T reference) {
@@ -77,5 +92,86 @@ public abstract class AbstractCache implements ICache{
             throw new NullPointerException();
         }
         return reference;
+    }
+
+    public interface CacheCounter{
+        void recordHit(long count);
+
+        void recordRequest(long count);
+
+        void recordEviction(long count);
+
+        String getHitRate();
+
+        void reset();
+    }
+
+    //A simple cache counter
+    /**
+     * Attention: This cache counter is not synchronized, so there might be deviation of the statistic data.
+     */
+    public class SimpleCacheCounter implements CacheCounter{
+
+        private long hitCount;
+        private long requestCount;
+        private long evictionCount;
+
+        public SimpleCacheCounter() {
+            hitCount = 0L;
+            requestCount = 0L;
+            evictionCount = 0L;
+        }
+
+        @Override
+        public void recordHit(long count) {
+            hitCount+=count;
+        }
+
+        @Override
+        public void recordRequest(long count) {
+            requestCount+=count;
+        }
+
+        @Override
+        public void recordEviction(long count) {
+            evictionCount+=count;
+        }
+
+        @Override
+        public String getHitRate() {
+            //TODO
+            return "0%";
+        }
+
+        @Override
+        public void reset() {
+            hitCount = 0L;
+            requestCount = 0L;
+            evictionCount = 0L;
+        }
+
+        public long getHitCount() {
+            return hitCount;
+        }
+
+        public void setHitCount(long hitCount) {
+            this.hitCount = hitCount;
+        }
+
+        public long getRequestCount() {
+            return requestCount;
+        }
+
+        public void setRequestCount(long requestCount) {
+            this.requestCount = requestCount;
+        }
+
+        public long getEvictionCount() {
+            return evictionCount;
+        }
+
+        public void setEvictionCount(long evictionCount) {
+            this.evictionCount = evictionCount;
+        }
     }
 }
