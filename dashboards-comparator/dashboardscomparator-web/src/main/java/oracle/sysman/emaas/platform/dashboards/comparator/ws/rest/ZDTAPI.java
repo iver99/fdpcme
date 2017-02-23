@@ -42,7 +42,7 @@ public class ZDTAPI
 
 		public InstanceCounts(InstanceData<CountsEntity> data)
 		{
-			instanceName = data.getInstance().getKey();
+			instanceName = data.getKey();
 			counts = data.getData();
 		}
 
@@ -149,6 +149,7 @@ public class ZDTAPI
 		InstancesComparedData<CountsEntity> result = dcc.compare();
 		InstancesComapredCounts ic = new InstancesComapredCounts(new InstanceCounts(result.getInstance1()),
 				new InstanceCounts(result.getInstance2()));
+
 		return Response.status(Status.OK).entity(JsonUtil.buildNormalMapper().toJson(ic)).build();
 	}
 

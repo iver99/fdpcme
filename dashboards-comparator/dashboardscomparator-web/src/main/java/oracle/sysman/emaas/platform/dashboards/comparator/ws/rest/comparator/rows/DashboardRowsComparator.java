@@ -11,6 +11,7 @@
 package oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -42,28 +43,42 @@ public class DashboardRowsComparator extends AbstractComparator
 	{
 		try {
 			logger.info("Starts to compare the two DF OMC instances: table by table and row by row");
-			Entry<String, LookupClient>[] instances = getOMCInstances();
+			HashMap<String, LookupClient> instances = getOMCInstances();
 			if (instances == null) {
 				logger.error("Failed to retrieve ZDT OMC instances: null retrieved");
 				return null;
 			}
-			Entry<String, LookupClient> ins1 = instances[0];
-			TableRowsEntity tre1 = retrieveRowsForSingleInstance(ins1.getValue());
+			
+			String key1 = null;
+			String key2 = null;
+			LookupClient client1 = null;
+			LookupClient client2 = null;
+			for (String key : instances.keySet()) {
+				if (client1 == null) {
+					client1 = instances.get(key);
+					key1 = key;
+				} else {
+					if (client2 == null)
+					client2 = instances.get(key);
+					key2 = key;
+				}
+			}
+			
+			TableRowsEntity tre1 = retrieveRowsForSingleInstance(client1);
 			if (tre1 == null) {
-				logger.error("Failed to retrieve ZDT table rows entity for instance {}", ins1.getKey());
+				logger.error("Failed to retrieve ZDT table rows entity for instance {}", key1);
 				logger.info("Completed to compare the two DF OMC instances");
 				return null;
 			}
 
-			Entry<String, LookupClient> ins2 = instances[1];
-			TableRowsEntity tre2 = retrieveRowsForSingleInstance(ins2.getValue());
+			TableRowsEntity tre2 = retrieveRowsForSingleInstance(client2);
 			if (tre2 == null) {
-				logger.error("Failed to retrieve ZDT table rows entity for instance {}", ins2.getKey());
+				logger.error("Failed to retrieve ZDT table rows entity for instance {}", key2);
 				logger.info("Completed to compare the two DF OMC instances");
 				return null;
 			}
-			InstancesComparedData<TableRowsEntity> cd = compareInstancesData(new InstanceData<TableRowsEntity>(ins1, tre1),
-					new InstanceData<TableRowsEntity>(ins2, tre2));
+			InstancesComparedData<TableRowsEntity> cd = compareInstancesData(new InstanceData<TableRowsEntity>(key1, client1, tre1),
+					new InstanceData<TableRowsEntity>(key1, client1, tre2));
 			logger.info("Completed to compare the two DF OMC instances");
 			return cd;
 		}
@@ -79,9 +94,11 @@ public class DashboardRowsComparator extends AbstractComparator
 			return;
 		}
 		// switch the data for the instances for sync
-		InstanceData<TableRowsEntity> instance1 = new InstanceData<TableRowsEntity>(instancesData.getInstance1().getInstance(),
+		InstanceData<TableRowsEntity> instance1 = new InstanceData<TableRowsEntity>(instancesData.getInstance1().getKey(),
+				instancesData.getInstance1().getClient(),
 				instancesData.getInstance2().getData());
-		InstanceData<TableRowsEntity> instance2 = new InstanceData<TableRowsEntity>(instancesData.getInstance2().getInstance(),
+		InstanceData<TableRowsEntity> instance2 = new InstanceData<TableRowsEntity>(instancesData.getInstance2().getKey(),
+				instancesData.getInstance2().getClient(),
 				instancesData.getInstance1().getData());
 		InstancesComparedData<TableRowsEntity> syncData = new InstancesComparedData<TableRowsEntity>(instance1, instance2);
 		syncForInstance(syncData.getInstance1());
@@ -193,8 +210,8 @@ public class DashboardRowsComparator extends AbstractComparator
 			return null;
 		}
 		// prepare the output compared data
-		InstanceData<TableRowsEntity> outData1 = new InstanceData<TableRowsEntity>(insData1.getInstance(), new TableRowsEntity());
-		InstanceData<TableRowsEntity> outData2 = new InstanceData<TableRowsEntity>(insData2.getInstance(), new TableRowsEntity());
+		InstanceData<TableRowsEntity> outData1 = new InstanceData<TableRowsEntity>(insData1.getKey(), insData1.getClient(), new TableRowsEntity());
+		InstanceData<TableRowsEntity> outData2 = new InstanceData<TableRowsEntity>(insData2.getKey(), insData2.getClient(), new TableRowsEntity());
 		InstancesComparedData<TableRowsEntity> cd = new InstancesComparedData<TableRowsEntity>(outData1, outData2);
 		compareDashboardRows(insData1.getData().getEmsDashboard(), insData2.getData().getEmsDashboard(), cd);
 		compareDashboardSetRows(insData1.getData().getEmsDashboardSet(), insData2.getData().getEmsDashboardSet(), cd);
@@ -260,7 +277,7 @@ public class DashboardRowsComparator extends AbstractComparator
 
 	private String syncForInstance(InstanceData<TableRowsEntity> instance) throws Exception
 	{
-		Link lk = getSingleInstanceUrl(instance.getInstance().getValue(), "zdt/sync", "http");
+		Link lk = getSingleInstanceUrl(instance.getClient(), "zdt/sync", "http");
 		if (lk == null) {
 			logger.warn("Get a null or empty link for one single instance!");
 			return null;
