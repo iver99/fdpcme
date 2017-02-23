@@ -186,8 +186,8 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', ['knocko
             
             function resizeMenuHeight(){
                 var windowH = $(window).height();
-                var brandingbarH = 52;
-                $("#hamburger-menu").height(windowH - brandingbarH);
+                var brandingbarH = 53;
+                $("#hamburger-menu11").height(windowH - brandingbarH);
                 
             }
 
