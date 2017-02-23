@@ -46,7 +46,7 @@ public class LinkedHashMapCache extends AbstractCache{
             public void run() {
                 logCacheStatus();
             }
-        },1000L, 60000L);
+        },1000L, CacheConstants.LOG_INTERVAL);
         LOGGER.info("Cache group named {} is created with capacity {} and timeToLive {}",name,capacity,timeToLive);
     }
 
