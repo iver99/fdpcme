@@ -10,6 +10,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.LinkedHashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by chehao on 2016/12/9.
@@ -22,6 +24,7 @@ public class LinkedHashMapCache extends AbstractCache{
     private Integer capacity;
     private Long timeToLive;
     private Long creationTime;
+    Timer timer;
 
     public LinkedHashMapCache(String name, Integer capacity, Long timeToLive){
         this.name=name;
@@ -36,6 +39,14 @@ public class LinkedHashMapCache extends AbstractCache{
                 return size() > LinkedHashMapCache.this.capacity-2;
             }
         };
+        // log cache status at fixed rate
+        timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                logCacheStatus();
+            }
+        },1000L, CacheConstants.LOG_INTERVAL);
         LOGGER.info("Cache group named {} is created with capacity {} and timeToLive {}",name,capacity,timeToLive);
     }
 
@@ -46,6 +57,7 @@ public class LinkedHashMapCache extends AbstractCache{
 
     @Override
     public void clear() {
+        super.clear();
         cacheMap.clear();
     }
 
@@ -68,6 +80,7 @@ public class LinkedHashMapCache extends AbstractCache{
 
     @Override
     public void evict(Object key) {
+        super.evict(key);
         cacheMap.remove(key);
         LOGGER.debug("Cached Item with key {} is evicted from cache group {}",key,name);
     }
@@ -90,6 +103,18 @@ public class LinkedHashMapCache extends AbstractCache{
         }
         return (System.currentTimeMillis()-cachedItem.getCreationTime())>TimeUtil.toMillis(timeToLive);
     }
+
+    private void logCacheStatus(){
+        LOGGER.info("[Cache Status] Cache group name is {}, " +
+                        "cache group capacity is {}, " +
+                        "cache group usage is {}, " +
+                        "total request count is {}, " +
+                        "cache hit count is {}, " +
+                        "cache hit rate is {}, " +
+                        "cache eviction count is {}", name, capacity, cacheMap.size(),
+                cacheCounter.getRequestCount(), cacheCounter.getHitCount(), cacheCounter.getHitRate(), cacheCounter.getEvictionCount());
+    }
+
 
 }
 
