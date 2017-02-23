@@ -1,3 +1,4 @@
+    <div class="emaas-brandingbar">
         <div class="emaas-appheader">
             <div id="emaas-appheader-bar" data-testapiversion="1.16.0" class="oj-row emaas-appheader-lite" style="max-width: 1920px;padding-left: 10px">
 
@@ -112,7 +113,7 @@
             </div>  
             
             <!-- ko if: showEntitySelector() -->
-            <span style="float: left;padding-top:3px;margin-right:6px;">
+            <span style="float: left;padding-top:5px;padding-bottom: 5px;margin-right:6px;">
             <div id="topologyButtonWrapper" data-bind="ojComponent: {component: 'ojButtonset', checked: isTopologyButtonChecked}" style="height:32px; background-color: white; border-radius: 2px;">
             <label for="buttonShowTopology"></label>
             <input type="checkbox" id="buttonShowTopology" value="buttonShowTopology" class="oj-button-half-chrome emaas-appheader-toolbar-button" role="button"
@@ -131,7 +132,7 @@
             </div>
             <!-- /ko -->
             <!-- ko if: !showEntityContextSelector() -->
-            <div class="ude-sdk emaas-appheader-inline-flexbox emaas-appheader-flexbox-auto animated_transitions" style="padding-bottom: 10px; padding-top: 3px; height: 32px; display: flex;">
+            <div class="ude-sdk emaas-appheader-inline-flexbox emaas-appheader-flexbox-auto animated_transitions" style="padding-bottom: 5px; padding-top: 5px; height: 32px; display: flex;">
             <div class="ude-sdk emcta_panel_border flexBoxNoShrink flexBoxColumn flexBoxAuto animated_transitions" id="globalBar_wrapper"
                  style="padding:2px;">
                 <!-- ko if: compositeCxtText() -->
@@ -172,13 +173,13 @@
             <!-- /ko -->
             <!-- ko if: showTimeSelector() === true -->
                 <!-- ko if: showEntitySelector() === false -->
-                    <div class="ude-sdk emaas-appheader-inline-flexbox emaas-appheader-flexbox-auto animated_transitions" style="padding-bottom: 10px; padding-top: 3px; height: 32px; display: flex;">
+                    <div class="ude-sdk emaas-appheader-inline-flexbox emaas-appheader-flexbox-auto animated_transitions" style="padding-bottom: 5px; padding-top: 5px; height: 32px; display: flex;">
                         <div class="ude-sdk emcta_panel_border flexBoxNoShrink flexBoxColumn flexBoxAuto animated_transitions" id="globalBar_wrapper"
                             style="padding:2px;">
                         </div>
                     </div>
                 <!-- /ko -->
-                <div id ="emaas-appheader-timecxt" class="emaas-appheader-time-context" data-bind="component: {name: 'df-datetime-picker', params: timeSelectorParams}" style="padding-top: 3px">
+                <div id ="emaas-appheader-timecxt" class="emaas-appheader-time-context" data-bind="component: {name: 'df-datetime-picker', params: timeSelectorParams}" style="padding-top: 5px">
                 </div>
             <!-- /ko -->
         </div>
@@ -187,7 +188,7 @@
         <!-- ko if: showEntitySelector() -->
         <!-- topology --->
         <!-- ko if: isTopologyCompRegistered() !== false -->
-        <div id="ude-topology-div" style="overflow-y:auto; height:auto; background-color:white; display: flex;"
+        <div id="ude-topology-div" style="overflow-y:auto; height:auto; display: flex; padding-left: 10px; padding-right: 10px; padding-bottom: 5px;"
              data-bind="visible: isTopologyDisplayed, event: {mouseover: showTopologyMaxIcon, mouseout: hideTopologyMaxIcon}" class="ude-sdk">
             <!-- ko if: topologyHeight() > 201 -->
             <div id="ude-topology-title" style="display: flex; position: absolute; right: 20px; z-index: 1">
@@ -203,7 +204,8 @@
             <!-- /ko -->
             
             <!--<div data-bind="attr: {style: topologyStyle}" style="margin: 0 auto">test div</div>-->
-            
+        <div style="overflow-y: auto; height: auto; display: flex;
+            border-width: 1px; border-color: #d6dfe6; border-style: solid; background-color: white;">
         <div class="ude-topology ude-topology-in-brandingbar" data-bind="attr: {style: topologyStyle},
            component:{name:'emctas-topology', 
             params:{
@@ -221,13 +223,15 @@
                    topologyData: topologyData
                 }
             }">
-        </div>      
+        </div>
+        </div>
         </div>
         <!-- /ko -->
         <!-- End of topology -->
         <!-- /ko -->
 
         <!-- /ko -->  <!-- End of Global Context Banner -->
+    </div>  <!--End of emaas-brandingbar-->
 
         <!-- ko if: hasMessages -->
         <div>
