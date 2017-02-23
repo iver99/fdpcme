@@ -149,7 +149,7 @@ public class DataAccessUtilTest
 
 	@Mocked final Link anyLink = new Link();
 
-	@Test
+	@Test(groups = { "s2" })
 	public void testGetTenantSubscribedServices(@Mocked final RegistryLookupUtil anyRegistryLookupUtil,@Mocked final ICache cache,
 												@Mocked final DataAccessUtil.RestClient rs,@Mocked final StringUtil stringUtil,
 												@Mocked final CacheManagers cacheManagers, @Mocked final ICacheManager cacheManager) throws ExecutionException {
