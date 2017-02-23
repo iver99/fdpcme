@@ -274,8 +274,7 @@ public class BugVerification extends LoginAndLogout
                 //create dashboard
 	        BrandingBarUtil.visitDashboardHome(webd);
 	        DashboardHomeUtil.gridView(webd);
-	        DashboardHomeUtil.createDashboard(webd, "Dashboard_EMCPDF2856", 
-     null);
+	        DashboardHomeUtil.createDashboard(webd, "Dashboard_EMCPDF2856", null);
 	        Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, "Dashboard_EMCPDF2856", null, true), "Create dashboard failed!");
 	
 	        //set it as home
