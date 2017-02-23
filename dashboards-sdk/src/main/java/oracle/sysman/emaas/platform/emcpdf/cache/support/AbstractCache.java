@@ -15,26 +15,26 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by chehao on 2016/12/22.
  */
-public abstract class AbstractCache implements ICache{
-    Logger LOGGER=LogManager.getLogger(AbstractCache.class);
+public abstract class AbstractCache implements ICache {
+    Logger LOGGER = LogManager.getLogger(AbstractCache.class);
 
     protected SimpleCacheCounter cacheCounter = new SimpleCacheCounter();
 
     @Override
     public Object get(Object key) throws ExecutionException {
-        return get(key,null);
+        return get(key, null);
     }
 
     @Override
-    public Object get(Object key, CacheLoader factory)throws ExecutionException {
+    public Object get(Object key, CacheLoader factory) throws ExecutionException {
         checkNotNull(key);
-        CachedItem value=lookup(key);
-        Object valueFromFactory= null;
+        CachedItem value = lookup(key);
+        Object valueFromFactory = null;
         cacheCounter.recordRequest(1L);
-        if(value!=null ){
-            if(isExpired(value)){
+        if (value != null) {
+            if (isExpired(value)) {
                 evict(key);
-            }else{
+            } else {
                 cacheCounter.recordHit(1L);
                 return value.getValue();
             }
@@ -55,23 +55,23 @@ public abstract class AbstractCache implements ICache{
 
     @Override
     public Object refreshAfterGet(final Object key, final CacheLoader factory) throws ExecutionException {
-        ScheduledExecutorService pool= CacheThreadPools.getThreadPool();
+        ScheduledExecutorService pool = CacheThreadPools.getThreadPool();
         LOGGER.info("Refresh after get action begin...");
         pool.schedule(new TimerTask() {
             @Override
             public void run() {
                 LOGGER.info("Refresh...");
-                Object obj= null;
+                Object obj = null;
                 try {
-                    obj = get(key,factory);
+                    obj = get(key, factory);
                 } catch (ExecutionException e) {
                     e.printStackTrace();
                 }
-                put(key,new CachedItem(key,obj));
+                put(key, new CachedItem(key, obj));
             }
         }, 30, TimeUnit.SECONDS);
         LOGGER.info("Refresh after get action end...");
-        return get(key,factory);
+        return get(key, factory);
     }
 
     @Override
@@ -87,7 +87,7 @@ public abstract class AbstractCache implements ICache{
 
     protected abstract CachedItem lookup(Object key);
 
-    private  <T> T checkNotNull(T reference) {
+    private <T> T checkNotNull(T reference) {
         if (reference == null) {
             LOGGER.error("Null Pointer Exception occurred!");
             throw new NullPointerException();
@@ -95,7 +95,7 @@ public abstract class AbstractCache implements ICache{
         return reference;
     }
 
-    public interface CacheCounter{
+    public interface CacheCounter {
         void recordHit(long count);
 
         void recordRequest(long count);
@@ -108,10 +108,11 @@ public abstract class AbstractCache implements ICache{
     }
 
     //A simple cache counter
+
     /**
      * Attention: This cache counter is not synchronized, so there might be deviation of the statistic data.
      */
-    public class SimpleCacheCounter implements CacheCounter{
+    public class SimpleCacheCounter implements CacheCounter {
 
         private long hitCount;
         private long requestCount;
@@ -125,26 +126,29 @@ public abstract class AbstractCache implements ICache{
 
         @Override
         public void recordHit(long count) {
-            hitCount+=count;
+            hitCount += count;
         }
 
         @Override
         public void recordRequest(long count) {
-            requestCount+=count;
+            requestCount += count;
         }
 
         @Override
         public void recordEviction(long count) {
-            evictionCount+=count;
+            evictionCount += count;
         }
 
         @Override
         public String getHitRate() {
-            if(hitCount > requestCount){
+            if (hitCount == 0L || requestCount == 0L) {
+                return "0%";
+            }
+            if (hitCount > requestCount) {
                 return "100.00%";
             }
-            Double rate =  Double.valueOf(hitCount) / Double.valueOf(requestCount);
-            rate *=100;
+            Double rate = Double.valueOf(hitCount) / Double.valueOf(requestCount);
+            rate *= 100;
             DecimalFormat df = new DecimalFormat("0.00");
             return df.format(rate) + "%";
         }
