@@ -204,6 +204,8 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	private static final String NAV_STATIC_CONFIGURATIONS = NAV_API_BASE + "configurations";
 	private static final String NAV_LOGGING_CONFIG = NAV_API_BASE + "_logging/configs";
 	private static final String NAV_ZDT_COUNTS = NAV_API_BASE + "zdt/counts";
+	private static final String NAV_ZDT_TABLEROWS = NAV_API_BASE + "zdt/tablerows";
+	private static final String NAV_ZDT_SYNC = NAV_API_BASE + "zdt/sync";
 	private static final String NAV_STATIC_OMCSTATUS = NAV_API_BASE + "omcstatus";
 	private static final String NAV_WIDGET_NOTIFY = NAV_API_BASE + "widgetnotification";
 
@@ -414,6 +416,20 @@ public class RegistryServiceManager implements ApplicationServiceManager
 			}
 			if (applicationUrlHttps != null) {
 				links.add(new Link().withRel("zdt/counts").withHref(applicationUrlHttps + NAV_ZDT_COUNTS));
+			}
+			if (applicationUrlHttp != null) {
+				links.add(new Link().withRel("zdt/tablerows").withHref(applicationUrlHttp + NAV_ZDT_TABLEROWS));
+			}
+			if (applicationUrlHttps != null) {
+				links.add(new Link().withRel("zdt/tablerows").withHref(applicationUrlHttps + NAV_ZDT_TABLEROWS));
+			}
+			if (applicationUrlHttp != null) {
+				links.add(new Link().withRel("zdt/sync").withHref(applicationUrlHttp + NAV_ZDT_SYNC));
+			}
+			if (applicationUrlHttps != null) {
+				links.add(new Link().withRel("zdt/sync").withHref(applicationUrlHttps + NAV_ZDT_SYNC));
+			}
+			if (applicationUrlHttp != null) {
 				links.add(new Link().withRel("ssf.widget.changed").withHref(applicationUrlHttp + NAV_WIDGET_NOTIFY));
 			}
 			if (applicationUrlHttps != null) {

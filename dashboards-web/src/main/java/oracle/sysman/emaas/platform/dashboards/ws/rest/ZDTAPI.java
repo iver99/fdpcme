@@ -99,6 +99,7 @@ public class ZDTAPI extends APIBase
 	@PUT
 	@Path("sync")
 	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response sync(JSONObject dataToSync)
 	{
 		infoInteractionLogAPIIncomingCall(null, null, "Service call to [PUT] /v1/zdt/sync");
