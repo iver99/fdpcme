@@ -3242,13 +3242,23 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 self.showOverFlowedLabelPopUp = ko.observable(false);
                 self.labelMouseOverHandler = function() {
                     var labelEle = $(self.wrapperId + " .oj-select-chosen")[0];
-                    if(labelEle && (labelEle.offsetWidth <= labelEle.scrollWidth)) {
-                        self.showOverFlowedLabelPopUp(true);
-                        var overflowedLabel = $(labelEle).text();
-                        if(!params.hideRangeLabel) {
-                            overflowedLabel = overflowedLabel.substring(overflowedLabel.indexOf(":")+1);
-                        }
-                        self.overflowedLabelInfo(overflowedLabel);
+                    if(!labelEle) {
+                        return;
+                    }
+                    
+                    self.showOverFlowedLabelPopUp(true);
+                    var overflowedLabel = $(labelEle).text();
+                    if(!params.hideRangeLabel) {
+                        overflowedLabel = overflowedLabel.substring(overflowedLabel.indexOf(":")+1);
+                    }
+                    self.overflowedLabelInfo(overflowedLabel);
+                    //create an invisible ele to get the width of time range content
+                    var ele = "<span id='labelContent' style='font-size:10px;'>"+overflowedLabel+"</span>";
+                    $("body").append(ele);
+                    var contentWidth = $("#labelContent").width();
+                    var labelWidth = $(labelEle).width();
+                    $("#labelContent").remove();
+                    if(labelWidth < contentWidth) {
                         if(!$("#overflowedLabelInfo_"+self.randomId).ojPopup("isOpen")) {
                             $("#overflowedLabelInfo_"+self.randomId).ojPopup("open", $(labelEle),
                                 {
