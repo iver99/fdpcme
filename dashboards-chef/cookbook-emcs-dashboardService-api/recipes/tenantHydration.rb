@@ -6,7 +6,9 @@
 
 tenant_hydration_schema_script_dir = "#{node["apps_dir"]}/#{node["SAAS_servicename"]}/#{node["SAAS_version"]}/sql"
 tenant_hydration_sql_filename = "emaas_dashboards_tenant_onboarding.sql"
-log_file="#{node["log_dir"]}/dashboardsOnboarding.log"
+log_file="#{node["log_dir"]}/dashboardsOnboarding_#{node["internalTenantID"]}.log"
+history_log_file="#{node["log_dir"]}/dashboardsOnboarding.log"
+
 # Couples of assumptions:
 #    1. the schema user/password information is passed in
 #       explicitly since the dashboards schema is dynamically
@@ -25,6 +27,19 @@ bash "checkTenantID" do
     exit 1;
   EOF
   not_if { node['internalTenantID'] }
+end
+
+# remove old log file
+ruby_block "remove_old_log" do
+  block do
+    if File.exists?(history_log_file)
+      File.delete(history_log_file)
+    end
+    if File.exists?(log_file)
+      File.delete(log_file)
+    end
+  end
+  action :create
 end
 
 #Use lcm db lookup
@@ -68,29 +83,6 @@ EOH
 }
 end
 
-
-#Add checks which needs to be done after we hydrate tenant
-ruby_block "Runtime checks - Post Tenant Hydration" do
-  block do
-    puts "************** Inside Runtime checks - Post Tenant Hydration "
-                            
-    #Check whether there are any SP2 errors
-      if File.exists?(log_file) 
-          errors = File.foreach(log_file).grep /SP2/
-          if errors.count > 0
-            puts "Found SP2 errors: " + errors[0].to_s
-            Chef::Application.fatal!("SP2 errors found. Please look into: " + log_file);
-          end
-          errors = File.foreach(log_file).grep /ORA-/
-          if errors.count > 0
-            puts "Found ORA- errors: " + errors[0].to_s
-            Chef::Application.fatal!("ORA errors found. Please look into: " + log_file);
-          end
-      end                      
-  end
-  action :run
-end
-
 #----------------------------------------
 # Executing the Tenant Hydration SQL file
 execute "run_tenant_hydration_sql" do
@@ -98,4 +90,23 @@ execute "run_tenant_hydration_sql" do
     command lazy {"#{node["dbhome"]}/bin/sqlplus #{node["db_url"]} @#{tenant_hydration_sql_filename} #{node["internalTenantID"]} #{node["SAAS_schema_sql_root_dir"]} >> #{log_file}"}
 end
 
-
+#Add checks which needs to be done after we hydrate tenant
+ruby_block "Runtime checks - Post Tenant Hydration" do
+  block do
+    puts "************** Inside Runtime checks - Post Tenant Hydration "
+                            
+    #Check whether there are any SQL errors
+      if File.exists?(log_file) 
+          errors = File.foreach(log_file).grep /^ORA-|^SP2-/
+          if errors.count > 0
+            puts "Found SQL errors: " + errors[0].to_s
+            timestamp = Time.now.strftime("%Y-%m-%d-%H-%M-%S")
+            File.rename(log_file, log_file+'.'+timestamp)
+            Chef::Application.fatal!("SQL errors found. Please look into: " + log_file);
+          else
+            File.delete(log_file)
+          end
+      end
+  end
+  action :run
+end
