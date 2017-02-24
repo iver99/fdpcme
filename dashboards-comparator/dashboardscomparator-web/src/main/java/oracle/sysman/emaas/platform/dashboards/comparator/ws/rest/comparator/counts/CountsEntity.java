@@ -16,7 +16,7 @@ package oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.co
 public class CountsEntity
 {
 	private Long countOfDashboards;
-	private Long countOfFavorite;
+	private Long countOfUserOptions;
 	private Long countOfPreference;
 
 	public CountsEntity()
@@ -26,7 +26,7 @@ public class CountsEntity
 	public CountsEntity(Long countOfDashboards, Long countOfFavorite, Long countOfPreference)
 	{
 		this.countOfDashboards = countOfDashboards;
-		this.countOfFavorite = countOfFavorite;
+		this.countOfUserOptions = countOfFavorite;
 		this.countOfPreference = countOfPreference;
 	}
 
@@ -43,7 +43,7 @@ public class CountsEntity
 	 */
 	public Long getCountOfFavorite()
 	{
-		return countOfFavorite;
+		return countOfUserOptions;
 	}
 
 	/**
@@ -69,7 +69,7 @@ public class CountsEntity
 	 */
 	public void setCountOfFavorite(Long countOfFavorite)
 	{
-		this.countOfFavorite = countOfFavorite;
+		this.countOfUserOptions = countOfFavorite;
 	}
 
 	/**

@@ -16,7 +16,7 @@ public class DashboardApplicationTypeTest
 {
 
 	private static final Logger LOGGER = LogManager.getLogger(DashboardApplicationTypeTest.class);
-	@Test(groups = { "s2" })
+	@Test(groups = { "s1" })
 	public void testFromJsonValue()
 	{
 		Assert.assertEquals(DashboardApplicationType.APM, DashboardApplicationType.fromJsonValue("APM"));
@@ -32,6 +32,8 @@ public class DashboardApplicationTypeTest
 		Assert.assertEquals(DashboardApplicationType.OMCSE, DashboardApplicationType.fromJsonValue("OMCSE"));
 		Assert.assertEquals(DashboardApplicationType.OMCEE, DashboardApplicationType.fromJsonValue("OMCEE"));
 		Assert.assertEquals(DashboardApplicationType.OMCLOG, DashboardApplicationType.fromJsonValue("OMCLOG"));
+		Assert.assertEquals(DashboardApplicationType.OMC, DashboardApplicationType.fromJsonValue("OMC"));
+		Assert.assertEquals(DashboardApplicationType.OSMACC, DashboardApplicationType.fromJsonValue("OSMACC"));
 		try {
 			DashboardApplicationType.fromJsonValue("Not Existing");
 			Assert.fail("Fail: trying to get application type from invalid value");
@@ -42,7 +44,7 @@ public class DashboardApplicationTypeTest
 		}
 	}
 
-	@Test(groups = { "s2" })
+	@Test(groups = { "s1" })
 	public void testFromValue()
 	{
 		Assert.assertEquals(DashboardApplicationType.APM, DashboardApplicationType.fromValue(1));
@@ -62,7 +64,7 @@ public class DashboardApplicationTypeTest
 		}
 	}
 
-	@Test(groups = { "s2" })
+	@Test(groups = { "s1" })
 	public void testGetJsonValue()
 	{
 		Assert.assertEquals(DashboardApplicationType.APM_STRING, DashboardApplicationType.APM.getJsonValue());
@@ -78,9 +80,11 @@ public class DashboardApplicationTypeTest
 		Assert.assertEquals(DashboardApplicationType.OMCEE_STRING, DashboardApplicationType.OMCEE.getJsonValue());
 		Assert.assertEquals(DashboardApplicationType.OMCLOG_STRING, DashboardApplicationType.OMCLOG.getJsonValue());
 		Assert.assertEquals(DashboardApplicationType.OMCSE_STRING, DashboardApplicationType.OMCSE.getJsonValue());
+		Assert.assertEquals(DashboardApplicationType.OMC_STRING, DashboardApplicationType.OMC.getJsonValue());
+		Assert.assertEquals(DashboardApplicationType.OSMACC_STRING, DashboardApplicationType.OSMACC.getJsonValue());
 	}
 
-	@Test(groups = { "s2" })
+	@Test(groups = { "s1" })
 	public void testGetBasicServices()
 	{
 		List<DashboardApplicationType> list1 = Arrays.asList(DashboardApplicationType.Compliance, DashboardApplicationType.APM);
@@ -107,6 +111,14 @@ public class DashboardApplicationTypeTest
 		Assert.assertEquals(typeList, DashboardApplicationType.allBasicService);
 		
 		list2 = Arrays.asList(DashboardApplicationType.SECSMA, DashboardApplicationType.SECSMA);
+		typeList = DashboardApplicationType.getBasicServiceList(list2);
+		Assert.assertEquals(typeList, DashboardApplicationType.allBasicService);
+
+		list2 = Arrays.asList(DashboardApplicationType.OMC, DashboardApplicationType.OMC);
+		typeList = DashboardApplicationType.getBasicServiceList(list2);
+		Assert.assertEquals(typeList, DashboardApplicationType.allBasicService);
+
+		list2 = Arrays.asList(DashboardApplicationType.OSMACC, DashboardApplicationType.OSMACC);
 		typeList = DashboardApplicationType.getBasicServiceList(list2);
 		Assert.assertEquals(typeList, DashboardApplicationType.allBasicService);
 		

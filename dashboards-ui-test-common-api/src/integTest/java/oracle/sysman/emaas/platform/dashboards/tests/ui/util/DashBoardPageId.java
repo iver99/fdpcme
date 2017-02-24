@@ -23,6 +23,7 @@ public class DashBoardPageId
 	public static final String DASHBOARDSAVEID = "dashboard-screenshot";
 	public static final String WIDGETADDBUTTON = "emcpdf_dsbopts_add";//"//div[@id='ojDialogWrapper-widgetDetailsDialog']/div[5]/button";////div[18]/div[5]/button/span[text()='Add']";
 	public static final String DASHBOARDEDIT = "//*[@id='emcpdf_dsbopts_edit']";
+	
 	public static final String DASHBOARDDUPLICATE = "//*[@id='emcpdf_dsbopts_duplicate']";
 	public static final String DASHBOARDDELETE = "//*[@id='emcpdf_dsbopts_delete']";
 	public static final String DASHBOARDHOME = "//*[@id='emcpdf_dsbopts_home']";
@@ -80,6 +81,7 @@ public class DashBoardPageId
 	public static final String FILTERSHARELOCATOR = "//*[@id='shareopt']";
 	public static final String FILTERMELOCATOR = "//*[@id='otheropt']";
 	public static final String FILTERFAVORITELOCATOR = "//*[@id='myfavorites']";
+	
 	// sort by
 	public static final String SORTBYSELECTLOCATOR = "//div[not(contains(@style,'display:none'))]//*[contains(@class, 'dsb-sortcb')]//*[contains(@class, 'oj-select-chosen')]";
 	public static final String SORTBYDEFAULTLOCATOR = "/html/body/div/div/div/ul/li[1]/div";

@@ -119,20 +119,20 @@ define(['knockout',
                             {
                                 self.dashboard.description = ko.observable(self.description());
                             }
-
+                            dfu.showMessage({type: 'correct'});
                             $('#edit-dashboard').ojDialog("close");
                         },
-                        error: function (jqXHR, textStatus, errorThrown) {
+                        error: function (jqXHR, textStatus, errorThrown) { 
                         	if (jqXHR && jqXHR[0] && jqXHR[0].responseJSON && jqXHR[0].responseJSON.errorCode === 10001)
                             {
                                  _m = getNlsString('COMMON_DASHBAORD_SAME_NAME_ERROR');
                                  _mdetail = getNlsString('COMMON_DASHBAORD_SAME_NAME_ERROR_DETAIL');
-                                  dfu.showMessage({type: 'error', summary: _m, detail: _mdetail, removeDelayTime: 5000});
+                                  dfu.showMessage({type: 'error', summary: _m, detail: _mdetail });
                             }else if (jqXHR && jqXHR.responseJSON && jqXHR.responseJSON.errorCode === 10001)
                             {
                                 _m = getNlsString('COMMON_DASHBAORD_SAME_NAME_ERROR');
                                 _mdetail = getNlsString('COMMON_DASHBAORD_SAME_NAME_ERROR_DETAIL');
-                                 dfu.showMessage({type: 'error', summary: _m, detail: _mdetail, removeDelayTime: 5000});
+                                 dfu.showMessage({type: 'error', summary: _m, detail: _mdetail});
                             }
                             else
                             {

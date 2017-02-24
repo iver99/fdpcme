@@ -45,6 +45,18 @@ public class TimeSelectorUtil
 		ITimeSelectorUtil tsu = new UtilLoader<ITimeSelectorUtil>().loadUtil(webd, ITimeSelectorUtil.class);
 		return tsu.setCustomTimeWithDateOnly(webd, startDateTime, endDateTime);
 	}
+	
+	public static String setCustomTimeWithMillisecond(WebDriver webd, int index, String startDateTime, String endDateTime)
+	{
+		ITimeSelectorUtil tsu = new UtilLoader<ITimeSelectorUtil>().loadUtil(webd, ITimeSelectorUtil.class);
+		return tsu.setCustomTimeWithMillisecond(webd, index, startDateTime, endDateTime);
+	}
+
+	public static String setCustomTimeWithMillisecond(WebDriver webd, String startDateTime, String endDateTime)
+	{
+		ITimeSelectorUtil tsu = new UtilLoader<ITimeSelectorUtil>().loadUtil(webd, ITimeSelectorUtil.class);
+		return tsu.setCustomTimeWithMillisecond(webd, startDateTime, endDateTime);
+	}
 
 	public static String setFlexibleRelativeTimeRange(WebDriver webd, int index, int relTimeVal, TimeUnit relTimeUnit)
 	{
@@ -68,6 +80,18 @@ public class TimeSelectorUtil
 	{
 		ITimeSelectorUtil tsu = new UtilLoader<ITimeSelectorUtil>().loadUtil(webd, ITimeSelectorUtil.class);
 		return tsu.setFlexibleRelativeTimeRangeWithDateOnly(webd, relTimeVal, relTimeUnit);
+	}
+	
+	public static String setFlexibleRelativeTimeRangeWithMillisecond(WebDriver webd, int index, int relTimeVal, TimeUnit relTimeUnit)
+	{
+		ITimeSelectorUtil tsu = new UtilLoader<ITimeSelectorUtil>().loadUtil(webd, ITimeSelectorUtil.class);
+		return tsu.setFlexibleRelativeTimeRangeWithMillisecond(webd, index, relTimeVal, relTimeUnit);
+	}
+
+	public static String setFlexibleRelativeTimeRangeWithMillisecond(WebDriver webd, int relTimeVal, TimeUnit relTimeUnit)
+	{
+		ITimeSelectorUtil tsu = new UtilLoader<ITimeSelectorUtil>().loadUtil(webd, ITimeSelectorUtil.class);
+		return tsu.setFlexibleRelativeTimeRangeWithMillisecond(webd, relTimeVal, relTimeUnit);
 	}
 
 	public static String setTimeFilter(WebDriver webd, int index, String hoursToExclude, int[] daysToExclude,
@@ -107,5 +131,17 @@ public class TimeSelectorUtil
 	{
 		ITimeSelectorUtil tsu = new UtilLoader<ITimeSelectorUtil>().loadUtil(webd, ITimeSelectorUtil.class);
 		return tsu.setTimeRangeWithDateOnly(webd, rangeOption);
+	}
+	
+	public static String setTimeRangeWithMillisecond(WebDriver webd, int index, TimeRange rangeOption)
+	{
+		ITimeSelectorUtil tsu = new UtilLoader<ITimeSelectorUtil>().loadUtil(webd, ITimeSelectorUtil.class);
+		return tsu.setTimeRangeWithMillisecond(webd, index, rangeOption);
+	}
+
+	public static String setTimeRangeWithMillisecond(WebDriver webd, TimeRange rangeOption)
+	{
+		ITimeSelectorUtil tsu = new UtilLoader<ITimeSelectorUtil>().loadUtil(webd, ITimeSelectorUtil.class);
+		return tsu.setTimeRangeWithMillisecond(webd, rangeOption);
 	}
 }

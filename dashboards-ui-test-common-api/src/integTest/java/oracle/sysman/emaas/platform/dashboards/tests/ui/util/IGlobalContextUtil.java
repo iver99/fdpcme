@@ -92,6 +92,10 @@ public interface IGlobalContextUtil extends IUiTestCommonAPI
 
 	public String setCustomTimeWithDateOnly(WebDriver webd, String startDate, String endDate);
 
+	public String setCustomTimeWithMillisecond(WebDriver webd, int index, String startDateTime, String endDateTime);
+
+	public String setCustomTimeWithMillisecond(WebDriver webd, String startDateTime, String endDateTime);
+
 	public String setFlexibleRelativeTimeRange(WebDriver webd, int index, int relTimeVal, TimeUnit relTimeUnit);
 
 	public String setFlexibleRelativeTimeRange(WebDriver webd, int relTimeVal, TimeUnit relTimeUnit);
@@ -99,6 +103,10 @@ public interface IGlobalContextUtil extends IUiTestCommonAPI
 	public String setFlexibleRelativeTimeRangeWithDateOnly(WebDriver webd, int index, int relTimeVal, TimeUnit relTimeUnit);
 
 	public String setFlexibleRelativeTimeRangeWithDateOnly(WebDriver webd, int relTimeVal, TimeUnit relTimeUnit);
+
+	public String setFlexibleRelativeTimeRangeWithMillisecond(WebDriver webd, int index, int relTimeVal, TimeUnit relTimeUnit);
+
+	public String setFlexibleRelativeTimeRangeWithMillisecond(WebDriver webd, int relTimeVal, TimeUnit relTimeUnit);
 
 	public String setTimeFilter(WebDriver webd, int index, String hoursToExclude, int[] daysToExclude, int[] monthsToExclude)
 			throws Exception;
@@ -113,6 +121,10 @@ public interface IGlobalContextUtil extends IUiTestCommonAPI
 	public String setTimeRangeWithDateOnly(WebDriver webd, int index, TimeRange rangeOption);
 
 	public String setTimeRangeWithDateOnly(WebDriver webd, TimeRange rangeOption);
+	
+	public String setTimeRangeWithMillisecond(WebDriver webd, int index, TimeRange rangeOption);
+
+	public String setTimeRangeWithMillisecond(WebDriver webd, TimeRange rangeOption);
 
 	/**
 	 * Show Topology

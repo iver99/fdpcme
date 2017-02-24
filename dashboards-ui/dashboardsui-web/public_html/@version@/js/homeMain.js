@@ -6,7 +6,7 @@
 requirejs.config({
     bundles: ((window.DEV_MODE !==null && typeof window.DEV_MODE ==="object") ||
                 (window.gradleDevMode !==null && typeof window.gradleDevMode ==="boolean")) ? undefined : {
-        'uifwk/js/uifwk-partition':
+        'uifwk/@version@/js/uifwk-impl-partition-cached':
             [
             'uifwk/js/util/ajax-util',
             'uifwk/js/util/df-util',
@@ -147,7 +147,7 @@ require(['dashboards/dbsmodel',
             if (!ko.components.isRegistered('df-oracle-dashboard-list')) {
                 ko.components.register("df-oracle-dashboard-list",{
                     viewModel:dashboardhome_impl,
-                    template:{require:'text!/emsaasui/emcpdfui/dashboardhome.html'}
+                    template:{require:'text!/emsaasui/emcpdfui/@version@/html/dashboardhome.html'}
                 });
             }
             ko.bindingHandlers.stopBinding = {

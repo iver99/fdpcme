@@ -1,20 +1,25 @@
-        <div data-testapiversion="1.13.0" data-bind="attr: {id: 'dateTimePicker_' + randomId}" style="display: table">
+        <div data-testapiversion="1.16.0" data-bind="attr: {id: 'dateTimePicker_' + randomId}" style="display: table">
             <label for="dropdown" data-bind="attr: {id: 'dropdownLabel_'+randomId}" style="font-weight: bold; font-size: 14px; vertical-align: middle; padding-right: 5px;" data-bind="text: timeRangeMsg, style: {display: hideMainLabel}"></label>
             <span class="oj-select-choice"  style="width: auto; display: inline-block" data-bind="attr: {id: 'dropDown_'+randomId}, click: panelControl, event: {keypress: function(data, event) {if(isEnterPressed(data, event)) {panelControl();}}}" aria-label="Pick datetime"> 
                 <span class="oj-select-chosen" style="padding-right: 24px;" data-bind="html: dateTimeInfo"></span>
+                <!-- ko if: tfInfoIndicatorVisible() === true -->
                 <span class="time-filter-indicator fa-icon-font" 
                   data-bind="event: {mouseover: showTimeFilterInfo, mouseout: hideTimeFilterInfo, 
                               keypress: function(data, event) {event.stopPropagation(); if(isEnterPressed(data, event)) {toggleTimeFilterInfo();}}},
                               click: toggleTimeFilterInfo, clickBubble: false,
-                             visible: tfInfoIndicatorVisible, attr: {id: 'tfInfoIndicator_'+randomId, 'aria-label': tfIndicatorLabel}"></span>
+                              attr: {id: 'tfInfoIndicator_'+randomId, 'aria-label': tfIndicatorLabel}"></span>
+                <!-- /ko -->
                 <a class="oj-select-arrow oj-component-icon oj-clickable-icon-nocontext oj-select-open-icon"></a>
             </span>
            
             <!-- popup for time filter info -->
+            <!-- ko if: showTimeFilterInfoPopUp() === true -->
             <div style="display: none;" data-bind="ojComponent: {component: 'ojPopup'}, attr: {id: 'tfInfo_'+randomId}">
                 <span data-bind="html: timeFilterInfo"></span>
             </div>
+            <!-- /ko -->
 
+            <!-- ko if: showPanel() === true -->
             <div class="panel" style="display:inline-block; padding: 0px; margin: 0px;" data-bind="ojComponent: {component: 'ojPopup', chrome: 'none', beforeClose: setLastDatas}, click: function(data, event) {event.stopPropagation();return true;}, attr: {id: 'panel_'+randomId}"> 
                 <!-- left of panel -->
                 <div class="drawers" data-bind="style: {height: leftDrawerHeight}">
@@ -49,6 +54,7 @@
                 <!--<div class="pickerPanel" data-bind="visible: showRightPanel, attr: {id: 'pickerPanel_'+randomId}">-->
                 <div class="pickerPanel" data-bind="ojComponent: {component: 'ojPopup', chrome: 'none'}, attr: {id: 'pickerPanel_'+randomId}, click: function(data, event) {event.stopPropagation();return true;}, css: pickerPanelCss">
 
+                    <!-- ko if: hideLastRange() !== true -->
                     <div class="lrControlRadios">
                         <span>
                             <input type="radio" name="lrCtrl" value="flexRelTimeCtrl" data-bind="checked: lrCtrlVal">
@@ -62,7 +68,7 @@
                         <select data-bind="ojComponent: {component: 'ojSelect', value: flexRelTimeOpt,
                             rootAttributes: {style: 'max-width: 108px;', id: 'flexRelTimeOpt_' + randomId}, 
                             optionChange: flexRelTimeOptChanged, disabled: lrCtrlVal()!=='flexRelTimeCtrl'}">
-                            <!-- ko if: (shouldShowTimeLevel("second") && hideTimeSelection() !== true && showTimeAtMillisecond === true) -->
+                            <!-- ko if: (shouldShowTimeLevel("second") && hideTimeSelection() !== true && showTimeAtMillisecond() === true) -->
                                 <!-- ko if: flexRelTimeVal() === 1 -->
                                     <option value="SECOND" data-bind="text: nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_SECOND"></option>
                                 <!-- /ko -->
@@ -136,6 +142,7 @@
                             </select>-->
                         </span>
                     </div>
+                    <!-- /ko -->
 
                     <span style="display: inline-block;" tabindex="0" data-bind="click: timeFilterControl, event: {keypress: function(data, event) {if(isEnterPressed(data, event)) {timeFilterControl();}}}, visible: enableTimeFilter, css: timeFilterIconCss, attr: {'aria-label': timeFilterAlt}">
                         <!--func_gear_16_ena-->
@@ -210,7 +217,7 @@
                     <div class="buttons">
                         <button id="apply-button" data-bind="click: applyClick, ojComponent:{component: 'ojButton', label: applyButton, disabled: applyButtonDisable}, attr: {id: 'applyButton_'+randomId}">
                         </button>
-                        <button id="cancel-button" data-bind="click: cancelClick, ojComponent:{component: 'ojButton', label: cancelButton}, attr: {id: 'cancelButton_'+randomId}"> 
+                        <button class="cancel-button" id="cancel-button" data-bind="click: cancelClick, ojComponent:{component: 'ojButton', label: cancelButton}, attr: {id: 'cancelButton_'+randomId}"> 
                         </button>
                         <span style="font-size: 14px; padding-left: 10px;" data-bind="text: timeZone"></span>
                     </div>
@@ -231,6 +238,7 @@
                         <!-- /ko -->
                     </div>
                 </div>
-            </div> 
+            </div>
+            <!-- /ko -->
 
         </div>

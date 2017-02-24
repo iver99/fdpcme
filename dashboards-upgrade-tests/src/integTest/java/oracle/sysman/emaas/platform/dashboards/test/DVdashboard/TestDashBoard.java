@@ -1,5 +1,6 @@
 package oracle.sysman.emaas.platform.dashboards.test.DVdashboard;
 
+//import oracle.sysman.emaas.platform.dashboards.test.DPdashboard.*;
 import oracle.sysman.emaas.platform.dashboards.test.util.DashBoardUtils;
 import oracle.sysman.emaas.platform.dashboards.test.util.LoginAndLogout;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
@@ -7,7 +8,10 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.WelcomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
@@ -166,9 +170,68 @@ public void testSetHome()
 		webd.getLogger().info("the dashboard has been deleted");
 	}
 
+         @Test
+          public void testModifyDashboard_LA() 
+		{
+					
+		//init test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test in testOpenLAWidget");
 
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
 
+		//switch to Grid View
+		webd.getLogger().info("Switch to Grid view");
+		DashboardHomeUtil.gridView(webd);
+		
+      //open the dashboard
+		webd.getLogger().info("Open the dashboard");
+		DashboardHomeUtil.selectDashboard(webd, oracle.sysman.emaas.platform.dashboards.test.DPdashboard.TestDashBoard.dbName_WithWidget);
 
+		//open the widget
+		webd.getLogger().info("Open the widget");
+		DashboardBuilderUtil.openWidget(webd, oracle.sysman.emaas.platform.dashboards.test.DPdashboard.TestDashBoard.WidgetName_LA);
+				
+		webd.switchToWindow();
+		webd.getLogger().info("Wait for the widget loading....");
+		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
+		wait1.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id='srchSrch']")));
+
+}
+
+                  @Test
+                 public void testModifyDashboard_UDE() 
+		{
+			
+			
+		//init test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test in testOpenUDEWidget");
+
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//switch to Grid View
+		webd.getLogger().info("Switch to Grid view");
+		DashboardHomeUtil.gridView(webd);
+		
+              //open the dashboard
+		webd.getLogger().info("Open the dashboard");
+		DashboardHomeUtil.selectDashboard(webd, oracle.sysman.emaas.platform.dashboards.test.DPdashboard.TestDashBoard.dbName_WithWidget);
+
+		//open the widget
+		webd.getLogger().info("Open the widget");
+		DashboardBuilderUtil.openWidget(webd, oracle.sysman.emaas.platform.dashboards.test.DPdashboard.TestDashBoard.WidgetName_UDE);
+				
+		webd.switchToWindow();
+		webd.getLogger().info("Wait for the widget loading....");
+		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
+		//wait1.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//button[contains(@id,'editButton')]")));
+
+}
 
 
       private String generateTimeStamp()

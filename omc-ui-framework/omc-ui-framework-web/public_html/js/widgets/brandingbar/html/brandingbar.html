@@ -1,5 +1,5 @@
         <div class="emaas-appheader">
-            <div id="emaas-appheader-bar" data-testapiversion="1.15.0" class="oj-row emaas-appheader-lite" style="max-width: 1920px;padding-left: 10px">
+            <div id="emaas-appheader-bar" data-testapiversion="1.16.0" class="oj-row emaas-appheader-lite" style="max-width: 1920px;padding-left: 10px">
 
                 <!-- logo -->  
                 <div class="emaas-appheader-logo" data-bind="attr: {'aria-label': textOracle}">
@@ -62,22 +62,26 @@
                 </div>
             </div>
             
-            <!-- About box -->
+            <!-- About box -->    
+            <!-- ko if: aboutBoxImmediateLoading -->
             <div data-bind="component: {
                     name: 'df-oracle-about-box',
                     params: aboutBoxKocParams
                 }">
             </div>
+            <!-- /ko -->
             <!-- End of about box -->
-            
+               
             <!-- ko if: navLinksVisible -->
             <!--Navigation Menu: Quick Links/Favorites/Recent Dashboards etc.-->
             <div class="oj-component-initnode" id="links_menu">
+                <!-- ko if: navLinksImmediateLoading -->
                 <div data-bind="component: {
                     name: 'df-oracle-nav-links',
                     params: navLinksKocParams
                     }">
                 </div>
+                <!-- /ko -->
             </div>
             <!-- /ko -->
         </div>  
@@ -211,9 +215,10 @@
                    customEventHandler: customEventHandler(),
                    miniEntityCardActions: miniEntityCardActions(),
                    highlightedEntities: highlightedEntities,
+                   updateGlobalContextByTopologySelection: updateGlobalContextByTopologySelection,
                    enableCache: true,
                    topologySize: topologySize,
-                   topologyData: topologyData()
+                   topologyData: topologyData
                 }
             }">
         </div>      

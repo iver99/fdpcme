@@ -10,7 +10,10 @@
 
 package oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows;
 
+import oracle.sysman.emaas.platform.dashboards.core.util.BigIntegerSerializer;
+
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import java.math.BigInteger;
 
@@ -20,7 +23,7 @@ import java.math.BigInteger;
 public class DashboardTileParamsRowEntity implements RowEntity
 {
 	@JsonProperty("TILE_ID")
-	private BigInteger tileId;
+	private String tileId;
 
 	@JsonProperty("PARAM_NAME")
 	private String paramName;
@@ -48,6 +51,19 @@ public class DashboardTileParamsRowEntity implements RowEntity
 
 	@JsonProperty("LAST_MODIFICATION_DATE")
 	private String lastModificationDate;
+	
+	@JsonProperty("DELETED")
+	private Integer deleted;
+	
+	
+
+	public Integer getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(Integer deleted) {
+		this.deleted = deleted;
+	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
@@ -207,7 +223,7 @@ public class DashboardTileParamsRowEntity implements RowEntity
 	/**
 	 * @return the tileId
 	 */
-	public BigInteger getTileId()
+	public String getTileId()
 	{
 		return tileId;
 	}
@@ -317,7 +333,7 @@ public class DashboardTileParamsRowEntity implements RowEntity
 	 * @param tileId
 	 *            the tileId to set
 	 */
-	public void setTileId(BigInteger tileId)
+	public void setTileId(String tileId)
 	{
 		this.tileId = tileId;
 	}

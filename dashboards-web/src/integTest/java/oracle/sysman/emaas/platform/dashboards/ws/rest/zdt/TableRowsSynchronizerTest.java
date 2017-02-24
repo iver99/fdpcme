@@ -39,7 +39,7 @@ public class TableRowsSynchronizerTest {
         DashboardTileParamsRowEntity dashboardTileParamsRowEntity = new DashboardTileParamsRowEntity();
         DashboardRowEntity dashboardRowEntity = new DashboardRowEntity();
 
-        dashboardRowEntity.setDashboardId(new BigInteger("1"));
+        dashboardRowEntity.setDashboardId("1");
         dashboardRowEntity.setName("name");
         dashboardRowEntity.setType(1L);
         dashboardRowEntity.setDescription("desciption") ;
@@ -51,15 +51,16 @@ public class TableRowsSynchronizerTest {
         dashboardRowEntity.setApplicationType(1);
         dashboardRowEntity.setEnableTimeRange(1);
         dashboardRowEntity.setScreenShot("") ;
-        dashboardRowEntity.setDeleted(new BigInteger("0"));
+        dashboardRowEntity.setDeleted("0");
         dashboardRowEntity.setTenantId(1L);
         dashboardRowEntity.setEnableRefresh(1);
         dashboardRowEntity.setSharePublic(1) ;
         dashboardRowEntity.setEnableEntityFilter(1);
         dashboardRowEntity.setEnableDescription(1);
         dashboardRowEntity.setExtendedOptions("options");
+        dashboardRowEntity.setShowInHome(1);
 
-        dashboardTileParamsRowEntity.setTileId(new BigInteger("1"));
+        dashboardTileParamsRowEntity.setTileId("1");
         dashboardTileParamsRowEntity.setParamName("name");
         dashboardTileParamsRowEntity.setTenantId(1L);
         dashboardTileParamsRowEntity.setIsSystem(1);
@@ -69,9 +70,10 @@ public class TableRowsSynchronizerTest {
         dashboardTileParamsRowEntity.setParamValueTimestamp("2016-08-11 13:31:00");
         dashboardTileParamsRowEntity.setCreationDate("2016-08-11 13:31:00");
         dashboardTileParamsRowEntity.setLastModificationDate("2016-08-11 13:31:00");
+        dashboardTileParamsRowEntity.setDeleted(0);
 
-        dashboardTileRowEntity.setTileId(new BigInteger("1"));
-        dashboardTileRowEntity.setDashboardId(new BigInteger("1"));
+        dashboardTileRowEntity.setTileId("1");
+        dashboardTileRowEntity.setDashboardId("1");
         dashboardTileRowEntity.setCreationDate("2016-08-11 13:31:00");
         dashboardTileRowEntity.setLastModificationDate("2016-08-11 13:31:00");
         dashboardTileRowEntity.setLastModifiedBy("ORACLE");
@@ -102,16 +104,20 @@ public class TableRowsSynchronizerTest {
         dashboardTileRowEntity.setType(1L);
         dashboardTileRowEntity.setWidgetSupportTimeControl(1);
         dashboardTileRowEntity.setWidgetLinkedDashboard(1L);
+        dashboardTileRowEntity.setWidgetDeletionDate("2016-08-11 13:31:00");
+        dashboardTileRowEntity.setWidgetDeleted(0);
+        dashboardTileRowEntity.setDeleted(0);
 
         dashboardUserOptionsRowEntity.setUserName("name");
         dashboardUserOptionsRowEntity.setTenantId(1L);
-        dashboardUserOptionsRowEntity.setDashboardId(new BigInteger("1"));
+        dashboardUserOptionsRowEntity.setDashboardId("1");
         dashboardUserOptionsRowEntity.setAutoRefreshInterval(1L);
         dashboardUserOptionsRowEntity.setAccessDate("2016-08-11 13:31:00");
         dashboardUserOptionsRowEntity.setIsFavorite(1);
         dashboardUserOptionsRowEntity.setExtendedOptions("options");
         dashboardUserOptionsRowEntity.setCreationDate("2016-08-11 13:31:00");
         dashboardUserOptionsRowEntity.setLastModificationDate("2016-08-11 13:31:00");
+        dashboardUserOptionsRowEntity.setDeleted(0);
 
         preferenceRowEntity.setUserName("name");
         preferenceRowEntity.setPrefKey("key");
@@ -119,13 +125,15 @@ public class TableRowsSynchronizerTest {
         preferenceRowEntity.setTenantId(1L);
         preferenceRowEntity.setCreationDate("2016-08-11 13:31:00");
         preferenceRowEntity.setLastModificationDate("2016-08-11 13:31:00");
+        preferenceRowEntity.setDeleted("0");
 
-        dashboardSetRowEntity.setDashboardSetId(new BigInteger("1"));
+        dashboardSetRowEntity.setDashboardSetId("1");
         dashboardSetRowEntity.setTenantId(1L);
-        dashboardSetRowEntity.setSubDashboardId(new BigInteger("1"));
+        dashboardSetRowEntity.setSubDashboardId("1");
         dashboardSetRowEntity.setPosition(1L);
         dashboardSetRowEntity.setCreationDate("2016-08-11 13:31:00");
         dashboardSetRowEntity.setLastModificationDate("2016-08-11 13:31:00");
+        dashboardSetRowEntity.setDeleted("0");
 
         List<PreferenceRowEntity> preferenceRowEntities = new ArrayList<>();
         preferenceRowEntities.add(preferenceRowEntity);
@@ -144,18 +152,18 @@ public class TableRowsSynchronizerTest {
             {
                 DataManager.getInstance();
                 result = dataManager;
-                dataManager.syncPreferences(anyString, anyString, anyString, anyLong, anyString, anyString);
+                dataManager.syncPreferences(anyString, anyString, anyString, anyLong, anyString, anyString,(Integer)any);
                 result = 1;
-                dataManager.syncDashboardTableRow((BigInteger)any, anyString, anyLong, anyString, anyString,anyString, anyString, anyString, (Integer)any, (Integer)any,(Integer)any, anyString, (BigInteger)any, anyLong, (Integer)any, (Integer)any,(Integer)any, (Integer)any, anyString);
+                dataManager.syncDashboardTableRow((BigInteger)any, anyString, anyLong, anyString, anyString,anyString, anyString, anyString, (Integer)any, (Integer)any,(Integer)any, anyString, (BigInteger)any, anyLong, (Integer)any, (Integer)any,(Integer)any, (Integer)any, anyString,(Integer)any);
                 result = 1;
-                dataManager.syncDashboardTile((BigInteger)any, (BigInteger)any, anyString, anyString, anyString, anyString, anyString, anyLong, anyLong, (Integer)any, anyLong,anyLong, anyString, anyString, anyString, anyString, anyString,anyString, anyString, anyString, anyLong,
-                        anyString, anyString, anyString, anyString, anyString, anyString, anyLong, anyLong, anyLong, (Integer)any, anyLong);
+                dataManager.syncDashboardTile(anyString, (BigInteger)any, anyString, anyString, anyString, anyString, anyString, anyLong, anyLong, (Integer)any, anyLong,anyLong, anyString, anyString, anyString, anyString, anyString,anyString, anyString, anyString, anyLong,
+                        anyString, anyString, anyString, anyString, anyString, anyString, anyLong, anyLong, anyLong, (Integer)any, anyLong,(Integer)any,anyString,(Integer)any);
                 result = 1;
-                dataManager.syncDashboardSet((BigInteger)any, anyLong, (BigInteger)any, anyLong, anyString, anyString);
+                dataManager.syncDashboardSet((BigInteger)any, anyLong, (BigInteger)any, anyLong, anyString, anyString, (BigInteger)any);
                 result = 1;
-                dataManager.syncDashboardTileParam((BigInteger)any, anyString, anyLong, (Integer)any, anyLong, anyString, anyLong, anyString, anyString, anyString);
+                dataManager.syncDashboardTileParam(anyString, anyString, anyLong, (Integer)any, anyLong, anyString, anyLong, anyString, anyString, anyString, (Integer)any);
                 result = 1;
-                dataManager.syncDashboardUserOption(anyString,anyLong, (BigInteger)any, anyLong, anyString, (Integer)any, anyString, anyString, anyString);
+                dataManager.syncDashboardUserOption(anyString,anyLong, (BigInteger)any, anyLong, anyString, (Integer)any, anyString, anyString, anyString, (Integer)any);
                 result = 1;
             }
         };

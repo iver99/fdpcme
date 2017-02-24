@@ -75,16 +75,16 @@ public class RegistrationEntity implements Serializable
 
 	public static final String NAME_REGISTRY_REL_SSO = "sso.endpoint/virtual";
 	public static final String APM_SERVICENAME = "ApmUI";
-	public static final String APM_VERSION = "1.0+";
+	public static final String APM_VERSION = "1.0";
 	public static final String APM_HOME_LINK = "sso.home";
 	//	public static final String APM_URL = "/emsaasui/apmUi/index.html";
 	public static final String LA_SERVICENAME = "LogAnalyticsUI";
-	public static final String LA_VERSION = "1.0+";
+	public static final String LA_VERSION = "1.0";
 	public static final String LA_HOME_LINK = "sso.search";
 	//no home link is needed
 	//	public static final String LA_URL = "/emsaasui/emlacore/html/log-analytics-search.html";
 	public static final String ITA_SERVICENAME = "emcitas-ui-apps";
-	public static final String ITA_VERSION = "1.0+";
+	public static final String ITA_VERSION = "1.0";
 	public static final String ITA_URL = "/emsaasui/emcpdfui/home.html?filter=ita";
 	public static final String TA_SERVICENAME = "TargetAnalytics";
 	//	public static final String TA_URL = "/emsaasui/emcta/ta/analytics.html";
@@ -627,8 +627,10 @@ public class RegistrationEntity implements Serializable
 			return appSet;
 		}
 		for (String app : apps) {
-			// in case any bundle service is subscribed, all 7 (actually 8 plus TA) services are subscribed
-			if (DashboardApplicationType.OMCSE_STRING.equals(app) ||
+			// in case any bundle service is subscribed, all 7 (actually 8 including TA) services are subscribed
+			if (DashboardApplicationType.OMC_STRING.equals(app) ||
+					DashboardApplicationType.OSMACC_STRING.equals(app) ||
+					DashboardApplicationType.OMCSE_STRING.equals(app) ||
 					DashboardApplicationType.OMCEE_STRING.equals(app) ||
 					DashboardApplicationType.OMCLOG_STRING.equals(app) ||
 					DashboardApplicationType.SECSE_STRING.equals(app) ||
