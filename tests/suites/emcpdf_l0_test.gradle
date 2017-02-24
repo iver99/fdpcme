@@ -74,7 +74,7 @@ dependencies {
     testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardsui-webutils', version: "${REPO_BID}") {transitive=false}
     testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'omc-ui-framework-webutils', version:"${REPO_BID}") {transitive=false}
 	testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'omc-ui-framework-web', version:"${REPO_BID}") {transitive=false}
-    testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-sdk', version:"${REPO_BID}") {transitive=false}
+    testConfig(group: 'com.oracle.emaas.emcpdf', name: 'dashboards-sdk', version:"1.0.0+") {transitive=false}
     
     testConfig(group: 'com.oracle.emaas.emcpsrvs.sdk', name:'emaas-platform-tenant-sdk', version:'2.0.+') { transitive = false }
     testConfig(group: 'com.oracle.emaas.emcpsm', name: 'registry-lookup-client', version: emcpsmRegLookupClientVer){ transitive = false }
@@ -200,6 +200,7 @@ task DEVTest(type:EMTest,dependsOn: DEVTest_ws){
 	include "oracle/sysman/emaas/platform/emcpdf/cache/tool/*.class"
 	include "oracle/sysman/emaas/platform/emcpdf/cache/util/*.class"
 	include "oracle/sysman/emaas/platform/uifwk/nls/filter/NLSFilterTest.class"
+        include "oracle/sysman/emaas/platform/uifwk/bootstrap/HtmlBootstrapJsUtilTest.class"
 	
 	useRestAssured=true
 	ext.set("testType", "unit")

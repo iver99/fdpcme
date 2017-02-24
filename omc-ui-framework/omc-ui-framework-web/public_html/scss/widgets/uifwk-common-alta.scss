@@ -395,7 +395,7 @@ a:hover {
 .emaas-appheader-global-context {
     font-size: 14px;
     background-color:#EDEDED;
-    height: 36px;
+    min-height: 36px;
     padding-left: 10px;
     padding-right: 10px;
     display: flex !important;

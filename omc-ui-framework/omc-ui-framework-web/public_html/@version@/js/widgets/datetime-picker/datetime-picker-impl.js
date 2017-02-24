@@ -787,6 +787,9 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     return self.timeConverter();
                 }
                 
+                //Call this first as popup binding is deferred. getDateTimeInfo function need this to know how to show time label(minite ot millisecond)
+                self.getTimeConverter();
+                
                 self.convertWindowSizeToDays = function(nls) {
                     var windowSize;
                     var totalMins = self.customWindowLimit / (60*1000);
@@ -1104,6 +1107,25 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     }
                     return false;
                 };
+                
+                self.isFlexRelTimePeriodLessThan1day = function() {
+                    var val = self.flexRelTimeVal();
+                    var opt = self.flexRelTimeOpt()[0];
+                    if(opt === ctxUtil.OMCTimeConstants.TIME_UNIT.SECOND) {
+                        if(val < 24*60*60) {
+                            return true;
+                        }
+                    }else if(opt === ctxUtil.OMCTimeConstants.TIME_UNIT.MINUTE) {
+                        if(val < 24*60) {
+                            return true;
+                        }
+                    }else if(opt === ctxUtil.OMCTimeConstants.TIME_UNIT.HOUR) {
+                        if(val < 24) {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
 
                 /**
                  *
@@ -1200,8 +1222,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         //add timezone for time ranges less than 1 day if the start&end time are in different timezone due to daylight saving time.
                         var tmpStart = oj.IntlConverterUtils.isoToLocalDate(startDate+startTime);
                         var tmpEnd = oj.IntlConverterUtils.isoToLocalDate(endDate+endTime);
-                        if(tmpStart.getTimezoneOffset() !== tmpEnd.getTimezoneOffset() && (self.isTimePeriodLessThan1day(timePeriod) 
-                                || self.flexRelTimeOpt()[0] === ctxUtil.OMCTimeConstants.TIME_UNIT.SECOND || self.flexRelTimeOpt()[0] === ctxUtil.OMCTimeConstants.TIME_UNIT.MINUTE || self.flexRelTimeOpt()[0] === ctxUtil.OMCTimeConstants.TIME_UNIT.HOUR)) {
+                        if(tmpStart.getTimezoneOffset() !== tmpEnd.getTimezoneOffset() && self.lrCtrlVal() === "flexRelTimeCtrl" && (self.isTimePeriodLessThan1day(timePeriod) || self.isFlexRelTimePeriodLessThan1day())) {
                             start += " (" + self.getGMTTimezone(tmpStart) + ")";
                             end += " (" + self.getGMTTimezone(tmpEnd) + ")";
                         }
@@ -2371,12 +2392,12 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
 
                         if(timePeriod === ctxUtil.OMCTimeConstants.QUICK_PICK.CUSTOM) {
                             if(flexRelTimeVal && flexRelTimeOpt) {
-                                ctxUtil.setTimePeriod(flexRelTimePeriodId);
+                                ctxUtil.setTimePeriod(flexRelTimePeriodId, eventSourceTimeSelector);
                             }else {
-                                ctxUtil.setStartAndEndTime(new Date(start).getTime(), new Date(end).getTime());
+                                ctxUtil.setStartAndEndTime(newDateWithMilliseconds(start).getTime(), newDateWithMilliseconds(end).getTime(),eventSourceTimeSelector);
                             }
                         }else {
-                            ctxUtil.setTimePeriod(timePeriod);
+                            ctxUtil.setTimePeriod(timePeriod, eventSourceTimeSelector);
                         }
                     }
 
@@ -2758,7 +2779,11 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     }
                 }
                 
+                var eventSourceTimeSelector = ctxUtil.OMCEventSourceConstants.GLOBAL_TIME_SELECTOR;
                 function callbackForOmcCtxChange(ctxChangeEvent) {
+                    if (ctxChangeEvent && ctxChangeEvent.source === eventSourceTimeSelector) {
+                        return;
+                    }
                     var start;
                     var end;
                     var ctxStart = null;

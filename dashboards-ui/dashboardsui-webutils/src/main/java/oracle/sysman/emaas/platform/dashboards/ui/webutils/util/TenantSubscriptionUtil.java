@@ -17,8 +17,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
@@ -57,7 +59,8 @@ public class TenantSubscriptionUtil
 		public RestClient()
 		{
 		}
-
+		
+		
 		public String get(String url, String tenant)
 		{
 			if (StringUtils.isEmpty(url)) {
