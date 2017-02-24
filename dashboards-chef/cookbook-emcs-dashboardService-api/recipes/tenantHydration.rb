@@ -65,6 +65,7 @@ end
 bash "unbundle_schema_zipe" do
   code lazy {<<-EOH
     echo "`date` -- Starting to hydrate tenant information for #{node["tenantID"]}" >> #{log_file}
+    echo "internal tenant id is #{node["internalTenantID"]}" >> #{log_file}
     cd #{node["apps_dir"]}/#{node["SAAS_servicename"]}/#{node["SAAS_version"]}
     echo "`date` -- Tenant hydration: always unzip the sql bundle " >> #{log_file}
     tar xzf #{node["sql_bundle"]}#{node["SAAS_version"]}.tgz
