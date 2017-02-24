@@ -104,6 +104,8 @@ public class UserOptions {
         try {
             if (this.getExtendedOptions() != null) {
                 new JSONObject(this.getExtendedOptions());
+                // the value should be in format like {selectedTab: 15}, to validate the string, we wrap it as {'tempData' : {selectedTab: 15}} and validate it again
+                new JSONObject("{\"tempData\":" + extendedOptions + "}");
             }
         } catch (JSONException e) {
             LOGGER.error(e);
