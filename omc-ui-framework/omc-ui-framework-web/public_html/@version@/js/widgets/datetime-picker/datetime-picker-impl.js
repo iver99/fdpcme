@@ -2235,6 +2235,10 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     if ($(self.panelId).ojPopup('isOpen')) {
                         self.closeAllPopups();
                     } else {
+                        //Close overflowed label popup and badge info popup
+                        $("#overflowedLabelInfo_"+self.randomId).ojPopup('close');
+                        $('.badge-popup-message').ojPopup("close");
+                        
                         self.recentChosen(false);
                         self.showRightPanel(false);
                         self.autoFocus("inputStartDate_" + self.randomId);
@@ -3233,6 +3237,33 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         $('.badge-popup-message').ojPopup("close");
                     }
                 };
+                
+                self.overflowedLabelInfo = ko.observable(null);
+                self.showOverFlowedLabelPopUp = ko.observable(false);
+                self.labelMouseOverHandler = function() {
+                    var labelEle = $(self.wrapperId + " .oj-select-chosen")[0];
+                    if(labelEle && (labelEle.offsetWidth <= labelEle.scrollWidth)) {
+                        self.showOverFlowedLabelPopUp(true);
+                        var overflowedLabel = $(labelEle).text();
+                        if(!params.hideRangeLabel) {
+                            overflowedLabel = overflowedLabel.substring(overflowedLabel.indexOf(":")+1);
+                        }
+                        self.overflowedLabelInfo(overflowedLabel);
+                        if(!$("#overflowedLabelInfo_"+self.randomId).ojPopup("isOpen")) {
+                            $("#overflowedLabelInfo_"+self.randomId).ojPopup("open", $(labelEle),
+                                {
+                                    my: "end top", at: "right bottom"
+                                }
+                            );
+                        }
+                    }
+                }
+                
+                self.labelMouseOutHandler = function() {
+                    if($("#overflowedLabelInfo_"+self.randomId).ojPopup("isOpen")) {
+                        $("#overflowedLabelInfo_"+self.randomId).ojPopup("close");
+                    }
+                }
 
                 ctxUtil.subscribeOMCContextChangeEvent(callbackForOmcCtxChange);
                 

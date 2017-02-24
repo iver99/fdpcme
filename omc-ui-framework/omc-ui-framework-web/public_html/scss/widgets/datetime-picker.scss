@@ -300,19 +300,16 @@ div[id^='pickerPanel'] .oj-listbox-search-wrapper {
     font-size: 12px;
     color:  #333333;
     margin: 5px auto -4px 0;
-    width: 291px;
 }
 
 .show-individual-time-span1-latest{
     font-size: 12px;
     color:  #333333;
-    width: 291px;
 }
 
 .show-individual-time-span1-short{
     font-size: 12px;
     color:  #333333;
-    width: 85px;
 }
 
 .show-individual-time-span2{
@@ -345,4 +342,13 @@ div[id^='pickerPanel'] .oj-listbox-search-wrapper {
 
 .oj-popup-content{
     padding: 10px;
+}
+
+.overflowedLabel{
+    font-size: 10px;
+    background-color: #fcfdfe;
+    padding: 5px;
+    border: 1px solid #c4ced7;
+    border-radius: 1px;
+    box-shadow: 1px 1px 3px 0 rgba(0,0,0,35);
 }
