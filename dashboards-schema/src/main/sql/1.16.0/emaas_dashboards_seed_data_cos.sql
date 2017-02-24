@@ -59,7 +59,7 @@ BEGIN
 EXCEPTION
 WHEN OTHERS THEN
   ROLLBACK;
-  DBMS_OUTPUT.PUT_LINE('Failed to update Screenshot of some ITA OOB widget according to EMCPDF-2904 due to '||SQLERRM);
+  DBMS_OUTPUT.PUT_LINE('Failed to UPDATE THE WIDGET NAME FOR COS due to '||SQLERRM);
   RAISE;  
 END;
 /
