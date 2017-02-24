@@ -397,6 +397,8 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 			throw new NoSuchElementException("Dashboard not exists. Name: " + dashboardName);
 		}
 		driver.setPageLoadDetector(BuildPageLoadDetector.class);
+		boolean isDisplayed=driver.isDisplayed(indicator);
+		driver.getLogger().info("isDisplayed:"+ isDisplayed);
 		driver.click(indicator);
 		driver.setPageLoadDetector(null);
 	}
