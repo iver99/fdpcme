@@ -13,8 +13,8 @@ public class DashboardTileParamsRowEntityTest
 		DashboardTileParamsRowEntity dtpre1 = new DashboardTileParamsRowEntity();
 		DashboardTileParamsRowEntity dtpre2 = new DashboardTileParamsRowEntity();
 		Assert.assertEquals(dtpre1, dtpre2);
-		dtpre1.setTileId(new BigInteger("12"));
-		dtpre2.setTileId(new BigInteger("12"));
+		dtpre1.setTileId("12");
+		dtpre2.setTileId("12");
 		Assert.assertEquals(dtpre1, dtpre2);
 		dtpre1.setParamName("param1");
 		dtpre2.setParamName("param1");
@@ -35,9 +35,9 @@ public class DashboardTileParamsRowEntityTest
 		dtpre2.setParamValueNum(1L);
 		Assert.assertEquals(dtpre1, dtpre2);
 
-		dtpre2.setTileId(new BigInteger("22"));
+		dtpre2.setTileId("22");
 		Assert.assertNotEquals(dtpre1, dtpre2);
-		dtpre2.setTileId(new BigInteger("12"));
+		dtpre2.setTileId("12");
 		dtpre2.setParamName("param2");
 		Assert.assertNotEquals(dtpre1, dtpre2);
 		dtpre2.setParamName("param1");
@@ -65,8 +65,8 @@ public class DashboardTileParamsRowEntityTest
 		DashboardTileParamsRowEntity dtpre1 = new DashboardTileParamsRowEntity();
 		DashboardTileParamsRowEntity dtpre2 = new DashboardTileParamsRowEntity();
 		Assert.assertEquals(dtpre1.hashCode(), dtpre2.hashCode());
-		dtpre1.setTileId(new BigInteger("12"));
-		dtpre2.setTileId(new BigInteger("12"));
+		dtpre1.setTileId("12");
+		dtpre2.setTileId("12");
 		Assert.assertEquals(dtpre1.hashCode(), dtpre2.hashCode());
 		dtpre1.setParamName("param1");
 		dtpre2.setParamName("param1");
@@ -87,9 +87,9 @@ public class DashboardTileParamsRowEntityTest
 		dtpre2.setParamValueNum(1L);
 		Assert.assertEquals(dtpre1.hashCode(), dtpre2.hashCode());
 
-		dtpre2.setTileId(new BigInteger("22"));
+		dtpre2.setTileId("22");
 		Assert.assertNotEquals(dtpre1.hashCode(), dtpre2.hashCode());
-		dtpre2.setTileId(new BigInteger("12"));
+		dtpre2.setTileId("12");
 		dtpre2.setParamName("param2");
 		Assert.assertNotEquals(dtpre1.hashCode(), dtpre2.hashCode());
 		dtpre2.setParamName("param1");
