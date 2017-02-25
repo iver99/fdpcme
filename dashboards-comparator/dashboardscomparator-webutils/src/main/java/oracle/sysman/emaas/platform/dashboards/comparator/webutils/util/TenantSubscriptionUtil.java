@@ -23,6 +23,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource.Builder;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
@@ -122,8 +123,16 @@ public class TenantSubscriptionUtil
 				builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
 						.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
 			}
+			String response = null;
+			try {
+				 response = builder.put(String.class, requestEntity);
+			} catch (Exception e) {
+				logger.warn(e.getLocalizedMessage());
+			}
+		    
 			
-			return builder.put(String.class, requestEntity);
+			
+			return response;
 		}
 	}
 

@@ -283,8 +283,13 @@ public class DashboardRowsComparator extends AbstractComparator
 			return null;
 		}
 		logger.info("print the sync data {} !",instance.getData());
-		String response = new TenantSubscriptionUtil.RestClient().put(lk.getHref(), instance.getData(), tenantId, userTenant);
-		logger.info("Checking dashboard OMC instance table rows. Response is " + response);
+		TableRowsEntity entity = instance.getData();
+		JsonUtil jsonUtil = JsonUtil.buildNonNullMapper();
+		jsonUtil.setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+		String entityStr = jsonUtil.toJson(entity);
+		logger.info("print the put data {} !",entityStr);
+		String response = new TenantSubscriptionUtil.RestClient().put(lk.getHref(), entityStr, tenantId, userTenant);
+		logger.info("Checking sync reponse. Response is " + response);
 		return response;
 	}
 }
