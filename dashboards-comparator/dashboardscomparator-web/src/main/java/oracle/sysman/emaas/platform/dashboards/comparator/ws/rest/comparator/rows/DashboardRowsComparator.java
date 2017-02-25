@@ -282,6 +282,7 @@ public class DashboardRowsComparator extends AbstractComparator
 			logger.warn("Get a null or empty link for one single instance!");
 			return null;
 		}
+		logger.info("print the sync data {} !",instance.getData());
 		String response = new TenantSubscriptionUtil.RestClient().put(lk.getHref(), instance.getData(), tenantId, userTenant);
 		logger.info("Checking dashboard OMC instance table rows. Response is " + response);
 		return response;
