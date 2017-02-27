@@ -115,10 +115,10 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 
             if (!ko.components.isRegistered('emctas-globalbar'))
             {
-                var versionedTemplate = window.getSDKVersionFile ? 
+                var versionedTemplate = window.getSDKVersionFile ?
                     window.getSDKVersionFile('emsaasui/emcta/ta/js/sdk/globalcontextbar/emctas-globalbar.html') : null;
-                var template = versionedTemplate ? versionedTemplate : 
-                        'emsaasui/emcta/ta/js/sdk/globalcontextbar/emctas-globalbar.html';
+                var template = versionedTemplate ? versionedTemplate :
+                    'emsaasui/emcta/ta/js/sdk/globalcontextbar/emctas-globalbar.html';
                 ko.components.register('emctas-globalbar', {
                     viewModel: function () {
                     },
@@ -215,15 +215,15 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 if (!self.isTopologyCompRegistered()) {
                     require(['ojs/ojdiagram'], function () {
                         if (!ko.components.isRegistered('emctas-topology')) {
-                            var versionedTopoViewModel = window.getSDKVersionFile ? 
+                            var versionedTopoViewModel = window.getSDKVersionFile ?
                                 window.getSDKVersionFile('emsaasui/emcta/ta/js/sdk/topology/emcta-topology.js') : null;
-                            var topoViewModel = versionedTopoViewModel ? (versionedTopoViewModel.lastIndexOf('.js') ===  versionedTopoViewModel.length - 3 ? 
-                                                versionedTopoViewModel.substring(0, versionedTopoViewModel.length - 3) : versionedTopoViewModel) : 
-                                    'emsaasui/emcta/ta/js/sdk/topology/emcta-topology';
-                            var versionedTopoTemplate = window.getSDKVersionFile ? 
+                            var topoViewModel = versionedTopoViewModel ? (versionedTopoViewModel.lastIndexOf('.js') === versionedTopoViewModel.length - 3 ?
+                                versionedTopoViewModel.substring(0, versionedTopoViewModel.length - 3) : versionedTopoViewModel) :
+                                'emsaasui/emcta/ta/js/sdk/topology/emcta-topology';
+                            var versionedTopoTemplate = window.getSDKVersionFile ?
                                 window.getSDKVersionFile('emsaasui/emcta/ta/js/sdk/topology/emcta-topology.html') : null;
-                            var topoTemplate = versionedTopoTemplate ? versionedTopoTemplate : 
-                                    'emsaasui/emcta/ta/js/sdk/topology/emcta-topology.html';
+                            var topoTemplate = versionedTopoTemplate ? versionedTopoTemplate :
+                                'emsaasui/emcta/ta/js/sdk/topology/emcta-topology.html';
                             ko.components.register('emctas-topology', {
                                 viewModel: {require: topoViewModel},
                                 template: {require: 'text!' + topoTemplate}
@@ -635,7 +635,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         break;
                 }
             };
-            
+
             $("#emaasAppheaderGlobalNavMenuId").ojMenu({
                 "beforeOpen": function (event, ui) {
                     self.aboutBoxImmediateLoading(true);
@@ -876,19 +876,19 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             function showMessage(data) {
                 if (data) {
                     var message = {};
-                    self.hasMessages(true);   
+                    self.hasMessages(true);
                     message.id = data.id ? data.id : dfu.getGuid();
                     message.type = data.type;
                     message.summary = data.summary;
                     message.detail = data.detail;
                     message.category = data.category;
                     message.icon = imgBackground;
-                    if (data.type && data.type.toUpperCase() === 'CORRECT') {    
+                    if (data.type && data.type.toUpperCase() === 'CORRECT') {
                         hiddenMessages = [];
                         displayMessages = [];
                         self.messageList(displayMessages);
                         self.hasHiddenMessages(false);
-                        self.hasMessages(false);     
+                        self.hasMessages(false);
                         self.hiddenMessagesExpanded(true);
                         return;
                     }
@@ -1101,7 +1101,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 if (self.isTopologyCompRegistered()) {
                     var refreshTopology = true;
                     var omcContext = cxtUtil.getOMCContext();
-                    var currentCompositeId = cxtUtil.getCompositeMeId();
+                    var currentCompositeId = cxtUtil.getCompositeMeId() || cxtUtil.getEntities()[0]['meId'];
                     console.log("************currentCompositeId" + currentCompositeId);
                     if (currentCompositeId) {
                         if (self.topologyInitialized === true && currentCompositeId === omcContext.previousCompositeMeId) {
@@ -1118,6 +1118,12 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                             self.topologyInitialized = true;
                         }
                         self.topologyDisabled(false);
+                    }
+                    else {
+
+
+
+
                     }
 //                    else {
 //                        self.topologyDisabled(true);
@@ -1178,10 +1184,11 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 }
             }
             function refreshOMCContext() {
-                self.cxtCompositeMeId = cxtUtil.getCompositeMeId();
+                //added suppport for single entity
+                self.cxtCompositeMeId = cxtUtil.getCompositeMeId() || cxtUtil.getEntities()[0]['meId'];
 //                self.cxtCompositeType = cxtUtil.getCompositeType();
-                self.cxtCompositeDisplayName = cxtUtil.getCompositeDisplayName();
-                self.cxtCompositeName = cxtUtil.getCompositeName();
+                self.cxtCompositeDisplayName = cxtUtil.getCompositeDisplayName() || cxtUtil.getEntities()[0]['displayName'];
+                self.cxtCompositeName = cxtUtil.getCompositeName() || cxtUtil.getEntities()[0]['entityName'];
                 self.cxtComposite = cxtUtil.getCompositeEntity();
 //                self.cxtStartTime = cxtUtil.getStartTime();
 //                self.cxtEndTime = cxtUtil.getEndTime();
@@ -1198,11 +1205,13 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 //When no compositeMEID exists, disable topology button
                 else {
                     //Hide topology
+
                     if (self.isTopologyDisplayed() && !self.topologyDisabled()) {
                         self.showTopology();
                     }
 
                     self.topologyDisabled(true);
+
                 }
 
 
@@ -1416,7 +1425,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             var zdtUtil = new zdtUtilModel();
             zdtUtil.detectPlannedDowntime(function () {
             });
-            
+
             ko.bindingHandlers.stopDataBinding = {
                 init: function (elem, valueAccessor) {
                     var value = ko.unwrap(valueAccessor());
