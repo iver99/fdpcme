@@ -846,12 +846,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                 tmp.push(self.timePeriodsNlsObject[tp]);
                                 self.setTimePeriodNotToShow(self.timePeriodsNlsObject[tp]);
                                 //remove time periods from "Recently Used" list
-                                for(j=0; j<self.recentList().length; j++) {
-                                    var data = self.recentList()[j];
-                                    if(tp === data.timePeriod) {
-                                        self.recentList.remove(data);
-                                    }
-                                }
+                                self.recentList.remove(function(data) {return data.timePeriod === tp});
                             }
                             return tmp;
                         }, self);
