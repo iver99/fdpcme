@@ -869,12 +869,21 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     }else if(ko.isObservable(params.timePeriodsNotToShow)) {
                         self.timePeriodsNotToShow = ko.computed(function() {
                             var tmp = [];
+                            var i, j;
+                            var tp;
                             self.setAllTimePeriodsToShow();
                             var l = params.timePeriodsNotToShow().length;
-                            for(var i=0; i<l; i++) {
-                                var tp = formalizeTimePeriod(params.timePeriodsNotToShow()[i]);
+                            for(i=0; i<l; i++) {
+                                tp = formalizeTimePeriod(params.timePeriodsNotToShow()[i]);
                                 tmp.push(self.timePeriodsNlsObject[tp]);
                                 self.setTimePeriodNotToShow(self.timePeriodsNlsObject[tp]);
+                                //remove time periods from "Recently Used" list
+                                for(j=0; j<self.recentList().length; j++) {
+                                    var data = self.recentList()[j];
+                                    if(tp === data.timePeriod) {
+                                        self.recentList.remove(data);
+                                    }
+                                }
                             }
                             return tmp;
                         }, self);
