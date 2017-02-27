@@ -1455,11 +1455,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     if(recent.timePeriod === ctxUtil.OMCTimeConstants.QUICK_PICK.CUSTOM) { // for custom time range
                         start = oj.IntlConverterUtils.dateToLocalIso(recent.start);
                         end = oj.IntlConverterUtils.dateToLocalIso(recent.end);
-                        if (self.timeConverter() === self.timeConverterMillisecond) {
-                            return self.getDateTimeInfo(start.slice(0, 10), end.slice(0, 10), start.slice(10), end.slice(10));
-                        } else {
-                            return self.getDateTimeInfo(start.slice(0, 10), end.slice(0, 10), start.slice(10, 16), end.slice(10, 16));
-                        }
+                        return self.getDateTimeInfo(start.slice(0, 10), end.slice(0, 10), start.slice(10), end.slice(10));
                     }else if(self.timePeriodsNlsObject[recent.timePeriod]) { //for quick picks
                         return self.timePeriodsNlsObject[recent.timePeriod];
                     }else { // for flexible relative time range
@@ -1786,13 +1782,8 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     self.startDate(self.dateConverter2.format(start));
                     self.endDate(self.dateConverter2.format(end));
 
-                    if(self.timeConverter() === self.timeConverterMillisecond) {
-                        self.startTime(start.slice(10));
-                        self.endTime(end.slice(10));
-                    }else {
-                        self.startTime(start.slice(10, 16));
-                        self.endTime(end.slice(10, 16));
-                    }
+                    self.startTime(start.slice(10));
+                    self.endTime(end.slice(10));
 
                     self.dateTimeInfo(self.getDateTimeInfo(start.slice(0, 10), end.slice(0, 10), self.startTime(), self.endTime(), self.timePeriod()));
                     
@@ -1939,13 +1930,8 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     self.startDate(self.dateConverter2.format(start));
                     self.endDate(self.dateConverter2.format(end));
                     
-                    if(self.timeConverter() === self.timeConverterMillisecond) {
-                        self.startTime(start.slice(10));
-                        self.endTime(end.slice(10));
-                    }else {
-                        self.startTime(start.slice(10, 16));
-                        self.endTime(end.slice(10, 16));
-                    }
+                    self.startTime(start.slice(10));
+                    self.endTime(end.slice(10));
                 }
                 
                 self.flexRelTimeValChanged = function(event, data) {
@@ -2441,13 +2427,8 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     self.startDate(self.dateConverter2.format(start));
                     self.endDate(self.dateConverter2.format(end));
 
-                    if(self.timeConverter() === self.timeConverterMillisecond) {
-                        self.startTime(start.slice(10));
-                        self.endTime(end.slice(10));
-                    }else {
-                        self.startTime(start.slice(10, 16));
-                        self.endTime(end.slice(10, 16));
-                    }
+                    self.startTime(start.slice(10));
+                    self.endTime(end.slice(10));
                     
                     self.recentList.remove(data);
                     setTimeout(function() {self.applyClick();}, 0);
@@ -2546,13 +2527,9 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         self.startDate(self.dateConverter2.format(start));
                         self.endDate(self.dateConverter2.format(end));
 
-                        if(self.timeConverter() === self.timeConverterMillisecond) {
-                            self.startTime(start.slice(10));
-                            self.endTime(end.slice(10));
-                        }else {
-                            self.startTime(start.slice(10, 16));
-                            self.endTime(end.slice(10, 16));
-                        }
+                        self.startTime(start.slice(10));
+                        self.endTime(end.slice(10));
+                            
                         self.selectByDrawer(true);
 
                         self.timePeriod(event.target.innerHTML);
@@ -2708,9 +2685,9 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                 console.log("time filter: "+JSON.stringify(self.timeFilter()));
                                 console.log("flexible relative time value: "+flexRelTimeVal+", option: "+flexRelTimeOpt);
                                 if(flexRelTimePeriodId) {
-                                    self.callbackAfterApply(new Date(start), new Date(end), flexRelTimePeriodId, self.timeFilter(), flexRelTimeVal, flexRelTimeOpt);                                    
+                                    self.callbackAfterApply(newDateWithMilliseconds(start), newDateWithMilliseconds(end), flexRelTimePeriodId, self.timeFilter(), flexRelTimeVal, flexRelTimeOpt);                                    
                                 }else {
-                                    self.callbackAfterApply(new Date(start), new Date(end), informalizeTimePeriod(timePeriod), self.timeFilter(), flexRelTimeVal, flexRelTimeOpt);
+                                    self.callbackAfterApply(newDateWithMilliseconds(start), newDateWithMilliseconds(end), informalizeTimePeriod(timePeriod), self.timeFilter(), flexRelTimeVal, flexRelTimeOpt);
                                 }
                             },
                             error: function () {
@@ -3007,12 +2984,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     }
                     timeStamp = parseInt(timeStamp);
                     if(self.hideTimeSelection() === false) {
-                        if(self.timeConverter() === self.timeConverterMillisecond) {
-                            return timeStamp;
-                        }else {
-                            resTime = oj.IntlConverterUtils.dateToLocalIso(new Date(timeStamp));
-                            resTime = oj.IntlConverterUtils.isoToLocalDate(resTime.slice(0, 10) + resTime.slice(10, 16));
-                        }
+                        return timeStamp;
                     }else {
                         resTime = oj.IntlConverterUtils.dateToLocalIso(new Date(timeStamp));
                         resTime = oj.IntlConverterUtils.isoToLocalDate(resTime.slice(0, 10));
@@ -3070,13 +3042,8 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     self.startDate(self.dateConverter2.format(start));
                     self.endDate(self.dateConverter2.format(end));
 
-                    if (self.timeConverter() === self.timeConverterMillisecond) {
-                        self.startTime(start.slice(10));
-                        self.endTime(end.slice(10));
-                    } else {
-                        self.startTime(start.slice(10, 16));
-                        self.endTime(end.slice(10, 16));
-                    }
+                    self.startTime(start.slice(10));
+                    self.endTime(end.slice(10));
                 }
                 
                 function setDateTimeForCustomTime(startTimeStamp, endTimeStamp) {
@@ -3093,13 +3060,8 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     self.startDate(self.dateConverter2.format(start));
                     self.endDate(self.dateConverter2.format(end));
 
-                    if (self.timeConverter() === self.timeConverterMillisecond) {
-                        self.startTime(start.slice(10));
-                        self.endTime(end.slice(10));
-                    } else {
-                        self.startTime(start.slice(10, 16));
-                        self.endTime(end.slice(10, 16));
-                    }
+                    self.startTime(start.slice(10));
+                    self.endTime(end.slice(10));
                 }
                 
                 var eventSourceTimeSelector = ctxUtil.OMCEventSourceConstants.GLOBAL_TIME_SELECTOR;
@@ -3210,13 +3172,9 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 self.badgeMouseOverHandler = function (widget, event) {
                     var _time = self.getTimeRangeForFlexRelTime(self.badgeTimePeriod());
                     var _startTime,_endTime;
-                    if(self.timeConverter() === self.timeConverterMillisecond) {
-                        _startTime = _time.start.slice(10);
-                        _endTime = _time.end.slice(10);
-                    }else {
-                        _startTime = _time.start.slice(10, 16);
-                        _endTime = _time.end.slice(10, 16);
-                    }
+                    
+                    _startTime = _time.start.slice(10);
+                    _endTime = _time.end.slice(10);
 
                     var _timeDisplay = self.timeDisplay;    //change self.timeDisplay temporary to get right time rage info
                     self.timeDisplay = ko.observable("long");
