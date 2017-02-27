@@ -16,7 +16,8 @@ define([
 'uifwk/js/widgets/hamburger-menu/js/hamburger-menu',
 'uifwk/js/widgets/timeFilter/js/timeFilter',
 'uifwk/js/widgets/widgetselector/js/widget-selector',
-'uifwk/js/util/zdt-util'
+'uifwk/js/util/zdt-util',
+'uifwk/js/sdk/menu-util'
 ],
     function () {
 //        function registerComponent(kocName, kocViewModel, kocTemplate)

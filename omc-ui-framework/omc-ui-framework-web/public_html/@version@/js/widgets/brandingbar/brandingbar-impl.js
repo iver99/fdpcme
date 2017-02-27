@@ -11,7 +11,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
     'ojs/ojtoolbar',
     'ojs/ojmenu',
     'ojs/ojbutton',
-    'ojs/ojdialog'
+    'ojs/ojdialog',
+    'ojs/ojoffcanvas'
 ],
     function (ko, $, dfumodel, msgUtilModel, contextModel, oj, nls, zdtUtilModel) {
         function BrandingBarViewModel(params) {
@@ -694,13 +695,25 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 $("#links_menu").slideToggle('normal');
                 item.stopImmediatePropagation();
             };
-
-            /**
-             * Navigation links button click handler
-             */
-            self.hamburgerMenuHandler = function (event, item) {
-                $("#hamburger_menu").toggle('normal');
-                item.stopImmediatePropagation();
+            
+            self.hamburgerBtnLabel = nls.BRANDING_BAR_HAMBURGER_BTN_LABEL;
+            self.menuParams = {'appId': self.appId, 'serviceMenus': params.serviceMenus ? params.serviceMenus : []};
+            //Register a Knockout component for hamburger menu
+            if (!ko.components.isRegistered('omc-uifwk-hamburger-menu')) {
+                var hamburgerVMPath = "uifwk/js/widgets/hamburger-menu/js/hamburger-menu";
+                var hamburgerTemplatePath = "uifwk/js/widgets/hamburger-menu/html/hamburger-menu.html";
+                ko.components.register("omc-uifwk-hamburger-menu", {
+                    viewModel: {require: hamburgerVMPath},
+                    template: {require: 'text!' + hamburgerTemplatePath}
+                });
+            }
+            self.toggleHamburgerMenu = function() {
+                return oj.OffcanvasUtils.toggle({
+                                                "edge": "start",
+                                                "displayMode": "push",
+                                //                "content": "#main-container",
+                                                "selector": "#omcHamburgerMenu"
+                                            });
             };
 
             /**

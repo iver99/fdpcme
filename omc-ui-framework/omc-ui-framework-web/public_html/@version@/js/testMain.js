@@ -25,7 +25,8 @@ requirejs.config({
             'text!uifwk/js/widgets/brandingbar/html/brandingbar.html',
             'text!uifwk/js/widgets/widgetselector/html/widget-selector.html',
             'text!uifwk/js/widgets/timeFilter/html/timeFilter.html',
-            'text!uifwk/js/widgets/datetime-picker/html/datetime-picker.html'
+            'text!uifwk/js/widgets/datetime-picker/html/datetime-picker.html',
+            'uifwk/js/sdk/menu-util'
             ]
     },
     // Path mappings for the logical module names
@@ -96,13 +97,14 @@ require(['knockout',
     'uifwk/js/util/usertenant-util',
     'uifwk/js/util/message-util',
     'uifwk/js/util/df-util',
+    'uifwk/js/sdk/menu-util',
     'uifwk/js/util/preference-util',
     'ojs/ojknockout',
     'ojs/ojbutton',
     'ojs/ojtoolbar',
     'ojs/ojdialog'
 ],
-        function(ko, $, oj, _emJETCustomLogger, userTenantUtilModel, msgUtilModel, dfumodel) // this callback gets executed when all required modules are loaded
+        function(ko, $, oj, _emJETCustomLogger, userTenantUtilModel, msgUtilModel, dfumodel, menuModel) // this callback gets executed when all required modules are loaded
         {
             var appId = getUrlParam("appId");
             appId = appId !== null && appId !== "" ? appId : "Dashboard";
@@ -173,6 +175,47 @@ require(['knockout',
             function HeaderViewModel() {
                 var self = this;
                 var entities = ko.observable(["8616FD4297516BA7974EF5AA20EE294B"]);
+                var menus = null;
+                if (appId === 'APM') {
+                    menus = [{'id': 'apm_home',type:'menu', 'name': 'Home', 'href': '#'},
+                            {'id': 'apm_Alerts',type:'menu', 'name': 'Alerts', 'href': '#'},
+                            {'id': 'apm_app',type:'menu', 'name': 'Applications', 'href': '#'},
+                            {'id': 'apm_divider',type:'divider', 'name': '', 'href': '#'},
+                            {'id': 'apm_pages',type:'menu', 'name': 'Pages', 'href': '#'},
+                            {'id': 'apm_ajaxcalls',type:'menu', 'name': 'Ajax Calls', 'href': '#'},
+                            {'id': 'apm_sessions',type:'menu', 'name': 'Sessions', 'href': '#'},
+                            {'id': 'apm_synthetictests',type:'menu', 'name': 'Synthetic Tests', 'href': '#'},
+                            {'id': 'apm_divider1',type:'divider', 'name': '', 'href': '#'},
+                            {'id': 'apm_mobileclient',type:'menu', 'name': 'Mobile Client', 'href': '#'},
+                            {'id': 'apm_viewcontrollers',type:'menu', 'name': 'View Controllers/Activities', 'href': '#'},
+                            {'id': 'apm_mobilehttp',type:'menu', 'name': '(Mobile)HTTP Requests', 'href': '#'},
+                            {'id': 'apm_divider2',type:'divider', 'name': '', 'href': '#'},
+                            {'id': 'apm_serverrequests',type:'menu', 'name': 'Server Requests', 'href': '#'},
+                            {'id': 'apm_threadprofiler',type:'menu', 'name': 'Thread Profilers', 'href': '#'},
+                            {'id': 'apm_appservers',type:'menu', 'name': 'App Servers', 'href': '#'},
+                            {'id': 'apm_divider3',type:'divider', 'name': 'hr', 'href': '#'},
+                            {'id': 'apm_admin',type:'admin_menu_group', 'name': 'APM Admin', 'href': '#', children: 
+                                [{'id': 'apm_admin_alertrules',type:'menu', 'name': 'Alert Rules', 'href': '#'},
+                                {'id': 'apm_admin_appdef',type:'menu', 'name': 'Application Definitions', 'href': '#'},
+                                {'id': 'apm_admin_synthetictests',type:'menu', 'name': 'Synthetic Tests', 'href': '#'},
+                                {'id': 'apm_admin_location',type:'menu', 'name': 'Beacon Locations', 'href': '#'},
+                                {'id': 'apm_admin_metricsettings',type:'menu', 'name': 'Metric Settings', 'href': '#'},
+                                {'id': 'apm_admin_browseragents',type:'menu', 'name': 'Browser Agents', 'href': '#'},
+                                {'id': 'apm_admin_mobileclientregistry',type:'menu', 'name': 'Mobile Client Registrations', 'href': '#'}]}];
+                }
+                else if (appId === 'LogAnalytics') {
+                    menus = [{'id': 'la_home', 'name': 'Log Explorer', 'href': '#'},
+                            {'id': 'la_Alerts', 'name': 'Alerts', 'href': '#'}];
+                }
+                else if (appId === 'ITAnalytics') {
+                    menus = [{'id': 'ita_apa', 'name': 'Application Performance Analytics', 'href': '#'},
+                            {'id': 'ita_dpa', 'name': 'Database Performance Analytics', 'href': '#'},
+                            {'id': 'ita_aspa', 'name': 'App Server Performance Analytics', 'href': '#'},
+                            {'id': 'ita_hra', 'name': 'Host Resource Analytics', 'href': '#'},
+                            {'id': 'ita_dra', 'name': 'Database Resource Analytics', 'href': '#'},
+                            {'id': 'ita_asra', 'name': 'App Server Resource Analytics', 'href': '#'}];
+                }
+                
                 self.brandingbarParams = {
                     userName: userName,
                     tenantName: tenantName,
@@ -181,7 +224,8 @@ require(['knockout',
 //                    relNotificationShow: "warnings",
                     isAdmin: isAdmin,
                     entities: entities,
-                    showGlobalContextBanner: false
+                    showGlobalContextBanner: true,
+                    serviceMenus: menus
                 };
             }
 
@@ -273,11 +317,21 @@ require(['knockout',
                 self.openWidgetSelectorDialog = function() {
                     $('#'+widgetSelectorDialogId).ojDialog('open');
                 };
+                
+                self.brandingbarParams = new HeaderViewModel().brandingbarParams;
+                
+                function menuSelectionHandler(data) {
+                    alert('Menu clicked: ' + JSON.stringify(data));
+                }
+                
+                var menuUtil = new menuModel();
+                menuUtil.subscribeMenuSelectionEvent(menuSelectionHandler);
+                menuUtil.setupCustomKOStopBinding();
             }
 
             $(document).ready(function() {
-                ko.applyBindings(new HeaderViewModel(), $('#headerWrapper')[0]);
-                ko.applyBindings(new MainViewModel(), $('#main-container')[0]);
+//                ko.applyBindings(new HeaderViewModel(), $('#headerWrapper')[0]);
+                ko.applyBindings(new MainViewModel(), $('#globalBody')[0]);
                 $("#loading").hide();
                 $('#globalBody').show();
             });
