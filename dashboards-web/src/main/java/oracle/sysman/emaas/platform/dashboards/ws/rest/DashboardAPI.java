@@ -806,7 +806,9 @@ public class DashboardAPI extends APIBase
 			userOption = getJsonUtil().fromJson(inputJson.toString(), UserOptions.class);
 			boolean validated = userOption.validateExtendedOptions();
 			if (!validated) {
-				ErrorEntity error = new ErrorEntity(new CommonFunctionalException(CommonFunctionalException.USER_OPTIONS_INVALID_EXTENDED_OPTIONS));
+				ErrorEntity error = new ErrorEntity(
+						new CommonFunctionalException(
+								MessageUtils.getDefaultBundleString(CommonFunctionalException.USER_OPTIONS_INVALID_EXTENDED_OPTIONS)));
 				return buildErrorResponse(error);
 			}
 		}
@@ -904,7 +906,9 @@ public class DashboardAPI extends APIBase
 			userOption.setDashboardId(dashboardId);
 			boolean validated = userOption.validateExtendedOptions();
 			if (!validated) {
-				ErrorEntity error = new ErrorEntity(new CommonFunctionalException(CommonFunctionalException.USER_OPTIONS_INVALID_EXTENDED_OPTIONS));
+				ErrorEntity error = new ErrorEntity(
+						new CommonFunctionalException(
+								MessageUtils.getDefaultBundleString(CommonFunctionalException.USER_OPTIONS_INVALID_EXTENDED_OPTIONS)));
 				return buildErrorResponse(error);
 			}
 		}
