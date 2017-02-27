@@ -58,7 +58,7 @@ public class NLSFilter implements Filter
         final String newResponseText = pattern.matcher(responseText).replaceFirst(langAttr);
 
         // Writes the updated response text to the response object
-        try (PrintWriter writer = new PrintWriter(response.getOutputStream())) {
+        try (PrintWriter writer = response.getWriter()) {
             writer.println(newResponseText);
         }
     }
