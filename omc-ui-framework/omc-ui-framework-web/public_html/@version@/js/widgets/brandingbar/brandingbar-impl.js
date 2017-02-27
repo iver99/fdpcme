@@ -1101,7 +1101,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 if (self.isTopologyCompRegistered()) {
                     var refreshTopology = true;
                     var omcContext = cxtUtil.getOMCContext();
-                    var currentCompositeId = cxtUtil.getCompositeMeId() || cxtUtil.getEntities()[0]['meId'];
+                    var currentCompositeId = cxtUtil.getCompositeMeId() || (cxtUtil.getEntities()[0] ? cxtUtil.getEntities()[0]['meId'] : cxtUtil.getEntities()[0]);
                     console.log("************currentCompositeId" + currentCompositeId);
                     if (currentCompositeId) {
                         if (self.topologyInitialized === true && currentCompositeId === omcContext.previousCompositeMeId) {
@@ -1185,10 +1185,10 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             }
             function refreshOMCContext() {
                 //added suppport for single entity
-                self.cxtCompositeMeId = cxtUtil.getCompositeMeId() || cxtUtil.getEntities()[0]['meId'];
+                self.cxtCompositeMeId = cxtUtil.getCompositeMeId() || (cxtUtil.getEntities()[0] ? cxtUtil.getEntities()[0]['meId'] : cxtUtil.getEntities()[0]);
 //                self.cxtCompositeType = cxtUtil.getCompositeType();
-                self.cxtCompositeDisplayName = cxtUtil.getCompositeDisplayName() || cxtUtil.getEntities()[0]['displayName'];
-                self.cxtCompositeName = cxtUtil.getCompositeName() || cxtUtil.getEntities()[0]['entityName'];
+                self.cxtCompositeDisplayName = cxtUtil.getCompositeDisplayName() || (cxtUtil.getEntities()[0] ? cxtUtil.getEntities()[0]['displayName'] : cxtUtil.getEntities()[0]);
+                self.cxtCompositeName = cxtUtil.getCompositeName() || (cxtUtil.getEntities()[0] ? cxtUtil.getEntities()[0]['entityName'] : cxtUtil.getEntities()[0]);
                 self.cxtComposite = cxtUtil.getCompositeEntity();
 //                self.cxtStartTime = cxtUtil.getStartTime();
 //                self.cxtEndTime = cxtUtil.getEndTime();
