@@ -12,7 +12,7 @@ publishing.publications {
     thisJarPublication(MavenPublication) {
         from project.components.java
 	groupId "${publishGroup1}"
-        version "1.0.0-" + sdkPubTimestamp
+        version "1.0.1-" + sdkPubTimestamp
     }
 }
 
