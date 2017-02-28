@@ -36,6 +36,7 @@ import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
 /* Your lrg specific code would come here */
 def emcpsmRegClientVer = getDependentSdkVersion('com.oracle.emaas.emcpsm', 'registry-client', '1.+')
 def emcpsmRegLookupClientVer = getDependentSdkVersion('com.oracle.emaas.emcpsm', 'registry-lookup-client', '1.+')
+def emcpdfDashboardSdkVer = getDependentSdkVersion('com.oracle.emaas.emcpdf', 'dashboards-sdk', '1.+')
 
 dependencies {
 	testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-web-integ-tests', version: "${REPO_BID}") {
@@ -74,7 +75,7 @@ dependencies {
     testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardsui-webutils', version: "${REPO_BID}") {transitive=false}
     testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'omc-ui-framework-webutils', version:"${REPO_BID}") {transitive=false}
 	testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'omc-ui-framework-web', version:"${REPO_BID}") {transitive=false}
-    testConfig(group: 'com.oracle.emaas.emcpdf', name: 'dashboards-sdk', version:"1.0.0-feb20+") {transitive=false}
+    testConfig(group: 'com.oracle.emaas.emcpdf', name: 'dashboards-sdk', version:emcpdfDashboardSdkVer) {transitive=false}
     
     testConfig(group: 'com.oracle.emaas.emcpsrvs.sdk', name:'emaas-platform-tenant-sdk', version:'2.0.+') { transitive = false }
     testConfig(group: 'com.oracle.emaas.emcpsm', name: 'registry-lookup-client', version: emcpsmRegLookupClientVer){ transitive = false }

@@ -33,6 +33,8 @@ public class DashboardDataAccessUtil {
         rc.setHeader("X-USER-IDENTITY-DOMAIN-NAME", tenantIdParam);
         rc.setHeader("X-REMOTE-USER", userTenant);
         rc.setHeader("SESSION_EXP", sessionExp);
+        //EMCPDF-3448, FEB20: 3 admin link dif found in farm jobs
+        rc.setHeader("OAM_REMOTE_USER", userTenant);
         rc.setHeader("Referer", referer);
         try{
         	String response = rc.get(dashboardHref, tenantIdParam,MediaType.TEXT_PLAIN);
