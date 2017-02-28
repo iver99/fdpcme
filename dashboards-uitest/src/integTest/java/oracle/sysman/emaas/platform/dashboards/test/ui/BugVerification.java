@@ -316,4 +316,21 @@ public class BugVerification extends LoginAndLogout
 	        webd.getLogger().info("Verfiy the home page");
 	        Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, WelcomeUtil.SERVICE_NAME_DASHBOARDS), "It is NOT the home page!");
      }
+
+        @Test
+        public void testEMCPDF_3210()
+        {
+                //Initialize the test
+                //login the dashboard with emaastesttenantnoita
+                initTest(Thread.currentThread().getStackTrace()[1].getMethodName(),"emcsadmin","emaastesttenantnoita");
+                webd.getLogger().info("Start the test case: testEMCPDF_3210");
+                
+		//reset the home page
+                webd.getLogger().info("Reset all filter options in the home page");
+                DashboardHomeUtil.resetFilterOptions(webd);
+
+		//verify the Explore Data button is disabled
+		 WebElement edButton = webd.getWebDriver().findElement(By.xpath(PageId.EXPLOREDATA_BTN));
+                Assert.assertFalse(edButton.isDisplayed(), "Explore Data button is displayed in dashboard");
+        }        
 }
