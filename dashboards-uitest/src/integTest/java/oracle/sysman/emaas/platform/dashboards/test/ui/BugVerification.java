@@ -318,12 +318,12 @@ public class BugVerification extends LoginAndLogout
      }
 
         @Test
-        public void testEMCPDF_3210()
+        public void testEMCPDF_3120()
         {
                 //Initialize the test
                 //login the dashboard with emaastesttenantnoita
-                initTest(Thread.currentThread().getStackTrace()[1].getMethodName(),"emcsadmin","emaastesttenantnoita");
-                webd.getLogger().info("Start the test case: testEMCPDF_3210");
+                initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emcsadmin", "emaastesttenantnoita");
+                webd.getLogger().info("Start the test case: testEMCPDF_3120");
                 
 		//reset the home page
                 webd.getLogger().info("Reset all filter options in the home page");
