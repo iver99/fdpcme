@@ -58,6 +58,11 @@ public class HtmlBootstrapJsUtil
 
 	private static org.apache.logging.log4j.Logger LOGGER = LogManager.getLogger(HtmlBootstrapJsUtil.class.getName());
 
+	public static String getAllBootstrapJS()
+	{
+		return HtmlBootstrapJsUtil.getSDKVersionJS();
+	}
+
 	public static String getAllBootstrapJS(HttpServletRequest httpReq)
 	{
 		StringBuilder bootstrapJS = new StringBuilder();
