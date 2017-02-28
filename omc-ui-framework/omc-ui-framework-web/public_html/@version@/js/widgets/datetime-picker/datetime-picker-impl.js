@@ -1044,9 +1044,9 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 }
 
                 if(params.showBadge){
-                    var defaultTP = formalizeTimePeriod(ko.unwrap(params.defaultTimePeriod));
+                    var defaultTP = formalizeTimePeriod(ko.unwrap(self.defaultTimePeriod));
                     if(self.timePeriodsNlsObject[defaultTP] || isValidFlexRelTimePeriod(defaultTP)) {
-                        self.badgeTimePeriod(self.timePeriodsNlsObject[defaultTP]);
+                        self.badgeTimePeriod(defaultTP);
                     }
                 }
 
@@ -3193,7 +3193,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
 
                     var _timeDisplay = self.timeDisplay;    //change self.timeDisplay temporary to get right time rage info
                     self.timeDisplay = ko.observable("long");
-                    var _timeInfoStr = self.getDateTimeInfo(_time.start.slice(0, 10), _time.end.slice(0, 10), _startTime, _endTime, self.badgeTimePeriod());
+                    var _timeInfoStr = self.getDateTimeInfo(_time.start.slice(0, 10), _time.end.slice(0, 10), _startTime, _endTime, self.timePeriodsNlsObject[self.badgeTimePeriod()]);
                     self.timeDisplay = _timeDisplay;
 
                     var _timeInfoNode = $("<div>" + _timeInfoStr + "</div>")[0];
