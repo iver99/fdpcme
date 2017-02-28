@@ -103,11 +103,11 @@ public class DashboardCountsComparator extends AbstractComparator
 			differentCountsForInstance2.setCountOfDashboards(ze2.getCountOfDashboards());
 			allMatch = false;
 		}
-		if (ze1.getCountOfFavorite() != ze2.getCountOfFavorite()) {
+		if (ze1.getCountOfUserOptions() != ze2.getCountOfUserOptions()) {
 			logger.error("Favorites count does not match. In instance \"{}\", count is {}. In instance \"{}\", count is {}",
-					key1, ze1.getCountOfFavorite(), key2, ze2.getCountOfFavorite());
-			differentCountsForInstance1.setCountOfFavorite(ze1.getCountOfFavorite());
-			differentCountsForInstance2.setCountOfFavorite(ze2.getCountOfFavorite());
+					key1, ze1.getCountOfUserOptions(), key2, ze2.getCountOfUserOptions());
+			differentCountsForInstance1.setCountOfUserOptions(ze1.getCountOfUserOptions());
+			differentCountsForInstance2.setCountOfUserOptions(ze2.getCountOfUserOptions());
 			allMatch = false;
 		}
 		if (ze1.getCountOfPreference() != ze2.getCountOfPreference()) {
@@ -151,7 +151,7 @@ public class DashboardCountsComparator extends AbstractComparator
 		// TODO: for the 1st step implementation, let's log in log files then
 		logger.info(
 				"Retrieved counts for dashboards OMC instance: dashboard count - {}, favorites count - {}, preference count - {}",
-				ze.getCountOfDashboards(), ze.getCountOfFavorite(), ze.getCountOfPreference());
+				ze.getCountOfDashboards(), ze.getCountOfUserOptions(), ze.getCountOfPreference());
 		return ze;
 	}
 }

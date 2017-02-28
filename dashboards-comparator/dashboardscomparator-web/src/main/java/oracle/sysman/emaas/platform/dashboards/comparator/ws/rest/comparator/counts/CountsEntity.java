@@ -41,7 +41,7 @@ public class CountsEntity
 	/**
 	 * @return the countOfFavorite
 	 */
-	public Long getCountOfFavorite()
+	public Long getCountOfUserOptions()
 	{
 		return countOfUserOptions;
 	}
@@ -67,7 +67,7 @@ public class CountsEntity
 	 * @param countOfFavorite
 	 *            the countOfFavorite to set
 	 */
-	public void setCountOfFavorite(Long countOfFavorite)
+	public void setCountOfUserOptions(Long countOfFavorite)
 	{
 		this.countOfUserOptions = countOfFavorite;
 	}

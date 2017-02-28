@@ -236,11 +236,11 @@ public class DashboardRowEntityTest
 	public void testCountsEntity(){
 		countsEntity = new CountsEntity(1L,1L,1L);
 		countsEntity.setCountOfDashboards(1L);
-		countsEntity.setCountOfFavorite(1L);
+		countsEntity.setCountOfUserOptions(1L);
 		countsEntity.setCountOfPreference(1L);
 
 		countsEntity.getCountOfDashboards();
-		countsEntity.getCountOfFavorite();
+		countsEntity.getCountOfUserOptions();
 		countsEntity.getCountOfPreference();
 	}
 }
