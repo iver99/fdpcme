@@ -32,9 +32,9 @@ public class BugVerification extends LoginAndLogout
 		DashBoardUtils.loadWebDriver(webd);
 	}
 
-	public void initTestCustom(String testName, String Username)
+	public void initTestCustom(String testName, String Username, String tenantName)
 	{
-		customlogin(this.getClass().getName() + "." + testName, Username);
+		customlogin(this.getClass().getName() + "." + testName, Username, tenantName);
 		DashBoardUtils.loadWebDriver(webd);
 
 	}
@@ -98,7 +98,7 @@ public class BugVerification extends LoginAndLogout
 	public void testEMCPDF_2425()
 	{
 		//login the dashboard with user emaastesttenant1_la_admin1
-		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_la_admin1");
+		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_la_admin1", "emaastesttenant1");
 		webd.getLogger().info("start to test in testEMCPDF_2425");
 		WaitUtil.waitForPageFullyLoaded(webd);
 
@@ -123,7 +123,7 @@ public class BugVerification extends LoginAndLogout
 	public void testEMCPDF_2425_1()
 	{
 		//login the dashboard with user emaastesttenant1_la_admin1
-		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_ita_admin1");
+		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_ita_admin1", "emaastesttenant1");
 		webd.getLogger().info("start to test in testEMCPDF_2425_1");
 		WaitUtil.waitForPageFullyLoaded(webd);
 
