@@ -1042,8 +1042,21 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         }
                     }
                 }
-
-                if(params.showBadge){
+                
+                if(ko.isObservable(params.showBadge)) {
+                    params.showBadge.subscribe(function(value) {
+                        if(value === true) {
+                           var defaultTP = formalizeTimePeriod(ko.unwrap(self.defaultTimePeriod));
+                            if(self.timePeriodsNlsObject[defaultTP] || isValidFlexRelTimePeriod(defaultTP)) {
+                                self.badgeTimePeriod(defaultTP);
+                            } 
+                        }else if(value === false){
+                            self.badgeTimePeriod(null);
+                        }
+                    });
+                }
+                
+                if(self.getParam(params.showBadge)){
                     var defaultTP = formalizeTimePeriod(ko.unwrap(self.defaultTimePeriod));
                     if(self.timePeriodsNlsObject[defaultTP] || isValidFlexRelTimePeriod(defaultTP)) {
                         self.badgeTimePeriod(defaultTP);
@@ -2493,7 +2506,6 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     var end;
                     var tpId;
                     var parsedTp;
-                    self.badgeTimePeriod(null);
                     self.setFocusOnInput("inputStartDate_" + self.randomId);
                     self.lastFocus(1);
                     
@@ -2573,6 +2585,9 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     var flexRelTimeOpt = null;
                     var flexRelTimePeriodId = null;
                     var recentTimePeriodId = null;
+                    if(self.shouldSetOmcCtx !== false && ko.isObservable(params.showBadge)) {
+                        params.showBadge(false);
+                    }
                     self.timeFilter = ko.observable(null);
 
                     self.lastStartDate(self.startDate());
