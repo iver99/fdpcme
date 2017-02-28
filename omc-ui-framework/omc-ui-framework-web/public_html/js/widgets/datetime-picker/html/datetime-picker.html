@@ -9,8 +9,8 @@
                         <span class="badge-message-detail" data-bind="text: badgeStartTime()+' - '+badgeEndTime()"></span>
                     </div>
                 </div>
-                <span class="oj-select-chosen" style="font-size: 10px; color: #666666;line-height: 28px; padding-right: 24px; max-width: 240px;" 
-                      data-bind="style: {'padding-left': badgeTimePeriod()?'36px':'2px'},html: dateTimeInfo,
+                <span class="oj-select-chosen" style="font-size: 10px; color: #666666;line-height: 28px; padding-right: 24px;" 
+                      data-bind="style: {'padding-left': badgeTimePeriod()?'36px':'2px', 'max-width': badgeTimePeriod()?'285px':'240px'},html: dateTimeInfo,
                                  event: {mouseover: labelMouseOverHandler, mouseout: labelMouseOutHandler}"></span>
                 <!-- ko if: tfInfoIndicatorVisible() === true -->
                 <span class="time-filter-indicator fa-icon-font" 
