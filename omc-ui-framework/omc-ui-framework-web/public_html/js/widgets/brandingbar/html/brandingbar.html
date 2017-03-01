@@ -132,14 +132,14 @@
             </div>
             <!-- /ko -->
             <!-- ko if: !showEntityContextSelector() -->
-            <div class="ude-sdk emaas-appheader-inline-flexbox emaas-appheader-flexbox-auto animated_transitions" style="padding-bottom: 5px; padding-top: 5px; height: 32px; display: flex;">
+            <div class="ude-sdk emaas-appheader-inline-flexbox emaas-appheader-flexbox-auto animated_transitions" style="padding-bottom: 5px; padding-top: 5px; height: 32px; display: flex; min-width:200px;">
             <div class="ude-sdk emcta_panel_border flexBoxNoShrink flexBoxColumn flexBoxAuto animated_transitions" id="globalBar_wrapper"
-                 style="padding:2px;">
+                 style="padding:2px; overflow: hidden;">
                 <!-- ko if: compositeCxtText() -->
                 <div class="ude-sdk pill filterpill_value filterpill_with_value" style="margin-bottom: auto; margin-top: auto;height: 20px; 
                      padding-left: 8px; padding-right:8px; font-size: 14px; padding-top: 3px;padding-bottom: 1px;margin-left:0px; font-weight: normal; cursor: default;"
                      id="globalBar_pillWrapper">
-                    <span style="white-space: pre-wrap; vertical-align: super;"
+                    <span style="white-space: nowrap; vertical-align: super;"
                           data-bind="text:compositeCxtText, attr:{title:cxtCompositeName}" class="ude-sdk">
                     </span>
                     <!-- ko if: showReadOnlyPillRemove -->
@@ -157,7 +157,7 @@
                             padding-left: 8px; padding-right: 8px; padding-top: 3px;padding-bottom: 1px;
                             height: 20px; font-size: 14px; font-weight: normal; cursor: default;"
                      data-bind="attr: {id: 'globalBar_pillWrapper_' + $index()}">
-                    <span style="white-space: pre-wrap; vertical-align: super;"
+                    <span style="white-space: nowrap; vertical-align: super;"
                         data-bind="text:$data.displayName, attr:{title:$data.entityName}" class="ude-sdk">
                     </span>
                     <!-- ko if: showReadOnlyPillRemove -->
