@@ -43,12 +43,13 @@ public abstract class AbstractCache implements ICache {
         if (factory != null) {
             try {
                 valueFromFactory = factory.load(key);
+                if (valueFromFactory != null) {
+                    put(key, valueFromFactory);
+                }
             } catch (Exception e) {
                 LOGGER.error(e.getLocalizedMessage());
                 throw new ExecutionException(e);
             }
-//            CachedItem ci = new CachedItem(key, valueFromFactory);
-            put(key, valueFromFactory);
         }
         return valueFromFactory;
     }
