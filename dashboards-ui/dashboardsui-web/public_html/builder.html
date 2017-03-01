@@ -493,7 +493,8 @@
                 <!-- /ko -->
             </script>
 
-            <div id="popUp-dialog" data-bind="with:selectedDashboardInst">
+            <div id="popUp-dialog">
+                <!--ko with: selectedDashboardInst-->
                 <!--ko if: $data.type === 'included'-->
                 <!-- delete dilog start -->
                 <div style="display:none" id="delete-dashboard"
@@ -628,6 +629,7 @@
                 </div>
                 <!-- set as home confirm dilog end -->
                 <!--/ko-->
+                <!--/ko-->            
             </div>
 
             <div class="df-right-panel no-print" data-bind="stopDataBinding:isDashboardSet ? isOobDashboardset() : ($b.dashboard.systemDashboard&&$b.dashboard.systemDashboard()),style:{top:isDashboardSet() ?'100px':'91px'},visible:!rightPanelControl.completelyHidden()">

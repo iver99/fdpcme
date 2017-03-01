@@ -1,5 +1,7 @@
 package oracle.sysman.emaas.platform.dashboards.ui.web;
 
+import oracle.sysman.emaas.platform.dashboards.ui.web.additionaldata.AdditionalDataProvider;
+import oracle.sysman.emaas.platform.dashboards.ui.web.additionaldata.HtmlFragmentCache;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.DashboardDataAccessUtil;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.StringUtil;
 
@@ -24,9 +26,10 @@ public class AdditionalDataFilter implements Filter {
     private static final String LANG_ATTR_TO_REPLACE = "lang=\"en-US\"";
     private static final String ADDITIONA_DATA_TO_REPLACE = "////ADDITIONALDATA////";
 
-    private static String CACHED_BEFORE_LANG_ATTR_PART = "";
-    private static String CACHED_BEFORE_DASHBOARD_DATA_PART = "";
-    private static String CACHED_AFTER_DASHBOARD_DATA_PART = "";
+    public static String HOME_URI = "/emsaasui/emcpdfui/home.html";
+    public static String WELCOME_URI = "/emsaasui/emcpdfui/welcome.html";
+    public static String BUILDER_URI = "/emsaasui/emcpdfui/builder.html";
+    public static String ERROR_URI = "/emsaasui/emcpdfui/error.html";
 
     private static class CaptureWrapper extends HttpServletResponseWrapper
     {
@@ -59,7 +62,7 @@ public class AdditionalDataFilter implements Filter {
             try {
             	outputStream.flush();
                 outputStream.close();
-                result = byteStream.toString();
+                result = byteStream.toString("UTF-8");
             }
             catch (IOException e) {
                 LOGGER.error("Failed to decode outputStream", e);
@@ -92,17 +95,21 @@ public class AdditionalDataFilter implements Filter {
         LOGGER.debug("Now enter the AdditionalDataFilter");
         HttpServletRequest httpReq = (HttpServletRequest) request;
         final HttpServletResponse httpResponse = (HttpServletResponse) response;
+
         httpResponse.setCharacterEncoding("utf-8");
         httpResponse.setContentType("text/html;charset=utf-8");
 
         final CaptureWrapper wrapper = new CaptureWrapper(httpResponse);
-        if (AdditionalDataFilter.isHtmlFragmentsCached()) {
+        HtmlFragmentCache hfc = HtmlFragmentCache.getInstance();
+        String uri = httpReq.getRequestURI();
+        LOGGER.info("The request uri is {}", uri);
+        if (HtmlFragmentCache.getInstance().isHtmlFragmentElementsCached(uri)) {
             // previously the html static resource (start part&end part) has been cached,
             // so no need to parse the static resource again or go to the next filter
             // just concatinate the data string into one
             String langAttr = NLSFilter.getLangAttr(httpReq);
-            String dashboardData = getDashboardData(httpReq);
-            String newResponseText = getResponseText(langAttr, dashboardData);
+            String dashboardData = AdditionalDataProvider.getAdditionalDataForRequest(httpReq);
+            String newResponseText = getResponseTextFromCachedHtmls(uri, langAttr, dashboardData);
             LOGGER.debug("After getting cached static html fragment, contactinating the data and inserting into html, the response text is {}", newResponseText);
             updateResponseWithAdditionDataText(response, newResponseText);
             return;
@@ -124,11 +131,11 @@ public class AdditionalDataFilter implements Filter {
         LOGGER.debug("Before dashboard&after lang attr part is {}", beforeDashboardDataPart);
         String afterDashboardDataPart = responseText.substring(idxDashboard + ADDITIONA_DATA_TO_REPLACE.length(), responseText.length());
         LOGGER.debug("After part is {}", afterDashboardDataPart);
-        AdditionalDataFilter.updateCachedHtmlFragments(beforeLangAttrPart, beforeDashboardDataPart, afterDashboardDataPart);
+        hfc.cacheElementsForRequest(uri, beforeLangAttrPart, beforeDashboardDataPart, afterDashboardDataPart);
 
         String langAttr = NLSFilter.getLangAttr(httpReq);
-        String dashboardData = getDashboardData(httpReq);
-        newResponseText = getResponseText(langAttr, dashboardData);
+        String dashboardData = AdditionalDataProvider.getAdditionalDataForRequest(httpReq);
+        newResponseText = getResponseTextFromCachedHtmls(uri, langAttr, dashboardData);
         LOGGER.debug("After inserting additional data, the response text is {}", newResponseText);
 
         updateResponseWithAdditionDataText(response, newResponseText);
@@ -144,7 +151,7 @@ public class AdditionalDataFilter implements Filter {
     private void updateResponseWithAdditionDataText(ServletResponse response, String newResponseText) throws IOException {
         response.setCharacterEncoding("utf-8");
         response.setContentType("text/html;charset=utf-8");
-        try (PrintWriter writer = new PrintWriter(response.getOutputStream())) {
+        try (PrintWriter writer = new PrintWriter(response.getWriter())) {
             writer.println(newResponseText);
         }
     }
@@ -154,96 +161,26 @@ public class AdditionalDataFilter implements Filter {
      * 
      * @param dashboardData
      */
-    private String getResponseText(String langAttr, String dashboardData) {
+    private String getResponseTextFromCachedHtmls(String uri, String langAttr, String dashboardData) {
         String newResponseText;
-        StringBuilder sb = new StringBuilder(CACHED_BEFORE_LANG_ATTR_PART);
+        HtmlFragmentCache.CachedHtml ce = HtmlFragmentCache.getInstance().getCachedElementsForRequest(uri);
+        StringBuilder sb = new StringBuilder(ce.getBeforeLangAttrPart());
         if (StringUtil.isEmpty(langAttr)) {
             sb.append(LANG_ATTR_TO_REPLACE);
         } else {
             sb.append(langAttr);
         }
-        sb.append(CACHED_BEFORE_DASHBOARD_DATA_PART);
+        sb.append(ce.getBeforeAdditionalDataPart());
         if (!StringUtil.isEmpty(dashboardData)) {
             sb.append(dashboardData);
         }
-        sb.append(CACHED_AFTER_DASHBOARD_DATA_PART);
+        sb.append(ce.getAfterAdditionalDataPart());
         newResponseText = sb.toString();
         return newResponseText;
-    }
-
-    private static synchronized void updateCachedHtmlFragments(String beforeLangAttrPart, String beforeDataPart, String afterDataPart) {
-        CACHED_BEFORE_LANG_ATTR_PART = beforeLangAttrPart;
-        CACHED_BEFORE_DASHBOARD_DATA_PART = beforeDataPart;
-        CACHED_AFTER_DASHBOARD_DATA_PART = afterDataPart;
-    }
-
-    private static synchronized boolean isHtmlFragmentsCached() {
-        return !StringUtil.isEmpty(CACHED_BEFORE_LANG_ATTR_PART) && !StringUtil.isEmpty(CACHED_BEFORE_DASHBOARD_DATA_PART) && !StringUtil.isEmpty(CACHED_AFTER_DASHBOARD_DATA_PART);
     }
 
     @Override
     public void destroy() {
 
-    }
-
-    private String getDashboardData(HttpServletRequest httpReq) {
-        String userTenant = httpReq.getHeader(DashboardsUiCORSFilter.OAM_REMOTE_USER_HEADER);
-        // TODO: check session expiry header
-        String sesExp = httpReq.getHeader("SESSION_EXP");
-        LOGGER.debug("Trying to get SESSION_EXP from builder.html file, its value is: {}", sesExp);
-        if (!StringUtil.isEmpty(userTenant) && userTenant.indexOf(".") > 0) {
-            int pos = userTenant.indexOf(".");
-            String tenant = userTenant.substring(0, pos);
-            String user = userTenant.substring(pos + 1);
-            LOGGER.info("Retrieved tenant is {} and user is {} from userTenant {}", tenant, user, userTenant);
-            if (StringUtil.isEmpty(tenant) || StringUtil.isEmpty(user)) {
-                LOGGER.warn("Retrieved null tenant or user");
-                return null;
-            }
-
-            final String dashboardIdStr = httpReq.getParameter("dashboardId");
-            BigInteger dashboardId = new BigInteger(dashboardIdStr);
-            return getDashboardData(tenant, user, dashboardId, httpReq.getHeader("referer"), sesExp);
-        }
-        return null;
-    }
-
-    private String getDashboardData(String tenant, String user, BigInteger dashboardId, String referer, String sessionExp) {
-        if (StringUtil.isEmpty(tenant) || StringUtil.isEmpty(user)) {
-            LOGGER.warn("tenant {}/user {} is null or empty or invalid, so do not update dashboard page then", tenant, user);
-            return null;
-        }
-        long start =System.currentTimeMillis();
-        StringBuilder sb = new StringBuilder();
-        if (BigInteger.ZERO.compareTo(dashboardId) < 0) {
-            String dashboardString = DashboardDataAccessUtil.getDashboardData(tenant, tenant + "." + user, referer, dashboardId);
-            if (StringUtil.isEmpty(dashboardString)) {
-                LOGGER.warn("Retrieved null or empty dashboard for tenant {} user {} and dashboardId {}, so do not update page data then", tenant, user, dashboardId);
-            } else {
-                //we do not need to escape the string, as we don't use regexp any more, but string concatenation
-                //dashboardString = formatJsonString(dashboardString);
-                //LOGGER.info("Escaping retrieved data before inserting to html. Vlaue now is: {}", dashboardString);
-                sb.append("window._dashboardServerCache=").append(dashboardString).append(";");
-            }
-        } else {
-            LOGGER.warn("dashboardId {} is invalid, so do not update dashboard page for dashboard data then", dashboardId);
-        }
-
-        String userInfoString = DashboardDataAccessUtil.getUserTenantInfo(tenant, tenant + "." + user, referer, sessionExp);
-        if (StringUtil.isEmpty(userInfoString)) {
-            LOGGER.warn("Retrieved null or empty user info for tenant {} user {}", tenant, user);
-        }
-        else {
-            sb.append("window._userInfoServerCache=").append(userInfoString).append(";");
-        }
-
-        String regString = DashboardDataAccessUtil.getRegistrationData(tenant, tenant + "." + user, referer, sessionExp);
-        if (StringUtil.isEmpty(regString)) {
-            LOGGER.warn("Retrieved null or empty registration for tenant {} user {}", tenant, user);
-        }
-        else {
-            sb.append("window._registrationServerCache=").append(regString).append(";");
-        }
-        return sb.toString();
     }
 }
