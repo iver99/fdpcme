@@ -475,6 +475,8 @@ public class DashBoardPageId
         public static final String EntSelSuggestionByCompositeCategory = "((//div[@id=''emcta-ctxtSel_suggestPopup'']//ul//li[contains(@class,''oj-listbox-result-selectable'') and not(preceding-sibling::li[not(contains(@class,''oj-listbox-result-selectable''))]//span[text()=''Entities''])])/div[span[2]/descendant-or-self::span[normalize-space()=''{0}'']])[1]";
         public static final String EntSelSuggestionByEntitiesCategory = "((//div[@id=''emcta-ctxtSel_suggestPopup'']//ul//li[contains(@class,''oj-listbox-result-selectable'') and preceding-sibling::li[not(contains(@class,''oj-listbox-result-selectable''))]//span[text()=''Entities'']])/div[span[2]/descendant-or-self::span[normalize-space()=''{0}'']])[1]";
         public static final String EntSelPillToRemoveByIndex = "(//div[@id=''emaas-appheader-globalcxt'']//a[contains(@id,''_remove'')])[{0}]";
+        public static final String EntSelPillLinkToReplaceByIndex = "//div[@id=\"emaas-appheader-globalcxt\"]//pill[{0}]//a[@class=\"pillLink\"]";
+        public static final String EntSelEditedPillByText = "//div[@id=\"emaas-appheader-globalcxt\"]//pill//a[@class=\"pillLink\"]//span[contains(text(),\"{0}\")]";
 
 	private DashBoardPageId()
 	{
