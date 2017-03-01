@@ -5,6 +5,7 @@ import oracle.sysman.emaas.platform.emcpdf.cache.exception.ExecutionException;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.AbstractCache;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.CachedItem;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
+import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheStatus;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.TimeUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,6 +20,7 @@ import java.util.TimerTask;
 public class LinkedHashMapCache extends AbstractCache{
     Logger LOGGER= LogManager.getLogger(LinkedHashMapCache.class);
 
+    private CacheStatus cacheStatus;
     private LinkedHashMap<Object, CachedItem> cacheMap;
     private String name;
     private Integer capacity;
@@ -32,6 +34,7 @@ public class LinkedHashMapCache extends AbstractCache{
         this.timeToLive = timeToLive == null ? CacheConstants.DEFAULT_EXPIRATION : timeToLive;
         this.creationTime=System.currentTimeMillis();
         int hashTableSize = (int) Math.ceil(capacity/0.75f) + 1;
+        cacheStatus = CacheStatus.AVAILABLE;
         cacheMap = new LinkedHashMap<Object,CachedItem>(hashTableSize, 0.75f, true) {//ordered by access time
             private static final long serialVersionUID = 1L;
             @Override
@@ -64,7 +67,8 @@ public class LinkedHashMapCache extends AbstractCache{
     @Override
     public Object get(Object key, CacheLoader factory) throws ExecutionException {
 
-       Object obj=super.get(key, factory);
+        if (checkCacheStatusNotAvailable()) return null;
+        Object obj=super.get(key, factory);
        if(obj!=null){
            LOGGER.debug("CachedItem with key {} and value {} is retrieved from cache group {}",key,obj,name);
            return obj;
@@ -74,12 +78,14 @@ public class LinkedHashMapCache extends AbstractCache{
 
     @Override
     public void put(Object key, Object value) {
+        if (checkCacheStatusNotAvailable()) return;
         cacheMap.put(key, new CachedItem(key,value));
         LOGGER.debug("CachedItem with key {} and value {} is cached into cache group {}",key,value,name);
     }
 
     @Override
     public void evict(Object key) {
+        if (checkCacheStatusNotAvailable()) return;
         super.evict(key);
         cacheMap.remove(key);
         LOGGER.debug("Cached Item with key {} is evicted from cache group {}",key,name);
@@ -113,6 +119,22 @@ public class LinkedHashMapCache extends AbstractCache{
                         "cache hit rate is {}, " +
                         "cache eviction count is {}", name, capacity, cacheMap.size(),
                 cacheCounter.getRequestCount(), cacheCounter.getHitCount(), cacheCounter.getHitRate(), cacheCounter.getEvictionCount());
+    }
+
+    private boolean checkCacheStatusNotAvailable() {
+        if(!cacheStatus.equals(CacheStatus.AVAILABLE)){
+            LOGGER.info("Cache group {} is not available now!", name);
+            return true;
+        }
+        return false;
+    }
+
+    public CacheStatus getCacheStatus() {
+        return cacheStatus;
+    }
+
+    public void setCacheStatus(CacheStatus cacheStatus) {
+        this.cacheStatus = cacheStatus;
     }
 
 
