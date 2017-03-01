@@ -174,7 +174,12 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                         }
                         var cache = sessionCaches[1].retrieveDataFromCache(entityCacheKey);
                         if (cache && cache['entities']) {
-                            globalCtx['entity']['entities'] = cache['entities'];
+                            var entities = [];
+                            cache['entities'].forEach(function (item) {
+                                var entity = EntityObject.prototype.createFromObject(item);
+                                entities.push(entity);
+                            });
+                            globalCtx['entity']['entities'] = entities;
                         }
                     }
                 }

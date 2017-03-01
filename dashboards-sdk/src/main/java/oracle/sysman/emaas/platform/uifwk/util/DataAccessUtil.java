@@ -128,6 +128,8 @@ public class DataAccessUtil
 			RestClient rc = new RestClient();
 			rc.setHeader("X-USER-IDENTITY-DOMAIN-NAME", tenantName);
 			rc.setHeader("X-REMOTE-USER", userTenant);
+			//EMCPDF-3448, FEB20: 3 admin link dif found in farm jobs
+			rc.setHeader("OAM_REMOTE_USER", userTenant);
 			if (!StringUtil.isEmpty(referer)) {
 				rc.setHeader("Referer", referer);
 			}
@@ -186,6 +188,8 @@ public class DataAccessUtil
 		RestClient rc = new RestClient();
 		rc.setHeader(HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME, tenant);
 		rc.setHeader("X-REMOTE-USER", tenant + "." + user);
+		//EMCPDF-3448, FEB20: 3 admin link dif found in farm jobs
+		rc.setHeader("OAM_REMOTE_USER", tenant + "." + user);
 		String subAppResponse = rc.get(subAppHref, tenant);
 		cache.put(tenantKey, subAppResponse);
 		LOGGER.info("Checking tenant (" + tenant + ") subscriptions. Dashboard-API subscribed app response is " + subAppResponse);
@@ -230,6 +234,8 @@ public class DataAccessUtil
 			RestClient rc = new RestClient();
 			rc.setHeader("X-USER-IDENTITY-DOMAIN-NAME", tenantName);
 			rc.setHeader("X-REMOTE-USER", userTenant);
+			//EMCPDF-3448, FEB20: 3 admin link dif found in farm jobs
+			rc.setHeader("OAM_REMOTE_USER", userTenant);
 			if (!StringUtil.isEmpty(referer)) {
 				rc.setHeader("Referer", referer);
 			}
