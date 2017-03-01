@@ -13,6 +13,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import java.io.IOException;
 import java.util.Map;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Created by chehao on 2017/3/1 10:36.
@@ -68,12 +69,13 @@ public class CacheAPI {
     }
 
     private void changeCacheGroupStatus(AbstractCacheManager cacheManager, CacheStatus cacheStatus) {
-        if (cacheManager.getCacheMap() == null) {
+        ConcurrentMap<String, ICache> map = cacheManager.getCacheMap();
+        if (map == null) {
             LOGGER.error("CacheMap in CacheManagers is null!");
             return;
         }
-        for (Map.Entry<String, ICache> entry : cacheManager.getCacheMap().entrySet()) {
-            LinkedHashMapCache cache = (LinkedHashMapCache) entry.getValue();
+        for (ICache value : map.values()) {
+            LinkedHashMapCache cache = (LinkedHashMapCache) value;
             cache.setCacheStatus(cacheStatus);
             LOGGER.info("Cache group {} status has been changed to {}", cache.getName(), cacheStatus);
         }
