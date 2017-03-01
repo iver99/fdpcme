@@ -2,18 +2,28 @@ define([
     'jquery', 
     'ojs/ojcore', 
     'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg',
+    'uifwk/@version@/js/util/df-util-impl',
+    'uifwk/@version@/js/util/preference-util-impl', 
+    'uifwk/@version@/js/sdk/context-util-impl',
     'ojs/ojnavigationlist',
     'ojs/ojjsontreedatasource'],
-        function ($, oj, nls) {
+        function ($, oj, nls, dfumodel, pfumodel, ctxmodel) {
             function HamburgerMenuViewModel(params) {
                 var self = this;
+                var dfu = new dfumodel();
+                var ctxUtil = new ctxmodel();
+                var prefUtil = new pfumodel(dfu.getPreferencesUrl(), dfu.getDashboardsRequestHeader());
+                var prefKeyHomeDashboardId = "Dashboards.homeDashboardId";
+                var isSetAsHomeChecked = false;
+                var omcHomeUrl = null;
+                
                 self.hamburgerRootMenuLabel = nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_LABEL;
                 var rootMenuData = [
                     {'id': 'omc_root_home', type: 'menu', 'name': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_HOME_LABEL, 'href': '#'},
                     {'id': 'omc_root_alerts', type: 'menu', 'name': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_ALERTS_LABEL, 'href': '#'},
-                    {'id': 'omc_root_applications', type: 'menu', 'name': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_APPS_LABEL, 'href': '#'},
+//                    {'id': 'omc_root_applications', type: 'menu', 'name': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_APPS_LABEL, 'href': '#'},
                     {'id': 'omc_root_dashboards', type: 'menu', 'name': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_DASHBOARDS_LABEL, 'href': '#'},
-                    {'id': 'omc_root_savedsearches', type: 'menu', 'name': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_SAVEDSEARCH_LABEL, 'href': '#'},
+//                    {'id': 'omc_root_savedsearches', type: 'menu', 'name': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_SAVEDSEARCH_LABEL, 'href': '#'},
                     {'id': 'omc_root_dataexplorer', type: 'menu', 'name': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_DATAEXPLORER_LABEL, 'href': '#'},
                     {'id': 'omc_root_divider', type: 'divider', 'name': '', 'href': '#'},
                     {'id': 'omc_root_APM', type: 'menu', 'name': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_APM_LABEL, 'href': '#'},
@@ -25,15 +35,15 @@ define([
                     {'id': 'omc_root_Compliance', type: 'menu', 'name': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_COMPLIANCE_LABEL, 'href': '#'},
                     {'id': 'omc_root_divider1', type: 'divider', 'name': '', 'href': '#'},
                     {'id': 'omc_root_admin', type: 'menu', 'name': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_ADMIN_LABEL, 'href': '#', children: [
-                            {'id': 'omc_admin_alertrules', type: 'menu', 'name': nls.BRANDING_BAR_HAMBURGER_MENU_ADMIN_ALERTRULES_LABEL, 'href': '#'},
-                            {'id': 'omc_admin_agents', type: 'menu', 'name': nls.BRANDING_BAR_HAMBURGER_MENU_ADMIN_AGENTS_LABEL, 'href': '#'},
-                            {'id': 'omc_admin_entitiesconfig', type: 'menu', 'name': nls.BRANDING_BAR_HAMBURGER_MENU_ADMIN_ENTITIESCONFIG_LABEL, 'href': '#'},
-                            {'id': 'omc_admin_divider', type: 'divider', 'name': '', 'href': '#'},
-                            {'id': 'omc_admin_grp_APM', type: 'menu', 'name': nls.BRANDING_BAR_HAMBURGER_MENU_APM_ADMIN_LABEL, 'href': '#'},
-                            {'id': 'omc_admin_grp_Monitoring', type: 'menu', 'name': nls.BRANDING_BAR_HAMBURGER_MENU_MONITORING_ADMIN_LABEL, 'href': '#'},
-                            {'id': 'omc_admin_grp_LogAnalytics', type: 'menu', 'name': nls.BRANDING_BAR_HAMBURGER_MENU_LOG_ADMIN_LABEL, 'href': '#'},
-                            {'id': 'omc_admin_grp_SecurityAnalytics', type: 'menu', 'name': nls.BRANDING_BAR_HAMBURGER_MENU_SECURITY_ADMIN_LABEL, 'href': '#'},
-                            {'id': 'omc_admin_grp_Compliance', type: 'menu', 'name': nls.BRANDING_BAR_HAMBURGER_MENU_COMPLIANCE_ADMIN_LABEL, 'href': '#'}
+                            {'id': 'omc_root_admin_alertrules', type: 'menu', 'name': nls.BRANDING_BAR_HAMBURGER_MENU_ADMIN_ALERTRULES_LABEL, 'href': '#'},
+                            {'id': 'omc_root_admin_agents', type: 'menu', 'name': nls.BRANDING_BAR_HAMBURGER_MENU_ADMIN_AGENTS_LABEL, 'href': '#'},
+                            {'id': 'omc_root_admin_entitiesconfig', type: 'menu', 'name': nls.BRANDING_BAR_HAMBURGER_MENU_ADMIN_ENTITIESCONFIG_LABEL, 'href': '#'},
+                            {'id': 'omc_root_admin_divider', type: 'divider', 'name': '', 'href': '#'},
+                            {'id': 'omc_root_admin_grp_APM', type: 'menu', 'name': nls.BRANDING_BAR_HAMBURGER_MENU_APM_ADMIN_LABEL, 'href': '#'},
+                            {'id': 'omc_root_admin_grp_Monitoring', type: 'menu', 'name': nls.BRANDING_BAR_HAMBURGER_MENU_MONITORING_ADMIN_LABEL, 'href': '#'},
+                            {'id': 'omc_root_admin_grp_LogAnalytics', type: 'menu', 'name': nls.BRANDING_BAR_HAMBURGER_MENU_LOG_ADMIN_LABEL, 'href': '#'},
+                            {'id': 'omc_root_admin_grp_SecurityAnalytics', type: 'menu', 'name': nls.BRANDING_BAR_HAMBURGER_MENU_SECURITY_ADMIN_LABEL, 'href': '#'},
+                            {'id': 'omc_root_admin_grp_Compliance', type: 'menu', 'name': nls.BRANDING_BAR_HAMBURGER_MENU_COMPLIANCE_ADMIN_LABEL, 'href': '#'}
                     ]}
                 ];
                 
@@ -128,26 +138,100 @@ define([
                 
                 self.dataSource =  new oj.JsonTreeDataSource(omcMenus);
                 self.selectionHandler = function(data, event) {
-                    if (event.type === 'click' && data.id.indexOf('root_') !== 0) {
-                        var item = null;
-                        for (var j = 0; j < rootMenuData.length; j++) {
-                            var found = findItem(rootMenuData[j], data.id);
-                            if (found) {
-                                item = found;
-                                break;
-                            }
-                        }
-                        if (item && !item.children) {
-                            fireMenuSelectionEvent(data);
-                        }
-
+                    if (event.type === 'click' && data.id.indexOf('omc_root_') !== -1) {
+                        handleMenuSelection(true, data);
+                    }
+                    else {
+                        handleMenuSelection(false, data);
                     }
                 };
+                
+                if (!isSetAsHomeChecked) {
+                    checkDashboardAsHomeSettings();
+                }
+                var globalMenuIdHrefMapping = null;
+                fetchGlobalMenuLinks();
+                
+                function handleMenuSelection(uifwkControlled, data) {
+                    var item = null;
+                    for (var j = 0; j < rootMenuData.length; j++) {
+                        var found = findItem(rootMenuData[j], data.id);
+                        if (found) {
+                            item = found;
+                            break;
+                        }
+                    }
+                    if (item && !item.children) {
+                        if (uifwkControlled) {
+                            var linkHref = globalMenuIdHrefMapping[data.id];
+                            if (linkHref) {
+                                window.location.href = ctxUtil.appendOMCContext(linkHref, true, true, true);
+                            }
+                        }
+                        else {
+                            fireMenuSelectionEvent(data);
+                        }
+                    }
+                }
+                
+                function fetchGlobalMenuLinks() {
+                    globalMenuIdHrefMapping = {};
+                    var successCallback = function(data) {
+                        globalMenuIdHrefMapping['omc_root_home'] = omcHomeUrl ? omcHomeUrl : '/emsaasui/emcpdfui/welcome.html';
+                        globalMenuIdHrefMapping['omc_root_alerts'] = fetchLinkFromRegistrationData(data, 'homeLinks', 'EventUI');
+                        globalMenuIdHrefMapping['omc_root_dashboards'] = '/emsaasui/emcpdfui/home.html';
+                        globalMenuIdHrefMapping['omc_root_dataexplorer'] = fetchLinkFromRegistrationData(data, 'visualAnalyzers', 'LogAnalyticsUI');
+                        globalMenuIdHrefMapping['omc_root_APM'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'ApmUI');
+                        globalMenuIdHrefMapping['omc_root_Monitoring'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'EventUI');
+                        globalMenuIdHrefMapping['omc_root_LogAnalytics'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'EventUI');
+                        globalMenuIdHrefMapping['omc_root_ITAnalytics'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'emcitas-ui-apps');
+                        globalMenuIdHrefMapping['omc_root_Orchestration'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'CosServiceUI');
+                        globalMenuIdHrefMapping['omc_root_SecurityAnalytics'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'SecurityAnalyticsUI');
+                        globalMenuIdHrefMapping['omc_root_Compliance'] = fetchLinkFromRegistrationData(data, 'homeLinks', 'ComplianceUIService');
+                        globalMenuIdHrefMapping['omc_root_admin_alertrules'] = fetchLinkFromRegistrationData(data, 'adminLinks', 'EventUI');
+                        globalMenuIdHrefMapping['omc_root_admin_agents'] = fetchLinkFromRegistrationData(data, 'adminLinks', 'TenantManagementUI');
+                        globalMenuIdHrefMapping['omc_root_admin_entitiesconfig'] = fetchLinkFromRegistrationData(data, 'adminLinks', 'AdminConsoleSaaSUi');
+                    };
+                    dfu.getRegistrations(successCallback, true, null);
+                }
+                
+                function fetchLinkFromRegistrationData(data, linkType, serviceName) {
+                    var links = data[linkType];
+                    if (links && links.length > 0) {
+                        for (var i = 0; i < links.length; i++) {
+                            if (links[i].serviceName === serviceName) {
+                                return links[i].href;
+                            }
+                        }
+                    }
+                    return null;
+                }
 
                 function fireMenuSelectionEvent(data) {
                     var message = {'tag': 'EMAAS_OMC_GLOBAL_MENU_SELECTION'};
                     message.data = data;
                     window.postMessage(message, window.location.href);
+                }
+                
+                function checkDashboardAsHomeSettings() {
+                    function succCallback(data) {
+                        var homeDashboardId = prefUtil.getPreferenceValue(data, prefKeyHomeDashboardId);
+                        if (homeDashboardId) {
+                            omcHomeUrl = "/emsaasui/emcpdfui/builder.html?dashboardId=" + homeDashboardId;
+                        }
+                        else {
+                            omcHomeUrl = null;
+                        }
+                        isSetAsHomeChecked = true;
+                    }
+                    function errorCallback(jqXHR, textStatus, errorThrown) {
+                        omcHomeUrl = null;
+                    }
+                    var options = {
+                        success: succCallback,
+                        error: errorCallback
+                    };
+                    prefUtil.getAllPreferences(options);
                 }
             }
             return HamburgerMenuViewModel;
