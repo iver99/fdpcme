@@ -46,7 +46,7 @@ import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
 //Setup gradle to onboard a new tenant
 apply from: 'onboard_tenant.gradle'
 
-def emcpdfCommonAPIVer = '2.2.0+'
+def emcpdfCommonAPIVer = '2.0.0+'
 
 //Update the lrgConfig configuration to specify where the test jar is.
 dependencies{
