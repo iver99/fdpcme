@@ -157,8 +157,7 @@ define(['knockout',
                     } else {
                         self.rightPanelControl.completelyHidden(false);
                         if (self.emptyDashboard) {
-                            self.rightPanelControl.showRightPanel(true);
-                            self.rightPanelControl.initializeRightPanel(true);
+                            self.rightPanelControl.showRightPanel(true);                         
                         } else {
                             self.rightPanelControl.showRightPanel(false);
                         }
@@ -193,6 +192,7 @@ define(['knockout',
                         newValue && initRightPanelDragAndTile();
                     });
                     
+                    self.emptyDashboard && self.rightPanelControl.initializeRightPanel(true);
                     initRightPanelDragAndTile();
             };
 

@@ -30,7 +30,7 @@ def compiledDir = buildDir.absolutePath+'/public_html'
 def File sourceTargetSelectorAPIDestDir = new File(buildDir.absolutePath+'/stage_tsel')
 def webRootSourceDir = 'public_html'
 
-def chefDir = project.rootDir.absolutePath +'/dashboards-chef/cookbook-emcs-omc-ui-framework/recipes'
+//def chefDir = project.rootDir.absolutePath +'/dashboards-chef/cookbook-emcs-omc-ui-framework/recipes'
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
@@ -280,14 +280,14 @@ clean.dependsOn cleanJet,cleanFont,cleanTargetSelector
 project.task("cleanCompassCss")<<{
 }
 
-project.task("prepareChef")<<{
+//project.task("prepareChef")<<{
 
-  File chefFile = new File(chefDir+"/default.rb")
+//  File chefFile = new File(chefDir+"/default.rb")
 
-		String contents = chefFile.getText('UTF-8')
-		String replacereg = "@version@"
-		contents = contents.replaceAll(Pattern.quote(replacereg), versionPathElement)
-		chefFile.write(contents, 'UTF-8')
+//		String contents = chefFile.getText('UTF-8')
+//		String replacereg = "@version@"
+//		contents = contents.replaceAll(Pattern.quote(replacereg), versionPathElement)
+//		chefFile.write(contents, 'UTF-8')
    
 //   new File(chefDir).eachFile {
 	//filesMatching("**/*.rb"){
@@ -296,9 +296,9 @@ project.task("prepareChef")<<{
 //    }
 //    into "../../dashboards-chef/cookbook-emcs-omc-ui-framework/recipes/"
 //}
-}
+//}
 
-task copyJsSource(type:Copy, dependsOn:[cleanJs,compileSass,prepareChef]) {
+task copyJsSource(type:Copy, dependsOn:[cleanJs,compileSass]) {
     from (webRootSourceDir) {
         include "**/*"
         exclude "**/uifwkCommonMsg.js"

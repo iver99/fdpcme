@@ -24,7 +24,6 @@ bash "create_servicemanger_properties_file"  do
     echo "registryUrls=$SAAS_REGISTRY_URLS" >> servicemanager.properties
     echo "serviceUrls=$SAAS_REGISTRY_URLS" >> servicemanager.properties
     echo "characteristics=_tenantAgnostic:true,SAAS_deploymentUuid:#{node["SAAS_deploymentUuid"]}" >> servicemanager.properties
-    echo "buildId=1.16.0-170208.233538" >> servicemanager.properties
     EOH
 end
 
