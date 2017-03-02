@@ -1,6 +1,7 @@
 package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICache;
+import oracle.sysman.emaas.platform.emcpdf.cache.support.AbstractCache;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.AbstractCacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.lru.LRUCacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.lru.LinkedHashMapCache;
@@ -26,15 +27,16 @@ public class CacheAPI {
     @Path("/stopCache")
     public String stopCache() {
         AbstractCacheManager lruCacheManager = LRUCacheManager.getInstance();
-        changeCacheGroupStatus(lruCacheManager,CacheStatus.CLOSED);
         AbstractCacheManager screenshotCacheManager = LRUScreenshotCacheManager.getInstance();
+        //clear all cache groups
+        clearAllCacheGroupData(lruCacheManager);
+        clearAllCacheGroupData(screenshotCacheManager);
+        //reset all cache group statistics data
+        resetCacheStatistics(lruCacheManager);
+        resetCacheStatistics(screenshotCacheManager);
+        //close all cache groups
+        changeCacheGroupStatus(lruCacheManager,CacheStatus.CLOSED);
         changeCacheGroupStatus(screenshotCacheManager,CacheStatus.CLOSED);
-        try {
-            lruCacheManager.close();
-            screenshotCacheManager.close();
-        } catch (IOException e) {
-            LOGGER.error(e);
-        }
         return null;
     }
 
@@ -78,6 +80,32 @@ public class CacheAPI {
             LinkedHashMapCache cache = (LinkedHashMapCache) value;
             cache.setCacheStatus(cacheStatus);
             LOGGER.info("Cache group {} status has been changed to {}", cache.getName(), cacheStatus);
+        }
+    }
+
+    private void clearAllCacheGroupData(AbstractCacheManager cacheManager){
+        ConcurrentMap<String, ICache> map = cacheManager.getCacheMap();
+        if (map == null) {
+            LOGGER.error("CacheMap in CacheManagers is null!");
+            return;
+        }
+        for (ICache value : map.values()) {
+            LinkedHashMapCache cache = (LinkedHashMapCache) value;
+            cache.clear();
+            LOGGER.info("Cache group {} data has been cleared!", cache.getName());
+        }
+    }
+
+    private void resetCacheStatistics(AbstractCacheManager cacheManager){
+        ConcurrentMap<String, ICache> map = cacheManager.getCacheMap();
+        if (map == null) {
+            LOGGER.error("CacheMap in CacheManagers is null!");
+            return;
+        }
+        for (ICache value : map.values()) {
+            AbstractCache cache = (AbstractCache) value;
+            cache.getCacheCounter().reset();
+            LOGGER.info("Cache group {} data has been cleared!", cache.getName());
         }
     }
 }
