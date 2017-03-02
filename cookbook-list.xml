@@ -1,5 +1,4 @@
 <?xml version="1.0"?> 
-kbook-list.xml.swp
  
 <cookbooks> 
   <cookbook name="cookbook-emcs-dashboardService-api" dir="dashboards-chef"/> 

@@ -191,8 +191,7 @@ public class ZDTAPI
 				logger.info("Get internal tenant id {} from opc tenant id {}", internalTenantId, tenantId);
 				return internalTenantId;
 			} catch (BasicServiceMalfunctionException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error("could not get internal tenantId from OPC tenant Id {}",e.getLocalizedMessage());
 			}
 			
 			return null;

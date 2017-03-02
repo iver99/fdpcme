@@ -63,6 +63,7 @@ public class TableRowsSynchronizer {
         for (DashboardSetRowEntity dashboardSetRowEntity : rows) {
             result += DataManager.getInstance().syncDashboardSet(new BigInteger(dashboardSetRowEntity.getDashboardSetId()), dashboardSetRowEntity.getTenantId(),
             		new BigInteger(dashboardSetRowEntity.getSubDashboardId()), dashboardSetRowEntity.getPosition(), dashboardSetRowEntity.getCreationDate(), dashboardSetRowEntity.getLastModificationDate(), new BigInteger(dashboardSetRowEntity.getDeleted()));
+        	
         }
         return result;
     }
