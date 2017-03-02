@@ -10,9 +10,11 @@ define(['knockout',
         'dfutil',
         'builder/dashboard.tile.model',
         'uifwk/js/util/df-util',
+        'uifwk/js/sdk/context-util',
         'builder/editor/editor.tiles'
     ],
-    function(ko, $, oj, dfu, dtm, dfumodel) {
+    function(ko, $, oj, dfu, dtm, dfumodel, ctxModel) {
+        var ctxUtil = new ctxModel();
         function getTileDefaultWidth(wgt, mode) {
             if (wgt && (typeof wgt.WIDGET_DEFAULT_WIDTH==='number') && (wgt.WIDGET_DEFAULT_WIDTH%1)===0 && wgt.WIDGET_DEFAULT_WIDTH >= mode.MODE_MIN_COLUMNS && wgt.WIDGET_DEFAULT_WIDTH <= mode.MODE_MAX_COLUMNS){
                     return wgt.WIDGET_DEFAULT_WIDTH;
@@ -43,7 +45,7 @@ define(['knockout',
             }
         }
         Builder.registerFunction(addVisualAnalyzerUrl, "addVisualAnalyzerUrl");
-        
+
         function isVisualAnalyzerUrlExisted(pName) {
             for(var i=0; i<visualAnalyzerUrls.length; i++) {
                 if(visualAnalyzerUrls[i].provider_name === pName) {
@@ -53,7 +55,7 @@ define(['knockout',
             return false;
         }
         Builder.registerFunction(isVisualAnalyzerUrlExisted, "isVisualAnalyzerUrlExisted");
-        
+
         function getVisualAnalyzerUrl(pName, pVersion) {
             for(var i=0; i<visualAnalyzerUrls.length; i++) {
                 if(visualAnalyzerUrls[i].provider_name === pName) {
@@ -489,7 +491,7 @@ define(['knockout',
             }
         }
         Builder.registerFunction(getTimePeriodValue, "getTimePeriodValue");
-        
+
         function requireTargetSelectorUtils(needLoad, callback) {
             if (needLoad) {
                 var versionedTargetSelectorUtils = window.getSDKVersionFile ? 
@@ -507,7 +509,7 @@ define(['knockout',
             }
         }
         Builder.registerFunction(requireTargetSelectorUtils, "requireTargetSelectorUtils");
-        
+
         function eagerLoadDahshboardSingleTileAtPageLoad(dfu, ko, tile) {
             //var tileid=tile.tileId();
             var clientGuid=tile.clientGuid;
@@ -545,28 +547,80 @@ define(['knockout',
             //$("#tile"+clientGuid).find(".dbd-tile-widget-wrapper")[0].append($includingEl);
         }
         Builder.registerFunction(eagerLoadDahshboardSingleTileAtPageLoad, "eagerLoadDahshboardSingleTileAtPageLoad");
-        
-        function eagerLoadDahshboardTilesAtPageLoad(dfu, ko, normalMode, tabletMode, mode, timeSelector, targets) {
+
+        function eagerLoadDahshboardTilesAtPageLoad(dfu, ko, normalMode, tabletMode, mode, isUnderSet, timeSelector, targets) {
+          return $.Deferred(function(dtd) {
+            var self = this;
+            var current = new Date();
+            var initStart = null;
+            var initEnd = null;
+            var timePeriod = null;
             var dds = new Builder.DashboardDataSource().dataSource;
+            var shouldResolve = true;
             for (var prop in dds) {
                 if (!dds[prop] || !dds[prop].dashboard || !dds[prop].dashboard.tiles || dds[prop].eagerLoaded) {
                     continue;
                 }
+                shouldResolve = false;
                 var dashboard = dds[prop].dashboard;
-                if (dashboard.tiles && dashboard.tiles() &&dashboard.tiles().length > 0){
-                    for (var i=0;i<dashboard.tiles().length;i++){
-                        var tile=dashboard.tiles()[i];
-                        Builder.initializeTileAfterLoad(mode, dashboard, tile, timeSelector, targets, true);
-                        Builder.eagerLoadDahshboardSingleTileAtPageLoad(dfu, ko, tile);
+
+                //get time and entity context for widgets when page is loaded
+                Builder.loadDashboardUserOptions(ko.unwrap(dashboard.id), self);
+                self.dashboardExtendedOptions = dashboard.extendedOptions ? JSON.parse(dashboard.extendedOptions()) : null;
+
+                /****************get time context start *************/
+                var timeContext = Builder.loadTimeContext(self, dashboard.enableTimeRange(), isUnderSet);
+                initStart = timeContext.start;
+                initEnd = timeContext.end;
+                timePeriod = timeContext.timePeriod;
+
+                if(ctxUtil.formalizeTimePeriod(timePeriod)) {
+                    if(ctxUtil.formalizeTimePeriod(timePeriod) !== "CUSTOM") { //get start and end time for relative time period
+                        var tmp = ctxUtil.getStartEndTimeFromTimePeriod(ctxUtil.formalizeTimePeriod(timePeriod));
+                        if(tmp) {
+                            initStart = tmp.start;
+                            initEnd = tmp.end;
+                        }
                     }
                 }
-                dds[prop].eagerLoaded = true;
-                dds[prop].eagerCreated = {normalMode: normalMode, tabletMode: tabletMode, timeSelector: timeSelector, targets: targets};
+
+                if(!(initStart instanceof Date && initEnd instanceof Date)) {
+                    initStart = new Date(current - 14*24*60*60*1000);
+                    initEnd = current;
+                }
+
+                timeSelector.viewStart(initStart);
+                timeSelector.viewEnd(initEnd);
+                timeSelector.viewTimePeriod(timePeriod);
+                /******************get time context end ***************/
+
+                /****************get entity context start *****************/
+                $.when(Builder.loadEntityContext(self, dashboard.enableEntityFilter(), isUnderSet)).done(function(entityContext) {
+                    entityContext && targets(entityContext);
+
+                    if (dashboard.tiles && dashboard.tiles() &&dashboard.tiles().length > 0){
+                        for (var i=0;i<dashboard.tiles().length;i++){
+                            var tile=dashboard.tiles()[i];
+                            Builder.initializeTileAfterLoad(mode, dashboard, tile, timeSelector, targets, true);
+                            Builder.eagerLoadDahshboardSingleTileAtPageLoad(dfu, ko, tile);
+                        }
+                    }
+                    window._contextPassedToWidgetsAtPageLoad = {timeSelector: timeSelector, targets: targets};
+                    dds[prop].eagerLoaded = true;
+                    dds[prop].eagerCreated = {normalMode: normalMode, tabletMode: tabletMode, timeSelector: timeSelector, targets: targets};
+                    dtd.resolve();
+                });
+                /***************get entity context end *******************/
                 break;
             }
+            
+            if(shouldResolve === true) {
+                dtd.resolve();
+            }
+          });
         }
         Builder.registerFunction(eagerLoadDahshboardTilesAtPageLoad, "eagerLoadDahshboardTilesAtPageLoad");
-        
+
         function attachEagerLoadedDahshboardSingleTileAtPageLoad(tile, appendToElem) {
             var clientGuid=tile.clientGuid;
             var wgtelem=$("#wgt"+clientGuid);
@@ -578,7 +632,7 @@ define(['knockout',
             wgtelem.detach().appendTo(appendToElem);
         }
         Builder.registerFunction(attachEagerLoadedDahshboardSingleTileAtPageLoad, "attachEagerLoadedDahshboardSingleTileAtPageLoad");
-        
+
         function attachEagerLoadedDahshboardTilesAtPageLoad() {
             var dds = new Builder.DashboardDataSource().dataSource;
             for (var prop in dds) {
@@ -598,5 +652,215 @@ define(['knockout',
             }
         }
         Builder.registerFunction(attachEagerLoadedDahshboardTilesAtPageLoad, "attachEagerLoadedDahshboardTilesAtPageLoad");
+
+        function loadDashboardUserOptions(dsbId, model) {
+            new Builder.DashboardDataSource().loadDashboardUserOptionsData(
+                dsbId,
+                function (data) {
+                    //sucessfully get extended options for page filters
+                    model.userExtendedOptions = data["extendedOptions"] ? JSON.parse(data["extendedOptions"]) : {};
+                    if(!model.userExtendedOptions.tsel || (model.userExtendedOptions.tsel && !model.userExtendedOptions.tsel.entityContext)) {
+                        model.userTsel = false;
+                        model.userExtendedOptions.tsel = {quickPick: "host", entityContext: ""};
+                    }else {
+                        model.userTsel= true;
+                    }
+                    if(!model.userExtendedOptions.timeSel || (model.userExtendedOptions.timeSel && !model.userExtendedOptions.timeSel.timePeriod)) {
+                        model.userTimeSel = false;
+                        model.userExtendedOptions.timeSel = {timePeriod: "last14days", start: new Date(new Date()-14*24*60*60*1000).getTime(), end: new Date().getTime()};
+                    }else {
+                        model.userTimeSel = true;
+                    }
+
+                    if(!model.userExtendedOptions.autoRefresh || isNaN(model.userExtendedOptions.autoRefresh.defaultValue)) {
+                        model.userExtendedOptions.autoRefresh = {"defaultValue": Builder.DEFAULT_AUTO_REFRESH_INTERVAL};
+                     }
+
+                },
+                function (jqXHR, textStatus, errorThrown) {
+                    if(jqXHR.status === 404){
+                        model.userTsel = false;
+                        model.userTimeSel = false;
+                        model.userExtendedOptions = {};
+                        model.userExtendedOptions.tsel = {quickPick: "host", entityContext: ""};
+                        model.userExtendedOptions.timeSel = {timePeriod: "last14days", start: new Date(new Date()-14*24*60*60*1000).getTime(), end: new Date().getTime()};
+                        model.userExtendedOptions.autoRefresh = {"defaultValue": Builder.DEFAULT_AUTO_REFRESH_INTERVAL};
+                    }
+                });
+        }
+        Builder.registerFunction(loadDashboardUserOptions, "loadDashboardUserOptions");
+
+        function loadTimeContext(model, timeFilterEnabledVal, isUnderSet) {
+                var start = null;
+                var end = null;
+                var timePeriod = null;
+                var now = new Date();
+                var val = timeFilterEnabledVal;
+                var omcContext = ctxUtil.getOMCContext(true, true, true);
+                if(isUnderSet) { //Do not respect GC in dashboard set
+                    if(val === "GC") {
+                        val = "TRUE";
+                    }
+                }
+                if(val === "GC") { //Respect time context in global context
+                    ctxUtil.respectOMCTimeContext(true); //Set respectOMCTimeContext flag to true
+                    start = (omcContext.time && omcContext.time.startTime) ? new Date(parseInt(omcContext.time.startTime)) : null;
+                    end = (omcContext.time && omcContext.time.endTime) ? new Date(parseInt(omcContext.time.endTime)) : null;
+                    timePeriod = (omcContext.time && omcContext.time.timePeriod) ? omcContext.time.timePeriod : null;
+
+                    //If no global context in URL, use dashboard saved context
+                    if(timePeriod === null && (start === null || end === null)) {
+                        if(model.userTimeSel && model.userExtendedOptions && !$.isEmptyObject(model.userExtendedOptions.timeSel)) {
+                            start = new Date(parseInt(model.userExtendedOptions.timeSel.start));
+                            end = new Date(parseInt(model.userExtendedOptions.timeSel.end));
+                            var tp = (model.userExtendedOptions.timeSel.timePeriod === "custom1") ? "custom" : model.userExtendedOptions.timeSel.timePeriod;
+                            timePeriod = Builder.getTimePeriodString(tp) ? Builder.getTimePeriodString(tp) : tp;
+                            //set global time context using dashboard saved time context
+                            if(ctxUtil.formalizeTimePeriod(timePeriod) === "CUSTOM") {
+                                ctxUtil.setStartAndEndTime(start.getTime(), end.getTime());
+                            }else {
+                                ctxUtil.setTimePeriod(ctxUtil.formalizeTimePeriod(timePeriod));
+                            }
+                        }else if(model.dashboardExtendedOptions && !$.isEmptyObject(model.dashboardExtendedOptions.timeSel)) {
+                            start = new Date(parseInt(model.dashboardExtendedOptions.timeSel.start));
+                            end = new Date(parseInt(model.dashboardExtendedOptions.timeSel.end));
+                            var tp = (model.dashboardExtendedOptions.timeSel.defaultValue === "custom1") ? "custom" : model.dashboardExtendedOptions.timeSel.defaultValue;
+                            timePeriod = Builder.getTimePeriodString(tp) ? Builder.getTimePeriodString(tp) : tp;
+                            model.userExtendedOptions.timeSel = {};
+                            //set global time context using dashboard saved time context
+                            if(ctxUtil.formalizeTimePeriod(timePeriod) === "CUSTOM") {
+                                ctxUtil.setStartAndEndTime(start.getTime(), end.getTime());
+                            }else {
+                                ctxUtil.setTimePeriod(ctxUtil.formalizeTimePeriod(timePeriod));
+                            }
+                        }else {
+                            start = new Date(now - 14*24*60*60*1000);
+                            end = now;
+                            timePeriod = "Last 14 days";
+                        }
+                    }
+                }else if(val === "TRUE") { //Use time context in dashboard and ignore time context in globalcontext
+                    ctxUtil.respectOMCTimeContext(false); //Set respectOMCTimeContext flag to false
+                    if(model.userTimeSel && model.userExtendedOptions && !$.isEmptyObject(model.userExtendedOptions.timeSel)) {
+                        start = new Date(parseInt(model.userExtendedOptions.timeSel.start));
+                        end = new Date(parseInt(model.userExtendedOptions.timeSel.end));
+                        var tp = (model.userExtendedOptions.timeSel.timePeriod === "custom1") ? "custom" : model.userExtendedOptions.timeSel.timePeriod;
+                        timePeriod = Builder.getTimePeriodString(tp) ? Builder.getTimePeriodString(tp) : tp;
+                    } else if (model.dashboardExtendedOptions && !$.isEmptyObject(model.dashboardExtendedOptions.timeSel)) {
+                        start = new Date(parseInt(model.dashboardExtendedOptions.timeSel.start));
+                        end = new Date(parseInt(model.dashboardExtendedOptions.timeSel.end));
+                        var tp = (model.dashboardExtendedOptions.timeSel.defaultValue === "custom1") ? "custom" : model.dashboardExtendedOptions.timeSel.defaultValue;
+                        timePeriod = Builder.getTimePeriodString(tp) ? Builder.getTimePeriodString(tp) : tp;
+                        model.userExtendedOptions.timeSel = {};
+                    } else {
+                        start = new Date(now - 14 * 24 * 60 * 60 * 1000);
+                        end = now;
+                        timePeriod = "Last 14 days";
+                    }
+                    //set non-global time context
+                    if(ctxUtil.formalizeTimePeriod(timePeriod) === "CUSTOM") {
+                        ctxUtil.setStartAndEndTime(start.getTime(), end.getTime());
+                    }else {
+                        ctxUtil.setTimePeriod(ctxUtil.formalizeTimePeriod(timePeriod));
+                    }
+                }else if(val === "FALSE") { // Do not use time context either from dashboard or from global context
+                    //No time context in this case, widgets should use their own time context
+                    //Set respectOMCTimeContext flag to false
+                    ctxUtil.respectOMCTimeContext(false);
+                    start = null;
+                    end = null;
+                    timePeriod = null;
+                    //set non-global time context to null
+                    ctxUtil.setTimePeriod(null);
+                }
+                return {
+                    start: start,
+                    end: end,
+                    timePeriod: timePeriod
+                }
+            };
+            Builder.registerFunction(loadTimeContext, "loadTimeContext");
+            
+            function loadEntityContext(model, enableEntityFilterVal, isUnderSet) {
+                return $.Deferred(function(dtd) {
+                    var entityContext = null;
+                    var val = enableEntityFilterVal;
+                    var omcContext = ctxUtil.getOMCContext(true, true, true);
+                    if(isUnderSet) { //Do not respect GC in dashboard set
+                        if(val === "GC") {
+                            val = "TRUE";
+                        }
+                    }                
+                    if(val === "GC") { //Respect entity context in global context
+                        //Set both of respectOMCApplicationContext and respectOMCEntityContext to true
+                        ctxUtil.respectOMCApplicationContext(true);
+                        ctxUtil.respectOMCEntityContext(true);
+                        entityContext = (omcContext.composite && omcContext.composite.compositeMEID) ? omcContext.composite.compositeMEID : null;
+                        //Use dashboard saved entity context if there's no entity context in URL
+                        if(entityContext === null) {
+                            if(model.userTsel && model.userExtendedOptions && !$.isEmptyObject(model.userExtendedOptions.tsel)) {
+                                entityContext = model.userExtendedOptions.tsel.entityContext;
+                            }else if(model.dashboardExtendedOptions && !$.isEmptyObject(model.dashboardExtendedOptions.tsel)) {
+                                entityContext = model.dashboardExtendedOptions.tsel.entityContext;
+                                model.userExtendedOptions.tsel = {};
+                            }
+                            //Set global entity context using dashboard save entity context in this case
+                            //convert json criteria to compositeMEID 
+                            Builder.requireTargetSelectorUtils(true, function(TargetSelectorUtils) {
+                                if (TargetSelectorUtils) {
+                                    TargetSelectorUtils.registerComponents();
+                                }
+                                TargetSelectorUtils.setOMCContextFromSelectionContext && TargetSelectorUtils.setOMCContextFromSelectionContext(entityContext);
+                                dtd.resolve(entityContext);
+                            });
+                        }else {
+                            //convert compositeMEID to json criteria
+                            Builder.requireTargetSelectorUtils(true, function(TargetSelectorUtils) {
+                                if (TargetSelectorUtils) {
+                                    TargetSelectorUtils.registerComponents();
+                                }
+                                ctxUtil.setOMCContext(omcContext);
+                                $.when(TargetSelectorUtils.getCriteriaFromOmcContext()).done(function (criteria) {
+                                    entityContext = {criteria: criteria};
+                                    dtd.resolve(entityContext);
+                                });
+                            });                            
+                        }
+
+                    }else if(val === "TRUE") { //Use dashboard saved entity context
+                        //Set both of respectOMCApplicationContext and respectOMCEntityContext to false
+                        ctxUtil.respectOMCApplicationContext(false);
+                        ctxUtil.respectOMCEntityContext(false);
+                        if(model.userTsel && model.userExtendedOptions && !$.isEmptyObject(model.userExtendedOptions.tsel)) {
+                            entityContext = model.userExtendedOptions.tsel.entityContext;
+                        }else if(model.dashboardExtendedOptions && !$.isEmptyObject(model.dashboardExtendedOptions.tsel)) {
+                            entityContext = model.dashboardExtendedOptions.tsel.entityContext;
+                            model.userExtendedOptions.tsel = {};
+                        }else {
+                            entityContext = {"criteria":"{\"version\":\"1.0\",\"criteriaList\":[]}"};
+                        }
+                        //set non-globalcontext
+                        //use saved JSON criteria to set compositeMEID
+                        Builder.requireTargetSelectorUtils(true, function(TargetSelectorUtils) {
+                            if (TargetSelectorUtils) {
+                                TargetSelectorUtils.registerComponents();
+                            }
+                            TargetSelectorUtils.setOMCContextFromSelectionContext && TargetSelectorUtils.setOMCContextFromSelectionContext(entityContext);
+                            dtd.resolve(entityContext);
+                        });
+                        
+                    }else if(val === "FALSE") { //Do not use entity context either from dashboard or from global context
+                        //No entity context in this case, widgets should use their own entity context
+                        //Set both of respectOMCApplicationContext and respectOMCEntityContext to false
+                        ctxUtil.respectOMCApplicationContext(false);
+                        ctxUtil.respectOMCEntityContext(false);
+                        entityContext = null;
+                        //set non-global entity conctext to null
+                        ctxUtil.setCompositeMeId(null);
+                        dtd.resolve(entityContext);
+                    }
+                });
+            }
+            Builder.registerFunction(loadEntityContext, "loadEntityContext");
     }
 );

@@ -93,8 +93,8 @@ define([
                     //3. fire event to widgets
                     //
                     //1. reset respectOMCApplicationContext flag and respectOMCEntityContext flag, get entity context info
-                    var dashboardTilesViewModel = self.tilesViewModel;                
-                    $.when(dashboardTilesViewModel.getEntityContext(dashboardTilesViewModel, val)).done(function(entityContext) {
+                    var dashboardTilesViewModel = self.tilesViewModel;
+                    $.when(Builder.loadEntityContext(dashboardTilesViewModel, val, self.isDashboardSet)).done(function(entityContext) {
                         //show/hide GC bar accordingly
                         var headerWrapper = $("#headerWrapper")[0];
                         var headerViewModel =  null;
@@ -167,7 +167,7 @@ define([
                 var end = null;
                 var dashboardTilesViewModel = self.tilesViewModel;
 
-                var timeContext = dashboardTilesViewModel.getTimeContext(dashboardTilesViewModel, val);
+                var timeContext = Builder.loadTimeContext(dashboardTilesViewModel, val, self.isDashboardSet);
                 start = timeContext.start;
                 end = timeContext.end;
                 timePeriod = timeContext.timePeriod;
@@ -383,10 +383,10 @@ define([
                 self.defaultEndTime(parseInt(timeSel.end));
                 //3. update global context or non-global context when switching between dashboard tabs and the enable filter is tate is unchanged
                 if(self.isDashboardSet && preDashboardId !== ko.unwrap(self.dashboard.id) && preEnableTimeRange === self.dashboard.enableTimeRange()) {
-                    self.tilesViewModel.getTimeContext(self.tilesViewModel, self.dashboard.enableTimeRange());
+                    Builder.loadTimeContext(self.tilesViewModel, self.dashboard.enableTimeRange(), self.isDashboardSet);
                 }
                 if(self.isDashboardSet && preDashboardId !== ko.unwrap(self.dashboard.id) && preEnableEntityFilter === self.dashboard.enableEntityFilter()) {
-                    self.tilesViewModel.getEntityContext(self.tilesViewModel, self.dashboard.enableEntityFilter());
+                    Builder.loadEntityContext(self.tilesViewModel, self.dashboard.enableEntityFilter(), self.isDashboardSet);
                 }
             };
             

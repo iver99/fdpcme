@@ -768,7 +768,8 @@ define(['knockout',
             };
 
             function highlightNextTab(removeDashboardId,clickItem){
-                 $("#dashboard-" + removeDashboardId).remove();
+                new Builder.DashboardDataSource().dataSource[removeDashboardId] = null; //delete the removed dashboard in data source
+                $("#dashboard-" + removeDashboardId).remove();
 
                 var removeResult = findTargetInArr(self.dashboardsetItems, removeDashboardId);
                 var reorderResult = findTargetInArr(self.reorderedDbsSetItems(), removeDashboardId);

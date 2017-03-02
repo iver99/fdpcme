@@ -29,6 +29,8 @@ public class PropertyReader
 
 	public static final String SERVICE_PROPS = "servicemanager.properties";
 
+	public static final String UIFWK_CONFIG = "uifwkconfig.properties";
+
 	public static final String getInstallDir()
 	{
 		if (RUNNING_IN_CONTAINER) {
@@ -45,7 +47,7 @@ public class PropertyReader
 		return JNDI_INITIAL_CONTEXT != null
 				&& JNDI_INITIAL_CONTEXT.startsWith("weblogic")
 				&& (System.getProperty("weblogic.home") != null || System.getProperty("wls.home") != null || System
-						.getProperty("weblogic.management.startmode") != null);
+				.getProperty("weblogic.management.startmode") != null);
 	}
 
 	public static Properties loadProperty(String filename) throws IOException
@@ -53,8 +55,12 @@ public class PropertyReader
 		Properties prop = new Properties();
 		InputStream input = null;
 		try {
-
-			input = new FileInputStream(CONFIG_DIR + File.separator + filename);
+			if (SERVICE_PROPS.equals(filename)) {
+				input = new FileInputStream(CONFIG_DIR + File.separator + filename);
+			}
+			else {
+				input = PropertyReader.class.getResourceAsStream(filename);
+			}
 			prop.load(input);
 
 		}
