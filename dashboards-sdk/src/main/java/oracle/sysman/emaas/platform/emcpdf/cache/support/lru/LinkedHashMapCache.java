@@ -123,7 +123,7 @@ public class LinkedHashMapCache extends AbstractCache{
 
     private boolean checkCacheStatusNotAvailable() {
         if(!cacheStatus.equals(CacheStatus.AVAILABLE)){
-            LOGGER.info("Cache group {} is not available now!", name);
+            LOGGER.debug("Cache group {} is not available now!", name);
             return true;
         }
         return false;

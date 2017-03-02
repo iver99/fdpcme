@@ -37,7 +37,7 @@ public class CacheAPI {
         //close all cache groups
         changeCacheGroupStatus(lruCacheManager,CacheStatus.CLOSED);
         changeCacheGroupStatus(screenshotCacheManager,CacheStatus.CLOSED);
-        return null;
+        return "Cache is stopped";
     }
 
     @PUT
