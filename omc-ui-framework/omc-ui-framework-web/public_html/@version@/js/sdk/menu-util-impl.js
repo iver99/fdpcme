@@ -9,7 +9,40 @@ define([
         function UIFWKGlobalMenuUtil() {
             var self = this;
             
-            self.subscribeMenuSelectionEvent = function (callback) {
+            function fireCompositeMenuDisplayEvent(objMenuName, menuJson) {
+                var message = {'tag': 'EMAAS_OMC_GLOBAL_MENU_COMPOSITE_DISPLAY'};
+                message.compositeRootMenuLabel = objMenuName;
+                message.compositeMenuJson = menuJson;
+                window.postMessage(message, window.location.href);
+            }
+            
+            self.setCurrentMenuItem = function(menuItemId){
+                var message = {'tag': 'EMAAS_OMC_GLOBAL_MENU_SET_CURRENT_ITEM'};
+                message.menuItemId = menuItemId;
+                window.postMessage(message, window.location.href);
+            };
+            
+            self.showCompositeObjectMenu = function(objMenuName, menuJson){
+                fireCompositeMenuDisplayEvent(objMenuName, menuJson);
+            };
+            
+            self.subscribeCompositeMenuDisplayEvent = function(callback) {
+                function onCompositeMenuDisplay(event) {
+                    if (event.origin !== window.location.protocol + '//' + window.location.host) {
+                        return;
+                    }
+                    var eventData = event.data;
+                    //Only handle received message for composite menu display
+                    if (eventData && eventData.tag && eventData.tag === 'EMAAS_OMC_GLOBAL_MENU_COMPOSITE_DISPLAY') {
+                        if ($.isFunction(callback)) {
+                            callback(eventData.compositeRootMenuLabel, eventData.compositeMenuJson);
+                        }
+                    }
+                };
+                window.addEventListener("message", onCompositeMenuDisplay, false);
+            };
+            
+            self.subscribeMenuSelectionEvent = function(callback) {
                 function onMenuSelection(event) {
                     if (event.origin !== window.location.protocol + '//' + window.location.host) {
                         return;

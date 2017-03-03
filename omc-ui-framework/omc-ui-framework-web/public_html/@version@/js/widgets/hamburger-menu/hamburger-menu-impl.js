@@ -1,13 +1,15 @@
 define([
     'jquery', 
     'ojs/ojcore', 
+    'knockout',
     'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg',
     'uifwk/@version@/js/util/df-util-impl',
     'uifwk/@version@/js/util/preference-util-impl', 
     'uifwk/@version@/js/sdk/context-util-impl',
+    'uifwk/@version@/js/sdk/menu-util-impl',
     'ojs/ojnavigationlist',
     'ojs/ojjsontreedatasource'],
-        function ($, oj, nls, dfumodel, pfumodel, ctxmodel) {
+        function ($, oj, ko, nls, dfumodel, pfumodel, ctxmodel, menumodel) {
             function HamburgerMenuViewModel(params) {
                 var self = this;
                 var dfu = new dfumodel();
@@ -16,6 +18,43 @@ define([
                 var prefKeyHomeDashboardId = "Dashboards.homeDashboardId";
                 var isSetAsHomeChecked = false;
                 var omcHomeUrl = null;
+                var menuUtil = new menumodel();
+                
+                self.selectedItem = ko.observable();
+                self.expanded = ko.observableArray([]);
+                
+                function clearCompositeMenuItems() {
+                    var size = omcMenus.length;
+                    if (omcMenus[size-1] && omcMenus[size-1].attr.id === 'omc_root_composite') {
+                        omcMenus.pop();
+                    }
+                }
+                
+                function jumpToCompositeMenu(rootMenuLabel, menuJson) {
+//                    var compositeMenus = [{'id': 'omc_composite_m1',type:'menu', 'name': 'Composite Menu 1', 'href': '#'},
+//                            {'id': 'omc_composite_m2',type:'menu', 'name': 'Composite Menu 2', 'href': '#'},
+//                            {'id': 'omc_composite_m3',type:'menu', 'name': 'Composite Menu 3', 'href': '#'},
+//                            {'id': 'omc_composite_m4',type:'divider', 'name': '', 'href': '#'},
+//                            {'id': 'omc_composite_m5',type:'menu', 'name': 'Composite Menu 4', 'href': '#'}
+//                            ];
+                    clearCompositeMenuItems();
+                    var rootCompositMenuItem = {'id': 'omc_root_composite', type: 'menu', 'name': rootMenuLabel, 'href': '#', children: menuJson};
+                    var compositeMenu = getMenuItem(rootCompositMenuItem);
+                    omcMenus.push(compositeMenu);
+                    self.expanded(['omc_root_composite']);
+                    self.dataSource(new oj.JsonTreeDataSource(omcMenus));
+                    $("#omcMenuNavList").ojNavigationList("refresh");
+                    
+                    oj.OffcanvasUtils.toggle({
+                                                "edge": "start",
+                                                "displayMode": "push",
+                                //                "content": "#main-container",
+                                                "selector": "#omcHamburgerMenu"
+                                            });
+//                    self.selectedItem('omc_composite_m1');
+//                    $("omcMenuNavList").ojNavigationList("expand", {'key': 'omc_root_composite', 'vetoable': true});                    
+                }
+                menuUtil.subscribeCompositeMenuDisplayEvent(jumpToCompositeMenu);
                 
                 self.hamburgerRootMenuLabel = nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_LABEL;
                 var rootMenuData = [
@@ -136,7 +175,30 @@ define([
                     }
                 }
                 
-                self.dataSource =  new oj.JsonTreeDataSource(omcMenus);
+                function findItemTrack(item, menuId) {
+                    var itemStack = [];
+                    function _findItem(_item){
+                        if (_item && _item.id === menuId) {
+                            itemStack.push(_item);
+                            return true;
+                        }
+                        else if (_item && _item.children) {
+                            for (var i = 0; i < _item.children.length; i++) {
+                                itemStack.push(_item);
+                                var foundItem = _findItem(_item.children[i], menuId);
+                                if (foundItem){
+                                    break;
+                                }else{
+                                    itemStack.pop();
+                                }
+                            }
+                        }
+                    }
+                    _findItem(item, menuId);
+                    return itemStack;
+                }
+                
+                self.dataSource =  ko.observable(new oj.JsonTreeDataSource(omcMenus));
                 self.selectionHandler = function(data, event) {
                     if (event.type === 'click' && data.id.indexOf('omc_root_') !== -1) {
                         handleMenuSelection(true, data);
@@ -144,6 +206,17 @@ define([
                     else {
                         handleMenuSelection(false, data);
                     }
+                };
+                
+                self.beforeCollapse = function(event, ui) {
+                    if (ui.key === 'omc_root_composite') {
+                        clearCompositeMenuItems();
+                        self.expanded([]);
+                        self.dataSource(new oj.JsonTreeDataSource(omcMenus));
+                        $("#omcMenuNavList").ojNavigationList("refresh");
+                    }
+                    return true;
+                    
                 };
                 
                 if (!isSetAsHomeChecked) {
@@ -233,6 +306,43 @@ define([
                     };
                     prefUtil.getAllPreferences(options);
                 }
+                
+                function listenToSetCurrentMenuItem() {
+                    var messageTag = 'EMAAS_OMC_GLOBAL_MENU_SET_CURRENT_ITEM';
+                    function onSetCurrentMenuItem(event) {
+                        if (event.origin !== window.location.protocol + '//' + window.location.host) {
+                            return;
+                        }
+                        var eventData = event.data;
+                        //Only handle received message for global menu selection
+                        if (eventData && eventData.tag && eventData.tag === messageTag) {
+                            if(eventData.menuItemId){
+                                var itemTrack;
+                                for (var j = 0; j < rootMenuData.length; j++) {
+                                    itemTrack = findItemTrack(rootMenuData[j], eventData.menuItemId);
+                                    if (itemTrack.length>0) {
+                                        break;
+                                    }else{
+                                        itemTrack = null;
+                                    }
+                                }
+                                if(itemTrack){
+                                    $.each(rootMenuData,function(idx, listItem){
+                                        $("#hamburgerMenu #navlistcontainer>div").ojNavigationList("collapse",listItem.id, true);
+                                    });
+                                    while(itemTrack.length>1){
+                                        var parentItem = itemTrack.shift();
+                                        $("#hamburgerMenu #navlistcontainer>div").ojNavigationList("expand",parentItem.id, true);
+                                    }
+                                    $("#hamburgerMenu #navlistcontainer>div").ojNavigationList("option", "selection", eventData.menuItemId);
+                                    $("#hamburgerMenu #navlistcontainer>div").ojNavigationList("option", "currentItem", eventData.menuItemId);
+                                }
+                            }
+                        }
+                    }
+                    window.addEventListener("message", onSetCurrentMenuItem, false);
+                }
+                listenToSetCurrentMenuItem();
             }
             return HamburgerMenuViewModel;
         });

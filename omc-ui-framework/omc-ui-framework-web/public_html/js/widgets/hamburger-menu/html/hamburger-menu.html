@@ -1,10 +1,13 @@
 <div id="hamburgerMenu" style="height:100%;background-color: #313334;color: #fff;zborder: 1px solid red;">
     <div id="navlistcontainer" class="demo-panel-contrast1 oj-contrast-marker">
-        <div data-bind="ojComponent:{
+        <div id="omcMenuNavList" data-bind="ojComponent:{
                             component:'ojNavigationList',
                             rootLabel: hamburgerRootMenuLabel,
                             drillMode: 'sliding',
                             data : dataSource,
+                            expanded: expanded,
+                            beforeCollapse: beforeCollapse,
+                            selection: selectedItem,
                             hierarchyMenuDisplayThresholdLevel: 2,
                             item: { template: function(itemContext) {
                                            return itemContext['type'] !== 'divider'?'hamburgerMenuItemTemplate':
