@@ -6,7 +6,7 @@
 
 tenant_hydration_schema_script_dir = "#{node["apps_dir"]}/#{node["SAAS_servicename"]}/#{node["SAAS_version"]}/sql"
 tenant_hydration_sql_filename = "emaas_dashboards_tenant_onboarding.sql"
-log_file="#{node["log_dir"]}/dashboardsOnboarding_#{node["internalTenantID"]}.log"
+log_file="#{node["log_dir"]}/dashboardsOnboarding_"
 
 # Couples of assumptions:
 #    1. the schema user/password information is passed in
@@ -26,6 +26,15 @@ bash "checkTenantID" do
     exit 1;
   EOF
   not_if { node['internalTenantID'] }
+end
+
+# define log name
+ruby_block "define_log_name" do
+  block do
+    timestamp = Time.now.strftime("%Y-%m-%d-%H-%M-%S")
+    log_file = log_file + node["internalTenantID"] + '_' + timestamp + '.log'
+  end
+  action :create
 end
 
 #Use lcm db lookup
@@ -89,8 +98,6 @@ ruby_block "Runtime checks - Post Tenant Hydration" do
             puts "Found SQL errors: " + errors[0].to_s
             Chef::Application.fatal!("SQL errors found. Please look into: " + log_file);
           end
-          timestamp = Time.now.strftime("%Y-%m-%d-%H-%M-%S")
-          File.rename(log_file, log_file+'.'+timestamp)
       end
   end
   action :run
