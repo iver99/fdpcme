@@ -10,7 +10,10 @@
 
 package oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows;
 
+import oracle.sysman.emaas.platform.dashboards.core.util.BigIntegerSerializer;
+
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import java.math.BigInteger;
 
@@ -26,7 +29,7 @@ public class DashboardUserOptionsRowEntity implements RowEntity
 	private Long tenantId;
 
 	@JsonProperty("DASHBOARD_ID")
-	private BigInteger dashboardId;
+	private String dashboardId;
 
 	@JsonProperty("AUTO_REFRESH_INTERVAL")
 	private Long autoRefreshInterval;
@@ -168,7 +171,7 @@ public class DashboardUserOptionsRowEntity implements RowEntity
 	/**
 	 * @return the dashboardId
 	 */
-	public BigInteger getDashboardId()
+	public String getDashboardId()
 	{
 		return dashboardId;
 	}
@@ -263,7 +266,7 @@ public class DashboardUserOptionsRowEntity implements RowEntity
 	 * @param dashboardId
 	 *            the dashboardId to set
 	 */
-	public void setDashboardId(BigInteger dashboardId)
+	public void setDashboardId(String dashboardId)
 	{
 		this.dashboardId = dashboardId;
 	}

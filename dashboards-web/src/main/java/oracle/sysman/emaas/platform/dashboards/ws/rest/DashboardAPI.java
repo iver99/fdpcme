@@ -1146,17 +1146,28 @@ public class DashboardAPI extends APIBase
 		
 		infoInteractionLogAPIIncomingCall(null, null, "Service call to [PUT] /v1/dashboards/import");
 		LOGGER.info("Service call to /v1/import/dashboards");
+		Long tenantId = null;
+        try {
+            tenantId = getTenantId(tenantIdParam);
+        } catch (BasicServiceMalfunctionException | DashboardException e) {
+            LOGGER.debug("could not get tenant ID from header");
+        }
+        String user = null;
+        if (userTenant != null) {
+        	user = userTenant.substring(userTenant.indexOf(".")-1,userTenant.length()-1);
+        }
+        
 		ImportDataUtil importUtil = new ImportDataUtil();
 		try {
 			DataRowsEntity data = getJsonUtil().fromJson(jsonObject.toString(), DataRowsEntity.class);
 			//save dashboard data
-			importUtil.saveDashboardData(data);
+			importUtil.saveDashboardData(data,tenantId, user);
 			//save savedsearch data
 			JSONArray savedSearchObject = jsonObject.getJSONArray("EMS_ANALYTICS_SEARCH");
 			JSONArray savedSearchParamObject = jsonObject.getJSONArray("EMS_ANALYTICS_SEARCH_PARAMS");
 			JSONObject obj = new JSONObject();
-			obj.put("", savedSearchObject);
-			obj.put("", savedSearchParamObject);
+			obj.put("EMS_ANALYTICS_SEARCH", savedSearchObject);
+			obj.put("EMS_ANALYTICS_SEARCH_PARAMS", savedSearchParamObject);
 			SSFDataUtil.saveSSFData(userTenant, obj.toString());
 			return Response.status(Status.NO_CONTENT).build();
 		}

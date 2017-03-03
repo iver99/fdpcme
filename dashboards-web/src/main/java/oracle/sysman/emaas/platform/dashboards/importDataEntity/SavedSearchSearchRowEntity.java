@@ -12,8 +12,11 @@ package oracle.sysman.emaas.platform.dashboards.importDataEntity;
 
 import java.math.BigInteger;
 
+import oracle.sysman.emaas.platform.dashboards.core.util.BigIntegerSerializer;
+
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 /**
  * @author pingwu
@@ -21,6 +24,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 public class SavedSearchSearchRowEntity implements RowEntity
 {
 	@JsonProperty("SEARCH_ID")
+	@JsonSerialize(using = BigIntegerSerializer.class)
 	private BigInteger searchId;
 
 	@JsonProperty("DESCRIPTION")
@@ -54,6 +58,7 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	private Integer uiHidden;
 
 	@JsonProperty("DELETED")
+	@JsonSerialize(using = BigIntegerSerializer.class)
 	private BigInteger deleted;
 
 	@JsonProperty("IS_WIDGET")
@@ -105,9 +110,11 @@ public class SavedSearchSearchRowEntity implements RowEntity
 	private Long tenantId;
 
 	@JsonProperty("FOLDER_ID")
+	@JsonSerialize(using = BigIntegerSerializer.class)
 	private BigInteger folderId;
 
 	@JsonProperty("CATEGORY_ID")
+	@JsonSerialize(using = BigIntegerSerializer.class)
 	private BigInteger categoryId;
 
 	@JsonProperty("PROVIDER_NAME")

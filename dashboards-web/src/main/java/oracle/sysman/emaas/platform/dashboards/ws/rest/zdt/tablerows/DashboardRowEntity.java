@@ -10,7 +10,10 @@
 
 package oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows;
 
+import oracle.sysman.emaas.platform.dashboards.core.util.BigIntegerSerializer;
+
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import java.math.BigInteger;
 
@@ -20,7 +23,7 @@ import java.math.BigInteger;
 public class DashboardRowEntity implements RowEntity
 {
 	@JsonProperty("DASHBOARD_ID")
-	private BigInteger dashboardId;
+	private String dashboardId;
 
 	@JsonProperty("NAME")
 	private String name;
@@ -56,7 +59,7 @@ public class DashboardRowEntity implements RowEntity
 	private String screenShot;
 
 	@JsonProperty("DELETED")
-	private BigInteger deleted;
+	private String deleted;
 
 	@JsonProperty("TENANT_ID")
 	private Long tenantId;
@@ -273,7 +276,7 @@ public class DashboardRowEntity implements RowEntity
 	/**
 	 * @return the dashboardId
 	 */
-	public BigInteger getDashboardId()
+	public String getDashboardId()
 	{
 		return dashboardId;
 	}
@@ -281,7 +284,7 @@ public class DashboardRowEntity implements RowEntity
 	/**
 	 * @return the deleted
 	 */
-	public BigInteger getDeleted()
+	public String getDeleted()
 	{
 		return deleted;
 	}
@@ -458,7 +461,7 @@ public class DashboardRowEntity implements RowEntity
 	 * @param dashboardId
 	 *            the dashboardId to set
 	 */
-	public void setDashboardId(BigInteger dashboardId)
+	public void setDashboardId(String dashboardId)
 	{
 		this.dashboardId = dashboardId;
 	}
@@ -467,7 +470,7 @@ public class DashboardRowEntity implements RowEntity
 	 * @param deleted
 	 *            the deleted to set
 	 */
-	public void setDeleted(BigInteger deleted)
+	public void setDeleted(String deleted)
 	{
 		this.deleted = deleted;
 	}

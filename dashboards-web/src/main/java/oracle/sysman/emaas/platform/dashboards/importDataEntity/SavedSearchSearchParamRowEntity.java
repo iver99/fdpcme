@@ -12,7 +12,10 @@ package oracle.sysman.emaas.platform.dashboards.importDataEntity;
 
 import java.math.BigInteger;
 
+import oracle.sysman.emaas.platform.dashboards.core.util.BigIntegerSerializer;
+
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 /**
  * @author pingwu
@@ -20,6 +23,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 public class SavedSearchSearchParamRowEntity implements RowEntity
 {
 	@JsonProperty("SEARCH_ID")
+	@JsonSerialize(using = BigIntegerSerializer.class)
 	private BigInteger searchId;
 
 	@JsonProperty("NAME")
