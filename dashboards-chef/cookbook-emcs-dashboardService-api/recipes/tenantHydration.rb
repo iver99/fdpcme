@@ -7,7 +7,6 @@
 tenant_hydration_schema_script_dir = "#{node["apps_dir"]}/#{node["SAAS_servicename"]}/#{node["SAAS_version"]}/sql"
 tenant_hydration_sql_filename = "emaas_dashboards_tenant_onboarding.sql"
 log_file="#{node["log_dir"]}/dashboardsOnboarding_#{node["internalTenantID"]}.log"
-history_log_file="#{node["log_dir"]}/dashboardsOnboarding.log"
 
 # Couples of assumptions:
 #    1. the schema user/password information is passed in
@@ -27,19 +26,6 @@ bash "checkTenantID" do
     exit 1;
   EOF
   not_if { node['internalTenantID'] }
-end
-
-# remove old log file
-ruby_block "remove_old_log" do
-  block do
-    if File.exists?(history_log_file)
-      File.delete(history_log_file)
-    end
-    if File.exists?(log_file)
-      File.delete(log_file)
-    end
-  end
-  action :create
 end
 
 #Use lcm db lookup
@@ -101,12 +87,10 @@ ruby_block "Runtime checks - Post Tenant Hydration" do
           errors = File.foreach(log_file).grep /^ORA-|^SP2-/
           if errors.count > 0
             puts "Found SQL errors: " + errors[0].to_s
-            timestamp = Time.now.strftime("%Y-%m-%d-%H-%M-%S")
-            File.rename(log_file, log_file+'.'+timestamp)
             Chef::Application.fatal!("SQL errors found. Please look into: " + log_file);
-          else
-            File.delete(log_file)
           end
+          timestamp = Time.now.strftime("%Y-%m-%d-%H-%M-%S")
+          File.rename(log_file, log_file+'.'+timestamp)
       end
   end
   action :run
