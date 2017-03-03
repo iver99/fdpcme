@@ -456,7 +456,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             appMap[appIdSecurityAnalytics] = {
                 "appId": appIdSecurityAnalytics,
                 "appName": "BRANDING_BAR_APP_NAME_SECURITY_ANALYTICS",
-                "serviceDisplayName": "BRANDING_BAR_CLOUD_SERVICE_NAME_SA",
+                "serviceDisplayName": "BRANDING_BAR_APP_NAME_SECURITY_ANALYTICS",
                 "serviceName": "SecurityAnalyticsUI",
                 "version": self.SERVICE_VERSION,
                 "helpTopicId": "em_samcs"
