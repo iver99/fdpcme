@@ -31,14 +31,14 @@ define([
                 }
                 
                 function jumpToCompositeMenu(rootMenuLabel, menuJson) {
-//                    var compositeMenus = [{'id': 'omc_composite_m1',type:'menu', 'name': 'Composite Menu 1', 'href': '#'},
-//                            {'id': 'omc_composite_m2',type:'menu', 'name': 'Composite Menu 2', 'href': '#'},
-//                            {'id': 'omc_composite_m3',type:'menu', 'name': 'Composite Menu 3', 'href': '#'},
-//                            {'id': 'omc_composite_m4',type:'divider', 'name': '', 'href': '#'},
-//                            {'id': 'omc_composite_m5',type:'menu', 'name': 'Composite Menu 4', 'href': '#'}
+//                    var compositeMenus = [{'id': 'omc_composite_m1',type:'menu_item', 'labelKey': 'Composite Menu 1', 'externalUrl': '#'},
+//                            {'id': 'omc_composite_m2',type:'menu_item', 'labelKey': 'Composite Menu 2', 'externalUrl': '#'},
+//                            {'id': 'omc_composite_m3',type:'menu_item', 'labelKey': 'Composite Menu 3', 'externalUrl': '#'},
+//                            {'id': 'omc_composite_m4',type:'divider', 'labelKey': '', 'externalUrl': '#'},
+//                            {'id': 'omc_composite_m5',type:'menu_item', 'labelKey': 'Composite Menu 4', 'externalUrl': '#'}
 //                            ];
                     clearCompositeMenuItems();
-                    var rootCompositMenuItem = {'id': 'omc_root_composite', type: 'menu', 'name': rootMenuLabel, 'href': '#', children: menuJson};
+                    var rootCompositMenuItem = {'id': 'omc_root_composite', type: 'menu_item', 'labelKey': rootMenuLabel, 'externalUrl': '#', children: menuJson};
                     var compositeMenu = getMenuItem(rootCompositMenuItem);
                     omcMenus.push(compositeMenu);
                     self.expanded(['omc_root_composite']);
@@ -58,33 +58,40 @@ define([
                 
                 self.hamburgerRootMenuLabel = nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_LABEL;
                 var rootMenuData = [
-                    {'id': 'omc_root_home', type: 'menu', 'name': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_HOME_LABEL, 'href': '#'},
-                    {'id': 'omc_root_alerts', type: 'menu', 'name': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_ALERTS_LABEL, 'href': '#'},
-//                    {'id': 'omc_root_applications', type: 'menu', 'name': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_APPS_LABEL, 'href': '#'},
-                    {'id': 'omc_root_dashboards', type: 'menu', 'name': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_DASHBOARDS_LABEL, 'href': '#'},
-//                    {'id': 'omc_root_savedsearches', type: 'menu', 'name': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_SAVEDSEARCH_LABEL, 'href': '#'},
-                    {'id': 'omc_root_dataexplorer', type: 'menu', 'name': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_DATAEXPLORER_LABEL, 'href': '#'},
-                    {'id': 'omc_root_divider', type: 'divider', 'name': '', 'href': '#'},
-                    {'id': 'omc_root_APM', type: 'menu', 'name': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_APM_LABEL, 'href': '#'},
-                    {'id': 'omc_root_Monitoring', type: 'menu', 'name': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_MONITORING_LABEL, 'href': '#'},
-                    {'id': 'omc_root_LogAnalytics', type: 'menu', 'name': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_LA_LABEL, 'href': '#'},
-                    {'id': 'omc_root_ITAnalytics', type: 'menu', 'name': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_ITA_LABEL, 'href': '#'},
-                    {'id': 'omc_root_Orchestration', type: 'menu', 'name': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_ORCHESTRATION_LABEL, 'href': '#'},
-                    {'id': 'omc_root_SecurityAnalytics', type: 'menu', 'name': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_SECURITY_LABEL, 'href': '#'},
-                    {'id': 'omc_root_Compliance', type: 'menu', 'name': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_COMPLIANCE_LABEL, 'href': '#'},
-                    {'id': 'omc_root_divider1', type: 'divider', 'name': '', 'href': '#'},
-                    {'id': 'omc_root_admin', type: 'menu', 'name': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_ADMIN_LABEL, 'href': '#', children: [
-                            {'id': 'omc_root_admin_alertrules', type: 'menu', 'name': nls.BRANDING_BAR_HAMBURGER_MENU_ADMIN_ALERTRULES_LABEL, 'href': '#'},
-                            {'id': 'omc_root_admin_agents', type: 'menu', 'name': nls.BRANDING_BAR_HAMBURGER_MENU_ADMIN_AGENTS_LABEL, 'href': '#'},
-                            {'id': 'omc_root_admin_entitiesconfig', type: 'menu', 'name': nls.BRANDING_BAR_HAMBURGER_MENU_ADMIN_ENTITIESCONFIG_LABEL, 'href': '#'},
-                            {'id': 'omc_root_admin_divider', type: 'divider', 'name': '', 'href': '#'},
-                            {'id': 'omc_root_admin_grp_APM', type: 'menu', 'name': nls.BRANDING_BAR_HAMBURGER_MENU_APM_ADMIN_LABEL, 'href': '#'},
-                            {'id': 'omc_root_admin_grp_Monitoring', type: 'menu', 'name': nls.BRANDING_BAR_HAMBURGER_MENU_MONITORING_ADMIN_LABEL, 'href': '#'},
-                            {'id': 'omc_root_admin_grp_LogAnalytics', type: 'menu', 'name': nls.BRANDING_BAR_HAMBURGER_MENU_LOG_ADMIN_LABEL, 'href': '#'},
-                            {'id': 'omc_root_admin_grp_SecurityAnalytics', type: 'menu', 'name': nls.BRANDING_BAR_HAMBURGER_MENU_SECURITY_ADMIN_LABEL, 'href': '#'},
-                            {'id': 'omc_root_admin_grp_Compliance', type: 'menu', 'name': nls.BRANDING_BAR_HAMBURGER_MENU_COMPLIANCE_ADMIN_LABEL, 'href': '#'}
+                    {'id': 'omc_root_home', type: 'menu_item', 'labelKey': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_HOME_LABEL, 'externalUrl': '#'},
+                    {'id': 'omc_root_alerts', type: 'menu_item', 'labelKey': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_ALERTS_LABEL, 'externalUrl': '#'},
+//                    {'id': 'omc_root_applications', type: 'menu_item', 'labelKey': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_APPS_LABEL, 'externalUrl': '#'},
+                    {'id': 'omc_root_dashboards', type: 'menu_item', 'labelKey': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_DASHBOARDS_LABEL, 'externalUrl': '#'},
+//                    {'id': 'omc_root_savedsearches', type: 'menu_item', 'labelKey': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_SAVEDSEARCH_LABEL, 'externalUrl': '#'},
+                    {'id': 'omc_root_dataexplorer', type: 'menu_item', 'labelKey': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_DATAEXPLORER_LABEL, 'externalUrl': '#'},
+                    {'id': 'omc_root_divider', type: 'divider', 'labelKey': '', 'externalUrl': '#'},
+                    {'id': 'omc_root_APM', type: 'menu_item', 'labelKey': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_APM_LABEL, 'externalUrl': '#'},
+                    {'id': 'omc_root_Monitoring', type: 'menu_item', 'labelKey': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_MONITORING_LABEL, 'externalUrl': '#'},
+                    {'id': 'omc_root_LogAnalytics', type: 'menu_item', 'labelKey': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_LA_LABEL, 'externalUrl': '#'},
+                    {'id': 'omc_root_ITAnalytics', type: 'menu_item', 'labelKey': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_ITA_LABEL, 'externalUrl': '#'},
+                    {'id': 'omc_root_Orchestration', type: 'menu_item', 'labelKey': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_ORCHESTRATION_LABEL, 'externalUrl': '#'},
+                    {'id': 'omc_root_SecurityAnalytics', type: 'menu_item', 'labelKey': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_SECURITY_LABEL, 'externalUrl': '#'},
+                    {'id': 'omc_root_Compliance', type: 'menu_item', 'labelKey': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_COMPLIANCE_LABEL, 'externalUrl': '#'},
+                    {'id': 'omc_root_divider1', type: 'divider', 'labelKey': '', 'externalUrl': '#'},
+                    {'id': 'omc_root_admin', type: 'menu_group', 'labelKey': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_ADMIN_LABEL, 'externalUrl': '#', children: [
+                            {'id': 'omc_root_admin_alertrules', type: 'menu_item', 'labelKey': nls.BRANDING_BAR_HAMBURGER_MENU_ADMIN_ALERTRULES_LABEL, 'externalUrl': '#'},
+                            {'id': 'omc_root_admin_agents', type: 'menu_item', 'labelKey': nls.BRANDING_BAR_HAMBURGER_MENU_ADMIN_AGENTS_LABEL, 'externalUrl': '#'},
+                            {'id': 'omc_root_admin_entitiesconfig', type: 'menu_item', 'labelKey': nls.BRANDING_BAR_HAMBURGER_MENU_ADMIN_ENTITIESCONFIG_LABEL, 'externalUrl': '#'},
+                            {'id': 'omc_root_admin_divider', type: 'divider', 'labelKey': '', 'externalUrl': '#'},
+                            {'id': 'omc_root_admin_grp_APM', type: 'menu_item', 'labelKey': nls.BRANDING_BAR_HAMBURGER_MENU_APM_ADMIN_LABEL, 'externalUrl': '#'},
+                            {'id': 'omc_root_admin_grp_Monitoring', type: 'menu_item', 'labelKey': nls.BRANDING_BAR_HAMBURGER_MENU_MONITORING_ADMIN_LABEL, 'externalUrl': '#'},
+                            {'id': 'omc_root_admin_grp_LogAnalytics', type: 'menu_item', 'labelKey': nls.BRANDING_BAR_HAMBURGER_MENU_LOG_ADMIN_LABEL, 'externalUrl': '#'},
+                            {'id': 'omc_root_admin_grp_SecurityAnalytics', type: 'menu_item', 'labelKey': nls.BRANDING_BAR_HAMBURGER_MENU_SECURITY_ADMIN_LABEL, 'externalUrl': '#'},
+                            {'id': 'omc_root_admin_grp_Compliance', type: 'menu_item', 'labelKey': nls.BRANDING_BAR_HAMBURGER_MENU_COMPLIANCE_ADMIN_LABEL, 'externalUrl': '#'}
                     ]}
                 ];
+                
+                function generateDividerItem(prefix) {
+                    var dividerId = prefix + '_' + [].toString.apply(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1)))
+                    return {
+                        'id': dividerId, type: 'divider', 'labelKey': '', 'externalUrl': '#'
+                    };
+                };
                 
                 function getServiceAdminMenus(serviceMenus) {
                     var adminMenus = [];
@@ -111,7 +118,8 @@ define([
                     return -1;
                 }
                 
-                var serviceMenuItems = params.serviceMenus;
+                var serviceMenuItems = params.serviceMenus.serviceMenus;
+                var serviceAdminMenu = params.serviceMenus.serviceAdminMenus;
                 var appId = params.appId;
                 var omcMenus = [];
                 if (serviceMenuItems && serviceMenuItems.length > 0) {
@@ -121,6 +129,10 @@ define([
                         for (var i = 0; i < serviceMenuItems.length; i++) {
                             var item = serviceMenuItems[i];
                             rootMenuData[index].children.push(item);
+                        }
+                        if(serviceAdminMenu){
+                            rootMenuData[index].children.push(generateDividerItem('omc_root_' + appId));
+                            rootMenuData[index].children.push(serviceAdminMenu);
                         }
                     }
                 }
@@ -140,7 +152,7 @@ define([
                 
                 function getMenuItem(item) {
                     if (item) {
-                        var menuItem = {'attr': {'id': item.id, 'type': item.type, 'name': item.name, 'href': item.href}};
+                        var menuItem = {'attr': {'id': item.id, 'type': item.type, 'labelKey': item.labelKey, 'externalUrl': item.externalUrl}};
                         if (item.children && item.children.length > 0) {
                             menuItem.children = [];
                             for (var i = 0; i < item.children.length; i++) {
@@ -273,7 +285,7 @@ define([
                     if (links && links.length > 0) {
                         for (var i = 0; i < links.length; i++) {
                             if (links[i].serviceName === serviceName) {
-                                return links[i].href;
+                                return links[i].externalUrl;
                             }
                         }
                     }

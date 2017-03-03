@@ -68,9 +68,9 @@ define([
             };
             
             self.OMC_COMMON_MENU_ALERTS = {id: 'omc_common_alerts', 
-                name: nls.BRANDING_BAR_HAMBURGER_MENU_COMMON_ALERTS_LABEL};
+                labelKey: nls.BRANDING_BAR_HAMBURGER_MENU_COMMON_ALERTS_LABEL};
             self.OMC_COMMON_ADMIN_MENU_ALERTS = {id: 'omc_common_admin_alertrules', 
-                name: nls.BRANDING_BAR_HAMBURGER_MENU_COMMON_ADMIN_ALERT_RULES_LABEL};
+                labelKey: nls.BRANDING_BAR_HAMBURGER_MENU_COMMON_ADMIN_ALERT_RULES_LABEL};
         }
         return UIFWKGlobalMenuUtil;
     }

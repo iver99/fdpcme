@@ -177,43 +177,52 @@ require(['knockout',
                 var entities = ko.observable(["8616FD4297516BA7974EF5AA20EE294B"]);
                 var menus = null;
                 if (appId === 'APM') {
-                    menus = [{'id': 'apm_home',type:'menu', 'name': 'Home', 'href': '#'},
-                            {'id': 'apm_Alerts',type:'menu', 'name': 'Alerts', 'href': '#'},
-                            {'id': 'apm_app',type:'menu', 'name': 'Applications', 'href': '#'},
-                            {'id': 'apm_divider',type:'divider', 'name': '', 'href': '#'},
-                            {'id': 'apm_pages',type:'menu', 'name': 'Pages', 'href': '#'},
-                            {'id': 'apm_ajaxcalls',type:'menu', 'name': 'Ajax Calls', 'href': '#'},
-                            {'id': 'apm_sessions',type:'menu', 'name': 'Sessions', 'href': '#'},
-                            {'id': 'apm_synthetictests',type:'menu', 'name': 'Synthetic Tests', 'href': '#'},
-                            {'id': 'apm_divider1',type:'divider', 'name': '', 'href': '#'},
-                            {'id': 'apm_mobileclient',type:'menu', 'name': 'Mobile Client', 'href': '#'},
-                            {'id': 'apm_viewcontrollers',type:'menu', 'name': 'View Controllers/Activities', 'href': '#'},
-                            {'id': 'apm_mobilehttp',type:'menu', 'name': '(Mobile)HTTP Requests', 'href': '#'},
-                            {'id': 'apm_divider2',type:'divider', 'name': '', 'href': '#'},
-                            {'id': 'apm_serverrequests',type:'menu', 'name': 'Server Requests', 'href': '#'},
-                            {'id': 'apm_threadprofiler',type:'menu', 'name': 'Thread Profilers', 'href': '#'},
-                            {'id': 'apm_appservers',type:'menu', 'name': 'App Servers', 'href': '#'},
-                            {'id': 'apm_divider3',type:'divider', 'name': 'hr', 'href': '#'},
-                            {'id': 'apm_admin',type:'admin_menu_group', 'name': 'APM Admin', 'href': '#', children: 
-                                [{'id': 'apm_admin_alertrules',type:'menu', 'name': 'Alert Rules', 'href': '#'},
-                                {'id': 'apm_admin_appdef',type:'menu', 'name': 'Application Definitions', 'href': '#'},
-                                {'id': 'apm_admin_synthetictests',type:'menu', 'name': 'Synthetic Tests', 'href': '#'},
-                                {'id': 'apm_admin_location',type:'menu', 'name': 'Beacon Locations', 'href': '#'},
-                                {'id': 'apm_admin_metricsettings',type:'menu', 'name': 'Metric Settings', 'href': '#'},
-                                {'id': 'apm_admin_browseragents',type:'menu', 'name': 'Browser Agents', 'href': '#'},
-                                {'id': 'apm_admin_mobileclientregistry',type:'menu', 'name': 'Mobile Client Registrations', 'href': '#'}]}];
+                    menus = {
+                                "serviceMenus":
+                                    [{'id': 'apm_home',type:'menu_item', 'labelKey': 'Home', 'externalUrl': '#'},
+                                    {'id': 'apm_Alerts',type:'menu_item', 'labelKey': 'Alerts', 'externalUrl': '#', 'selfHandleMenuSelection': 'false'},
+                                    {'id': 'apm_app',type:'menu_item', 'labelKey': 'Applications', 'externalUrl': '#'},
+                                    {'id': 'apm_divider',type:'divider', 'labelKey': '', 'externalUrl': '#'},
+                                    {'id': 'apm_pages',type:'menu_item', 'labelKey': 'Pages', 'externalUrl': '#'},
+                                    {'id': 'apm_ajaxcalls',type:'menu_item', 'labelKey': 'Ajax Calls', 'externalUrl': '#'},
+                                    {'id': 'apm_sessions',type:'menu_item', 'labelKey': 'Sessions', 'externalUrl': '#'},
+                                    {'id': 'apm_synthetictests',type:'menu_item', 'labelKey': 'Synthetic Tests', 'externalUrl': '#'},
+                                    {'id': 'apm_divider1',type:'divider', 'labelKey': '', 'externalUrl': '#'},
+                                    {'id': 'apm_mobileclient',type:'menu_item', 'labelKey': 'Mobile Client', 'externalUrl': '#'},
+                                    {'id': 'apm_viewcontrollers',type:'menu_item', 'labelKey': 'View Controllers/Activities', 'externalUrl': '#'},
+                                    {'id': 'apm_mobilehttp',type:'menu_item', 'labelKey': '(Mobile)HTTP Requests', 'externalUrl': '#'},
+                                    {'id': 'apm_divider2',type:'divider', 'labelKey': '', 'externalUrl': '#'},
+                                    {'id': 'apm_serverrequests',type:'menu_item', 'labelKey': 'Server Requests', 'externalUrl': '#'},
+                                    {'id': 'apm_threadprofiler',type:'menu_item', 'labelKey': 'Thread Profilers', 'externalUrl': '#'},
+                                    {'id': 'apm_appservers',type:'menu_item', 'labelKey': 'App Servers', 'externalUrl': '#'}],
+                                "serviceAdminMenus":
+                                    {'id': 'apm_admin',type:'admin_menu_group', 'labelKey': 'APM Admin', 'externalUrl': '#', children: 
+                                        [{'id': 'apm_admin_alertrules',type:'menu_item', 'labelKey': 'Alert Rules', 'externalUrl': '#'},
+                                        {'id': 'apm_admin_appdef',type:'menu_item', 'labelKey': 'Application Definitions', 'externalUrl': '#'},
+                                        {'id': 'apm_admin_synthetictests',type:'menu_item', 'labelKey': 'Synthetic Tests', 'externalUrl': '#'},
+                                        {'id': 'apm_admin_location',type:'menu_item', 'labelKey': 'Beacon Locations', 'externalUrl': '#'},
+                                        {'id': 'apm_admin_metricsettings',type:'menu_item', 'labelKey': 'Metric Settings', 'externalUrl': '#'},
+                                        {'id': 'apm_admin_browseragents',type:'menu_item', 'labelKey': 'Browser Agents', 'externalUrl': '#'},
+                                        {'id': 'apm_admin_mobileclientregistry',type:'menu_item', 'labelKey': 'Mobile Client Registrations', 'externalUrl': '#'}]}
+                        };
                 }
                 else if (appId === 'LogAnalytics') {
-                    menus = [{'id': 'la_home', 'name': 'Log Explorer', 'href': '#'},
-                            {'id': 'la_Alerts', 'name': 'Alerts', 'href': '#'}];
+                    menus = {
+                                "serviceMenus":
+                                    [{'id': 'la_home', 'labelKey': 'Log Explorer', 'externalUrl': '#'},
+                                    {'id': 'la_Alerts', 'labelKey': 'Alerts', 'externalUrl': '#'}]
+                        };
                 }
                 else if (appId === 'ITAnalytics') {
-                    menus = [{'id': 'ita_apa', 'name': 'Application Performance Analytics', 'href': '#'},
-                            {'id': 'ita_dpa', 'name': 'Database Performance Analytics', 'href': '#'},
-                            {'id': 'ita_aspa', 'name': 'App Server Performance Analytics', 'href': '#'},
-                            {'id': 'ita_hra', 'name': 'Host Resource Analytics', 'href': '#'},
-                            {'id': 'ita_dra', 'name': 'Database Resource Analytics', 'href': '#'},
-                            {'id': 'ita_asra', 'name': 'App Server Resource Analytics', 'href': '#'}];
+                    menus = {
+                                "serviceMenus":
+                                    [{'id': 'ita_apa', 'labelKey': 'Application Performance Analytics', 'externalUrl': '#'},
+                                    {'id': 'ita_dpa', 'labelKey': 'Database Performance Analytics', 'externalUrl': '#'},
+                                    {'id': 'ita_aspa', 'labelKey': 'App Server Performance Analytics', 'externalUrl': '#'},
+                                    {'id': 'ita_hra', 'labelKey': 'Host Resource Analytics', 'externalUrl': '#'},
+                                    {'id': 'ita_dra', 'labelKey': 'Database Resource Analytics', 'externalUrl': '#'},
+                                    {'id': 'ita_asra', 'labelKey': 'App Server Resource Analytics', 'externalUrl': '#'}]
+                        };
                 }
                 
                 self.brandingbarParams = {
