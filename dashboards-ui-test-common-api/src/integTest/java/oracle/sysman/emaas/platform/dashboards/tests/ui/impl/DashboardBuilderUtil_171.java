@@ -882,6 +882,22 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 		resizeWidget(driver, widgetName, 0, resizeOptions);
 	}
 
+	@Override
+	public boolean respectGCForEntity(WebDriver driver)
+	{
+		Assert.assertTrue(false, "This method is not available in 1.7.1 version");
+		driver.getLogger().info("Method not available in 1.7.1 version");
+		return false;
+	}
+
+	@Override
+	public boolean respectGCForTimeRange(WebDriver driver)
+	{
+		Assert.assertTrue(false, "This method is not available in 1.7.1 version");
+		driver.getLogger().info("Method not available in 1.7.1 version");
+		return false;
+	}
+
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#restoreWidget(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String, int)
 	 */
@@ -1180,7 +1196,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 	{
 		driver.getLogger().info(
 				"verifyDashboard started for name=\"" + dashboardName + "\", description=\"" + description
-				+ "\", showTimeSelector=\"" + showTimeSelector + "\"");
+						+ "\", showTimeSelector=\"" + showTimeSelector + "\"");
 		Validator.notEmptyString("dashboardName", dashboardName);
 
 		driver.waitForElementPresent(DashBoardPageId.BUILDERNAMETEXTLOCATOR);
@@ -1195,7 +1211,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 		if (!dashboardName.equals(realName)) {
 			driver.getLogger().info(
 					"verifyDashboard compelted and returns false. Expected dashboard name is " + dashboardName
-					+ ", actual dashboard name is " + realName);
+							+ ", actual dashboard name is " + realName);
 			return false;
 		}
 
@@ -1205,7 +1221,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 			if (realDesc != null && !"".equals(realDesc.trim())) {
 				driver.getLogger().info(
 						"verifyDashboard compelted and returns false. Expected description is " + description
-						+ ", actual dashboard description is " + realDesc);
+								+ ", actual dashboard description is " + realDesc);
 				return false;
 			}
 		}
@@ -1213,7 +1229,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 			if (!description.equals(realDesc)) {
 				driver.getLogger().info(
 						"verifyDashboard compelted and returns false. Expected description is " + description
-						+ ", actual dashboard description is " + realDesc);
+								+ ", actual dashboard description is " + realDesc);
 				return false;
 			}
 		}
@@ -1222,7 +1238,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 		if (actualTimeSelectorShown != showTimeSelector) {
 			driver.getLogger().info(
 					"verifyDashboard compelted and returns false. Expected showTimeSelector is " + showTimeSelector
-					+ ", actual dashboard showTimeSelector is " + actualTimeSelectorShown);
+							+ ", actual dashboard showTimeSelector is " + actualTimeSelectorShown);
 			return false;
 		}
 
@@ -1295,7 +1311,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 		if (!dashboardSetName.equals(realName)) {
 			driver.getLogger().info(
 					"verifyDashboardSet compelted and returns false. Expected dashboard set name is " + dashboardSetName
-					+ ", actual dashboard set name is " + realName);
+							+ ", actual dashboard set name is " + realName);
 			return false;
 		}
 

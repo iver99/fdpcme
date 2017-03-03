@@ -4,18 +4,15 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-impl',[
     'uifwk/@version@/js/util/df-util-impl', 
     'ojs/ojcore',
     'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg',
-    'uifwk/@version@/js/sdk/context-util-impl',
     'uifwk/@version@/js/util/typeahead-search-impl', 
     'ojs/ojselectcombobox',
     'ojs/ojdialog',
     'ojs/ojinputtext',
     'ojs/ojbutton'
     ],
-        function (ko, $, dfumodel, oj, nls, contextModel) {
+        function (ko, $, dfumodel, oj, nls) {
             function WidgetSelectorViewModel(params) {
                 var self = this;
-                var ctxUtil = new contextModel();
-                var omcContext = ctxUtil.getOMCContext();
 
                 // Get input parameters and set UI strings
                 var affirmativeTxt = $.isFunction(params.affirmativeButtonLabel) ? params.affirmativeButtonLabel() : params.affirmativeButtonLabel;
@@ -290,7 +287,6 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-impl',[
                     else {
                         oj.Logger.warn('No widget handler is available to call back!');
                     }
-                    ctxUtil.setTimePeriod(ctxUtil.formalizeTimePeriod("LAST_1_YEAR"));
                 };
 
                 function getWidgets() {
