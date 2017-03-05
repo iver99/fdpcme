@@ -12,12 +12,7 @@ package oracle.sysman.emaas.platform.dashboards.tests.ui.impl;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -1017,8 +1012,8 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 	protected String timeFormatChange(WebDriver driver, String testTime, String inputDateFormat, String outputDateFormat)
 
 	{
-		SimpleDateFormat inputFormat = new SimpleDateFormat(inputDateFormat);
-		SimpleDateFormat outputFormat = new SimpleDateFormat(outputDateFormat);
+		SimpleDateFormat inputFormat = new SimpleDateFormat(inputDateFormat, Locale.US);
+		SimpleDateFormat outputFormat = new SimpleDateFormat(outputDateFormat,Locale.US);
 		Date date = null;
 		try {
 			date = inputFormat.parse(testTime);

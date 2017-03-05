@@ -243,6 +243,12 @@ a:hover {
     height:27px; 
 }
 
+.emaas-brandingbar{
+    background-color: #f5f5f5;
+    box-shadow: 0 3px 3px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
 .emaas-icon-font{
     font-family:AppFont;
     font-size:1.34rem;
@@ -398,7 +404,7 @@ a:hover {
 
 .emaas-appheader-global-context {
     font-size: 14px;
-    background-color:#EDEDED;
+    background-color:#f5f5f5;
     min-height: 36px;
     padding-left: 10px;
     padding-right: 10px;

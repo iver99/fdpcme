@@ -107,4 +107,5 @@ public class PageId
 	public static final String SAVEBUTTON_UDE = "//*[@id='save_widget_btn']";
 	//LA page
 	public static final String RUNBUTTON_LA = "//*[@id='srchSrch']";
+	public static final String NOTIFICATIONBUTTON_LA = "//*[@id='notificationButton']";
 }
