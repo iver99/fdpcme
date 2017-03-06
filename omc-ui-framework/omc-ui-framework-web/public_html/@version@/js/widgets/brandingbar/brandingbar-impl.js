@@ -1201,6 +1201,10 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 //Refresh topology button status
                 if (self.cxtCompositeMeId) {
                     self.topologyDisabled(false);
+
+                    if (!cxtUtil.getCompositeMeId()) {
+                        window.centernodeid_diagram = cxtUtil.getEntities()[0]['meId'];
+                    }
                 }
                 //When no compositeMEID exists, disable topology button
                 else {
