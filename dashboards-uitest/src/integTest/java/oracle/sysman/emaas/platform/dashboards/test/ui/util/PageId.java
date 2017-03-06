@@ -96,7 +96,6 @@ public class PageId
 	public static final String DATETIMEPICKER_OOB_CSS = "#dateTimePicker_APA";
 
 	public static final String DASHBOARD_BUILDER_ERRMSG_CSS = ".emaas-appheader-message-box.emaas-appheader-message-box-error";
-	public static final String EXPLOREDATA_BTN = "[id^='explore-data-btn_']";
 
 	//error page
 	public static final String ERRORMESSAGE_CSS = ".dbd-error-msg";

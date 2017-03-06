@@ -3,6 +3,8 @@ package oracle.sysman.emaas.platform.dashboards.test.ui;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.DashBoardUtils;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.LoginAndLogout;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.PageId;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_190;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
@@ -238,7 +240,7 @@ public class BugVerification extends LoginAndLogout
 
 		//visit LA page
 		BrandingBarUtil.visitWelcome(webd);
-		WelcomeUtil.dataExplorers(webd, "log");
+		WelcomeUtil.visitLA(webd);
 		
 		String laCtx_url = webd.getWebDriver().getCurrentUrl();		
 		Assert.assertTrue(laCtx_url.contains("log-analytics-search"), "Failed to open the LA page");	
@@ -330,7 +332,7 @@ public class BugVerification extends LoginAndLogout
                 DashboardHomeUtil.resetFilterOptions(webd);
 
 		//verify the Explore Data button is disabled
-		 WebElement edButton = webd.getWebDriver().findElement(By.xpath(PageId.EXPLOREDATA_BTN));
+		 WebElement edButton = webd.getWebDriver().findElement(By.xpath(DashBoardPageId.EXPLOREDATABTNID));
                 Assert.assertFalse(edButton.isDisplayed(), "Explore Data button is displayed in dashboard");
         }        
 }
