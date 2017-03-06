@@ -12,6 +12,7 @@ package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
 
 import java.util.List;
+import java.util.concurrent.*;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -23,14 +24,15 @@ import javax.ws.rs.core.Response.Status;
 
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.EntityNamingDependencyUnavailableException;
-import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
-import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
-import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
+import oracle.sysman.emaas.platform.dashboards.core.util.*;
+import oracle.sysman.emaas.platform.dashboards.webutils.ParallelThreadPool;
 import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.model.RegistrationEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.model.UserInfoEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.TenantSubscriptionsAPI.SubscribedAppsEntity;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.util.PrivilegeChecker;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -167,21 +169,96 @@ public class ConfigurationAPI extends APIBase
 	@Path("/brandingbardata")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response queryCombinedBrandingBarData(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
+	public Response getCombinedBrandingBarData(final @HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 												 @HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
 												 @HeaderParam(value = "SESSION_EXP") String sessionExpiryTime)
 	{
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [GET] /v1/configurations/brandingbardata");
+        long start = System.currentTimeMillis();
 		try {
 			initializeUserContext(tenantIdParam, userTenant);
-			UserInfoEntity uie = new UserInfoEntity();
-			// this ensures subscribed app data inside cache, and reused by registration data retrieval
-			List<String> apps = TenantSubscriptionUtil.getTenantSubscribedServices(tenantIdParam);
-			SubscribedAppsEntity sae = apps == null ? null : new SubscribedAppsEntity(apps);
-			RegistrationEntity re = new RegistrationEntity(sessionExpiryTime, uie.getUserRoles());
-			CombinedBrandingBarData cbbd = new CombinedBrandingBarData(uie, re, new SubscribedAppsEntity(apps));
+            if (!DependencyStatus.getInstance().isEntityNamingUp())  {
+                _LOGGER.error("Error to call [GET] /v1/configurations/userInfo: EntityNaming service is down");
+                throw new EntityNamingDependencyUnavailableException();
+            }
+
+            Future<List<String>> futureUserRoles =null;
+            Future<List<String>> futureSubscribedApps =null;
+            ExecutorService pool = ParallelThreadPool.getThreadPool();
+
+            final String curTenant = TenantContext.getCurrentTenant();
+            final String curUser = UserContext.getCurrentUser();
+            futureUserRoles = pool.submit(new Callable<List<String>>() {
+                @Override
+                public List<String> call() throws Exception {
+                    try{
+                        long startUserRoles = System.currentTimeMillis();
+                        _LOGGER.info("Parallel request user roles...");
+                        List<String> userRoles = PrivilegeChecker.getUserRoles(curTenant, curUser);
+                        long endUserRoles = System.currentTimeMillis();
+                        _LOGGER.info("Time to get user roles: {}ms, user roles are: {}", (endUserRoles - startUserRoles), userRoles);
+                        return userRoles;
+                    }catch(Exception e){
+                        _LOGGER.error("Error occurred when retrieving user roles data using parallel request!", e);
+                        throw e;
+                    }
+                }
+            });
+
+            futureSubscribedApps = pool.submit(new Callable<List<String>>() {
+                @Override
+                public List<String> call() throws Exception {
+                    try{
+                        // this ensures subscribed app data inside cache, and reused by registration data retrieval
+                        _LOGGER.info("Parallel request subscribed apps info...");
+                        long startSubsApps = System.currentTimeMillis();
+                        List<String> apps = TenantSubscriptionUtil.getTenantSubscribedServices(tenantIdParam);
+                        long endSubsApps = System.currentTimeMillis();
+                        _LOGGER.info("Time to get subscribed app: {}ms. Retrieved data is: {}", (endSubsApps - startSubsApps), apps);
+                        return apps;
+                    }catch(Exception e){
+                        _LOGGER.error("Error occurred when retrieving subscribed data using parallel request!", e);
+                        throw e;
+                    }
+                }
+            });
+
+            final long TIMEOUT=30000;
+            //get subscribed apps
+            List<String> subApps = null;
+            try {
+                if(futureSubscribedApps!=null){
+                    subApps = futureSubscribedApps.get(TIMEOUT, TimeUnit.MILLISECONDS);
+                    _LOGGER.debug("Subscribed apps data is " + subApps);
+                }
+            } catch (InterruptedException e) {
+                _LOGGER.error(e);
+            } catch (ExecutionException e) {
+                _LOGGER.error(e.getCause() == null ? e : e.getCause());
+            }catch(TimeoutException e){
+                _LOGGER.error(e);
+            }
+
+            List<String> userRoles = null;
+            try {
+                if(futureUserRoles!=null){
+                    userRoles = futureUserRoles.get(TIMEOUT, TimeUnit.MILLISECONDS);
+                    _LOGGER.debug("User roles data is {}", userRoles);
+                }
+            } catch (InterruptedException e) {
+                _LOGGER.error(e);
+            } catch (ExecutionException e) {
+                _LOGGER.error(e.getCause() == null ? e : e.getCause());
+            }catch(TimeoutException e){
+                _LOGGER.error(e);
+            }
+
+			SubscribedAppsEntity sae = subApps == null ? null : new SubscribedAppsEntity(subApps);
+			RegistrationEntity re = new RegistrationEntity(sessionExpiryTime, userRoles);
+			CombinedBrandingBarData cbbd = new CombinedBrandingBarData(new UserInfoEntity(userRoles), re, sae);
 			String brandingBarData = cbbd.getBrandingbarInjectedJS();
-			_LOGGER.info("Response for [GET] /v1/configurations/brandingbardata is \"{}\"", brandingBarData);
+            long end = System.currentTimeMillis();
+			_LOGGER.info("Response for [GET] /v1/configurations/brandingbardata is \"{}\". It takes {}ms for this API", brandingBarData, (end - start));
 			Response resp = Response.status(Status.OK).entity(brandingBarData).build();
 			return resp;
 

@@ -93,28 +93,12 @@ public class DataAccessUtil
 	private static final String HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME = "X-USER-IDENTITY-DOMAIN-NAME";
 	private static final Logger LOGGER = LogManager.getLogger(DataAccessUtil.class);
 
+    // retrieve branding bar data from dashbaord-api side from a combined API to avoid separate calls
+    // cache isn't used as user info data might change from time to time
 	public static String getBrandingBarData(String tenantName, String userName, String referer, String sessionExp)
 	{
 		String userTenant = tenantName + "." + userName;
 		long start = System.currentTimeMillis();
-//		Tenant cacheTenant = new Tenant(tenantName);
-//		Object userTenantKey = DefaultKeyGenerator.getInstance().generate(cacheTenant, new Keys(userTenant));
-//		ICacheManager cm = CacheManagers.getInstance().build();
-//		ICache cache = cm.getCache(CacheConstants.CACHES_REGISTRY_CACHE);
-//		if (cache != null) {
-//			try {
-//				Object obj = cache.get(userTenantKey);
-//				if (obj instanceof String) {
-//					String data = (String) obj;
-//					LOGGER.info("Retrieved registration data from cache for userTenant {}, cached data is {}", userTenant, data);
-//					return data;
-//				}
-//			}
-//			catch (ExecutionException e) {
-//				// for cache issue, we'll continue retrieve data and just log a warning message
-//				LOGGER.warn(e.getMessage(), e);
-//			}
-//		}
 
 		try {
 			Link configurationsLink = RegistryLookupUtil.getServiceInternalLink("Dashboard-API", "1.0+",
@@ -137,7 +121,6 @@ public class DataAccessUtil
 				rc.setHeader("SESSION_EXP", sessionExp);
 			}
 			String response = rc.get(registrationHref, tenantName);
-//			cache.put(userTenantKey, response);
 			LOGGER.info("Retrieved brandingbar data is: {}", response);
 			LOGGER.info("It takes {}ms to retrieve brandingbar data from Dashboard-API", System.currentTimeMillis() - start);
 			return response;
