@@ -63,6 +63,7 @@ task e2e (type: EMTest, dependsOn:[omcSetup, onboardTenant] ){
 options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
         test('name': 'DashboardUITest') {
             classes([:]) {
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.SuiteLevelSetup')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestHomePage_BasicTest')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestHomePage_SortBy')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestWelcomePage')
