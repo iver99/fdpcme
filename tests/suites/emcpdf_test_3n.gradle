@@ -139,7 +139,7 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n','parallel':
         test('name': 'DashboardUITest', 'preserve-order':'true') {
             classes([:]) {
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.SuiteLevelSetup')
-		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboard')
+		//'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboard')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestGlobalContext')
                 'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashBoard_SimpleCRUD')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashBoard_OtherFeatures')
