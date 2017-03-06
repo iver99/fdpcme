@@ -25,7 +25,8 @@ public class UIControls
 	public static final String SADMINLABEL = "//*[@id='obbNavAdminLinks']/div[1]";
 	public static final String SWIDGETNAME = "/html/body/div[3]/div/div[2]/div/div[1]";
 	public static final String SWIDGETDESC = "/html/body/div[3]/div/div[2]/div/div[2]";
-	public static final String SWIDGETWINDOWTITLE = "//*[@id='exploreDataMenu-mainContentsortcb']/li[1]/a";
+	//public static final String SWIDGETWINDOWTITLE = "//*[@id='exploreDataMenu-mainContentsortcb']/li[1]/a";
+	public static final String SWIDGETWINDOWTITLE_CSS = ".oj-dialog-header>span";
 	//End: Text
 
 	//Begin: Button
@@ -43,7 +44,7 @@ public class UIControls
 	//End: Icon
 
 	//Begin: Images
-	public static final String SORACLEIMAGE = "/html/body/div[2]/header/div/div[1]/div[1]/div[1]/div[1]/img";
+	public static final String SORACLEIMAGE = ".emaas-appheader-appname-table-cell-baseline>img";///html/body/div[2]/header/div/div[1]/div[1]/div[1]/div[1]/img";
 	public static final String SWIDGETSELECT = "/html/body/div[1]/div[2]/div/div[2]/div[1]/div[2]/ul/li[1]/a/div";
 	//End: Images
 
@@ -62,6 +63,6 @@ public class UIControls
 	public static final String SADMIN = "//*[@class='links-content-container']/div[4]";
 	public static final String SWIDGET = "//*[@id='widgets-container']";
 	public static final String SCATEGORYSELECT = "//*[@id='ojChoiceId_categorySelect_selected']";
-	public static final String SWIDGETDISPLAY = "/html/body/div[1]/div[2]/div/div[2]/div[1]/div[2]/ul";
+	public static final String SWIDGETDISPLAY = "#widget-selector-widgets>ul";//"/html/body/div[1]/div[2]/div/div[2]/div[1]/div[2]/ul";
 	//End: Components
 }
