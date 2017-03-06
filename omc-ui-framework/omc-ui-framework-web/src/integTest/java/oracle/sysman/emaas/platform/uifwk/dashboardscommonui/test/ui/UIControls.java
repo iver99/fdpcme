@@ -25,7 +25,7 @@ public class UIControls
 	public static final String SADMINLABEL = "//*[@id='obbNavAdminLinks']/div[1]";
 	public static final String SWIDGETNAME = "/html/body/div[3]/div/div[2]/div/div[1]";
 	public static final String SWIDGETDESC = "/html/body/div[3]/div/div[2]/div/div[2]";
-	public static final String SWIDGETWINDOWTITLE = "//*[@id='exploreDataMenu-mainContentsortcb']/li[1]/a";
+	public static final String SWIDGETWINDOWTITLE = "//*[@id='ui-id-4']"; //"//*[@id='exploreDataMenu-mainContentsortcb']/li[1]/a";
 	//End: Text
 
 	//Begin: Button

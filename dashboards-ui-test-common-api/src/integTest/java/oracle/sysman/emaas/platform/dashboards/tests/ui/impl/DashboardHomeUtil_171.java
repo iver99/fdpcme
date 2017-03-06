@@ -84,8 +84,12 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 		else if (DASHBOARDSET.equalsIgnoreCase(type)) {
 			driver.check(convertID(DashBoardPageId.DASHBOARDTYPE_SET));
 		}
-		driver.setPageLoadDetector(BuildPageLoadDetector.class);
+ 
+		boolean isDisplayed = driver.isDisplayed(convertID(DashBoardPageId.DASHOKBUTTONID));
+		driver.getLogger().info("isDisplayed:" +isDisplayed);
 		driver.click(convertID(DashBoardPageId.DASHOKBUTTONID));
+		driver.setPageLoadDetector(BuildPageLoadDetector.class);
+		driver.waitForServer(); 
 		driver.setPageLoadDetector(null);
 
 	}
@@ -396,10 +400,12 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 		if (!driver.isElementPresent(indicator)) {
 			throw new NoSuchElementException("Dashboard not exists. Name: " + dashboardName);
 		}
-		driver.setPageLoadDetector(BuildPageLoadDetector.class);
+
 		boolean isDisplayed=driver.isDisplayed(indicator);
 		driver.getLogger().info("isDisplayed:"+ isDisplayed);
 		driver.click(indicator);
+		driver.setPageLoadDetector(BuildPageLoadDetector.class);
+		driver.waitForServer(); 
 		driver.setPageLoadDetector(null);
 	}
 
