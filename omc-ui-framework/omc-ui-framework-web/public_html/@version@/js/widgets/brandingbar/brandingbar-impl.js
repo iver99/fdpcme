@@ -707,15 +707,49 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     template: {require: 'text!' + hamburgerTemplatePath}
                 });
             }
+
+            var xlQuery = oj.ResponsiveUtils.getFrameworkQuery(oj.ResponsiveUtils.FRAMEWORK_QUERY_KEY.XL_UP);
+            self.xlargeScreen = oj.ResponsiveKnockoutUtils.createMediaQueryObservable(xlQuery);
+
+            self.xlargeScreen.subscribe(function(isXlarge){
+                if(!isXlarge){
+                    if($("#omcHamburgerMenu").hasClass("oj-offcanvas-open")){
+                        oj.OffcanvasUtils.close({
+                                "edge": "start",
+                                "displayMode": "push",
+                                "selector": "#omcHamburgerMenu"
+                            });
+                    }
+                }else{
+                    if(!$("#omcHamburgerMenu").hasClass("oj-offcanvas-open")){
+                        oj.OffcanvasUtils.toggle({
+                                "edge": "start",
+                                "displayMode": "push",
+                                "selector": "#omcHamburgerMenu",
+                                "autoDismiss": "none"
+                            });
+                    }
+                }
+            });
+
             self.toggleHamburgerMenu = function() {
                 return oj.OffcanvasUtils.toggle({
-                                                "edge": "start",
-                                                "displayMode": "push",
-                                //                "content": "#main-container",
-                                                "selector": "#omcHamburgerMenu"
-                                            });
+                        "edge": "start",
+                        "displayMode": self.xlargeScreen()?"push":"overlay",
+//                      "content": "#main-container",
+                        "selector": "#omcHamburgerMenu",
+                        "autoDismiss": self.xlargeScreen()?"none":"focusLoss"
+                    });
             };
 
+            $((function(){
+                oj.OffcanvasUtils.open({
+                        "edge": "start",
+                        "displayMode": "push",
+                        "selector": "#omcHamburgerMenu",
+                        "autoDismiss": "none"
+                    });
+            })());
             /**
              * Notifications button click handler
              */
