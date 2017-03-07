@@ -551,10 +551,10 @@ public class TenantSubscriptionUtilTest
 		Assert.assertEquals(apps, "{\"applications\":[\"APM\",\"Compliance\"]}");
 
 		apps = TenantSubscriptionUtil.getTenantSubscribedServicesString("emaastesttenant1");
-		Assert.assertEquals(apps, null);
+		Assert.assertEquals(apps, "{\"applications\":[]}");
 
 		apps = TenantSubscriptionUtil.getTenantSubscribedServicesString("emaastesttenant1");
-		Assert.assertEquals(apps, null);
+		Assert.assertEquals(apps, "{\"applications\":[]}");
 	}
 
 	@Test(groups = { "s1" })
