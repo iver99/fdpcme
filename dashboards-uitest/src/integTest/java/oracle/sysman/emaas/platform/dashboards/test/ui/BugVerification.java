@@ -233,15 +233,16 @@ public class BugVerification extends LoginAndLogout
 		//Initialize the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start the test case: testEMCPDF_2855");
+		WaitUtil.waitForPageFullyLoaded(webd);
 
 		//reset the home page
 		webd.getLogger().info("Reset all filter options in the home page");
 		DashboardHomeUtil.resetFilterOptions(webd);
 
 		//visit LA page
-		BrandingBarUtil.visitWelcome(webd);
-		WelcomeUtil.visitLA(webd);
-		
+		BrandingBarUtil.visitApplicationCloudService(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_LA);
+		WaitUtil.waitForPageFullyLoaded(webd);	
+
 		String laCtx_url = webd.getWebDriver().getCurrentUrl();		
 		Assert.assertTrue(laCtx_url.contains("log-analytics-search"), "Failed to open the LA page");	
 		webd.getLogger().info("Start to test opening LA page...");
@@ -254,6 +255,7 @@ public class BugVerification extends LoginAndLogout
 		WebElement ntButton = webd.getWebDriver().findElement(By.xpath(PageId.NOTIFICATIONBUTTON_LA));		
 		Assert.assertTrue(ntButton.isDisplayed(), "Notiification button isn't displayed in the page.");
 		webd.click(PageId.NOTIFICATIONBUTTON_LA);
+		WaitUtil.waitForPageFullyLoaded(webd);
 		
 		//verify omcCtx exist in the Notification page url
 		String lantCtx_url = webd.getWebDriver().getCurrentUrl();		
@@ -325,7 +327,8 @@ public class BugVerification extends LoginAndLogout
                 //Initialize the test
                 //login the dashboard with emaastesttenantnoita
                 initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emcsadmin", "emaastesttenantnoita");
-                webd.getLogger().info("Start the test case: testEMCPDF_3120");
+                WaitUtil.waitForPageFullyLoaded(webd);
+		webd.getLogger().info("Start the test case: testEMCPDF_3120");
                 
 		//reset the home page
                 webd.getLogger().info("Reset all filter options in the home page");
