@@ -534,7 +534,7 @@ public class DashboardAPI extends APIBase
 					try{
 						LOGGER.info("Parallel request registry info...");
 						initializeUserContext(tenantIdParam, userTenant);
-						return JsonUtil.buildNonNullMapper().toJson(new RegistrationEntity(sessionExpiryTime));
+						return JsonUtil.buildNonNullMapper().toJson(new RegistrationEntity(sessionExpiryTime, null));
 					}catch(Exception e){
 						LOGGER.error("Error occurred when retrieving registration data using parallel request!");
 						LOGGER.error(e);
