@@ -60,6 +60,7 @@ public class CommonFunctionalException extends DashboardException
 
 	public static final String USER_OPTIONS_INVALID_AUTO_REFRESH_INTERVAL ="USER_OPTIONS_INVALID_AUTO_REFRESH_INTERVAL";
     public static final String USER_OPTIONS_INVALID_DASHBOARD_ID = "USER_OPTIONS_INVALID_DASHBOARD_ID" ;
+	public static final String USER_OPTIONS_INVALID_EXTENDED_OPTIONS = "USER_OPTIONS_INVALID_EXTENDED_OPTIONS" ;
 
 	/**
 	 * Constructs a new <code>CommonFunctionalException</code> with the specified detail message.
