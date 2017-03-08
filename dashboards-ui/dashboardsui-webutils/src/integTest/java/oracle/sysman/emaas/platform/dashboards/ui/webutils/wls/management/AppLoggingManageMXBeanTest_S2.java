@@ -1,6 +1,6 @@
 package oracle.sysman.emaas.platform.dashboards.ui.webutils.wls.management;
 
- 
+
 import mockit.Expectations;
 import mockit.Mocked;
 import org.apache.logging.log4j.LogManager;

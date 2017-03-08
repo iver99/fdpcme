@@ -27,7 +27,8 @@ publishing.publications {
 }
 
 dependencies {
-    testConfig project(':dashboards-ui-test-common-api')  
+ 
+    testConfig project(path: ':dashboards-ui-test-common-api', configuration: 'integTestOutput')  
     testConfig getProjectArtifact('jmockit')   	
 	testConfig getProjectArtifact('log4j-api')   	
 	testConfig getProjectArtifact('log4j-core')   	
