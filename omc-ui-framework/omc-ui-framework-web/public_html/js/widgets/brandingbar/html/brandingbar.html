@@ -191,7 +191,7 @@
         <div id="ude-topology-div" style="overflow-y:auto; height:auto; display: flex; padding-left: 10px; padding-right: 10px; padding-bottom: 5px;"
              data-bind="visible: isTopologyDisplayed, event: {mouseover: showTopologyMaxIcon, mouseout: hideTopologyMaxIcon}" class="ude-sdk">
             <!-- ko if: topologyHeight() > 201 -->
-            <div id="ude-topology-title" style="display: flex; position: absolute; right: 20px; z-index: 1">
+            <div id="ude-topology-title" style="display: flex; position: absolute; z-index: 1" data-bind="style: {right: maxIconToRight}">
                     <button data-bind="attr: {'id': 'maxMinTopology', title: isMaximized() ? topologyRestoreLabel : topologyMaximizeLabel}, click: maxMinTopologyToggle,
                                     style: {display: 'none'},
                                     ojComponent: {
