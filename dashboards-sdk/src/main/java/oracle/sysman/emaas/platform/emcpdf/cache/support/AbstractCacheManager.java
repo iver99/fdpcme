@@ -64,4 +64,7 @@ public abstract class AbstractCacheManager implements ICacheManager{
         this.cacheMap.clear();
     }
 
+    public ConcurrentMap<String, ICache> getCacheMap() {
+        return cacheMap;
+    }
 }

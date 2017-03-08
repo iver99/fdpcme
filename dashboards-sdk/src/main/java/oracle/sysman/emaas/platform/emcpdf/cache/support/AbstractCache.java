@@ -20,6 +20,14 @@ public abstract class AbstractCache implements ICache {
 
     protected SimpleCacheCounter cacheCounter = new SimpleCacheCounter();
 
+    public SimpleCacheCounter getCacheCounter() {
+        return cacheCounter;
+    }
+
+    public void setCacheCounter(SimpleCacheCounter cacheCounter) {
+        this.cacheCounter = cacheCounter;
+    }
+
     @Override
     public Object get(Object key) throws ExecutionException {
         return get(key, null);
@@ -43,12 +51,13 @@ public abstract class AbstractCache implements ICache {
         if (factory != null) {
             try {
                 valueFromFactory = factory.load(key);
+                if (valueFromFactory != null) {
+                    put(key, valueFromFactory);
+                }
             } catch (Exception e) {
                 LOGGER.error(e.getLocalizedMessage());
                 throw new ExecutionException(e);
             }
-//            CachedItem ci = new CachedItem(key, valueFromFactory);
-            put(key, valueFromFactory);
         }
         return valueFromFactory;
     }
@@ -96,8 +105,8 @@ public abstract class AbstractCache implements ICache {
     }
 
     public interface CacheCounter {
-        void recordHit(long count);
 
+        void recordHit(long count);
         void recordRequest(long count);
 
         void recordEviction(long count);
@@ -105,8 +114,8 @@ public abstract class AbstractCache implements ICache {
         String getHitRate();
 
         void reset();
-    }
 
+    }
     //A simple cache counter
 
     /**
@@ -115,9 +124,9 @@ public abstract class AbstractCache implements ICache {
     public class SimpleCacheCounter implements CacheCounter {
 
         private long hitCount;
+
         private long requestCount;
         private long evictionCount;
-
         public SimpleCacheCounter() {
             hitCount = 0L;
             requestCount = 0L;
@@ -183,5 +192,7 @@ public abstract class AbstractCache implements ICache {
         public void setEvictionCount(long evictionCount) {
             this.evictionCount = evictionCount;
         }
+
     }
+
 }
