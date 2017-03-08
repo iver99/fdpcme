@@ -925,6 +925,7 @@ define(['knockout',
                     return;
                 }
                 if(ctxChangeEvent.contextName !== "compositeMEID" && ctxChangeEvent.contextName !== "entityMEIDs" && ctxChangeEvent.contextName !== "composite" && ctxChangeEvent.contextName !== "entity") {
+                    console.log("***callbackForOmcCtxChange: contextName is " + ctxChangeEvent.contextName + ". It is not entity context change, so return***");
                     return;
                 }
                 
