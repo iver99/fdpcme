@@ -18,10 +18,10 @@ clean{
   delete 'build'
 }
 
-task integTestJar (type:Jar, dependsOn: [':omc-ui-framework:omc-ui-framework-web:unpackTargetSelectorFromArtifactory']) {
+task integTestJar (type:Jar){//, dependsOn: [':omc-ui-framework:omc-ui-framework-web:unpackTargetSelectorFromArtifactory']) {
     from sourceSets.integTest.output
     //Add the Target Selector Test API classes 
-    from fileTree(dir: '../omc-ui-framework/omc-ui-framework-web/build/stage_tsel')   
+    //from fileTree(dir: '../omc-ui-framework/omc-ui-framework-web/build/stage_tsel')   
   
 }
 
