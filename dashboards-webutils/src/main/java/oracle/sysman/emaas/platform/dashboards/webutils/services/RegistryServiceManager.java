@@ -33,6 +33,8 @@ import oracle.sysman.emaas.platform.dashboards.webutils.ParallelThreadPool;
 import oracle.sysman.emaas.platform.dashboards.webutils.wls.lifecycle.AbstractApplicationLifecycleService;
 import oracle.sysman.emaas.platform.dashboards.webutils.wls.lifecycle.ApplicationServiceManager;
 
+import oracle.sysman.emaas.platform.emcpdf.cache.support.lru.LRUCacheManager;
+import oracle.sysman.emaas.platform.emcpdf.cache.support.screenshot.LRUScreenshotCacheManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -299,6 +301,10 @@ public class RegistryServiceManager implements ApplicationServiceManager
 		LOGGER.info("Pre-stopping 'Service Registry' application service");
 		RegistrationManager.getInstance().getRegistrationClient().shutdown();
 		LOGGER.debug("Pre-stopped 'Service Regsitry'");
+		LOGGER.info("Pre-stopping cache");
+		LRUCacheManager.getInstance().close();
+		LRUScreenshotCacheManager.getInstance().close();
+		LOGGER.debug("Pre-stopped cache");
 	}
 
 	public boolean registerService()

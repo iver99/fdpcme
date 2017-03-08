@@ -231,7 +231,7 @@
                                 <!-- ko if: type() === 'DEFAULT' -->
                                 <div class="dbd-widget" data-bind="attr: {style: cssStyle, id: 'tile'+clientGuid, ismobile: $root.isMobileDevice,'data-tile-name':WIDGET_NAME}, css: tileDisplayClass(), 
                                                                     event: {mouseover: function(data, event) {$root.showPullRightBtn(clientGuid, data, event)}, mouseout: function(data, event) {$root.hidePullRightBtn(clientGuid, data, event)}}">
-                                    <div class="dbd-tile-container" tabindex="0" data-bind="event: {focus: function(data, event) {$root.focusOnTile(clientGuid, data, event)}}">
+                                    <div class="dbd-tile-container" role="presentation" tabindex="0" data-bind="event: {focus: function(data, event) {$root.focusOnTile(clientGuid, data, event)}}">
                                         <div class="dbd-tile-header tile-drag-handle" style="display: flex">
                                           <!-- ko if: $root.dashboard.systemDashboard() && linkedDashboard && linkedDashboard() !== '#'-->
                                             <h2 class="dbd-tile-title"><a data-bind="text:hideTitle() === 'true' ? '': title, attr: {href: linkedDashboard, 'data-tile-title': title}"></a></h2>
@@ -264,7 +264,7 @@
                                                         }"></button>
                                               </div>
                                                 <div class="dbd-btn-group" data-bind="stopDataBinding: $root.dashboard.systemDashboard && $root.dashboard.systemDashboard()==true">
-                                                    <button class="oj-button-half-chrome dbd-tile-action" id="dbd-tile-action" tabindex="0"
+                                                    <button class="oj-button-half-chrome dbd-tile-action" tabindex="0"
                                                             data-bind="attr: {'id': 'actionButton' + clientGuid, title: getNlsString('DBS_BUILDER_TILE_ACTIONS')},
                                                                        visible: ($root.dashboard.systemDashboard()===false)&& !(($root.dashboard.sharePublic ===true)&&($root.dashboard.owner()!==$root.loginUser())) &&($root.isMobileDevice !== 'true')&&($root.toolbarModel.notZdtStatus),
                                                                        ojComponent: {component: 'ojButton', 
@@ -1037,7 +1037,7 @@
                                     </div>
                                 </div>
                                 <div class="dbd-left-panel-widgets fit-size" data-bind="event:{scroll: rightPanelWidget.widgetListScroll}" style="overflow-y: scroll">
-                                    <div class="oj-col stretch-width" data-bind="foreach: rightPanelWidget.widgets">
+                                    <div class="oj-col stretch-width" data-bind="foreach: rightPanelWidget.widgets,attr:{'searchStaus':rightPanelWidget.searchStaus}">
                                         <div class="dbd-left-panel-widget" data-bind="css: 'widget-item-'+WIDGET_UNIQUE_ID()">
                                             <div data-bind="event: {mouseover: $root.rightPanelWidget.widgetMouseOverHandler, mouseout: $root.rightPanelWidget.widgetMouseOutHandler}">
                                                 <div class="dbd-left-panel-widget-text">

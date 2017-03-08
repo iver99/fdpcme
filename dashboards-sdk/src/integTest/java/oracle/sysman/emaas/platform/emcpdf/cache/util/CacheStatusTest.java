@@ -14,6 +14,5 @@ public class CacheStatusTest {
         cs=CacheStatus.AVAILABLE;
         cs=CacheStatus.CLOSED;
         cs=CacheStatus.SUSPEND;
-        cs=CacheStatus.UNINITIALIZED;
     }
 }

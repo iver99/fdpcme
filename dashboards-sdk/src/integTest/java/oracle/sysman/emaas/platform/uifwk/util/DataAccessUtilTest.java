@@ -18,6 +18,7 @@ import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.exception.ExecutionException;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
 
+import oracle.sysman.emaas.platform.emcpdf.cache.util.StringUtil;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -57,4 +58,5 @@ public class DataAccessUtilTest
 		String res = DataAccessUtil.getBrandingBarData("tenant", "user", null, null);
 		Assert.assertNull(res);
 	}
+
 }
