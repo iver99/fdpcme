@@ -611,12 +611,13 @@ public class RegistryLookupUtil
 	{
 		ICacheManager cm= CacheManagers.getInstance().build();
 		Tenant cacheTenant = new Tenant(tenantName);
+		Object cacheKey = DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_INTERNAL_LINK, serviceName, version, rel, prefixMatch));
 		if(useCache){
 			LOGGER.debug(
 					"/getServiceInternalLink/ Trying to retrieve service internal link for service: \"{}\", version: \"{}\", rel: \"{}\", prefixMatch: \"{}\", tenant: \"{}\"",
 					serviceName, version, rel, prefixMatch, tenantName);
 			try {
-				CachedLink cl=(CachedLink)cm.getCache(CacheConstants.CACHES_SERVICE_INTERNAL_LINK_CACHE).get(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_INTERNAL_LINK, serviceName, version, rel, prefixMatch)));
+				CachedLink cl=(CachedLink)cm.getCache(CacheConstants.CACHES_SERVICE_INTERNAL_LINK_CACHE).get(cacheKey);
 				if (cl != null) {
 					LOGGER.debug(
 							"Retrieved internal link {} from cache, serviceName={}, version={}, rel={}, prefixMatch={}, tenantName={}",
@@ -669,7 +670,7 @@ public class RegistryLookupUtil
 						lk = new VersionedLink(links.get(0), version);
 						itrLogger.debug("Retrieved link {}", lk == null ? null : lk.getHref());
 						if(useCache){
-							cm.getCache(CacheConstants.CACHES_SERVICE_INTERNAL_LINK_CACHE).put(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(serviceName, version, rel, prefixMatch)),
+							cm.getCache(CacheConstants.CACHES_SERVICE_INTERNAL_LINK_CACHE).put(cacheKey,
 									new CachedLink(lk));
 						}
 						return lk;
