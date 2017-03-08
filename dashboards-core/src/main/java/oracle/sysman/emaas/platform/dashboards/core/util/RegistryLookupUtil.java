@@ -256,7 +256,7 @@ public class RegistryLookupUtil
 
 	public static Link getServiceInternalLink(String serviceName, String version, String rel, String tenantName)
 	{
-		return RegistryLookupUtil.getServiceInternalLink(serviceName, version, rel, false, tenantName);
+		return RegistryLookupUtil.getServiceInternalLink(serviceName, version, rel, false, tenantName, true);
 	}
 
 	public static EndpointEntity replaceWithVanityUrl(EndpointEntity ep, String tenantName, String serviceName)
@@ -606,25 +606,27 @@ public class RegistryLookupUtil
 		}
 	}
 
-	private static Link getServiceInternalLink(String serviceName, String version, String rel, boolean prefixMatch,
-			String tenantName)
+	public static Link getServiceInternalLink(String serviceName, String version, String rel, boolean prefixMatch,
+			String tenantName, Boolean useCache)
 	{
 		ICacheManager cm= CacheManagers.getInstance().build();
-		LOGGER.debug(
-				"/getServiceInternalLink/ Trying to retrieve service internal link for service: \"{}\", version: \"{}\", rel: \"{}\", prefixMatch: \"{}\", tenant: \"{}\"",
-				serviceName, version, rel, prefixMatch, tenantName);
 		Tenant cacheTenant = new Tenant(tenantName);
-		try {
-			CachedLink cl=(CachedLink)cm.getCache(CacheConstants.CACHES_SERVICE_INTERNAL_LINK_CACHE).get(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_INTERNAL_LINK, serviceName, version, rel, prefixMatch)));
-			if (cl != null) {
-				LOGGER.debug(
-						"Retrieved internal link {} from cache, serviceName={}, version={}, rel={}, prefixMatch={}, tenantName={}",
-						cl.getHref(), serviceName, version, rel, prefixMatch, tenantName);
-				return cl.getLink();
+		if(useCache){
+			LOGGER.debug(
+					"/getServiceInternalLink/ Trying to retrieve service internal link for service: \"{}\", version: \"{}\", rel: \"{}\", prefixMatch: \"{}\", tenant: \"{}\"",
+					serviceName, version, rel, prefixMatch, tenantName);
+			try {
+				CachedLink cl=(CachedLink)cm.getCache(CacheConstants.CACHES_SERVICE_INTERNAL_LINK_CACHE).get(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_INTERNAL_LINK, serviceName, version, rel, prefixMatch)));
+				if (cl != null) {
+					LOGGER.debug(
+							"Retrieved internal link {} from cache, serviceName={}, version={}, rel={}, prefixMatch={}, tenantName={}",
+							cl.getHref(), serviceName, version, rel, prefixMatch, tenantName);
+					return cl.getLink();
+				}
 			}
-		}
-		catch (Exception e) {
-			LOGGER.error("Error to retrieve internal link from cache. Try to lookup the link", e);
+			catch (Exception e) {
+				LOGGER.error("Error to retrieve internal link from cache. Try to lookup the link", e);
+			}
 		}
 
 		LogUtil.setInteractionLogThreadContext(tenantName, "Retristry lookup client", LogUtil.InteractionLogDirection.OUT);
@@ -666,8 +668,10 @@ public class RegistryLookupUtil
 					if (links != null && !links.isEmpty()) {
 						lk = new VersionedLink(links.get(0), version);
 						itrLogger.debug("Retrieved link {}", lk == null ? null : lk.getHref());
-						cm.getCache(CacheConstants.CACHES_SERVICE_INTERNAL_LINK_CACHE).put(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(serviceName, version, rel, prefixMatch)),
-								new CachedLink(lk));
+						if(useCache){
+							cm.getCache(CacheConstants.CACHES_SERVICE_INTERNAL_LINK_CACHE).put(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(serviceName, version, rel, prefixMatch)),
+									new CachedLink(lk));
+						}
 						return lk;
 					}
 				}
