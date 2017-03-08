@@ -325,15 +325,11 @@ public class BugVerification extends LoginAndLogout
         public void testEMCPDF_3120()
         {
                 //Initialize the test
-                //login the dashboard with emaastesttenantnoita to onboard OCS Service only
+                //login the dashboard with emaastesttenantnoita and onboard OCS Service only
                 initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emcsadmin", "emaastesttenantnoita");
                 WaitUtil.waitForPageFullyLoaded(webd);
 		webd.getLogger().info("Start the test case: testEMCPDF_3120");
                 
-		//reset the home page
-                //webd.getLogger().info("Reset all filter options in the home page");
-                //DashboardHomeUtil.resetFilterOptions(webd);
-
 		//verify the Explore Data button is disabled
 		 WebElement edButton = webd.getWebDriver().findElement(By.xpath(DashBoardPageId.EXPLOREDATABTNID));
                 Assert.assertFalse(edButton.isDisplayed(), "Explore Data button is displayed in dashboard");
