@@ -1563,9 +1563,14 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 		driver.takeScreenShot();
 		driver.getLogger().info("DashboardBuilderUtil.duplicate save button has been focused");
 
+		boolean isDisplayed = driver.isDisplayed("css=" + DashBoardPageId_190.BUILDEROPTIONSDUPLICATESAVECSS);
+		driver.getLogger().info("isDisplayed:" +isDisplayed);
 		driver.click("css=" + DashBoardPageId_190.BUILDEROPTIONSDUPLICATESAVECSS);
-		driver.takeScreenShot();
-		//wait for direct
+		if(DUP_DASHBOARD_NODSUBMENU.equals(operationName)){
+			driver.setPageLoadDetector(BuildPageLoadDetector.class);
+			driver.waitForServer();
+			driver.setPageLoadDetector(null);
+		}
 		if (operationName.equals(DUP_DASHBOARD_TOSET)) {
 			WaitUtil.waitForPageFullyLoaded(driver);
 			driver.waitForElementPresent("css=" + DashBoardPageId_190.BUILDEROPTIONSMENULOCATOR);
