@@ -186,6 +186,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 self.timeConverterMillisecond = oj.Validation.converterFactory("dateTime").createConverter({pattern: 'hh:mm:ss:SSS a'});
                 self.timeConverter = ko.observable(self.timeConverterMinute);
                 self.showTimeAtMillisecond = ko.observable(false);
+                self.showLatestOnCustomPanel = ko.observable(false);
                 
                 self.timeIncrement = ko.observable("00:10:00:00");
 
@@ -224,11 +225,18 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     self.timePeriodLast1year = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_1_YEAR;
                     self.timePeriodLast60mins = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_60_MINS;
                     self.timePeriodLast7days = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_7_DAYS;
+                    self.showLatestOnCustomPanel(true);
                 }else { //show old labels for "Last unit"
                     self.timePeriodLast1day = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_DAY;
                     self.timePeriodLast1year = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_YEAR;
                     self.timePeriodLast60mins = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_1_HOUR;
-                    self.timePeriodLast7days = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_1_WEEK;
+                    self.timePeriodLast7days = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_1_WEEK;                    
+                }
+                
+                if (ko.isObservable(params.enableLatestOnCustomPanel)) {
+                    self.enableLatestOnCustomPanel = params.enableLatestOnCustomPanel;
+                } else {
+                    self.enableLatestOnCustomPanel = ko.observable(ko.unwrap(params.enableLatestOnCustomPanel) === true ? true : false);
                 }
                 
                 self.timePeriodSetShortTerm = "SHORT_TERM";
@@ -459,6 +467,13 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         self.setFlexRelTime(num, opt);
                         self.setTimePeriodChosen(self.timePeriodCustom);
                         customClick(1);
+                    }else if(value === "latestOnCustom"){
+                        var event = {};
+                        event.extended = "Latest";
+                        event.target = {};
+                        event.target.innerHTML = "Latest";
+                        self.chooseTimePeriod(undefined, event);
+                        self.setTimePeriodChosen("Custom");
                     }else {
                         self.autoFocus("inputStartDate_" + self.randomId);
                         self.lastFocus(1);
@@ -1473,8 +1488,12 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             }else if(tp === self.timePeriodLatest) {
                                 start = curDate;
                                 end = curDate;
-                                self.setTimePeriodChosen(tp);
-                                self.setTimePeriodToLastX(tp, start, end, 1);
+                                if (self.showLatestOnCustomPanel()) {
+                                    self.lrCtrlVal("latestOnCustom");
+                                } else {
+                                    self.setTimePeriodChosen(tp);
+                                    self.setTimePeriodToLastX(tp, start, end, 1);
+                                }
                             }else if(tp === self.timePeriodCustom) {
                                 if(self.startDateTime && self.endDateTime) {
                                     sdt = self.getParam(self.startDateTime);
@@ -1590,8 +1609,12 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                 }else if(tp === self.timePeriodLatest) {
                                     start = curDate;
                                     end = curDate;
-                                    self.setTimePeriodChosen(tp);
-                                    self.setTimePeriodToLastX(tp, start, end, 1);
+                                    if (self.showLatestOnCustomPanel()) {
+                                        self.lrCtrlVal("latestOnCustom");
+                                    } else {
+                                        self.setTimePeriodChosen(tp);
+                                        self.setTimePeriodToLastX(tp, start, end, 1);
+                                    }
                                 }else {
                                     self.lrCtrlVal("flexRelTimeCtrl");
                                     parsedTp = ctxUtil.parseTimePeriodToUnitAndDuration(convertTPIdForQuickPick(formalizeTimePeriod(ko.unwrap(omcContext.time.timePeriod)), !params.timePeriodsSet));
@@ -1680,9 +1703,13 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                     self.setTimePeriodToLastX(tp, start, end, 1);
                                 }else if(tp === self.timePeriodLatest) {
                                     start = curDate;
-                                    end = curDate;
-                                    self.setTimePeriodChosen(tp);
-                                    self.setTimePeriodToLastX(tp, start, end, 1);
+                                    end = curDate;                                                                       
+                                    if (self.showLatestOnCustomPanel()) {
+                                        self.lrCtrlVal("latestOnCustom");
+                                    } else {
+                                        self.setTimePeriodChosen(tp);
+                                        self.setTimePeriodToLastX(tp, start, end, 1);
+                                    }
                                 }else {
                                     self.lrCtrlVal("flexRelTimeCtrl");
 
@@ -2324,8 +2351,12 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     if(self.lastTimePeriod() !== self.timePeriodCustom) {
                         self.showCalendar(false);
                         self.beyondWindowLimitError(false);
-                        self.setTimePeriodChosen(self.lastTimePeriod());
-                        self.setTimePeriodToLastX(self.lastTimePeriod(), null, null, 0);
+                        if (self.showLatestOnCustomPanel() && self.lastTimePeriod()==="Latest") {
+                            self.lrCtrlVal("latestOnCustom");
+                        } else {
+                            self.setTimePeriodChosen(self.lastTimePeriod());
+                            self.setTimePeriodToLastX(self.lastTimePeriod(), null, null, 0);
+                        }                       
                     }else{
                         self.showCalendar(true);
                         var lastBeyondWindowLimitError = self.beyondWindowLimitError();
@@ -2489,11 +2520,18 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     var end;
                     var tpId;
                     var parsedTp;
+                    var chosenPeriod;
+                    if (!data) {
+                        //choose the radio latest in the custom panel
+                        chosenPeriod = event.extended;
+                    } else {
+                        chosenPeriod = $(event.target).text();
+                    }
                     self.badgeTimePeriod(null);
                     self.setFocusOnInput("inputStartDate_" + self.randomId);
                     self.lastFocus(1);
                     
-                    if($(event.target).text() === self.timePeriodRecent) {
+                    if(chosenPeriod === self.timePeriodRecent) {
                         if(self.recentList().length>0) {
                             self.setAllTimePeriodsNotChosen();
                             self.recentChosen(true);
@@ -2502,12 +2540,12 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         return;
                     }
 
-                    if ($(event.target).text() !== self.timePeriodCustom) {
+                    if (chosenPeriod !== self.timePeriodCustom) {
                         //just show window limit error in custom mode
                         self.beyondWindowLimitError(false);
                         self.setMinMaxDate(null, null);
 
-                        tpId = self.getTimePeriodString($(event.target).text());
+                        tpId = self.getTimePeriodString(chosenPeriod);
                         tpId =  convertTPIdForQuickPick(tpId, !params.timePeriodsSet);
                         parsedTp = ctxUtil.parseTimePeriodToUnitAndDuration(tpId);
 
@@ -2516,10 +2554,12 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             self.flexRelTimeVal(parsedTp.duration);
                             self.flexRelTimeOpt([parsedTp.unit]);
                         }else {
-                            self.lrCtrlVal("timeLevelCtrl");
+                            if (chosenPeriod !== "Latest") {
+                                self.lrCtrlVal("timeLevelCtrl");
+                            }
                         }
 
-                        timeRange = self.getTimeRangeForQuickPick($(event.target).text());
+                        timeRange = self.getTimeRangeForQuickPick(chosenPeriod);
                         start = timeRange.start;
                         end = timeRange.end;
 
@@ -2536,10 +2576,16 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         self.selectByDrawer(true);
 
                         self.timePeriod(event.target.innerHTML);
-                        self.hoverOutDrawer(data, event); //remove hover style when ele is clicked for firefox
-                        self.setTimePeriodChosen(self.timePeriod());
-
-                        setTimeout(function() {self.applyClick();}, 0);
+                        self.hoverOutDrawer(data, event); //remove hover style when ele is clicked for firefox                  
+                        
+                        if (chosenPeriod !== "Latest" || !self.showLatestOnCustomPanel()) {
+                            self.setTimePeriodChosen(self.timePeriod());
+                            setTimeout(function () {
+                                self.applyClick();
+                            }, 0);
+                        }else{
+                            self.setTimePeriodChosen("Custom"); 
+                        }
                     }else {
                         self.showRightPanel(true);
                         //set modality to "modeless" in case it is set as "modal" in launchTimePickerCucstom function
@@ -2553,7 +2599,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     setTimeout(function(){self.updateRange(self.startDate(), self.endDate());}, 0);
                     $(event.target).focus();
                 };
-
+                
 
                 self.getTimePeriodString = function(tp) {
                     for(var i in self.timePeriodsNlsObject) {

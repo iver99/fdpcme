@@ -72,12 +72,12 @@
                             <label data-bind="text: nls.DATETIME_PICKER_FLEX_REL_TIME_LAST"></label>
                         </span>
                         <input data-bind="ojComponent: {component: 'ojInputNumber', value: flexRelTimeVal, min: 1, max: maxFlexRelTimeVal, 
-                                rootAttributes: {style: 'max-width: 54px; padding-left: 10px; padding-right: 10px;'},
+                                rootAttributes: {style: 'max-width: 54px; min-width:88px;padding-left: 10px; padding-right: 10px;'},
                                 displayOptions: {'validatorHint': 'none'},
                                 optionChange: flexRelTimeValChanged, disabled: lrCtrlVal()!=='flexRelTimeCtrl'},
                                 attr: {id: 'flexRelTimeVal_' + randomId}"/>
                         <select data-bind="ojComponent: {component: 'ojSelect', value: flexRelTimeOpt,
-                            rootAttributes: {style: 'max-width: 108px;', id: 'flexRelTimeOpt_' + randomId}, 
+                            rootAttributes: {style: 'max-width: 98px; min-width:7em ', id: 'flexRelTimeOpt_' + randomId}, 
                             optionChange: flexRelTimeOptChanged, disabled: lrCtrlVal()!=='flexRelTimeCtrl'}">
                             <!-- ko if: (shouldShowTimeLevel("second") && hideTimeSelection() !== true && showTimeAtMillisecond() === true) -->
                                 <!-- ko if: flexRelTimeVal() === 1 -->
@@ -136,7 +136,15 @@
                                 <!-- /ko -->
                             <!-- /ko -->
                         </select>
-                        
+                        <!-- ko if: showLatestOnCustomPanel() == true -->
+                        <span style="margin-left:4px">
+                            <input type="radio" name="newLatest" value="latestOnCustom" data-bind="checked: lrCtrlVal">
+                            <label data-bind="text:timePeriodLatest,css:{'latest-disabled': !enableLatestOnCustomPanel()}"></label>
+                        </span>
+                        <div class="time-filter-latest-question fa-icon-font fa-icon-font-14">
+                            <span class="time-filter-latest-tooltip" data-bind="text: nls.DATETIME_PICKER_RADIO_LATEST_HELP"></span>
+                        </div>                                                    
+                        <!-- /ko -->
                         <hr>
                         
                         <span style="display: inline-block; padding-top: 5px;">

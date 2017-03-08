@@ -21,6 +21,10 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
+.fa-icon-font-14 {
+    font-size: 14px !important; 
+}
+
 .panel {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 14px;
@@ -248,6 +252,51 @@
 .time-filter-indicator:before{
     content: "\f069";
 }
+
+.time-filter-latest-question{
+    right: initial;
+    position: relative;
+    display: inline-block;
+    .time-filter-latest-tooltip{
+        visibility: hidden;
+        width: 170px;
+        background-color: #f7f8f9;
+        color: #333333;
+        text-align: center;
+        border-radius: 4px;
+        border: solid 1px #d9dfe3;
+        padding: 5px 0;
+        position: absolute;
+        z-index: 1;
+        margin-left: -15px;
+        opacity: 0;
+        transition: opacity 1s;
+    }
+    .time-filter-latest-tooltip::after {        
+        content: "";
+        position: absolute;
+        bottom: 100%;
+        left: 5%;
+        border-width: 5px;
+        border-style: solid;
+        border-color: transparent transparent #f7f8f9 transparent;
+    }
+
+    &:hover .time-filter-latest-tooltip{
+        visibility: visible;
+        opacity: 1;
+    }
+    &:before{
+        color: #8A8F92;
+        content: "\f059";
+    }
+    &:hover{
+        &:before{
+            color:blue;
+        }
+    }
+}
+
 html:not([dir="rtl"]) .time-filter-indicator{
     right: 20px;
 }
@@ -345,4 +394,12 @@ div[id^='pickerPanel'] .oj-listbox-search-wrapper {
 
 .oj-popup-content{
     padding: 10px;
+}
+
+//hack default oj class
+.oj-listbox-drop{
+    width:82px !important;
+}
+.pickerPanel .oj-select-choice{
+    width:82px
 }
