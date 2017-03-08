@@ -23,9 +23,10 @@ task integTestJar (type:Jar, dependsOn: [':omc-ui-framework:omc-ui-framework-web
     //Add the Target Selector Test API classes 
     from fileTree(dir: '../omc-ui-framework/omc-ui-framework-web/build/stage_tsel')   
   
+	
 }
 
-
+build.dependsOn integTestJar
 check.dependsOn integTestJar
 
 ext.customPomDefinition = {
@@ -69,4 +70,13 @@ eclipse {
         plusConfigurations += configurations.webdriver
         plusConfigurations += configurations.testConfig
     }
+}
+
+configurations
+{
+	integTestOutput
+}
+
+artifacts{
+integTestOutput integTestJar
 }
