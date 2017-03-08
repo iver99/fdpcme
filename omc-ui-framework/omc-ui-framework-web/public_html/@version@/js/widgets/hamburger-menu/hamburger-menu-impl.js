@@ -106,6 +106,95 @@ define([
                     return adminMenus;
                 }
                 
+                function getServiceLinks(){
+                    var serviceName = "??";
+                    var version = "1.0";
+                    var rel = "registration?";
+                    var header = dfu.getDefaultHeader();
+                    var result = null;
+                    var url = dfu.discoverUrl(serviceName,version,rel);
+                    dfu.ajaxWithRetry(url, {
+                        type: 'get',
+                        dataType: 'json',
+                        headers: header,
+                        success: function (data) {
+                            result = data.serviceMenus;
+                        },
+                        error: function (xhr, textStatus, errorThrown) {
+                            oj.Logger.error("Failed to get subscribed applicatoins due to error: " + textStatus);
+                        },
+                        async: false
+                    });
+                    return result;
+                }
+
+                function getServiceData(serviceLinks) {
+                    if(!self.allServiceData || self.allServiceData.length < 1){
+                        self.allServiceData = {};
+                        $.each(serviceLinks, function(idx, linkItem){
+                            var serviceItem = {};
+                            serviceItem.appId = linkItem.appId;
+                            serviceItem.serviceName = linkItem.serviceName;
+                            serviceItem.version = linkItem.version;
+                            var header = dfu.getDefaultHeader();
+
+                            var url = linkItem.metaDataHref;
+                            dfu.ajaxWithRetry(url, {
+                                type: 'get',
+                                dataType: 'json',
+                                headers: header,
+                                success: function (data) {
+                                    serviceItem.serviceMenus = data.serviceMenus;
+                                    serviceItem.serviceAdminMenus = data.serviceAdminMenus;
+                                    url = data.msgBundleHref;
+                                    dfu.ajaxWithRetry(url, {
+                                        type: 'get',
+                                        dataType: 'json',
+                                        headers: header,
+                                        success: function (data) {
+                                            serviceItem.serviceMenuMsgBundle = data;
+                                        },
+                                        error: function (xhr, textStatus, errorThrown) {
+                                            oj.Logger.error("Failed to get subscribed applicatoins due to error: " + textStatus);
+                                        },
+                                        async: false
+                                    });
+                                    self.allServiceData.push(serviceItem);
+                                        },
+                                        error: function (xhr, textStatus, errorThrown) {
+                                            oj.Logger.error("Failed to get subscribed applicatoins due to error: " + textStatus);
+                                        },
+                                        async: false
+                                    });
+                        });
+                    }
+                    return self.allServiceData;
+                }
+
+                function applyNlsOnMenu(rawMenuObj, nlsObj){
+                    var _idx;
+                    if(!Array.isArray(rawMenuObj)){
+                        var menuItem = $.extend(true,{},rawMenuObj);
+                        if(menuItem && menuItem.labelKey){
+                            var _labelKey = menuItem.labelKey;
+                            menuItem.labelKey = (nlsObj&&nlsObj[_labelKey])?nlsObj[_labelKey]:_labelKey;
+                        }
+                        if(menuItem.children){
+                            for(_idx = 0; _idx < menuItem.children.length; ++_idx){
+                                menuItem.children[_idx] = applyNlsOnMenu(menuItem.children[_idx],nlsObj);
+                            }
+                        }
+                        return menuItem;
+                    }else{
+                        var menuItemList = [];
+                        for(_idx = 0; _idx < rawMenuObj.length; ++_idx){
+                            var menuItem = $.extend(true,{},rawMenuObj[_idx]);
+                            menuItemList.push(applyNlsOnMenu(menuItem,nlsObj));
+                        }
+                        return menuItemList;
+                    }
+                }
+
                 function findAppItemIndex(items, id) {
                     if (id && items && items.length > 0) {
                         for (var i = 0; i < items.length; i++) {
@@ -118,38 +207,23 @@ define([
                     return -1;
                 }
                 
-                var serviceMenuItems = params.serviceMenus.serviceMenus;
-                var serviceAdminMenu = params.serviceMenus.serviceAdminMenus;
-                var appId = params.appId;
+                self.serviceLinks = getServiceLinks();
+                self.serviceLinks && getServiceData(self.serviceLinks);
+                self.serviceMenuData = [];
+                for(var k = 0; k < rootMenuData.length; ++k){
+                    self.serviceMenuData.push($.extend(true,{},rootMenuData[k]));
+                }
+                self.allServiceData && $.each(self.allServiceData, function(idx, singleServiceData){
+                    var menuId = findAppItemIndex(rootMenuData, 'omc_root_'+singleServiceData.appId);
+                    if(self.serviceMenuData[menuId]){
+                        var newServiceMenuItem = applyNlsOnMenu(singleServiceData.serviceMenus, singleServiceData.serviceMenuMsgBundle);
+                        self.serviceMenuData[menuId].children = newServiceMenuItem;
+                        singleServiceData.serviceAdminMenus && self.serviceMenuData[menuId].children.push(applyNlsOnMenu(singleServiceData.serviceAdminMenus, singleServiceData.serviceMenuMsgBundle));
+                    }
+                });
+
+
                 var omcMenus = [];
-                if (serviceMenuItems && serviceMenuItems.length > 0) {
-                    var index = findAppItemIndex(rootMenuData, 'omc_root_' + appId);
-                    if (index >= 0) {
-                        rootMenuData[index].children = [];
-                        for (var i = 0; i < serviceMenuItems.length; i++) {
-                            var item = serviceMenuItems[i];
-                            rootMenuData[index].children.push(item);
-                        }
-                        if(serviceAdminMenu){
-                            rootMenuData[index].children.push(generateDividerItem('omc_root_' + appId));
-                            rootMenuData[index].children.push(serviceAdminMenu);
-                        }
-                    }
-                }
-                
-                var omcAdminIndex = findAppItemIndex(rootMenuData, 'omc_root_admin');
-                if (omcAdminIndex >= 0) {
-                    var rootAdminChildren = rootMenuData[omcAdminIndex].children;
-                    var appAdminIndex = findAppItemIndex(rootAdminChildren, 'omc_admin_grp_' + appId);
-                    if (appAdminIndex >= 0) {
-                        var serviceAdminMenuItems = getServiceAdminMenus(serviceMenuItems);
-                        rootMenuData[omcAdminIndex].children[appAdminIndex].children = [];
-                        for (var i = 0; i < serviceAdminMenuItems.length; i++) {
-                            rootMenuData[omcAdminIndex].children[appAdminIndex].children.push(serviceAdminMenuItems[i]);
-                        }
-                    }
-                }
-                
                 function getMenuItem(item) {
                     if (item) {
                         var menuItem = {'attr': {'id': item.id, 'type': item.type, 'labelKey': item.labelKey, 'externalUrl': item.externalUrl}};
@@ -167,8 +241,8 @@ define([
                     return null;
                 }
                 
-                for (var j = 0; j < rootMenuData.length; j++) {
-                    var item = rootMenuData[j];
+                for (var j = 0; j < self.serviceMenuData.length; j++) {
+                    var item = self.serviceMenuData[j];
                     var menuItem = getMenuItem(item);
                     omcMenus.push(menuItem);
                 }
