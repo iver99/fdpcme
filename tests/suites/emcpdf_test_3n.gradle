@@ -45,6 +45,7 @@ import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
 
 def emcpsmRegClientVer = getDependentSdkVersion('com.oracle.emaas.emcpsm', 'registry-client', '1.+')
 def emcpsmRegLookupClientVer = getDependentSdkVersion('com.oracle.emaas.emcpsm', 'registry-lookup-client', '1.+')
+def emcpdfCommonAPIVer=getDependentSdkVersion('com.oracle.emaas.emcpdf.testsdk.ui', 'dashboards-ui-test-common-api', '2.+')
 
 //Setup gradle to onboard a new tenant
 apply from: 'onboard_tenant.gradle'
@@ -74,7 +75,7 @@ dependencies{
       	exclude('module':'groovy')
     }
 
-     testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: '2.0.0+')
+     testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: emcpdfCommonAPIVer)
 
     testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-web-integ-tests', version: "${REPO_BID}") {
 	exclude('module':'groovy')
@@ -117,7 +118,7 @@ dependencies{
 
 project.ext.omctf_omcCloudSetup_additionalParam = "-skipagents -skipomr"
 
-//Task added from "emcpdf_qa_test_3n"  
+//Task added from "emcpdf_qa_test_3n"
 task QATest(type:EMTest,dependsOn:[omcSetup, onboardNewTenant]) {
 	include "oracle/sysman/emaas/platform/dashboards/test/dashboard/*"
 	include "oracle/sysman/emaas/platform/dashboards/test/common/*"
@@ -137,8 +138,7 @@ task e2e (type: EMTest, dependsOn:QATest ){
 options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n','parallel':'none') {
         test('name': 'DashboardUITest', 'preserve-order':'true') {
             classes([:]) {
-		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboard')
-		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestGlobalContext')
+//		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestGlobalContext')
                 'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashBoard_SimpleCRUD')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashBoard_OtherFeatures')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.BugVerification')
@@ -148,7 +148,6 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n','parallel':
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet_DashboardRelated_CreatedOutsideSet')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet_DuplicateDashboard')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboard_NegativeCases')
-		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboard_RespectGC')
             }
 	}
 	test('name': 'DashboardUITest_testDashboardSet_SetHome', 'preserve-order':'true'){
@@ -171,7 +170,6 @@ task QATest1(type:EMTest,dependsOn:e2e ){
 	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/TestAnalyzerPage.class"
 	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/TestDashboardPage.class"
 	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/TestOtherPage.class"
-	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/TestGlobalContext.class" 
 	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_FixDate.class"
 	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_FlexibleDate.class"
 	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_RecentUseOption.class"
@@ -184,7 +182,7 @@ task DEVTest(type:EMTest,dependsOn: QATest1){
   	include "oracle/sysman/emaas/platform/dashboards/core/persistence/DashboardServiceFacadeTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/PreferenceManagerTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/DashboardManagerTest.class"
-//	include "oracle/sysman/emaas/platform/dashboards/core/model/*"
+	include "oracle/sysman/emaas/platform/dashboards/core/model/*"
 	include "oracle/sysman/emaas/platform/dashboards/core/wls/management/*"
 	useRestAssured=true
 	ext.set("testType", "unit")
@@ -192,16 +190,16 @@ task DEVTest(type:EMTest,dependsOn: QATest1){
 
 //Task is added from "emcpdf_dev_ui_test_3n"
 task DEVUiTest(type:EMTest,dependsOn: DEVTest){
-//  	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/JsonUtilTest.class"
+  	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/JsonUtilTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/wls/management/AppLoggingManageMXBeanTest.class"
  	useRestAssured=true
 	ext.set("testType", "unit")
 }
 
 //Task is added from "emcpdf_uifwk_dev_test_3n"
-task DEVTest2(type:EMTest,dependsOn: DEVUiTest){
-//	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/util/StringUtilTest.class"
-	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/wls/management/AppLoggingManageMXBeanTest.class"
+task DEVTest2(type:EMTest,dependsOn: DEVUiTest){ 
+	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/util/StringUtilTest.class"
+	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/wls/management/AppLoggingManageMXBeanTest.class"	
 	useRestAssured=true
 	ext.set("testType", "unit")
 }

@@ -28,7 +28,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 /**
  * @author cawei
  */
-public class EntitySelectorUtil_1140 extends EntitySelectorUtil_Version implements IEntitySelectorUtil
+public class EntitySelectorUtil_1160 extends EntitySelectorUtil_1140
 {
 	private static final int UNTIL_TIMEOUT = 900;
 
