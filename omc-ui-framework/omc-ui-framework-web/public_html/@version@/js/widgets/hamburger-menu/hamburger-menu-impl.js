@@ -128,48 +128,10 @@ define([
                     return result;
                 }
 
+                self.menuDataRequestingNum = ko.observable(0);
                 function getServiceData(serviceLinks) {
-                    self.allServiceData = [{
-	"appId":	"APM",
-	"serviceName":	"APMName",
-	"version":	"1.0",
-    "serviceMenus":    [{'id': 'apm_home',type:'menu_item', 'labelKey': 'Home', 'externalUrl': '#'},
-                                    {'id': 'apm_Alerts',type:'menu_item', 'labelKey': 'Alerts', 'externalUrl': '#', 'selfHandleMenuSelection': 'false'},
-                                    {'id': 'apm_app',type:'menu_item', 'labelKey': 'Applications', 'externalUrl': '#'},
-                                    {'id': 'apm_divider',type:'divider', 'labelKey': '', 'externalUrl': '#'},
-                                    {'id': 'apm_pages',type:'menu_item', 'labelKey': 'Pages', 'externalUrl': '#'},
-                                    {'id': 'apm_ajaxcalls',type:'menu_item', 'labelKey': 'Ajax Calls', 'externalUrl': '#'},
-                                    {'id': 'apm_sessions',type:'menu_item', 'labelKey': 'Sessions', 'externalUrl': '#'},
-                                    {'id': 'apm_synthetictests',type:'menu_item', 'labelKey': 'Synthetic Tests', 'externalUrl': '#'},
-                                    {'id': 'apm_divider1',type:'divider', 'labelKey': '', 'externalUrl': '#'},
-                                    {'id': 'apm_mobileclient',type:'menu_item', 'labelKey': 'Mobile Client', 'externalUrl': '#'},
-                                    {'id': 'apm_viewcontrollers',type:'menu_item', 'labelKey': 'View Controllers/Activities', 'externalUrl': '#'},
-                                    {'id': 'apm_mobilehttp',type:'menu_item', 'labelKey': '(Mobile)HTTP Requests', 'externalUrl': '#'},
-                                    {'id': 'apm_divider2',type:'divider', 'labelKey': '', 'externalUrl': '#'},
-                                    {'id': 'apm_serverrequests',type:'menu_item', 'labelKey': 'Server Requests', 'externalUrl': '#'},
-                                    {'id': 'apm_threadprofiler',type:'menu_item', 'labelKey': 'Thread Profilers', 'externalUrl': '#'},
-                                    {'id': 'apm_appservers',type:'menu_item', 'labelKey': 'App Servers', 'externalUrl': '#'}],
-	"serviceAdminMenus": 	{'id': 'apm_admin',type:'admin_menu_group', 'labelKey': 'APM Admin', 'externalUrl': '#', children: 
-                                        [{'id': 'apm_admin_alertrules',type:'menu_item', 'labelKey': 'Alert Rules', 'externalUrl': '#'},
-                                        {'id': 'apm_admin_appdef',type:'menu_item', 'labelKey': 'BRANDING_BAR_HAMBURGER_MENU_ADMIN_ALERTRULES_LABEL', 'externalUrl': '#'},
-                                        {'id': 'apm_admin_synthetictests',type:'menu_item', 'labelKey': 'Synthetic Tests', 'externalUrl': '#'},
-                                        {'id': 'apm_admin_location',type:'menu_item', 'labelKey': 'Beacon Locations', 'externalUrl': '#'},
-                                        {'id': 'apm_admin_metricsettings',type:'menu_item', 'labelKey': 'Metric Settings', 'externalUrl': '#'},
-                                        {'id': 'apm_admin_browseragents',type:'menu_item', 'labelKey': 'Browser Agents', 'externalUrl': '#'},
-                                        {'id': 'apm_admin_mobileclientregistry',type:'menu_item', 'labelKey': 'Mobile Client Registrations', 'externalUrl': '#'}]},
-	"serviceMenuMsgBundle": nls
-},
-{
-	"appId":	"LogAnalytics",
-	"serviceName":	"LogAnalyticsName",
-	"version":	"1.0",
-	"serviceMenus":
-                                    [{'id': 'la_home', 'labelKey': 'Log Explorer', 'externalUrl': '#'},
-                                    {'id': 'la_Alerts', 'labelKey': 'Alerts', 'externalUrl': '#'}],
-	"serviceMenuMsgBundle": nls
-}];
                     if(!self.allServiceData || self.allServiceData.length < 1){
-                        self.allServiceData = {};
+                        self.allServiceData = [];
                         $.each(serviceLinks, function(idx, linkItem){
                             var serviceItem = {};
                             serviceItem.appId = linkItem.appId;
@@ -178,6 +140,7 @@ define([
                             var header = dfu.getDefaultHeader();
 
                             var url = linkItem.metaDataHref;
+                            self.menuDataRequestingNum(self.menuDataRequestingNum()+1);
                             dfu.ajaxWithRetry(url, {
                                 type: 'get',
                                 dataType: 'json',
@@ -186,25 +149,26 @@ define([
                                     serviceItem.serviceMenus = data.serviceMenus;
                                     serviceItem.serviceAdminMenus = data.serviceAdminMenus;
                                     url = data.msgBundleHref;
-                                    dfu.ajaxWithRetry(url, {
-                                        type: 'get',
-                                        dataType: 'json',
-                                        headers: header,
-                                        success: function (data) {
-                                            serviceItem.serviceMenuMsgBundle = data;
-                                        },
-                                        error: function (xhr, textStatus, errorThrown) {
-                                            oj.Logger.error("Failed to get subscribed applicatoins due to error: " + textStatus);
-                                        },
-                                        async: false
+                                    var re = new RegExp('emsaasui.*\.');
+                                    url = re.exec(url);
+                                    if(!url){
+                                        return;
+                                    }
+                                    url = url.subString(0,url.length);
+                                    require(['ojL10n!'+url], function (_nls) {
+                                        serviceItem.serviceMenuMsgBundle = _nls;
+                                        serviceItem.serviceMenus = applyNlsOnMenu(serviceItem.serviceMenus, _nls);
+                                        serviceItem.serviceAdminMenus = applyNlsOnMenu(serviceItem.serviceAdminMenus, _nls);
+                                        self.allServiceData.push(serviceItem);
+                                        self.menuDataRequestingNum(self.menuDataRequestingNum()-1);
                                     });
-                                    self.allServiceData.push(serviceItem);
-                                        },
-                                        error: function (xhr, textStatus, errorThrown) {
-                                            oj.Logger.error("Failed to get subscribed applicatoins due to error: " + textStatus);
-                                        },
-                                        async: false
-                                    });
+                                },
+                                error: function (xhr, textStatus, errorThrown) {
+                                    self.menuDataRequestingNum(self.menuDataRequestingNum()-1);
+                                    oj.Logger.error("Failed to get subscribed applicatoins due to error: " + textStatus);
+                                },
+                                async: false
+                            });
                         });
                     }
                     return self.allServiceData;
@@ -246,23 +210,7 @@ define([
                     return -1;
                 }
                 
-//                self.serviceLinks = getServiceLinks();
-//                self.serviceLinks && getServiceData(self.serviceLinks);
-                getServiceData(self.serviceLinks);
                 self.serviceMenuData = [];
-                for(var k = 0; k < rootMenuData.length; ++k){
-                    self.serviceMenuData.push($.extend(true,{},rootMenuData[k]));
-                }
-                self.allServiceData && $.each(self.allServiceData, function(idx, singleServiceData){
-                    var menuId = findAppItemIndex(rootMenuData, 'omc_root_'+singleServiceData.appId);
-                    if(self.serviceMenuData[menuId]){
-                        var newServiceMenuItem = applyNlsOnMenu(singleServiceData.serviceMenus, singleServiceData.serviceMenuMsgBundle);
-                        self.serviceMenuData[menuId].children = newServiceMenuItem;
-                        singleServiceData.serviceAdminMenus && self.serviceMenuData[menuId].children.push(applyNlsOnMenu(singleServiceData.serviceAdminMenus, singleServiceData.serviceMenuMsgBundle));
-                    }
-                });
-
-
                 var omcMenus = [];
                 function getMenuItem(item) {
                     if (item) {
@@ -281,12 +229,77 @@ define([
                     return null;
                 }
                 
-                for (var j = 0; j < self.serviceMenuData.length; j++) {
-                    var item = self.serviceMenuData[j];
-                    var menuItem = getMenuItem(item);
-                    omcMenus.push(menuItem);
-                }
-                
+                self.menuDataRequestingNum.subscribe(function(num){
+                    if(num!==0)return;
+                    for (var k = 0; k < rootMenuData.length; ++k) {
+                        self.serviceMenuData.push($.extend(true, {}, rootMenuData[k]));
+                    }
+                    self.allServiceData && $.each(self.allServiceData, function (idx, singleServiceData) {
+                        var menuId = findAppItemIndex(rootMenuData, 'omc_root_' + singleServiceData.appId);
+                        if (self.serviceMenuData[menuId]) {
+                            self.serviceMenuData[menuId].children = singleServiceData.serviceMenus;
+                            singleServiceData.serviceAdminMenus && self.serviceMenuData[menuId].children.push(singleServiceData.serviceAdminMenus);
+                        }
+                    });
+                    for (var j = 0; j < self.serviceMenuData.length; j++) {
+                        var item = self.serviceMenuData[j];
+                        var menuItem = getMenuItem(item);
+                        omcMenus.push(menuItem);
+                    }
+                });
+
+                dfu.getRegistrations(function(data){
+                    self.serviceLinks = data.serviceMenus;
+                },false);
+//                self.serviceLinks && getServiceData(self.serviceLinks);
+                /*######################################for test START#####################################*/
+                self.allServiceData = [{
+                        "appId": "APM",
+                        "serviceName": "APMName",
+                        "version": "1.0",
+                            "serviceMenus":    [{'id': 'apm_home', type: 'menu_item', 'labelKey': 'Home', 'externalUrl': '#'},
+                            {'id': 'apm_Alerts', type: 'menu_item', 'labelKey': 'Alerts', 'externalUrl': '#', 'selfHandleMenuSelection': 'false'},
+                            {'id': 'apm_app', type: 'menu_item', 'labelKey': 'Applications', 'externalUrl': '#'},
+                            {'id': 'apm_divider', type: 'divider', 'labelKey': '', 'externalUrl': '#'},
+                            {'id': 'apm_pages', type: 'menu_item', 'labelKey': 'Pages', 'externalUrl': '#'},
+                            {'id': 'apm_ajaxcalls', type: 'menu_item', 'labelKey': 'Ajax Calls', 'externalUrl': '#'},
+                            {'id': 'apm_sessions', type: 'menu_item', 'labelKey': 'Sessions', 'externalUrl': '#'},
+                            {'id': 'apm_synthetictests', type: 'menu_item', 'labelKey': 'Synthetic Tests', 'externalUrl': '#'},
+                            {'id': 'apm_divider1', type: 'divider', 'labelKey': '', 'externalUrl': '#'},
+                            {'id': 'apm_mobileclient', type: 'menu_item', 'labelKey': 'Mobile Client', 'externalUrl': '#'},
+                            {'id': 'apm_viewcontrollers', type: 'menu_item', 'labelKey': 'View Controllers/Activities', 'externalUrl': '#'},
+                            {'id': 'apm_mobilehttp', type: 'menu_item', 'labelKey': '(Mobile)HTTP Requests', 'externalUrl': '#'},
+                            {'id': 'apm_divider2', type: 'divider', 'labelKey': '', 'externalUrl': '#'},
+                            {'id': 'apm_serverrequests', type: 'menu_item', 'labelKey': 'Server Requests', 'externalUrl': '#'},
+                            {'id': 'apm_threadprofiler', type: 'menu_item', 'labelKey': 'Thread Profilers', 'externalUrl': '#'},
+                            {'id': 'apm_appservers', type: 'menu_item', 'labelKey': 'App Servers', 'externalUrl': '#'}],
+                        "serviceAdminMenus": {'id': 'apm_admin', type: 'admin_menu_group', 'labelKey': 'APM Admin', 'externalUrl': '#', children:
+                                    [{'id': 'apm_admin_alertrules', type: 'menu_item', 'labelKey': 'Alert Rules', 'externalUrl': '#'},
+                                        {'id': 'apm_admin_appdef', type: 'menu_item', 'labelKey': 'BRANDING_BAR_HAMBURGER_MENU_ADMIN_ALERTRULES_LABEL', 'externalUrl': '#'},
+                                        {'id': 'apm_admin_synthetictests', type: 'menu_item', 'labelKey': 'Synthetic Tests', 'externalUrl': '#'},
+                                        {'id': 'apm_admin_location', type: 'menu_item', 'labelKey': 'Beacon Locations', 'externalUrl': '#'},
+                                        {'id': 'apm_admin_metricsettings', type: 'menu_item', 'labelKey': 'Metric Settings', 'externalUrl': '#'},
+                                        {'id': 'apm_admin_browseragents', type: 'menu_item', 'labelKey': 'Browser Agents', 'externalUrl': '#'},
+                                        {'id': 'apm_admin_mobileclientregistry', type: 'menu_item', 'labelKey': 'Mobile Client Registrations', 'externalUrl': '#'}]},
+                        "serviceMenuMsgBundle": nls
+                    },
+                    {
+                        "appId": "LogAnalytics",
+                        "serviceName": "LogAnalyticsName",
+                        "version": "1.0",
+                        "serviceMenus":
+                                [{'id': 'la_home', 'labelKey': 'Log Explorer', 'externalUrl': '#'},
+                                    {'id': 'la_Alerts', 'labelKey': 'Alerts', 'externalUrl': '#'}],
+                        "serviceMenuMsgBundle": nls
+                    }];
+                var serviceItem = self.allServiceData[0];
+                serviceItem.serviceMenus = applyNlsOnMenu(serviceItem.serviceMenus, nls);
+                serviceItem.serviceAdminMenus = applyNlsOnMenu(serviceItem.serviceAdminMenus, nls);
+                self.allServiceData[0] = serviceItem;
+                self.menuDataRequestingNum(1);
+                self.menuDataRequestingNum(self.menuDataRequestingNum()-1);
+                /*######################################for test END#####################################*/
+
                 function findItem(item, menuId) {
                     if (item && item.id === menuId) {
                         return item;
