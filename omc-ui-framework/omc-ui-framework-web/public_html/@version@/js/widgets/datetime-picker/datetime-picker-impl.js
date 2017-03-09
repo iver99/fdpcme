@@ -480,6 +480,8 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         
                         self.gotoCalendarMonth(self.startDateISO().slice(0, 10));
                         self.updateRange(self.startDate(), self.endDate());
+                        self.setTimePeriodChosen("Custom");
+                        customClick(1);
                     }
                 });
 
@@ -1026,12 +1028,14 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 }
 
                 if(params.hideTimeSelection && params.hideTimeSelection === true) {
-                    self.last15minsNotToShow(true);
-                    self.last30minsNotToShow(true);
-                    self.last60minsNotToShow(true);
-                    self.last2hoursNotToShow(true);
-                    self.last4hoursNotToShow(true);
-                    self.last6hoursNotToShow(true);
+                    if(!params.timePeriodsSet) {
+                        self.last15minsNotToShow(true);
+                        self.last30minsNotToShow(true);
+                        self.last60minsNotToShow(true);
+                        self.last2hoursNotToShow(true);
+                        self.last4hoursNotToShow(true);
+                        self.last6hoursNotToShow(true);
+                    }
                     self.hideTimeSelection(true);
                 }
 
@@ -2647,7 +2651,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             self.timePeriod(self.timePeriodLast60mins);
                         }else if(!params.timePeriodsSet && flexRelTimePeriodId === "LAST_1_WEEK") {
                             self.timePeriod(self.timePeriodLast7days);
-                        }else if (self.timePeriodsNlsObject[flexRelTimePeriodId]) {
+                        }else if (self.timePeriodsNlsObject[flexRelTimePeriodId] && $.inArray(self.timePeriodsNlsObject[flexRelTimePeriodId], self.getParam(self.timePeriodsNotToShow)) === -1) {
                             self.timePeriod(self.timePeriodsNlsObject[flexRelTimePeriodId]);
                         }
 
