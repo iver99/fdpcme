@@ -338,7 +338,7 @@ require(['knockout',
 				},
 				showEntitySelector: ko.observable(false),
 				entityContextParams: {
-				    readOnly: true
+				    readOnly: false
 				}
 			    };
 
