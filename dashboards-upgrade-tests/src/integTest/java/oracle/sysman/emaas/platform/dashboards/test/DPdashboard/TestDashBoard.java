@@ -17,7 +17,7 @@ import org.testng.annotations.Test;
 public class TestDashBoard extends LoginAndLogout
 {
 	private String dbName_noWidgetGrid = "";
-	public static String dbName_WithWidget = "pre#_$dashboard%^&";
+	public static String dbName_WithWidget = "pre#_$dashboard%^&中文";
 	public static String dbName_DisableEntitiesTime = "Test Entities and Time Selector Disabled";
 	public static String WidgetName_LA = "Database Errors Trend";
 	public static String WidgetName_UDE = "Area Chart";
@@ -27,7 +27,6 @@ public class TestDashBoard extends LoginAndLogout
 	{
 		//dbName_WithWidget = "dashbaord$!@#-" + generateTimeStamp();
 		String dbDesc = "Dashboard with Widget";
-
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start to test in createTestDashboard");
 

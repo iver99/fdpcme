@@ -21,6 +21,8 @@ Rem    miayu   1/26/1015  Created
 WHENEVER SQLERROR EXIT ROLLBACK
 SET FEEDBACK ON
 SET SERVEROUTPUT ON
+SET VERIFY OFF
+SET ECHO OFF
 DEFINE TENANT_ID = '&1'
 DEFINE EMSAAS_SQL_ROOT = '&2'
 
@@ -36,15 +38,6 @@ BEGIN
   WHEN VALUE_ERROR THEN
     RAISE_APPLICATION_ERROR(-21000, ' Please  specify valid internal tenant id');
   END;
-  SELECT COUNT(*)
-  INTO oob_dsb_count
-  FROM EMS_DASHBOARD
-  WHERE DASHBOARD_ID <=1000
-  AND TENANT_ID       ='&TENANT_ID';
-  IF oob_dsb_count    >0 THEN
-    DBMS_OUTPUT.PUT_LINE('OOB dashboards for &TENANT_ID are already present');
-    RAISE_APPLICATION_ERROR(-20000, ' OOB dashboards for &TENANT_ID are already present');
-  END IF; 
 END;
 /
 @&EMSAAS_SQL_ROOT/1.10.0/emaas_create_tables.sql
@@ -102,6 +95,7 @@ END;
 @&EMSAAS_SQL_ROOT/1.15.0/emaas_dashboards_seed_data_ita.sql &TENANT_ID
 @&EMSAAS_SQL_ROOT/1.15.0/emaas_dashboards_update_orchetration_timesel.sql &TENANT_ID
 
+@&EMSAAS_SQL_ROOT/1.17.0/emaas_dashboards_update_uigallery.sql &TENANT_ID
 COMMIT;
 /
 BEGIN

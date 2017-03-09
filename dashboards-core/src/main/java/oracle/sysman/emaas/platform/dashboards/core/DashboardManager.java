@@ -437,7 +437,7 @@ public class DashboardManager
 						ep = null;
 						edbdtList = ed.getDashboardTileList();
 					} catch (DashboardException e) {
-						LOGGER.error(e.getStackTrace());
+						LOGGER.error(e);
 						return cdSet;
 					}
 				}
@@ -1101,6 +1101,10 @@ public class DashboardManager
 				EmsDashboard emsd=dsf.getEmsDashboardById(dupId);
 				ed.setScreenShot(emsd.getScreenShot());
 			}
+			String dbdName = (dbd.getName() !=null? dbd.getName().replace("&amp;", "&"):dbd.getName());
+			ed.setName(dbdName);
+			String dbdDes = (dbd.getDescription() !=null? dbd.getDescription().replace("&amp;", "&"):dbd.getDescription());
+			ed.setDescription(dbdDes);
 			dsf.persistEmsDashboard(ed);
 			updateLastAccessDate(ed.getDashboardId(), tenantId);
 			return Dashboard.valueOf(ed, dbd, true, true, true);
