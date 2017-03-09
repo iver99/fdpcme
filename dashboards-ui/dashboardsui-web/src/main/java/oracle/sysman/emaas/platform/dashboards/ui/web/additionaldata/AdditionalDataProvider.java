@@ -55,7 +55,7 @@ public class AdditionalDataProvider
 		StringBuilder sb = new StringBuilder();
 		if (AdditionalDataFilter.BUILDER_URI.equals(uri)) { // only builder page needs dashbaord data
 			String result = getDashboardData(httpReq) + HtmlBootstrapJsUtil.getSDKVersionJS();
-			LOGGER.info("Builder page data is {}",result);
+			LOGGER.debug("Builder page data is {}",result);
 			return result;
 		}else{
 
@@ -65,7 +65,7 @@ public class AdditionalDataProvider
 				LOGGER.warn("Retrieved null or empty bootstrap JS for tenant {} user {}", tenant, user);
 			}
 			else {
-				LOGGER.info("Retrieved bootstrap js: " + bootstrapJS);
+				LOGGER.debug("Retrieved bootstrap js: " + bootstrapJS);
 				sb.append(bootstrapJS);
 			}
 

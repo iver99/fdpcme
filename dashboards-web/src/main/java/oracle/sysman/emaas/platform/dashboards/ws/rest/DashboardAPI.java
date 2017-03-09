@@ -455,7 +455,7 @@ public class DashboardAPI extends APIBase
 			@HeaderParam(value = "X-REMOTE-USER") final String userTenant, @HeaderParam(value = "Referer") String referer,
 			@PathParam("id") final BigInteger dashboardId,@HeaderParam(value = "SESSION_EXP") final String sessionExpiryTime)
 	{
-		final long TIMEOUT=5000;
+		final long TIMEOUT=30000;
 		Long begin=System.currentTimeMillis();
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [GET] /v1/dashboards/{}", dashboardId);
 		final DashboardManager dm = DashboardManager.getInstance();
@@ -466,6 +466,7 @@ public class DashboardAPI extends APIBase
 		Future<Dashboard> futureDashboard=null;
 		Future<String> futureUserInfo =null;
 		Future<String> futureReg =null;
+		Future<String> futureSubscried =null;
 		try {
 			if (!DependencyStatus.getInstance().isDatabaseUp())  {
 				LOGGER.error("Error to call [GET] /v1/dashboards/{}/combinedData: database is down", dashboardId);
@@ -476,17 +477,23 @@ public class DashboardAPI extends APIBase
 			futureDashboard = pool.submit(new Callable<Dashboard>() {
 				@Override
 				public Dashboard call() throws Exception {
-					LOGGER.info("Parallel request dashboard data info...");
-					Long tenantId = getTenantId(tenantIdParam);
-					initializeUserContext(tenantIdParam, userTenant);
-					String userName = UserContext.getCurrentUser();
-					return dm.getCombinedDashboardById(dashboardId, tenantId, userName);
+					try{
+						LOGGER.info("Parallel request dashboard data info...");
+						Long tenantId = getTenantId(tenantIdParam);
+						initializeUserContext(tenantIdParam, userTenant);
+						String userName = UserContext.getCurrentUser();
+						return dm.getCombinedDashboardById(dashboardId, tenantId, userName);
+					}catch(Exception e){
+						LOGGER.error("Error occurred when retrieving dashboard meta data using parallel request!");
+						LOGGER.error(e);
+						throw e;
+					}
 				}
 			});
 		}
 		
 		catch (DashboardException e) {
-			LOGGER.error(e.getStackTrace());
+			LOGGER.error(e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		finally {
@@ -497,9 +504,15 @@ public class DashboardAPI extends APIBase
 		futureUserInfo= pool.submit(new Callable<String>() {
 				@Override
 				public String call() throws Exception {
-					LOGGER.info("Parallel request user info...");
-					initializeUserContext(tenantIdParam, userTenant);
-					return JsonUtil.buildNormalMapper().toJson(new UserInfoEntity());
+					try{
+						LOGGER.info("Parallel request user info...");
+						initializeUserContext(tenantIdParam, userTenant);
+						return JsonUtil.buildNormalMapper().toJson(new UserInfoEntity());
+					}catch(Exception e){
+						LOGGER.error("Error occurred when retrieving userInfo data using parallel request!");
+						LOGGER.error(e);
+						throw e;
+					}
 				}
 		});
 
@@ -508,11 +521,34 @@ public class DashboardAPI extends APIBase
 			futureReg = pool.submit(new Callable<String>() {
 				@Override
 				public String call() throws Exception {
-					LOGGER.info("Parallel request registry info...");
-					initializeUserContext(tenantIdParam, userTenant);
-					return JsonUtil.buildNonNullMapper().toJson(new RegistrationEntity(sessionExpiryTime));
+					try{
+						LOGGER.info("Parallel request registry info...");
+						initializeUserContext(tenantIdParam, userTenant);
+						return JsonUtil.buildNonNullMapper().toJson(new RegistrationEntity(sessionExpiryTime));
+					}catch(Exception e){
+						LOGGER.error("Error occurred when retrieving registration data using parallel request!");
+						LOGGER.error(e);
+						throw e;
+					}
 				}
 			});
+
+		//retrieve subscribed apps info
+		String subscribedApps=null;
+		futureSubscried = pool.submit(new Callable<String>() {
+			@Override
+			public String call() throws Exception {
+				try{
+					LOGGER.info("Parallel request subscribed apps info...");
+					return TenantSubscriptionUtil.getTenantSubscribedServicesString(tenantIdParam);
+				}catch(Exception e){
+					LOGGER.error("Error occurred when retrieving subscribed data using parallel request!");
+					LOGGER.error(e);
+					throw e;
+				}
+			}
+		});
+
 		//get data
 		try {
 			if(futureReg!=null){
@@ -524,28 +560,46 @@ public class DashboardAPI extends APIBase
 				LOGGER.debug("Registration data is "+regEntity);
 			}
 		} catch (InterruptedException e) {
-			LOGGER.error(e.getStackTrace());
+			LOGGER.error(e);
 		} catch (ExecutionException e) {
-			LOGGER.error(e.getCause() == null? e.getStackTrace() : e.getCause().getStackTrace());
+			LOGGER.error(e.getCause() == null? e : e.getCause());
 		}catch(TimeoutException e){
-			LOGGER.error(e.getStackTrace());
+			LOGGER.error(e);
 		}
 
+		sb.append("if(!window._uifwk){window._uifwk={};}if(!window._uifwk.cachedData){window._uifwk.cachedData={};}");
 		try {
 			if (futureUserInfo != null) {
 				userInfoEntity = futureUserInfo.get(TIMEOUT, TimeUnit.MILLISECONDS);
 				if (userInfoEntity != null && !StringUtils.isEmpty(userInfoEntity)) {
-					sb.append("window._userInfoServerCache=");
+					sb.append("window._uifwk.cachedData.userInfo=");
 					sb.append(userInfoEntity).append(";");
 				}
 				LOGGER.debug("User info data is " + regEntity);
 			}
 		} catch (InterruptedException e) {
-			LOGGER.error(e.getStackTrace());
+			LOGGER.error(e);
 		} catch (ExecutionException e) {
-			LOGGER.error(e.getCause().getStackTrace());
+			LOGGER.error(e.getCause() == null? e : e.getCause());
 		}catch(TimeoutException e){
-			LOGGER.error(e.getStackTrace());
+			LOGGER.error(e);
+		}
+
+		try {
+			if (futureSubscried != null) {
+				subscribedApps = futureSubscried.get(TIMEOUT, TimeUnit.MILLISECONDS);
+				if (!StringUtils.isEmpty(subscribedApps)) {
+					sb.append("window._uifwk.cachedData.subscribedapps=");
+					sb.append(subscribedApps).append(";");
+				}
+				LOGGER.debug("Subscribed applications data is " + subscribedApps);
+			}
+		} catch (InterruptedException e) {
+			LOGGER.error(e);
+		} catch (ExecutionException e) {
+			LOGGER.error(e.getCause());
+		}catch(TimeoutException e){
+			LOGGER.error(e);
 		}
 
 		try {
@@ -559,11 +613,11 @@ public class DashboardAPI extends APIBase
 				updateDashboardAllHref(dbd, tenantIdParam);
 			}
 		} catch (ExecutionException e) {
-			LOGGER.error(e.getCause().getStackTrace());
+			LOGGER.error(e.getCause() == null? e : e.getCause());
 		}catch (InterruptedException e) {
-			LOGGER.error(e.getStackTrace());
+			LOGGER.error(e);
 		}catch(TimeoutException e){
-			LOGGER.error(e.getStackTrace());
+			LOGGER.error(e);
 		}
 
 		LOGGER.info("Retrieving combined data cost {}ms",(System.currentTimeMillis()-begin));

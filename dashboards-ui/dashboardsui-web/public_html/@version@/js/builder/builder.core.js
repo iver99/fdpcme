@@ -49,6 +49,7 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
     Builder.DEFAULT_HEIGHT = 161;
     Builder.EDITOR_POS_BASED_ON_ROW_COLUMN = "BASED_ON_ROW_COLUMN";
     Builder.EDITOR_POS_FIND_SUITABLE_SPACE = "FIND_SUITABLE_SPACE";
+    Builder.DEFAULT_AUTO_REFRESH_INTERVAL = 300000;
 
     window.Builder = Builder;
 

@@ -216,8 +216,9 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     require(['ojs/ojdiagram'], function () {
                         if (!ko.components.isRegistered('emctas-topology')) {
                             var versionedTopoViewModel = window.getSDKVersionFile ? 
-                                window.getSDKVersionFile('emsaasui/emcta/ta/js/sdk/topology/emcta-topology') : null;
-                            var topoViewModel = versionedTopoViewModel ? versionedTopoViewModel : 
+                                window.getSDKVersionFile('emsaasui/emcta/ta/js/sdk/topology/emcta-topology.js') : null;
+                            var topoViewModel = versionedTopoViewModel ? (versionedTopoViewModel.lastIndexOf('.js') ===  versionedTopoViewModel.length - 3 ? 
+                                                versionedTopoViewModel.substring(0, versionedTopoViewModel.length - 3) : versionedTopoViewModel) : 
                                     'emsaasui/emcta/ta/js/sdk/topology/emcta-topology';
                             var versionedTopoTemplate = window.getSDKVersionFile ? 
                                 window.getSDKVersionFile('emsaasui/emcta/ta/js/sdk/topology/emcta-topology.html') : null;
@@ -273,6 +274,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 }
             }
 
+
+            self.maxIconToRight = ko.observable("30px");
             self.topologySize = ko.observable();
             self.topologyHeight = ko.observable();
             self.topologySize.subscribe(function (topoHeight) {
@@ -281,6 +284,12 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     self.topologyCssHeight(self.topologyHeight());
                 } else {
                     self.topologyCssHeight(201);
+                }
+                
+                if($("#ude_topology_legend").length > 0) {
+                    self.maxIconToRight("180px");
+                }else {
+                    self.maxIconToRight("30px");
                 }
             });
 

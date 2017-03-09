@@ -89,6 +89,8 @@ public class TestDashBoard extends LoginAndLogout
 
 		webd.getLogger().info("Open the dashboard");
 		DashboardHomeUtil.selectDashboard(webd, dbName_favorite);
+		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
+
 		webd.getLogger().info("Verify the dashboard in builder page");
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_favorite, dbDesc, true), "Create dashboard failed!");
 
@@ -272,5 +274,4 @@ public class TestDashBoard extends LoginAndLogout
 	{
 		return String.valueOf(System.currentTimeMillis());
 	}
-
 }

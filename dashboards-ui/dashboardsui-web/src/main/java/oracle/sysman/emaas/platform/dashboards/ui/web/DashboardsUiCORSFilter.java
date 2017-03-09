@@ -50,6 +50,7 @@ public class DashboardsUiCORSFilter implements Filter
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
 			ServletException
 	{
+		long start = System.currentTimeMillis();
 		HttpServletResponse hRes = (HttpServletResponse) response;
 		HttpServletRequest hReq = (HttpServletRequest) request;
 
@@ -191,6 +192,8 @@ public class DashboardsUiCORSFilter implements Filter
 			LOGGER.error(t.getLocalizedMessage(), t);
 		}
 		chain.doFilter(request, response);
+		long end = System.currentTimeMillis();
+		LOGGER.info("Time for dashboard filters to handle request takes {}ms, and the URI is {}", (end - start), hReq.getRequestURI());
 	}
 
 	@Override

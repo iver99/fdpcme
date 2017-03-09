@@ -170,7 +170,6 @@ define(['knockout',
             };
 
             self.handleDeleteDashboardClicked = function() {
-               self.notifyBindingPopupDialog();
                var cxtUtil = new cxtModel();
 		 var _url="/sso.static/dashboards.service/";
                 if (dfu.isDevMode()){
@@ -433,6 +432,7 @@ define(['knockout',
                 $('#duplicateDsbDialog').ojDialog('open');
             };
             self.openDashboardDeleteConfirmDialog = function() {
+                self.notifyBindingPopupDialog();
                 self.isDeletingDbd(true);
                 $('#delete-dashboard').ojDialog( "open" );
                 $('#delete-dashboard').focus();
