@@ -136,8 +136,8 @@ require(['knockout',
                 oj.Logger.error(msg, true);
 
                 return false; 
-            }
-
+            };
+            
             if (!ko.components.isRegistered('df-oracle-branding-bar')) {
                 ko.components.register("df-oracle-branding-bar",{
                     viewModel:{require:'uifwk/js/widgets/brandingbar/js/brandingbar'},
@@ -267,11 +267,13 @@ require(['knockout',
                 self.openWidgetSelectorDialog = function() {
                     $('#'+widgetSelectorDialogId).ojDialog('open');
                 };
+                
+                self.brandingbarParams = new HeaderViewModel().brandingbarParams;
             }
 
             $(document).ready(function() {
-                ko.applyBindings(new HeaderViewModel(), $('#headerWrapper')[0]);
-                ko.applyBindings(new MainViewModel(), $('#main-container')[0]);
+//                ko.applyBindings(new HeaderViewModel(), $('#headerWrapper')[0]);
+                ko.applyBindings(new MainViewModel(), $('#globalBody')[0]);
                 $("#loading").hide();
                 $('#globalBody').show();
             });
