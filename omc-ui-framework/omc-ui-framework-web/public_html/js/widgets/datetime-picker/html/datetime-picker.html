@@ -9,7 +9,9 @@
                         <span class="badge-message-detail" data-bind="text: badgeStartTime()+' - '+badgeEndTime()"></span>
                     </div>
                 </div>
-                <span class="oj-select-chosen" style="font-size: 10px; color: #666666;line-height: 28px; padding-right: 24px;" data-bind="style: {'padding-left': badgeTimePeriod()?'36px':'10px'},html: dateTimeInfo"></span>
+                <span class="oj-select-chosen" style="font-size: 10px; color: #666666;line-height: 28px; padding-right: 24px;" 
+                      data-bind="style: {'padding-left': badgeTimePeriod()?'36px':'2px', 'max-width': badgeTimePeriod()?'285px':'240px'},html: dateTimeInfo,
+                                 event: {mouseover: labelMouseOverHandler, mouseout: labelMouseOutHandler}"></span>
                 <!-- ko if: tfInfoIndicatorVisible() === true -->
                 <span class="time-filter-indicator fa-icon-font" 
                   data-bind="event: {mouseover: showTimeFilterInfo, mouseout: hideTimeFilterInfo, 
@@ -20,12 +22,22 @@
                 <a class="oj-select-arrow oj-component-icon oj-clickable-icon-nocontext oj-select-open-icon"></a>
             </span>
            
-            <!-- popup for time filter info -->
+            <!--**********popup for time filter info start**********-->
             <!-- ko if: showTimeFilterInfoPopUp() === true -->
             <div style="display: none;" data-bind="ojComponent: {component: 'ojPopup'}, attr: {id: 'tfInfo_'+randomId}">
                 <span data-bind="html: timeFilterInfo"></span>
             </div>
             <!-- /ko -->
+            <!--**********popup for time filter info end**********-->
+            
+            <!--**********popup for overflowed label start**********-->
+            <!--ko if: showOverFlowedLabelPopUp() === true -->
+            <div style="display: none;" 
+                 data-bind="ojComponent: {component: 'ojPopup', chrome: 'none'}, attr: {id: 'overflowedLabelInfo_'+randomId}">
+                <span class="overflowedLabel" data-bind="text: overflowedLabelInfo"></span>                
+            </div>
+            <!-- /ko -->
+            <!--**********popup for overflowed label end**********-->
 
             <!-- ko if: showPanel() === true -->
             <div class="panel" style="display:inline-block; padding: 0px; margin: 0px;" data-bind="ojComponent: {component: 'ojPopup', chrome: 'none', beforeClose: setLastDatas}, click: function(data, event) {event.stopPropagation();return true;}, attr: {id: 'panel_'+randomId}">
