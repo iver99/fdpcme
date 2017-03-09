@@ -1,18 +1,25 @@
 package oracle.sysman.emaas.platform.emcpdf.cache.support.lru;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import mockit.Deencapsulation;
+import mockit.Expectations;
+import mockit.Mocked;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.CacheLoader;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICache;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.exception.ExecutionException;
+import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.CachedItem;
-import oracle.sysman.emaas.platform.emcpdf.cache.support.lru.LRUCacheManager;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.CacheConfig;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.DefaultKeyGenerator;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.io.IOException;
 
 /**
  * Created by chehao on 2016/12/23.
@@ -132,9 +139,15 @@ public class LRUCacheManagerTest {
     }
 
     @Test
-    public void testInit(){
-        ICacheManager cm=LRUCacheManager.getInstance();
-        cm.init();
+    public void testInit(@Mocked final ICacheManager cacheManager){
+    	List<CacheConfig> list = new ArrayList<CacheConfig>();
+    	CacheConfig config = new CacheConfig();
+    	config.setName("test");
+    	config.setExpiry(1L);
+    	config.setCapacity(1);
+    	list.add(config);
+    	Deencapsulation.setField(CacheConfig.class, "cacheConfigList", list);
+        CacheManagers.getInstance().build().init();
     }
     @Test
     public void testClose(){

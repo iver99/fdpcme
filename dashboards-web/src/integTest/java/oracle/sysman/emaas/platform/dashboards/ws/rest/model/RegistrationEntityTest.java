@@ -1,8 +1,10 @@
 package oracle.sysman.emaas.platform.dashboards.ws.rest.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import oracle.sysman.emaas.platform.dashboards.ws.rest.util.PrivilegeChecker;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.lru.LRUCacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.DefaultKeyGenerator;
@@ -163,10 +165,32 @@ public class RegistrationEntityTest
 	public void testGetSessionExpiryTime() 
 	{
 		Assert.assertNull(registrationEntity.getSessionExpiryTime());
-		registrationEntity = new RegistrationEntity("201217");
+		registrationEntity = new RegistrationEntity("201217", null);
 
 		Assert.assertEquals(registrationEntity.getSessionExpiryTime(), "201217");
 	}
+
+    @Test(groups = { "s2" })
+    public void testGetAdminLinkWithUserRoles(@Mocked final PrivilegeChecker anyPrivilegeChecker)
+    {
+        Assert.assertNull(Deencapsulation.getField(registrationEntity, "userRoles"));
+        final List<String> userRoles = Arrays.asList(PrivilegeChecker.ADMIN_ROLE_NAME_ITA, PrivilegeChecker.ADMIN_ROLE_NAME_APM);
+        new Expectations() {
+            {
+                PrivilegeChecker.getUserRoles(anyString, anyString);
+                result = userRoles;
+            }
+        };
+        registrationEntity.getAdminLinks();
+
+        new Expectations() {
+            {
+                PrivilegeChecker.getUserRoles(anyString, anyString);
+                times = 0;
+            }
+        };
+        registrationEntity.getAdminLinks();
+    }
 
 	@Test
 	public void testGetVisualAnalyzers() 

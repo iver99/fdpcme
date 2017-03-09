@@ -274,6 +274,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 }
             }
 
+
+            self.maxIconToRight = ko.observable("30px");
             self.topologySize = ko.observable();
             self.topologyHeight = ko.observable();
             self.topologySize.subscribe(function (topoHeight) {
@@ -282,6 +284,12 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     self.topologyCssHeight(self.topologyHeight());
                 } else {
                     self.topologyCssHeight(201);
+                }
+                
+                if($("#ude_topology_legend").length > 0) {
+                    self.maxIconToRight("180px");
+                }else {
+                    self.maxIconToRight("30px");
                 }
             });
 

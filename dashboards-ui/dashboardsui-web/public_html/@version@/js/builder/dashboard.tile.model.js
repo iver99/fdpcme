@@ -919,6 +919,31 @@ define(['knockout',
                 });
             }
             
+            function callbackForOmcCtxChange(ctxChangeEvent) {
+                //handle entity context changed by selecting GC entity selector
+                if(!ctxChangeEvent || !ctxChangeEvent.contextName) {
+                    return;
+                }
+                if(ctxChangeEvent.contextName !== "compositeMEID" && ctxChangeEvent.contextName !== "entityMEIDs" && ctxChangeEvent.contextName !== "composite" && ctxChangeEvent.contextName !== "entity") {
+                    console.log("***callbackForOmcCtxChange: contextName is " + ctxChangeEvent.contextName + ". It is not entity context change, so return***");
+                    return;
+                }
+                
+                Builder.requireTargetSelectorUtils(true, function(TargetSelectorUtils) {
+                    if (TargetSelectorUtils) {
+                        TargetSelectorUtils.registerComponents();
+                    }
+                    $.when(TargetSelectorUtils.getCriteriaFromOmcContext()).done(function (criteria) {
+                        var entityContext = {criteria: criteria};
+                        //save users' selection of entity context by GC entity selector
+                        self.returnFromPageTsel(entityContext);
+                    });
+                }); 
+                    
+            }
+            
+            ctxUtil.subscribeOMCContextChangeEvent(callbackForOmcCtxChange);
+            
             if(!self.timeSelectorModel) {
                 self.timeSelectorModel = new Builder.TimeSelectorModel();
                 var timeContext = Builder.loadTimeContext(self, self.dashboard.enableTimeRange(), self.isUnderSet);
