@@ -24,6 +24,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 
 /**
  * @author cawei
@@ -218,6 +219,34 @@ public class EntitySelectorUtil_1140 extends EntitySelectorUtil_Version implemen
 
 		return isReadOnly;
 	}
+        
+        @Override
+        public void verifyCompositePillContent(WebDriver driver, Logger logger, String text)
+        {
+                Assert.assertTrue(false, "This method is not available in the current version");
+                logger.info("Method not available in the current version");
+        }
+        
+        @Override
+        public void verifyEntityPillContent(WebDriver driver, Logger logger, String text)
+        {
+                Assert.assertTrue(false, "This method is not available in the current version");
+                logger.info("Method not available in the current version");
+        }
+        
+        @Override
+        public void verifyPillContains(WebDriver driver, Logger logger, String text)
+        {
+                Assert.assertTrue(false, "This method is not available in the current version");
+                logger.info("Method not available in the current version");
+        }
+        
+        @Override
+        public void verifyPillContentByIndex(WebDriver driver, Logger logger, int pillIndex, String text)
+        {
+                Assert.assertTrue(false, "This method is not available in the current version");
+                logger.info("Method not available in the current version");  
+        }
         
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IEntitySelectorUtil#selectFirstSuggestionByCategory(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
