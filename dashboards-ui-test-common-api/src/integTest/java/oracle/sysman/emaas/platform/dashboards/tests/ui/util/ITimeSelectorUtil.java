@@ -18,9 +18,9 @@ public interface ITimeSelectorUtil extends IUiTestCommonAPI
 	{
 		Last15Mins("Last 15 mins"), Last30Mins("Last 30 mins"), Last60Mins("Last hour"), Last2Hours("Last 2 hours"), Last4Hours(
 				"Last 4 hours"), Last6Hours("Last 6 hours"), Last1Day("Last day"), Last7Days("Last week"), Last14Days(
-						"Last 14 days"), Last30Days("Last 30 days"), Last90Days("Last 90 days"), Last1Year("Last year"), Latest("Latest"), Custom(
-								"Custom"), Last24Hours("Last 24 hours"), Last12Months("Last 12 months"), Last8Hours("Last 8 hours"), NewLast60Mins(
-				"Last hour"), NewLast7Days("Last week");
+				"Last 14 days"), Last30Days("Last 30 days"), Last90Days("Last 90 days"), Last1Year("Last year"), Latest("Latest"), Custom(
+				"Custom"), Last24Hours("Last 24 hours"), Last12Months("Last 12 months"), Last8Hours("Last 8 hours"), NewLast60Mins(
+										"Last 60 mins"), NewLast7Days("Last 7 days");
 		private final String timerange;
 
 		private TimeRange(String timerange)
