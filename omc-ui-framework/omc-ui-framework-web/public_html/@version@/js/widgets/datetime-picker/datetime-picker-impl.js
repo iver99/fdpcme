@@ -469,9 +469,9 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         customClick(1);
                     }else if(value === "latestOnCustom"){
                         var event = {};
-                        event.extended = "Latest";
+                        event.extended = self.timePeriodLatest;
                         event.target = {};
-                        event.target.innerHTML = "Latest";
+                        event.target.innerHTML = self.timePeriodLatest;
                         self.chooseTimePeriod(undefined, event);
                         self.setTimePeriodChosen("Custom");
                     }else {
@@ -1427,6 +1427,12 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                 dateTimeInfo = "<span style='font-weight:bold; padding-right: 5px; display:" + self.hideRangeLabel + ";' " + "class='show-individual-time-span1'>" + self.getFlexTimePeriod(self.flexRelTimeVal(), self.flexRelTimeOpt()[0]) + ": </span>";
                                 dateTimeInfo += start + "<span style='font-weight:bold; " + hyphenDisplay + "' "+ "class='show-individual-time-span2'>" +" - </span>" + end;
                             }
+                        }else if(self.lrCtrlVal() === "latestOnCustom") {
+                            if(self.getParam(self.timeDisplay) === "short") {
+                                dateTimeInfo = "<span style='font-weight: bold; padding-right: 5px; display: inline-block;' class='show-individual-time-span1-short'>" + self.timePeriodLatest + "</span>";
+                            }else{
+                                dateTimeInfo = "<span style='font-weight: bold; padding-right: 5px; display: inline-block;' class='show-individual-time-span1-latest'>" + self.timePeriodLatest + "</span>";
+                            }
                         }else {
                         
                             if(self.getParam(self.timeDisplay) === "short") {
@@ -2358,7 +2364,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     if(self.lastTimePeriod() !== self.timePeriodCustom) {
                         self.showCalendar(false);
                         self.beyondWindowLimitError(false);
-                        if (self.showLatestOnCustomPanel() && self.lastTimePeriod()==="Latest") {
+                        if (self.showLatestOnCustomPanel() && self.lastTimePeriod()===self.timePeriodLatest) {
                             self.lrCtrlVal("latestOnCustom");
                         } else {
                             self.setTimePeriodChosen(self.lastTimePeriod());
@@ -2556,7 +2562,9 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             self.flexRelTimeVal(parsedTp.duration);
                             self.flexRelTimeOpt([parsedTp.unit]);
                         }else {
-                            if (chosenPeriod !== "Latest") {
+                            if(chosenPeriod === self.timePeriodLatest && self.showLatestOnCustomPanel()) {
+                                self.lrCtrlVal("latestOnCustom");
+                            }else{
                                 self.lrCtrlVal("timeLevelCtrl");
                             }
                         }
@@ -2576,13 +2584,13 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         self.timePeriod(event.target.innerHTML);
                         self.hoverOutDrawer(data, event); //remove hover style when ele is clicked for firefox                  
                         
-                        if (chosenPeriod !== "Latest" || !self.showLatestOnCustomPanel()) {
+                        if (chosenPeriod !== self.timePeriodLatest || !self.showLatestOnCustomPanel()) {
                             self.setTimePeriodChosen(self.timePeriod());
                             setTimeout(function () {
                                 self.applyClick();
                             }, 0);
                         }else{
-                            self.setTimePeriodChosen("Custom"); 
+                            customClick(0);
                         }
                     }else {
                         self.showRightPanel(true);
@@ -2699,6 +2707,8 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
     //                                    timeFilter: self.timeFilter(), flexRelTimeVal: flexRelTimeVal, flexRelTimeOpt: flexRelTimeOpt});
                         if(timePeriod === ctxUtil.OMCTimeConstants.QUICK_PICK.CUSTOM && flexRelTimeVal && flexRelTimeOpt) {
                             recentTimePeriodId =  flexRelTimePeriodId;
+                        }else if(self.lrCtrlVal() === "latestOnCustom") {
+                            recentTimePeriodId = ctxUtil.OMCTimeConstants.QUICK_PICK.LATEST;
                         }else {
                             recentTimePeriodId = timePeriod;
                         }
@@ -2709,6 +2719,8 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         if(timePeriod === ctxUtil.OMCTimeConstants.QUICK_PICK.CUSTOM) {
                             if(flexRelTimeVal && flexRelTimeOpt) {
                                 ctxUtil.setTimePeriod(flexRelTimePeriodId, eventSourceTimeSelector);
+                            }else if(self.lrCtrlVal() === "latestOnCustom") {
+                                ctxUtil.setTimePeriod(recentTimePeriodId, eventSourceTimeSelector);
                             }else {
                                 ctxUtil.setStartAndEndTime(newDateWithMilliseconds(start).getTime(), newDateWithMilliseconds(end).getTime(),eventSourceTimeSelector);
                             }
