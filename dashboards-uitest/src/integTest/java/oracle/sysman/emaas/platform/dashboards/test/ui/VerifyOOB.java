@@ -30,7 +30,7 @@ public class VerifyOOB extends LoginAndLogout
 		DashboardHomeUtil.resetFilterOptions(webd);
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyAPM_GridView()
 	{
 		//initTest
@@ -48,7 +48,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyAPM();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyAPM_ListView()
 	{
 		//initTest
@@ -66,7 +66,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyAPM();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyAPM_withFilter_GridView()
 	{
 		//initTest
@@ -89,7 +89,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyAPM();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyAPM_withFilter_ListView()
 	{
 		//initTest
@@ -112,7 +112,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyAPM();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyApplicationPerfAnalytics_GridView()
 	{
 		//initTest
@@ -131,7 +131,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyApplicationPerfAnalytics();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyApplicationPerfAnalytics_ListView()
 	{
 		//initTest
@@ -150,7 +150,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyApplicationPerfAnalytics();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyApplicationPerfAnalytics_withFilter_GridView()
 	{
 		//initTest
@@ -173,7 +173,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyApplicationPerfAnalytics();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyApplicationPerfAnalytics_withFilter_ListView()
 	{
 		//initTest
@@ -196,7 +196,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyApplicationPerfAnalytics();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyAvailabilityAnalytics_GridView()
 	{
 		//initTest
@@ -215,7 +215,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyAvailabilityAnalytics();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyAvailabilityAnalytics_ListView()
 	{
 		//initTest
@@ -234,7 +234,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyAvailabilityAnalytics();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyAvailabilityAnalytics_WithFilter_GridView()
 	{
 		//initTest
@@ -257,7 +257,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyAvailabilityAnalytics();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyAvailabilityAnalytics_WithFilter_ListView()
 	{
 		//initTest
@@ -280,7 +280,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyAvailabilityAnalytics();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyDatabaseOperations_GridView()
 	{
 		//initTest
@@ -302,7 +302,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyDatabaseOperations_Details();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyDatabaseOperations_ListView()
 	{
 		//initTest
@@ -323,7 +323,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyDatabaseOperations();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyDatabaseOperations_WithFilter_GridView()
 	{
 		//initTest
@@ -348,7 +348,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyDatabaseOperations();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyDatabaseOperations_WithFilter_ListView()
 	{
 		//initTest
@@ -373,7 +373,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyDatabaseOperations();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyEnterpriseHealth_GridView()
 	{
 		//initTest
@@ -395,7 +395,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyEnterpriseHealth_Details();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyEnterpriseHealth_ListView()
 	{
 		//initTest
@@ -416,7 +416,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyEnterpriseHealth();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyEnterpriseHealth_WithFilter_GridView()
 	{
 		//initTest
@@ -441,7 +441,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyEnterpriseHealth();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyEnterpriseHealth_WithFilter_ListView()
 	{
 		//initTest
@@ -466,7 +466,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyEnterpriseHealth();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyExadataHealth_GridView()
 	{
 		//initTest
@@ -488,7 +488,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyExadataHealth_Details();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyExadataHealth_ListView()
 	{
 		//initTest
@@ -509,7 +509,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyExadataHealth();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyExadataHealth_WithFilter_GridView()
 	{
 		//initTest
@@ -534,7 +534,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyExadataHealth();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyExadataHealth_WithFilter_ListView()
 	{
 		//initTest
@@ -559,7 +559,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyExadataHealth();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyHostOperations_GridView()
 	{
 		//initTest
@@ -581,7 +581,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyHostOperations_Details();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyHostOperations_ListView()
 	{
 		//initTest
@@ -602,7 +602,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyHostOperations();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyHostOperations_WithFilter_GridView()
 	{
 		//initTest
@@ -627,7 +627,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyHostOperations();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyHostOperations_WithFilter_ListView()
 	{
 		//initTest
@@ -652,7 +652,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyHostOperations();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyMiddlewareOperations_GridView()
 	{
 		//initTest
@@ -674,7 +674,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyMiddlewareOperations_Details();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyMiddlewareOperations_ListView()
 	{
 		//initTest
@@ -695,7 +695,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyMiddlewareOperations();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyMiddlewareOperations_WithFilter_GridView()
 	{
 		//initTest
@@ -720,7 +720,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyMiddlewareOperations();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyMiddlewareOperations_WithFilter_ListView()
 	{
 		//initTest
@@ -745,520 +745,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyMiddlewareOperations();
 	}
 
-	@Test
-	public void verifyPerfAnalyticsApplication_GridView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyPerfAnalyticsApplication_GridView");
-
-		//click on Grid View
-		webd.getLogger().info("Click on Grid View icon");
-		DashboardHomeUtil.gridView(webd);
-
-		//open Performance Analytics: Middleware
-		webd.getLogger().info("Open the OOB dashboard---Performance Analytics: Middleware");
-		DashboardHomeUtil.selectDashboard(webd, "Performance Analytics Application Server");
-
-		//verify Perf Analytics Application
-		verifyPerfAnalyticsApplication();
-	}
-
-	@Test
-	public void verifyPerfAnalyticsApplication_ListView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyPerfAnalyticsApplication_ListView");
-
-		//click on List View
-		webd.getLogger().info("Click on List View icon");
-		DashboardHomeUtil.listView(webd);
-
-		//open Performance Analytics: Middleware
-		webd.getLogger().info("Open the OOB dashboard---Performance Analytics: Middleware");
-		DashboardHomeUtil.selectDashboard(webd, "Performance Analytics Application Server");
-
-		//verify Perf Analytics Application
-		verifyPerfAnalyticsApplication();
-	}
-
-	@Test
-	public void verifyPerfAnalyticsApplication_WithFilter_GridView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyPerfAnalyticsApplication_WithFilter_GridView");
-
-		//click Filter-Application PerfAnalytics
-		webd.getLogger().info("Click Cloud Services - IT Analytics");
-		DashboardHomeUtil.filterOptions(webd, "ita");
-
-		//click on Grid View
-		webd.getLogger().info("Click on Grid View icon");
-		DashboardHomeUtil.gridView(webd);
-
-		//open Performance Analytics: Middleware
-		webd.getLogger().info("Open the OOB dashboard---Performance Analytics: Middleware");
-		DashboardHomeUtil.selectDashboard(webd, "Performance Analytics Application Server");
-
-		//verify Perf Analytics Application
-		verifyPerfAnalyticsApplication();
-	}
-
-	@Test
-	public void verifyPerfAnalyticsApplication_WithFilter_ListView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyPerfAnalyticsApplication_WithFilter_ListView");
-
-		//click Filter-Application PerfAnalytics
-		webd.getLogger().info("Click Cloud Services - IT Analytics");
-		DashboardHomeUtil.filterOptions(webd, "ita");
-
-		//click on List View
-		webd.getLogger().info("Click on List View icon");
-		DashboardHomeUtil.listView(webd);
-
-		//open Performance Analytics: Middleware
-		webd.getLogger().info("Open the OOB dashboard---Performance Analytics: Middleware");
-		DashboardHomeUtil.selectDashboard(webd, "Performance Analytics Application Server");
-
-		//verify Perf Analytics Application
-		verifyPerfAnalyticsApplication();
-	}
-
-	@Test
-	public void verifyPerfAnalyticsDatabase_GridView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyPerfAnalyticsDatabase_GridView");
-
-		//click on Grid View
-		webd.getLogger().info("Click on Grid View icon");
-		DashboardHomeUtil.gridView(webd);
-
-		//open Performance Analytics: Database
-		webd.getLogger().info("Open the OOB dashboard---Performance Analytics: Database");
-		DashboardHomeUtil.selectDashboard(webd, "Performance Analytics: Database");
-
-		//verify Perf Analytics Database
-		verifyPerfAnalyticsDatabase();
-	}
-
-	@Test
-	public void verifyPerfAnalyticsDatabase_ListView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyPerfAnalyticsDatabase_ListView");
-
-		//click on List View
-		webd.getLogger().info("Click on List View icon");
-		DashboardHomeUtil.listView(webd);
-
-		//open Performance Analytics: Database
-		webd.getLogger().info("Open the OOB dashboard---Performance Analytics: Database");
-		DashboardHomeUtil.selectDashboard(webd, "Performance Analytics: Database");
-
-		//verify Perf Analytics Database
-		verifyPerfAnalyticsDatabase();
-	}
-
-	@Test
-	public void verifyPerfAnalyticsDatabase_WithFilter_GridView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyPerfAnalyticsDatabase_WithFilter_GridView");
-
-		//click Filter-Application PerfAnalytics
-		webd.getLogger().info("Click Cloud Services - IT Analytics");
-		DashboardHomeUtil.filterOptions(webd, "ita");
-
-		//click on Grid View
-		webd.getLogger().info("Click on Grid View icon");
-		DashboardHomeUtil.gridView(webd);
-
-		//open Performance Analytics: Database
-		webd.getLogger().info("Open the OOB dashboard---Performance Analytics: Database");
-		DashboardHomeUtil.selectDashboard(webd, "Performance Analytics: Database");
-
-		//verify Perf Analytics Database
-		verifyPerfAnalyticsDatabase();
-	}
-
-	@Test
-	public void verifyPerfAnalyticsDatabase_WithFilter_ListView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyPerfAnalyticsDatabase_WithFilter_ListView");
-
-		//click Filter-Application PerfAnalytics
-		webd.getLogger().info("Click Cloud Services - IT Analytics");
-		DashboardHomeUtil.filterOptions(webd, "ita");
-
-		//click on List View
-		webd.getLogger().info("Click on List View icon");
-		DashboardHomeUtil.listView(webd);
-
-		//open Performance Analytics: Database
-		webd.getLogger().info("Open the OOB dashboard---Performance Analytics: Database");
-		DashboardHomeUtil.selectDashboard(webd, "Performance Analytics: Database");
-
-		//verify Perf Analytics Database
-		verifyPerfAnalyticsDatabase();
-	}
-
-	@Test
-	public void verifyResourceAnalyticsDatabase_GridView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyResourceAnalyticsDatabase_GridView");
-
-		//click on Grid View
-		webd.getLogger().info("Click on Grid View icon");
-		DashboardHomeUtil.gridView(webd);
-
-		//open Resource Analytics: Database
-		webd.getLogger().info("Open the OOB dashboard---Resource Analytics: Database");
-		DashboardHomeUtil.selectDashboard(webd, "Resource Analytics: Database");
-
-		//verify Resource Analytics Database
-		verifyResourceAnalyticsDatabase();
-	}
-
-	@Test
-	public void verifyResourceAnalyticsDatabase_ListView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyResourceAnalyticsDatabase_ListView");
-
-		//click on List View
-		webd.getLogger().info("Click on List View icon");
-		DashboardHomeUtil.listView(webd);
-
-		//open Resource Analytics: Database
-		webd.getLogger().info("Open the OOB dashboard---Resource Analytics: Database");
-		DashboardHomeUtil.selectDashboard(webd, "Resource Analytics: Database");
-
-		//verify Resource Analytics Database
-		verifyResourceAnalyticsDatabase();
-	}
-
-	@Test
-	public void verifyResourceAnalyticsDatabase_WithFilter_GridView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyResourceAnalyticsDatabase_WithFilter_GridView");
-
-		//click Filter-Application PerfAnalytics
-		webd.getLogger().info("Click Cloud Services - IT Analytics");
-		DashboardHomeUtil.filterOptions(webd, "ita");
-
-		//click on Grid View
-		webd.getLogger().info("Click on Grid View icon");
-		DashboardHomeUtil.gridView(webd);
-
-		//open Resource Analytics: Database
-		webd.getLogger().info("Open the OOB dashboard---Resource Analytics: Database");
-		DashboardHomeUtil.selectDashboard(webd, "Resource Analytics: Database");
-
-		//verify Resource Analytics Database
-		verifyResourceAnalyticsDatabase();
-	}
-
-	@Test
-	public void verifyResourceAnalyticsDatabase_WithFilter_ListView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyResourceAnalyticsDatabase_WithFilter_ListView");
-
-		//click Filter-Application PerfAnalytics
-		webd.getLogger().info("Click Cloud Services - IT Analytics");
-		DashboardHomeUtil.filterOptions(webd, "ita");
-
-		//click on List View
-		webd.getLogger().info("Click on List View icon");
-		DashboardHomeUtil.listView(webd);
-
-		//open Resource Analytics: Database
-		webd.getLogger().info("Open the OOB dashboard---Resource Analytics: Database");
-		DashboardHomeUtil.selectDashboard(webd, "Resource Analytics: Database");
-
-		//verify Resource Analytics Database
-		verifyResourceAnalyticsDatabase();
-	}
-
-	@Test
-	public void verifyResourceAnalyticsHost_GridView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyResourceAnalyticsHost_GridView");
-
-		//click on Grid View
-		webd.getLogger().info("Click on Grid View icon");
-		DashboardHomeUtil.gridView(webd);
-
-		//open Resource Analytics: Host
-		webd.getLogger().info("Open the OOB dashboard---Resource Analytics: Host");
-		DashboardHomeUtil.selectDashboard(webd, "Resource Analytics: Host");
-
-		//verify esource Analytics Host
-		verifyResourceAnalyticsHost();
-	}
-
-	@Test
-	public void verifyResourceAnalyticsHost_ListView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyResourceAnalyticsHost_ListView");
-
-		//click on List View
-		webd.getLogger().info("Click on List View icon");
-		DashboardHomeUtil.listView(webd);
-
-		//open Resource Analytics: Host
-		webd.getLogger().info("Open the OOB dashboard---Resource Analytics: Host");
-		DashboardHomeUtil.selectDashboard(webd, "Resource Analytics: Host");
-
-		//verify esource Analytics Host
-		verifyResourceAnalyticsHost();
-	}
-
-	@Test
-	public void verifyResourceAnalyticsHost_WithFilter_GridView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyResourceAnalyticsHost_WithFilter_GridView");
-
-		//click Filter-Application PerfAnalytics
-		webd.getLogger().info("Click Cloud Services - IT Analytics");
-		DashboardHomeUtil.filterOptions(webd, "ita");
-
-		//click on Grid View
-		webd.getLogger().info("Click on Grid View icon");
-		DashboardHomeUtil.gridView(webd);
-
-		//open Resource Analytics: Host
-		webd.getLogger().info("Open the OOB dashboard---Resource Analytics: Host");
-		DashboardHomeUtil.selectDashboard(webd, "Resource Analytics: Host");
-
-		//verify esource Analytics Host
-		verifyResourceAnalyticsHost();
-	}
-
-	@Test
-	public void verifyResourceAnalyticsHost_WithFilter_ListView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyResourceAnalyticsHost_WithFilter_ListView");
-
-		//click Filter-Application PerfAnalytics
-		webd.getLogger().info("Click Cloud Services - IT Analytics");
-		DashboardHomeUtil.filterOptions(webd, "ita");
-
-		//click on List View
-		webd.getLogger().info("Click on List View icon");
-		DashboardHomeUtil.listView(webd);
-
-		//open Resource Analytics: Host
-		webd.getLogger().info("Open the OOB dashboard---Resource Analytics: Host");
-		DashboardHomeUtil.selectDashboard(webd, "Resource Analytics: Host");
-
-		//verify esource Analytics Host
-		verifyResourceAnalyticsHost();
-	}
-
-	@Test
-	public void verifyResourceAnalyticsMiddleware_GridView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyResourceAnalyticsMiddleware_GridView");
-
-		//click on Grid View
-		webd.getLogger().info("Click on Grid View icon");
-		DashboardHomeUtil.gridView(webd);
-
-		//open Resource Analytics: Middleware
-		webd.getLogger().info("Open the OOB dashboard---Resource Analytics: Middleware");
-		DashboardHomeUtil.selectDashboard(webd, "Resource Analytics: Middleware");
-
-		//verify Resource Analytics Middleware
-		verifyResourceAnalyticsMiddleware();
-	}
-
-	@Test
-	public void verifyResourceAnalyticsMiddleware_ListView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyResourceAnalyticsMiddleware_ListView");
-
-		//click on List View
-		webd.getLogger().info("Click on List View icon");
-		DashboardHomeUtil.listView(webd);
-
-		//open Resource Analytics: Middleware
-		webd.getLogger().info("Open the OOB dashboard---Resource Analytics: Middleware");
-		DashboardHomeUtil.selectDashboard(webd, "Resource Analytics: Middleware");
-
-		//verify Resource Analytics Middleware
-		verifyResourceAnalyticsMiddleware();
-	}
-
-	@Test
-	public void verifyResourceAnalyticsMiddleware_WithFilter_GridView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyResourceAnalyticsMiddleware_WithFilter_GridView");
-
-		//click Filter-Application PerfAnalytics
-		webd.getLogger().info("Click Cloud Services - IT Analytics");
-		DashboardHomeUtil.filterOptions(webd, "ita");
-
-		//click on Grid View
-		webd.getLogger().info("Click on Grid View icon");
-		DashboardHomeUtil.gridView(webd);
-
-		//open Resource Analytics: Middleware
-		webd.getLogger().info("Open the OOB dashboard---Resource Analytics: Middleware");
-		DashboardHomeUtil.selectDashboard(webd, "Resource Analytics: Middleware");
-
-		//verify Resource Analytics Middleware
-		verifyResourceAnalyticsMiddleware();
-	}
-
-	@Test
-	public void verifyResourceAnalyticsMiddleware_WithFilter_ListView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verifyResourceAnalyticsMiddleware_WithFilter_ListView");
-
-		//click Filter-Application PerfAnalytics
-		webd.getLogger().info("Click Cloud Services - IT Analytics");
-		DashboardHomeUtil.filterOptions(webd, "ita");
-
-		//click on List View
-		webd.getLogger().info("Click on List View icon");
-		DashboardHomeUtil.listView(webd);
-
-		//open Resource Analytics: Middleware
-		webd.getLogger().info("Open the OOB dashboard---Resource Analytics: Middleware");
-		DashboardHomeUtil.selectDashboard(webd, "Resource Analytics: Middleware");
-
-		//verify Resource Analytics Middleware
-		verifyResourceAnalyticsMiddleware();
-	}
-
-	@Test
-	public void verifyUIGallery_GridView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyUIGallery_GridView");
-
-		//click on Grid View
-		webd.getLogger().info("Click on Grid View icon");
-		DashboardHomeUtil.gridView(webd);
-
-		//Open the OOB dashboard---UI Gallery
-		webd.getLogger().info("Open the OOB dashboard---UI Gallery");
-		DashboardHomeUtil.selectDashboard(webd, "UI Gallery");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
-		//verify UI Gallery
-		verifyUIGallery();
-		verifyUIGallery_Details();
-	}
-
-	@Test
-	public void verifyUIGallery_ListView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyUIGallery_ListView");
-
-		//click on List View
-		webd.getLogger().info("Click on List View icon");
-		DashboardHomeUtil.listView(webd);
-
-		//Open the OOB dashboard---UI Gallery
-		webd.getLogger().info("Open the OOB dashboard---UI Gallery");
-		DashboardHomeUtil.selectDashboard(webd, "UI Gallery");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
-		//verify UI Gallery
-		verifyUIGallery();
-	}
-
-	@Test
-	public void verifyUIGallery_WithFilter_GridView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyUIGallery_WithFilter_GridView");
-
-		//click Filter-Application PerfAnalytics
-		webd.getLogger().info("Click Cloud Services - IT Analytics");
-		DashboardHomeUtil.filterOptions(webd, "ita");
-
-		//click on Grid View
-		webd.getLogger().info("Click on Grid View icon");
-		DashboardHomeUtil.gridView(webd);
-
-		//Open the OOB dashboard---UI Gallery
-		webd.getLogger().info("Open the OOB dashboard---UI Gallery");
-		DashboardHomeUtil.selectDashboard(webd, "UI Gallery");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
-		//verify UI Gallery
-		verifyUIGallery();
-	}	
-
-	@Test
-	public void verifyUIGallery_WithFilter_ListView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyUIGallery_WithFilter_ListView");
-
-		//click Filter-Application PerfAnalytics
-		webd.getLogger().info("Click Cloud Services - IT Analytics");
-		DashboardHomeUtil.filterOptions(webd, "ita");
-
-		//click on List View
-		webd.getLogger().info("Click on List View icon");
-		DashboardHomeUtil.listView(webd);
-
-		//Open the OOB dashboard---UI Gallery
-		webd.getLogger().info("Open the OOB dashboard---UI Gallery");
-		DashboardHomeUtil.selectDashboard(webd, "UI Gallery");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
-		//verify UI Gallery
-		verifyUIGallery();
-	}
-	
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyOrchestration_GridView()
 	{
 		//initTest
@@ -1278,7 +765,8 @@ public class VerifyOOB extends LoginAndLogout
 		//verify Orchestration Workflows
 		verifyOrchestration();
 	}
-	@Test
+
+	@Test(alwaysRun = true)
 	public void verifyOrchestration_ListView()
 	{
 		//initTest
@@ -1298,7 +786,8 @@ public class VerifyOOB extends LoginAndLogout
 		//verify Orchestration Workflows
 		verifyOrchestration();
 	}
-	@Test
+
+	@Test(alwaysRun = true)
 	public void verifyOrchestration_WithFilter_GridView()
 	{
 		//initTest
@@ -1322,7 +811,8 @@ public class VerifyOOB extends LoginAndLogout
 		//verify Orchestration Workflows
 		verifyOrchestration();
 	}
-	@Test
+
+	@Test(alwaysRun = true)
 	public void verifyOrchestration_WithFilter_ListView()
 	{
 		//initTest
@@ -1346,24 +836,520 @@ public class VerifyOOB extends LoginAndLogout
 		//verify Orchestration Workflows
 		verifyOrchestration();
 	}
-	private void verifyOrchestration()
+
+	@Test(alwaysRun = true)
+	public void verifyPerfAnalyticsApplication_GridView()
 	{
-		webd.getLogger().info("Start to verify the OOB Dashboard");
-		//verify the current url
-		webd.getLogger().info("Verify the current url");
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in verifyPerfAnalyticsApplication_GridView");
 
-		//verify the url of opened page
-		DashBoardUtils.verifyURL_WithPara(webd, "emcpdfui/builder.html?dashboardId=37");
-	
-		DashboardBuilderUtil.verifyWidget(webd, "Summary");
-		DashboardBuilderUtil.verifyWidget(webd, "Workflow Submission Alerts");
-		DashboardBuilderUtil.verifyWidget(webd, "Submissions by User");
-		DashboardBuilderUtil.verifyWidget(webd, "Submissions by Type");
-		DashboardBuilderUtil.verifyWidget(webd, "Histogram of Submissions by Average Failed Steps");
-		DashboardBuilderUtil.verifyWidget(webd, "Workflow Submission Details");
+		//click on Grid View
+		webd.getLogger().info("Click on Grid View icon");
+		DashboardHomeUtil.gridView(webd);
 
-		webd.getLogger().info("Verification end...");
+		//open Performance Analytics: Middleware
+		webd.getLogger().info("Open the OOB dashboard---Performance Analytics: Middleware");
+		DashboardHomeUtil.selectDashboard(webd, "Performance Analytics Application Server");
+
+		//verify Perf Analytics Application
+		verifyPerfAnalyticsApplication();
 	}
+
+	@Test(alwaysRun = true)
+	public void verifyPerfAnalyticsApplication_ListView()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in verifyPerfAnalyticsApplication_ListView");
+
+		//click on List View
+		webd.getLogger().info("Click on List View icon");
+		DashboardHomeUtil.listView(webd);
+
+		//open Performance Analytics: Middleware
+		webd.getLogger().info("Open the OOB dashboard---Performance Analytics: Middleware");
+		DashboardHomeUtil.selectDashboard(webd, "Performance Analytics Application Server");
+
+		//verify Perf Analytics Application
+		verifyPerfAnalyticsApplication();
+	}
+
+	@Test(alwaysRun = true)
+	public void verifyPerfAnalyticsApplication_WithFilter_GridView()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in verifyPerfAnalyticsApplication_WithFilter_GridView");
+
+		//click Filter-Application PerfAnalytics
+		webd.getLogger().info("Click Cloud Services - IT Analytics");
+		DashboardHomeUtil.filterOptions(webd, "ita");
+
+		//click on Grid View
+		webd.getLogger().info("Click on Grid View icon");
+		DashboardHomeUtil.gridView(webd);
+
+		//open Performance Analytics: Middleware
+		webd.getLogger().info("Open the OOB dashboard---Performance Analytics: Middleware");
+		DashboardHomeUtil.selectDashboard(webd, "Performance Analytics Application Server");
+
+		//verify Perf Analytics Application
+		verifyPerfAnalyticsApplication();
+	}
+
+	@Test(alwaysRun = true)
+	public void verifyPerfAnalyticsApplication_WithFilter_ListView()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in verifyPerfAnalyticsApplication_WithFilter_ListView");
+
+		//click Filter-Application PerfAnalytics
+		webd.getLogger().info("Click Cloud Services - IT Analytics");
+		DashboardHomeUtil.filterOptions(webd, "ita");
+
+		//click on List View
+		webd.getLogger().info("Click on List View icon");
+		DashboardHomeUtil.listView(webd);
+
+		//open Performance Analytics: Middleware
+		webd.getLogger().info("Open the OOB dashboard---Performance Analytics: Middleware");
+		DashboardHomeUtil.selectDashboard(webd, "Performance Analytics Application Server");
+
+		//verify Perf Analytics Application
+		verifyPerfAnalyticsApplication();
+	}
+
+	@Test(alwaysRun = true)
+	public void verifyPerfAnalyticsDatabase_GridView()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in verifyPerfAnalyticsDatabase_GridView");
+
+		//click on Grid View
+		webd.getLogger().info("Click on Grid View icon");
+		DashboardHomeUtil.gridView(webd);
+
+		//open Performance Analytics: Database
+		webd.getLogger().info("Open the OOB dashboard---Performance Analytics: Database");
+		DashboardHomeUtil.selectDashboard(webd, "Performance Analytics: Database");
+
+		//verify Perf Analytics Database
+		verifyPerfAnalyticsDatabase();
+	}
+
+	@Test(alwaysRun = true)
+	public void verifyPerfAnalyticsDatabase_ListView()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in verifyPerfAnalyticsDatabase_ListView");
+
+		//click on List View
+		webd.getLogger().info("Click on List View icon");
+		DashboardHomeUtil.listView(webd);
+
+		//open Performance Analytics: Database
+		webd.getLogger().info("Open the OOB dashboard---Performance Analytics: Database");
+		DashboardHomeUtil.selectDashboard(webd, "Performance Analytics: Database");
+
+		//verify Perf Analytics Database
+		verifyPerfAnalyticsDatabase();
+	}
+
+	@Test(alwaysRun = true)
+	public void verifyPerfAnalyticsDatabase_WithFilter_GridView()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in verifyPerfAnalyticsDatabase_WithFilter_GridView");
+
+		//click Filter-Application PerfAnalytics
+		webd.getLogger().info("Click Cloud Services - IT Analytics");
+		DashboardHomeUtil.filterOptions(webd, "ita");
+
+		//click on Grid View
+		webd.getLogger().info("Click on Grid View icon");
+		DashboardHomeUtil.gridView(webd);
+
+		//open Performance Analytics: Database
+		webd.getLogger().info("Open the OOB dashboard---Performance Analytics: Database");
+		DashboardHomeUtil.selectDashboard(webd, "Performance Analytics: Database");
+
+		//verify Perf Analytics Database
+		verifyPerfAnalyticsDatabase();
+	}
+
+	@Test(alwaysRun = true)
+	public void verifyPerfAnalyticsDatabase_WithFilter_ListView()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in verifyPerfAnalyticsDatabase_WithFilter_ListView");
+
+		//click Filter-Application PerfAnalytics
+		webd.getLogger().info("Click Cloud Services - IT Analytics");
+		DashboardHomeUtil.filterOptions(webd, "ita");
+
+		//click on List View
+		webd.getLogger().info("Click on List View icon");
+		DashboardHomeUtil.listView(webd);
+
+		//open Performance Analytics: Database
+		webd.getLogger().info("Open the OOB dashboard---Performance Analytics: Database");
+		DashboardHomeUtil.selectDashboard(webd, "Performance Analytics: Database");
+
+		//verify Perf Analytics Database
+		verifyPerfAnalyticsDatabase();
+	}
+
+	@Test(alwaysRun = true)
+	public void verifyResourceAnalyticsDatabase_GridView()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in verifyResourceAnalyticsDatabase_GridView");
+
+		//click on Grid View
+		webd.getLogger().info("Click on Grid View icon");
+		DashboardHomeUtil.gridView(webd);
+
+		//open Resource Analytics: Database
+		webd.getLogger().info("Open the OOB dashboard---Resource Analytics: Database");
+		DashboardHomeUtil.selectDashboard(webd, "Resource Analytics: Database");
+
+		//verify Resource Analytics Database
+		verifyResourceAnalyticsDatabase();
+	}
+
+	@Test(alwaysRun = true)
+	public void verifyResourceAnalyticsDatabase_ListView()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in verifyResourceAnalyticsDatabase_ListView");
+
+		//click on List View
+		webd.getLogger().info("Click on List View icon");
+		DashboardHomeUtil.listView(webd);
+
+		//open Resource Analytics: Database
+		webd.getLogger().info("Open the OOB dashboard---Resource Analytics: Database");
+		DashboardHomeUtil.selectDashboard(webd, "Resource Analytics: Database");
+
+		//verify Resource Analytics Database
+		verifyResourceAnalyticsDatabase();
+	}
+
+	@Test(alwaysRun = true)
+	public void verifyResourceAnalyticsDatabase_WithFilter_GridView()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in verifyResourceAnalyticsDatabase_WithFilter_GridView");
+
+		//click Filter-Application PerfAnalytics
+		webd.getLogger().info("Click Cloud Services - IT Analytics");
+		DashboardHomeUtil.filterOptions(webd, "ita");
+
+		//click on Grid View
+		webd.getLogger().info("Click on Grid View icon");
+		DashboardHomeUtil.gridView(webd);
+
+		//open Resource Analytics: Database
+		webd.getLogger().info("Open the OOB dashboard---Resource Analytics: Database");
+		DashboardHomeUtil.selectDashboard(webd, "Resource Analytics: Database");
+
+		//verify Resource Analytics Database
+		verifyResourceAnalyticsDatabase();
+	}
+
+	@Test(alwaysRun = true)
+	public void verifyResourceAnalyticsDatabase_WithFilter_ListView()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in verifyResourceAnalyticsDatabase_WithFilter_ListView");
+
+		//click Filter-Application PerfAnalytics
+		webd.getLogger().info("Click Cloud Services - IT Analytics");
+		DashboardHomeUtil.filterOptions(webd, "ita");
+
+		//click on List View
+		webd.getLogger().info("Click on List View icon");
+		DashboardHomeUtil.listView(webd);
+
+		//open Resource Analytics: Database
+		webd.getLogger().info("Open the OOB dashboard---Resource Analytics: Database");
+		DashboardHomeUtil.selectDashboard(webd, "Resource Analytics: Database");
+
+		//verify Resource Analytics Database
+		verifyResourceAnalyticsDatabase();
+	}
+
+	@Test(alwaysRun = true)
+	public void verifyResourceAnalyticsHost_GridView()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in verifyResourceAnalyticsHost_GridView");
+
+		//click on Grid View
+		webd.getLogger().info("Click on Grid View icon");
+		DashboardHomeUtil.gridView(webd);
+
+		//open Resource Analytics: Host
+		webd.getLogger().info("Open the OOB dashboard---Resource Analytics: Host");
+		DashboardHomeUtil.selectDashboard(webd, "Resource Analytics: Host");
+
+		//verify esource Analytics Host
+		verifyResourceAnalyticsHost();
+	}
+
+	@Test(alwaysRun = true)
+	public void verifyResourceAnalyticsHost_ListView()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in verifyResourceAnalyticsHost_ListView");
+
+		//click on List View
+		webd.getLogger().info("Click on List View icon");
+		DashboardHomeUtil.listView(webd);
+
+		//open Resource Analytics: Host
+		webd.getLogger().info("Open the OOB dashboard---Resource Analytics: Host");
+		DashboardHomeUtil.selectDashboard(webd, "Resource Analytics: Host");
+
+		//verify esource Analytics Host
+		verifyResourceAnalyticsHost();
+	}
+
+	@Test(alwaysRun = true)
+	public void verifyResourceAnalyticsHost_WithFilter_GridView()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in verifyResourceAnalyticsHost_WithFilter_GridView");
+
+		//click Filter-Application PerfAnalytics
+		webd.getLogger().info("Click Cloud Services - IT Analytics");
+		DashboardHomeUtil.filterOptions(webd, "ita");
+
+		//click on Grid View
+		webd.getLogger().info("Click on Grid View icon");
+		DashboardHomeUtil.gridView(webd);
+
+		//open Resource Analytics: Host
+		webd.getLogger().info("Open the OOB dashboard---Resource Analytics: Host");
+		DashboardHomeUtil.selectDashboard(webd, "Resource Analytics: Host");
+
+		//verify esource Analytics Host
+		verifyResourceAnalyticsHost();
+	}
+
+	@Test(alwaysRun = true)
+	public void verifyResourceAnalyticsHost_WithFilter_ListView()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in verifyResourceAnalyticsHost_WithFilter_ListView");
+
+		//click Filter-Application PerfAnalytics
+		webd.getLogger().info("Click Cloud Services - IT Analytics");
+		DashboardHomeUtil.filterOptions(webd, "ita");
+
+		//click on List View
+		webd.getLogger().info("Click on List View icon");
+		DashboardHomeUtil.listView(webd);
+
+		//open Resource Analytics: Host
+		webd.getLogger().info("Open the OOB dashboard---Resource Analytics: Host");
+		DashboardHomeUtil.selectDashboard(webd, "Resource Analytics: Host");
+
+		//verify esource Analytics Host
+		verifyResourceAnalyticsHost();
+	}
+
+	@Test(alwaysRun = true)
+	public void verifyResourceAnalyticsMiddleware_GridView()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in verifyResourceAnalyticsMiddleware_GridView");
+
+		//click on Grid View
+		webd.getLogger().info("Click on Grid View icon");
+		DashboardHomeUtil.gridView(webd);
+
+		//open Resource Analytics: Middleware
+		webd.getLogger().info("Open the OOB dashboard---Resource Analytics: Middleware");
+		DashboardHomeUtil.selectDashboard(webd, "Resource Analytics: Middleware");
+
+		//verify Resource Analytics Middleware
+		verifyResourceAnalyticsMiddleware();
+	}
+
+	@Test(alwaysRun = true)
+	public void verifyResourceAnalyticsMiddleware_ListView()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in verifyResourceAnalyticsMiddleware_ListView");
+
+		//click on List View
+		webd.getLogger().info("Click on List View icon");
+		DashboardHomeUtil.listView(webd);
+
+		//open Resource Analytics: Middleware
+		webd.getLogger().info("Open the OOB dashboard---Resource Analytics: Middleware");
+		DashboardHomeUtil.selectDashboard(webd, "Resource Analytics: Middleware");
+
+		//verify Resource Analytics Middleware
+		verifyResourceAnalyticsMiddleware();
+	}
+
+	@Test(alwaysRun = true)
+	public void verifyResourceAnalyticsMiddleware_WithFilter_GridView()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in verifyResourceAnalyticsMiddleware_WithFilter_GridView");
+
+		//click Filter-Application PerfAnalytics
+		webd.getLogger().info("Click Cloud Services - IT Analytics");
+		DashboardHomeUtil.filterOptions(webd, "ita");
+
+		//click on Grid View
+		webd.getLogger().info("Click on Grid View icon");
+		DashboardHomeUtil.gridView(webd);
+
+		//open Resource Analytics: Middleware
+		webd.getLogger().info("Open the OOB dashboard---Resource Analytics: Middleware");
+		DashboardHomeUtil.selectDashboard(webd, "Resource Analytics: Middleware");
+
+		//verify Resource Analytics Middleware
+		verifyResourceAnalyticsMiddleware();
+	}
+
+	@Test(alwaysRun = true)
+	public void verifyResourceAnalyticsMiddleware_WithFilter_ListView()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in verifyResourceAnalyticsMiddleware_WithFilter_ListView");
+
+		//click Filter-Application PerfAnalytics
+		webd.getLogger().info("Click Cloud Services - IT Analytics");
+		DashboardHomeUtil.filterOptions(webd, "ita");
+
+		//click on List View
+		webd.getLogger().info("Click on List View icon");
+		DashboardHomeUtil.listView(webd);
+
+		//open Resource Analytics: Middleware
+		webd.getLogger().info("Open the OOB dashboard---Resource Analytics: Middleware");
+		DashboardHomeUtil.selectDashboard(webd, "Resource Analytics: Middleware");
+
+		//verify Resource Analytics Middleware
+		verifyResourceAnalyticsMiddleware();
+	}
+
+	@Test(alwaysRun = true)
+	public void verifyUIGallery_GridView()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test in verifyUIGallery_GridView");
+
+		//click on Grid View
+		webd.getLogger().info("Click on Grid View icon");
+		DashboardHomeUtil.gridView(webd);
+
+		//Open the OOB dashboard---UI Gallery
+		webd.getLogger().info("Open the OOB dashboard---UI Gallery");
+		DashboardHomeUtil.selectDashboard(webd, "UI Gallery");
+
+		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
+
+		//verify UI Gallery
+		verifyUIGallery();
+		verifyUIGallery_Details();
+	}
+
+	@Test(alwaysRun = true)
+	public void verifyUIGallery_ListView()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test in verifyUIGallery_ListView");
+
+		//click on List View
+		webd.getLogger().info("Click on List View icon");
+		DashboardHomeUtil.listView(webd);
+
+		//Open the OOB dashboard---UI Gallery
+		webd.getLogger().info("Open the OOB dashboard---UI Gallery");
+		DashboardHomeUtil.selectDashboard(webd, "UI Gallery");
+
+		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
+
+		//verify UI Gallery
+		verifyUIGallery();
+	}
+
+	@Test(alwaysRun = true)
+	public void verifyUIGallery_WithFilter_GridView()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test in verifyUIGallery_WithFilter_GridView");
+
+		//click Filter-Application PerfAnalytics
+		webd.getLogger().info("Click Cloud Services - IT Analytics");
+		DashboardHomeUtil.filterOptions(webd, "ita");
+
+		//click on Grid View
+		webd.getLogger().info("Click on Grid View icon");
+		DashboardHomeUtil.gridView(webd);
+
+		//Open the OOB dashboard---UI Gallery
+		webd.getLogger().info("Open the OOB dashboard---UI Gallery");
+		DashboardHomeUtil.selectDashboard(webd, "UI Gallery");
+
+		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
+
+		//verify UI Gallery
+		verifyUIGallery();
+	}
+
+	@Test(alwaysRun = true)
+	public void verifyUIGallery_WithFilter_ListView()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test in verifyUIGallery_WithFilter_ListView");
+
+		//click Filter-Application PerfAnalytics
+		webd.getLogger().info("Click Cloud Services - IT Analytics");
+		DashboardHomeUtil.filterOptions(webd, "ita");
+
+		//click on List View
+		webd.getLogger().info("Click on List View icon");
+		DashboardHomeUtil.listView(webd);
+
+		//Open the OOB dashboard---UI Gallery
+		webd.getLogger().info("Open the OOB dashboard---UI Gallery");
+		DashboardHomeUtil.selectDashboard(webd, "UI Gallery");
+
+		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
+
+		//verify UI Gallery
+		verifyUIGallery();
+	}
+
 	private void verifyAPM()
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
@@ -1449,36 +1435,6 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Verification end...");
 	}
 
-	private void verifyCategoricalBasic()
-	{
-		webd.getLogger().info("Start to verify the OOB Dashboard");
-
-		//verify the dashboard open correctly
-		webd.getLogger().info("Start to verify the OOB Dashboard - Categorical - Basic opened correctly");
-
-		//verify all the widgets displayed
-		webd.getLogger().info("Verify all the widgets in dashboard");
-		DashboardBuilderUtil.verifyWidget(webd, "Donut");
-		DashboardBuilderUtil.verifyWidget(webd, "Treemap");
-		DashboardBuilderUtil.verifyWidget(webd, "Histogram");
-		DashboardBuilderUtil.verifyWidget(webd, "Analytics Line - Categorical");
-		DashboardBuilderUtil.verifyWidget(webd, "Bar Chart");
-		DashboardBuilderUtil.verifyWidget(webd, "Stacked Bar Chart");
-
-		webd.getLogger().info("Verify the icon in OOB");
-		verifyIconInOobDashboard();
-
-		webd.getLogger().info("Verify the icon in widget");
-		verifyIconInWidget(webd, "Donut");
-		verifyIconInWidget(webd, "Treemap");
-		verifyIconInWidget(webd, "Histogram");
-		verifyIconInWidget(webd, "Analytics Line - Categorical");
-		verifyIconInWidget(webd, "Bar Chart");
-		verifyIconInWidget(webd, "Stacked Bar Chart");
-
-		webd.getLogger().info("Verification end...");
-	}
-
 	private void verifyCategoricalAdvanced()
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
@@ -1505,23 +1461,32 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Verification end...");
 	}
 
-	private void verifyTrendAndForecasting()
+	private void verifyCategoricalBasic()
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
 
 		//verify the dashboard open correctly
-		webd.getLogger().info("Start to verify the OOB Dashboard -Trend and Forecasting opened correctly");
+		webd.getLogger().info("Start to verify the OOB Dashboard - Categorical - Basic opened correctly");
 
 		//verify all the widgets displayed
 		webd.getLogger().info("Verify all the widgets in dashboard");
-		DashboardBuilderUtil.verifyWidget(webd, "Analytics Line with Trend and Forecasting");
-		DashboardBuilderUtil.verifyWidget(webd, "Line Chart with Trend and Forecasting");
+		DashboardBuilderUtil.verifyWidget(webd, "Donut");
+		DashboardBuilderUtil.verifyWidget(webd, "Treemap");
+		DashboardBuilderUtil.verifyWidget(webd, "Histogram");
+		DashboardBuilderUtil.verifyWidget(webd, "Analytics Line - Categorical");
+		DashboardBuilderUtil.verifyWidget(webd, "Bar Chart");
+		DashboardBuilderUtil.verifyWidget(webd, "Stacked Bar Chart");
+
 		webd.getLogger().info("Verify the icon in OOB");
 		verifyIconInOobDashboard();
 
 		webd.getLogger().info("Verify the icon in widget");
-		verifyIconInWidget(webd, "Analytics Line with Trend and Forecasting");
-		verifyIconInWidget(webd, "Line Chart with Trend and Forecasting");
+		verifyIconInWidget(webd, "Donut");
+		verifyIconInWidget(webd, "Treemap");
+		verifyIconInWidget(webd, "Histogram");
+		verifyIconInWidget(webd, "Analytics Line - Categorical");
+		verifyIconInWidget(webd, "Bar Chart");
+		verifyIconInWidget(webd, "Stacked Bar Chart");
 
 		webd.getLogger().info("Verification end...");
 	}
@@ -1868,6 +1833,25 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Verification end...");
 	}
 
+	private void verifyOrchestration()
+	{
+		webd.getLogger().info("Start to verify the OOB Dashboard");
+		//verify the current url
+		webd.getLogger().info("Verify the current url");
+
+		//verify the url of opened page
+		DashBoardUtils.verifyURL_WithPara(webd, "emcpdfui/builder.html?dashboardId=37");
+
+		DashboardBuilderUtil.verifyWidget(webd, "Summary");
+		DashboardBuilderUtil.verifyWidget(webd, "Workflow Submission Alerts");
+		DashboardBuilderUtil.verifyWidget(webd, "Submissions by User");
+		DashboardBuilderUtil.verifyWidget(webd, "Submissions by Type");
+		DashboardBuilderUtil.verifyWidget(webd, "Histogram of Submissions by Average Failed Steps");
+		DashboardBuilderUtil.verifyWidget(webd, "Workflow Submission Details");
+
+		webd.getLogger().info("Verification end...");
+	}
+
 	private void verifyOthers()
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
@@ -2067,28 +2051,25 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Verification end...");
 	}
 
-	private void verifyTimeseriesLineBasic()
+	private void verifyTimeseriesArea()
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
 
 		//verify the dashboard open correctly
-		webd.getLogger().info("Start to verify the OOB Dashboard - Timeseries - Line Basic opened correctly");
+		webd.getLogger().info("Start to verify the OOB Dashboard - Timeseries - Area opened correctly");
 
 		webd.getLogger().info("Verify all the widgets in dashboard");
-		DashboardBuilderUtil.verifyWidget(webd, "Line Chart");
-		DashboardBuilderUtil.verifyWidget(webd, "Analytics Line");
-		DashboardBuilderUtil.verifyWidget(webd, "Line Chart with Shared Y-axis");
-		DashboardBuilderUtil.verifyWidget(webd, "Line Chart with Reference Line");
-
+		DashboardBuilderUtil.verifyWidget(webd, "Area Chart");
+		DashboardBuilderUtil.verifyWidget(webd, "Stacked Area Chart");
+		DashboardBuilderUtil.verifyWidget(webd, "Stacked Area Chart with Group By");
 
 		webd.getLogger().info("Verify the icon in OOB");
 		verifyIconInOobDashboard();
 
 		webd.getLogger().info("Verify the icon in widget");
-		verifyIconInWidget(webd, "Line Chart");
-		verifyIconInWidget(webd, "Analytics Line");
-		verifyIconInWidget(webd, "Line Chart with Shared Y-axis");
-		verifyIconInWidget(webd, "Line Chart with Reference Line");
+		verifyIconInWidget(webd, "Area Chart");
+		verifyIconInWidget(webd, "Stacked Area Chart");
+		verifyIconInWidget(webd, "Stacked Area Chart with Group By");
 
 		webd.getLogger().info("the verification end...");
 	}
@@ -2105,7 +2086,6 @@ public class VerifyOOB extends LoginAndLogout
 		DashboardBuilderUtil.verifyWidget(webd, "Stacked Line Chart with Group By");
 		DashboardBuilderUtil.verifyWidget(webd, "Stacked Line Chart with Color and Group by");
 
-
 		webd.getLogger().info("Verify the icon in OOB");
 		verifyIconInOobDashboard();
 
@@ -2117,28 +2097,50 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("the verification end...");
 	}
 
-	private void verifyTimeseriesArea()
+	private void verifyTimeseriesLineBasic()
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
 
 		//verify the dashboard open correctly
-		webd.getLogger().info("Start to verify the OOB Dashboard - Timeseries - Area opened correctly");
+		webd.getLogger().info("Start to verify the OOB Dashboard - Timeseries - Line Basic opened correctly");
 
 		webd.getLogger().info("Verify all the widgets in dashboard");
-		DashboardBuilderUtil.verifyWidget(webd, "Area Chart");
-		DashboardBuilderUtil.verifyWidget(webd, "Stacked Area Chart");
-		DashboardBuilderUtil.verifyWidget(webd, "Stacked Area Chart with Group By");
-
+		DashboardBuilderUtil.verifyWidget(webd, "Line Chart");
+		DashboardBuilderUtil.verifyWidget(webd, "Analytics Line");
+		DashboardBuilderUtil.verifyWidget(webd, "Line Chart with Shared Y-axis");
+		DashboardBuilderUtil.verifyWidget(webd, "Line Chart with Reference Line");
 
 		webd.getLogger().info("Verify the icon in OOB");
 		verifyIconInOobDashboard();
 
 		webd.getLogger().info("Verify the icon in widget");
-		verifyIconInWidget(webd, "Area Chart");
-		verifyIconInWidget(webd, "Stacked Area Chart");
-		verifyIconInWidget(webd, "Stacked Area Chart with Group By");
+		verifyIconInWidget(webd, "Line Chart");
+		verifyIconInWidget(webd, "Analytics Line");
+		verifyIconInWidget(webd, "Line Chart with Shared Y-axis");
+		verifyIconInWidget(webd, "Line Chart with Reference Line");
 
 		webd.getLogger().info("the verification end...");
+	}
+
+	private void verifyTrendAndForecasting()
+	{
+		webd.getLogger().info("Start to verify the OOB Dashboard");
+
+		//verify the dashboard open correctly
+		webd.getLogger().info("Start to verify the OOB Dashboard -Trend and Forecasting opened correctly");
+
+		//verify all the widgets displayed
+		webd.getLogger().info("Verify all the widgets in dashboard");
+		DashboardBuilderUtil.verifyWidget(webd, "Analytics Line with Trend and Forecasting");
+		DashboardBuilderUtil.verifyWidget(webd, "Line Chart with Trend and Forecasting");
+		webd.getLogger().info("Verify the icon in OOB");
+		verifyIconInOobDashboard();
+
+		webd.getLogger().info("Verify the icon in widget");
+		verifyIconInWidget(webd, "Analytics Line with Trend and Forecasting");
+		verifyIconInWidget(webd, "Line Chart with Trend and Forecasting");
+
+		webd.getLogger().info("Verification end...");
 	}
 
 	private void verifyUIGallery()
