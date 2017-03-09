@@ -539,6 +539,24 @@ public class TenantSubscriptionUtilTest
 		Assert.assertEquals(services, Arrays.asList("APM", "LogAnalytics", "ITAnalytics"));
 	}
 
+	@Test(groups = { "s2" })
+	public void testGetTenantSubscribedServicesString() {
+		new NonStrictExpectations(TenantSubscriptionUtil.class) {
+			{
+				TenantSubscriptionUtil.getTenantSubscribedServices(anyString);
+				returns(Arrays.asList("APM", "Compliance"), null, Arrays.asList());
+			}
+		};
+		String apps = TenantSubscriptionUtil.getTenantSubscribedServicesString("emaastesttenant1");
+		Assert.assertEquals(apps, "{\"applications\":[\"APM\",\"Compliance\"]}");
+
+		apps = TenantSubscriptionUtil.getTenantSubscribedServicesString("emaastesttenant1");
+		Assert.assertEquals(apps, "{\"applications\":[]}");
+
+		apps = TenantSubscriptionUtil.getTenantSubscribedServicesString("emaastesttenant1");
+		Assert.assertEquals(apps, "{\"applications\":[]}");
+	}
+
 	@Test(groups = { "s1" })
 	public void testIsAPMServiceOnly()
 	{

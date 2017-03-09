@@ -304,6 +304,22 @@ public class DashboardAPITest
 	}
 
 	@Test
+	public void testQueryCombinedData(@Mocked final DependencyStatus anyDependencyStatus) throws Exception
+	{
+		new Expectations() {
+			{
+				anyDependencyStatus.isDatabaseUp();
+				result = true;
+				mockedDashboardManager.getCombinedDashboardById((BigInteger) any, anyLong, anyString);
+				result = new CombinedDashboard();
+				Deencapsulation.invoke(dashboardAPI, "updateDashboardAllHref", withAny(new CombinedDashboard()), anyString);
+				result = any;
+			}
+		};
+		assertQueryCombinedDashboardById();
+	}
+
+	@Test
 	public void testQueryDashboardByIdWithBasicServiceMalfunctionException(@Mocked final DependencyStatus anyDependencyStatus) throws Exception
 	{
 		new Expectations() {
@@ -538,7 +554,8 @@ public class DashboardAPITest
 	}
 
 	@Test
-	public void testSaveUserOptions(@Mocked final UserOptionsManager mockedUserOptionsManager,@Mocked final DependencyStatus anyDependencyStatus) throws Exception {
+	public void testSaveUserOptions(@Mocked final UserOptionsManager mockedUserOptionsManager,@Mocked final DependencyStatus anyDependencyStatus,
+									@Mocked final UserOptions anyUserOptions) throws Exception {
         new Expectations() {
             {
             	anyDependencyStatus.isDatabaseUp();
@@ -546,7 +563,10 @@ public class DashboardAPITest
                 mockedAPIBase.initializeUserContext(anyString, anyString);
                 result = null;
 
-                mockedUserOptionsManager.saveOrUpdateUserOptions(withAny(new UserOptions()), anyLong);
+				anyUserOptions.validateExtendedOptions();
+				result = true;
+
+                mockedUserOptionsManager.saveOrUpdateUserOptions(anyUserOptions, anyLong);
                 result = any;
             }
         };
@@ -555,7 +575,8 @@ public class DashboardAPITest
 	}
 
 	@Test
-	public void testUpdateUserOptions(@Mocked final UserOptionsManager mockedUserOptionsManager,@Mocked final DependencyStatus anyDependencyStatus) throws Exception {
+	public void testUpdateUserOptions(@Mocked final UserOptionsManager mockedUserOptionsManager,@Mocked final DependencyStatus anyDependencyStatus,
+									  @Mocked final UserOptions anyUserOptions) throws Exception {
         new Expectations() {
             {
             	anyDependencyStatus.isDatabaseUp();
@@ -563,7 +584,10 @@ public class DashboardAPITest
                 mockedAPIBase.initializeUserContext(anyString, anyString);
                 result = null;
 
-				mockedUserOptionsManager.saveOrUpdateUserOptions(withAny(new UserOptions()), anyLong);
+				anyUserOptions.validateExtendedOptions();
+				result = true;
+
+				mockedUserOptionsManager.saveOrUpdateUserOptions(anyUserOptions, anyLong);
 				result = any;
 			}
 		};
@@ -621,6 +645,12 @@ public class DashboardAPITest
 	{
 		Assert.assertNotNull(dashboardAPI.queryDashboardById("tenant01", "tenant01.emcsadmin",
 				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101", BigInteger.valueOf(123L)));
+	}
+
+	private void assertQueryCombinedDashboardById()
+	{
+		Assert.assertNotNull(dashboardAPI.queryCombinedData("tenant01", "tenant01.emcsadmin",
+				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101", BigInteger.valueOf(123L), null));
 	}
 
 	private void assertQueryDashboards()

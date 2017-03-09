@@ -11,26 +11,24 @@ apply plugin: 'compass'
 apply from: 'test.gradle'
 
 jsversion = project.ext.getServiceVersion('OMC-UI-Framework')
-//def versionPathElement = jsversion + "-"+ new SimpleDateFormat("yyMMdd.HHmmss").format(new Date())
 def versionPathElement = jsversion + "-"+ rootProject.ext.get("appTimeStamp")
 
 // source 'webapp' directory
 def File sourceWebappDir = new File(project.projectDir, 'public_html')
+
 // source directories where jet files are copied
 def File sourceJetDestDir = new File(sourceWebappDir, 'libs/@version@/js/oraclejet')
 def File sourceJsCanvgDestDir = new File(sourceWebappDir, 'libs/@version@/js/canvg')
 def File sourceJsCanvasDesDir = new File(sourceWebappDir, 'libs/@version@/js/html2canvas')
+
 // source directories where font files are copied
 def File sourceFontDestDir = new File(sourceWebappDir, 'libs/@version@/css/font-awesome')
-// source directories where target selector files are copied
-def File sourceTargetSelectorDestDir = new File(sourceWebappDir, 'libs/emcstgtsel')
 
 def stagingDir = buildDir.absolutePath+'/staging/public_html'
 def compiledDir = buildDir.absolutePath+'/public_html'
-def File sourceTargetSelectorAPIDestDir = new File(buildDir.absolutePath+'/stage_tsel')
 def webRootSourceDir = 'public_html'
 
-def chefDir = project.rootDir.absolutePath +'/dashboards-chef/cookbook-emcs-omc-ui-framework/recipes'
+//def chefDir = project.rootDir.absolutePath +'/dashboards-chef/cookbook-emcs-omc-ui-framework/recipes'
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
@@ -42,21 +40,6 @@ configurations{
 
 def jscc = "1".equals(System.getenv()['ENABLE_CC_JS'])
 
-def tselVersion 
-if (project.hasProperty("debugTsel"))
-{
-    def user = System.getenv('USER')
-    if (user == null || user.equals(""))
-    {
-        user = "unknown"
-    }
-    tselVersion = user + "_debug"
-}
-else
-{
-    tselVersion =  getDependentSdkVersion('com.oracle.emaas.emctas.tgtsel', 'emcs-targetselector', '1.9.+')
-}
-
 dependencies {
     compile(group: 'com.oracle.oraclejet', name: 'oraclejet', version: '2.0.2-26417', ext: 'war'){ transitive = false }	
     compile(group: 'files', name: 'canvg', version: '1.3', ext: 'zip'){ transitive = false }
@@ -64,7 +47,6 @@ dependencies {
     compile(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1'){ transitive = false }
     compile(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1'){ transitive = false }
     compile(group: 'com.font-awesome', name: 'font-awesome', version: '4.3.0', ext: 'zip') {transitive = false }
-    compile(group: 'com.oracle.emaas.emctas.tgtsel', name:'emcs-targetselector', version:tselVersion, ext:'zip'){ transitive = false }
     providedCompile project(':dashboards-ui-test-common-api')  { transitive = false }
     providedCompile project(':omc-ui-framework:omc-ui-framework-webutils')  { transitive = false }
     compass (group: 'org.jruby', name: 'jruby-complete', version: '1.7.3')
@@ -210,95 +192,12 @@ project.task("cleanFont") << {
     sourceFontDestDir.deleteDir()
 }
 
-project.task("unpackTargetSelectorFromArtifactory") << {  
-    def File buildTargetSelectorUnzipDir = new File(buildDir.absolutePath, 'emcs-targetselector')
-    //first time or if custom cleans removes it
-    sourceTargetSelectorDestDir.mkdirs()
-    sourceTargetSelectorAPIDestDir.mkdirs()
-
-    //project.configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
-    configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
-        if (artifact.name.equals('emcs-targetselector') && files(sourceTargetSelectorDestDir.listFiles()).isEmpty()) {
-            logger.lifecycle("Unpacking artifact ${artifact.name}, version:${artifact.moduleVersion.id.version}..")
-            buildTargetSelectorUnzipDir.mkdirs()
-            project.copy {
-                from project.zipTree(artifact.file.absolutePath)
-                into buildTargetSelectorUnzipDir.absolutePath
-            }
-
-            if (!files(buildTargetSelectorUnzipDir.listFiles().findAll{
-                        it.name.startsWith('TargetSelectorUtil')
-                    }).isEmpty())
-            {
-                logger.lifecycle("Target Selector artifact contains Source and Test API Zip")
-                logger.lifecycle("Unpacking Test API..")
-                //Copy the Test API classes to a dir so they can be added to the distributed jar
-                project.copy {
-                    from buildTargetSelectorUnzipDir.listFiles().findAll{
-                        it.name.startsWith('TargetSelectorUtil')
-                    }.collect {
-                        zipTree(it)
-                    }
-                    into sourceTargetSelectorAPIDestDir
-                }
-	
-                logger.lifecycle("Unpacking Source..")
-                //Copy Tsel source code to destination dir
-                project.copy {
-                    from buildTargetSelectorUnzipDir.listFiles().findAll{
-                        it.name.startsWith('emcs-targetselector')
-                    }.collect {
-                        zipTree(it)
-                    }
-                    into sourceTargetSelectorDestDir
-                }
-            }
-            else
-            {
-                logger.lifecycle("Unpacking Source..")
-                project.copy {
-                    from buildTargetSelectorUnzipDir
-                    into sourceTargetSelectorDestDir
-                }
-            }            
-            //finally delete the build directory
-            project.delete(buildTargetSelectorUnzipDir)
-        }
-    }
-}
-
-project.task("cleanTargetSelector") << {
-    println 'Cleaning up target selector directories ...'
-    println 'target selector dir: ' + sourceTargetSelectorDestDir.absolutePath
-    sourceTargetSelectorDestDir.deleteDir()
-    println 'target selector API dir: ' + sourceTargetSelectorAPIDestDir.absolutePath
-    sourceTargetSelectorAPIDestDir.deleteDir()
-}
-
-clean.dependsOn cleanJet,cleanFont,cleanTargetSelector
+clean.dependsOn cleanJet,cleanFont
 
 project.task("cleanCompassCss")<<{
 }
 
-project.task("prepareChef")<<{
-
-  File chefFile = new File(chefDir+"/default.rb")
-
-		String contents = chefFile.getText('UTF-8')
-		String replacereg = "@version@"
-		contents = contents.replaceAll(Pattern.quote(replacereg), versionPathElement)
-		chefFile.write(contents, 'UTF-8')
-   
-//   new File(chefDir).eachFile {
-	//filesMatching("**/*.rb"){
-
-  //     	    filter(ReplaceTokens, tokens: [version: versionPathElement])
-//    }
-//    into "../../dashboards-chef/cookbook-emcs-omc-ui-framework/recipes/"
-//}
-}
-
-task copyJsSource(type:Copy, dependsOn:[cleanJs,compileSass,prepareChef]) {
+task copyJsSource(type:Copy, dependsOn:[cleanJs,compileSass]) {
     from (webRootSourceDir) {
         include "**/*"
         exclude "**/uifwkCommonMsg.js"
@@ -337,7 +236,7 @@ task copyJsSource(type:Copy, dependsOn:[cleanJs,compileSass,prepareChef]) {
     }
 }
 
-task stageJs(dependsOn:[unpackJETFromArtifactory,unpackJSLibFromArtifactory,unpackFontFromArtifactory,unpackTargetSelectorFromArtifactory,copyJsSource]) {
+task stageJs(dependsOn:[unpackJETFromArtifactory,unpackJSLibFromArtifactory,unpackFontFromArtifactory,copyJsSource]) {
 }
 
 //define the JS source locations
@@ -663,12 +562,20 @@ task copyStagedJs(type:Copy, dependsOn:[stageJs]) {
 }
 
 task prepareRequireJsConfig(type:Copy) {
-    from ('.') {
-        include "uifwk.build.js"
-            //replace @version@ with versionPathElement
-            filter(ReplaceTokens, tokens: [version: versionPathElement])
+    if(!project.hasProperty("devMode")){
+        from ('.') {
+            include "uifwk.build.js"
+                //replace @version@ with versionPathElement
+                filter(ReplaceTokens, tokens: [version: versionPathElement])
+        }
+        into buildDir
     }
-    into buildDir
+    else {
+        from ('.') {
+            include "uifwk.build.js"
+        }
+        into buildDir
+    }
 }
 
 task individualMinify(dependsOn: [copyStagedJs, jsCodeCoverage, tasks.matching { Task task -> task.name.startsWith("dominify")}]){}
@@ -760,10 +667,8 @@ task minifyUIFwkImplPartitionJs(dependsOn: [minifyUIFwkPartitionJs],type: com.er
 
 war.archiveName "omc-ui-framework-web.war"
 
-//copyJsSource.dependsOn unpackJETFromArtifactory, unpackJSLibFromArtifactory, unpackFontFromArtifactory, unpackTargetSelectorFromArtifactory
-
 //copy files without minify when -PdevMode enabled
-task copyDevJs(type:Copy, dependsOn: [cleanJs, unpackJETFromArtifactory, unpackJSLibFromArtifactory, unpackFontFromArtifactory,compileSass, unpackTargetSelectorFromArtifactory,jsCodeCoverage]){
+task copyDevJs(type:Copy, dependsOn: [cleanJs, unpackJETFromArtifactory, unpackJSLibFromArtifactory, unpackFontFromArtifactory,compileSass,jsCodeCoverage]){
     from(webRootSourceDir) {
 	include "**/*"
     }
@@ -830,6 +735,19 @@ task copyDevJs(type:Copy, dependsOn: [cleanJs, unpackJETFromArtifactory, unpackJ
     }  
 }
 
+task copyStagedDevJs(type:Copy, dependsOn:[copyDevJs]) {
+    from (stagingDir) {
+	include "**/*"	
+    }
+    into compiledDir
+}
+
+task combineAppJsDebug(dependsOn: [copyStagedDevJs, prepareRequireJsConfig], type: com.eriwen.gradle.js.tasks.RequireJsTask) {
+    source = javascript.source.staticjs.js.files   //point to your source files
+    requirejs.buildprofile = file(buildDir.absolutePath+"/uifwk.build.js")
+    outputs.upToDateWhen { false }           //requireJs task does not know how to accurately determine if it is UP-TO-DATE so this line says the task is never up to date.
+}
+
 test {
         classpath = sourceSets.test.compileClasspath + sourceSets.test.output
         useTestNG()
@@ -848,8 +766,11 @@ eclipse {
 }
 
 if(project.hasProperty("devMode")){
-	war.dependsOn copyDevJs
+	war.dependsOn combineAppJsDebug   //copyDevJs
 }
+//else if(project.hasProperty("debugJs")){
+//        war.dependsOn combineAppJsDebug
+//}
 else
 {
 	war.dependsOn minifyUIFwkImplPartitionJs
@@ -857,20 +778,20 @@ else
 }
 
 war {
-    if(project.hasProperty("devMode")){
-	from(stagingDir) {
-	    include '**/*'
-	    exclude '**/*.orig.js','**/*.map'
-	    into('/')
-	}
-
-	from('src/main/java') { 
-		include '**/*.properties'
-		into('WEB-INF/classes') 
-	}
-    }
-    else
-    {
+//    if(project.hasProperty("devMode")){
+//	from(stagingDir) {
+//	    include '**/*'
+//	    exclude '**/*.orig.js','**/*.map'
+//	    into('/')
+//	}
+//
+//	from('src/main/java') { 
+//		include '**/*.properties'
+//		into('WEB-INF/classes') 
+//	}
+//    }
+//    else
+//    {
 	from(compiledDir) {
 	    include '**/*'
 	    exclude '**/*.orig.js','**/*.map','**/scss'
@@ -881,19 +802,7 @@ war {
 		include '**/*.properties'
 		into('WEB-INF/classes') 
 	}
-    }
-
-	//rootSpec.exclude("**/*.zip")
 }
-
-//task buildDFCommonLibZip(type: Zip){
-//	baseName = 'emcs-ui-framework'
-//	appendix = 'common'
-//	from stagingDir+'/emcsDependencies/uifwk/'
-//	into 'uifwk'
-//}
-
-
 
 publishing.publications {
     integTest(MavenPublication) {
@@ -902,7 +811,6 @@ publishing.publications {
         artifact integTestJar.archivePath
     }
 	thisJarPublication(MavenPublication) {
-//		from project.components.java
 		setGroupId("${publishGroup}")
 		artifact jar
 	}

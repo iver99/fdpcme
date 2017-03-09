@@ -25,8 +25,7 @@ requirejs.config({
             'text!uifwk/js/widgets/brandingbar/html/brandingbar.html',
             'text!uifwk/js/widgets/widgetselector/html/widget-selector.html',
             'text!uifwk/js/widgets/timeFilter/html/timeFilter.html',
-            'text!uifwk/js/widgets/datetime-picker/html/datetime-picker.html',
-            'uifwk/js/sdk/menu-util'
+            'text!uifwk/js/widgets/datetime-picker/html/datetime-picker.html'
             ]
     },
     // Path mappings for the logical module names
@@ -97,15 +96,17 @@ require(['knockout',
     'uifwk/js/util/usertenant-util',
     'uifwk/js/util/message-util',
     'uifwk/js/util/df-util',
-    'uifwk/js/sdk/menu-util',
+    'uifwk/@version@/js/sdk/context-util-impl',
     'uifwk/js/util/preference-util',
     'ojs/ojknockout',
     'ojs/ojbutton',
     'ojs/ojtoolbar',
     'ojs/ojdialog'
 ],
-        function(ko, $, oj, _emJETCustomLogger, userTenantUtilModel, msgUtilModel, dfumodel, menuModel) // this callback gets executed when all required modules are loaded
+        function(ko, $, oj, _emJETCustomLogger, userTenantUtilModel, msgUtilModel, dfumodel, contextModel) // this callback gets executed when all required modules are loaded
         {
+            var ctxUtil = new contextModel();
+            var omcContext = ctxUtil.getOMCContext();
             var appId = getUrlParam("appId");
             appId = appId !== null && appId !== "" ? appId : "Dashboard";
             var isAdmin = getUrlParam("isAdmin");
@@ -135,17 +136,6 @@ require(['knockout',
                 oj.Logger.error(msg, true);
 
                 return false; 
-            };
-            
-            var hamburgerVMPath = "uifwk/js/widgets/hamburger-menu/js/hamburger-menu";
-            var hamburgerTemplatePath = "uifwk/js/widgets/hamburger-menu/html/hamburger-menu.html";
-            
-            //Register a Knockout component for hamburger menu
-            if (!ko.components.isRegistered('df-oracle-hamburger-menu')) {
-                ko.components.register("df-oracle-hamburger-menu", {
-                    viewModel: {require: hamburgerVMPath},
-                    template: {require: 'text!' + hamburgerTemplatePath}
-                });
             }
 
             if (!ko.components.isRegistered('df-oracle-branding-bar')) {
@@ -175,56 +165,6 @@ require(['knockout',
             function HeaderViewModel() {
                 var self = this;
                 var entities = ko.observable(["8616FD4297516BA7974EF5AA20EE294B"]);
-                var menus = null;
-                if (appId === 'APM') {
-                    menus = {
-                                "serviceMenus":
-                                    [{'id': 'apm_home',type:'menu_item', 'labelKey': 'Home', 'externalUrl': '#'},
-                                    {'id': 'apm_Alerts',type:'menu_item', 'labelKey': 'Alerts', 'externalUrl': '#', 'selfHandleMenuSelection': 'false'},
-                                    {'id': 'apm_app',type:'menu_item', 'labelKey': 'Applications', 'externalUrl': '#'},
-                                    {'id': 'apm_divider',type:'divider', 'labelKey': '', 'externalUrl': '#'},
-                                    {'id': 'apm_pages',type:'menu_item', 'labelKey': 'Pages', 'externalUrl': '#'},
-                                    {'id': 'apm_ajaxcalls',type:'menu_item', 'labelKey': 'Ajax Calls', 'externalUrl': '#'},
-                                    {'id': 'apm_sessions',type:'menu_item', 'labelKey': 'Sessions', 'externalUrl': '#'},
-                                    {'id': 'apm_synthetictests',type:'menu_item', 'labelKey': 'Synthetic Tests', 'externalUrl': '#'},
-                                    {'id': 'apm_divider1',type:'divider', 'labelKey': '', 'externalUrl': '#'},
-                                    {'id': 'apm_mobileclient',type:'menu_item', 'labelKey': 'Mobile Client', 'externalUrl': '#'},
-                                    {'id': 'apm_viewcontrollers',type:'menu_item', 'labelKey': 'View Controllers/Activities', 'externalUrl': '#'},
-                                    {'id': 'apm_mobilehttp',type:'menu_item', 'labelKey': '(Mobile)HTTP Requests', 'externalUrl': '#'},
-                                    {'id': 'apm_divider2',type:'divider', 'labelKey': '', 'externalUrl': '#'},
-                                    {'id': 'apm_serverrequests',type:'menu_item', 'labelKey': 'Server Requests', 'externalUrl': '#'},
-                                    {'id': 'apm_threadprofiler',type:'menu_item', 'labelKey': 'Thread Profilers', 'externalUrl': '#'},
-                                    {'id': 'apm_appservers',type:'menu_item', 'labelKey': 'App Servers', 'externalUrl': '#'}],
-                                "serviceAdminMenus":
-                                    {'id': 'apm_admin',type:'admin_menu_group', 'labelKey': 'APM Admin', 'externalUrl': '#', children: 
-                                        [{'id': 'apm_admin_alertrules',type:'menu_item', 'labelKey': 'Alert Rules', 'externalUrl': '#'},
-                                        {'id': 'apm_admin_appdef',type:'menu_item', 'labelKey': 'Application Definitions', 'externalUrl': '#'},
-                                        {'id': 'apm_admin_synthetictests',type:'menu_item', 'labelKey': 'Synthetic Tests', 'externalUrl': '#'},
-                                        {'id': 'apm_admin_location',type:'menu_item', 'labelKey': 'Beacon Locations', 'externalUrl': '#'},
-                                        {'id': 'apm_admin_metricsettings',type:'menu_item', 'labelKey': 'Metric Settings', 'externalUrl': '#'},
-                                        {'id': 'apm_admin_browseragents',type:'menu_item', 'labelKey': 'Browser Agents', 'externalUrl': '#'},
-                                        {'id': 'apm_admin_mobileclientregistry',type:'menu_item', 'labelKey': 'Mobile Client Registrations', 'externalUrl': '#'}]}
-                        };
-                }
-                else if (appId === 'LogAnalytics') {
-                    menus = {
-                                "serviceMenus":
-                                    [{'id': 'la_home', 'labelKey': 'Log Explorer', 'externalUrl': '#'},
-                                    {'id': 'la_Alerts', 'labelKey': 'Alerts', 'externalUrl': '#'}]
-                        };
-                }
-                else if (appId === 'ITAnalytics') {
-                    menus = {
-                                "serviceMenus":
-                                    [{'id': 'ita_apa', 'labelKey': 'Application Performance Analytics', 'externalUrl': '#'},
-                                    {'id': 'ita_dpa', 'labelKey': 'Database Performance Analytics', 'externalUrl': '#'},
-                                    {'id': 'ita_aspa', 'labelKey': 'App Server Performance Analytics', 'externalUrl': '#'},
-                                    {'id': 'ita_hra', 'labelKey': 'Host Resource Analytics', 'externalUrl': '#'},
-                                    {'id': 'ita_dra', 'labelKey': 'Database Resource Analytics', 'externalUrl': '#'},
-                                    {'id': 'ita_asra', 'labelKey': 'App Server Resource Analytics', 'externalUrl': '#'}]
-                        };
-                }
-                
                 self.brandingbarParams = {
                     userName: userName,
                     tenantName: tenantName,
@@ -234,7 +174,7 @@ require(['knockout',
                     isAdmin: isAdmin,
                     entities: entities,
                     showGlobalContextBanner: true,
-                    serviceMenus: menus
+                    showTimeSelector: ko.observable(true)
                 };
             }
 
@@ -296,6 +236,7 @@ require(['knockout',
                 };
 
                 self.addSelectedWidgetToDashboard = function(widget) {
+                    ctxUtil.setTimePeriod(ctxUtil.formalizeTimePeriod("LAST_1_YEAR"));
                     widgetArray.push(widget);
                     self.widgetList(widgetArray);
                     var msgObj = {
@@ -326,21 +267,11 @@ require(['knockout',
                 self.openWidgetSelectorDialog = function() {
                     $('#'+widgetSelectorDialogId).ojDialog('open');
                 };
-                
-                self.brandingbarParams = new HeaderViewModel().brandingbarParams;
-                
-                function menuSelectionHandler(data) {
-                    alert('Menu clicked: ' + JSON.stringify(data));
-                }
-                
-                var menuUtil = new menuModel();
-                menuUtil.subscribeMenuSelectionEvent(menuSelectionHandler);
-                menuUtil.setupCustomKOStopBinding();
             }
 
             $(document).ready(function() {
-//                ko.applyBindings(new HeaderViewModel(), $('#headerWrapper')[0]);
-                ko.applyBindings(new MainViewModel(), $('#globalBody')[0]);
+                ko.applyBindings(new HeaderViewModel(), $('#headerWrapper')[0]);
+                ko.applyBindings(new MainViewModel(), $('#main-container')[0]);
                 $("#loading").hide();
                 $('#globalBody').show();
             });

@@ -50,6 +50,7 @@ public class DashboardsUiCORSFilter implements Filter
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
 			ServletException
 	{
+		long start = System.currentTimeMillis();
 		HttpServletResponse hRes = (HttpServletResponse) response;
 		HttpServletRequest hReq = (HttpServletRequest) request;
 
@@ -175,7 +176,8 @@ public class DashboardsUiCORSFilter implements Filter
 						}
 					}
 				}
-				else if (!StringUtil.isEmpty(hReq.getRequestURI()) && hReq.getRequestURI().toLowerCase().contains("emsaasui/emcpdfui/builder.html")) {
+/*				else if (!StringUtil.isEmpty(hReq.getRequestURI()) && hReq.getRequestURI().toLowerCase().contains("emsaasui/emcpdfui/builder.html")) {
+					long start1 = System.currentTimeMillis();
 					List<String> apps = TenantSubscriptionUtil.getTenantSubscribedServices(opcTenantId, user);
 					if (apps == null || apps.isEmpty()) {
 						LOGGER.error("Tenant (" + opcTenantId
@@ -184,13 +186,17 @@ public class DashboardsUiCORSFilter implements Filter
 								"./error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_NO_SUBS_MSG", hReq));
 						return;
 					}
-				}
+					long end1 = System.currentTimeMillis();
+					LOGGER.info("[Diagnosis] Time for builder page to do subscribed apps checking is {}ms", (end1 - start1));
+				}*/
 			}
 		}
 		catch (Exception t) {
 			LOGGER.error(t.getLocalizedMessage(), t);
 		}
 		chain.doFilter(request, response);
+		long end = System.currentTimeMillis();
+		LOGGER.info("Time for dashboard filters to handle request takes {}ms, and the URI is {}", (end - start), hReq.getRequestURI());
 	}
 
 	@Override

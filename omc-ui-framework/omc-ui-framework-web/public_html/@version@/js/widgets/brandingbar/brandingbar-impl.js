@@ -116,10 +116,14 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 
             if (!ko.components.isRegistered('emctas-globalbar'))
             {
+                var versionedTemplate = window.getSDKVersionFile ? 
+                    window.getSDKVersionFile('emsaasui/emcta/ta/js/sdk/globalcontextbar/emctas-globalbar.html') : null;
+                var template = versionedTemplate ? versionedTemplate : 
+                        'emsaasui/emcta/ta/js/sdk/globalcontextbar/emctas-globalbar.html';
                 ko.components.register('emctas-globalbar', {
                     viewModel: function () {
                     },
-                    template: {require: 'text!/emsaasui/emcta/ta/js/sdk/globalcontextbar/emctas-globalbar.html'}
+                    template: {require: 'text!' + template}
                 });
             }
 
@@ -212,9 +216,18 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 if (!self.isTopologyCompRegistered()) {
                     require(['ojs/ojdiagram'], function () {
                         if (!ko.components.isRegistered('emctas-topology')) {
+                            var versionedTopoViewModel = window.getSDKVersionFile ? 
+                                window.getSDKVersionFile('emsaasui/emcta/ta/js/sdk/topology/emcta-topology.js') : null;
+                            var topoViewModel = versionedTopoViewModel ? (versionedTopoViewModel.lastIndexOf('.js') ===  versionedTopoViewModel.length - 3 ? 
+                                                versionedTopoViewModel.substring(0, versionedTopoViewModel.length - 3) : versionedTopoViewModel) : 
+                                    'emsaasui/emcta/ta/js/sdk/topology/emcta-topology';
+                            var versionedTopoTemplate = window.getSDKVersionFile ? 
+                                window.getSDKVersionFile('emsaasui/emcta/ta/js/sdk/topology/emcta-topology.html') : null;
+                            var topoTemplate = versionedTopoTemplate ? versionedTopoTemplate : 
+                                    'emsaasui/emcta/ta/js/sdk/topology/emcta-topology.html';
                             ko.components.register('emctas-topology', {
-                                viewModel: {require: '/emsaasui/emcta/ta/js/sdk/topology/emcta-topology.js'},
-                                template: {require: 'text!/emsaasui/emcta/ta/js/sdk/topology/emcta-topology.html'}
+                                viewModel: {require: topoViewModel},
+                                template: {require: 'text!' + topoTemplate}
                             });
                         }
                         self.isTopologyCompRegistered(true);
@@ -262,6 +275,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 }
             }
 
+
+            self.maxIconToRight = ko.observable("30px");
             self.topologySize = ko.observable();
             self.topologyHeight = ko.observable();
             self.topologySize.subscribe(function (topoHeight) {
@@ -270,6 +285,12 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     self.topologyCssHeight(self.topologyHeight());
                 } else {
                     self.topologyCssHeight(201);
+                }
+                
+                if($("#ude_topology_legend").length > 0) {
+                    self.maxIconToRight("180px");
+                }else {
+                    self.maxIconToRight("30px");
                 }
             });
 
@@ -452,6 +473,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.notificationDisabled = ko.observable(true);
             self.notificationPageUrl = null;
             self.navLinksVisible = true;
+            self.navLinksImmediateLoading = ko.observable(false);
 
             var isAppIdNotEmpty = self.appId && $.trim(self.appId) !== "";
             var appProperties = isAppIdNotEmpty && appMap[self.appId] ? appMap[self.appId] : {};
@@ -569,6 +591,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             //Open about box
             //aboutbox id
             self.aboutBoxId = 'aboutBox';
+            self.aboutBoxImmediateLoading = ko.observable(false);
             self.openAboutBox = function () {
                 $('#' + self.aboutBoxId).ojDialog('open');
             };
@@ -621,6 +644,12 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         break;
                 }
             };
+            
+            $("#emaasAppheaderGlobalNavMenuId").ojMenu({
+                "beforeOpen": function (event, ui) {
+                    self.aboutBoxImmediateLoading(true);
+                }
+            });
 
             var templatePath = "uifwk/js/widgets/navlinks/html/navigation-links.html";
             var vmPath = "uifwk/js/widgets/navlinks/js/navigation-links";
@@ -692,6 +721,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
              */
             self.linkMenuHandler = function (event, item) {
                 self.navLinksNeedRefresh(true);
+                self.navLinksImmediateLoading(true);
                 $("#links_menu").slideToggle('normal');
                 item.stopImmediatePropagation();
             };
@@ -909,13 +939,23 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             function showMessage(data) {
                 if (data) {
                     var message = {};
+                    self.hasMessages(true);   
                     message.id = data.id ? data.id : dfu.getGuid();
                     message.type = data.type;
                     message.summary = data.summary;
                     message.detail = data.detail;
                     message.category = data.category;
                     message.icon = imgBackground;
-                    if (data.type && data.type.toUpperCase() === 'ERROR') {
+                    if (data.type && data.type.toUpperCase() === 'CORRECT') {    
+                        hiddenMessages = [];
+                        displayMessages = [];
+                        self.messageList(displayMessages);
+                        self.hasHiddenMessages(false);
+                        self.hasMessages(false);     
+                        self.hiddenMessagesExpanded(true);
+                        return;
+                    }
+                    else if (data.type && data.type.toUpperCase() === 'ERROR') {
                         message.iconAltText = self.altTextError;
                         message.imgCssStyle = "background:url('" + messageIconSprite + "') no-repeat 0px -78px;height:16px;";
                     }
@@ -1439,6 +1479,13 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             var zdtUtil = new zdtUtilModel();
             zdtUtil.detectPlannedDowntime(function () {
             });
+            
+            ko.bindingHandlers.stopDataBinding = {
+                init: function (elem, valueAccessor) {
+                    var value = ko.unwrap(valueAccessor());
+                    return {controlsDescendantBindings: value};
+                }
+            };
         }
 
         return BrandingBarViewModel;

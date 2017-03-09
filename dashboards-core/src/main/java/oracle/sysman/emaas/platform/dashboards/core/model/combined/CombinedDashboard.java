@@ -17,6 +17,8 @@ import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsPreference;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * @author guochen
@@ -24,6 +26,8 @@ import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
  */
 public class CombinedDashboard extends Dashboard
 {
+	private static final Logger LOGGER = LogManager.getLogger(CombinedDashboard.class);
+
 	private Preference preference;
 	private UserOptions userOptions;
 	private Boolean isFavorite;
@@ -37,6 +41,14 @@ public class CombinedDashboard extends Dashboard
 		Preference p = Preference.valueOf(ep);
 		UserOptions uo = UserOptions.valueOf(euo);
 		cb.setPreference(p);
+		if (uo != null) {
+			boolean validated = uo.validateExtendedOptions();
+			if (!validated) { // if extended options is invalid, we simply return an empty extended option so that UI display won't be break
+				LOGGER.error("Extended option for dashboardID={} is {}, it's an invalid json string, so use empty extended option instead",
+						d.getDashboardId(), uo.getExtendedOptions());
+				uo.setExtendedOptions(null);
+			}
+		}
 		cb.setUserOptions(uo);
 		cb.isFavorite = euo == null ? Boolean.FALSE : DataFormatUtils.integer2Boolean(euo.getIsFavorite());
 		cb.selectedSsData=savedSearchResponse;

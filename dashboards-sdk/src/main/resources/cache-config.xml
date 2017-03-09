@@ -1,0 +1,98 @@
+<root>
+    <cache-group>
+        <name>screenshotCache</name>
+        <capacity>6000</capacity>
+        <expiry>0</expiry>
+    </cache-group>
+
+    <cache-group>
+        <name>adminLinkCache</name>
+        <capacity>1000</capacity>
+        <expiry>60</expiry>
+    </cache-group>
+
+    <cache-group>
+        <name>cloudServiceLinkCache</name>
+        <capacity>1000</capacity>
+        <expiry>60</expiry>
+    </cache-group>
+
+    <cache-group>
+        <name>homeLinkCache</name>
+        <capacity>1000</capacity>
+        <expiry>60</expiry>
+    </cache-group>
+
+    <cache-group>
+        <name>visualAnalyzerLinkCache</name>
+        <capacity>1000</capacity>
+        <expiry>60</expiry>
+    </cache-group>
+
+    <cache-group>
+        <name>externalLinkCache</name>
+        <capacity>1000</capacity>
+        <expiry>60</expiry>
+    </cache-group>
+
+    <cache-group>
+        <name>internalLinkCache</name>
+        <capacity>1000</capacity>
+        <expiry>60</expiry>
+    </cache-group>
+
+    <cache-group>
+        <name>vanityBaseUrlCache</name>
+        <capacity>1000</capacity>
+        <expiry>60</expiry>
+    </cache-group>
+
+    <cache-group>
+        <name>domainsDataCache</name>
+        <capacity>1000</capacity>
+        <expiry>60</expiry>
+    </cache-group>
+
+    <cache-group>
+        <name>tenantAppMappingCache</name>
+        <capacity>1000</capacity>
+        <expiry>60</expiry>
+    </cache-group>
+
+    <cache-group>
+        <name>SsoLogoutCache</name>
+        <capacity>1000</capacity>
+        <expiry>1800</expiry>
+    </cache-group>
+
+    <cache-group>
+        <name>subscribeCache</name>
+        <capacity>5000</capacity>
+        <expiry>60</expiry>
+    </cache-group>
+
+    <cache-group>
+        <name>assetRootCache</name>
+        <capacity>1000</capacity>
+        <expiry>60</expiry>
+    </cache-group>
+
+    <cache-group>
+        <name>registryCache</name>
+        <capacity>1000</capacity>
+        <expiry>60</expiry>
+    </cache-group>
+
+    <cache-group>
+        <name>tenantUserCache</name>
+        <capacity>1000</capacity>
+        <expiry>60</expiry>
+    </cache-group>
+
+    <cache-group>
+        <name>oobDashboardSavedSearchCache</name>
+        <capacity>5000</capacity>
+        <expiry>60</expiry>
+    </cache-group>
+
+</root>

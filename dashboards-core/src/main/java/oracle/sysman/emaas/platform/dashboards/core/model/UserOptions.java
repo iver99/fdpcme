@@ -8,12 +8,18 @@ import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonF
 import oracle.sysman.emaas.platform.dashboards.core.util.DateUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 
 /**
  * @author jishshi
  * @since 2/2/2016.
  */
 public class UserOptions {
+    private static final Logger LOGGER = LogManager.getLogger(UserOptions.class);
+
     private String userName;
     private BigInteger dashboardId;
     private Long autoRefreshInterval;
@@ -92,5 +98,19 @@ public class UserOptions {
         euo.setExtendedOptions(extendedOptions);
 
         return euo;
+    }
+
+    public boolean validateExtendedOptions() {
+        try {
+            if (this.getExtendedOptions() != null) {
+                new JSONObject(this.getExtendedOptions());
+                // the value should be in format like {selectedTab: 15}, to validate the string, we wrap it as {'tempData' : {selectedTab: 15}} and validate it again
+                new JSONObject("{\"tempData\":" + extendedOptions + "}");
+            }
+        } catch (JSONException e) {
+            LOGGER.error(e);
+            return false;
+        }
+        return true;
     }
 }

@@ -15,7 +15,14 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
+import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
+import oracle.sysman.emaas.platform.emcpdf.cache.exception.ExecutionException;
+import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.DefaultKeyGenerator;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.ScreenshotData;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
+import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -437,7 +444,7 @@ public class DashboardManager
 						ep = null;
 						edbdtList = ed.getDashboardTileList();
 					} catch (DashboardException e) {
-						LOGGER.error(e.getStackTrace());
+						LOGGER.error(e);
 						return cdSet;
 					}
 				}
@@ -450,7 +457,7 @@ public class DashboardManager
 					ssfIdList.add(edt.getWidgetUniqueId());
 				}
 			}
-			String savedSearchResponse = retrieveSavedSeasrch(ssfIdList);
+			String savedSearchResponse = retrieveSavedSeasrch(dashboardId, ed.getIsSystem() == 1, ssfIdList);
 
 			// combine single dashboard or selected dashbaord
 			CombinedDashboard cd = CombinedDashboard.valueOf(ed, ep, euo,savedSearchResponse);
@@ -471,8 +478,26 @@ public class DashboardManager
 	}
 	
 
-    private String retrieveSavedSeasrch(List<String> ssfIdList) {
-        TenantSubscriptionUtil.RestClient rc = new TenantSubscriptionUtil.RestClient();
+    private String retrieveSavedSeasrch(BigInteger dashboardId, boolean isOobDashboard, List<String> ssfIdList) {
+		ICacheManager cm= CacheManagers.getInstance().build();
+		String cachedData = null;
+		Object cacheKey = null;
+		if (dashboardId != null && isOobDashboard) {
+			cacheKey = DefaultKeyGenerator.getInstance().generate(new Tenant("COMMON_TENANT_FOR_OOB_DASHBOARD_CACHE"),
+					new Keys(CacheConstants.LOOKUP_CACHE_KEY_OOB_DASHBOARD_SAVEDSEARCH, dashboardId));
+			try {
+				cachedData = (String) cm.getCache(CacheConstants.CACHES_OOB_DASHBOARD_SAVEDSEARCH_CACHE).get(cacheKey);
+				if (cachedData != null) {
+					LOGGER.debug(
+							"retrieved OOB widget data for dashboard {} from cache: {}", dashboardId, cachedData);
+					return cachedData;
+				}
+			} catch (ExecutionException e) { // if we see this cache issue, we just log and go ahead
+				LOGGER.error(e);
+			}
+		}
+
+		TenantSubscriptionUtil.RestClient rc = new TenantSubscriptionUtil.RestClient();
         Link tenantsLink = RegistryLookupUtil.getServiceInternalLink(
         		"SavedSearch", "1.0+", "search", null);
         String tenantHref = tenantsLink.getHref() + "/list";
@@ -483,8 +508,11 @@ public class DashboardManager
         try {
         	savedSearchResponse = rc.put(tenantHref, headers, ssfIdList.toString(), tenantName);
         } catch (Exception e) {
-        	LOGGER.info("savedsearch response", e);
+        	LOGGER.error(e);
         }
+		if (!StringUtil.isEmpty(savedSearchResponse) && dashboardId != null && isOobDashboard) {
+			cm.getCache(CacheConstants.CACHES_OOB_DASHBOARD_SAVEDSEARCH_CACHE).put(cacheKey,savedSearchResponse);
+		}
         return savedSearchResponse;
     }
 
@@ -1101,6 +1129,10 @@ public class DashboardManager
 				EmsDashboard emsd=dsf.getEmsDashboardById(dupId);
 				ed.setScreenShot(emsd.getScreenShot());
 			}
+			String dbdName = (dbd.getName() !=null? dbd.getName().replace("&amp;", "&"):dbd.getName());
+			ed.setName(dbdName);
+			String dbdDes = (dbd.getDescription() !=null? dbd.getDescription().replace("&amp;", "&"):dbd.getDescription());
+			ed.setDescription(dbdDes);
 			dsf.persistEmsDashboard(ed);
 			updateLastAccessDate(ed.getDashboardId(), tenantId);
 			return Dashboard.valueOf(ed, dbd, true, true, true);
@@ -1444,40 +1476,40 @@ public class DashboardManager
 			Locale locale)
 	{
 		if (!ic) {
-			sb.append(" and (p.name LIKE ?" + index++);
+			sb.append(" and (p.name LIKE ?" + index++ +" escape '\\' ");
 			paramList.add("%" + StringEscapeUtils.escapeHtml4(queryString) + "%");
 		}
 		else {
-			sb.append(" and (lower(p.name) LIKE ?" + index++);
+			sb.append(" and (lower(p.name) LIKE ?" + index++ +" escape '\\' ");
 			paramList.add("%" + StringEscapeUtils.escapeHtml4(queryString.toLowerCase(locale)) + "%");
 		}
 
 		if (!ic) {
-			sb.append(" or p.description like ?" + index++);
+			sb.append(" or p.description like ?" + index++ +" escape '\\' ");
 			paramList.add("%" + StringEscapeUtils.escapeHtml4(queryString) + "%");
 		}
 		else {
-			sb.append(" or lower(p.description) like ?" + index++);
+			sb.append(" or lower(p.description) like ?" + index++ +" escape '\\' ");
 			paramList.add("%" + StringEscapeUtils.escapeHtml4(queryString.toLowerCase(locale)) + "%");
 		}
 
 		if (!ic) {
-			sb.append(" or p.owner like ?" + index++);
+			sb.append(" or p.owner like ?" + index++ +" escape '\\' ");
 			paramList.add("%" + StringEscapeUtils.escapeHtml4(queryString) + "%");
 		}
 		else {
-			sb.append(" or lower(p.owner) like ?" + index++);
+			sb.append(" or lower(p.owner) like ?" + index++ +" escape '\\' ");
 			paramList.add("%" + StringEscapeUtils.escapeHtml4(queryString.toLowerCase(locale)) + "%");
 		}
 
 		if (!ic) {
 			sb.append(" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where t.type <> 1 and t.title like ?"
-					+ index++ + " )) ");
+					+ index++ +" escape '\\' " + " )) ");
 			paramList.add("%" + queryString + "%");
 		}
 		else {
 			sb.append(" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where t.type <> 1 and lower(t.title) like ?"
-					+ index++ + " )) ");
+					+ index++ +" escape '\\' " + " )) ");
 			paramList.add("%" + queryString.toLowerCase(locale) + "%");
 		}
 		return index;
