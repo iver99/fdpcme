@@ -180,6 +180,6 @@ define({
       "PILL_REMOVE_TITLE": "Remove",
       
       //Help message
-      "DATETIME_PICKER_RADIO_LATEST_HELP":"The latest data the system can return"
+      "DATETIME_PICKER_RADIO_LATEST_HELP":"The latest data the system can return."
 });
 

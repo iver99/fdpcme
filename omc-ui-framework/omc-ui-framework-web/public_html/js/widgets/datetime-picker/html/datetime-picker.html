@@ -138,11 +138,11 @@
                         </select>
                         <!-- ko if: showLatestOnCustomPanel() == true -->
                         <span style="margin-left:4px">
-                            <input type="radio" name="newLatest" value="latestOnCustom" data-bind="checked: lrCtrlVal">
-                            <label data-bind="text:timePeriodLatest,css:{'latest-disabled': !enableLatestOnCustomPanel()}"></label>
+                            <input type="radio" name="newLatest" value="latestOnCustom" data-bind="checked: lrCtrlVal, disable: !enableLatestOnCustomPanel()">
+                            <label data-bind="text:timePeriodLatest, style: {color: enableLatestOnCustomPanel()?'':'grey'}"></label>
                         </span>
-                        <div class="time-filter-latest-question fa-icon-font fa-icon-font-14">
-                            <span class="time-filter-latest-tooltip" data-bind="text: nls.DATETIME_PICKER_RADIO_LATEST_HELP"></span>
+                        <div class="time-filter-latest-question fa-icon-font fa-icon-font-14" data-bind="css: {'latest-enabled': enableLatestOnCustomPanel()}">
+                            <span class="time-filter-latest-tooltip" data-bind="text: nls.DATETIME_PICKER_RADIO_LATEST_HELP, css: {'latest-enabled': enableLatestOnCustomPanel()}"></span>
                         </div>                                                    
                         <!-- /ko -->
                         <hr>
