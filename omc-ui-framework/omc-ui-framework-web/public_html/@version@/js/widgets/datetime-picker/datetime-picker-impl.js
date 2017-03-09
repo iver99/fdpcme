@@ -2594,7 +2594,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                 self.applyClick();
                             }, 0);
                         }else{
-                            customClick(0);
+                            customClick(1);
                         }
                     }else {
                         self.showRightPanel(true);
