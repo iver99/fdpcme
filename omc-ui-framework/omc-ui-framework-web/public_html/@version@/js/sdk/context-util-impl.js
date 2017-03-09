@@ -1045,17 +1045,20 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
 //                omcContext.previousEntityMeIds = ids ? ids : [];
 
                 var meIds = null;
+                var _meIds = null;
 
                 //If it's an array, convert to a comma separated string
                 if ($.isArray(entityMEIDs)) {
-                    meIds = entityMEIDs.sort().join();
+                    meIds = entityMEIDs.join();
+                    _meIds = entityMEIDs.sort().join();
                 }
 //                //If it's a string
                 else if (entityMEIDs) {
                     meIds = entityMEIDs;
+                    _meIds = entityMEIDs;
                 }
                 var currentEntityIds = self.getEntityMeIds();
-                if (meIds !== (currentEntityIds ? currentEntityIds.sort().join() : null)) {
+                if (_meIds !== (currentEntityIds ? currentEntityIds.sort().join() : null)) {
                     console.log("****************** updating entity ids");
                     setIndividualContext('entity', 'entityMEIDs', meIds, true, true, false, source);
                     //Set entity meIds will reset the cached entity objects, 
@@ -1546,6 +1549,11 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
             var entitiesFetched = [];
             function loadEntities(data) {
                 entitiesFetched = [];
+                var entityMeIds = self.getEntityMeIds();
+                var meIdIndex = null;
+                if(!$.isArray(entityMeIds)) {
+                    return;
+                }
                 if (data && data['rows']) {
                     var dataRows = data['rows'];
                     for (var i = 0; i < dataRows.length; i++) {
@@ -1555,7 +1563,9 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                         entity['entityName'] = dataRows[i][2];
                         entity['entityType'] = dataRows[i][4];
                         entity['meClass'] = dataRows[i][5];
-                        entitiesFetched.push(entity);
+                        
+                        meIdIndex = entityMeIds.indexOf(entity['meId']);
+                        (meIdIndex > -1) && (entitiesFetched[meIdIndex] = entity);
                     }
                 }
             }
@@ -1588,14 +1598,6 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                                 "not": false,
                                 "lhs": {"expr": "column", "table": "me", "column": "meId"},
                                 "rhs": []
-                            },
-                            "orderBy": {
-                                "entries": [{
-                                        "entry": "expr",
-                                        "item": {"expr": "function", "name": "UPPER", "args": [{"expr": "column", "table": "me", "column": "entityName"}]},
-                                        "direction": "DESC",
-                                        "nulls": "LAST"
-                                    }]
                             },
                             "groupBy": null
                         }
@@ -1637,14 +1639,6 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                             "where": {"cond": "compare", "comparator": "EQ",
                                 "lhs": {"expr": "column", "table": "me", "column": "entityType"},
                                 "rhs": {'expr': 'str', 'val': entityType}
-                            },
-                            "orderBy": {
-                                "entries": [{
-                                        "entry": "expr",
-                                        "item": {"expr": "function", "name": "UPPER", "args": [{"expr": "column", "table": "me", "column": "entityName"}]},
-                                        "direction": "DESC",
-                                        "nulls": "LAST"
-                                    }]
                             },
                             "groupBy": null
                         }
