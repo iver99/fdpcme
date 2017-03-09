@@ -129,6 +129,45 @@ define([
                 }
 
                 function getServiceData(serviceLinks) {
+                    self.allServiceData = [{
+	"appId":	"APM",
+	"serviceName":	"APMName",
+	"version":	"1.0",
+    "serviceMenus":    [{'id': 'apm_home',type:'menu_item', 'labelKey': 'Home', 'externalUrl': '#'},
+                                    {'id': 'apm_Alerts',type:'menu_item', 'labelKey': 'Alerts', 'externalUrl': '#', 'selfHandleMenuSelection': 'false'},
+                                    {'id': 'apm_app',type:'menu_item', 'labelKey': 'Applications', 'externalUrl': '#'},
+                                    {'id': 'apm_divider',type:'divider', 'labelKey': '', 'externalUrl': '#'},
+                                    {'id': 'apm_pages',type:'menu_item', 'labelKey': 'Pages', 'externalUrl': '#'},
+                                    {'id': 'apm_ajaxcalls',type:'menu_item', 'labelKey': 'Ajax Calls', 'externalUrl': '#'},
+                                    {'id': 'apm_sessions',type:'menu_item', 'labelKey': 'Sessions', 'externalUrl': '#'},
+                                    {'id': 'apm_synthetictests',type:'menu_item', 'labelKey': 'Synthetic Tests', 'externalUrl': '#'},
+                                    {'id': 'apm_divider1',type:'divider', 'labelKey': '', 'externalUrl': '#'},
+                                    {'id': 'apm_mobileclient',type:'menu_item', 'labelKey': 'Mobile Client', 'externalUrl': '#'},
+                                    {'id': 'apm_viewcontrollers',type:'menu_item', 'labelKey': 'View Controllers/Activities', 'externalUrl': '#'},
+                                    {'id': 'apm_mobilehttp',type:'menu_item', 'labelKey': '(Mobile)HTTP Requests', 'externalUrl': '#'},
+                                    {'id': 'apm_divider2',type:'divider', 'labelKey': '', 'externalUrl': '#'},
+                                    {'id': 'apm_serverrequests',type:'menu_item', 'labelKey': 'Server Requests', 'externalUrl': '#'},
+                                    {'id': 'apm_threadprofiler',type:'menu_item', 'labelKey': 'Thread Profilers', 'externalUrl': '#'},
+                                    {'id': 'apm_appservers',type:'menu_item', 'labelKey': 'App Servers', 'externalUrl': '#'}],
+	"serviceAdminMenus": 	{'id': 'apm_admin',type:'admin_menu_group', 'labelKey': 'APM Admin', 'externalUrl': '#', children: 
+                                        [{'id': 'apm_admin_alertrules',type:'menu_item', 'labelKey': 'Alert Rules', 'externalUrl': '#'},
+                                        {'id': 'apm_admin_appdef',type:'menu_item', 'labelKey': 'BRANDING_BAR_HAMBURGER_MENU_ADMIN_ALERTRULES_LABEL', 'externalUrl': '#'},
+                                        {'id': 'apm_admin_synthetictests',type:'menu_item', 'labelKey': 'Synthetic Tests', 'externalUrl': '#'},
+                                        {'id': 'apm_admin_location',type:'menu_item', 'labelKey': 'Beacon Locations', 'externalUrl': '#'},
+                                        {'id': 'apm_admin_metricsettings',type:'menu_item', 'labelKey': 'Metric Settings', 'externalUrl': '#'},
+                                        {'id': 'apm_admin_browseragents',type:'menu_item', 'labelKey': 'Browser Agents', 'externalUrl': '#'},
+                                        {'id': 'apm_admin_mobileclientregistry',type:'menu_item', 'labelKey': 'Mobile Client Registrations', 'externalUrl': '#'}]},
+	"serviceMenuMsgBundle": nls
+},
+{
+	"appId":	"LogAnalytics",
+	"serviceName":	"LogAnalyticsName",
+	"version":	"1.0",
+	"serviceMenus":
+                                    [{'id': 'la_home', 'labelKey': 'Log Explorer', 'externalUrl': '#'},
+                                    {'id': 'la_Alerts', 'labelKey': 'Alerts', 'externalUrl': '#'}],
+	"serviceMenuMsgBundle": nls
+}];
                     if(!self.allServiceData || self.allServiceData.length < 1){
                         self.allServiceData = {};
                         $.each(serviceLinks, function(idx, linkItem){
@@ -207,8 +246,9 @@ define([
                     return -1;
                 }
                 
-                self.serviceLinks = getServiceLinks();
-                self.serviceLinks && getServiceData(self.serviceLinks);
+//                self.serviceLinks = getServiceLinks();
+//                self.serviceLinks && getServiceData(self.serviceLinks);
+                getServiceData(self.serviceLinks);
                 self.serviceMenuData = [];
                 for(var k = 0; k < rootMenuData.length; ++k){
                     self.serviceMenuData.push($.extend(true,{},rootMenuData[k]));
