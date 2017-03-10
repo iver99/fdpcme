@@ -2,6 +2,7 @@ package oracle.sysman.emaas.platform.emcpdf.cache.support;
 
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICache;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
+import oracle.sysman.emaas.platform.emcpdf.cache.support.lru.LinkedHashMapCache;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -62,6 +63,14 @@ public abstract class AbstractCacheManager implements ICacheManager{
     @Override
     public void close() throws IOException{
         this.cacheMap.clear();
+        for(ICache cache:this.cacheMap.values()){
+            LinkedHashMapCache cacheGroup = (LinkedHashMapCache)cache;
+            cacheGroup.getTimer().cancel();
+            cacheGroup.getTimer().purge();
+            LOGGER.info("Cache group {} timer is cancelled and purged!",cacheGroup.getName());
+
+        }
+
     }
 
     public ConcurrentMap<String, ICache> getCacheMap() {
