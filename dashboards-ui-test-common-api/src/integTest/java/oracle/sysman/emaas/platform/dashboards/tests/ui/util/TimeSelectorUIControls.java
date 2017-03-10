@@ -108,7 +108,8 @@ public class TimeSelectorUIControls
 	public static final String sFlexRelTimeOptStart = "div[id^='pickerPanel'][id$='_wrapper_layer'] div[data-oj-containerid^='flexRelTimeOpt'] ul li:nth-of-type(";
 	public static final String sFlexRelTimeOptEnd = ")";
 	public static final String sRangeRadio = "div[id^='pickerPanel'] input[value='timeLevelCtrl']";
-
+	
+	public static final String sLatestRadio = "div[id^='pickerPanel'] input[value='latestOnCustom']";
 	// End: Flexible Relative Time Period
 
 	private TimeSelectorUIControls()

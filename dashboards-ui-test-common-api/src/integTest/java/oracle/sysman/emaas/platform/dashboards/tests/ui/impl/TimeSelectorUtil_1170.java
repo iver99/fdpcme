@@ -21,7 +21,7 @@ import org.openqa.selenium.WebElement;
 
 public class TimeSelectorUtil_1170 extends TimeSelectorUtil_1160
 {
-
+	
 	@Override
 	public String setTimeRange(WebDriver webd, int Index, TimeRange rangeoption)
 	{
@@ -114,9 +114,21 @@ public class TimeSelectorUtil_1170 extends TimeSelectorUtil_1160
 				break;
 
 			case Latest:
-				webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_Latest);
-				webd.click("css=" + TimeSelectorUIControls.sTimeRange_Latest);
-				webd.takeScreenShot();
+				if(webd.isDisplayed("css=" + TimeSelectorUIControls.sTimeRange_Latest)) {
+					webd.click("css=" + TimeSelectorUIControls.sTimeRange_Latest);
+					webd.takeScreenShot();
+				}else {
+					webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_Custom);
+					webd.click("css=" + TimeSelectorUIControls.sTimeRange_Custom);
+					webd.takeScreenShot();
+					
+					webd.waitForElementPresent("css=" + TimeSelectorUIControls.sLatestRadio);
+					webd.click("css=" + TimeSelectorUIControls.sLatestRadio);
+					webd.takeScreenShot();
+					
+					clickApplyButton(webd);
+				}
+				
 				return webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn)).get(Index - 1)
 						.getText();
 			case Custom:
@@ -234,9 +246,20 @@ public class TimeSelectorUtil_1170 extends TimeSelectorUtil_1160
 				webd.takeScreenShot();
 				break;
 			case Latest:
-				webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_Latest);
-				webd.click("css=" + TimeSelectorUIControls.sTimeRange_Latest);
-				webd.takeScreenShot();
+				if(webd.isDisplayed("css=" + TimeSelectorUIControls.sTimeRange_Latest)) {
+					webd.click("css=" + TimeSelectorUIControls.sTimeRange_Latest);
+					webd.takeScreenShot();
+				}else {
+					webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_Custom);
+					webd.click("css=" + TimeSelectorUIControls.sTimeRange_Custom);
+					webd.takeScreenShot();
+					
+					webd.waitForElementPresent("css=" + TimeSelectorUIControls.sLatestRadio);
+					webd.click("css=" + TimeSelectorUIControls.sLatestRadio);
+					webd.takeScreenShot();
+					
+					clickApplyButton(webd);
+				}
 				return webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn)).get(index - 1)
 						.getText();
 			case Custom:
@@ -377,9 +400,20 @@ public class TimeSelectorUtil_1170 extends TimeSelectorUtil_1160
 				break;
 
 			case Latest:
-				webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_Latest);
-				webd.click("css=" + TimeSelectorUIControls.sTimeRange_Latest);
-				webd.takeScreenShot();
+				if(webd.isDisplayed("css=" + TimeSelectorUIControls.sTimeRange_Latest)) {
+					webd.click("css=" + TimeSelectorUIControls.sTimeRange_Latest);
+					webd.takeScreenShot();
+				}else {
+					webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_Custom);
+					webd.click("css=" + TimeSelectorUIControls.sTimeRange_Custom);
+					webd.takeScreenShot();
+					
+					webd.waitForElementPresent("css=" + TimeSelectorUIControls.sLatestRadio);
+					webd.click("css=" + TimeSelectorUIControls.sLatestRadio);
+					webd.takeScreenShot();
+					
+					clickApplyButton(webd);
+				}
 				return webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn)).get(index - 1)
 						.getText();
 			case Custom:
