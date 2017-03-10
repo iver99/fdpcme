@@ -100,7 +100,7 @@ public class TestDashBoard extends LoginAndLogout
 	@Test
 	public void testDisableEntitiesTimeSelector()
 	{
-		dbName_DisableEntitiesTime = dbName_DisableEntitiesTime + " - " + generateTimeStamp();
+		//dbName_DisableEntitiesTime = dbName_DisableEntitiesTime + " - " + generateTimeStamp();
 		String dbDesc = "This dshboard is test Entities Selector and Time Selector disabled";
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start to test in testDisableEntitiesTimeSelector");
