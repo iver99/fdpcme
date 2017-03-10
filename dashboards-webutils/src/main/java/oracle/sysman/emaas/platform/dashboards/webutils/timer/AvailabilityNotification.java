@@ -128,8 +128,9 @@ public class AvailabilityNotification implements NotificationListener
 
 	private boolean isEntityNamingAvailable()
 	{
+		//when checking entity naming  we don't use cache to make sure check is reliable
 		Link lk = RegistryLookupUtil.getServiceInternalLink(ENTITY_NAMING_SERVICE_NAME, ENTITY_NAMING_SERVICE_VERSION,
-				ENTITY_NAMING_SERVICE_REL, null);
+				ENTITY_NAMING_SERVICE_REL, false, null, false);
 		return lk != null && !StringUtil.isEmpty(lk.getHref());
 	}
 

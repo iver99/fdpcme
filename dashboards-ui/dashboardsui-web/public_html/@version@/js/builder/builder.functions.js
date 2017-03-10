@@ -795,9 +795,9 @@ define(['knockout',
                         //Set both of respectOMCApplicationContext and respectOMCEntityContext to true
                         ctxUtil.respectOMCApplicationContext(true);
                         ctxUtil.respectOMCEntityContext(true);
-                        entityContext = (omcContext.composite && omcContext.composite.compositeMEID) ? omcContext.composite.compositeMEID : null;
+                        var IsGCEntityContextExisted = ((omcContext.composite && omcContext.composite.compositeMEID) || (omcContext.entity && omcContext.entity.entityMEIDs)) ? true : false;
                         //Use dashboard saved entity context if there's no entity context in URL
-                        if(entityContext === null) {
+                        if(!IsGCEntityContextExisted) {
                             if(model.userTsel && model.userExtendedOptions && !$.isEmptyObject(model.userExtendedOptions.tsel)) {
                                 entityContext = model.userExtendedOptions.tsel.entityContext;
                             }else if(model.dashboardExtendedOptions && !$.isEmptyObject(model.dashboardExtendedOptions.tsel)) {
