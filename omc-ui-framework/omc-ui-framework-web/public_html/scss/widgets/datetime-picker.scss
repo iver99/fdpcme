@@ -400,6 +400,14 @@ div[id^='pickerPanel'] .oj-listbox-search-wrapper {
     padding: 10px;
 }
 
+//hack default oj class
+div[id^='pickerPanel'] .oj-listbox-drop{
+    width:82px;
+}
+.pickerPanel .oj-select-choice{
+    width:82px
+}
+
 .overflowedLabel{
     display: inline-block;
     font-size: 10px;
@@ -409,12 +417,4 @@ div[id^='pickerPanel'] .oj-listbox-search-wrapper {
     border-radius: 1px;
     box-shadow: 1px 1px 3px 0 rgba(0,0,0,35);
     max-width: 340px;
-}
-
-//hack default oj class
-.oj-listbox-drop{
-    width:82px !important;
-}
-.pickerPanel .oj-select-choice{
-    width:82px
 }
