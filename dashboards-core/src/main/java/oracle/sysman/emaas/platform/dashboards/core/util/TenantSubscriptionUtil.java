@@ -209,6 +209,7 @@ public class TenantSubscriptionUtil
 			LOGGER.warn("This is usually unexpected: now it's trying to retrieve subscribed applications for null tenant");
 			return Collections.emptyList();
 		}
+		long start = System.currentTimeMillis();
 		ICacheManager cm= CacheManagers.getInstance().build();
 		Tenant cacheTenant = new Tenant(tenant);
 		List<String> cachedApps;
@@ -220,95 +221,59 @@ public class TenantSubscriptionUtil
 			return Collections.emptyList();
 		}
 		if (cachedApps != null) {
-			LOGGER.debug(
-					"retrieved subscribed apps for tenant {} from cache: "
-							+ StringUtil.arrayToCommaDelimitedString(cachedApps.toArray()), tenant);
+			LOGGER.info(
+                    "retrieved subscribed apps for tenant {} from cache: "
+                            + StringUtil.arrayToCommaDelimitedString(cachedApps.toArray()), tenant);
 			return cachedApps;
 		}
 
-		Link domainLink = RegistryLookupUtil.getServiceInternalLink("EntityNaming", "1.0+", "collection/domains", null);
-		if (domainLink == null || domainLink.getHref() == null || "".equals(domainLink.getHref())) {
+		Link lookupLink = RegistryLookupUtil.getServiceInternalLink("EntityNaming", "1.0+", "collection/lookups", null);
+		if (lookupLink == null || lookupLink.getHref() == null || "".equals(lookupLink.getHref())) {
 			LOGGER.warn(
-					"Failed to get entity naming service, or its rel (collection/domains) link is empty. Exists the retrieval of subscribed service for tenant {}",
+					"Failed to get entity naming service, or its rel (collection/lookups) link is empty. Exists the retrieval of subscribed service for tenant {}",
 					tenant);
 			cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE).evict(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS)));
 			return Collections.emptyList();
 		}
-		LOGGER.debug("Checking tenant (" + tenant + ") subscriptions. The entity naming href is " + domainLink.getHref());
-		String domainHref = domainLink.getHref();
+		LOGGER.debug("Checking tenant (" + tenant + ") subscriptions. The entity naming lookups href is " + lookupLink.getHref());
+		String queryHref = lookupLink.getHref() + "?domainName=TenantApplicationMapping&opcTenantId=" + tenant;
 		RestClient rc = new RestClient();
-		String domainsResponse = rc.get(domainHref, tenant);
-		LOGGER.debug("Checking tenant (" + tenant + ") subscriptions. Domains list response is " + domainsResponse);
+		long subappQueryStart = System.currentTimeMillis();
+		String appsResponse = rc.get(queryHref, tenant);
+		LOGGER.info("Checking tenant ({}) subscriptions. URL is {}, query response is {}. It took {}ms", tenant, queryHref, appsResponse, (System.currentTimeMillis() - subappQueryStart));
 		JsonUtil ju = JsonUtil.buildNormalMapper();
 		try {
-			DomainsEntity de = ju.fromJson(domainsResponse, DomainsEntity.class);
-			if (de == null || de.getItems() == null || de.getItems().isEmpty()) {
-				LOGGER.warn("Checking tenant (" + tenant
-						+ ") subscriptions: null/empty domains entity or domains item retrieved.");
-				cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE).evict(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS)));
-				return Collections.emptyList();
-			}
-			String tenantAppUrl = null;
-			for (DomainEntity domain : de.getItems()) {
-				if ("TenantApplicationMapping".equals(domain.getDomainName())) {
-					tenantAppUrl = domain.getCanonicalUrl();
-					break;
-				}
-			}
-			if (tenantAppUrl == null || "".equals(tenantAppUrl)) {
-				LOGGER.warn("Checking tenant (" + tenant + ") subscriptions. 'TenantApplicationMapping' not found");
-				cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE).evict(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS)));
-				return Collections.emptyList();
-			}
-			String appMappingUrl = tenantAppUrl + "/lookups?opcTenantId=" + tenant;
-			LOGGER.debug("Checking tenant (" + tenant + ") subscriptions. tenant application mapping lookup URL is "
-					+ appMappingUrl);
-			String appMappingJson = rc.get(appMappingUrl, tenant);
-			LOGGER.debug("Checking tenant (" + tenant + ") subscriptions. application lookup response json is " + appMappingJson);
-			if (appMappingJson == null || "".equals(appMappingJson)) {
-				cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE).evict(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS)));
-				return Collections.emptyList();
-			}
-			AppMappingCollection amec = ju.fromJson(appMappingJson, AppMappingCollection.class);
+			AppMappingCollection amec = ju.fromJson(appsResponse, AppMappingCollection.class);
 			if (amec == null || amec.getItems() == null || amec.getItems().isEmpty()) {
 				LOGGER.error("Checking tenant (" + tenant + ") subscriptions. Empty application mapping items are retrieved");
 				cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE).evict(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS)));
 				return Collections.emptyList();
 			}
-			AppMappingEntity ame = null;
+			String apps = null;
 			for (AppMappingEntity entity : amec.getItems()) {
 				if (entity.getValues() == null) {
 					continue;
 				}
 				for (AppMappingEntity.AppMappingValue amv : entity.getValues()) {
 					if (tenant.equals(amv.getOpcTenantId())) {
-						ame = entity;
+						apps = amv.getApplicationNames();
 						break;
 					}
 
 				}
 			}
-			if (ame == null || ame.getValues() == null || ame.getValues().isEmpty()) {
-				LOGGER.error("Checking tenant (" + tenant
-						+ ") subscriptions. Failed to get an application mapping for the specified tenant");
-				cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE).evict(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS)));
-				return Collections.emptyList();
-			}
-			String apps = null;
-			for (AppMappingEntity.AppMappingValue amv : ame.getValues()) {
-				if (tenant.equals(amv.getOpcTenantId())) {
-					apps = amv.getApplicationNames();
-					break;
-				}
-			}
 			LOGGER.debug("Checking tenant (" + tenant + ") subscriptions. applications for the tenant are " + apps);
 			if (apps == null || "".equals(apps)) {
+				LOGGER.error("Checking tenant ({}) subscriptions. Failed to get subscribed apps data for the specified tenant, or get empty subscribed apps", tenant);
 				cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE).evict(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS)));
 				return Collections.emptyList();
 			}
 			List<String> origAppsList = Arrays.asList(apps
 					.split(ApplicationEditionConverter.APPLICATION_EDITION_ELEMENT_DELIMINATOR));
 			cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE).put(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS)),origAppsList);
+
+            long end = System.currentTimeMillis();
+            LOGGER.info("It takes {} ms to get subscribed apps. applications for the tenant are {}", (end - start), apps);
 
 			return origAppsList;
 

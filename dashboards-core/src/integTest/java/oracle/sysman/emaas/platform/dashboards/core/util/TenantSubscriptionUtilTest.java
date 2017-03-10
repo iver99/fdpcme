@@ -8,6 +8,7 @@ import java.util.List;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 
+import oracle.sysman.emaas.platform.dashboards.core.restclient.AppMappingCollection;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.lru.LRUCacheManager;
@@ -429,8 +430,8 @@ public class TenantSubscriptionUtilTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testGetTenantSubscribedServicesEmptyDomainsEntityS2(@Mocked RegistryLookupUtil anyUtil,
-			@Mocked final RestClient anyClient, @Mocked final JsonUtil anyJsonUtil, @Mocked final DomainsEntity anyDomainsEntity)
+	public void testGetTenantSubscribedServicesEmptyAppMappItemsS2(@Mocked RegistryLookupUtil anyUtil,
+			@Mocked final RestClient anyClient, @Mocked final JsonUtil anyJsonUtil, @Mocked final AppMappingCollection anyAppMappingCollection)
 			throws IOException
 	{
 		final Link link = new Link();
@@ -447,9 +448,9 @@ public class TenantSubscriptionUtilTest
 				anyClient.get(anyString, anyString);
 				JsonUtil.buildNormalMapper();
 				result = anyJsonUtil;
-				anyJsonUtil.fromJson(anyString, DomainsEntity.class);
-				result = anyDomainsEntity;
-				anyDomainsEntity.getItems();
+				anyJsonUtil.fromJson(anyString, AppMappingCollection.class);
+				result = anyAppMappingCollection;
+                anyAppMappingCollection.getItems();
 				result = null;
 			}
 		};
@@ -500,7 +501,7 @@ public class TenantSubscriptionUtilTest
 				anyClient.get(anyString, anyString);
 				JsonUtil.buildNormalMapper();
 				result = anyJsonUtil;
-				anyJsonUtil.fromJson(anyString, DomainsEntity.class);
+				anyJsonUtil.fromJson(anyString, AppMappingCollection.class);
 				result = new IOException();
 			}
 		};
@@ -532,7 +533,7 @@ public class TenantSubscriptionUtilTest
 				result = link;
 
 				anyClient.get(anyString, anyString);
-				returns(ENTITY_NAMING_DOMAIN, TENANT_LOOKUP_RESULT);
+				returns(TENANT_LOOKUP_RESULT);
 			}
 		};
 		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1");
