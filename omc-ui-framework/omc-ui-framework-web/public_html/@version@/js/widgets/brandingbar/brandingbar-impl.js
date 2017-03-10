@@ -467,13 +467,14 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 "helpTopicId": "em_home_gs"
             };
 
+            var omcHamburgerMenuOptIn = $.isFunction(params.omcHamburgerMenuOptIn) ? params.omcHamburgerMenuOptIn() : params.omcHamburgerMenuOptIn;
             self.appId = $.isFunction(params.appId) ? params.appId() : params.appId;
             self.relNotificationCheck = $.isFunction(params.relNotificationCheck) ? params.relNotificationCheck() : params.relNotificationCheck;
             self.relNotificationShow = $.isFunction(params.relNotificationShow) ? params.relNotificationShow() : params.relNotificationShow;
             self.notificationVisible = ko.observable(false);
             self.notificationDisabled = ko.observable(true);
             self.notificationPageUrl = null;
-            self.navLinksVisible = true;
+            self.navLinksVisible = omcHamburgerMenuOptIn ? false : true;
             self.navLinksImmediateLoading = ko.observable(false);
 
             var isAppIdNotEmpty = self.appId && $.trim(self.appId) !== "";
@@ -727,63 +728,66 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 item.stopImmediatePropagation();
             };
             
-            self.hamburgerBtnLabel = nls.BRANDING_BAR_HAMBURGER_BTN_LABEL;
-            self.menuParams = {'appId': self.appId, 'serviceMenus': params.serviceMenus ? params.serviceMenus : []};
-            //Register a Knockout component for hamburger menu
-            if (!ko.components.isRegistered('omc-uifwk-hamburger-menu')) {
-                var hamburgerVMPath = "uifwk/js/widgets/hamburger-menu/js/hamburger-menu";
-                var hamburgerTemplatePath = "uifwk/js/widgets/hamburger-menu/html/hamburger-menu.html";
-                ko.components.register("omc-uifwk-hamburger-menu", {
-                    viewModel: {require: hamburgerVMPath},
-                    template: {require: 'text!' + hamburgerTemplatePath}
-                });
-            }
+            self.hamburgerMenuEnabled = omcHamburgerMenuOptIn ? true : false;
+            if (omcHamburgerMenuOptIn) {
+                self.hamburgerBtnLabel = nls.BRANDING_BAR_HAMBURGER_BTN_LABEL;
+                self.menuParams = {'appId': self.appId, 'serviceMenus': params.serviceMenus ? params.serviceMenus : []};
+                //Register a Knockout component for hamburger menu
+                if (!ko.components.isRegistered('omc-uifwk-hamburger-menu')) {
+                    var hamburgerVMPath = "uifwk/js/widgets/hamburger-menu/js/hamburger-menu";
+                    var hamburgerTemplatePath = "uifwk/js/widgets/hamburger-menu/html/hamburger-menu.html";
+                    ko.components.register("omc-uifwk-hamburger-menu", {
+                        viewModel: {require: hamburgerVMPath},
+                        template: {require: 'text!' + hamburgerTemplatePath}
+                    });
+                }
 
-            var xlQuery = oj.ResponsiveUtils.getFrameworkQuery(oj.ResponsiveUtils.FRAMEWORK_QUERY_KEY.XL_UP);
-            self.xlargeScreen = oj.ResponsiveKnockoutUtils.createMediaQueryObservable(xlQuery);
+                var xlQuery = oj.ResponsiveUtils.getFrameworkQuery(oj.ResponsiveUtils.FRAMEWORK_QUERY_KEY.XL_UP);
+                self.xlargeScreen = oj.ResponsiveKnockoutUtils.createMediaQueryObservable(xlQuery);
 
-            self.xlargeScreen.subscribe(function(isXlarge){
-                if(!isXlarge){
-                    if($("#omcHamburgerMenu").hasClass("oj-offcanvas-open")){
-                        oj.OffcanvasUtils.close({
-                                "edge": "start",
-                                "displayMode": "push",
-                                "selector": "#omcHamburgerMenu"
-                            });
+                self.xlargeScreen.subscribe(function(isXlarge){
+                    if(!isXlarge){
+                        if($("#omcHamburgerMenu").hasClass("oj-offcanvas-open")){
+                            oj.OffcanvasUtils.close({
+                                    "edge": "start",
+                                    "displayMode": "push",
+                                    "selector": "#omcHamburgerMenu"
+                                });
+                        }
+                    }else{
+                        if(!$("#omcHamburgerMenu").hasClass("oj-offcanvas-open")){
+                            oj.OffcanvasUtils.toggle({
+                                    "edge": "start",
+                                    "displayMode": "push",
+                                    "selector": "#omcHamburgerMenu",
+                                    "autoDismiss": "none"
+                                });
+                        }
                     }
-                }else{
-                    if(!$("#omcHamburgerMenu").hasClass("oj-offcanvas-open")){
-                        oj.OffcanvasUtils.toggle({
+                });
+
+                self.toggleHamburgerMenu = function() {
+                    return oj.OffcanvasUtils.toggle({
+                            "edge": "start",
+                            "displayMode": self.xlargeScreen() ? "push" : "overlay",
+    //                      "content": "#main-container",
+                            "selector": "#omcHamburgerMenu",
+                            "autoDismiss": self.xlargeScreen() ? "none" : "focusLoss"
+                        });
+                };
+
+                var menuUtil = new menuModel();
+                menuUtil.subscribeServiceMenuLoadedEvent(function(){
+                    $((function(){
+                        oj.OffcanvasUtils.open({
                                 "edge": "start",
                                 "displayMode": "push",
                                 "selector": "#omcHamburgerMenu",
                                 "autoDismiss": "none"
                             });
-                    }
-                }
-            });
-
-            self.toggleHamburgerMenu = function() {
-                return oj.OffcanvasUtils.toggle({
-                        "edge": "start",
-                        "displayMode": self.xlargeScreen() ? "push" : "overlay",
-//                      "content": "#main-container",
-                        "selector": "#omcHamburgerMenu",
-                        "autoDismiss": self.xlargeScreen() ? "none" : "focusLoss"
-                    });
-            };
-            
-            var menuUtil = new menuModel();
-            menuUtil.subscribeServiceMenuLoadedEvent(function(){
-                $((function(){
-                    oj.OffcanvasUtils.open({
-                            "edge": "start",
-                            "displayMode": "push",
-                            "selector": "#omcHamburgerMenu",
-                            "autoDismiss": "none"
-                        });
-                })());
-            });
+                    })());
+                });
+            }
             
             /**
              * Notifications button click handler
