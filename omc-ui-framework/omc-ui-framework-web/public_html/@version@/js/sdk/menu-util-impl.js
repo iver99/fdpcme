@@ -16,6 +16,27 @@ define([
                 window.postMessage(message, window.location.href);
             }
             
+            self.fireServiceMenuLoadedEvent = function(){
+                var message = {'tag': 'EMAAS_OMC_GLOBAL_MENU_SERVICE_MENU_LOADED'};
+                window.postMessage(message, window.location.href);
+            };
+            
+            self.subscribeServiceMenuLoadedEvent = function(callback) {
+                function onServiceMenuLoaded(event) {
+                    if (event.origin !== window.location.protocol + '//' + window.location.host) {
+                        return;
+                    }
+                    var eventData = event.data;
+                    //Only handle received message for global menu selection
+                    if (eventData && eventData.tag && eventData.tag === 'EMAAS_OMC_GLOBAL_MENU_SERVICE_MENU_LOADED') {
+                        if ($.isFunction(callback)) {
+                            callback(eventData);
+                        }
+                    }
+                };
+                window.addEventListener("message", onServiceMenuLoaded, false);
+            };
+            
             self.setCurrentMenuItem = function(menuItemId){
                 var message = {'tag': 'EMAAS_OMC_GLOBAL_MENU_SET_CURRENT_ITEM'};
                 message.menuItemId = menuItemId;

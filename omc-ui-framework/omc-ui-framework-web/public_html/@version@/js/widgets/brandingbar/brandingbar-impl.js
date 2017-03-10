@@ -7,6 +7,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
     'ojs/ojcore',
     'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg',
     'uifwk/@version@/js/util/zdt-util-impl',
+    'uifwk/@version@/js/sdk/menu-util-impl',
     'ojs/ojknockout',
     'ojs/ojtoolbar',
     'ojs/ojmenu',
@@ -14,7 +15,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
     'ojs/ojdialog',
     'ojs/ojoffcanvas'
 ],
-    function (ko, $, dfumodel, msgUtilModel, contextModel, oj, nls, zdtUtilModel) {
+    function (ko, $, dfumodel, msgUtilModel, contextModel, oj, nls, zdtUtilModel, menuModel) {
         function BrandingBarViewModel(params) {
             var self = this;
             var msgUtil = new msgUtilModel();
@@ -765,21 +766,25 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.toggleHamburgerMenu = function() {
                 return oj.OffcanvasUtils.toggle({
                         "edge": "start",
-                        "displayMode": self.xlargeScreen()?"push":"overlay",
+                        "displayMode": self.xlargeScreen() ? "push" : "overlay",
 //                      "content": "#main-container",
                         "selector": "#omcHamburgerMenu",
-                        "autoDismiss": self.xlargeScreen()?"none":"focusLoss"
+                        "autoDismiss": self.xlargeScreen() ? "none" : "focusLoss"
                     });
             };
-
-            $((function(){
-                oj.OffcanvasUtils.open({
-                        "edge": "start",
-                        "displayMode": "push",
-                        "selector": "#omcHamburgerMenu",
-                        "autoDismiss": "none"
-                    });
-            })());
+            
+            var menuUtil = new menuModel();
+            menuUtil.subscribeServiceMenuLoadedEvent(function(){
+                $((function(){
+                    oj.OffcanvasUtils.open({
+                            "edge": "start",
+                            "displayMode": "push",
+                            "selector": "#omcHamburgerMenu",
+                            "autoDismiss": "none"
+                        });
+                })());
+            });
+            
             /**
              * Notifications button click handler
              */
