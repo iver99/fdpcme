@@ -85,6 +85,120 @@ define([
                             {'id': 'omc_root_admin_grp_Compliance', type: 'menu_item', 'labelKey': nls.BRANDING_BAR_HAMBURGER_MENU_COMPLIANCE_ADMIN_LABEL, 'externalUrl': '#'}
                     ]}
                 ];
+                
+                var defaultMenuIds = ['omc_root_home','omc_root_alerts','omc_root_dashboards','omc_root_admin'];
+
+                self.privilegeList = [];
+                self.subscribedApps = [];
+                function checkPrivilege(_id, requiredPrivilege){
+                    var appId = _id;
+//                    self.privilegeList = ['apm11','apm22'];//test#################################
+                    if(!self.subscribedApps || self.subscribedApps.length<1){
+                        self.subscribedApps = dfu.getSubscribedApplications();
+                    }
+                    if(!self.privilegeList || self.privilegeList.length<1){
+                        var url = "sso.static/getUserGrants";
+                        if (dfu.isDevMode()) {
+                            url = "/authorization/ws/api/v1/priv/grants/getUserGrants";
+                        }
+                        var header = dfu.getDefaultHeader();
+                        dfu.ajaxWithRetry(url, {
+                                type: 'get',
+                                dataType: 'json',
+                                headers: header,
+                                success: function (data) {
+                                    self.privilegeList = data;
+                                },
+                                error: function (xhr, textStatus, errorThrown) {
+                                    oj.Logger.error("Failed to get UserGrants due to error: " + textStatus);
+                                },
+                                async: false
+                            });
+                    }
+                    if(!self.subscribedApps || !self.privilegeList){
+                        oj.Logger.error("Failed to get subscribed applications or user granted priviledges in 'CheckPriviledge()'.");
+                        return;
+                    }
+                    if(!appId){
+                        oj.Logger.error("Wrong parameter '_id' in 'CheckPriviledge()'.");
+                        return;
+                    }
+                    if(!requiredPrivilege){
+                        return true;
+                    }
+
+                    if(_id.indexOf("omc_root_")>-1){
+                        appId = _id.substring(9);
+                        if(self.subscribedApps.indexOf(appId)<0){
+                            return false;
+                        }
+                    }
+
+                    if(Array.isArray(requiredPrivilege)){
+                        for(var _idx = 0; _idx < requiredPrivilege.length; ++_idx){
+                            if(self.privilegeList.indexOf(requiredPrivilege[_idx])<0){
+                                return false;
+                            }
+                        }
+                        return true;
+                    }else{
+                        if(self.privilegeList.indexOf(requiredPrivilege)<0){
+                                return false;
+                        }else{
+                            return true;
+                        }
+                    }
+                }
+                
+                function filterAuthorizedMenuItem(rawMenuObj){
+                    var _idx;
+                    if(!Array.isArray(rawMenuObj)){
+                        var menuItem = rawMenuObj;
+                        if(defaultMenuIds.indexOf(menuItem.id)>-1){
+                            return menuItem;
+                        }
+                        
+//                        if(menuItem.id === 'omc_root_APM') menuItem.requiredPrivileges = 'apm223';//test###########################################
+                        if(menuItem && menuItem.id && menuItem.requiredPrivileges){
+                            if(!checkPrivilege(menuItem.id, menuItem.requiredPrivileges)){
+                                if(menuItem.id.indexOf('omc_root')<0 && !menuItem.disableMode || menuItem.disableMode === "hidden"){
+                                    return false;
+                                }else{
+                                    menuItem.disabled = true;
+                                    if(menuItem.children)delete menuItem.children;    //if parent menu is disabled,remove sub menus
+                                    return menuItem;
+                                }
+                            }
+                        }
+                        if(menuItem.children){
+                            for(_idx = 0; _idx < menuItem.children.length; ++_idx){
+                                if(!checkPrivilege(menuItem.children[_idx].id, menuItem.children[_idx].requiredPrivileges)){
+                                    if(!menuItem.children[_idx].disableMode || menuItem.children[_idx].disableMode === "hidden"){
+                                        menuItem.children.remove(_idx);
+                                    }else{
+                                        menuItem.children[_idx].disabled = true;
+                                    }
+                                }
+                            }
+                            if(menuItem.children.length === 0){
+                                delete menuItem.children;
+                            }
+                        }
+                        return menuItem;
+                    }else{
+                        var menuItemList = [];
+                        for(_idx = 0; _idx < rawMenuObj.length; ++_idx){
+                            var menuItem = $.extend(true,{},rawMenuObj[_idx]);
+                            if(checkPrivilege(menuItem.children[_idx].id, menuItem.children[_idx].requiredPrivileges)){
+                                menuItemList.push(menuItem);
+                            }else if(menuItem.children[_idx].disableMode && menuItem.children[_idx].disableMode === "disabled"){
+                                menuItem.disabled = true;
+                                menuItemList.push(menuItem);
+                            }
+                        }
+                        return menuItemList;
+                    }
+                }
 
                 self.menuDataRequestingNum = ko.observable(0);
                 function getServiceData(serviceLinks) {
@@ -112,6 +226,7 @@ define([
                                     serviceItem.serviceAdminMenus = data.serviceAdminMenus;
                                     url = data.serviceMenuMsgBundle;
                                     if(!url){
+                                        self.menuDataRequestingNum(self.menuDataRequestingNum()-1);
                                         return;
                                     }
                                     if (dfu.isDevMode()) {
@@ -185,7 +300,8 @@ define([
                 var omcMenus = [];
                 function getMenuItem(item) {
                     if (item) {
-                        var menuItem = {'attr': {'id': item.id, 'type': item.type, 'labelKey': item.labelKey, 'externalUrl': item.externalUrl}};
+                        item = filterAuthorizedMenuItem(item);
+                        var menuItem = {'attr': {'id': item.id, 'type': item.type, 'labelKey': item.labelKey, 'externalUrl': item.externalUrl, 'disabled': item.disabled}};
                         if (item.children && item.children.length > 0) {
                             menuItem.children = [];
                             for (var i = 0; i < item.children.length; i++) {
@@ -210,6 +326,16 @@ define([
                         if (self.serviceMenuData[menuId]) {
                             self.serviceMenuData[menuId].children = singleServiceData.serviceMenus;
                             singleServiceData.serviceAdminMenus && self.serviceMenuData[menuId].children.push(singleServiceData.serviceAdminMenus);
+                            var adminMenuId = findAppItemIndex(rootMenuData,'omc_root_admin');
+                            var adminSubMenuId = findAppItemIndex(rootMenuData[adminMenuId].children,'omc_root_admin_grp_'+singleServiceData.appId);
+                            if(adminSubMenuId > -1){
+                                rootMenuData[adminMenuId].children[adminSubMenuId] = $.extend(true, {}, singleServiceData.serviceAdminMenus);
+                                rootMenuData[adminMenuId].children[adminSubMenuId].id = 'omc_root_admin_grp_'+singleServiceData.appId;
+                            }else{
+                                if(!rootMenuData[adminMenuId].children)rootMenuData['omc_root_admin'].children = [];
+                                rootMenuData[adminMenuId].children.push($.extend(true, {}, singleServiceData.serviceAdminMenus));
+                                rootMenuData[adminMenuId].children[rootMenuData[adminMenuId].children.length - 1].id = 'omc_root_admin_grp_'+singleServiceData.appId;
+                            }
                         }
                     });
                     for (var j = 0; j < self.serviceMenuData.length; j++) {
