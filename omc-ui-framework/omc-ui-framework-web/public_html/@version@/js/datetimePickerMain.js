@@ -366,8 +366,50 @@ require(['ojs/ojcore',
                         self.end2(self.dateConverter.format(appliedEnd));
                     }
                 };
-
+                
+                self.start4 = ko.observable(self.dateTimeConverter1.format(oj.IntlConverterUtils.dateToLocalIso(new Date(end-60*60*1000))));
+                self.end4 = ko.observable(self.dateTimeConverter1.format(oj.IntlConverterUtils.dateToLocalIso(end)));
+                
                 self.timeParams4 = {
+                    hideMainLabel: true,
+                    dtpickerPosition: self.floatPosition1,
+                    timePeriodsSet: "SHORT_TERM",
+                    enableLatestOnCustomPanel: true,
+                    callbackAfterApply: function (start, end, tp, tf, relTimeVal, relTimeUnit) {
+                        var appliedStart = oj.IntlConverterUtils.dateToLocalIso(start);
+                        var appliedEnd = oj.IntlConverterUtils.dateToLocalIso(end);
+                        if((self.isTimePeriodLessThan1day(tp) || relTimeUnit==="SECOND" || relTimeUnit==="MINUTE" || relTimeUnit === "HOUR") && (start.getTimezoneOffset() !== end.getTimezoneOffset())) {
+                            self.start4(self.dateTimeConverter1.format(appliedStart)+" ("+self.getGMTTimezone(start)+")");
+                            self.end4(self.dateTimeConverter1.format(appliedEnd)+" ("+self.getGMTTimezone(end)+")");
+                        }else {
+                            self.start4(self.dateTimeConverter1.format(appliedStart));
+                            self.end4(self.dateTimeConverter1.format(appliedEnd));
+                        }
+                    }
+                };
+                
+                
+                self.start5 = ko.observable(self.dateTimeConverter1.format(oj.IntlConverterUtils.dateToLocalIso(new Date(end-30*24*60*60*1000))));
+                self.end5 = ko.observable(self.dateTimeConverter1.format(oj.IntlConverterUtils.dateToLocalIso(end)));
+                self.timeParams5 = {
+                    hideMainLabel: true,
+                    dtpickerPosition: self.floatPosition1,
+                    timePeriodsSet: "LONG_TERM",
+                    enableLatestOnCustomPanel: true,
+                    callbackAfterApply: function (start, end, tp, tf, relTimeVal, relTimeUnit) {
+                        var appliedStart = oj.IntlConverterUtils.dateToLocalIso(start);
+                        var appliedEnd = oj.IntlConverterUtils.dateToLocalIso(end);
+                        if((self.isTimePeriodLessThan1day(tp) || relTimeUnit==="SECOND" || relTimeUnit==="MINUTE" || relTimeUnit === "HOUR") && (start.getTimezoneOffset() !== end.getTimezoneOffset())) {
+                            self.start5(self.dateTimeConverter1.format(appliedStart)+" ("+self.getGMTTimezone(start)+")");
+                            self.end5(self.dateTimeConverter1.format(appliedEnd)+" ("+self.getGMTTimezone(end)+")");
+                        }else {
+                            self.start5(self.dateTimeConverter1.format(appliedStart));
+                            self.end5(self.dateTimeConverter1.format(appliedEnd));
+                        }
+                    }
+                };
+
+                self.timeParams = {
 //                    startDateTime: "2015-05-17T00:00:00",
 //                    endDateTime: "2015-05-16T13:00:00"
                       startDateTime: new Date(new Date() - 24 * 60 * 60 * 1000),
