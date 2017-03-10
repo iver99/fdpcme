@@ -176,7 +176,8 @@ public class DashboardsUiCORSFilter implements Filter
 						}
 					}
 				}
-				else if (!StringUtil.isEmpty(hReq.getRequestURI()) && hReq.getRequestURI().toLowerCase().contains("emsaasui/emcpdfui/builder.html")) {
+/*				else if (!StringUtil.isEmpty(hReq.getRequestURI()) && hReq.getRequestURI().toLowerCase().contains("emsaasui/emcpdfui/builder.html")) {
+					long start1 = System.currentTimeMillis();
 					List<String> apps = TenantSubscriptionUtil.getTenantSubscribedServices(opcTenantId, user);
 					if (apps == null || apps.isEmpty()) {
 						LOGGER.error("Tenant (" + opcTenantId
@@ -185,7 +186,9 @@ public class DashboardsUiCORSFilter implements Filter
 								"./error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_NO_SUBS_MSG", hReq));
 						return;
 					}
-				}
+					long end1 = System.currentTimeMillis();
+					LOGGER.info("[Diagnosis] Time for builder page to do subscribed apps checking is {}ms", (end1 - start1));
+				}*/
 			}
 		}
 		catch (Exception t) {
