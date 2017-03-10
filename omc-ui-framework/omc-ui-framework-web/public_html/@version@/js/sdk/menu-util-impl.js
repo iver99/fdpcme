@@ -9,8 +9,9 @@ define([
         function UIFWKGlobalMenuUtil() {
             var self = this;
             
-            function fireCompositeMenuDisplayEvent(objMenuName, menuJson) {
+            function fireCompositeMenuDisplayEvent(parentMenuId, objMenuName, menuJson) {
                 var message = {'tag': 'EMAAS_OMC_GLOBAL_MENU_COMPOSITE_DISPLAY'};
+                message.compositeParentMenuId = parentMenuId;
                 message.compositeRootMenuLabel = objMenuName;
                 message.compositeMenuJson = menuJson;
                 window.postMessage(message, window.location.href);
@@ -43,8 +44,8 @@ define([
                 window.postMessage(message, window.location.href);
             };
             
-            self.showCompositeObjectMenu = function(objMenuName, menuJson){
-                fireCompositeMenuDisplayEvent(objMenuName, menuJson);
+            self.showCompositeObjectMenu = function(parentMenuId, objMenuName, menuJson){
+                fireCompositeMenuDisplayEvent(parentMenuId, objMenuName, menuJson);
             };
             
             self.subscribeCompositeMenuDisplayEvent = function(callback) {
@@ -56,7 +57,7 @@ define([
                     //Only handle received message for composite menu display
                     if (eventData && eventData.tag && eventData.tag === 'EMAAS_OMC_GLOBAL_MENU_COMPOSITE_DISPLAY') {
                         if ($.isFunction(callback)) {
-                            callback(eventData.compositeRootMenuLabel, eventData.compositeMenuJson);
+                            callback(eventData.compositeParentMenuId, eventData.compositeRootMenuLabel, eventData.compositeMenuJson);
                         }
                     }
                 };

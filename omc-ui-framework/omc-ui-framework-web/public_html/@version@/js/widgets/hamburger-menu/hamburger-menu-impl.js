@@ -7,9 +7,10 @@ define([
     'uifwk/@version@/js/util/preference-util-impl', 
     'uifwk/@version@/js/sdk/context-util-impl',
     'uifwk/@version@/js/sdk/menu-util-impl',
+    'uifwk/@version@/js/sdk/SessionCacheUtil',
     'ojs/ojnavigationlist',
     'ojs/ojjsontreedatasource'],
-        function ($, oj, ko, nls, dfumodel, pfumodel, ctxmodel, menumodel) {
+        function ($, oj, ko, nls, dfumodel, pfumodel, ctxmodel, menumodel, sessionCacheModel) {
             function HamburgerMenuViewModel(params) {
                 var self = this;
                 var dfu = new dfumodel();
@@ -19,40 +20,70 @@ define([
                 var isSetAsHomeChecked = false;
                 var omcHomeUrl = null;
                 var menuUtil = new menumodel();
+                var rootCompositeMenuid = 'omc_root_composite';
+                var menuSessionCacheName = '_uifwk_servicemenucache';
+                var sessionCacheAllMenusKey = 'omc_hamburger_menu';
+                var sessionCacheOmcMenusDataKey = 'omc_menus';
+                var sessionCacheServiceMenuDataKey = 'service_menu_data';
+                var sessionCacheSelectedMenuIdKey = 'selected_menu_id';
                 
                 self.selectedItem = ko.observable();
                 self.expanded = ko.observableArray([]);
                 
-                function clearCompositeMenuItems() {
-                    var size = omcMenus.length;
-                    if (omcMenus[size-1] && omcMenus[size-1].attr.id === 'omc_root_composite') {
-                        omcMenus.pop();
+                //
+                // sessionStorage cache
+                //
+                var sessionCaches = [];
+                var sessionCacheNames = [menuSessionCacheName];
+                for (var i = 0; i < sessionCacheNames.length; i++) {
+                    sessionCaches.push(new sessionCacheModel(sessionCacheNames[i], 1));
+                }
+                if (window.performance) {
+                    //We should only clear the cache once during a page refresh, otherwise
+                    //it may cause cached data lost though service menus already fetched
+                    if (window.performance.navigation.type === 1 && !window._uifwk.isOmcServiceMenuCacheCleared) {
+                        for (var i = 0; i < sessionCaches.length; i++) {
+                            sessionCaches[i].clearCache();
+                        }
+                        window._uifwk.isOmcServiceMenuCacheCleared = true;
                     }
                 }
                 
-                function jumpToCompositeMenu(rootMenuLabel, menuJson) {
-//                    var compositeMenus = [{'id': 'omc_composite_m1',type:'menu_item', 'labelKey': 'Composite Menu 1', 'externalUrl': '#'},
-//                            {'id': 'omc_composite_m2',type:'menu_item', 'labelKey': 'Composite Menu 2', 'externalUrl': '#'},
-//                            {'id': 'omc_composite_m3',type:'menu_item', 'labelKey': 'Composite Menu 3', 'externalUrl': '#'},
-//                            {'id': 'omc_composite_m4',type:'divider', 'labelKey': '', 'externalUrl': '#'},
-//                            {'id': 'omc_composite_m5',type:'menu_item', 'labelKey': 'Composite Menu 4', 'externalUrl': '#'}
-//                            ];
+                function clearCompositeMenuItems() {
+                    var size = omcMenus.length;
+                    if (omcMenus[size-1] && omcMenus[size-1].attr.id === rootCompositeMenuid) {
+                        omcMenus.pop();
+                    }
+                    currentCompositeParentId = null;
+                }
+                
+                var currentCompositeParentId = null;
+                function jumpToCompositeMenu(parentMenuId, rootMenuLabel, menuJson) {
                     clearCompositeMenuItems();
-                    var rootCompositMenuItem = {'id': 'omc_root_composite', type: 'menu_item', 'labelKey': rootMenuLabel, 'externalUrl': '#', children: menuJson};
+                    currentCompositeParentId = parentMenuId;
+                    var rootCompositMenuItem = {'id': rootCompositeMenuid, type: 'menu_item', 'labelKey': rootMenuLabel, 'externalUrl': '#', children: menuJson};
                     var compositeMenu = getMenuItem(rootCompositMenuItem);
+//                    var parentMenuIndex = findTreeItemIndex(omcMenus, parentMenuId);
+//                    if (parentMenuIndex > -1) {
+//                        if (!omcMenus[parentMenuIndex].children) {
+//                            omcMenus[parentMenuIndex].children = [];
+//                        }
+//                        omcMenus[parentMenuIndex].children.push(compositeMenu);
+//                    }
+                    
                     omcMenus.push(compositeMenu);
-                    self.expanded(['omc_root_composite']);
+                    self.expanded([rootCompositeMenuid]);
                     self.dataSource(new oj.JsonTreeDataSource(omcMenus));
                     $("#omcMenuNavList").ojNavigationList("refresh");
                     
-                    oj.OffcanvasUtils.toggle({
-                                                "edge": "start",
-                                                "displayMode": "push",
-                                //                "content": "#main-container",
-                                                "selector": "#omcHamburgerMenu"
-                                            });
+//                    oj.OffcanvasUtils.toggle({
+//                                                "edge": "start",
+//                                                "displayMode": "push",
+//                                //                "content": "#main-container",
+//                                                "selector": "#omcHamburgerMenu"
+//                                            });
 //                    self.selectedItem('omc_composite_m1');
-//                    $("omcMenuNavList").ojNavigationList("expand", {'key': 'omc_root_composite', 'vetoable': true});                    
+//                    $("omcMenuNavList").ojNavigationList("expand", {'key': rootCompositeMenuid, 'vetoable': true});                    
                 }
                 menuUtil.subscribeCompositeMenuDisplayEvent(jumpToCompositeMenu);
                 
@@ -181,6 +212,18 @@ define([
                     return -1;
                 }
                 
+//                function findTreeItemIndex(items, id) {
+//                    if (id && items && items.length > 0) {
+//                        for (var i = 0; i < items.length; i++) {
+//                            if (id === items[i].attr['id']) {
+//                                return i;
+//                                break;
+//                            }
+//                        }
+//                    }
+//                    return -1;
+//                }
+                
                 self.serviceMenuData = [];
                 var omcMenus = [];
                 function getMenuItem(item) {
@@ -217,14 +260,33 @@ define([
                         var menuItem = getMenuItem(item);
                         omcMenus.push(menuItem);
                     }
+                    sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheOmcMenusDataKey, omcMenus);
+                    sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheServiceMenuDataKey, self.serviceMenuData);
                     self.dataSource(new oj.JsonTreeDataSource(omcMenus));
                     menuUtil.fireServiceMenuLoadedEvent();
                 });
-
-                dfu.getRegistrations(function(data){
-                    self.serviceLinks = data.serviceMenus;
-                    getServiceData(self.serviceLinks);
-                }, true);
+                
+                self.dataSource = ko.observable();
+                var cachedMenus = sessionCaches[0].retrieveDataFromCache(sessionCacheAllMenusKey);
+                if (cachedMenus && cachedMenus[sessionCacheOmcMenusDataKey]) {
+                    omcMenus = cachedMenus[sessionCacheOmcMenusDataKey];
+                    self.serviceMenuData = cachedMenus[sessionCacheServiceMenuDataKey];
+                    self.dataSource(new oj.JsonTreeDataSource(omcMenus));
+                    menuUtil.fireServiceMenuLoadedEvent();
+                    var selectedMenuId = cachedMenus[sessionCacheSelectedMenuIdKey];
+                    if (selectedMenuId) {
+                        menuUtil.setCurrentMenuItem(selectedMenuId);
+                    }
+//                    self.expanded([rootCompositeMenuid]);
+//                    self.dataSource(new oj.JsonTreeDataSource(omcMenus));
+//                    $("#omcMenuNavList").ojNavigationList("refresh");
+                }
+                else {
+                    dfu.getRegistrations(function(data){
+                        self.serviceLinks = data.serviceMenus;
+                        getServiceData(self.serviceLinks);
+                    }, true);
+                }
 
                 function findItem(item, menuId) {
                     if (item && item.id === menuId) {
@@ -263,8 +325,9 @@ define([
                     return itemStack;
                 }
                 
-                self.dataSource =  ko.observable(new oj.JsonTreeDataSource(omcMenus));
                 self.selectionHandler = function(data, event) {
+                    self.selectedItem(data.id);
+                    sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheSelectedMenuIdKey, data.id);
                     if (event.type === 'click' && data.id.indexOf('omc_root_') !== -1) {
                         handleMenuSelection(true, data);
                     }
@@ -274,7 +337,8 @@ define([
                 };
                 
                 self.beforeCollapse = function(event, ui) {
-                    if (ui.key === 'omc_root_composite') {
+                    if (ui.key === rootCompositeMenuid) {
+//                        currentCompositeParentId && self.selectedItem(currentCompositeParentId);
                         clearCompositeMenuItems();
                         self.expanded([]);
                         self.dataSource(new oj.JsonTreeDataSource(omcMenus));
@@ -292,8 +356,8 @@ define([
                 
                 function handleMenuSelection(uifwkControlled, data) {
                     var item = null;
-                    for (var j = 0; j < rootMenuData.length; j++) {
-                        var found = findItem(rootMenuData[j], data.id);
+                    for (var j = 0; j < self.serviceMenuData.length; j++) {
+                        var found = findItem(self.serviceMenuData[j], data.id);
                         if (found) {
                             item = found;
                             break;
@@ -383,8 +447,8 @@ define([
                         if (eventData && eventData.tag && eventData.tag === messageTag) {
                             if(eventData.menuItemId){
                                 var itemTrack;
-                                for (var j = 0; j < rootMenuData.length; j++) {
-                                    itemTrack = findItemTrack(rootMenuData[j], eventData.menuItemId);
+                                for (var j = 0; j < self.serviceMenuData.length; j++) {
+                                    itemTrack = findItemTrack(self.serviceMenuData[j], eventData.menuItemId);
                                     if (itemTrack.length>0) {
                                         break;
                                     }else{
@@ -392,7 +456,7 @@ define([
                                     }
                                 }
                                 if(itemTrack){
-                                    $.each(rootMenuData,function(idx, listItem){
+                                    $.each(self.serviceMenuData,function(idx, listItem){
                                         $("#hamburgerMenu #navlistcontainer>div").ojNavigationList("collapse",listItem.id, true);
                                     });
                                     while(itemTrack.length>1){

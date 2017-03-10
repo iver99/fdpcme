@@ -136,7 +136,7 @@ require(['ojs/ojcore',
                     appId: self.appId,
                     isAdmin: true,
                     showGlobalContextBanner: false,
-                    serviceMenus: []
+                    omcHamburgerMenuOptIn: false
                 };
             }
 
