@@ -1,3 +1,4 @@
+    <!-- ko if: hamburgerMenuEnabled -->
     <!-- hamburger menu -->            
     <div id="omcHamburgerMenu" style="width:250px;" class="oj-contrast-marker oj-web-applayout-offcanvas oj-offcanvas-start">
         <div data-bind="component: {
@@ -6,8 +7,10 @@
             }">
         </div>
     </div>
+    <!-- /ko -->
     <div class="emaas-brandingbar">
         <div class="emaas-appheader">
+            <!-- ko if: hamburgerMenuEnabled -->
             <!-- hamburger menu button-->
             <div class="emaas-appheader-hamburger-menu">
                 <button id="hamburgerButton" class="oj-button-half-chrome emaas-appheader-hamburger-button emaas-appheader-toolbar-button" 
@@ -17,6 +20,7 @@
                     click: toggleHamburgerMenu, attr: {title: hamburgerBtnLabel}" role="button" tabindex="0">
                 </button>
             </div>
+            <!-- /ko -->
             <div id="emaas-appheader-bar" data-testapiversion="1.16.0" class="oj-row emaas-appheader-lite" style="max-width: 1920px;padding-left: 10px">
 
                 <!-- logo -->  

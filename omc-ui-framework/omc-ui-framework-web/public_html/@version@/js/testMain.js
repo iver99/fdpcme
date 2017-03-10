@@ -174,7 +174,8 @@ require(['knockout',
                     isAdmin: isAdmin,
                     entities: entities,
                     showGlobalContextBanner: true,
-                    showTimeSelector: ko.observable(true)
+                    showTimeSelector: ko.observable(true),
+                    omcHamburgerMenuOptIn: true
                 };
             }
 
