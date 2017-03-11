@@ -427,7 +427,7 @@ public class RegistrationEntity implements Serializable
 						@Override
 						public Object load(Object key) throws Exception
 						{
-							List<LinkEntity> registeredMenuLinks = lookupLinksWithRelPrefix(NAME_SERVICE_MENUS, false, false);
+							List<LinkEntity> registeredMenuLinks = lookupLinksWithRelPrefix(NAME_SERVICE_MENUS, false, true);
 							List<ServiceMenuEntity> serviceMenus = new ArrayList<ServiceMenuEntity>();
 							for (LinkEntity le : registeredMenuLinks) {
 								ServiceMenuEntity sme = new ServiceMenuEntity();
