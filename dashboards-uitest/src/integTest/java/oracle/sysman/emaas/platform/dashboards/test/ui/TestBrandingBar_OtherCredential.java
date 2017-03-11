@@ -25,7 +25,7 @@ public class TestBrandingBar_OtherCredential extends LoginAndLogout
 		DashBoardUtils.loadWebDriver(webd);
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testAdminLinkAPMAdmin()
 	{
 		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_apm_admin1");
@@ -92,7 +92,7 @@ public class TestBrandingBar_OtherCredential extends LoginAndLogout
 		BrandingBarUtil.visitApplicationAdministration(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_ALERT);
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testAdminLinkAPMUser()
 	{
 		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_apm_user1");
@@ -111,7 +111,7 @@ public class TestBrandingBar_OtherCredential extends LoginAndLogout
 		Assert.assertFalse(BrandingBarUtil.isAdmin(webd));
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testAdminLinkITAAdmin()
 	{
 		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_ita_admin1");
@@ -151,7 +151,7 @@ public class TestBrandingBar_OtherCredential extends LoginAndLogout
 		Assert.assertTrue(BrandingBarUtil.isAdminLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_AGENT));
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testAdminLinkITAUser()
 	{
 		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_ita_user1");
@@ -175,7 +175,7 @@ public class TestBrandingBar_OtherCredential extends LoginAndLogout
 		Assert.assertFalse(BrandingBarUtil.isAdmin(webd));
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testAdminLinkLAAdmin()
 	{
 		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_la_admin1");
@@ -226,7 +226,7 @@ public class TestBrandingBar_OtherCredential extends LoginAndLogout
 		Assert.assertTrue(BrandingBarUtil.isAdminLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_ALERT));
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testAdminLinkLAUser()
 	{
 		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_la_user1");

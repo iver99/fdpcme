@@ -401,8 +401,8 @@ div[id^='pickerPanel'] .oj-listbox-search-wrapper {
 }
 
 //hack default oj class
-.oj-listbox-drop{
-    width:82px !important;
+div[id^='pickerPanel'] .oj-listbox-drop{
+    width:82px;
 }
 .pickerPanel .oj-select-choice{
     width:82px
