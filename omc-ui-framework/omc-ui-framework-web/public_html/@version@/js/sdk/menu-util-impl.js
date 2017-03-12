@@ -38,10 +38,32 @@ define([
                 window.addEventListener("message", onServiceMenuLoaded, false);
             };
             
-            self.setCurrentMenuItem = function(menuItemId){
+            self.setCurrentMenuItem = function(menuItemId) {
                 var message = {'tag': 'EMAAS_OMC_GLOBAL_MENU_SET_CURRENT_ITEM'};
                 message.menuItemId = menuItemId;
                 window.postMessage(message, window.location.href);
+            };
+            
+            self.registerServiceMenus = function(serviceMenuJson) {
+                var message = {'tag': 'EMAAS_OMC_GLOBAL_MENU_REGISTER_SERVICE_MENU'};
+                message.serviceMenuJson = serviceMenuJson;
+                window.postMessage(message, window.location.href);
+            };
+            
+            self.subscribeServiceMenuRegisterEvent = function(callback) {
+                function onServiceMenuRegister(event) {
+                    if (event.origin !== window.location.protocol + '//' + window.location.host) {
+                        return;
+                    }
+                    var eventData = event.data;
+                    //Only handle received message for service menu registering
+                    if (eventData && eventData.tag && eventData.tag === 'EMAAS_OMC_GLOBAL_MENU_REGISTER_SERVICE_MENU') {
+                        if ($.isFunction(callback)) {
+                            callback(eventData.serviceMenuJson);
+                        }
+                    }
+                };
+                window.addEventListener("message", onServiceMenuRegister, false);
             };
             
             self.showCompositeObjectMenu = function(parentMenuId, objMenuName, menuJson){

@@ -29,6 +29,7 @@ define([
                 
                 var userName = params.userName;
                 var tenantName = params.tenantName;
+                var serviceAppId = params.appId;
                 self.selectedItem = ko.observable();
                 self.expanded = ko.observableArray([]);
                 
@@ -89,8 +90,26 @@ define([
                 }
                 menuUtil.subscribeCompositeMenuDisplayEvent(jumpToCompositeMenu);
                 
+                function registerServiceMenus(menuJson) {
+                    if (menuJson) {
+                        var menuItemList = [];
+                        for (var i = 0; i < menuJson.length; i++) {
+                            menuItemList.push(getMenuItem(menuJson[i]));
+                        }
+                        var parentIndex = findMenuTreeItemIndex(omcMenus, 'omc_root_' + serviceAppId);
+                        if (parentIndex > -1) {
+                            omcMenus[parentIndex].children = menuItemList;
+                        }
+                        self.dataSource(new oj.JsonTreeDataSource(omcMenus));
+                    }
+                }
+                menuUtil.subscribeServiceMenuRegisterEvent(registerServiceMenus);
+                
                 self.hamburgerRootMenuLabel = nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_LABEL;
                 var rootMenuData = [
+//                    //testing
+//                    {'id': 'omc_root_test', type: 'menu_item', 'labelKey': 'Test', 'externalUrl': '#'},
+//                    //testing
                     {'id': 'omc_root_home', type: 'menu_item', 'labelKey': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_HOME_LABEL, 'externalUrl': '#'},
                     {'id': 'omc_root_alerts', type: 'menu_item', 'labelKey': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_ALERTS_LABEL, 'externalUrl': '#'},
 //                    {'id': 'omc_root_applications', type: 'menu_item', 'labelKey': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_APPS_LABEL, 'externalUrl': '#'},
@@ -125,7 +144,10 @@ define([
                     'omc_root_admin', 
                     'omc_root_admin_alertrules', 
                     'omc_root_admin_agents',
-                    'omc_root_admin_entitiesconfig'
+                    'omc_root_admin_entitiesconfig',
+                    rootCompositeMenuid
+//                    //testing
+//                    ,'omc_root_test'
                 ];
 
                 self.privilegeList = [];
@@ -138,9 +160,36 @@ define([
                 function loadServiceMenus() {
                     var dfdLoadServiceMenus = $.Deferred();
                         dfu.getRegistrations(function(data){
+                            fetchGlobalMenuLinks(data);
+                            
                             self.serviceLinks = data.serviceMenus;
-                            if (self.serviceLinks) {
+//                            //testing code start
+//                            self.serviceLinks = [
+////                                {
+////                                    'appId': 'APM',
+////                                    'serviceName': 'ApmUI',
+////                                    'version': '1.0',
+////                                    'metaDataHref': 'http://localhost:8383/emsaasui/uifwk/@version@/data/serviceMenus.json'
+////                                },
+////                                {
+////                                    'appId': 'ITAnalytics',
+////                                    'serviceName': 'emcitas-ui-apps',
+////                                    'version': '1.0',
+////                                    'metaDataHref': 'http://localhost:8383/emsaasui/uifwk/@version@/data/serviceMenus1.json'
+////                                },
+////                                {
+////                                    'appId': 'LogAnalytics',
+////                                    'serviceName': 'LogAnalyticsUI',
+////                                    'version': '1.0',
+////                                    'metaDataHref': 'http://localhost:8383/emsaasui/uifwk/@version@/data/serviceMenus2.json'
+////                                }
+//                            ];
+//                            //testing code end
+                            if (self.serviceLinks && self.serviceLinks.length > 0) {
                                 loadServiceData(dfdLoadServiceMenus, self.serviceLinks);
+                            }
+                            else {
+                                dfdLoadServiceMenus.resolve();
                             }
                         }, true, function(){
                             dfdLoadServiceMenus.reject();
@@ -156,6 +205,9 @@ define([
                             var odsUrl = dfu.getDevData().odsRestApiEndPoint;
                             var odsBaseUrl = odsUrl.substring(0, odsUrl.indexOf('/ods-query'));
                             url = odsBaseUrl + "/authorization/ws/api/v1/priv/grants/getUserGrants";
+//                            //testing
+//                            url = '/emsaasui/uifwk/test.html';
+//                            //testing
                         }
                         url = url + '?granteeUser=' + tenantName + '.' + userName;
                         var header = dfu.getDefaultHeader();
@@ -163,6 +215,9 @@ define([
                                 type: 'get',
                                 headers: header,
                                 success: function (data) {
+//                                    //testing
+//                                    data = 'ADMINISTER_LOG_TYPE,RUN_AWR_VIEWER_APP,USE_TARGET_ANALYTICS,ADMIN_ITA_WAREHOUSE,ADMINISTER_ROLE,RUN_MW_PERF_APP,MANAGE_CREDENTIALS,FULL_ANY_TARGET,RUN_DB_PERF_APP,DELETE_ANY_LOG,VIEW_SOURCE_DETAILS,OVERRIDE_OOTB_RULE_SETTINGS,CREATE_UPLOAD,RUN_DB_RESOURCE_APP,ADMIN_ITA_TARGET,RUN_FLEX_ANALYZER_APP,ASSOCIATE_RULE_TO_TARGET,VIEW_APMAAS_MONITORING_DATA,VIEW_LOG_TYPE_DETAILS,SET_RULE_TO_AUTO_ASSOCIATE,RUN_RESOURCE_ANALYTICS_APP,MANAGE_ALERT_SETUP,MANAGE_APMAAS_AGENT,VIEW_ANY_TARGET,ADMINISTER_SOURCE,SEARCH_LOGS';
+//                                    //testing
                                     self.privilegeList = data;
                                     dfdGetUserGrants.resolve();
                                 },
@@ -177,7 +232,7 @@ define([
                 
                 function getSubscribedApps() {
                     var dfdGetSubscribedApps = $.Deferred();
-                    if(!self.subscribedApps || self.subscribedApps.length < 1){
+                    if (!self.subscribedApps || self.subscribedApps.length < 1) {
                         function subscribedAppsCallback(data) {
                             if (!data) {
                                 dfdGetSubscribedApps.reject();
@@ -232,6 +287,9 @@ define([
                                     else {
                                         url = url.substring(url.indexOf('/emsaasui/') + 1, url.length - 3);
                                     }
+//                                    //testing code
+//                                    url = data.serviceMenuMsgBundle.substring(data.serviceMenuMsgBundle.indexOf('/emsaasui/') + 1, data.serviceMenuMsgBundle.length - 3); 
+//                                    //testing code
                                     
                                     require(['ojL10n!' + url], function (_nls) {
                                         serviceItem.serviceMenuMsgBundle = _nls;
@@ -267,10 +325,9 @@ define([
                     }
                 }
                 else {
-                    $.when(loadServiceMenus(), getUserGrants(), getSubscribedApps()).done(function(){
-                        fetchGlobalMenuLinks();
-                        
+                    $.when(loadServiceMenus(), getUserGrants(), getSubscribedApps()).done(function() {
                         for (var k = 0; k < rootMenuData.length; ++k) {
+                            rootMenuData[k].externalUrl = globalMenuIdHrefMapping[rootMenuData[k].id] ? globalMenuIdHrefMapping[rootMenuData[k].id] : '#';
                             self.serviceMenuData.push($.extend(true, {}, rootMenuData[k]));
                         }
                         self.allServiceData && $.each(self.allServiceData, function (idx, singleServiceData) {
@@ -367,6 +424,10 @@ define([
                             }
                             else {
                                 if (menuItem.id.indexOf('omc_root_admin_grp_') > -1) {
+                                    if (!menuItem.children || menuItem.children.length === 0) {
+                                        menuItem.disabled = true;
+                                        return menuItem;
+                                    }
                                     appId = menuItem.id.substring(19);
                                 }
                                 else {
@@ -467,17 +528,17 @@ define([
                     return -1;
                 }
                 
-//                function findTreeItemIndex(items, id) {
-//                    if (id && items && items.length > 0) {
-//                        for (var i = 0; i < items.length; i++) {
-//                            if (id === items[i].attr['id']) {
-//                                return i;
-//                                break;
-//                            }
-//                        }
-//                    }
-//                    return -1;
-//                }
+                function findMenuTreeItemIndex(items, id) {
+                    if (id && items && items.length > 0) {
+                        for (var i = 0; i < items.length; i++) {
+                            if (id === items[i].attr['id']) {
+                                return i;
+                                break;
+                            }
+                        }
+                    }
+                    return -1;
+                }
                 
                 
                 function getMenuItem(item) {
@@ -575,8 +636,8 @@ define([
                     }
                     if (item && !item.children) {
                         if (uifwkControlled) {
-                            var linkHref = globalMenuIdHrefMapping[data.id];
-                            if (linkHref) {
+                            var linkHref = item.externalUrl; //globalMenuIdHrefMapping[data.id];
+                            if (linkHref && linkHref !== '#') {
                                 window.location.href = ctxUtil.appendOMCContext(linkHref, true, true, true);
                             }
                         }
@@ -586,25 +647,25 @@ define([
                     }
                 }
                 
-                function fetchGlobalMenuLinks() {
+                function fetchGlobalMenuLinks(data) {
                     globalMenuIdHrefMapping = {};
-                    var successCallback = function(data) {
-                        globalMenuIdHrefMapping['omc_root_home'] = omcHomeUrl ? omcHomeUrl : '/emsaasui/emcpdfui/welcome.html';
-                        globalMenuIdHrefMapping['omc_root_alerts'] = fetchLinkFromRegistrationData(data, 'homeLinks', 'EventUI');
-                        globalMenuIdHrefMapping['omc_root_dashboards'] = '/emsaasui/emcpdfui/home.html';
-                        globalMenuIdHrefMapping['omc_root_dataexplorer'] = fetchLinkFromRegistrationData(data, 'visualAnalyzers', 'LogAnalyticsUI');
-                        globalMenuIdHrefMapping['omc_root_APM'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'ApmUI');
-                        globalMenuIdHrefMapping['omc_root_Monitoring'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'EventUI');
-                        globalMenuIdHrefMapping['omc_root_LogAnalytics'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'EventUI');
-                        globalMenuIdHrefMapping['omc_root_ITAnalytics'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'emcitas-ui-apps');
-                        globalMenuIdHrefMapping['omc_root_Orchestration'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'CosServiceUI');
-                        globalMenuIdHrefMapping['omc_root_SecurityAnalytics'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'SecurityAnalyticsUI');
-                        globalMenuIdHrefMapping['omc_root_Compliance'] = fetchLinkFromRegistrationData(data, 'homeLinks', 'ComplianceUIService');
-                        globalMenuIdHrefMapping['omc_root_admin_alertrules'] = fetchLinkFromRegistrationData(data, 'adminLinks', 'EventUI');
-                        globalMenuIdHrefMapping['omc_root_admin_agents'] = fetchLinkFromRegistrationData(data, 'adminLinks', 'TenantManagementUI');
-                        globalMenuIdHrefMapping['omc_root_admin_entitiesconfig'] = fetchLinkFromRegistrationData(data, 'adminLinks', 'AdminConsoleSaaSUi');
-                    };
-                    dfu.getRegistrations(successCallback, true, null);
+//                    //testing
+//                    globalMenuIdHrefMapping['omc_root_test'] = '/emsaasui/uifwk/test.html?appId=LogAnalytics';
+//                    //testing
+                    globalMenuIdHrefMapping['omc_root_home'] = omcHomeUrl ? omcHomeUrl : '/emsaasui/emcpdfui/welcome.html';
+                    globalMenuIdHrefMapping['omc_root_alerts'] = fetchLinkFromRegistrationData(data, 'homeLinks', 'EventUI');
+                    globalMenuIdHrefMapping['omc_root_dashboards'] = '/emsaasui/emcpdfui/home.html';
+                    globalMenuIdHrefMapping['omc_root_dataexplorer'] = fetchLinkFromRegistrationData(data, 'visualAnalyzers', 'TargetAnalytics');
+                    globalMenuIdHrefMapping['omc_root_APM'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'ApmUI');
+                    globalMenuIdHrefMapping['omc_root_Monitoring'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'MonitoringServiceUI');
+                    globalMenuIdHrefMapping['omc_root_LogAnalytics'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'LogAnalyticsUI');
+                    globalMenuIdHrefMapping['omc_root_ITAnalytics'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'emcitas-ui-apps');
+                    globalMenuIdHrefMapping['omc_root_Orchestration'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'CosServiceUI');
+                    globalMenuIdHrefMapping['omc_root_SecurityAnalytics'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'SecurityAnalyticsUI');
+                    globalMenuIdHrefMapping['omc_root_Compliance'] = fetchLinkFromRegistrationData(data, 'homeLinks', 'ComplianceUIService');
+                    globalMenuIdHrefMapping['omc_root_admin_alertrules'] = fetchLinkFromRegistrationData(data, 'adminLinks', 'EventUI');
+                    globalMenuIdHrefMapping['omc_root_admin_agents'] = fetchLinkFromRegistrationData(data, 'adminLinks', 'TenantManagementUI');
+                    globalMenuIdHrefMapping['omc_root_admin_entitiesconfig'] = fetchLinkFromRegistrationData(data, 'adminLinks', 'AdminConsoleSaaSUi');
                 }
                 
                 function fetchLinkFromRegistrationData(data, linkType, serviceName) {
@@ -612,7 +673,7 @@ define([
                     if (links && links.length > 0) {
                         for (var i = 0; i < links.length; i++) {
                             if (links[i].serviceName === serviceName) {
-                                return links[i].externalUrl;
+                                return links[i].href;
                             }
                         }
                     }
