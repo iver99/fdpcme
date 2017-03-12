@@ -105,9 +105,12 @@ public class RetryableLookupClient<T> {
             }
 
             // Delay between retries grows over time
+            LOGGER.info("Waiting for {}ms before next retry", delaySecs);
             try { Thread.sleep((long)(delaySecs * 1000)); } catch(InterruptedException ie) {}
+            LOGGER.info("After waiting, will retry or abort the retry procedure");
             delaySecs = delaySecs * 2 * (0.9 + delayRand.nextDouble() * 0.2); // Grow by 1.8 to 2.2 each time
         }
+        LOGGER.info("Exceeds the maxmium retry times. Stop retry logic");
         return null;
     }
 
