@@ -25,6 +25,11 @@ public class UIControls
 	public static final String SSTARTTEXT_DATEONLY = "//*[@id='startWithDateOnly']";
 	public static final String SENDTEXT_DATEONLY = "//*[@id='endWithDateOnly']";
 
+	public static final String SSTARTTEXT4 = "//*[@id='start4']";
+	public static final String SENDTEXT4 = "//*[@id='end4']";
+
+	public static final String SSTARTTEXT5 = "//*[@id='start5']";
+	public static final String SENDTEXT5 = "//*[@id='end5']";
 	public static final String SFILTERINFO = "//*[@id='filterInfo']";
 	public static final String SFILTERINFO_COMPACT = "//*[@id='filterInfoInCompact']";
 

@@ -608,8 +608,8 @@ public class TestTimePicker_FixDate extends CommonUIUtils
 
 		//verify the result
 		webdriver.getLogger().info("verify the time range is set correctly");
-		TestTimePicker_FixDate.verifyResult(webdriver, returnDate, TimeRange.Last12Months, UIControls.SSTARTTEXT_DATEONLY,
-				UIControls.SENDTEXT_DATEONLY, true);
+		TestTimePicker_FixDate.verifyResult(webdriver, returnDate, TimeRange.Last12Months, UIControls.SSTARTTEXT5,
+				UIControls.SENDTEXT5, true);
 
 		webdriver.shutdownBrowser(true);
 	}
@@ -712,8 +712,8 @@ public class TestTimePicker_FixDate extends CommonUIUtils
 
 		//verify the result
 		webdriver.getLogger().info("verify the time range is set correctly");
-		TestTimePicker_FixDate.verifyResult(webdriver, returnDate, TimeRange.Last24Hours, UIControls.SSTARTTEXT_DATEONLY,
-				UIControls.SENDTEXT_DATEONLY, true);
+		TestTimePicker_FixDate.verifyResult(webdriver, returnDate, TimeRange.Last24Hours, UIControls.SSTARTTEXT4,
+				UIControls.SENDTEXT4, true);
 
 		webdriver.shutdownBrowser(true);
 	}
@@ -790,8 +790,8 @@ public class TestTimePicker_FixDate extends CommonUIUtils
 
 		//verify the result
 		webdriver.getLogger().info("verify the time range is set correctly");
-		TestTimePicker_FixDate.verifyResult(webdriver, returnDate, TimeRange.Last8Hours, UIControls.SSTARTTEXT_DATEONLY,
-				UIControls.SENDTEXT_DATEONLY, true);
+		TestTimePicker_FixDate.verifyResult(webdriver, returnDate, TimeRange.Last8Hours, UIControls.SSTARTTEXT4,
+				UIControls.SENDTEXT4, true);
 
 		webdriver.shutdownBrowser(true);
 	}
@@ -868,8 +868,8 @@ public class TestTimePicker_FixDate extends CommonUIUtils
 
 		//verify the result
 		webdriver.getLogger().info("verify the time range is set correctly");
-		TestTimePicker_FixDate.verifyResult(webdriver, returnDate, TimeRange.NewLast60Mins, UIControls.SSTARTTEXT_DATEONLY,
-				UIControls.SENDTEXT_DATEONLY, true);
+		TestTimePicker_FixDate.verifyResult(webdriver, returnDate, TimeRange.NewLast60Mins, UIControls.SSTARTTEXT4,
+				UIControls.SENDTEXT4, true);
 
 		webdriver.shutdownBrowser(true);
 	}
@@ -894,8 +894,8 @@ public class TestTimePicker_FixDate extends CommonUIUtils
 
 		//verify the result
 		webdriver.getLogger().info("verify the time range is set correctly");
-		TestTimePicker_FixDate.verifyResult(webdriver, returnDate, TimeRange.NewLast7Days, UIControls.SSTARTTEXT_DATEONLY,
-				UIControls.SENDTEXT_DATEONLY, true);
+		TestTimePicker_FixDate.verifyResult(webdriver, returnDate, TimeRange.NewLast7Days, UIControls.SSTARTTEXT5,
+				UIControls.SENDTEXT5, true);
 
 		webdriver.shutdownBrowser(true);
 	}
@@ -920,8 +920,8 @@ public class TestTimePicker_FixDate extends CommonUIUtils
 
 		//verify the result
 		webdriver.getLogger().info("verify the time range is set correctly");
-		TestTimePicker_FixDate.verifyResult(webdriver, returnDate, TimeRange.Last12Months, UIControls.SSTARTTEXT,
-				UIControls.SENDTEXT);
+		TestTimePicker_FixDate.verifyResult(webdriver, returnDate, TimeRange.Last12Months, UIControls.SSTARTTEXT5,
+				UIControls.SENDTEXT5);
 
 		webdriver.shutdownBrowser(true);
 	}
@@ -1057,7 +1057,7 @@ public class TestTimePicker_FixDate extends CommonUIUtils
 		//verify the result
 		webdriver.getLogger().info("verify the time range is set correctly");
 		TestTimePicker_FixDate
-		.verifyResult(webdriver, returnDate, TimeRange.Last1Day, UIControls.SSTARTTEXT, UIControls.SENDTEXT);
+				.verifyResult(webdriver, returnDate, TimeRange.Last1Day, UIControls.SSTARTTEXT, UIControls.SENDTEXT);
 
 		webdriver.shutdownBrowser(true);
 	}
@@ -1168,8 +1168,8 @@ public class TestTimePicker_FixDate extends CommonUIUtils
 
 		//verify the result
 		webdriver.getLogger().info("verify the time range is set correctly");
-		TestTimePicker_FixDate.verifyResult(webdriver, returnDate, TimeRange.Last24Hours, UIControls.SSTARTTEXT,
-				UIControls.SENDTEXT);
+		TestTimePicker_FixDate.verifyResult(webdriver, returnDate, TimeRange.Last24Hours, UIControls.SSTARTTEXT4,
+				UIControls.SENDTEXT4);
 
 		webdriver.shutdownBrowser(true);
 	}
@@ -1516,8 +1516,8 @@ public class TestTimePicker_FixDate extends CommonUIUtils
 
 		//verify the result
 		webdriver.getLogger().info("verify the time range is set correctly");
-		TestTimePicker_FixDate.verifyResult(webdriver, returnDate, TimeRange.Last8Hours, UIControls.SSTARTTEXT,
-				UIControls.SENDTEXT);
+		TestTimePicker_FixDate.verifyResult(webdriver, returnDate, TimeRange.Last8Hours, UIControls.SSTARTTEXT4,
+				UIControls.SENDTEXT4);
 
 		webdriver.shutdownBrowser(true);
 	}
@@ -1642,8 +1642,8 @@ public class TestTimePicker_FixDate extends CommonUIUtils
 
 		//verify the result
 		webdriver.getLogger().info("verify the time range is set correctly");
-		TestTimePicker_FixDate.verifyResult(webdriver, returnDate, TimeRange.NewLast60Mins, UIControls.SSTARTTEXT,
-				UIControls.SENDTEXT);
+		TestTimePicker_FixDate.verifyResult(webdriver, returnDate, TimeRange.NewLast60Mins, UIControls.SSTARTTEXT4,
+				UIControls.SENDTEXT4);
 
 		webdriver.shutdownBrowser(true);
 	}
@@ -1668,8 +1668,8 @@ public class TestTimePicker_FixDate extends CommonUIUtils
 
 		//verify the result
 		webdriver.getLogger().info("verify the time range is set correctly");
-		TestTimePicker_FixDate.verifyResult(webdriver, returnDate, TimeRange.NewLast7Days, UIControls.SSTARTTEXT,
-				UIControls.SENDTEXT);
+		TestTimePicker_FixDate.verifyResult(webdriver, returnDate, TimeRange.NewLast7Days, UIControls.SSTARTTEXT5,
+				UIControls.SENDTEXT5);
 
 		webdriver.shutdownBrowser(true);
 	}

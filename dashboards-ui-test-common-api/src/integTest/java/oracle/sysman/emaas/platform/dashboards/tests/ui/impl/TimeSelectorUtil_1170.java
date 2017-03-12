@@ -21,7 +21,7 @@ import org.openqa.selenium.WebElement;
 
 public class TimeSelectorUtil_1170 extends TimeSelectorUtil_1160
 {
-	
+
 	@Override
 	public String setTimeRange(WebDriver webd, int Index, TimeRange rangeoption)
 	{
@@ -114,21 +114,22 @@ public class TimeSelectorUtil_1170 extends TimeSelectorUtil_1160
 				break;
 
 			case Latest:
-				if(webd.isDisplayed("css=" + TimeSelectorUIControls.sTimeRange_Latest)) {
+				if (webd.isDisplayed("css=" + TimeSelectorUIControls.sTimeRange_Latest)) {
 					webd.click("css=" + TimeSelectorUIControls.sTimeRange_Latest);
 					webd.takeScreenShot();
-				}else {
+				}
+				else {
 					webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_Custom);
 					webd.click("css=" + TimeSelectorUIControls.sTimeRange_Custom);
 					webd.takeScreenShot();
-					
+
 					webd.waitForElementPresent("css=" + TimeSelectorUIControls.sLatestRadio);
 					webd.click("css=" + TimeSelectorUIControls.sLatestRadio);
 					webd.takeScreenShot();
-					
+
 					clickApplyButton(webd);
 				}
-				
+
 				return webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn)).get(Index - 1)
 						.getText();
 			case Custom:
@@ -154,12 +155,12 @@ public class TimeSelectorUtil_1170 extends TimeSelectorUtil_1160
 					.get(Index - 1).findElement(By.cssSelector(TimeSelectorUIControls.sStartDateInput)).getAttribute("value")
 					+ " "
 					+ webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sDateTimePick)).get(Index - 1)
-					.findElement(By.cssSelector(TimeSelectorUIControls.sStartTimeInput)).getAttribute("value");
+							.findElement(By.cssSelector(TimeSelectorUIControls.sStartTimeInput)).getAttribute("value");
 			String returnEndDate = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sDateTimePick))
 					.get(Index - 1).findElement(By.cssSelector(TimeSelectorUIControls.sEndDateInput)).getAttribute("value")
 					+ " "
 					+ webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sDateTimePick)).get(Index - 1)
-					.findElement(By.cssSelector(TimeSelectorUIControls.sEndTimeInput)).getAttribute("value");
+							.findElement(By.cssSelector(TimeSelectorUIControls.sEndTimeInput)).getAttribute("value");
 
 			returnStartDate = timeFormatChange(webd, returnStartDate, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
 			returnEndDate = timeFormatChange(webd, returnEndDate, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
@@ -186,7 +187,8 @@ public class TimeSelectorUtil_1170 extends TimeSelectorUtil_1160
 				"Start to set time range with date only for #" + index + " time picker. Range options is " + rangeOption);
 
 		Validator.fromValidValues("timeRangeOption", rangeOption, TimeRange.Last1Day, TimeRange.Last7Days, TimeRange.Last14Days,
-				TimeRange.Last30Days, TimeRange.Last90Days, TimeRange.Last1Year, TimeRange.Latest);
+				TimeRange.Last30Days, TimeRange.Last90Days, TimeRange.Last1Year, TimeRange.Latest, TimeRange.Last24Hours,
+				TimeRange.Last12Months, TimeRange.Last8Hours, TimeRange.NewLast60Mins, TimeRange.NewLast7Days);
 
 		clickTimePicker(webd, index);
 		switch (rangeOption) {
@@ -246,18 +248,19 @@ public class TimeSelectorUtil_1170 extends TimeSelectorUtil_1160
 				webd.takeScreenShot();
 				break;
 			case Latest:
-				if(webd.isDisplayed("css=" + TimeSelectorUIControls.sTimeRange_Latest)) {
+				if (webd.isDisplayed("css=" + TimeSelectorUIControls.sTimeRange_Latest)) {
 					webd.click("css=" + TimeSelectorUIControls.sTimeRange_Latest);
 					webd.takeScreenShot();
-				}else {
+				}
+				else {
 					webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_Custom);
 					webd.click("css=" + TimeSelectorUIControls.sTimeRange_Custom);
 					webd.takeScreenShot();
-					
+
 					webd.waitForElementPresent("css=" + TimeSelectorUIControls.sLatestRadio);
 					webd.click("css=" + TimeSelectorUIControls.sLatestRadio);
 					webd.takeScreenShot();
-					
+
 					clickApplyButton(webd);
 				}
 				return webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn)).get(index - 1)
@@ -286,12 +289,12 @@ public class TimeSelectorUtil_1170 extends TimeSelectorUtil_1160
 					.get(index - 1).getAttribute("value")
 					+ " "
 					+ webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sStartTimeInput)).get(index - 1)
-					.getAttribute("value");
+							.getAttribute("value");
 			String returnEndDate = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sEndDateInput))
 					.get(index - 1).getAttribute("value")
 					+ " "
 					+ webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sEndTimeInput)).get(index - 1)
-					.getAttribute("value");
+							.getAttribute("value");
 
 			returnStartDate = timeFormatChange(webd, returnStartDate, "MM/dd/yyyy", "MMM d, yyyy");
 			returnEndDate = timeFormatChange(webd, returnEndDate, "MM/dd/yyyy", "MMM d, yyyy");
@@ -400,18 +403,19 @@ public class TimeSelectorUtil_1170 extends TimeSelectorUtil_1160
 				break;
 
 			case Latest:
-				if(webd.isDisplayed("css=" + TimeSelectorUIControls.sTimeRange_Latest)) {
+				if (webd.isDisplayed("css=" + TimeSelectorUIControls.sTimeRange_Latest)) {
 					webd.click("css=" + TimeSelectorUIControls.sTimeRange_Latest);
 					webd.takeScreenShot();
-				}else {
+				}
+				else {
 					webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_Custom);
 					webd.click("css=" + TimeSelectorUIControls.sTimeRange_Custom);
 					webd.takeScreenShot();
-					
+
 					webd.waitForElementPresent("css=" + TimeSelectorUIControls.sLatestRadio);
 					webd.click("css=" + TimeSelectorUIControls.sLatestRadio);
 					webd.takeScreenShot();
-					
+
 					clickApplyButton(webd);
 				}
 				return webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn)).get(index - 1)
@@ -439,12 +443,12 @@ public class TimeSelectorUtil_1170 extends TimeSelectorUtil_1160
 					.get(index - 1).findElement(By.cssSelector(TimeSelectorUIControls.sStartDateInput)).getAttribute("value")
 					+ " "
 					+ webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sDateTimePick)).get(index - 1)
-					.findElement(By.cssSelector(TimeSelectorUIControls.sStartTimeInput)).getAttribute("value");
+							.findElement(By.cssSelector(TimeSelectorUIControls.sStartTimeInput)).getAttribute("value");
 			String returnEndDate = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sDateTimePick))
 					.get(index - 1).findElement(By.cssSelector(TimeSelectorUIControls.sEndDateInput)).getAttribute("value")
 					+ " "
 					+ webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sDateTimePick)).get(index - 1)
-					.findElement(By.cssSelector(TimeSelectorUIControls.sEndTimeInput)).getAttribute("value");
+							.findElement(By.cssSelector(TimeSelectorUIControls.sEndTimeInput)).getAttribute("value");
 
 			returnStartDate = timeFormatChange(webd, returnStartDate, "MM/dd/yyyy hh:mm:ss:SSS a", "MMM d, yyyy hh:mm:ss:SSS a");
 			returnEndDate = timeFormatChange(webd, returnEndDate, "MM/dd/yyyy hh:mm:ss:SSS a", "MMM d, yyyy hh:mm:ss:SSS a");
