@@ -392,7 +392,13 @@ public class DashboardAPI extends APIBase
 					LOGGER.error("Extended option for dashboardID={} is {}, it's an invalid json string, so use empty extended option instead",
 							dashboardId, options.getExtendedOptions());
 					options.setExtendedOptions(null);
-				}
+				}else {
+                    // to ensure that previously saved invalid extended options are escaped also, we escape at the GET operation
+                    String eo = options.getExtendedOptions();
+                    if (eo != null) {
+                        options.setExtendedOptions(StringEscapeUtil.escapeWithCharPairs(eo, new String[][]{{"&", "&amp;"}, {"<", "&lt;"}, {">", "&gt;"}}));
+                    }
+                }
 			}
 			return Response.ok(getJsonUtil().toJson(options)).build();
 		}
@@ -810,7 +816,13 @@ public class DashboardAPI extends APIBase
 						new CommonFunctionalException(
 								MessageUtils.getDefaultBundleString(CommonFunctionalException.USER_OPTIONS_INVALID_EXTENDED_OPTIONS)));
 				return buildErrorResponse(error);
-			}
+			}else {
+                // to ensure that previously saved invalid extended options are escaped also, we escape at the GET operation
+                String eo = userOption.getExtendedOptions();
+                if (eo != null) {
+                    userOption.setExtendedOptions(StringEscapeUtil.escapeWithCharPairs(eo, new String[][]{{"&", "&amp;"}, {"<", "&lt;"}, {">", "&gt;"}}));
+                }
+            }
 		}
 		catch (IOException e) {
 			LOGGER.error(e.getLocalizedMessage(), e);

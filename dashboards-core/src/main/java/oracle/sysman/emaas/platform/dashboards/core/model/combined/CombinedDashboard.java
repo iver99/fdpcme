@@ -14,6 +14,7 @@ import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.core.model.Preference;
 import oracle.sysman.emaas.platform.dashboards.core.model.UserOptions;
 import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
+import oracle.sysman.emaas.platform.dashboards.core.util.StringEscapeUtil;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsPreference;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
@@ -47,7 +48,13 @@ public class CombinedDashboard extends Dashboard
 				LOGGER.error("Extended option for dashboardID={} is {}, it's an invalid json string, so use empty extended option instead",
 						d.getDashboardId(), uo.getExtendedOptions());
 				uo.setExtendedOptions(null);
-			}
+			}else {
+                // to ensure that previously saved invalid extended options are escaped also, we escape at the GET operation
+                String eo = uo.getExtendedOptions();
+                if (eo != null) {
+                    uo.setExtendedOptions(StringEscapeUtil.escapeWithCharPairs(eo, new String[][]{{"&", "&amp;"}, {"<", "&lt;"}, {">", "&gt;"}}));
+                }
+            }
 		}
 		cb.setUserOptions(uo);
 		cb.isFavorite = euo == null ? Boolean.FALSE : DataFormatUtils.integer2Boolean(euo.getIsFavorite());
