@@ -46,7 +46,7 @@ import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
 def emcpsmRegClientVer = getDependentSdkVersion('com.oracle.emaas.emcpsm', 'registry-client', '1.+')
 def emcpsmRegLookupClientVer = getDependentSdkVersion('com.oracle.emaas.emcpsm', 'registry-lookup-client', '1.+')
 def emcpdfCommonAPIVer=getDependentSdkVersion('com.oracle.emaas.emcpdf.testsdk.ui', 'dashboards-ui-test-common-api', '2.+')
-
+def emcpdfDashboardsSdkVer= getDependentSdkVersion('com.oracle.emaas.emcpdf', 'dashboards-sdk', '1.+')
 //Setup gradle to onboard a new tenant
 apply from: 'onboard_tenant.gradle'
 
@@ -75,7 +75,11 @@ dependencies{
       	exclude('module':'groovy')
     }
 
+
      testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: '2.2.0+')
+
+
+    testConfig(group: 'com.oracle.emaas.emcpdf', name: 'dashboards-sdk', version: emcpdfDashboardsSdkVer)
 
     testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-web-integ-tests', version: "${REPO_BID}") {
 	exclude('module':'groovy')
