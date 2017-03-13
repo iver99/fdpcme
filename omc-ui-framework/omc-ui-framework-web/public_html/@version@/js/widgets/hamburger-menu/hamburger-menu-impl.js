@@ -641,7 +641,7 @@ define([
                 
                 self.selectionHandler = function(data, event) {
                     self.selectedItem(data.id);
-                    if (event.type === 'click' && (data.id.indexOf('omc_root_') !== -1 || data.selfHandleMenuSelection !== true)) {
+                    if (event.type === 'click' && (data.id.indexOf('omc_root_') !== -1 || data.selfHandleMenuSelection === false)) {
                         handleMenuSelection(true, data);
                     }
                     else {
