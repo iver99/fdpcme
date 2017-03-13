@@ -330,8 +330,8 @@ public class BugVerification extends LoginAndLogout
                 WaitUtil.waitForPageFullyLoaded(webd);
 		webd.getLogger().info("Start the test case: testEMCPDF_3120");
                 
-		//verify the Explore Data button is disabled
-		 WebElement edButton = webd.getWebDriver().findElement(By.xpath(DashBoardPageId.EXPLOREDATABTNID));
-                Assert.assertFalse(edButton.isDisplayed(), "Explore Data button is displayed in dashboard");
+		//verify the Explore Data menu is disabled
+		webd.getLogger().info("Verify the Explore Data menu is not diplayed in the page");
+		Assert.assertFalse(webd.isDisplayed("id=" + DashBoardPageId.EXPLOREDATABTNID), "Explore Data menu is displayed in dashboard");
         }        
 }
