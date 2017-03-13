@@ -2004,6 +2004,10 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         return;
                     }
                     
+                    if(data.previousValue && data.value && (data.previousValue[0]===data.value[0])) {
+                        return;
+                    }
+                    
                     var opt = data.value[0];
                     var num = self.flexRelTimeVal();
                     console.log("flexRelTimeOptChanged: num: " + num + ", opt: " + opt);

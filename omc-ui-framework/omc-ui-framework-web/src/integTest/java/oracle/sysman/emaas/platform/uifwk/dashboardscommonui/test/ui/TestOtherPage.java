@@ -104,8 +104,8 @@ public class TestOtherPage extends CommonUIUtils
 
 			//verify the product name,app name,content of page
 			webdriver.getLogger().info("Verify the page content");
-			Assert.assertTrue(webdriver.isElementPresent(UIControls.SORACLEIMAGE));
-			Assert.assertEquals(webdriver.getAttribute(UIControls.SORACLEIMAGE + "@alt"), "Oracle");
+			Assert.assertTrue(webdriver.isElementPresent("css=" + UIControls.SORACLEIMAGE));
+			Assert.assertEquals(webdriver.getAttribute("css=" + UIControls.SORACLEIMAGE + "@alt"), "Oracle");
 			Assert.assertTrue(webdriver.isElementPresent("css=" + UIControls.SPRODUCTTEXT_CSS));
 			webdriver.getLogger().info("The Product is:  " + webdriver.getText("css=" + UIControls.SPRODUCTTEXT_CSS));
 			Assert.assertEquals(webdriver.getText("css=" + UIControls.SPRODUCTTEXT_CSS), "MANAGEMENT CLOUD");
