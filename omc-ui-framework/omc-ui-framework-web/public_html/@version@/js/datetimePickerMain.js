@@ -408,6 +408,22 @@ require(['ojs/ojcore',
                         }
                     }
                 };
+                
+                self.start6 = ko.observable(self.dateConverter.format(oj.IntlConverterUtils.dateToLocalIso(new Date(end-30*24*60*60*1000))));
+                self.end6 = ko.observable(self.dateConverter.format(oj.IntlConverterUtils.dateToLocalIso(end)));
+                self.timeParams6 = {
+                    hideMainLabel: true,
+                    dtpickerPosition: self.floatPosition1,
+                    timePeriodsSet: "LONG_TERM",
+                    enableLatestOnCustomPanel: true,
+                    hideTimeSelection: true,
+                    callbackAfterApply: function (start, end, tp, tf, relTimeVal, relTimeUnit) {
+                        var appliedStart = oj.IntlConverterUtils.dateToLocalIso(start);
+                        var appliedEnd = oj.IntlConverterUtils.dateToLocalIso(end);
+                        self.start6(self.dateConverter.format(appliedStart));
+                        self.end6(self.dateConverter.format(appliedEnd));
+                    }
+                };
 
                 self.timeParams = {
 //                    startDateTime: "2015-05-17T00:00:00",
