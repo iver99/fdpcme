@@ -16,6 +16,9 @@ public class StringEscapeUtilTest {
 
         String[][] escapePairs = new String[][]{{"&", "&amp;"}, {"<", "&lt;"}, {">", "&gt;"}};
         Assert.assertEquals(StringEscapeUtil.escapeWithCharPairs("test<script>&abc</script>", escapePairs), "test&lt;script&gt;&amp;abc&lt;/script&gt;");
+
+        escapePairs = new String[][]{{"&amp;", "&"}, {"&lt;", "<"}, {"&gt;", ">"}};
+        Assert.assertEquals(StringEscapeUtil.escapeWithCharPairs("test&lt;script&gt;&amp;abc&lt;/script&gt;", escapePairs), "test<script>&abc</script>");
     }
 
     @Test(groups = { "s2"}, expectedExceptions = IllegalArgumentException.class)
