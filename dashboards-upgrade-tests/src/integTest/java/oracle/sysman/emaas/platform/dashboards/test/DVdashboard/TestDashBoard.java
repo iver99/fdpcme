@@ -129,7 +129,7 @@ public class TestDashBoard extends LoginAndLogout
 
 		//init test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start to test in testOpenLAWidget");
+		webd.getLogger().info("Start to test in testModifyDashboard_LA");
 
 		//reset the home page
 		webd.getLogger().info("Reset all filter options in the home page");
@@ -162,7 +162,7 @@ public class TestDashBoard extends LoginAndLogout
 
 		//init test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start to test in testOpenUDEWidget");
+		webd.getLogger().info("Start to test in testModifyDashboard_UDE");
 
 		//reset the home page
 		webd.getLogger().info("Reset all filter options in the home page");
@@ -187,6 +187,32 @@ public class TestDashBoard extends LoginAndLogout
 		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 		//wait1.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//button[contains(@id,'editButton')]")));
 
+	}
+
+	@Test
+	public void testNoGCinURL()
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test in testNoGCinURL");
+
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//switch to Grid View
+		webd.getLogger().info("Switch to Grid view");
+		DashboardHomeUtil.gridView(webd);
+
+		//open the dashboard
+		webd.getLogger().info("Open the dashboard");
+		DashboardHomeUtil.selectDashboard(webd,
+				oracle.sysman.emaas.platform.dashboards.test.DPdashboard.TestDashBoard.dbName_DisableEntitiesTime);
+
+		Assert.assertFalse(GlobalContextUtil.isGlobalContextExisted(webd));
+
+		String currenturl = webd.getWebDriver().getCurrentUrl();
+
+		Assert.assertFalse(currenturl.contains("omcCtx="), "The global context infomation is in URL");
 	}
 
 	@Test
@@ -220,7 +246,6 @@ public class TestDashBoard extends LoginAndLogout
 		TimeSelectorUtil.setTimeRange(webd, TimeRange.Last6Hours);
 		currenturl = webd.getWebDriver().getCurrentUrl();
 		Assert.assertFalse(currenturl.contains("omcCtx="), "The global context infomation is in URL");
-
 	}
 
 	@Test

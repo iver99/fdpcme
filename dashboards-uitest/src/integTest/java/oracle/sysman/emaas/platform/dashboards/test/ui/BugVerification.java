@@ -138,7 +138,7 @@ public class BugVerification extends LoginAndLogout
 
 	}
 
-	@Test
+	/*@Test
 	public void testEMCPDF_2855()
 	{
 		//Initialize the test
@@ -236,7 +236,7 @@ public class BugVerification extends LoginAndLogout
 		webd.getLogger().info("Verfiy the home page");
 		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, WelcomeUtil.SERVICE_NAME_DASHBOARDS),
 				"It is NOT the home page!");
-	}
+	}*/
 
 	@Test
 	public void testEMPCDF_2970()

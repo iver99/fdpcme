@@ -19,6 +19,7 @@ public class TestDashBoard extends LoginAndLogout
 	private String dbName_noWidgetGrid = "";
 	public static String dbName_WithWidget = "pre#_$dashboard%^&中文";
 	public static String dbName_EnableEntitiesTime = "Test Entities and Time Selector Enabled";
+	public static String dbName_DisableEntitiesTime = "Test Entities and Time Selector Disabled";
 	public static String WidgetName_LA = "Database Errors Trend";
 	public static String WidgetName_UDE = "Area Chart";
 
@@ -27,7 +28,6 @@ public class TestDashBoard extends LoginAndLogout
 	{
 		//dbName_WithWidget = "dashbaord$!@#-" + generateTimeStamp();
 		String dbDesc = "Dashboard with Widget";
-
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start to test in createTestDashboard");
 
@@ -97,6 +97,50 @@ public class TestDashBoard extends LoginAndLogout
 				"Create dashboard failed!");
 	}
 
+	@Test
+	public void testDisableEntitiesTimeSelector()
+	{
+		//dbName_DisableEntitiesTime = dbName_DisableEntitiesTime + " - " + generateTimeStamp();
+		String dbDesc = "This dshboard is test Entities Selector and Time Selector disabled";
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test in testDisableEntitiesTimeSelector");
+
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//create dashboard
+		webd.getLogger().info("Start to create dashboard in grid view");
+		DashboardHomeUtil.gridView(webd);
+		DashboardHomeUtil.createDashboard(webd, dbName_DisableEntitiesTime, dbDesc, DashboardHomeUtil.DASHBOARD);
+
+		//verify dashboard in builder page
+		webd.getLogger().info("Verify the dashboard created Successfully");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_DisableEntitiesTime, dbDesc, true),
+				"Create dashboard failed!");
+
+		//add widget
+		webd.getLogger().info("Start to add Widget into the dashboard");
+		DashboardBuilderUtil.addWidgetToDashboard(webd, WidgetName_LA);
+		webd.getLogger().info("Add widget finished");
+
+		//verify if the widget added successfully
+		Assert.assertTrue(DashboardBuilderUtil.verifyWidget(webd, WidgetName_LA), "Widget '" + WidgetName_LA + "' not found");
+
+		//disable Entities selector
+		webd.getLogger().info("Disable Entites Selector - Use entities defined by content on page");
+		DashboardBuilderUtil.showEntityFilter(webd, false);
+
+		//disable Time Selector
+		webd.getLogger().info("Disable Time Selector - Use time range defined by content on page");
+		DashboardBuilderUtil.showTimeRangeFilter(webd, false);
+
+		//save dashboard
+		webd.getLogger().info("save the dashboard");
+		DashboardBuilderUtil.saveDashboard(webd);
+
+	}
+
 	@Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView", "testModifyDashboard_namedesc" })
 	public void testDuplicateDashboard()
 	{
@@ -146,9 +190,6 @@ public class TestDashBoard extends LoginAndLogout
 		webd.getLogger().info("Reset all filter options in the home page");
 		DashboardHomeUtil.resetFilterOptions(webd);
 
-		//create dashboard
-		webd.getLogger().info("Start to create dashboard in grid view");
-		DashboardHomeUtil.gridView(webd);
 		DashboardHomeUtil.createDashboard(webd, dbName_EnableEntitiesTime, dbDesc, DashboardHomeUtil.DASHBOARD);
 
 		//verify dashboard in builder page
