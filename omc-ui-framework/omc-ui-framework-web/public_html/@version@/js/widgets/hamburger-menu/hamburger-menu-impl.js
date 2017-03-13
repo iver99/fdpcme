@@ -25,7 +25,6 @@ define([
                 var sessionCacheAllMenusKey = 'omc_hamburger_menu';
                 var sessionCacheOmcMenusDataKey = 'omc_menus';
                 var sessionCacheServiceMenuDataKey = 'service_menu_data';
-                var sessionCacheSelectedMenuIdKey = 'selected_menu_id';
                 
                 var userName = params.userName;
                 var tenantName = params.tenantName;
@@ -319,7 +318,7 @@ define([
                     self.serviceMenuData = cachedMenus[sessionCacheServiceMenuDataKey];
                     self.dataSource(new oj.JsonTreeDataSource(omcMenus));
                     menuUtil.fireServiceMenuLoadedEvent();
-                    var selectedMenuId = cachedMenus[sessionCacheSelectedMenuIdKey];
+                    var selectedMenuId = getOmcMenuUrlParam();
                     if (selectedMenuId) {
                         menuUtil.setCurrentMenuItem(selectedMenuId);
                     }
@@ -516,6 +515,46 @@ define([
                     }
                 }
 
+                function setOmcMenuUrlParam(url, paramValue) {
+                    var paramName = "omcMenu";
+                    paramValue = encodeURI(paramValue);
+                    if (paramValue === null) {
+                        paramValue = '';
+                    }
+                    //Handle the case anchor section ('#') exists in the given URL 
+                    var anchorIdx = url.indexOf('#');
+                    var hash = '';
+                    //Retrieve hash string from the URL and append to the end of the URL after appending context string
+                    if (anchorIdx !== -1) {
+                        hash = url.substring(anchorIdx);
+                        url = url.substring(0, anchorIdx);
+                    }
+                    var pattern = new RegExp('([?&])' + paramName + '=.*?(&|$|#)(.*)', 'i');
+                    if (url.match(pattern)) {
+                        //If parameter value is not empty, update URL parameter
+                        if (paramValue) {
+                            return url.replace(pattern, '$1' + paramName + "=" + paramValue + '$2$3') + hash;
+                        }
+                        //Otherwise, remove the parameter from URL
+                        else {
+                            return url.replace(pattern, '$1$3').replace(/(&|\?)$/, '') + hash;
+                        }
+                    }
+
+                    //If value is not empty, append it to the URL
+                    if (paramValue) {
+                        return url + (url.indexOf('?') > 0 ?
+                                //Handle case that an URL ending with a question mark only
+                                        (url.lastIndexOf('?') === url.length - 1 ? '' : '&') : '?') + paramName + '=' + paramValue + hash;
+                    }
+                    //If value is empty, return original URL
+                    return url;
+                }
+
+                function getOmcMenuUrlParam(){
+                    return decodeURI(dfu.getUrlParam("omcMenu"));
+                }
+
                 function findAppItemIndex(items, id) {
                     if (id && items && items.length > 0) {
                         for (var i = 0; i < items.length; i++) {
@@ -546,7 +585,7 @@ define([
                         if (item.type && item.type !== 'divider') {
                             item = filterAuthorizedMenuItem(item);
                         }
-                        var menuItem = {'attr': {'id': item.id, 'type': item.type, 'labelKey': item.labelKey, 'externalUrl': item.externalUrl, 'disabled': item.disabled}};
+                        var menuItem = {'attr': {'id': item.id, 'type': item.type, 'labelKey': item.labelKey, 'externalUrl': item.externalUrl, 'disabled': item.disabled, 'selfHandleMenuSelection': item.selfHandleMenuSelection}};
                         if (item && item.children && item.children.length > 0) {
                             menuItem.children = [];
                             for (var i = 0; i < item.children.length; i++) {
@@ -600,8 +639,7 @@ define([
                 
                 self.selectionHandler = function(data, event) {
                     self.selectedItem(data.id);
-                    sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheSelectedMenuIdKey, data.id);
-                    if (event.type === 'click' && data.id.indexOf('omc_root_') !== -1) {
+                    if (event.type === 'click' && (data.id.indexOf('omc_root_') !== -1 || data.selfHandleMenuSelection === 'true')) {
                         handleMenuSelection(true, data);
                     }
                     else {
@@ -638,7 +676,7 @@ define([
                         if (uifwkControlled) {
                             var linkHref = item.externalUrl; //globalMenuIdHrefMapping[data.id];
                             if (linkHref && linkHref !== '#') {
-                                window.location.href = ctxUtil.appendOMCContext(linkHref, true, true, true);
+                                window.location.href = ctxUtil.appendOMCContext(setOmcMenuUrlParam(linkHref, data.id), true, true, true);
                             }
                         }
                         else {
