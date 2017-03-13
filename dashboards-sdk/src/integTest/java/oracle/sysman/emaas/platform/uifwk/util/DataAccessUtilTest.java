@@ -18,6 +18,8 @@ import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.exception.ExecutionException;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
 
+import oracle.sysman.emaas.platform.emcpdf.cache.util.StringUtil;
+import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -27,8 +29,8 @@ import org.testng.annotations.Test;
 public class DataAccessUtilTest
 {
 	@Test(groups = { "s2" })
-	public void testGetRegistrationData(@Mocked final RegistryLookupUtil anyRegistryLookupUtil, @Mocked final Link anyLink,
-			@Mocked final DataAccessUtil.RestClient anyRestClient)
+	public void testGetBrandingBarData(@Mocked final RegistryLookupUtil anyRegistryLookupUtil, @Mocked final Link anyLink,
+			@Mocked final RestClient anyRestClient)
 	{
 		final String reg = "{\"cloudServices\":[{\"name\":\"APM\",\"href\":\"https://slc04pgi.us.oracle.com:4443/emsaasui/apmUi/index.html\",\"serviceName\":\"ApmUI\",\"version\":\"1.0+\"},{\"name\":\"ITAnalytics\",\"href\":\"/emsaasui/emcpdfui/home.html?filter=ita\",\"serviceName\":\"emcitas-ui-apps\",\"version\":\"1.0+\"},{\"name\":\"LogAnalytics\",\"href\":\"https://slc04pgi.us.oracle.com:4443/emsaasui/emlacore/html/log-analytics-search.html\",\"serviceName\":\"LogAnalyticsUI\",\"version\":\"1.0+\"}],\"sessionExpiryTime\":\"20161119184208\",\"ssoLogoutUrl\":\"https://slc04pgi.us.oracle.com:4443/microservice/sso/086b88c4-265f-c9d7-862d-5feb618d30a3/securityutil/ssoLogout\",\"visualAnalyzers\":[{\"name\":\"Log Visual Analyzer\",\"href\":\"https://slc04pgi.us.oracle.com:4443/emsaasui/emlacore/html/log-analytics-search.html\",\"serviceName\":\"LogAnalyticsUI\",\"version\":\"1.0\"},{\"name\":\"Search\",\"href\":\"https://slc04pgi.us.oracle.com:4443/emsaasui/emcta/ta/analytics.html\",\"serviceName\":\"TargetAnalytics\",\"version\":\"1.1\"}],\"homeLinks\":[{\"name\":\"Alerts\",\"href\":\"https://slc04pgi.us.oracle.com:4443/emsaasui/eventUi/console/html/event-dashboard.html\",\"serviceName\":\"EventUI\",\"version\":\"1.0\"}],\"adminLinks\":[{\"name\":\"Administration\",\"href\":\"https://slc04pgi.us.oracle.com:4443/emsaasui/admin-console/ac/adminConsole.html\",\"serviceName\":\"AdminConsoleSaaSUi\",\"version\":\"1.1\"},{\"name\":\"Agents\",\"href\":\"https://slc04pgi.us.oracle.com:4443/emsaasui/tenantmgmt/services/customersoftware\",\"serviceName\":\"TenantManagementUI\",\"version\":\"1.0\"},{\"name\":\"Alert Rules\",\"href\":\"https://slc04pgi.us.oracle.com:4443/emsaasui/eventUi/rules/html/rules-dashboard.html\",\"serviceName\":\"EventUI\",\"version\":\"1.0\"}],\"assetRoots\":[{\"href\":\"https://slc04pgi.us.oracle.com:4443/emsaasui/emcitas\",\"serviceName\":\"emcitas-ui-apps\",\"version\":\"1.0\"},{\"href\":\"https://slc04pgi.us.oracle.com:4443/emsaasui/emcta/ta/js\",\"serviceName\":\"TargetAnalytics\",\"version\":\"1.1\"},{\"href\":\"https://slc04pgi.us.oracle.com:4443/emsaasui/emlacore\",\"serviceName\":\"LogAnalyticsUI\",\"version\":\"1.0\"},{\"href\":\"https://slc04pgi.us.oracle.com:4443/emsaasui/eventUi/widget\",\"serviceName\":\"EventUI\",\"version\":\"1.0\"}]}";
 		new Expectations() {
@@ -68,7 +70,7 @@ public class DataAccessUtilTest
 
 	@Test(groups = { "s2" })
 	public void testGetTenantSubscribedApps(@Mocked final RegistryLookupUtil anyRegistryLookupUtil, @Mocked final Link anyLink,
-			@Mocked final DataAccessUtil.RestClient anyRestClient)
+			@Mocked final RestClient anyRestClient)
 	{
 		final String reg = "{\"applications\":[\"APM\",\"LogAnalytics\",\"ITAnalytics\"]}";
 		new Expectations() {
@@ -109,7 +111,7 @@ public class DataAccessUtilTest
 	@Test(groups = { "s2" })
 	public void testGetUserTenantInfo(@Mocked final CacheManagers anyCacheManagers, @Mocked final ICacheManager anyCacheManager,
 			@Mocked final ICache anyCache, @Mocked final RegistryLookupUtil anyRegistryLookupUtil, @Mocked final Link anyLink,
-			@Mocked final DataAccessUtil.RestClient anyRestClient) throws ExecutionException
+			@Mocked final RestClient anyRestClient) throws ExecutionException
 	{
 		final String userInfo = "{\"currentUser\":\"emaastesttenant1.emcsadmin\",\"userRoles\":[\"APM Administrator\",\"APM User\",\"IT Analytics Administrator\",\"Log Analytics Administrator\",\"Log Analytics User\",\"IT Analytics User\"]}";
 		new Expectations() {
