@@ -23,7 +23,9 @@
                 "text",
                 "ojL10n",
                 "ojs/ojnavigationlist",
-                "ojs/ojjsontreedatasource"
+                "ojs/ojjsontreedatasource",
+                "ojs/ojoffcanvas",
+                "ojs/ojinputnumber"
             ]
         },
         {
@@ -46,7 +48,9 @@
                 "ojL10n",
                 "ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg",
                 "ojs/ojnavigationlist",
-                "ojs/ojjsontreedatasource"
+                "ojs/ojjsontreedatasource",
+                "ojs/ojoffcanvas",
+                "ojs/ojinputnumber"
             ]
         }
     ],
