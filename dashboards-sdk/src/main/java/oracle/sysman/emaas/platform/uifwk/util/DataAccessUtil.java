@@ -10,6 +10,8 @@
 
 package oracle.sysman.emaas.platform.uifwk.util;
 
+import com.sun.jersey.api.client.ClientHandlerException;
+import com.sun.jersey.api.client.UniformInterfaceException;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICache;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
@@ -76,10 +78,18 @@ public class DataAccessUtil
 			if (!StringUtil.isEmpty(sessionExp)) {
 				rc.setHeader("SESSION_EXP", sessionExp);
 			}
-			String response = rc.get(registrationHref, tenantName);
-			cache.put(userTenantKey, response);
-			LOGGER.info("Retrieved registration data is: {}", response);
-			LOGGER.info("It takes {}ms to retrieve registration data from Dashboard-API", System.currentTimeMillis() - start);
+			String response = null;
+			try{
+				response = rc.get(registrationHref, tenantName);
+			}catch(UniformInterfaceException e){
+				LOGGER.error("Error occurred: status code of the HTTP response indicates a response that is not expected");
+				LOGGER.error(e);
+			}catch(ClientHandlerException e){//RestClient may timeout, so catch this runtime exception to make sure the response can return.
+				LOGGER.error("Error occurred: Signals a failure to process the HTTP request or HTTP response");
+				LOGGER.error(e);
+			}
+			LOGGER.info("Retrieved brandingbar data is: {}", response);
+			LOGGER.info("It takes {}ms to retrieve brandingbar data from Dashboard-API", System.currentTimeMillis() - start);
 			return response;
 		}
 		catch (Exception e) {

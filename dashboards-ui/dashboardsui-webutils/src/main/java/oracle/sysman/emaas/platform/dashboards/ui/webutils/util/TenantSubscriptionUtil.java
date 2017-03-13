@@ -15,6 +15,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.sun.jersey.api.client.ClientHandlerException;
+import com.sun.jersey.api.client.UniformInterfaceException;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.subscription.SubscribedApps;
@@ -83,7 +85,16 @@ public class TenantSubscriptionUtil
 		RestClient rc = new RestClient();
 		rc.setHeader(HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME, tenant);
 		rc.setHeader("X-REMOTE-USER", tenant + "." + user);
-		String subAppResponse = rc.get(subAppHref, tenant);
+		String subAppResponse = null;
+		try{
+			subAppResponse = rc.get(subAppHref, tenant);
+		}catch(UniformInterfaceException e){
+			LOGGER.error("Error occurred: status code of the HTTP response indicates a response that is not expected");
+			LOGGER.error(e);
+		}catch(ClientHandlerException e){//RestClient may timeout, so catch this runtime exception to make sure the response can return.
+			LOGGER.error("Error occurred: Signals a failure to process the HTTP request or HTTP response");
+			LOGGER.error(e);
+		}
 		LOGGER.info("Checking tenant (" + tenant + ") subscriptions. Dashboard-API subscribed app response is " + subAppResponse);
 		JsonUtil ju = JsonUtil.buildNormalMapper();
 		try {

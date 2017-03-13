@@ -110,9 +110,6 @@ public class TenantSubscriptionUtil
 			return cachedApps;
 		}
 
-        final Map<String, String> requestHeader = new HashMap<String, String>();
-        requestHeader.put("X-OMC-SERVICE-TRACE", "Dashboard-API");
-
         List<String> apps = new RetryableLookupClient<List<String>>().connectAndDoWithRetry("EntityNaming", "1.0+", "collection/domains", false, null, new RetryableRunner<List<String>>() {
             public List<String> runWithLink(Link domainLink) throws Exception {
                 if (domainLink == null || domainLink.getHref() == null || "".equals(domainLink.getHref())) {
@@ -128,6 +125,7 @@ public class TenantSubscriptionUtil
                 String domainsResponse = null;
                 try {
 					rc.setHeader("X-USER-IDENTITY-DOMAIN-NAME",tenant);
+					rc.setHeader("X-OMC-SERVICE-TRACE", "Dashboard-API");
                     domainsResponse = rc.get(domainHref, tenant);
                 } catch (UniformInterfaceException e) {
                     if (e.getResponse() != null && (e.getResponse().getStatus() == 404 || e.getResponse().getStatus() == 503)) {

@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import com.sun.jersey.api.client.ClientHandlerException;
+import com.sun.jersey.api.client.UniformInterfaceException;
 import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -50,7 +52,16 @@ public class TenantSubscriptionUtil
 		logger.info("Checking tenant (" + tenant + ") subscriptions. The entity naming href is " + domainLink.getHref());
 		String domainHref = domainLink.getHref();
 		RestClient rc = new RestClient();
-		String domainsResponse = rc.get(domainHref, tenant);
+		String domainsResponse = null;
+		try{
+			domainsResponse = rc.get(domainHref, tenant);
+		}catch(UniformInterfaceException e){
+			logger.error("Error occurred: status code of the HTTP response indicates a response that is not expected");
+			logger.error(e);
+		}catch(ClientHandlerException e){//RestClient may timeout, so catch this runtime exception to make sure the response can return.
+			logger.error("Error occurred: Signals a failure to process the HTTP request or HTTP response");
+			logger.error(e);
+		}
 		logger.info("Checking tenant (" + tenant + ") subscriptions. Domains list response is " + domainsResponse);
 		JsonUtil ju = JsonUtil.buildNormalMapper();
 		try {

@@ -15,6 +15,8 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
+import com.sun.jersey.api.client.ClientHandlerException;
+import com.sun.jersey.api.client.UniformInterfaceException;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.ScreenshotData;
 import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -482,8 +484,14 @@ public class DashboardManager
         try {
 			rc.setHeader("X-USER-IDENTITY-DOMAIN-NAME", tenantName);
         	savedSearchResponse = rc.put(tenantHref, ssfIdList.toString(), tenantName);
-        } catch (Exception e) {
-        	LOGGER.info("savedsearch response", e);
+        }catch(UniformInterfaceException e){
+			LOGGER.error("Error occurred: status code of the HTTP response indicates a response that is not expected");
+			LOGGER.error(e);
+		}catch(ClientHandlerException e){//RestClient may timeout, so catch this runtime exception to make sure the response can return.
+			LOGGER.error("Error occurred: Signals a failure to process the HTTP request or HTTP response");
+			LOGGER.error(e);
+		}catch (Exception e) {
+        	LOGGER.error(e);
         }
         return savedSearchResponse;
     }

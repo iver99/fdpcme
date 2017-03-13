@@ -13,6 +13,8 @@ package oracle.sysman.emaas.platform.dashboards.ws.rest.util;
 import java.io.IOException;
 import java.util.List;
 
+import com.sun.jersey.api.client.ClientHandlerException;
+import com.sun.jersey.api.client.UniformInterfaceException;
 import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
@@ -58,7 +60,16 @@ public class PrivilegeChecker
 					RestClient rc = new RestClient();
 					rc.setHeader("X-USER-IDENTITY-DOMAIN-NAME",tenantName);
 					rc.setHeader("OAM_REMOTE_USER",tenantDotUser);
-					String roleCheckResponse = rc.get(secAuthRolesApiUrl, tenantName);
+					String roleCheckResponse = null;
+					try{
+						roleCheckResponse = rc.get(secAuthRolesApiUrl, tenantName);
+					}catch(UniformInterfaceException e){
+						LOGGER.error("Error occurred: status code of the HTTP response indicates a response that is not expected");
+						LOGGER.error(e);
+					}catch(ClientHandlerException e){//RestClient may timeout, so catch this runtime exception to make sure the response can return.
+						LOGGER.error("Error occurred: Signals a failure to process the HTTP request or HTTP response");
+						LOGGER.error(e);
+					}
 					LOGGER.debug("Checking roles for tenant user (" + tenantDotUser + "). The response is " + roleCheckResponse);
 					JsonUtil ju = JsonUtil.buildNormalMapper();
 					RoleNamesEntity rne = ju.fromJson(roleCheckResponse, RoleNamesEntity.class);

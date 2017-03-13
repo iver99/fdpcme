@@ -22,6 +22,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.sun.jersey.api.client.ClientHandlerException;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.EntityNamingDependencyUnavailableException;
@@ -133,7 +134,16 @@ public class TenantSubscriptionsAPI extends APIBase
 			String tenantHref = tenantsLink.getHref() + "/" + tenantName;
 			RestClient rc = new RestClient();
 			rc.setHeader("X-USER-IDENTITY-DOMAIN-NAME",tenantName);
-			String tenantResponse = rc.get(tenantHref, tenantName);
+			String tenantResponse = null;
+			try{
+				tenantResponse = rc.get(tenantHref, tenantName);
+			}catch(UniformInterfaceException e){
+				LOGGER.error("Error occurred: status code of the HTTP response indicates a response that is not expected");
+				LOGGER.error(e);
+			}catch(ClientHandlerException e){//RestClient may timeout, so catch this runtime exception to make sure the response can return.
+				LOGGER.error("Error occurred: Signals a failure to process the HTTP request or HTTP response");
+				LOGGER.error(e);
+			}
 			LOGGER.debug("Checking tenant (" + tenantName + ") subscriptions with edition. Tenant response is " + tenantResponse);
 			JsonUtil ju = JsonUtil.buildNormalMapper();
 			TenantDetailEntity de = ju.fromJson(tenantResponse, TenantDetailEntity.class);
