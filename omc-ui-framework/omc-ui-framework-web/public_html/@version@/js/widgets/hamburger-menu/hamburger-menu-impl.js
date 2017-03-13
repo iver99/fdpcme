@@ -93,17 +93,63 @@ define([
                 
                 function registerServiceMenus(menuJson) {
                     if (menuJson) {
-                        var menuItemList = [];
-                        for (var i = 0; i < menuJson.length; i++) {
-                            menuItemList.push(getMenuItem(menuJson[i]));
+                        var serviceItem = {};
+                        serviceItem.appId = serviceAppId;
+                        serviceItem.serviceMenus = menuJson.serviceMenus;
+                        serviceItem.serviceAdminMenus = menuJson.serviceAdminMenus;
+                        var msgBundleUrl = menuJson.serviceMenuMsgBundle;
+                        if (msgBundleUrl) {
+                            msgBundleUrl = msgBundleUrl.substring(msgBundleUrl.indexOf('/emsaasui/') + 1, msgBundleUrl.length - 3);
                         }
-                        var parentIndex = findMenuTreeItemIndex(omcMenus, 'omc_root_' + serviceAppId);
-                        if (parentIndex > -1) {
-                            omcMenus[parentIndex].children = menuItemList;
-                        }
-                        self.dataSource(new oj.JsonTreeDataSource(omcMenus));
+
+                        require(['ojL10n!' + msgBundleUrl], function (_nls) {
+                            serviceItem.serviceMenuMsgBundle = _nls;
+                            serviceItem.serviceMenus = applyNlsOnMenu(serviceItem.serviceMenus, _nls);
+                            serviceItem.serviceAdminMenus = applyNlsOnMenu(serviceItem.serviceAdminMenus, _nls);
+                            
+                            var menuId = findAppItemIndex(rootMenuData, 'omc_root_' + serviceAppId);
+                            if (self.serviceMenuData[menuId]) {
+                                if (serviceItem.serviceMenus) {
+                                    self.serviceMenuData[menuId].children = serviceItem.serviceMenus;
+                                    var menuItem = getMenuItem(self.serviceMenuData[menuId]);
+                                    omcMenus[menuId] = menuItem;
+                                }
+                                if (serviceItem.serviceAdminMenus && serviceItem.serviceAdminMenus.children) {
+                                    if (serviceItem.serviceMenus && serviceItem.serviceMenus.length > 0) {
+                                        var lastServiceMenuItem = serviceItem.serviceMenus[serviceItem.serviceMenus.length - 1];
+                                        if (lastServiceMenuItem.type !== 'divider') {
+                                            var dividerItem = generateDividerItem('omc_' + serviceItem.appId);
+                                            self.serviceMenuData[menuId].children.push(dividerItem);
+                                            omcMenus[menuId].children.push(getMenuItem(dividerItem));
+                                        }
+                                    }
+                                    self.serviceMenuData[menuId].children.push(serviceItem.serviceAdminMenus);
+                                    omcMenus[menuId].children.push(getMenuItem(serviceItem.serviceAdminMenus));
+                                    var adminMenuId = findAppItemIndex(self.serviceMenuData,'omc_root_admin');
+                                    var adminSubMenuId = findAppItemIndex(self.serviceMenuData[adminMenuId].children, 'omc_root_admin_grp_'+serviceItem.appId);
+                                    if (adminSubMenuId > -1) {
+                                        self.serviceMenuData[adminMenuId].children[adminSubMenuId].children = serviceItem.serviceAdminMenus.children;
+                                        omcMenus[adminMenuId].children[adminSubMenuId].attr['disabled'] = false;
+                                        var serviceAdminItem = getMenuItem(serviceItem.serviceAdminMenus)
+                                        omcMenus[adminMenuId].children[adminSubMenuId].children = serviceAdminItem.children;
+                                    }
+                                    else {
+                                        if (!self.serviceMenuData[adminMenuId].children) {
+                                            self.serviceMenuData[adminMenuId].children = [];
+                                        }
+                                        self.serviceMenuData[adminMenuId].children.push($.extend(true, {}, serviceItem.serviceAdminMenus));
+                                        self.serviceMenuData[adminMenuId].children[self.serviceMenuData[adminMenuId].children.length].id = 'omc_root_admin_grp_'+serviceItem.appId;
+                                        omcMenus[adminMenuId].children.push(getMenuItem(self.serviceMenuData[adminMenuId].children[self.serviceMenuData[adminMenuId].children.length]));
+                                    }
+                                }
+                                
+                                self.dataSource(new oj.JsonTreeDataSource(omcMenus));
+                            }
+                            
+                        });                        
                     }
                 }
+                
                 menuUtil.subscribeServiceMenuRegisterEvent(registerServiceMenus);
                 
                 self.hamburgerRootMenuLabel = nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_LABEL;
@@ -277,8 +323,8 @@ define([
                                     serviceItem.serviceMenus = data.serviceMenus;
                                     serviceItem.serviceAdminMenus = data.serviceAdminMenus;
                                     url = data.serviceMenuMsgBundle;
-                                    if(!url){
-                                        self.menuDataRequestingNum(self.menuDataRequestingNum()-1);
+                                    if (!url){
+                                        self.loadedServiceCnt(self.loadedServiceCnt() + 1);
                                         return;
                                     }
                                     if (dfu.isDevMode()) {
