@@ -30,6 +30,8 @@ public class UIControls
 
 	public static final String SSTARTTEXT5 = "//*[@id='start5']";
 	public static final String SENDTEXT5 = "//*[@id='end5']";
+	public static final String SSTARTTEXT6 = "//*[@id='start6']";
+	public static final String SENDTEXT6 = "//*[@id='end6']";
 	public static final String SFILTERINFO = "//*[@id='filterInfo']";
 	public static final String SFILTERINFO_COMPACT = "//*[@id='filterInfoInCompact']";
 
