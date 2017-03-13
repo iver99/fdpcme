@@ -238,7 +238,7 @@ public class TestDashBoard extends LoginAndLogout
 		webd.getLogger().info("Start to verify the global context related information");
 		webd.getLogger().info("Verify 'All Entities' in global context bar doesn't displayed");
 		Assert.assertFalse(GlobalContextUtil.isGlobalContextExisted(webd),
-				"Should have 'All Entities' in global context bar in the page");
+				"Shouldn't have 'All Entities' in global context bar in the page");
 		String currenturl = webd.getWebDriver().getCurrentUrl();
 		Assert.assertFalse(currenturl.contains("omcCtx="), "The global context infomation is in URL");
 
