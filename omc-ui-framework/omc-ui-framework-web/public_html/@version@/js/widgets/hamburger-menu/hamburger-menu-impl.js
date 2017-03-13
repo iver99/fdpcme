@@ -13,7 +13,9 @@ define([
         function ($, oj, ko, nls, dfumodel, pfumodel, ctxmodel, menumodel, sessionCacheModel) {
             function HamburgerMenuViewModel(params) {
                 var self = this;
-                var dfu = new dfumodel();
+                var userName = params.userName;
+                var tenantName = params.tenantName;
+                var dfu = new dfumodel(userName, tenantName);
                 var ctxUtil = new ctxmodel();
                 var prefUtil = new pfumodel(dfu.getPreferencesUrl(), dfu.getDashboardsRequestHeader());
                 var prefKeyHomeDashboardId = "Dashboards.homeDashboardId";
@@ -26,10 +28,8 @@ define([
                 var sessionCacheOmcMenusDataKey = 'omc_menus';
                 var sessionCacheServiceMenuDataKey = 'service_menu_data';
                 var sessionCacheSelectedMenuIdKey = 'selected_menu_id';
-                
-                var userName = params.userName;
-                var tenantName = params.tenantName;
                 var serviceAppId = params.appId;
+                
                 self.selectedItem = ko.observable();
                 self.expanded = ko.observableArray([]);
                 
