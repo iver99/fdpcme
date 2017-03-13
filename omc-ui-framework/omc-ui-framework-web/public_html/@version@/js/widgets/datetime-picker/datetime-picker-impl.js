@@ -1523,6 +1523,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                     edt = self.getParam(self.endDateTime);
                                     start = newDateWithMilliseconds(sdt);
                                     end = newDateWithMilliseconds(edt);
+                                    self.lrCtrlVal("timeLevelCtrl");
                                     customClick(0);
                                 }else {
                                     console.error('Error: set timePeriod to "Custom" without time range specified!');
@@ -1592,6 +1593,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             console.log("Initializing time is " + curDate);
                             if(Math.abs(end.getTime()-curDate.getTime())>60*1000 || end.getMinutes() !== curDate.getMinutes()) {
                                 var t_timePeriod = self.timePeriodCustom;
+                                self.lrCtrlVal("timeLevelCtrl");
                                 customClick(0);
                             }else {
                                 dateTimeDiff = end - start;
@@ -1602,6 +1604,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                     start = range.start;
                                     end = range.end;
                                 } else {
+                                    self.lrCtrlVal("timeLevelCtrl");
                                     customClick(0);
                                 }
                             }
@@ -1617,6 +1620,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             //print warning...
                             oj.Logger.warn("The user just input end time");
                         } else if (isValidDateInput(self.getParam(self.startDateTime)) && !isValidDateInput(self.getParam(self.endDateTime))) {
+                            self.lrCtrlVal("timeLevelCtrl");
                             customClick(0);
                             sdt = self.getParam(self.startDateTime);
                             start = newDateWithMilliseconds(sdt);
@@ -1702,6 +1706,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             console.log("Initializing time is " + curDate);
                             if(Math.abs(end.getTime()-curDate.getTime())>60*1000 || end.getMinutes() !== curDate.getMinutes()) {
                                 var t_timePeriod = self.timePeriodCustom;
+                                self.lrCtrlVal("timeLevelCtrl");
                                 customClick(0);
                             }else {
                                 dateTimeDiff = end - start;
@@ -1712,6 +1717,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                     start = range.start;
                                     end = range.end;
                                 } else {
+                                    self.lrCtrlVal("timeLevelCtrl");
                                     customClick(0);
                                 }
                             }
