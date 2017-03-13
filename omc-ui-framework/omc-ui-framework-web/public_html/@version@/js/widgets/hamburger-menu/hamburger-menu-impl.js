@@ -416,6 +416,12 @@ define([
                         sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheServiceMenuDataKey, self.serviceMenuData);
                         self.dataSource(new oj.JsonTreeDataSource(omcMenus));
                         menuUtil.fireServiceMenuLoadedEvent();
+                        setTimeout(function(){
+                            var selectedMenuId = getOmcMenuUrlParam();
+                            if (selectedMenuId) {
+                                menuUtil.setCurrentMenuItem(selectedMenuId);
+                            }
+                        }, 50);
                     });
                 }
                 
