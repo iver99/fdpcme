@@ -7,7 +7,7 @@
 tenant_hydration_schema_script_dir = "#{node["apps_dir"]}/#{node["SAAS_servicename"]}/#{node["SAAS_version"]}/sql"
 tenant_hydration_sql_filename = "emaas_dashboards_tenant_onboarding.sql"
 log_file_folder = "#{node["log_dir"]}/dashboardsOnboarding"
-log_file = "#{node["log_file_folder"]}/dashboardsOnboarding_"
+log_file = "#{log_file_folder}/dashboardsOnboarding_"
 
 # Couples of assumptions:
 #    1. the schema user/password information is passed in
