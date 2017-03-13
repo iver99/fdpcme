@@ -87,10 +87,10 @@ public class TenantSubscriptionsAPI extends APIBase
 
 		// handling normal requests without edition
 		try {
-			if (!DependencyStatus.getInstance().isEntityNamingUp())  {
-				LOGGER.error("Error to call [GET] /v1/subscribedapps?withEdition={}: EntityNaming service is down", withEdition);
-				throw new EntityNamingDependencyUnavailableException();
-			}
+//			if (!DependencyStatus.getInstance().isEntityNamingUp())  {
+//				LOGGER.error("Error to call [GET] /v1/subscribedapps?withEdition={}: EntityNaming service is down", withEdition);
+//				throw new EntityNamingDependencyUnavailableException();
+//			}
 			initializeUserContext(tenantIdParam, userTenant);
 			String tenantName = TenantContext.getCurrentTenant();
 			List<String> apps = TenantSubscriptionUtil.getTenantSubscribedServices(tenantName);
