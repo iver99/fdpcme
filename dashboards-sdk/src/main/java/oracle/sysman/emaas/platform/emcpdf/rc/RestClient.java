@@ -1,7 +1,6 @@
 package oracle.sysman.emaas.platform.emcpdf.rc;
 
 import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
@@ -23,9 +22,11 @@ public class RestClient {
     private final Logger LOGGER = LogManager.getLogger(RestClient.class);
     private static final String HTTP_HEADER_OAM_REMOTE_USER = "OAM_REMOTE_USER";
     private static final String HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME = "X-USER-IDENTITY-DOMAIN-NAME";
+    //timeout milli-seconds
+    private static final Integer DEFAULT_TIMEOUT = 30000;
     private Map<String, Object> headers;
     //Default accept type is json
-    private String accept =MediaType.APPLICATION_JSON;
+    private String accept = MediaType.APPLICATION_JSON;
     //Default type is json
     private String type = MediaType.APPLICATION_JSON;
 
@@ -39,6 +40,8 @@ public class RestClient {
 
         ClientConfig cc = new DefaultClientConfig();
         Client client = Client.create(cc);
+        client.setConnectTimeout(DEFAULT_TIMEOUT);
+        client.setReadTimeout(DEFAULT_TIMEOUT);
         char[] authToken = RegistrationManager.getInstance().getAuthorizationToken();
         String auth = String.copyValueOf(authToken);
         if (StringUtil.isEmpty(auth)) {
@@ -49,11 +52,10 @@ public class RestClient {
         }
         try {
             WebResource.Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
-                    .header(HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME, tenant).type(type)
-                    .accept(accept);
+                    .type(type).accept(accept);
             if (headers != null && !headers.isEmpty()) {
                 for (String key : headers.keySet()) {
-                    if (HttpHeaders.AUTHORIZATION.equals(key) || HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME.equals(key)) {
+                    if (HttpHeaders.AUTHORIZATION.equals(key)) {
                         continue;
                     }
                     builder.header(key, headers.get(key));
@@ -83,6 +85,8 @@ public class RestClient {
         //TODO
 //        cc.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
         Client client = Client.create(cc);
+        client.setConnectTimeout(DEFAULT_TIMEOUT);
+        client.setReadTimeout(DEFAULT_TIMEOUT);
         char[] authToken = RegistrationManager.getInstance().getAuthorizationToken();
         String auth = String.copyValueOf(authToken);
         if (StringUtil.isEmpty(auth)) {
@@ -98,7 +102,7 @@ public class RestClient {
         if (headers != null) {
             for (String key : headers.keySet()) {
                 Object value = headers.get(key);
-                if (value == null) {
+                if (value == null || HttpHeaders.AUTHORIZATION.equals(key)) {
                     continue;
                 }
                 builder.header(key, value);
@@ -107,8 +111,7 @@ public class RestClient {
         return builder.put(requestEntity.getClass(), requestEntity).toString();
     }
 
-    public void setHeader(String header, Object value)
-    {
+    public void setHeader(String header, Object value) {
         if (headers == null) {
             headers = new HashMap<String, Object>();
         }
@@ -116,14 +119,14 @@ public class RestClient {
     }
 
     public void setAccept(String accept) {
-        if(StringUtil.isEmpty(accept)){
+        if (StringUtil.isEmpty(accept)) {
             accept = MediaType.APPLICATION_JSON;
         }
         this.accept = accept;
     }
 
     public void setType(String type) {
-        if(StringUtil.isEmpty(type)){
+        if (StringUtil.isEmpty(type)) {
             type = MediaType.APPLICATION_JSON;
         }
         this.type = type;
