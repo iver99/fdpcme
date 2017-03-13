@@ -6,6 +6,7 @@ import oracle.sysman.emaas.platform.emcpdf.cache.api.ICache;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.exception.ExecutionException;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
+import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -20,7 +21,7 @@ import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.registration.Str
 public class DashboardDataAccessUtilTest {
     @Test(groups = { "s2" })
     public void testGetDashboardData(@Mocked final RegistryLookupUtil anyRegistryLookupUtil, @Mocked final Link anyLink,
-                                     @Mocked final TenantSubscriptionUtil.RestClient anyRestClient) {
+                                     @Mocked final RestClient anyRestClient) {
         final String dashboard = "{dashboardId: 1, name: 'test'}";
         new Expectations() {
             {
@@ -28,7 +29,7 @@ public class DashboardDataAccessUtilTest {
                 result = anyLink;
                 anyLink.getHref();
                 result = "http://test";
-                anyRestClient.get(anyString, anyString, anyString);
+                anyRestClient.get(anyString, anyString);
                 result = dashboard;
             }
         };
