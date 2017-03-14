@@ -138,7 +138,7 @@ public class DataFetcher
 				rc.setHeader("SESSION_EXP", sessionExp);
 			}
 			String response = rc.get(registrationHref, tenantIdParam, ((VersionedLink) configurationsLink).getAuthToken());
-			cache.put(userTenant, response);
+			cache.put(userTenantKey, response);
 			LOGGER.info("Retrieved registration data is: {}", response);
 			LOGGER.info("It takes {}ms to retrieve registration data from Dashboard-API", System.currentTimeMillis() - start);
 			return response;
