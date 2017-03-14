@@ -2712,7 +2712,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     
                     //reset time params in global context and update recent list
                     if(shouldSetOmcCtx !== false) {
-                        var tmpList = self.recentList();
+                        var tmpList = ko.observableArray(self.recentList());
     //                    tmpList.unshift({start: new Date(start), end: new Date(end), timePeriod: timePeriod, 
     //                                    timeFilter: self.timeFilter(), flexRelTimeVal: flexRelTimeVal, flexRelTimeOpt: flexRelTimeOpt});
                         if(timePeriod === ctxUtil.OMCTimeConstants.QUICK_PICK.CUSTOM && flexRelTimeVal && flexRelTimeOpt) {
@@ -2722,10 +2722,11 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         }else {
                             recentTimePeriodId = timePeriod;
                         }
+                        tmpList.remove(function(data) {return (data.timePeriod === recentTimePeriodId) && (recentTimePeriodId !== ctxUtil.OMCTimeConstants.QUICK_PICK.CUSTOM);});
                         tmpList.unshift({start: new Date(start), end: new Date(end), timePeriod: recentTimePeriodId, 
                                         timeFilter: self.timeFilter()});
                         self.recentList(tmpList.slice(0, 5));
-
+                        
                         if(timePeriod === ctxUtil.OMCTimeConstants.QUICK_PICK.CUSTOM) {
                             if(flexRelTimeVal && flexRelTimeOpt) {
                                 ctxUtil.setTimePeriod(flexRelTimePeriodId, eventSourceTimeSelector);
