@@ -68,7 +68,12 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             //respond to change to entityContextReadOnly
             self.entityContextReadOnly.subscribe(function () {
                 if (!self.entityContextReadOnly()) {
-                    require(['/emsaasui/emcta/ta/js/sdk/contextSelector/api/ContextSelectorUtils.js'], function (EmctaContextSelectorUtil) {
+                    var versionedContextSelectorUtils = window.getSDKVersionFile ?
+                                window.getSDKVersionFile('emsaasui/emcta/ta/js/sdk/contextSelector/api/ContextSelectorUtils') : null;
+                    var contextSelectorUtil = versionedContextSelectorUtils ? versionedContextSelectorUtils :
+                                '/emsaasui/emcta/ta/js/sdk/contextSelector/api/ContextSelectorUtils.js';
+                    
+                    require([contextSelectorUtil], function (EmctaContextSelectorUtil) {
                         EmctaContextSelectorUtil.registerComponents();
                         self.showEntityContextSelector(true);
                     });
