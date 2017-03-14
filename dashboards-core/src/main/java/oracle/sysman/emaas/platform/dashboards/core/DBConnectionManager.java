@@ -72,14 +72,15 @@ public class DBConnectionManager
 			return BigDecimal.valueOf(1).equals(result);
 		} catch(NoResultException e){
 			LOGGER.warn("get all dashboards count did not retrieve any data!");
+			return false;
 		} catch (Exception e) {
 			LOGGER.error(e.getLocalizedMessage(), e);
+			return false;
 		}
 		finally {
 			if (em != null) {
 				em.close();
 			}
-		return false;
 		}
 	}
 
