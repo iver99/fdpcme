@@ -1091,6 +1091,42 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
             };
 
             /**
+             * Set Non-Removable EntityMeId. GC Emctas components like Topology and ContextSelector
+             * will prevent deletion of this entity.
+             *
+             * @param {String} entityMEID entity meid
+             * @param {String} source Source name to tell where the API is called
+             * @returns
+             */
+            self.setNonRemovableEntityMeId = function (entityMEID, source) {
+                if (self.getNonRemovableEntity() !== entityMEID) {
+                    setIndividualContext('entity', 'nonRemovableEntityMEID', entityMEID, false, false, false, source);
+                }
+            };
+
+            /**
+             * Get Non-Removable Entity. GC Emctas components like Topology and ContextSelector
+             * will prevent deletion of this entity.
+             *
+             * @param
+             * @returns {Object} an Entity object
+             */
+            self.getNonRemovableEntity = function () {
+                var entityMEID = getIndividualContext('entity', 'nonRemovableEntityMEID');
+                if (entityMEID) {
+                    var entities = self.getEntities();
+                    for (var i = 0; i < entities.length; i++) {
+                        var entity = entities[i];
+                        if (entity.meId === entityMEID) {
+                            return entity;
+                        }
+                    }
+                    ;
+                }
+                return null;
+            };
+
+            /**
              * Set OMC global context of entities type.
              * 
              * @param {String} entitiesType Entities type
