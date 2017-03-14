@@ -6,8 +6,11 @@ import oracle.sysman.emaas.platform.dashboards.test.util.LoginAndLogout;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.GlobalContextUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.WelcomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.ITimeSelectorUtil.TimeRange;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 
 import org.openqa.selenium.By;
@@ -126,7 +129,7 @@ public class TestDashBoard extends LoginAndLogout
 
 		//init test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start to test in testOpenLAWidget");
+		webd.getLogger().info("Start to test in testModifyDashboard_LA");
 
 		//reset the home page
 		webd.getLogger().info("Reset all filter options in the home page");
@@ -159,7 +162,7 @@ public class TestDashBoard extends LoginAndLogout
 
 		//init test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start to test in testOpenUDEWidget");
+		webd.getLogger().info("Start to test in testModifyDashboard_UDE");
 
 		//reset the home page
 		webd.getLogger().info("Reset all filter options in the home page");
@@ -184,6 +187,65 @@ public class TestDashBoard extends LoginAndLogout
 		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 		//wait1.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//button[contains(@id,'editButton')]")));
 
+	}
+
+	@Test
+	public void testNoGCinURL()
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test in testNoGCinURL");
+
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//switch to Grid View
+		webd.getLogger().info("Switch to Grid view");
+		DashboardHomeUtil.gridView(webd);
+
+		//open the dashboard
+		webd.getLogger().info("Open the dashboard");
+		DashboardHomeUtil.selectDashboard(webd,
+				oracle.sysman.emaas.platform.dashboards.test.DPdashboard.TestDashBoard.dbName_DisableEntitiesTime);
+
+		Assert.assertFalse(GlobalContextUtil.isGlobalContextExisted(webd));
+
+		String currenturl = webd.getWebDriver().getCurrentUrl();
+
+		Assert.assertFalse(currenturl.contains("omcCtx="), "The global context infomation is in URL");
+	}
+
+	@Test
+	public void testNoGCinURL_EnableEntitiesTimeSelector()
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test in testNoGCinURL_EnableEntitiesTimeSelector");
+
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//switch to Grid View
+		webd.getLogger().info("Switch to Grid view");
+		DashboardHomeUtil.gridView(webd);
+
+		//open the dashboard
+		webd.getLogger().info("Open the dashboard");
+		DashboardHomeUtil.selectDashboard(webd,
+				oracle.sysman.emaas.platform.dashboards.test.DPdashboard.TestDashBoard.dbName_EnableEntitiesTime);
+
+		//verify the gc context
+		webd.getLogger().info("Start to verify the global context related information");
+		webd.getLogger().info("Verify 'All Entities' in global context bar doesn't displayed");
+		Assert.assertFalse(GlobalContextUtil.isGlobalContextExisted(webd),
+				"Shouldn't have 'All Entities' in global context bar in the page");
+		String currenturl = webd.getWebDriver().getCurrentUrl();
+		Assert.assertFalse(currenturl.contains("omcCtx="), "The global context infomation is in URL");
+
+		webd.getLogger().info("Set time selector");
+		TimeSelectorUtil.setTimeRange(webd, TimeRange.Last6Hours);
+		currenturl = webd.getWebDriver().getCurrentUrl();
+		Assert.assertFalse(currenturl.contains("omcCtx="), "The global context infomation is in URL");
 	}
 
 	@Test
@@ -239,5 +301,4 @@ public class TestDashBoard extends LoginAndLogout
 	{
 		return String.valueOf(System.currentTimeMillis());
 	}
-
 }
