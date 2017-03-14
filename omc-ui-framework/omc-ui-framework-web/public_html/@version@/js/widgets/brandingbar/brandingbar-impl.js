@@ -731,7 +731,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.hamburgerMenuEnabled = omcHamburgerMenuOptIn ? true : false;
             if (omcHamburgerMenuOptIn) {
                 self.hamburgerBtnLabel = nls.BRANDING_BAR_HAMBURGER_BTN_LABEL;
-                self.menuParams = {'appId': self.appId, 'userName': self.userName, 'tenantName': self.tenantName};
+                self.menuParams = {'appId': self.appId, 'userName': self.userName, 'tenantName': self.tenantName, 'omcCurrentMenuId': params.omcCurrentMenuId};
                 //Register a Knockout component for hamburger menu
                 if (!ko.components.isRegistered('omc-uifwk-hamburger-menu')) {
                     var hamburgerVMPath = "uifwk/js/widgets/hamburger-menu/js/hamburger-menu";

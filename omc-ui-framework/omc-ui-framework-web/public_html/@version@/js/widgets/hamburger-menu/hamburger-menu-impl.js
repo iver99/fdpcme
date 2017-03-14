@@ -27,6 +27,8 @@ define([
                 var sessionCacheAllMenusKey = 'omc_hamburger_menu';
                 var sessionCacheOmcMenusDataKey = 'omc_menus';
                 var sessionCacheServiceMenuDataKey = 'service_menu_data';
+                var sessionCacheOmcMenusServiceLinksKey = 'service_links';
+                var sessionCacheOmcMenusPrivilegeKey = 'privilege_list';
                 
                 var userName = params.userName;
                 var tenantName = params.tenantName;
@@ -361,12 +363,14 @@ define([
                 };
                 
                 var cachedMenus = sessionCaches[0].retrieveDataFromCache(sessionCacheAllMenusKey);
-                if (cachedMenus && cachedMenus[sessionCacheOmcMenusDataKey]) {
+                if (cachedMenus && cachedMenus[sessionCacheOmcMenusDataKey] && cachedMenus[sessionCacheOmcMenusServiceLinksKey] && cachedMenus[sessionCacheOmcMenusPrivilegeKey]) {
                     omcMenus = cachedMenus[sessionCacheOmcMenusDataKey];
+                    self.serviceLinks = cachedMenus[sessionCacheOmcMenusServiceLinksKey];
+                    self.privilegeList = cachedMenus[sessionCacheOmcMenusPrivilegeKey];
                     self.serviceMenuData = cachedMenus[sessionCacheServiceMenuDataKey];
                     self.dataSource(new oj.JsonTreeDataSource(omcMenus));
                     menuUtil.fireServiceMenuLoadedEvent();
-                    var selectedMenuId = getOmcMenuUrlParam();
+                    var selectedMenuId = params.omcCurrentMenuId;
                     if (selectedMenuId) {
                         menuUtil.setCurrentMenuItem(selectedMenuId);
                     }
@@ -412,16 +416,18 @@ define([
                             var menuItem = getMenuItem(item);
                             omcMenus.push(menuItem);
                         }
+                        sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheOmcMenusServiceLinksKey, self.serviceLinks);
+                        sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheOmcMenusPrivilegeKey, self.privilegeList);
                         sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheOmcMenusDataKey, omcMenus);
                         sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheServiceMenuDataKey, self.serviceMenuData);
                         self.dataSource(new oj.JsonTreeDataSource(omcMenus));
                         menuUtil.fireServiceMenuLoadedEvent();
                         setTimeout(function(){
-                            var selectedMenuId = getOmcMenuUrlParam();
+                            var selectedMenuId = params.omcCurrentMenuId;
                             if (selectedMenuId) {
                                 menuUtil.setCurrentMenuItem(selectedMenuId);
                             }
-                        }, 50);
+                        }, 10);
                     });
                 }
                 
@@ -553,6 +559,10 @@ define([
                             var _labelKey = menuItem.labelKey;
                             menuItem.labelKey = (nlsObj&&nlsObj[_labelKey])?nlsObj[_labelKey]:_labelKey;
                         }
+                        if(menuItem && menuItem.tooltipKey){
+                            var _tooltipKey = menuItem.tooltipKey;
+                            menuItem.tooltipKey = (nlsObj&&nlsObj[_tooltipKey])?nlsObj[_tooltipKey]:_tooltipKey;
+                        }
                         if(menuItem.children){
                             for(_idx = 0; _idx < menuItem.children.length; ++_idx){
                                 menuItem.children[_idx] = applyNlsOnMenu(menuItem.children[_idx],nlsObj);
@@ -567,46 +577,6 @@ define([
                         }
                         return menuItemList;
                     }
-                }
-
-                function setOmcMenuUrlParam(url, paramValue) {
-                    var paramName = "omcMenu";
-                    paramValue = encodeURI(paramValue);
-                    if (paramValue === null) {
-                        paramValue = '';
-                    }
-                    //Handle the case anchor section ('#') exists in the given URL 
-                    var anchorIdx = url.indexOf('#');
-                    var hash = '';
-                    //Retrieve hash string from the URL and append to the end of the URL after appending context string
-                    if (anchorIdx !== -1) {
-                        hash = url.substring(anchorIdx);
-                        url = url.substring(0, anchorIdx);
-                    }
-                    var pattern = new RegExp('([?&])' + paramName + '=.*?(&|$|#)(.*)', 'i');
-                    if (url.match(pattern)) {
-                        //If parameter value is not empty, update URL parameter
-                        if (paramValue) {
-                            return url.replace(pattern, '$1' + paramName + "=" + paramValue + '$2$3') + hash;
-                        }
-                        //Otherwise, remove the parameter from URL
-                        else {
-                            return url.replace(pattern, '$1$3').replace(/(&|\?)$/, '') + hash;
-                        }
-                    }
-
-                    //If value is not empty, append it to the URL
-                    if (paramValue) {
-                        return url + (url.indexOf('?') > 0 ?
-                                //Handle case that an URL ending with a question mark only
-                                        (url.lastIndexOf('?') === url.length - 1 ? '' : '&') : '?') + paramName + '=' + paramValue + hash;
-                    }
-                    //If value is empty, return original URL
-                    return url;
-                }
-
-                function getOmcMenuUrlParam(){
-                    return decodeURI(dfu.getUrlParam("omcMenu"));
                 }
 
                 function findAppItemIndex(items, id) {
@@ -639,7 +609,7 @@ define([
                         if (item.type && item.type !== 'divider') {
                             item = filterAuthorizedMenuItem(item);
                         }
-                        var menuItem = {'attr': {'id': item.id, 'type': item.type, 'labelKey': item.labelKey, 'externalUrl': item.externalUrl, 'disabled': item.disabled, 'selfHandleMenuSelection': item.selfHandleMenuSelection}};
+                        var menuItem = {'attr': {'id': item.id, 'type': item.type, 'labelKey': item.labelKey, 'externalUrl': item.externalUrl, 'disabled': item.disabled, 'selfHandleMenuSelection': item.selfHandleMenuSelection, 'tooltipKey': item.tooltipKey}};
                         if (item && item.children && item.children.length > 0) {
                             menuItem.children = [];
                             for (var i = 0; i < item.children.length; i++) {
@@ -730,7 +700,7 @@ define([
                         if (uifwkControlled) {
                             var linkHref = item.externalUrl; //globalMenuIdHrefMapping[data.id];
                             if (linkHref && linkHref !== '#') {
-                                window.location.href = ctxUtil.appendOMCContext(setOmcMenuUrlParam(linkHref, data.id), true, true, true);
+                                window.location.href = ctxUtil.appendOMCContext(linkHref, true, true, true);
                             }
                         }
                         else {

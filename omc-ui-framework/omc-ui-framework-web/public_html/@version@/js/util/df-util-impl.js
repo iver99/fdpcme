@@ -896,7 +896,7 @@ define(['knockout',
                 window.sessionStorage.removeItem('_uifwk_brandingbar_cache');
                 window.sessionStorage.removeItem('_uifwk_omccontextcache_composite');
                 window.sessionStorage.removeItem('_uifwk_omccontextcache_entity');
-
+                window.sessionStorage.removeItem('_uifwk_servicemenucache');
                 window.sessionStorage.removeItem('_udeCommonSessionCache');
                 for (var attr in window.sessionStorage) {
                     if (attr.indexOf('_udeTopologyCache') === 0) {
