@@ -35,7 +35,7 @@
         <div id="obbNavCsLinks" class="headerMenuText">
             <div class="oj-row" style="font-weight: bolder; font-size: medium;" data-bind="text: cloudServicesLabel"></div>
             <!-- ko foreach: cloudServices -->
-            <div class="oj-row"><a data-bind="attr: {href: 'javascript: this.click()'}, click: $parent.openLink, text: $parent.truncateString($data.name, 35)"></a></div>
+            <div class="oj-row" data-bind="attr:{'cloud-service-name':$parent.truncateString($data.name, 35)}"><a data-bind="attr: {href: 'javascript: this.click()'}, click: $parent.openLink, text: $parent.truncateString($data.name, 35)"></a></div>
             <!-- /ko -->
         </div>
     </div>
