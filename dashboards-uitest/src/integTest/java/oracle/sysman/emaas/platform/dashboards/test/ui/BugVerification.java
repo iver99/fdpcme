@@ -152,10 +152,8 @@ public class BugVerification extends LoginAndLogout
 		DashboardHomeUtil.resetFilterOptions(webd);
 
 		//visit LA page
-		BrandingBarUtil.visitWelcome(webd);
-		WelcomeUtil.dataExplorers(webd, "log");
-
-		WaitUtil.waitForPageFullyLoaded(webd);
+		BrandingBarUtil.visitApplicationCloudService(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_LA);
+                WaitUtil.waitForPageFullyLoaded(webd);
 
 		String laCtx_url = webd.getWebDriver().getCurrentUrl();
 		Assert.assertTrue(laCtx_url.contains("log-analytics-search"), "Failed to open the LA page");
@@ -326,6 +324,8 @@ public class BugVerification extends LoginAndLogout
 		webd.getLogger().info("welcome page is verified successfully");
 		webd.getLogger().info("complete testing in testEMPCDF_832");
 	}
+
+        @Test
         public void testEMCPDF_3120()
         {
                 //Initialize the test
