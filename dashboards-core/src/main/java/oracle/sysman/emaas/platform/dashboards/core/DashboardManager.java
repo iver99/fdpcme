@@ -1519,10 +1519,10 @@ public class DashboardManager
 	{
 		if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_NAME.equals(orderBy)
 				|| DashboardConstants.DASHBOARD_QUERY_ORDER_BY_NAME_ASC.equals(orderBy)) {
-			return " order by lower(p.name), p.name, p.dashboard_Id DESC";
+			return " order by nlssort(name,'NLS_SORT=SCHINESE_PINYIN_M'), p.dashboard_Id DESC";
 		}
 		else if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_NAME_DSC.equals(orderBy)) {
-			return " order by lower(p.name) DESC, p.name DESC, p.dashboard_Id DESC";
+			return " order by nlssort(name,'NLS_SORT=SCHINESE_PINYIN_M') DESC, p.dashboard_Id DESC";
 		}
 		else if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_CREATE_TIME.equals(orderBy)
 				|| DashboardConstants.DASHBOARD_QUERY_ORDER_BY_CREATE_TIME_DSC.equals(orderBy)) {
