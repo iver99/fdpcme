@@ -76,7 +76,7 @@ dependencies{
     }
 
 
-     testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: '2.2.0+')
+     testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: emcpdfCommonAPIVer)
 
 
     testConfig(group: 'com.oracle.emaas.emcpdf', name: 'dashboards-sdk', version: emcpdfDashboardsSdkVer)
