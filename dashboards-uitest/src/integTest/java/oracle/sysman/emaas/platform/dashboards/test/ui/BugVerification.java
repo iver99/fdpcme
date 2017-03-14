@@ -11,8 +11,6 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.WelcomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
@@ -138,46 +136,6 @@ public class BugVerification extends LoginAndLogout
 
 	}
 
-	/*@Test
-	public void testEMCPDF_2855()
-	{
-		//Initialize the test
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test case: testEMCPDF_2855");
-
-		//reset the home page
-		webd.getLogger().info("Reset all filter options in the home page");
-		DashboardHomeUtil.resetFilterOptions(webd);
-
-		//visit LA page
-		BrandingBarUtil.visitWelcome(webd);
-		WelcomeUtil.dataExplorers(webd, "log");
-
-		WaitUtil.waitForPageFullyLoaded(webd);
-
-		String laCtx_url = webd.getWebDriver().getCurrentUrl();
-		Assert.assertTrue(laCtx_url.contains("log-analytics-search"), "Failed to open the LA page");
-		webd.getLogger().info("Start to test opening LA page...");
-
-		//verify omcCtx exist in the LA url
-		webd.getLogger().info("start to verify omcCtx exist in the LA page url");
-		Assert.assertTrue(laCtx_url.contains("omcCtx="), "The global context infomation in URL is lost");
-
-		//find notification button and click it to open notification page
-		WebElement ntButton = webd.getWebDriver().findElement(By.xpath(PageId.NOTIFICATIONBUTTON_LA));
-		Assert.assertTrue(ntButton.isDisplayed(), "Notiification button isn't displayed in the page.");
-		webd.click(PageId.NOTIFICATIONBUTTON_LA);
-
-		WaitUtil.waitForPageFullyLoaded(webd);
-
-		//verify omcCtx exist in the Notification page url
-		webd.switchToWindow();
-		String lantCtx_url = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("start to verify omcCtx exist in the Notification page url: " + lantCtx_url);
-		Assert.assertTrue(lantCtx_url.contains("omcCtx="), "The global context infomation in URL is lost");
-
-	}
-
 	@Test
 	public void testEMCPDF_2856()
 	{
@@ -207,7 +165,7 @@ public class BugVerification extends LoginAndLogout
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, "Dashboard_EMCPDF2856", null, true),
 				"It is NOT the home page!");
 
-		//logout and login 
+		//logout and login
 		LoginAndLogout.logoutMethod();
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Logout and login");
@@ -236,7 +194,7 @@ public class BugVerification extends LoginAndLogout
 		webd.getLogger().info("Verfiy the home page");
 		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, WelcomeUtil.SERVICE_NAME_DASHBOARDS),
 				"It is NOT the home page!");
-	}*/
+	}
 
 	@Test
 	public void testEMPCDF_2970()

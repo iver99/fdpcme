@@ -9,14 +9,12 @@
         <link rel="stylesheet" href="libs/@version@/js/oraclejet/css/libs/oj/v2.0.2/alta/oj-alta-min.css" type="text/css"/>
 
         <script type="text/javascript">
-            function serverSideInit() {
                 ////ADDITIONALDATA////
-            }
         </script>
         <script data-main="@version@/js/builderMain" src="libs/@version@/js/oraclejet/js/libs/require/require.js"></script>
 
     </head>
-    <body onload="serverSideInit()">
+    <body>
         <div data-bind="text:getNlsString('DBS_HOME_LOADING')" style="position: fixed; top: 0; margin-left: -65px; width: 120px; height: 15px; left: 50%; z-index: 999; background-color: #e6ffe0; padding: 5px; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; text-align: center; border-style: solid; border-width: 1px; border-top: none; box-shadow: 2px 2px 2px #888888;" class="loadingIndicator" id="loading"></div>
         <div class="loadingIndicator" id="printLoading" style="display: none; z-index:1000">Loading Content</div>
         <div id="globalBody" style="display: none;">
@@ -194,7 +192,7 @@
                             </ul>
                             <!-- /ko -->
                             <span role="separator" aria-orientation="vertical" class="oj-toolbar-separator no-print"></span>
-                            <!--ko if: dashboard.enableEntityFilter && (dashboard.enableEntityFilter() === 'TRUE' || dashboard.enableEntityFilter() === 'GC') -->
+                            <!--ko if: dashboard.enableEntityFilter && ((dashboard.enableEntityFilter() === 'TRUE') || (isUnderSet && dashboard.enableEntityFilter() === 'GC')) -->
                             <div class="df-target-selector">   
                                 <emcta-target-selector data-bind="attr: {id: 'tsel_'+dashboard.id()}"
                                                        params="returnFunction: returnFromTsel,

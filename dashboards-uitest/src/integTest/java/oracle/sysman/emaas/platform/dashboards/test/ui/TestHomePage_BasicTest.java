@@ -19,7 +19,7 @@ public class TestHomePage_BasicTest extends LoginAndLogout
 		DashboardHomeUtil.resetFilterOptions(webd);
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testExploreData_LALink()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -32,7 +32,7 @@ public class TestHomePage_BasicTest extends LoginAndLogout
 		DashBoardUtils.verifyURL(webd, "emlacore/html/log-analytics-search.html");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testExploreData_SearchLink()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -45,7 +45,7 @@ public class TestHomePage_BasicTest extends LoginAndLogout
 		DashBoardUtils.verifyURL(webd, "emcta/ta/analytics.html");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testUserMenu()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -55,7 +55,7 @@ public class TestHomePage_BasicTest extends LoginAndLogout
 
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verify_allOOB_GridView()
 	{
 		//login the dashboard
@@ -73,7 +73,7 @@ public class TestHomePage_BasicTest extends LoginAndLogout
 		DashBoardUtils.outDateOob();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verify_allOOB_ListView()
 	{
 		//login the dashboard
@@ -91,7 +91,7 @@ public class TestHomePage_BasicTest extends LoginAndLogout
 		DashBoardUtils.outDateOob();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verify_APMOOB_GridView()
 	{
 		//login the dashboard
@@ -115,7 +115,7 @@ public class TestHomePage_BasicTest extends LoginAndLogout
 		DashboardHomeUtil.resetFilterOptions(webd);
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verify_CreatedBy_Me_GridView()
 	{
 		//login the dashboard
@@ -137,7 +137,7 @@ public class TestHomePage_BasicTest extends LoginAndLogout
 		DashboardHomeUtil.resetFilterOptions(webd);
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verify_CreatedBy_Me_ListView()
 	{
 		//login the dashboard
@@ -159,7 +159,7 @@ public class TestHomePage_BasicTest extends LoginAndLogout
 		DashboardHomeUtil.resetFilterOptions(webd);
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verify_CreatedBy_Oracle_GridView()
 	{
 		//login the dashboard
@@ -184,7 +184,7 @@ public class TestHomePage_BasicTest extends LoginAndLogout
 		DashboardHomeUtil.resetFilterOptions(webd);
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verify_CreatedBy_Oracle_ListView()
 	{
 		//login the dashboard
@@ -209,7 +209,7 @@ public class TestHomePage_BasicTest extends LoginAndLogout
 		DashboardHomeUtil.resetFilterOptions(webd);
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verify_ITAOOB_GridView()
 	{
 		//login the dashboard
@@ -234,7 +234,7 @@ public class TestHomePage_BasicTest extends LoginAndLogout
 		DashboardHomeUtil.resetFilterOptions(webd);
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verify_ITAOOB_ListView()
 	{
 		//login the dashboard
@@ -259,7 +259,7 @@ public class TestHomePage_BasicTest extends LoginAndLogout
 		DashboardHomeUtil.resetFilterOptions(webd);
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verify_LAOOB_GridView()
 	{
 		//login the dashboard
@@ -284,7 +284,7 @@ public class TestHomePage_BasicTest extends LoginAndLogout
 		DashboardHomeUtil.resetFilterOptions(webd);
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verify_LAOOB_ListView()
 	{
 		//login the dashboard
