@@ -1,13 +1,14 @@
 package oracle.sysman.emaas.platform.dashboards.core.model;
 
 import java.math.BigInteger;
-import java.util.Date;
 
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
-import oracle.sysman.emaas.platform.dashboards.core.util.DateUtil;
+import oracle.sysman.emaas.platform.dashboards.core.util.BigIntegerSerializer;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
+
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 /**
  * @author jishshi
@@ -15,6 +16,7 @@ import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
  */
 public class UserOptions {
     private String userName;
+    @JsonSerialize(using = BigIntegerSerializer.class)
     private BigInteger dashboardId;
     private Long autoRefreshInterval;
     private String extendedOptions;
