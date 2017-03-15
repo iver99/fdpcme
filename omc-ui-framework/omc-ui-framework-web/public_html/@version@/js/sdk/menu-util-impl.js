@@ -1,13 +1,20 @@
-define([
+define('uifwk/@version@/js/sdk/menu-util-impl', [
     'ojs/ojcore',
     'knockout',
     'jquery',
+    'uifwk/@version@/js/util/ajax-util-impl',
+    'uifwk/@version@/js/util/df-util-impl',
+    'uifwk/@version@/js/util/usertenant-util-impl',
     'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg'
 ],
-    function (oj, ko, $, nls)
+    function (oj, ko, $, ajaxUtilModel, dfuModel, userTenantModel, nls)
     {
         function UIFWKGlobalMenuUtil() {
             var self = this;
+            var ajaxUtil = new ajaxUtilModel();
+            var dfu = new dfuModel();
+            var userTenantUtil = new userTenantModel();
+            
             self.OMC_GLOBAL_MENU_HOME = 'omc_root_home';
             self.OMC_GLOBAL_MENU_ALERTS = 'omc_root_alerts';
             self.OMC_GLOBAL_MENU_DASHBOARDS = 'omc_root_dashboards';
@@ -131,10 +138,91 @@ define([
                 ko.virtualElements.allowedBindings.stopBinding = true;
             };
             
-            self.OMC_COMMON_MENU_ALERTS = {id: 'omc_common_alerts', 
-                labelKey: nls.BRANDING_BAR_HAMBURGER_MENU_COMMON_ALERTS_LABEL};
-            self.OMC_COMMON_ADMIN_MENU_ALERTS = {id: 'omc_common_admin_alertrules', 
-                labelKey: nls.BRANDING_BAR_HAMBURGER_MENU_COMMON_ADMIN_ALERT_RULES_LABEL};
+            self.getServiceBaseVanityUrls = function(callbackForVanityUrls) {
+                var dfdGetVanityUrls = $.Deferred();
+                if (window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.baseVanityUrls && 
+                        ($.isFunction(window._uifwk.cachedData.baseVanityUrls) ? window._uifwk.cachedData.baseVanityUrls() : true)) {
+                    dfdGetVanityUrls.resolve($.isFunction(window._uifwk.cachedData.baseVanityUrls) ? window._uifwk.cachedData.baseVanityUrls() : 
+                            window._uifwk.cachedData.baseVanityUrls);
+                } else {
+                    if (!window._uifwk) {
+                        window._uifwk = {};
+                    }
+                    if (!window._uifwk.cachedData) {
+                        window._uifwk.cachedData = {};
+                    }
+                    if (!window._uifwk.cachedData.isFetchingVanityUrls) {
+                        window._uifwk.cachedData.isFetchingVanityUrls = true;
+                        if (!window._uifwk.cachedData.baseVanityUrls) {
+                            window._uifwk.cachedData.baseVanityUrls = ko.observable();
+                        }
+
+                        function doneCallback(data, textStatus, jqXHR) {
+                            window._uifwk.cachedData.baseVanityUrls(data);
+                            window._uifwk.cachedData.isFetchingVanityUrls = false;
+                            dfdGetVanityUrls.resolve(data);
+                        }
+
+                        var lookupVanityUrl = '/sso.static/dashboards.registry';
+                        if (dfu.isDevMode()) {
+                            var dfBaseUrl = dfu.getDevData().dfRestApiEndPoint;
+                            lookupVanityUrl = dfBaseUrl.substring(0, dfBaseUrl.indexOf('/emcpdf/')) + '/emcpdf/api/v1/registry';
+                        }
+                        lookupVanityUrl = lookupVanityUrl + '/lookup/baseVanityUrls';
+                        ajaxUtil.ajaxWithRetry({type: 'GET', contentType: 'application/json', url: lookupVanityUrl,
+                            dataType: 'json',
+                            headers: dfu.getDefaultHeader(),
+                            async: true,
+                            success: function (data, textStatus, jqXHR) {
+                                doneCallback(data, textStatus, jqXHR);
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                console.log('Failed to get vanity URLs!');
+                                window._uifwk.cachedData.isFetchingVanityUrls = false;
+                                dfdGetVanityUrls.resolve(null);
+                            }
+                        });
+                    } else {
+                        window._uifwk.cachedData.baseVanityUrls.subscribe(function (data) {
+                            dfdGetVanityUrls.resolve(data);
+                        });
+                    }
+                }
+                return dfdGetVanityUrls;
+            };
+            
+            self.getVanityUrl = function(originalUrl, serviceName, callback) {
+                if (!originalUrl || !serviceName) {
+                    oj.Logger.error("Error: Failed to get vanity URL: serviceName=" + serviceName + ', originalUrl=' + originalUrl);
+                }
+                
+                var host = window.location.host;
+                var tenantName = userTenantUtil.getTenantName();
+                if (host.indexOf(tenantName + '.') === 0) {
+                    self.getServiceBaseVanityUrls().done(fetchServiceVanityUrl);
+                }
+                else {
+                    callback(originalUrl);
+                }
+                
+                function fetchServiceVanityUrl(urls) {
+                    var targetUrl = originalUrl;
+                    if (urls && urls[serviceName]) {
+                        var baseVanityUrl = urls[serviceName];
+                        if (baseVanityUrl.indexOf('://') > -1) {
+                            var urlSplitted = baseVanityUrl.split('://');
+                            if (urlSplitted.length === 2) {
+                                var idx = originalUrl.indexOf('/emsaasui');
+                                if (idx > -1 && idx !== 0) {
+                                    originalUrl = originalUrl.substring(idx);
+                                }
+                                targetUrl = dfu.buildFullUrl(urlSplitted[0] + '://' + tenantName + '.' + urlSplitted[1], originalUrl);
+                            }
+                        }
+                    }
+                    callback(targetUrl);
+                }
+            };
         }
         return UIFWKGlobalMenuUtil;
     }

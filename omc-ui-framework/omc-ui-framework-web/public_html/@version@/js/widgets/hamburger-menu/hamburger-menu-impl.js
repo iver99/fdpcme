@@ -61,7 +61,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     if (omcMenus[size-1] && omcMenus[size-1].attr.id === rootCompositeMenuid) {
                         omcMenus.pop();
                     }
-                    if (self.serviceMenuData[size-1] && self.serviceMenuData[size-1].attr.id === rootCompositeMenuid) {
+                    if (self.serviceMenuData[size-1] && self.serviceMenuData[size-1].id === rootCompositeMenuid) {
                         self.serviceMenuData.pop();
                     }
                     currentCompositeParentId = null;
