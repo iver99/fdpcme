@@ -8,6 +8,26 @@ define([
     {
         function UIFWKGlobalMenuUtil() {
             var self = this;
+            self.OMC_GLOBAL_MENU_HOME = 'omc_root_home';
+            self.OMC_GLOBAL_MENU_ALERTS = 'omc_root_alerts';
+            self.OMC_GLOBAL_MENU_DASHBOARDS = 'omc_root_dashboards';
+            self.OMC_GLOBAL_MENU_DATAEXPLORER = 'omc_root_dataexplorer';
+            self.OMC_GLOBAL_MENU_APM = 'omc_root_APM';
+            self.OMC_GLOBAL_MENU_MONITORING = 'omc_root_Monitoring';
+            self.OMC_GLOBAL_MENU_LOGANALYTICS = 'omc_root_LogAnalytics';
+            self.OMC_GLOBAL_MENU_ITANALYTICS = 'omc_root_ITAnalytics';
+            self.OMC_GLOBAL_MENU_ORCHESTRATION = 'omc_root_Orchestration';
+            self.OMC_GLOBAL_MENU_SECURITY = 'omc_root_SecurityAnalytics';
+            self.OMC_GLOBAL_MENU_COMPLIANCE = 'omc_root_Compliance';
+            self.OMC_GLOBAL_MENU_ADMIN = 'omc_root_admin';
+            self.OMC_GLOBAL_MENU_ADMIN_ALERTRULES = 'omc_root_admin_alertrules';
+            self.OMC_GLOBAL_MENU_ADMIN_AGENTS = 'omc_root_admin_agents';
+            self.OMC_GLOBAL_MENU_ADMIN_ENTITIESCONFIG = 'omc_root_admin_entitiesconfig';
+            self.OMC_GLOBAL_MENU_ADMIN_GRP_APM = 'omc_root_admin_grp_APM';
+            self.OMC_GLOBAL_MENU_ADMIN_GRP_MONITORING = 'omc_root_admin_grp_Monitoring';
+            self.OMC_GLOBAL_MENU_ADMIN_GRP_LOGANALYTICS = 'omc_root_admin_grp_LogAnalytics';
+            self.OMC_GLOBAL_MENU_ADMIN_GRP_SECURITY = 'omc_root_admin_grp_SecurityAnalytics';
+            self.OMC_GLOBAL_MENU_ADMIN_GRP_COMPLIANCE = 'omc_root_admin_grp_Compliance';
             
             function fireCompositeMenuDisplayEvent(parentMenuId, objMenuName, menuJson) {
                 var message = {'tag': 'EMAAS_OMC_GLOBAL_MENU_COMPOSITE_DISPLAY'};
