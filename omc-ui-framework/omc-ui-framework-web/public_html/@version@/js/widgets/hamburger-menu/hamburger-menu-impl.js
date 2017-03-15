@@ -29,6 +29,7 @@ define([
                 var sessionCacheServiceMenuDataKey = 'service_menu_data';
                 var sessionCacheOmcMenusServiceLinksKey = 'service_links';
                 var sessionCacheOmcMenusPrivilegeKey = 'privilege_list';
+                var sessionCacheOmcMenusRegistrationKey = 'registration';
                 
                 var userName = params.userName;
                 var tenantName = params.tenantName;
