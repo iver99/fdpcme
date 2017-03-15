@@ -61,6 +61,9 @@ define([
                     if (omcMenus[size-1] && omcMenus[size-1].attr.id === rootCompositeMenuid) {
                         omcMenus.pop();
                     }
+                    if (self.serviceMenuData[size-1] && self.serviceMenuData[size-1].attr.id === rootCompositeMenuid) {
+                        self.serviceMenuData.pop();
+                    }
                     currentCompositeParentId = null;
                 }
                 
@@ -89,6 +92,7 @@ define([
                                                     'externalUrl': '#', 
                                                     'children': menuJson.serviceCompositeMenus};
                                 rootCompositMenuItem = applyNlsOnMenu(rootCompositMenuItem, _nls);
+                                self.serviceMenuData.push(rootCompositMenuItem);
                                 var compositeMenu = getMenuItem(rootCompositMenuItem);
                                 omcMenus.push(compositeMenu);
                                 self.expanded([rootCompositeMenuid]);
