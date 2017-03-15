@@ -445,7 +445,7 @@ public class RegistryLookupUtil
 		return protocoledLinks;
 	}
 	
-	private static String getAuthorizationAccessToken(InstanceInfo instanceInfo) {
+	public static String getAuthorizationAccessToken(InstanceInfo instanceInfo) {
 	    char[] authToken = LookupManager.getInstance().getAuthorizationAccessToken(instanceInfo);
 	    return new String(authToken);
 	}

@@ -55,8 +55,8 @@ public class TenantSubscriptionsAPITest {
     public void testGetSubscribedApplications1(@Mocked final DependencyStatus anyDependencyStatus,@Mocked final APIBase apiBase, @Mocked final TenantSubscriptionUtil tenantSubscriptionUtil) {
         new Expectations() {
             {
-            	anyDependencyStatus.isEntityNamingUp();
-            	result=true;
+//            	anyDependencyStatus.isEntityNamingUp();
+//            	result=true;
                 List<String> apps = new ArrayList<>();
                 apps.add("DBD");
                 TenantSubscriptionUtil.getTenantSubscribedServices(anyString);
