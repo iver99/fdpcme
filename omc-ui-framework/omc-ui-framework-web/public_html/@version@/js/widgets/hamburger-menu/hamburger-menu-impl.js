@@ -1,4 +1,4 @@
-define([
+define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
     'jquery', 
     'ojs/ojcore', 
     'knockout',
