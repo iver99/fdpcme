@@ -7,6 +7,7 @@ import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
 import oracle.sysman.emaas.platform.dashboards.core.util.DateUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
+import oracle.sysman.emaas.platform.dashboards.core.util.StringEscapeUtil;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -50,7 +51,7 @@ public class UserOptions {
     }
 
     public String getExtendedOptions() {
-        return extendedOptions;
+        return StringEscapeUtil.escapeWithCharPairs(extendedOptions, new String[][]{{"&", "&amp;"}, {"<", "&lt;"}, {">", "&gt;"}});
     }
 
     public void setExtendedOptions(String extendedOptions) {

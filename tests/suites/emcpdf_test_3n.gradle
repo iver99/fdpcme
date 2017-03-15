@@ -75,8 +75,12 @@ dependencies{
       	exclude('module':'groovy')
     }
 
-    testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: emcpdfCommonAPIVer)
+
+     testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: emcpdfCommonAPIVer)
+
+
     testConfig(group: 'com.oracle.emaas.emcpdf', name: 'dashboards-sdk', version: emcpdfDashboardsSdkVer)
+
     testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-web-integ-tests', version: "${REPO_BID}") {
 	exclude('module':'groovy')
     }
