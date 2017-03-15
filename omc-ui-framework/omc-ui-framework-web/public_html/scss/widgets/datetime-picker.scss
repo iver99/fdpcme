@@ -428,7 +428,11 @@ div[id^='pickerPanel'] .oj-listbox-drop{
 div[id^='pickerPanel'] .oj-messaging-inline-container{
     .oj-message-error {
         width: 430px;
+        height: 36px;
         padding: 5px;
+        word-wrap: break-word;
+        word-break: normal;
+        overflow: auto;
     }
     .oj-message-summary {
         font-size: 12px;
