@@ -30,6 +30,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 var sessionCacheOmcMenusServiceLinksKey = 'service_links';
                 var sessionCacheOmcMenusPrivilegeKey = 'privilege_list';
                 var sessionCacheOmcMenusSubscribedAppsKey = 'subscribed_apps';
+                var sessionCacheBaseVanityUrlsKey = 'base_vanity_urls';
                 
                 var userName = params.userName;
                 var tenantName = params.tenantName;
@@ -213,9 +214,25 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 self.privilegeList = [];
                 self.subscribedApps = [];
                 self.serviceMenuData = [];
+                self.baseVanityUrls = null;
                 self.dataSource = ko.observable();
                 var omcMenus = [];
                 var globalMenuIdHrefMapping = null;
+                
+                function fetchBaseVanityUrls() {
+                    var dfdFetchBaseVanityUrls = $.Deferred();
+                    var host = window.location.host;
+                    if (host.indexOf(tenantName + '.') === 0) {
+                        menuUtil.getServiceBaseVanityUrls(function(data){
+                            self.baseVanityUrls = data;
+                            dfdFetchBaseVanityUrls.resolve();
+                        });
+                    }
+                    else {
+                        dfdFetchBaseVanityUrls.resolve();
+                    }
+                    return dfdFetchBaseVanityUrls;
+                }
                 
                 function loadServiceMenus() {
                     var dfdLoadServiceMenus = $.Deferred();
@@ -225,12 +242,12 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                             self.serviceLinks = data.serviceMenus;
 //                            //testing code start
 //                            self.serviceLinks = [
-////                                {
-////                                    'appId': 'APM',
-////                                    'serviceName': 'ApmUI',
-////                                    'version': '1.0',
-////                                    'metaDataHref': 'http://localhost:8383/emsaasui/uifwk/@version@/data/serviceMenus.json'
-////                                },
+//                                {
+//                                    'appId': 'APM',
+//                                    'serviceName': 'ApmUI',
+//                                    'version': '1.0',
+//                                    'metaDataHref': 'http://localhost:8383/emsaasui/uifwk/@version@/data/serviceMenus.json'
+//                                }
 ////                                {
 ////                                    'appId': 'ITAnalytics',
 ////                                    'serviceName': 'emcitas-ui-apps',
@@ -380,6 +397,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     self.serviceLinks = cachedMenus[sessionCacheOmcMenusServiceLinksKey];
                     self.privilegeList = cachedMenus[sessionCacheOmcMenusPrivilegeKey];
                     self.serviceMenuData = cachedMenus[sessionCacheServiceMenuDataKey];
+                    self.baseVanityUrls = cachedMenus[sessionCacheBaseVanityUrlsKey];
                     self.dataSource(new oj.JsonTreeDataSource(omcMenus));
                     menuUtil.fireServiceMenuLoadedEvent();
                     var selectedMenuId = params.omcCurrentMenuId;
@@ -388,7 +406,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     }
                 }
                 else {
-                    $.when(loadServiceMenus(), getUserGrants(), getSubscribedApps()).done(function() {
+                    $.when(loadServiceMenus(), getUserGrants(), getSubscribedApps(), fetchBaseVanityUrls()).done(function() {
                         for (var k = 0; k < rootMenuData.length; ++k) {
                             rootMenuData[k].externalUrl = globalMenuIdHrefMapping[rootMenuData[k].id] ? globalMenuIdHrefMapping[rootMenuData[k].id] : '#';
                             self.serviceMenuData.push($.extend(true, {}, rootMenuData[k]));
@@ -433,6 +451,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                         sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheOmcMenusPrivilegeKey, self.privilegeList);
                         sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheOmcMenusDataKey, omcMenus);
                         sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheServiceMenuDataKey, self.serviceMenuData);
+                        sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheBaseVanityUrlsKey, self.baseVanityUrls);
                         self.dataSource(new oj.JsonTreeDataSource(omcMenus));
                         menuUtil.fireServiceMenuLoadedEvent();
                         setTimeout(function(){
@@ -604,25 +623,32 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     return -1;
                 }
                 
-                function findMenuTreeItemIndex(items, id) {
-                    if (id && items && items.length > 0) {
-                        for (var i = 0; i < items.length; i++) {
-                            if (id === items[i].attr['id']) {
-                                return i;
-                                break;
-                            }
-                        }
-                    }
-                    return -1;
-                }
+//                function findMenuTreeItemIndex(items, id) {
+//                    if (id && items && items.length > 0) {
+//                        for (var i = 0; i < items.length; i++) {
+//                            if (id === items[i].attr['id']) {
+//                                return i;
+//                                break;
+//                            }
+//                        }
+//                    }
+//                    return -1;
+//                }
                 
                 
                 function getMenuItem(item) {
                     if (item) {
                         if (item.type && item.type !== 'divider') {
                             item = filterAuthorizedMenuItem(item);
+                            if (item && item.externalUrl && item.serviceNameForVanityUrl) {
+                                if (self.baseVanityUrls) {
+                                    item.externalUrl = menuUtil.generateVanityUrl(item.externalUrl, self.baseVanityUrls[item.serviceNameForVanityUrl]);
+                                }
+                            }
                         }
-                        var menuItem = {'attr': {'id': item.id, 'type': item.type, 'labelKey': item.labelKey, 'externalUrl': item.externalUrl, 'disabled': item.disabled, 'selfHandleMenuSelection': item.selfHandleMenuSelection, 'tooltipKey': item.tooltipKey}};
+                        var menuItem = {'attr': {'id': item.id, 'type': item.type, 'labelKey': item.labelKey, 'externalUrl': item.externalUrl, 
+                                'disabled': item.disabled, 'selfHandleMenuSelection': item.selfHandleMenuSelection, 
+                                'tooltipKey': item.tooltipKey, 'serviceNameForVanityUrl': item.serviceNameForVanityUrl}};
                         if (item && item.children && item.children.length > 0) {
                             menuItem.children = [];
                             for (var i = 0; i < item.children.length; i++) {

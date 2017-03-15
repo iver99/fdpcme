@@ -14,6 +14,8 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
             var ajaxUtil = new ajaxUtilModel();
             var dfu = new dfuModel();
             var userTenantUtil = new userTenantModel();
+            var host = window.location.host;
+            var tenantName = userTenantUtil.getTenantName();
             
             self.OMC_GLOBAL_MENU_HOME = 'omc_root_home';
             self.OMC_GLOBAL_MENU_ALERTS = 'omc_root_alerts';
@@ -138,11 +140,10 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
                 ko.virtualElements.allowedBindings.stopBinding = true;
             };
             
-            self.getServiceBaseVanityUrls = function() {
-                var dfdGetVanityUrls = $.Deferred();
+            self.getServiceBaseVanityUrls = function(callbackForVanityUrls) {
                 if (window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.baseVanityUrls && 
                         ($.isFunction(window._uifwk.cachedData.baseVanityUrls) ? window._uifwk.cachedData.baseVanityUrls() : true)) {
-                    dfdGetVanityUrls.resolve($.isFunction(window._uifwk.cachedData.baseVanityUrls) ? window._uifwk.cachedData.baseVanityUrls() : 
+                    callbackForVanityUrls($.isFunction(window._uifwk.cachedData.baseVanityUrls) ? window._uifwk.cachedData.baseVanityUrls() : 
                             window._uifwk.cachedData.baseVanityUrls);
                 } else {
                     if (!window._uifwk) {
@@ -160,7 +161,7 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
                         function doneCallback(data, textStatus, jqXHR) {
                             window._uifwk.cachedData.baseVanityUrls(data);
                             window._uifwk.cachedData.isFetchingVanityUrls = false;
-                            dfdGetVanityUrls.resolve(data);
+                            callbackForVanityUrls(data);
                         }
 
                         var lookupVanityUrl = '/sso.static/dashboards.registry';
@@ -179,27 +180,41 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
                             error: function (jqXHR, textStatus, errorThrown) {
                                 console.log('Failed to get vanity URLs!');
                                 window._uifwk.cachedData.isFetchingVanityUrls = false;
-                                dfdGetVanityUrls.resolve(null);
+                                callbackForVanityUrls(null);
                             }
                         });
                     } else {
                         window._uifwk.cachedData.baseVanityUrls.subscribe(function (data) {
-                            dfdGetVanityUrls.resolve(data);
+                            callbackForVanityUrls(data);
                         });
                     }
                 }
-                return dfdGetVanityUrls;
             };
             
-            self.getVanityUrl = function(originalUrl, serviceName, callback) {
+            self.generateVanityUrl = function(originalUrl, baseVanityUrl) {
+                var targetUrl = originalUrl;
+                if (baseVanityUrl && host.indexOf(tenantName + '.') === 0) {
+                    if (baseVanityUrl.indexOf('://') > -1) {
+                        var urlSplitted = baseVanityUrl.split('://');
+                        if (urlSplitted.length === 2) {
+                            var idx = originalUrl.indexOf('/emsaasui');
+                            if (idx > -1 && idx !== 0) {
+                                originalUrl = originalUrl.substring(idx);
+                            }
+                            targetUrl = dfu.buildFullUrl(urlSplitted[0] + '://' + tenantName + '.' + urlSplitted[1], originalUrl);
+                        }
+                    }
+                }
+                return targetUrl;
+            };
+            
+            self.getVanityUrlByServiceName = function(originalUrl, serviceName, callback) {
                 if (!originalUrl || !serviceName) {
                     oj.Logger.error("Error: Failed to get vanity URL: serviceName=" + serviceName + ', originalUrl=' + originalUrl);
                 }
                 
-                var host = window.location.host;
-                var tenantName = userTenantUtil.getTenantName();
                 if (host.indexOf(tenantName + '.') === 0) {
-                    self.getServiceBaseVanityUrls().done(fetchServiceVanityUrl);
+                    self.getServiceBaseVanityUrls(fetchServiceVanityUrl);
                 }
                 else {
                     callback(originalUrl);
@@ -208,17 +223,7 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
                 function fetchServiceVanityUrl(urls) {
                     var targetUrl = originalUrl;
                     if (urls && urls[serviceName]) {
-                        var baseVanityUrl = urls[serviceName];
-                        if (baseVanityUrl.indexOf('://') > -1) {
-                            var urlSplitted = baseVanityUrl.split('://');
-                            if (urlSplitted.length === 2) {
-                                var idx = originalUrl.indexOf('/emsaasui');
-                                if (idx > -1 && idx !== 0) {
-                                    originalUrl = originalUrl.substring(idx);
-                                }
-                                targetUrl = dfu.buildFullUrl(urlSplitted[0] + '://' + tenantName + '.' + urlSplitted[1], originalUrl);
-                            }
-                        }
+                        targetUrl = generateVanityUrl(originalUrl, urls[serviceName]);
                     }
                     callback(targetUrl);
                 }
