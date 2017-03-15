@@ -244,7 +244,6 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
 
                 self.lrCtrlVal = ko.observable("timeLevelCtrl");
                 self.flexRelTimeVal = ko.observable(1);
-                self.maxFlexRelTimeVal = ko.observable(null);
                 self.flexRelTimeOpt = ko.observable(["DAY"]);
 //                self.timeLevelOpt = ko.observable(["MINUTE"]);
 
@@ -442,6 +441,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 self.endTimeError = ko.observable(false);
                 self.timeValidateError = ko.observable(false);
                 self.beyondWindowLimitError = ko.observable(false);
+                self.flexRelTimeValError = ko.observable(false);
 
                 self.showErrorMsg = ko.computed(function () {
                     return self.startDateError() || self.endDateError() || self.startTimeError() || self.endTimeError();
@@ -457,7 +457,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
 
                 self.applyButtonDisable = ko.computed(function() {
                     return self.startDateError() || self.endDateError() || self.startTimeError() || self.endTimeError() ||
-                            self.timeValidateError() || self.beyondWindowLimitError() || self.showTimeFilterError();
+                            self.timeValidateError() || self.beyondWindowLimitError() || self.showTimeFilterError() || self.flexRelTimeValError();
                 }, self);
                 
                 self.lrCtrlVal.subscribe(function(value) {
@@ -562,6 +562,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 self.formatErrorMsg = nls.DATETIME_PICKER_FORMAT_ERROR_MSG;
                 self.timeValidateErrorMsg = nls.DATETIME_PICKER_TIME_VALIDATE_ERROR_MSG;
                 self.beyondWindowLimitErrorMsg = nls.DATETIME_PICKER_BEYOND_WINDOW_LIMIT_ERROR_MSG;
+                self.felRelTimeValError = nls.DATETIME_PICKER_FLEX_REL_TIME_VALUE_ERROR_MSG;
                 self.timeRangeMsg = nls.DATETIME_PICKER_TIME_RANGE;
                 self.applyButton = nls.DATETIME_PICKER_BUTTONS_APPLY_BUTTON;
                 self.cancelButton = nls.DATETIME_PICKER_BUTTONS_CANCEL_BUTTON;
@@ -1977,7 +1978,23 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     self.endTime(end.slice(10));
                 }
                 
+                self.numberValidator = {
+                    'validate': function(value) {
+                        //TO DO: Need to confirm with Juan what is the biggest number allowed
+                       if(value >= 1 && $.isNumeric(value) && (parseInt(value) === value) && value.toString().length<4) {
+                           return true;
+                       }else {
+                           throw new Error(self.felRelTimeValError);
+                       }
+                    }
+                };
+                     
                 self.flexRelTimeValChanged = function(event, data) {
+                    if(data.option === "messagesShown" && isArray(data.value) && data.value.length>0) {
+                        self.flexRelTimeValError(true);
+                    }else {
+                        self.flexRelTimeValError(false);
+                    }
                     if(self.init || data.option !== "value") {
                         return;
                     }
