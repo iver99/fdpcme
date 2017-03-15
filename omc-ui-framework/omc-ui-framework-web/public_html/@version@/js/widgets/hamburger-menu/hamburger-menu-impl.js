@@ -29,7 +29,7 @@ define([
                 var sessionCacheServiceMenuDataKey = 'service_menu_data';
                 var sessionCacheOmcMenusServiceLinksKey = 'service_links';
                 var sessionCacheOmcMenusPrivilegeKey = 'privilege_list';
-                var sessionCacheOmcMenusRegistrationKey = 'registration';
+                var sessionCacheOmcMenusSubscribedAppsKey = 'subscribed_apps';
                 
                 var userName = params.userName;
                 var tenantName = params.tenantName;
@@ -374,13 +374,12 @@ define([
                 };
                 
                 var cachedMenus = sessionCaches[0].retrieveDataFromCache(sessionCacheAllMenusKey);
-                if (cachedMenus && cachedMenus[sessionCacheOmcMenusDataKey] && cachedMenus[sessionCacheOmcMenusServiceLinksKey] && cachedMenus[sessionCacheOmcMenusPrivilegeKey] && cachedMenus[sessionCacheOmcMenusRegistrationKey]) {
+                if (cachedMenus && cachedMenus[sessionCacheOmcMenusDataKey] && cachedMenus[sessionCacheOmcMenusServiceLinksKey] && cachedMenus[sessionCacheOmcMenusPrivilegeKey] && cachedMenus[sessionCacheOmcMenusSubscribedAppsKey]) {
                     omcMenus = cachedMenus[sessionCacheOmcMenusDataKey];
-                    self.registration = cachedMenus[sessionCacheOmcMenusRegistrationKey];
+                    self.subscribedApps = cachedMenus[sessionCacheOmcMenusSubscribedAppsKey];
                     self.serviceLinks = cachedMenus[sessionCacheOmcMenusServiceLinksKey];
                     self.privilegeList = cachedMenus[sessionCacheOmcMenusPrivilegeKey];
                     self.serviceMenuData = cachedMenus[sessionCacheServiceMenuDataKey];
-                    fetchGlobalMenuLinks(self.registration);
                     self.dataSource(new oj.JsonTreeDataSource(omcMenus));
                     menuUtil.fireServiceMenuLoadedEvent();
                     var selectedMenuId = params.omcCurrentMenuId;
@@ -429,7 +428,7 @@ define([
                             var menuItem = getMenuItem(item);
                             omcMenus.push(menuItem);
                         }
-                        sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheOmcMenusRegistrationKey, self.registration);
+                        sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheOmcMenusSubscribedAppsKey, self.subscribedApps);
                         sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheOmcMenusServiceLinksKey, self.serviceLinks);
                         sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheOmcMenusPrivilegeKey, self.privilegeList);
                         sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheOmcMenusDataKey, omcMenus);
