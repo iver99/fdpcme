@@ -66,31 +66,37 @@ define([
                 
                 var currentCompositeParentId = null;
                 function jumpToCompositeMenu(parentMenuId, rootMenuLabel, menuJson) {
-                    clearCompositeMenuItems();
-                    currentCompositeParentId = parentMenuId;
-                    var rootCompositMenuItem = {'id': rootCompositeMenuid, type: 'menu_item', 'labelKey': rootMenuLabel, 'externalUrl': '#', children: menuJson};
-                    var compositeMenu = getMenuItem(rootCompositMenuItem);
-//                    var parentMenuIndex = findTreeItemIndex(omcMenus, parentMenuId);
-//                    if (parentMenuIndex > -1) {
-//                        if (!omcMenus[parentMenuIndex].children) {
-//                            omcMenus[parentMenuIndex].children = [];
-//                        }
-//                        omcMenus[parentMenuIndex].children.push(compositeMenu);
-//                    }
-                    
-                    omcMenus.push(compositeMenu);
-                    self.expanded([rootCompositeMenuid]);
-                    self.dataSource(new oj.JsonTreeDataSource(omcMenus));
-                    $("#omcMenuNavList").ojNavigationList("refresh");
-                    
-//                    oj.OffcanvasUtils.toggle({
-//                                                "edge": "start",
-//                                                "displayMode": "push",
-//                                //                "content": "#main-container",
-//                                                "selector": "#omcHamburgerMenu"
-//                                            });
-//                    self.selectedItem('omc_composite_m1');
-//                    $("omcMenuNavList").ojNavigationList("expand", {'key': rootCompositeMenuid, 'vetoable': true});                    
+                    if (menuJson && menuJson.serviceCompositeMenus) {
+                        clearCompositeMenuItems();
+                        currentCompositeParentId = parentMenuId;
+                        if (menuJson.serviceMenuMsgBundle) {
+                            var url = menuJson.serviceMenuMsgBundle;
+                            if (dfu.isDevMode()) {
+                                var dfBaseUrl = dfu.getDevData().dfRestApiEndPoint;
+                                url = dfBaseUrl.substring(0, dfBaseUrl.indexOf('/emcpdf/')) + url;
+                            }
+                            else {
+                                url = url.substring(url.indexOf('/emsaasui/') + 1, url.length - 3);
+                            }
+//                            //testing code
+//                            url = menuJson.serviceMenuMsgBundle.substring(menuJson.serviceMenuMsgBundle.indexOf('/emsaasui/') + 1, menuJson.serviceMenuMsgBundle.length - 3); 
+//                            //testing code
+                            
+                            require(['ojL10n!' + url], function (_nls) {
+                                var rootCompositMenuItem = {'id': rootCompositeMenuid, 
+                                                    type: 'menu_item', 
+                                                    'labelKey': rootMenuLabel, 
+                                                    'externalUrl': '#', 
+                                                    'children': menuJson.serviceCompositeMenus};
+                                rootCompositMenuItem = applyNlsOnMenu(rootCompositMenuItem, _nls);
+                                var compositeMenu = getMenuItem(rootCompositMenuItem);
+                                omcMenus.push(compositeMenu);
+                                self.expanded([rootCompositeMenuid]);
+                                self.dataSource(new oj.JsonTreeDataSource(omcMenus));
+                                $("#omcMenuNavList").ojNavigationList("refresh");
+                            });
+                        }
+                    }                  
                 }
                 menuUtil.subscribeCompositeMenuDisplayEvent(jumpToCompositeMenu);
                 
