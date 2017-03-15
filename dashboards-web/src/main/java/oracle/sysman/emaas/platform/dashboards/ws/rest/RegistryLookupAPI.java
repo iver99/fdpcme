@@ -60,6 +60,25 @@ public class RegistryLookupAPI extends APIBase
 			initializeUserContext(tenantIdParam, userTenant);
 			Map<String, String> baseVanityUrls = RegistryLookupUtil.getVanityBaseURLs(tenantIdParam);
 			if (baseVanityUrls != null) {
+				//Remove tenant name from url if it's inserted already
+				for (Map.Entry<String, String> entry : baseVanityUrls.entrySet()) {
+					String url = entry.getValue();
+					if (url != null && url.indexOf("://") != -1) {
+						String[] splittedUrl = url.split("://");
+						if (splittedUrl.length == 2 && splittedUrl[1].startsWith(tenantIdParam + ".")) {
+							StringBuilder sb = new StringBuilder();
+							sb.append(splittedUrl[0]);
+							sb.append("://");
+							sb.append(splittedUrl[1].substring(tenantIdParam.length() + 1));
+							url = sb.toString();
+						}
+
+					}
+					baseVanityUrls.put(entry.getKey(), url);
+				}
+			}
+
+			if (baseVanityUrls != null) {
 				return Response.status(Status.OK).entity(JsonUtil.buildNormalMapper().toJson(baseVanityUrls)).build();
 			}
 			else {
