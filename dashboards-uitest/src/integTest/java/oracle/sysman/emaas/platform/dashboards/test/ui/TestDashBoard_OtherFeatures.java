@@ -153,6 +153,8 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 			webd.takeScreenShot();
 		}
 		webd.getLogger().info("Finished to get wider widgets");
+		webd.getLogger().info("save the dashboard");
+		DashboardBuilderUtil.saveDashboard(webd);
 	}
 
 	@Test

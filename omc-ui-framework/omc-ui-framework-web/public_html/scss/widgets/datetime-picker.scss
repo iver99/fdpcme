@@ -293,3 +293,56 @@ div[id^='pickerPanel'] .oj-listbox-search-wrapper {
 .cancel-button {
     margin-left: 4px;
 }
+
+.show-individual-time-span1{
+    display: block !important;
+    line-height: 0.5em;
+    font-size: 12px;
+    color:  #333333;
+    margin: 5px auto -4px 0;
+    width: 291px;
+}
+
+.show-individual-time-span1-latest{
+    font-size: 12px;
+    color:  #333333;
+    width: 291px;
+}
+
+.show-individual-time-span1-short{
+    font-size: 12px;
+    color:  #333333;
+    width: 85px;
+}
+
+.show-individual-time-span2{
+/*    line-height: 0.5em;
+    font-size: 0.5em;*/
+}
+
+.show-individual-time-badge{
+    height:16px;
+    width:16px;
+    vertical-align:top;
+    margin-top:8px;
+    background: url('@version@/images/uifwkSprite.png') no-repeat 0px -46px;
+}
+
+.badge-message-detail{
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    color: #333333;
+    font-size: 12px;
+    padding: 0 10px 0 4px;
+}
+
+.badge-message-summary{
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    color: #333333;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 0 10px 0 0;
+}
+
+.oj-popup-content{
+    padding: 10px;
+}

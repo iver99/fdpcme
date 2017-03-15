@@ -594,7 +594,7 @@ define(['knockout',
                                     dbsToolBar.dashboardsetConfig.addFavorite(false);
                                     dfu.showMessage({
                                         type: 'confirm',
-                                        summary: getNlsString('DBS_BUILDER_MSG_ADD_FAVORITE_SUCC'),
+                                        summary: getNlsString('DBS_SET_BUILDER_MSG_ADD_FAVORITE_SUCC'),
                                         detail: '',
                                         removeDelayTime: 5000
                                     });
@@ -602,7 +602,7 @@ define(['knockout',
                                 function () {
                                     dfu.showMessage({
                                         type: 'error',
-                                        summary: getNlsString('DBS_BUILDER_MSG_ADD_FAVORITE_FAIL'),
+                                        summary: getNlsString('DBS_SET_BUILDER_MSG_ADD_FAVORITE_FAIL'),
                                         detail: ''
                                     });
                                 });
@@ -613,7 +613,7 @@ define(['knockout',
                                     dbsToolBar.dashboardsetConfig.addFavorite(true);
                                     dfu.showMessage({
                                         type: 'confirm',
-                                        summary: getNlsString('DBS_BUILDER_MSG_REMOVE_FAVORITE_SUCC'),
+                                        summary: getNlsString('DBS_SET_BUILDER_MSG_REMOVE_FAVORITE_SUCC'),
                                         detail: '',
                                         removeDelayTime: 5000
                                     });
@@ -621,7 +621,7 @@ define(['knockout',
                                 function () {
                                     dfu.showMessage({
                                         type: 'error',
-                                        summary: getNlsString('DBS_BUILDER_MSG_REMOVE_FAVORITE_FAIL'),
+                                        summary: getNlsString('DBS_SET_BUILDER_MSG_REMOVE_FAVORITE_FAIL'),
                                         detail: ''
                                     });
                                 });
@@ -637,7 +637,7 @@ define(['knockout',
                                 dbsToolBar.dashboardsetConfig.setHome(false);
                                 dfu.showMessage({
                                     type: 'confirm',
-                                    summary: getNlsString('DBS_BUILDER_MSG_SET_AS_HOME_SUCC'),
+                                    summary: getNlsString('DBS_SET_BUILDER_MSG_SET_AS_HOME_SUCC'),
                                     detail: '',
                                     removeDelayTime: 5000
                                 });
@@ -645,7 +645,7 @@ define(['knockout',
                             error: function() {
                                 dfu.showMessage({
                                     type: 'error',
-                                    summary: getNlsString('DBS_BUILDER_MSG_SET_AS_HOME_FAIL'),
+                                    summary: getNlsString('DBS_SET_BUILDER_MSG_SET_AS_HOME_FAIL'),
                                     detail: ''
                                 });
                             }
@@ -657,7 +657,7 @@ define(['knockout',
                                 dbsToolBar.dashboardsetConfig.setHome(true);
                                 dfu.showMessage({
                                         type: 'confirm',
-                                        summary: getNlsString('DBS_BUILDER_MSG_REMOVE_AS_HOME_SUCC'),
+                                        summary: getNlsString('DBS_SET_BUILDER_MSG_REMOVE_AS_HOME_SUCC'),
                                         detail: '',
                                         removeDelayTime: 5000
                                 });
@@ -665,7 +665,7 @@ define(['knockout',
                             error: function() {
                                 dfu.showMessage({
                                     type: 'error',
-                                    summary: getNlsString('DBS_BUILDER_MSG_REMOVE_AS_HOME_FAIL'),
+                                    summary: getNlsString('DBS_SET_BUILDER_MSG_REMOVE_AS_HOME_FAIL'),
                                     detail: ''
                                 });
                             }
@@ -768,7 +768,8 @@ define(['knockout',
             };
 
             function highlightNextTab(removeDashboardId,clickItem){
-                 $("#dashboard-" + removeDashboardId).remove();
+                new Builder.DashboardDataSource().dataSource[removeDashboardId] = null; //delete the removed dashboard in data source
+                $("#dashboard-" + removeDashboardId).remove();
 
                 var removeResult = findTargetInArr(self.dashboardsetItems, removeDashboardId);
                 var reorderResult = findTargetInArr(self.reorderedDbsSetItems(), removeDashboardId);

@@ -30,7 +30,7 @@ def compiledDir = buildDir.absolutePath+'/public_html'
 def File sourceTargetSelectorAPIDestDir = new File(buildDir.absolutePath+'/stage_tsel')
 def webRootSourceDir = 'public_html'
 
-def chefDir = project.rootDir.absolutePath +'/dashboards-chef/cookbook-emcs-omc-ui-framework/recipes'
+//def chefDir = project.rootDir.absolutePath +'/dashboards-chef/cookbook-emcs-omc-ui-framework/recipes'
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
@@ -280,14 +280,14 @@ clean.dependsOn cleanJet,cleanFont,cleanTargetSelector
 project.task("cleanCompassCss")<<{
 }
 
-project.task("prepareChef")<<{
+//project.task("prepareChef")<<{
 
-  File chefFile = new File(chefDir+"/default.rb")
+//  File chefFile = new File(chefDir+"/default.rb")
 
-		String contents = chefFile.getText('UTF-8')
-		String replacereg = "@version@"
-		contents = contents.replaceAll(Pattern.quote(replacereg), versionPathElement)
-		chefFile.write(contents, 'UTF-8')
+//		String contents = chefFile.getText('UTF-8')
+//		String replacereg = "@version@"
+//		contents = contents.replaceAll(Pattern.quote(replacereg), versionPathElement)
+//		chefFile.write(contents, 'UTF-8')
    
 //   new File(chefDir).eachFile {
 	//filesMatching("**/*.rb"){
@@ -296,9 +296,9 @@ project.task("prepareChef")<<{
 //    }
 //    into "../../dashboards-chef/cookbook-emcs-omc-ui-framework/recipes/"
 //}
-}
+//}
 
-task copyJsSource(type:Copy, dependsOn:[cleanJs,compileSass,prepareChef]) {
+task copyJsSource(type:Copy, dependsOn:[cleanJs,compileSass]) {
     from (webRootSourceDir) {
         include "**/*"
         exclude "**/uifwkCommonMsg.js"
@@ -663,12 +663,20 @@ task copyStagedJs(type:Copy, dependsOn:[stageJs]) {
 }
 
 task prepareRequireJsConfig(type:Copy) {
-    from ('.') {
-        include "uifwk.build.js"
-            //replace @version@ with versionPathElement
-            filter(ReplaceTokens, tokens: [version: versionPathElement])
+    if(!project.hasProperty("devMode")){
+        from ('.') {
+            include "uifwk.build.js"
+                //replace @version@ with versionPathElement
+                filter(ReplaceTokens, tokens: [version: versionPathElement])
+        }
+        into buildDir
     }
-    into buildDir
+    else {
+        from ('.') {
+            include "uifwk.build.js"
+        }
+        into buildDir
+    }
 }
 
 task individualMinify(dependsOn: [copyStagedJs, jsCodeCoverage, tasks.matching { Task task -> task.name.startsWith("dominify")}]){}
@@ -830,6 +838,19 @@ task copyDevJs(type:Copy, dependsOn: [cleanJs, unpackJETFromArtifactory, unpackJ
     }  
 }
 
+task copyStagedDevJs(type:Copy, dependsOn:[copyDevJs]) {
+    from (stagingDir) {
+	include "**/*"	
+    }
+    into compiledDir
+}
+
+task combineAppJsDebug(dependsOn: [copyStagedDevJs, prepareRequireJsConfig], type: com.eriwen.gradle.js.tasks.RequireJsTask) {
+    source = javascript.source.staticjs.js.files   //point to your source files
+    requirejs.buildprofile = file(buildDir.absolutePath+"/uifwk.build.js")
+    outputs.upToDateWhen { false }           //requireJs task does not know how to accurately determine if it is UP-TO-DATE so this line says the task is never up to date.
+}
+
 test {
         classpath = sourceSets.test.compileClasspath + sourceSets.test.output
         useTestNG()
@@ -848,8 +869,11 @@ eclipse {
 }
 
 if(project.hasProperty("devMode")){
-	war.dependsOn copyDevJs
+	war.dependsOn combineAppJsDebug   //copyDevJs
 }
+//else if(project.hasProperty("debugJs")){
+//        war.dependsOn combineAppJsDebug
+//}
 else
 {
 	war.dependsOn minifyUIFwkImplPartitionJs
@@ -857,20 +881,20 @@ else
 }
 
 war {
-    if(project.hasProperty("devMode")){
-	from(stagingDir) {
-	    include '**/*'
-	    exclude '**/*.orig.js','**/*.map'
-	    into('/')
-	}
-
-	from('src/main/java') { 
-		include '**/*.properties'
-		into('WEB-INF/classes') 
-	}
-    }
-    else
-    {
+//    if(project.hasProperty("devMode")){
+//	from(stagingDir) {
+//	    include '**/*'
+//	    exclude '**/*.orig.js','**/*.map'
+//	    into('/')
+//	}
+//
+//	from('src/main/java') { 
+//		include '**/*.properties'
+//		into('WEB-INF/classes') 
+//	}
+//    }
+//    else
+//    {
 	from(compiledDir) {
 	    include '**/*'
 	    exclude '**/*.orig.js','**/*.map','**/scss'
@@ -881,7 +905,7 @@ war {
 		include '**/*.properties'
 		into('WEB-INF/classes') 
 	}
-    }
+//    }
 
 	//rootSpec.exclude("**/*.zip")
 }

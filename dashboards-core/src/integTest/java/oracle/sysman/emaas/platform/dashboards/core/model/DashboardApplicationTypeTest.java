@@ -16,7 +16,7 @@ public class DashboardApplicationTypeTest
 {
 
 	private static final Logger LOGGER = LogManager.getLogger(DashboardApplicationTypeTest.class);
-	@Test(groups = { "s2" })
+	@Test(groups = { "s1" })
 	public void testFromJsonValue()
 	{
 		Assert.assertEquals(DashboardApplicationType.APM, DashboardApplicationType.fromJsonValue("APM"));
@@ -44,7 +44,7 @@ public class DashboardApplicationTypeTest
 		}
 	}
 
-	@Test(groups = { "s2" })
+	@Test(groups = { "s1" })
 	public void testFromValue()
 	{
 		Assert.assertEquals(DashboardApplicationType.APM, DashboardApplicationType.fromValue(1));
@@ -64,7 +64,7 @@ public class DashboardApplicationTypeTest
 		}
 	}
 
-	@Test(groups = { "s2" })
+	@Test(groups = { "s1" })
 	public void testGetJsonValue()
 	{
 		Assert.assertEquals(DashboardApplicationType.APM_STRING, DashboardApplicationType.APM.getJsonValue());
@@ -84,7 +84,7 @@ public class DashboardApplicationTypeTest
 		Assert.assertEquals(DashboardApplicationType.OSMACC_STRING, DashboardApplicationType.OSMACC.getJsonValue());
 	}
 
-	@Test(groups = { "s2" })
+	@Test(groups = { "s1" })
 	public void testGetBasicServices()
 	{
 		List<DashboardApplicationType> list1 = Arrays.asList(DashboardApplicationType.Compliance, DashboardApplicationType.APM);
