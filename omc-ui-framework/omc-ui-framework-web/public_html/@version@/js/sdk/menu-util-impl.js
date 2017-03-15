@@ -138,7 +138,7 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
                 ko.virtualElements.allowedBindings.stopBinding = true;
             };
             
-            self.getServiceBaseVanityUrls = function(callbackForVanityUrls) {
+            self.getServiceBaseVanityUrls = function() {
                 var dfdGetVanityUrls = $.Deferred();
                 if (window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.baseVanityUrls && 
                         ($.isFunction(window._uifwk.cachedData.baseVanityUrls) ? window._uifwk.cachedData.baseVanityUrls() : true)) {
