@@ -188,7 +188,7 @@
                         <div style="display:inline-block; padding-left: 15px;">
                             <div class="chosenDate">
                                 <input id="chosen-date-1" data-bind="attr: {id: 'inputStartDate_'+randomId, 'aria-label': startDateLabel}, 
-                                    ojComponent: {component: 'ojInputText', value: startDate, placeholder: 'mm/dd/yyyy',
+                                    ojComponent: {component: 'ojInputText', value: startDate, placeholder: nls.DATETIME_PICKER_CALENDAR_DATE_FORMAT,
                                         rootAttributes:{style : 'width: 70px;'}, 
                                         optionChange: function(event, data){changeDate(event, data, 1)},
                                         disabled: lrCtrlVal()!=='timeLevelCtrl'
@@ -212,7 +212,7 @@
 
                             <div class="chosenDate">
                                 <input id="chosen-date-2" data-bind="attr: {id: 'inputEndDate_'+randomId, 'aria-label': endDateLabel}, 
-                                    ojComponent: {component: 'ojInputText', value: endDate, placeholder: 'mm/dd/yyyy', 
+                                    ojComponent: {component: 'ojInputText', value: endDate, placeholder:  nls.DATETIME_PICKER_CALENDAR_DATE_FORMAT, 
                                         rootAttributes: {style : 'width: 70px;'}, 
                                         optionChange: function(event, data){changeDate(event, data, 2)},
                                         disabled: lrCtrlVal()!=='timeLevelCtrl'
