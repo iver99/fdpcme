@@ -49,6 +49,7 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
     Builder.DEFAULT_HEIGHT = 161;
     Builder.EDITOR_POS_BASED_ON_ROW_COLUMN = "BASED_ON_ROW_COLUMN";
     Builder.EDITOR_POS_FIND_SUITABLE_SPACE = "FIND_SUITABLE_SPACE";
+    Builder.DEFAULT_AUTO_REFRESH_INTERVAL = 300000;
 
     window.Builder = Builder;
 
@@ -104,8 +105,7 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
 
         // an addition bool parameter to indicate at least one tile exists in dashboard, false to indicate no tiles in dashboard
         self.EVENT_TILE_EXISTS_CHANGED = "EVENT_TILE_EXISTS_CHANGED";
-        self.EVENT_EXISTS_TILE_SUPPORT_TIMECONTROL = "EVENT_EXISTS_TILE_SUPPORT_TIMECONTROL";
-
+       
         self.EVENT_DISPLAY_CONTENT_IN_EDIT_AREA = "EVENT_DISPLAY_CONTENT_IN_EDIT_AREA";
 
         self.EVENT_TILE_MOVE_STOPED = "EVENT_TILE_MOVE_STOPED";

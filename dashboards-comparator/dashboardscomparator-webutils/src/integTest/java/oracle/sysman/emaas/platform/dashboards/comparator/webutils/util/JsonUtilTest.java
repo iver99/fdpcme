@@ -13,7 +13,7 @@ import java.io.IOException;
 /**
  * Created by chehao on 2017/1/10.
  */
-@Test(groups = {"s2"})
+@Test(groups = {"s1"})
 public class JsonUtilTest {
 
     public static class TestClass<T>

@@ -204,6 +204,23 @@ public class TenantSubscriptionUtil
 
 	private static Logger itrLogger = LogUtil.getInteractionLogger();
 
+	public static String getTenantSubscribedServicesString(final String tenant) {
+		List<String> apps = TenantSubscriptionUtil.getTenantSubscribedServices(tenant);
+		if (apps == null || apps.isEmpty()) {
+			return null;
+		}
+		StringBuilder sb = new StringBuilder();
+		sb.append("{\"applications\":[");
+		for (int i = 0; i < apps.size(); i++) {
+			if (i != 0) {
+				sb.append(",");
+			}
+			sb.append("\"").append(apps.get(i)).append("\"");
+		}
+		sb.append("]}");
+		return sb.toString();
+	}
+
 	@SuppressWarnings("unchecked")
 	public static List<String> getTenantSubscribedServices(final String tenant)
 	{

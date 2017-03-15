@@ -20,7 +20,7 @@ import org.testng.annotations.Test;
  */
 public class PaginatedDashboardsTest
 {
-	@Test(groups = { "s2" })
+	@Test(groups = { "s1" })
 	public void testPaginatedDashboards()
 	{
 		PaginatedDashboards pd = new PaginatedDashboards(0L, 0, 0, 50, new ArrayList<Dashboard>());

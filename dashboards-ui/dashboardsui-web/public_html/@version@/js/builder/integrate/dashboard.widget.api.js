@@ -17,7 +17,11 @@ define(['ojs/ojcore', 'knockout', 'jquery',
 
             self.getTargetInstancesList = function (callback) {
                     if (self.tselContextChanged) {
-                        require(['emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils'], function(TargetSelectorUtils) {
+                        var versionedTargetSelectorUtils = window.getSDKVersionFile ? 
+                            window.getSDKVersionFile('emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils') : null;
+                        var targetSelectorUtilsModel = versionedTargetSelectorUtils ? versionedTargetSelectorUtils : 
+                                'emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils';
+                        require([targetSelectorUtilsModel], function(TargetSelectorUtils) {
                             TargetSelectorUtils.getSelection(TargetSelectorUtils.MEID_FORCE_QUERY, self.tselContext,
                                 function (targets) {
                                     self.tselContextChanged = false;

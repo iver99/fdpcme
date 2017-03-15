@@ -238,17 +238,8 @@ task runS1Tests(type: Exec) {
 }
 runS1Tests.enabled = !project.disableBuildTests
 
-task runS2Tests(type: Exec) {
- executable = project.gradle.gradleHomeDir.absolutePath + '/bin/gradle'
-    args 'do_lrg', '-Plrgs=emcpdf_l1_test'
-    if (project.hasProperty('BuildID')) {
-        args "-PREPO_BID=${BuildID}"
-    }
-    if (project.hasProperty('ENABLE_CC')) {
-        args "-PENABLE_CC=1"
-    }
-    finalizedBy "print_results"
-
+task runS2Tests() {
+ 
 } 
 
 runS2Tests.enabled = !project.disableBuildTests

@@ -38,6 +38,7 @@ public class NLSFilterTest {
     HttpServletRequest request;
     @Mocked
     ServletOutputStream servletOutputStream;
+    @Test
     public void testDoFilter() throws IOException, ServletException {
         final NLSFilter filter = new NLSFilter();
         new Expectations() {
@@ -50,7 +51,7 @@ public class NLSFilterTest {
     }
     @Mocked
     IOException ioException;
-    @Test(expectedExceptions = {AssertionError.class})
+    @Test
     public void testGetResponseText() throws IOException, ServletException {
         final NLSFilter filter = new NLSFilter();
         new Expectations() {
