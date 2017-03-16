@@ -24,7 +24,7 @@ import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
  * @author guochen
  *
  */
-@Test(groups = {"s2"})
+@Test(groups = {"s1"})
 public class CombinedDashboardTest {
 	@Test
 	public void testValueOf() {

@@ -65,6 +65,8 @@ define('uifwk/@version@/js/widgets/navlinks/navigation-links-impl', ['knockout',
                         params.navLinksNeedRefresh(false);
                     }
                 });
+                
+                checkDashboardAsHomeSettings();
 
                 self.refresh = function() {
                     refreshLinks();

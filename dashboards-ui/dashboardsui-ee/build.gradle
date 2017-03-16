@@ -45,7 +45,8 @@ dependencies
 	earlib getProjectArtifact('httpmime')    
     earlib getProjectArtifact('commons-lang3')    
     earlib getProjectArtifact('commons-logging')    
-    earlib getProjectArtifact('commons-codec')    
+    earlib getProjectArtifact('commons-codec')   
+    earlib getProjectArtifact('security-client') 
 
     
     

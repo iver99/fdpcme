@@ -46,7 +46,7 @@ import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
 //Setup gradle to onboard a new tenant
 apply from: 'onboard_tenant.gradle'
 
-def emcpdfCommonAPIVer = '2.0.0+'
+def emcpdfCommonAPIVer = getDependentSdkVersion('com.oracle.emaas.emcpdf.testsdk.ui', 'dashboards-ui-test-common-api', '2.+')
 
 //Update the lrgConfig configuration to specify where the test jar is.
 dependencies{
@@ -63,6 +63,7 @@ task e2e (type: EMTest, dependsOn:[omcSetup, onboardTenant] ){
 options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
         test('name': 'DashboardUITest') {
             classes([:]) {
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.SuiteLevelSetup')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestHomePage_BasicTest')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestHomePage_SortBy')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestWelcomePage')
