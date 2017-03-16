@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Collections;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
@@ -474,7 +475,7 @@ public class TenantSubscriptionUtilTest
 			{
 				Deencapsulation.setField(TenantSubscriptionUtil.class, "IS_TEST_ENV", null);
 
-                LookupManager.getInstance().getLookupClient().lookup((InstanceQuery)any);
+                LookupManager.getInstance().getLookupClient().lookup((InstanceQuery) any);
                 result = insList;
                 anyInstanceInfo.getLinksWithProtocol(anyString, anyString);
                 result = links;
@@ -591,19 +592,26 @@ public class TenantSubscriptionUtilTest
 
 	@Test(groups = { "s2" })
 	public void testGetTenantSubscribedServicesString() {
+		final List<String> appList = Arrays.asList("APM", "Compliance");
 		new NonStrictExpectations(TenantSubscriptionUtil.class) {
 			{
 				TenantSubscriptionUtil.getTenantSubscribedServices(anyString);
-				returns(Arrays.asList("APM", "Compliance"), null, Arrays.asList());
+				returns(appList, null, Arrays.asList());
 			}
 		};
-		String apps = TenantSubscriptionUtil.getTenantSubscribedServicesString("emaastesttenant1");
+		String apps = TenantSubscriptionUtil.getTenantSubscribedServicesString("emaastesttenant1", null);
         Assert.assertEquals(apps, "{\"applications\":[\"APM\",\"Compliance\"]}");
 
-		apps = TenantSubscriptionUtil.getTenantSubscribedServicesString("emaastesttenant1");
+		apps = TenantSubscriptionUtil.getTenantSubscribedServicesString("emaastesttenant1", null);
 		Assert.assertEquals(apps, "{\"applications\":[]}");
 
-		apps = TenantSubscriptionUtil.getTenantSubscribedServicesString("emaastesttenant1");
+		apps = TenantSubscriptionUtil.getTenantSubscribedServicesString("emaastesttenant1", null);
+		Assert.assertEquals(apps, "{\"applications\":[]}");
+
+		apps = TenantSubscriptionUtil.getTenantSubscribedServicesString("emaastesttenant1", appList);
+		Assert.assertEquals(apps, "{\"applications\":[\"APM\",\"Compliance\"]}");
+
+		apps = TenantSubscriptionUtil.getTenantSubscribedServicesString("emaastesttenant1", Collections.<String>emptyList());
 		Assert.assertEquals(apps, "{\"applications\":[]}");
 	}
 

@@ -297,8 +297,11 @@ public class DashboardManager
 			}
 		}
 	}
-	
 	public EmsDashboard getEmsDashboardById(DashboardServiceFacade dsf, BigInteger dashboardId, Long tenantId) throws DashboardNotFoundException,TenantWithoutSubscriptionException {
+		return getEmsDashboardById(dsf, dashboardId, tenantId, null);
+	}
+
+	public EmsDashboard getEmsDashboardById(DashboardServiceFacade dsf, BigInteger dashboardId, Long tenantId, List<String> subscribedApps) throws DashboardNotFoundException,TenantWithoutSubscriptionException {
         if (dashboardId == null || dashboardId.compareTo(BigInteger.ZERO) <= 0) {
 			LOGGER.debug("Dashboard not found for id {} is invalid", dashboardId);
 			throw new DashboardNotFoundException();
@@ -323,7 +326,7 @@ public class DashboardManager
 				throw new DashboardNotFoundException();
 			}
 		}
-		if (!isDashboardAccessbyCurrentTenant(ed)) {
+		if (!isDashboardAccessbyCurrentTenant(ed, subscribedApps)) {
 			LOGGER.debug("Dashboard with id {} is not found for it can't be accessed by current tenant", dashboardId);
 			throw new DashboardNotFoundException();
 		}
@@ -354,6 +357,11 @@ public class DashboardManager
 		}
 	}
 
+	public CombinedDashboard getCombinedDashboardById(BigInteger dashboardId, Long tenantId, String userName)
+			throws DashboardNotFoundException,TenantWithoutSubscriptionException {
+		return getCombinedDashboardById(dashboardId, tenantId, userName, null);
+	}
+
 	/**
 	 * Returns combined dashboard instance by specifying the id
 	 *
@@ -363,12 +371,12 @@ public class DashboardManager
 	 * @throws JSONException 
 	 */
 	public CombinedDashboard getCombinedDashboardById(BigInteger dashboardId,
-			Long tenantId, String userName) throws DashboardNotFoundException,TenantWithoutSubscriptionException {
+			Long tenantId, String userName, List<String> subscribedApps) throws DashboardNotFoundException,TenantWithoutSubscriptionException {
 		EntityManager em = null;
 		try {
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			em = dsf.getEntityManager();
-			EmsDashboard ed = getEmsDashboardById(dsf, dashboardId, tenantId);
+			EmsDashboard ed = getEmsDashboardById(dsf, dashboardId, tenantId, subscribedApps);
 			EmsPreference ep = dsf.getEmsPreference(userName,"Dashboards.homeDashboardId");
 			EmsUserOptions euo = dsf.getEmsUserOptions(userName, dashboardId);
 			List<EmsDashboardTile> edbdtList = ed.getDashboardTileList();
@@ -1575,12 +1583,17 @@ public class DashboardManager
 
 	private List<DashboardApplicationType> getTenantApplications()
 	{
+		return getTenantApplications(null);
+	}
+
+	private List<DashboardApplicationType> getTenantApplications(List<String> subscribedApps)
+	{
 		String opcTenantId = TenantContext.getCurrentTenant();
 		if (opcTenantId == null || "".equals(opcTenantId)) {
 			LOGGER.warn("When trying to retrieve subscribed application, it's found the tenant context is not set (TenantContext.getCurrentTenant() == null)");
 			return Collections.emptyList();
 		}
-		List<String> appNames = TenantSubscriptionUtil.getTenantSubscribedServices(opcTenantId);
+		List<String> appNames = subscribedApps != null ? subscribedApps : TenantSubscriptionUtil.getTenantSubscribedServices(opcTenantId);
 		if (appNames == null || appNames.isEmpty()) {
 			return Collections.emptyList();
 		}
@@ -1604,13 +1617,17 @@ public class DashboardManager
 		}
 	}
 
-	private boolean isDashboardAccessbyCurrentTenant(EmsDashboard ed) throws TenantWithoutSubscriptionException
+	private boolean isDashboardAccessbyCurrentTenant(EmsDashboard ed) throws TenantWithoutSubscriptionException {
+		return isDashboardAccessbyCurrentTenant(ed, null);
+	}
+
+	private boolean isDashboardAccessbyCurrentTenant(EmsDashboard ed, List<String> subscribedApps) throws TenantWithoutSubscriptionException
 	{
 		if (ed == null) {
 			LOGGER.debug("null dashboard is not accessed by current tenant");
 			return false;
 		}
-		List<DashboardApplicationType> datList = getTenantApplications();
+		List<DashboardApplicationType> datList = getTenantApplications(subscribedApps);
 		// as dashboards only stores basic servcies data, we need to trasfer (possible) bundle services to basic servcies for comparision
 		datList = DashboardApplicationType.getBasicServiceList(datList);
 		if (datList == null || datList.isEmpty()) { // accessible app list is empty
