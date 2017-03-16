@@ -490,6 +490,7 @@ public class DashboardManager
 		ICacheManager cm= CacheManagers.getInstance().build();
 		String cachedData = null;
 		Object cacheKey = null;
+		long start = System.currentTimeMillis();
 		if (dashboardId != null && isOobDashboard) {
 			cacheKey = DefaultKeyGenerator.getInstance().generate(new Tenant("COMMON_TENANT_FOR_OOB_DASHBOARD_CACHE"),
 					new Keys(CacheConstants.LOOKUP_CACHE_KEY_OOB_DASHBOARD_SAVEDSEARCH, dashboardId));
@@ -521,6 +522,8 @@ public class DashboardManager
 		if (!StringUtil.isEmpty(savedSearchResponse) && dashboardId != null && isOobDashboard) {
 			cm.getCache(CacheConstants.CACHES_OOB_DASHBOARD_SAVEDSEARCH_CACHE).put(cacheKey,savedSearchResponse);
 		}
+		long end = System.currentTimeMillis();
+		LOGGER.info("It takes {}ms to retrieve saved search meta data from Dashboard-API", (end - start));
         return savedSearchResponse;
     }
 

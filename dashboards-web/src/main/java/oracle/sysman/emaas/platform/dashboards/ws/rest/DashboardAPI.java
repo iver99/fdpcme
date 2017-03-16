@@ -528,26 +528,30 @@ public class DashboardAPI extends APIBase
 			try {
 				if (futureUserInfo != null) {
 					final List<String> fUserInfo = userInfo = futureUserInfo.get(TIMEOUT, TimeUnit.MILLISECONDS); // retrieve reg info after user info thread is done
-					futureReg = pool.submit(new Callable<String>() {
-						@Override
-						public String call() throws Exception {
-							try {
-								long startRegInfo = System.currentTimeMillis();
-								LOGGER.info("2 round parallel to request registry info after thread for user info thread is completed...");
-								initializeUserContext(curTenant, userTenant);
-								String reg = JsonUtil.buildNonNullMapper().toJson(new RegistrationEntity(sessionExpiryTime, fUserInfo));
-								long endRegInfo = System.currentTimeMillis();
-								LOGGER.info("Time to get registration info: {}ms, registration info are: {}", (endRegInfo - startRegInfo), reg);
-								return reg;
-							} catch (Exception e) {
-								LOGGER.error("Error occurred when retrieving registration data using parallel request!");
-								LOGGER.error(e);
-								throw e;
-							} finally {
-								clearUserContext();
+					if (userInfo != null) {
+						futureReg = pool.submit(new Callable<String>() {
+							@Override
+							public String call() throws Exception {
+								try {
+									long startRegInfo = System.currentTimeMillis();
+									LOGGER.info("2 round parallel to request registry info after thread for user info thread is completed...");
+									initializeUserContext(curTenant, userTenant);
+									String reg = JsonUtil.buildNonNullMapper().toJson(new RegistrationEntity(sessionExpiryTime, fUserInfo));
+									long endRegInfo = System.currentTimeMillis();
+									LOGGER.info("Time to get registration info: {}ms, registration info are: {}", (endRegInfo - startRegInfo), reg);
+									return reg;
+								} catch (Exception e) {
+									LOGGER.error("Error occurred when retrieving registration data using parallel request!");
+									LOGGER.error(e);
+									throw e;
+								} finally {
+									clearUserContext();
+								}
 							}
-						}
-					});
+						});
+					} else {
+						LOGGER.warn("Failed to get futureUserInfo, won't continue to start registry info thread");
+					}
 				}
 			} catch (InterruptedException e) {
 				LOGGER.error(e);
@@ -565,32 +569,36 @@ public class DashboardAPI extends APIBase
 				} else {
 					if (futureSubscried != null) {
 						subscribedApps = futureSubscried.get(TIMEOUT, TimeUnit.MILLISECONDS); // retrieve dashboard data after subscribed app thread is done
-						final List<String> fSubscribedApps = subscribedApps;
-						logkeyHeaders("combinedData()", userTenant, curTenant);
+						if (subscribedApps != null) {
+							final List<String> fSubscribedApps = subscribedApps;
+							logkeyHeaders("combinedData()", userTenant, curTenant);
 
-						futureDashboard = pool.submit(new Callable<Dashboard>() {
-							@Override
-							public Dashboard call() throws Exception {
-								try {
-									long startDash = System.currentTimeMillis();
-									LOGGER.info("2nd round parallel thread to request dashboard data info after thread for subscribed apps thread is completed...");
-									Long tenantId = getTenantId(curTenant);
-									initializeUserContext(curTenant, userTenant);
-									String userName = UserContext.getCurrentUser();
-									// put through subscribed apps to avoid to lookup this data again
-									Dashboard dashboard = dm.getCombinedDashboardById(dashboardId, tenantId, userName, fSubscribedApps);
-									long endDash = System.currentTimeMillis();
-									LOGGER.info("Time to retrieve dashboard meta data: {}ms, dashboard meta data are: {}", (endDash - startDash), dashboard);
-									return dashboard;
-								} catch (Exception e) {
-									LOGGER.error("Error occurred when retrieving dashboard meta data using parallel request!");
-									LOGGER.error(e);
-									throw e;
-								} finally {
-									clearUserContext();
+							futureDashboard = pool.submit(new Callable<Dashboard>() {
+								@Override
+								public Dashboard call() throws Exception {
+									try {
+										long startDash = System.currentTimeMillis();
+										LOGGER.info("2nd round parallel thread to request dashboard data info after thread for subscribed apps thread is completed...");
+										Long tenantId = getTenantId(curTenant);
+										initializeUserContext(curTenant, userTenant);
+										String userName = UserContext.getCurrentUser();
+										// put through subscribed apps to avoid to lookup this data again
+										Dashboard dashboard = dm.getCombinedDashboardById(dashboardId, tenantId, userName, fSubscribedApps);
+										long endDash = System.currentTimeMillis();
+										LOGGER.info("Time to retrieve dashboard meta data: {}ms, dashboard meta data are: {}", (endDash - startDash), dashboard);
+										return dashboard;
+									} catch (Exception e) {
+										LOGGER.error("Error occurred when retrieving dashboard meta data using parallel request!");
+										LOGGER.error(e);
+										throw e;
+									} finally {
+										clearUserContext();
+									}
 								}
-							}
-						});
+							});
+						} else {
+							LOGGER.warn("Failed to get subscribed app data, won't continue to start dashboard data thread");
+						}
 					}
 				}
 			} catch (InterruptedException e) {
