@@ -168,6 +168,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 self.enableTimeFilter = ko.observable(false);
                 self.tfInfoIndicatorVisible = ko.observable(false);
                 self.timeFilterInfo = ko.observable();
+                self.calendarDateFormat="mm/dd/yyyy";
                 self.wrapperId = "#dateTimePicker_" + self.randomId;
                 self.panelId = "#panel_" + self.randomId;
                 self.pickerPanelId = "#pickerPanel_" + self.randomId;
