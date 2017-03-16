@@ -2592,7 +2592,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             self.timePeriod(self.timePeriodLast60mins);
                         }else if(!params.timePeriodsSet && flexRelTimePeriodId === "LAST_1_WEEK") {
                             self.timePeriod(self.timePeriodLast7days);
-                        }else if (self.timePeriodsNlsObject[flexRelTimePeriodId]) {
+                        }else if (self.timePeriodsNlsObject[flexRelTimePeriodId] && $.inArray(self.timePeriodsNlsObject[flexRelTimePeriodId], self.getParam(self.timePeriodsNotToShow)) === -1) {
                             self.timePeriod(self.timePeriodsNlsObject[flexRelTimePeriodId]);
                         }
 
