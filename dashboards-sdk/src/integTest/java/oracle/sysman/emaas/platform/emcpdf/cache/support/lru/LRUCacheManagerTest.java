@@ -1,10 +1,14 @@
 package oracle.sysman.emaas.platform.emcpdf.cache.support.lru;
 
 import oracle.sysman.emaas.platform.emcpdf.cache.api.CacheLoader;
+import oracle.sysman.emaas.platform.emcpdf.cache.api.ICache;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.exception.ExecutionException;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.CachedItem;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.lru.LRUCacheManager;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.DefaultKeyGenerator;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -46,6 +50,47 @@ public class LRUCacheManagerTest {
 
         Assert.assertEquals(o1.toString(),"FromFactory");
     }
+
+    /**
+     * EMCPDF-3116
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
+    @Test
+    public void testGetCachedItem3() throws ExecutionException, InterruptedException {
+        ICacheManager cm=LRUCacheManager.getInstance();
+        ICache cache = cm.getCache("testCache1",100,2L);
+        Tenant tenant=new Tenant("tenant1");
+        Object key = DefaultKeyGenerator.getInstance().generate(tenant,new Keys("keys1"));
+        TestCache tc1=(TestCache) cache.get(key, new CacheLoader() {
+            @Override
+            public Object load(Object key) throws Exception {
+                return new TestCache();
+            }
+        });
+        TestCache tc2 = (TestCache) cache.get(key, new CacheLoader() {
+            @Override
+            public Object load(Object key) throws Exception {
+                return new TestCache();
+            }
+        });
+        Assert.assertEquals(tc1,tc2);
+        // make cachedItem expired
+        Thread.currentThread().sleep(2100);
+
+        TestCache tc3 = (TestCache) cache.get(key, new CacheLoader() {
+            @Override
+            public Object load(Object key) throws Exception {
+                return new TestCache();
+            }
+        });
+        Assert.assertNotEquals(tc1,tc3);
+    }
+    //Test Inner Class
+    public class TestCache{
+
+    }
+
     @Test
     public void testEviction() throws ExecutionException {
         ICacheManager cm=LRUCacheManager.getInstance();

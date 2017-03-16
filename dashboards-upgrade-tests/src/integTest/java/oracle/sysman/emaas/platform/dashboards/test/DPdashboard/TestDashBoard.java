@@ -21,6 +21,10 @@ import org.testng.annotations.Test;
 public class TestDashBoard extends LoginAndLogout
 {
        private String dbName_noWidgetGrid = "";
+       public static String dbName_WithWidget = "pre#_$dashboard%^&";
+       public static String WidgetName_LA = "Database Errors Trend";
+       public static String WidgetName_UDE = "Area Chart";
+
        
 
 	public void initTest(String testName) 
@@ -120,6 +124,44 @@ public class TestDashBoard extends LoginAndLogout
 		DashboardBuilderUtil.duplicateDashboard(webd, dbName, dbDesc);
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName, dbDesc, true), "Duplicate failed!");
 
+	}
+     @Test
+      public void createTestDashboard()
+	{
+		//dbName_WithWidget = "dashbaord$!@#-" + generateTimeStamp();
+		String dbDesc = "Dashboard with Widget";
+
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test in createTestDashboard");
+
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//create dashboard
+		webd.getLogger().info("Start to create dashboard in grid view");
+		DashboardHomeUtil.gridView(webd);
+		DashboardHomeUtil.createDashboard(webd, dbName_WithWidget, dbDesc, DashboardHomeUtil.DASHBOARD);
+
+		//verify dashboard in builder page
+		webd.getLogger().info("Verify the dashboard created Successfully");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_WithWidget, dbDesc, true), "Create dashboard failed!");
+
+		//add widget
+		webd.getLogger().info("Start to add Widget into the dashboard");
+		DashboardBuilderUtil.addWidgetToDashboard(webd, WidgetName_LA);
+		DashboardBuilderUtil.addWidgetToDashboard(webd, WidgetName_UDE);
+		webd.getLogger().info("Add widget finished");
+
+		//verify if the widget added successfully
+		Assert.assertTrue(DashboardBuilderUtil.verifyWidget(webd, WidgetName_LA), "Widget '" + WidgetName_LA + "' not found");
+		Assert.assertTrue(DashboardBuilderUtil.verifyWidget(webd, WidgetName_UDE), "Widget '" + WidgetName_UDE + "' not found");
+
+		//save dashboard
+		webd.getLogger().info("save the dashboard");
+		DashboardBuilderUtil.saveDashboard(webd);
+
+		
 	}
 
 

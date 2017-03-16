@@ -1,5 +1,5 @@
 define([
-    'text!../../dashboardhome.html',
+    'text!../../@version@/html/dashboardhome.html',
     'jquery',
     'ojs/ojcore',
     'dfutil',

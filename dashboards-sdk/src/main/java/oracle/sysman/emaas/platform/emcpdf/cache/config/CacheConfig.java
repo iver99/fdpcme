@@ -90,8 +90,8 @@ public class CacheConfig {
     public static final Integer ETERNAL_CAPACITY = 20;
     public static final Integer DEFAULT_CAPACITY = 20;
     public static final Long LOG_INTERVAL = 20L;
-    public static final Integer REGISTRY_CAPACITY = 20L;
-    public static final Integer TENANT_USER_CAPACITY = 20L;
+    public static final Integer REGISTRY_CAPACITY = 20;
+    public static final Integer TENANT_USER_CAPACITY = 20;
     public static final Long REFRESH_CACHE_INTERVAL = 20L;*/
 }
 
