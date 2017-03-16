@@ -1360,7 +1360,7 @@ public class VerifyOOB extends LoginAndLogout
 		DashboardBuilderUtil.verifyWidget(webd, "Submissions by User");
 		DashboardBuilderUtil.verifyWidget(webd, "Submissions by Type");
 		DashboardBuilderUtil.verifyWidget(webd, "Histogram of Submissions by Average Failed Steps");
-		DashboardBuilderUtil.verifyWidget(webd, "Workflow Submission Details");
+		DashboardBuilderUtil.verifyWidget(webd, "Execution Details");
 
 		webd.getLogger().info("Verification end...");
 	}
