@@ -828,15 +828,26 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                                     }
                                 }
                                 if(itemTrack){
-                                    $.each(self.serviceMenuData,function(idx, listItem){
-                                        $("#hamburgerMenu #navlistcontainer>div").ojNavigationList("collapse",listItem.id, true);
+                                    var expandedIdList = $("#omcMenuNavList").ojNavigationList("getExpanded");
+                                    var trackIdList = [];
+                                    while(itemTrack.length>0){
+                                        trackIdList.push(itemTrack.shift().id);
+                                    }
+                                    while(expandedIdList.length>0 && trackIdList.length > 0 && expandedIdList[0] === trackIdList[0]){
+                                        expandedIdList.shift();
+                                        trackIdList.shift();
+                                    }
+                                    $.each(expandedIdList,function(idx, expandedItemId){
+                                        $("#hamburgerMenu #navlistcontainer>div").ojNavigationList("collapse",expandedItemId, true);
                                     });
-                                    while(itemTrack.length>1){
-                                        var parentItem = itemTrack.shift();
-                                        $("#hamburgerMenu #navlistcontainer>div").ojNavigationList("expand",parentItem.id, true);
+                                    setTimeout(function(){
+                                    while(trackIdList.length>1){
+                                        var parentItemId = trackIdList.shift();
+                                        $("#hamburgerMenu #navlistcontainer>div").ojNavigationList("expand",parentItemId, true);
                                     }
                                     $("#hamburgerMenu #navlistcontainer>div").ojNavigationList("option", "selection", eventData.menuItemId);
                                     $("#hamburgerMenu #navlistcontainer>div").ojNavigationList("option", "currentItem", eventData.menuItemId);
+                                    },0);
                                 }
                             }
                         }
