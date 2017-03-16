@@ -60,6 +60,7 @@ import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableDescri
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableEntityFilterState;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableTimeRangeState;
 import oracle.sysman.emaas.platform.dashboards.core.model.PaginatedDashboards;
+import oracle.sysman.emaas.platform.dashboards.core.model.Tile;
 import oracle.sysman.emaas.platform.dashboards.core.model.UserOptions;
 import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
@@ -993,13 +994,6 @@ public class DashboardAPI extends APIBase
 		}
 	}
 	
-
-	private static final String DASHBOARD_SET_TABLE_NAME = "EMS_DASHBOARD_SET";
-	private static final String DASHBOARD_TABLE_NAME = "EMS_DASHBOARD";
-	private static final String DASHBOARD_TILE_TABLE_NAME = "EMS_DASHBOARD_TILE";
-	private static final String DASHBOARD_TILE_PARAMS_TABLE_NAME = "EMS_DASHBOARD_TILE_PARAMS";
-	private static final String USER_OPTIONS_TABLE_NAME = "EMS_DASHBOARD_USER_OPTIONS";
-	
 	@PUT
 	@Path("/export")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -1009,77 +1003,82 @@ public class DashboardAPI extends APIBase
 			@HeaderParam(value = "Referer") String referer,
 			JSONArray array){
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [PUT] /v1/dashboards/export");
-		List<BigInteger> dbdIds = new ArrayList<BigInteger>();
+		List<String> dbdNames = new ArrayList<String>();
 		if (array != null && array.length() > 0) {
 			for (int i = 0; i < array.length(); i++) {
 				try {
-					dbdIds.add(new BigInteger(array.getString(i)));
+					dbdNames.add(array.getString(i));
 				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					LOGGER.error("Can not handle the input JSONArray for {}", e.getLocalizedMessage());
 				}
 			}
-		} 
-		Long tenantId = null;
-		try {
-			tenantId = getTenantId(tenantIdParam);
-		} catch (BasicServiceMalfunctionException | DashboardException e) {
-			LOGGER.debug("could not get tenant ID from header");
+		} else {
+			LOGGER.error("Error to export dashboard as no input dashboard names");
+			return Response.status(Status.BAD_REQUEST).build();
 		}
-		JSONObject obj = new JSONObject();
-		DataExportManager exportManager = DataExportManager.getInstatnce();
-		ExportDataUtil exportUtil = new ExportDataUtil();
 		
+		DashboardManager dm = DashboardManager.getInstance();
 		try {
-			//dashboard set table data
-			List<Map<String, Object>> dashboardSets = exportManager.getDashboardSetByDashboardSetIDs(dbdIds, tenantId);
-			JSONArray tableData = exportUtil.getJSONArrayForListOfObjects(DASHBOARD_SET_TABLE_NAME,dashboardSets);
-			obj.put(DASHBOARD_SET_TABLE_NAME, tableData);
-			
-			List<BigInteger> subDbds = exportUtil.getSubDashboardIds(dashboardSets);
-			subDbds.addAll(dbdIds);
-			List<BigInteger> allDbds = exportUtil.getAllDashboardIds(subDbds);
-			//dashboard table data
-			List<Map<String, Object>> dashboards = exportManager.getDashboardByDashboardIDs(allDbds, tenantId);
-			tableData = exportUtil.getJSONArrayForListOfObjects(DASHBOARD_TABLE_NAME,dashboards);
-			obj.put(DASHBOARD_TABLE_NAME, tableData);
-			//dashboard tile table data
-			List<Map<String, Object>> tiles = exportManager.getTileByDashboardIDs(allDbds, tenantId);
-			tableData = exportUtil.getJSONArrayForListOfObjects(DASHBOARD_TILE_TABLE_NAME,tiles);
-			obj.put(DASHBOARD_TILE_TABLE_NAME, tableData);
-			List<BigInteger> tileIds = exportUtil.getTileIds(tiles);
-			//dashboard tile params table data
-			List<Map<String, Object>> tileParams = null;
-			if (tileIds != null && !tileIds.isEmpty()) {			
-				tileParams = exportManager.getTileParamsByTileIDs(tileIds, tenantId);
+			if (!DependencyStatus.getInstance().isDatabaseUp())  {
+				LOGGER.error("Error to call [PUT] /v1/dashboards/export: database is down");
+				throw new DatabaseDependencyUnavailableException();
 			}
-			tableData = exportUtil.getJSONArrayForListOfObjects(DASHBOARD_TILE_PARAMS_TABLE_NAME,tileParams);
-			obj.put(DASHBOARD_TILE_PARAMS_TABLE_NAME, tableData);
-			//dashboard user options table data
-			List<Map<String, Object>> userOptions = exportManager.getUserOptionsByDashboardIds(allDbds, tenantId);
-			tableData = exportUtil.getJSONArrayForListOfObjects(USER_OPTIONS_TABLE_NAME,userOptions);
-			obj.put(USER_OPTIONS_TABLE_NAME, tableData);
-			//ssf data
-			List<BigInteger> widgetIds = exportUtil.getWidgetIds(tiles);
-	 		JSONArray requestEntity = new JSONArray();
-			if (widgetIds != null) {
-				for (BigInteger widgetId : widgetIds) {
-					requestEntity.put(widgetId.toString());
+			logkeyHeaders("export()", userTenant, tenantIdParam);
+			Long tenantId = getTenantId(tenantIdParam);
+			initializeUserContext(tenantIdParam, userTenant);					
+			List<BigInteger> dbdIds = dm.getDashboardIdsByNames(dbdNames, tenantId);
+			String userName = UserContext.getCurrentUser();
+			List<String> widgetIds = new ArrayList<String>();
+			JSONArray dbdArray = new JSONArray();
+			for (BigInteger id : dbdIds) {
+				Dashboard dbd = dm.getCombinedDashboardById(id, tenantId, userName);
+				List<Tile> tiles = dbd.getTileList();
+				if (tiles != null) {
+					for (Tile tile : tiles) {
+						String widgetUniqueId = tile.getWidgetUniqueId();
+						widgetIds.add(widgetUniqueId);
+					}
+				}
+				updateDashboardAllHref(dbd, tenantIdParam);
+				String dbdJson = getJsonUtil().toJson(dbd);
+				dbdArray.put(dbdJson);
+			}
+			//Savedsearch data
+			JSONArray requestEntity = new JSONArray();
+			if (widgetIds != null) {				
+				for (String widgetId : widgetIds) {
+					requestEntity.put(widgetId);
 				}
 			}
 			String ssfDataResponse = SSFDataUtil.getSSFData(userTenant, requestEntity.toString());
 			JSONObject ssfObject = new JSONObject(ssfDataResponse);
-			JSONArray savedSearchArray = ssfObject.optJSONArray("EMS_ANALYTICS_SEARCH");
-			JSONArray savedSearchParamsArray = ssfObject.optJSONArray("EMS_ANALYTICS_SEARCH_PARAMS");
-			obj.put("EMS_ANALYTICS_SEARCH", savedSearchArray);
-			obj.put("EMS_ANALYTICS_SEARCH_PARAMS", savedSearchParamsArray);
-			//response data
 			
-		} catch (JSONException e) {
+			//Combine dbd json and savedsearch json
+			JSONObject finalObject = new JSONObject();
+			finalObject.append("Dashboard", dbdArray).append("Savedsearch", ssfObject);
+			return Response.ok(finalObject.toString()).build();
+		}
+		catch(DashboardNotFoundException e){
+			//suppress error information in log file
+			LOGGER.warn("Specific dashboard not found");
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+		catch (DashboardException e) {
 			LOGGER.error(e.getLocalizedMessage(), e);
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+		catch (BasicServiceMalfunctionException e) {
+			LOGGER.error(e.getLocalizedMessage(), e);
+			return buildErrorResponse(new ErrorEntity(e));
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally {
+			clearUserContext();
 		}
 		
-		return Response.status(Status.OK).entity(obj).build();
+		return Response.status(Status.BAD_REQUEST).build();
 	}
 	
 	

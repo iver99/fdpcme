@@ -233,6 +233,32 @@ public class DashboardManager
 		}		
 	}
 	
+	/**
+	 * 
+	 * @param name
+	 * @param tenantId
+	 * @return
+	 */
+	public List<BigInteger> getDashboardIdsByNames(List<String> names, Long tenantId){
+    	if (names == null || names.isEmpty()) {
+    		LOGGER.debug("Dashboard not found for no input names");
+    		return null;
+    	}
+    	EntityManager em = null;
+    	try {
+    		DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+    		em = dsf.getEntityManager();
+    		return dsf.getDashboardIdsByNames(names, tenantId);   		
+    	} catch (NoResultException e) {
+    		LOGGER.error(e.getLocalizedMessage(), e);
+    	} finally {
+    		if (em != null) {
+    			em.close();
+    		}
+    	}
+    	return null;
+    }
+	
 
 	/**
 	 * Delete a dashboard specified by dashboard id for given tenant. Soft deletion is supported

@@ -103,6 +103,21 @@ public class DashboardServiceFacade
 		}
 		return null;
 	}
+	
+	public List<BigInteger> getDashboardIdsByNames(List<String> names, Long tenantId) {
+		StringBuilder parameters = new StringBuilder();
+		int flag = 0;
+		for (String name : names) {
+			if (flag++ > 0) {
+				parameters.append(",");
+			}
+			parameters.append("'"+ name + "'");
+		}
+		String sql = "select dashboard_id from ems_dashboard t where t.name in (" + parameters.toString() + ")" + " and t.tenant_id = " + tenantId;
+		Query query = em.createNativeQuery(sql);
+		List<BigInteger> result = query.getResultList();
+		return result;
+	}
 
 	public CombinedDashboard getCombinedEmsDashboardById(BigInteger dashboardId, String userName) {
 		EmsDashboard ed = getEmsDashboardById(dashboardId);
