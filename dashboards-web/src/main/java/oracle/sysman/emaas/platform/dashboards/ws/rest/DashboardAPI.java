@@ -467,16 +467,17 @@ public class DashboardAPI extends APIBase
 			@HeaderParam(value = "X-REMOTE-USER") final String userTenant, @HeaderParam(value = "Referer") String referer,
 			@PathParam("id") final BigInteger dashboardId,@HeaderParam(value = "SESSION_EXP") final String sessionExpiryTime)
 	{
-		final long TIMEOUT=30000;
-		final String curTenant = TenantContext.getCurrentTenant();
-		final String curUser = UserContext.getCurrentUser();
-		Long begin=System.currentTimeMillis();
-		infoInteractionLogAPIIncomingCall(curTenant, referer, "Service call to [GET] /v1/dashboards/{}", dashboardId);
-		final DashboardManager dm = DashboardManager.getInstance();
-		StringBuilder sb=new StringBuilder();
-		ExecutorService pool = ParallelThreadPool.getThreadPool();
-
 		try {
+			final long TIMEOUT=30000;
+			Long begin=System.currentTimeMillis();
+			initializeUserContext(tenantIdParam, userTenant);
+			final String curTenant = TenantContext.getCurrentTenant();
+			final String curUser = UserContext.getCurrentUser();
+			infoInteractionLogAPIIncomingCall(curTenant, referer, "Service call to [GET] /v1/dashboards/{}", dashboardId);
+			final DashboardManager dm = DashboardManager.getInstance();
+			StringBuilder sb=new StringBuilder();
+			ExecutorService pool = ParallelThreadPool.getThreadPool();
+
 			//retrieve user info
 			List<String> userInfo = null;
 			final Future<List<String>> futureUserInfo = pool.submit(new Callable<List<String>>() {
@@ -654,6 +655,10 @@ public class DashboardAPI extends APIBase
 
 			LOGGER.info("Retrieving combined data cost {}ms", (System.currentTimeMillis() - begin));
 			return Response.ok(sb.toString()).build();
+
+		} catch (DashboardException e) {
+			LOGGER.error(e.getLocalizedMessage(), e);
+			return buildErrorResponse(new ErrorEntity(e));
 		} finally {
 			clearUserContext();
 		}
