@@ -381,6 +381,7 @@ public class DashboardManager
 			EmsUserOptions euo = dsf.getEmsUserOptions(userName, dashboardId);
 			List<EmsDashboardTile> edbdtList = ed.getDashboardTileList();
 			CombinedDashboard cdSet = null;
+			BigInteger selectedId = null; // used for selected tab dashbaord ID
 
 			if (Dashboard.DASHBOARD_TYPE_CODE_SET.equals(ed.getType())) {
 				// combine dashboard set
@@ -423,7 +424,6 @@ public class DashboardManager
 					// ahead w/o selected tab then...
 					LOGGER.error(e.getLocalizedMessage(), e);
 				}
-				BigInteger selectedId = null;
 
 				if (selected != null) {
 					try {
@@ -465,7 +465,8 @@ public class DashboardManager
 					ssfIdList.add(edt.getWidgetUniqueId());
 				}
 			}
-			String savedSearchResponse = retrieveSavedSeasrch(dashboardId, ed.getIsSystem() == 1, ssfIdList);
+			// we've ensured that the dashoard id and SSF id list are all for the dashboard OR selected tab dashboard and is correctly set
+			String savedSearchResponse = retrieveSavedSeasrch(selectedId  != null ? selectedId : dashboardId, ed.getIsSystem() == 1, ssfIdList);
 
 			// combine single dashboard or selected dashbaord
 			CombinedDashboard cd = CombinedDashboard.valueOf(ed, ep, euo,savedSearchResponse);
@@ -497,7 +498,7 @@ public class DashboardManager
 			try {
 				cachedData = (String) cm.getCache(CacheConstants.CACHES_OOB_DASHBOARD_SAVEDSEARCH_CACHE).get(cacheKey);
 				if (cachedData != null) {
-					LOGGER.debug(
+					LOGGER.info(
 							"retrieved OOB widget data for dashboard {} from cache: {}", dashboardId, cachedData);
 					return cachedData;
 				}

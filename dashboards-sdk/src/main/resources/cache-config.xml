@@ -92,7 +92,7 @@
     <cache-group>
         <name>oobDashboardSavedSearchCache</name>
         <capacity>5000</capacity>
-        <expiry>60</expiry>
+        <expiry>86400</expiry>
     </cache-group>
 
 </root>

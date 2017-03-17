@@ -10,7 +10,6 @@
  
 package oracle.sysman.emaas.platform.emcpdf.cache.util;
 
-import oracle.sysman.emaas.platform.dashboards.ws.rest.CacheAPI;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.AbstractCacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.lru.LRUCacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.screenshot.LRUScreenshotCacheManager;
