@@ -268,8 +268,7 @@ public class DashboardRowsComparator extends AbstractComparator
 			logger.warn("Get a null or empty link for one single instance!");
 			return null;
 		}
-		String response = null;
-		response = new RestClient().put(lk.getHref(), instance.getData(), null);
+		String response = new RestClient().put(lk.getHref(), instance.getData(), null);
 		logger.info("Checking dashboard OMC instance table rows. Response is " + response);
 		return response;
 	}

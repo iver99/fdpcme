@@ -79,6 +79,9 @@ public class DataAccessUtil
 				rc.setHeader("SESSION_EXP", sessionExp);
 			}
 			String response = rc.get(registrationHref, tenantName);
+			if(response!=null){
+				cache.put(userTenantKey, response);
+			}
 			LOGGER.info("Retrieved brandingbar data is: {}", response);
 			LOGGER.info("It takes {}ms to retrieve brandingbar data from Dashboard-API", System.currentTimeMillis() - start);
 			return response;
