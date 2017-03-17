@@ -43,15 +43,10 @@ import oracle.sysman.emaas.platform.dashboards.core.util.lookup.RetryableLookupC
 import oracle.sysman.emaas.platform.dashboards.core.util.lookup.RetryableLookupClient.RetryableLookupException;
 import oracle.sysman.emaas.platform.dashboards.core.util.lookup.RetryableLookupClient.RetryableRunner;
 
+import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource.Builder;
-import com.sun.jersey.api.client.config.ClientConfig;
-import com.sun.jersey.api.client.config.DefaultClientConfig;
-import com.sun.jersey.api.json.JSONConfiguration;
 
 
 /**
@@ -59,143 +54,6 @@ import com.sun.jersey.api.json.JSONConfiguration;
  */
 public class TenantSubscriptionUtil
 {
-	public static class RestClient
-	{
-        public static final Integer DEFAULT_TIMEOUT = 30000;
-
-		private static final String HTTP_HEADER_OAM_REMOTE_USER = "OAM_REMOTE_USER";
-		private static final String HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME = "X-USER-IDENTITY-DOMAIN-NAME";
-
-		public RestClient()
-		{
-		}
-
-        // this method is kept for backward compatability
-        public String get(String url, String tenant) {
-			try {
-                return getWithExeption(url, tenant, null);
-			}
-			catch (Exception e) {
-				LOGGER.info("context", e);
-				itrLogger.error("Exception when RestClient trying to get response from specified service. Message:"
-						+ e.getLocalizedMessage());
-				return null;
-			}
-        }
-
-		public String getWithExeption(String url, String tenant, Map<String, String> headers) throws UniformInterfaceException, ClientHandlerException
-		{
-			if (url == null || "".equals(url)) {
-				return null;
-			}
-
-			ClientConfig cc = new DefaultClientConfig();
-			Client client = Client.create(cc);
-            client.setConnectTimeout(DEFAULT_TIMEOUT);
-            client.setReadTimeout(DEFAULT_TIMEOUT);
-			char[] authToken = RegistrationManager.getInstance().getAuthorizationToken();
-			String auth = String.copyValueOf(authToken);
-			if (StringUtil.isEmpty(auth)) {
-				LOGGER.warn("Warning: RestClient get an empty auth token when connection to url {}", url);
-			}
-			else {
-				LogUtil.setInteractionLogThreadContext(tenant, url, InteractionLogDirection.OUT);
-				itrLogger
-						.info("RestClient is connecting to get response after getting authorization token from registration manager.");
-			}
-            Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
-                    .header(HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME, tenant).type(MediaType.APPLICATION_JSON)
-                    .accept(MediaType.APPLICATION_JSON);
-            if (headers != null) {
-                for (Iterator<String> itr = headers.keySet().iterator(); itr.hasNext();) {
-                    String key = itr.next();
-                    String value = headers.get(key);
-                    if (!StringUtil.isEmpty(value)) {
-                        builder.header(key, value);
-                        LOGGER.debug("Update header ({}, {}) for request {}", key, value, url);
-                    }
-                }
-            }
-            return builder.get(String.class);
-		}
-
-		public String get(String url, String tenantName, String userName)
-		{
-			if (url == null || "".equals(url)) {
-				return null;
-			}
-
-			ClientConfig cc = new DefaultClientConfig();
-			Client client = Client.create(cc);
-			char[] authToken = RegistrationManager.getInstance().getAuthorizationToken();
-			String auth = String.copyValueOf(authToken);
-			if (StringUtil.isEmpty(auth)) {
-				LOGGER.warn("Warning: RestClient get an empty auth token when connection to url {}", url);
-			}
-			else {
-				LogUtil.setInteractionLogThreadContext(tenantName, url, InteractionLogDirection.OUT);
-				itrLogger
-						.info("RestClient is connecting to get response after getting authorization token from registration manager.");
-			}
-			try {
-				Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
-						.header(HTTP_HEADER_OAM_REMOTE_USER, tenantName + "." + userName)
-						.header(HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME, tenantName);
-				ClientResponse cr = builder.get(ClientResponse.class);
-				String response = cr.getEntity(String.class);
-				itrLogger.info("Response returned from Rest Client call: " + response);
-				return response;
-				//				return builder.get(String.class);
-			}
-			catch (Exception e) {
-				LOGGER.info("context", e);
-				itrLogger.error("Exception when RestClient trying to get response from specified service. Message:"
-						+ e.getLocalizedMessage());
-				return null;
-			}
-
-		}
-
-		public String put(String url, Map<String, Object> headers, Object requestEntity, String tenant)
-		{
-			if (StringUtil.isEmpty(url)) {
-				LOGGER.error("Unable to post to an empty URL for requestEntity: \"{}\", tenant: \"{}\"", requestEntity, tenant);
-				return null;
-			}
-			if (requestEntity == null || "".equals(requestEntity)) {
-				LOGGER.error("Unable to post an empty request entity");
-				return null;
-			}
-
-			ClientConfig cc = new DefaultClientConfig();
-			cc.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
-			Client client = Client.create(cc);
-			char[] authToken = RegistrationManager.getInstance().getAuthorizationToken();
-			String auth = String.copyValueOf(authToken);
-			if (StringUtil.isEmpty(auth)) {
-				LOGGER.warn("Warning: RestClient get an empty auth token when connection to url {}", url);
-			}
-			else {
-				LogUtil.setInteractionLogThreadContext(tenant, url, InteractionLogDirection.OUT);
-				LOGGER.info(
-						"RestClient is connecting to {} after getting authorization token from registration manager. HTTP method is post.",
-						url);
-			}
-			Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
-					.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
-			if (headers != null) {
-				for (String key : headers.keySet()) {
-					Object value = headers.get(key);
-					if (value == null) {
-						continue;
-					}
-					builder.header(key, value);
-				}
-			}
-			return builder.put(requestEntity.getClass(), requestEntity).toString();
-		}
-	}
-
 	private static Boolean IS_TEST_ENV = null;
 
 	private static Object lock = new Object();
@@ -269,7 +127,8 @@ public class TenantSubscriptionUtil
                 RestClient rc = new RestClient();
                 String domainsResponse = null;
                 try {
-                    domainsResponse = rc.getWithExeption(domainHref, tenant, requestHeader);
+					rc.setHeader("X-USER-IDENTITY-DOMAIN-NAME",tenant);
+                    domainsResponse = rc.get(domainHref, tenant);
                 } catch (UniformInterfaceException e) {
                     if (e.getResponse() != null && (e.getResponse().getStatus() == 404 || e.getResponse().getStatus() == 503)) {
                         LOGGER.error("Got status code {} when getting tenant app mapping domain", e.getResponse().getStatus());
