@@ -284,7 +284,12 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.topologySize = ko.observable();
             self.topologyHeight = ko.observable();
             self.topologySize.subscribe(function (topoHeight) {
-                topoHeight && topoHeight.h && self.topologyHeight(topoHeight.h);
+                var legendHeight = 0;
+                if($("#ude_topology_legend").length > 0) { //Re-set legend height if there is legend.
+                    //TO DO: hard-code legend height for now. Need to get legend height dynamically after UDE support it later.
+                    legendHeight = 300;
+                }
+                topoHeight && topoHeight.h && self.topologyHeight(Math.max(topoHeight.h, legendHeight));
                 if (self.topologyHeight() <= 201) {
                     self.topologyCssHeight(self.topologyHeight());
                 } else {
