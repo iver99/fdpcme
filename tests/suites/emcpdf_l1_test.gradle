@@ -38,6 +38,7 @@ project.ext.omctf_omcCloudSetup_deployArgs= "-skipOpssConfig true -skipRestartSe
 def emcpsmRegClientVer = getDependentSdkVersion('com.oracle.emaas.emcpsm', 'registry-client', '1.+')
 def emcpsmRegLookupClientVer = getDependentSdkVersion('com.oracle.emaas.emcpsm', 'registry-lookup-client', '1.+')
 def emcpdfDashboardSdkVer = getDependentSdkVersion('com.oracle.emaas.emcpdf', 'dashboards-sdk', '1.+')
+def emcpsfSdkVer =  getDependentSdkVersion('com.oracle.emaas.emcpsf.sdk', 'security-client', '1.+')
 
 dependencies {
 	testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-web-integ-tests', version: "${REPO_BID}") {
@@ -109,7 +110,7 @@ dependencies {
     testConfig(group: 'org.apache.httpcomponents', name:'httpmime', version:'4.3.1') { transitive = false }
     testConfig(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1')  { transitive = false }
     testConfig(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1')  { transitive = false }
-    testConfig(group: 'com.oracle.emaas.emcpsf.sdk', name:'security-client', version:'1.+')  { transitive = false }
+    testConfig(group: 'com.oracle.emaas.emcpsf.sdk', name:'security-client', version:emcpsfSdkVer) { transitive = false }
 }
 
 

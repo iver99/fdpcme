@@ -1,4 +1,4 @@
-        <div data-testapiversion="1.16.0" data-bind="attr: {id: 'dateTimePicker_' + randomId}" style="display: table">
+        <div data-testapiversion="1.17.0" data-bind="attr: {id: 'dateTimePicker_' + randomId}" style="display: table">
             <label for="dropdown" data-bind="attr: {id: 'dropdownLabel_'+randomId}" style="font-weight: bold; font-size: 14px; vertical-align: middle; padding-right: 5px;" data-bind="text: timeRangeMsg, style: {display: hideMainLabel}"></label>
             <span class="oj-select-choice"  style="width: auto; display: inline-block;" data-bind="attr: {id: 'dropDown_'+randomId}, click: panelControl, event: {keypress: function(data, event) {if(isEnterPressed(data, event)) {panelControl();}}}" aria-label="Pick datetime">
                 <img class="info-badge" src="/emsaasui/uifwk/@version@/images/imgbackground.png" style="position:absolute; height:16px;width:16px;vertical-align:top;margin:8px;background: url('/emsaasui/uifwk/@version@/images/uifwkSprite.png') no-repeat 0px -46px;" data-bind="style: {display: badgeTimePeriod()?'inline':'none'},event: {mouseover: badgeMouseOverHandler, mouseout: badgeMouseOutHandler}"/>
@@ -84,12 +84,12 @@
                             <label data-bind="text: nls.DATETIME_PICKER_FLEX_REL_TIME_LAST"></label>
                         </span>
                         <input data-bind="ojComponent: {component: 'ojInputNumber', value: flexRelTimeVal, min: 1, max: maxFlexRelTimeVal, 
-                                rootAttributes: {style: 'max-width: 54px; padding-left: 10px; padding-right: 10px;'},
+                                rootAttributes: {style: 'max-width: 54px; min-width:88px;padding-left: 10px; padding-right: 10px;'},
                                 displayOptions: {'validatorHint': 'none'},
                                 optionChange: flexRelTimeValChanged, disabled: lrCtrlVal()!=='flexRelTimeCtrl'},
                                 attr: {id: 'flexRelTimeVal_' + randomId}"/>
                         <select data-bind="ojComponent: {component: 'ojSelect', value: flexRelTimeOpt,
-                            rootAttributes: {style: 'max-width: 108px;', id: 'flexRelTimeOpt_' + randomId}, 
+                            rootAttributes: {style: 'max-width: 98px; min-width:7em ', id: 'flexRelTimeOpt_' + randomId}, 
                             optionChange: flexRelTimeOptChanged, disabled: lrCtrlVal()!=='flexRelTimeCtrl'}">
                             <!-- ko if: (shouldShowTimeLevel("second") && hideTimeSelection() !== true && showTimeAtMillisecond() === true) -->
                                 <!-- ko if: flexRelTimeVal() === 1 -->
@@ -148,7 +148,15 @@
                                 <!-- /ko -->
                             <!-- /ko -->
                         </select>
-                        
+                        <!-- ko if: showLatestOnCustomPanel() == true -->
+                        <span style="margin-left:4px">
+                            <input type="radio" name="newLatest" value="latestOnCustom" data-bind="checked: lrCtrlVal, disable: !enableLatestOnCustomPanel()">
+                            <label data-bind="text:timePeriodLatest, style: {color: enableLatestOnCustomPanel()?'':'grey'}"></label>
+                        </span>
+                        <div class="time-filter-latest-question fa-icon-font fa-icon-font-14" data-bind="css: {'latest-enabled': enableLatestOnCustomPanel()}">
+                            <span class="time-filter-latest-tooltip" data-bind="text: nls.DATETIME_PICKER_RADIO_LATEST_HELP, css: {'latest-enabled': enableLatestOnCustomPanel()}"></span>
+                        </div>                                                    
+                        <!-- /ko -->
                         <hr>
                         
                         <span style="display: inline-block; padding-top: 5px;">
