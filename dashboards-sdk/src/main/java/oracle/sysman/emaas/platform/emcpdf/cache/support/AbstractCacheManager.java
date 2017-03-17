@@ -62,7 +62,6 @@ public abstract class AbstractCacheManager implements ICacheManager{
 
     @Override
     public void close() throws IOException{
-        this.cacheMap.clear();
         for(ICache cache:this.cacheMap.values()){
             LinkedHashMapCache cacheGroup = (LinkedHashMapCache)cache;
             cacheGroup.getTimer().cancel();
@@ -70,6 +69,7 @@ public abstract class AbstractCacheManager implements ICacheManager{
             LOGGER.info("Cache group {} timer is cancelled and purged!",cacheGroup.getName());
 
         }
+        this.cacheMap.clear();
 
     }
 
