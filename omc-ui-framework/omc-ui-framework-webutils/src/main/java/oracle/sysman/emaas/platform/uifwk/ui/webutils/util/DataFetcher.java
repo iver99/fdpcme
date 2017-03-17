@@ -78,8 +78,7 @@ public class DataFetcher
 			if (!StringUtil.isEmpty(sessionExp)) {
 				rc.setHeader("SESSION_EXP", sessionExp);
 			}
-			String response = null;
-			response = rc.get(registrationHref, tenantIdParam);
+			String response = rc.get(registrationHref, tenantIdParam);
 			if(response!=null){
 				cache.put(userTenantKey, response);
 			}

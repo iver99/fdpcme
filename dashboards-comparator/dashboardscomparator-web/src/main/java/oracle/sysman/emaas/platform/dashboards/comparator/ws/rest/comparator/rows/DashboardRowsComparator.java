@@ -256,8 +256,7 @@ public class DashboardRowsComparator extends AbstractComparator
 			logger.warn("Get a null or empty link for one single instance!");
 			return null;
 		}
-		String response = null;
-		response = new RestClient().get(lk.getHref(), null);
+		String response = new RestClient().get(lk.getHref(), null);
 		logger.info("Checking dashboard OMC instance table rows. Response is " + response);
 		return retrieveRowsEntityFromJsonForSingleInstance(response);
 	}
@@ -270,15 +269,7 @@ public class DashboardRowsComparator extends AbstractComparator
 			return null;
 		}
 		String response = null;
-		try{
-			response = new RestClient().put(lk.getHref(), instance.getData(), null);
-		}catch(UniformInterfaceException e){
-			logger.error("Error occurred: status code of the HTTP response indicates a response that is not expected");
-			logger.error(e);
-		}catch(ClientHandlerException e){//RestClient may timeout, so catch this runtime exception to make sure the response can return.
-			logger.error("Error occurred: Signals a failure to process the HTTP request or HTTP response");
-			logger.error(e);
-		}
+		response = new RestClient().put(lk.getHref(), instance.getData(), null);
 		logger.info("Checking dashboard OMC instance table rows. Response is " + response);
 		return response;
 	}

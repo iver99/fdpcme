@@ -78,8 +78,7 @@ public class DataAccessUtil
 			if (!StringUtil.isEmpty(sessionExp)) {
 				rc.setHeader("SESSION_EXP", sessionExp);
 			}
-			String response = null;
-			response = rc.get(registrationHref, tenantName);
+			String response = rc.get(registrationHref, tenantName);
 			LOGGER.info("Retrieved brandingbar data is: {}", response);
 			LOGGER.info("It takes {}ms to retrieve brandingbar data from Dashboard-API", System.currentTimeMillis() - start);
 			return response;

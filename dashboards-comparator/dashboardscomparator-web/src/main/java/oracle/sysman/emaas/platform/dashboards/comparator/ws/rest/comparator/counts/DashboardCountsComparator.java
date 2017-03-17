@@ -128,8 +128,7 @@ public class DashboardCountsComparator extends AbstractComparator
 			logger.warn("Get a null or empty link for one single instance!");
 			return null;
 		}
-		String response = null;
-		response = new RestClient().get(lk.getHref(), null);
+		String response = new RestClient().get(lk.getHref(), null);
 		logger.info("Checking dashboard OMC instance counts. Response is " + response);
 		JsonUtil ju = JsonUtil.buildNormalMapper();
 		CountsEntity ze = ju.fromJson(response, CountsEntity.class);

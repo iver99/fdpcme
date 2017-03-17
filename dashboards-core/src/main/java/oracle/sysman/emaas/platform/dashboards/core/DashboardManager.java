@@ -484,13 +484,7 @@ public class DashboardManager
         try {
 			rc.setHeader("X-USER-IDENTITY-DOMAIN-NAME", tenantName);
         	savedSearchResponse = rc.put(tenantHref, ssfIdList.toString(), tenantName);
-        }catch(UniformInterfaceException e){
-			LOGGER.error("Error occurred: status code of the HTTP response indicates a response that is not expected");
-			LOGGER.error(e);
-		}catch(ClientHandlerException e){//RestClient may timeout, so catch this runtime exception to make sure the response can return.
-			LOGGER.error("Error occurred: Signals a failure to process the HTTP request or HTTP response");
-			LOGGER.error(e);
-		}catch (Exception e) {
+        }catch (Exception e) {
         	LOGGER.error(e);
         }
         return savedSearchResponse;

@@ -134,8 +134,7 @@ public class TenantSubscriptionsAPI extends APIBase
 			String tenantHref = tenantsLink.getHref() + "/" + tenantName;
 			RestClient rc = new RestClient();
 			rc.setHeader("X-USER-IDENTITY-DOMAIN-NAME",tenantName);
-			String tenantResponse = null;
-			tenantResponse = rc.get(tenantHref, tenantName);
+			String tenantResponse = rc.get(tenantHref, tenantName);
 			LOGGER.debug("Checking tenant (" + tenantName + ") subscriptions with edition. Tenant response is " + tenantResponse);
 			JsonUtil ju = JsonUtil.buildNormalMapper();
 			TenantDetailEntity de = ju.fromJson(tenantResponse, TenantDetailEntity.class);

@@ -78,8 +78,7 @@ public class TenantSubscriptionUtil
 		RestClient rc = new RestClient();
 		rc.setHeader(HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME, tenant);
 		rc.setHeader("X-REMOTE-USER", tenant + "." + user);
-		String subAppResponse = null;
-		subAppResponse = rc.get(subAppHref, tenant);
+		String subAppResponse = rc.get(subAppHref, tenant);
 		if(subAppResponse!=null){
 			cache.put(tenantKey, subAppResponse);
 		}

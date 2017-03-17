@@ -60,8 +60,9 @@ public class PrivilegeChecker
 					RestClient rc = new RestClient();
 					rc.setHeader("X-USER-IDENTITY-DOMAIN-NAME",tenantName);
 					rc.setHeader("OAM_REMOTE_USER",tenantDotUser);
-					String roleCheckResponse = null;
-					roleCheckResponse = rc.get(secAuthRolesApiUrl, tenantName);
+					rc.setType(null);
+					rc.setAccept(null);
+					String roleCheckResponse = rc.get(secAuthRolesApiUrl, tenantName);
 					LOGGER.debug("Checking roles for tenant user (" + tenantDotUser + "). The response is " + roleCheckResponse);
 					JsonUtil ju = JsonUtil.buildNormalMapper();
 					RoleNamesEntity rne = ju.fromJson(roleCheckResponse, RoleNamesEntity.class);
