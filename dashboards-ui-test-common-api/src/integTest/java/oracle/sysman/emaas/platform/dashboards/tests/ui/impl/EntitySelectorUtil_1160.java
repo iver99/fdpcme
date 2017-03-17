@@ -16,7 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.IEntitySelectorUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 import org.openqa.selenium.By;
@@ -24,6 +24,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 
 /**
  * @author cawei
@@ -36,6 +37,8 @@ public class EntitySelectorUtil_1160 extends EntitySelectorUtil_1140
         public void clearContext(WebDriver driver, Logger logger)
         {
                 logger.log(Level.INFO, "Clear global context by removing every pill.");
+                //wait until previous processes are completed
+                WaitUtil.waitForPageFullyLoaded(driver);
         
                 //Remove all pills from global context bar
                 int total = getNumberOfPills(driver, logger);
@@ -116,6 +119,8 @@ public class EntitySelectorUtil_1160 extends EntitySelectorUtil_1140
         public void replacePillSelection(WebDriver driver, Logger logger, int pillIndex, String entityName, String entityType, String category) 
         {
 		logger.log(Level.INFO, "Replace selection from pill [{0}]. Number of pills before replace = {1}", new Object[]{ pillIndex, getNumberOfPills(driver, logger) });
+                //wait until previous processes are completed
+                WaitUtil.waitForPageFullyLoaded(driver);
                 
                 //Find pill at desired position
                 WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), UNTIL_TIMEOUT);
@@ -218,6 +223,34 @@ public class EntitySelectorUtil_1160 extends EntitySelectorUtil_1140
 
 		return isReadOnly;
 	}
+        
+        @Override
+        public void verifyCompositePillContent(WebDriver driver, Logger logger, String text)
+        {
+                Assert.assertTrue(false, "This method is not available in the current version");
+                logger.info("Method not available in the current version");
+        }
+        
+        @Override
+        public void verifyEntityPillContent(WebDriver driver, Logger logger, String text)
+        {
+                Assert.assertTrue(false, "This method is not available in the current version");
+                logger.info("Method not available in the current version");
+        }
+        
+        @Override
+        public void verifyPillContains(WebDriver driver, Logger logger, String text)
+        {
+                Assert.assertTrue(false, "This method is not available in the current version");
+                logger.info("Method not available in the current version");
+        }
+        
+        @Override
+        public void verifyPillContentByIndex(WebDriver driver, Logger logger, int pillIndex, String text)
+        {
+                Assert.assertTrue(false, "This method is not available in the current version");
+                logger.info("Method not available in the current version");  
+        }
         
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IEntitySelectorUtil#selectFirstSuggestionByCategory(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)

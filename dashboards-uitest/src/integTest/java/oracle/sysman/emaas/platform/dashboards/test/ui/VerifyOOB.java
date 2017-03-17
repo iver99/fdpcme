@@ -746,98 +746,6 @@ public class VerifyOOB extends LoginAndLogout
 	}
 
 	@Test(alwaysRun = true)
-	public void verifyOrchestration_GridView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyOrchestration_GridView");
-
-		//click on Grid View
-		webd.getLogger().info("Click on Grid View icon");
-		DashboardHomeUtil.gridView(webd);
-
-		//Open the OOB dashboard---Orchestration Workflows
-		webd.getLogger().info("Open the OOB dashboard---Orchestration Workflows");
-		DashboardHomeUtil.selectDashboard(webd, "Orchestration Workflows");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
-		//verify Orchestration Workflows
-		verifyOrchestration();
-	}
-
-	@Test(alwaysRun = true)
-	public void verifyOrchestration_ListView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyOrchestration_ListView");
-
-		//click on List View
-		webd.getLogger().info("Click on List View icon");
-		DashboardHomeUtil.listView(webd);
-
-		//Open the OOB dashboard---Orchestration Workflows
-		webd.getLogger().info("Open the OOB dashboard---Orchestration Workflows");
-		DashboardHomeUtil.selectDashboard(webd, "Orchestration Workflows");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
-		//verify Orchestration Workflows
-		verifyOrchestration();
-	}
-
-	@Test(alwaysRun = true)
-	public void verifyOrchestration_WithFilter_GridView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyOrchestration_GridView");
-
-		//click Filter-orchestration
-		webd.getLogger().info("Click Cloud Services - orchestration");
-		DashboardHomeUtil.filterOptions(webd, "orchestration");
-
-		//click on Grid View
-		webd.getLogger().info("Click on Grid View icon");
-		DashboardHomeUtil.gridView(webd);
-
-		//Open the OOB dashboard---Orchestration Workflows
-		webd.getLogger().info("Open the OOB dashboard---Orchestration Workflows");
-		DashboardHomeUtil.selectDashboard(webd, "Orchestration Workflows");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
-		//verify Orchestration Workflows
-		verifyOrchestration();
-	}
-
-	@Test(alwaysRun = true)
-	public void verifyOrchestration_WithFilter_ListView()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test in verifyOrchestration_ListView");
-
-		//click Filter-orchestration
-		webd.getLogger().info("Click Cloud Services - orchestration");
-		DashboardHomeUtil.filterOptions(webd, "orchestration");
-
-		//click on List View
-		webd.getLogger().info("Click on List View icon");
-		DashboardHomeUtil.listView(webd);
-
-		//Open the OOB dashboard---Orchestration Workflows
-		webd.getLogger().info("Open the OOB dashboard---Orchestration Workflows");
-		DashboardHomeUtil.selectDashboard(webd, "Orchestration Workflows");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
-		//verify Orchestration Workflows
-		verifyOrchestration();
-	}
-
-	@Test(alwaysRun = true)
 	public void verifyPerfAnalyticsApplication_GridView()
 	{
 		//initTest
@@ -1349,7 +1257,113 @@ public class VerifyOOB extends LoginAndLogout
 		//verify UI Gallery
 		verifyUIGallery();
 	}
+	
+	@Test(alwaysRun = true)
+	public void verifyOrchestration_GridView()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test in verifyOrchestration_GridView");
 
+		//click on Grid View
+		webd.getLogger().info("Click on Grid View icon");
+		DashboardHomeUtil.gridView(webd);
+
+		//Open the OOB dashboard---Orchestration Workflows
+		webd.getLogger().info("Open the OOB dashboard---Orchestration Workflows");
+		DashboardHomeUtil.selectDashboard(webd, "Orchestration Workflows");
+
+		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
+
+		//verify Orchestration Workflows
+		verifyOrchestration();
+	}
+	@Test(alwaysRun = true)
+	public void verifyOrchestration_ListView()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test in verifyOrchestration_ListView");
+
+		//click on List View
+		webd.getLogger().info("Click on List View icon");
+		DashboardHomeUtil.listView(webd);
+
+		//Open the OOB dashboard---Orchestration Workflows
+		webd.getLogger().info("Open the OOB dashboard---Orchestration Workflows");
+		DashboardHomeUtil.selectDashboard(webd, "Orchestration Workflows");
+
+		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
+
+		//verify Orchestration Workflows
+		verifyOrchestration();
+	}
+	@Test(alwaysRun = true)
+	public void verifyOrchestration_WithFilter_GridView()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test in verifyOrchestration_GridView");
+
+		//click Filter-orchestration
+		webd.getLogger().info("Click Cloud Services - orchestration");
+		DashboardHomeUtil.filterOptions(webd, "orchestration");
+
+		//click on Grid View
+		webd.getLogger().info("Click on Grid View icon");
+		DashboardHomeUtil.gridView(webd);
+
+		//Open the OOB dashboard---Orchestration Workflows
+		webd.getLogger().info("Open the OOB dashboard---Orchestration Workflows");
+		DashboardHomeUtil.selectDashboard(webd, "Orchestration Workflows");
+
+		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
+
+		//verify Orchestration Workflows
+		verifyOrchestration();
+	}
+	@Test(alwaysRun = true)
+	public void verifyOrchestration_WithFilter_ListView()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test in verifyOrchestration_ListView");
+
+		//click Filter-orchestration
+		webd.getLogger().info("Click Cloud Services - orchestration");
+		DashboardHomeUtil.filterOptions(webd, "orchestration");
+
+		//click on List View
+		webd.getLogger().info("Click on List View icon");
+		DashboardHomeUtil.listView(webd);
+
+		//Open the OOB dashboard---Orchestration Workflows
+		webd.getLogger().info("Open the OOB dashboard---Orchestration Workflows");
+		DashboardHomeUtil.selectDashboard(webd, "Orchestration Workflows");
+
+		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
+
+		//verify Orchestration Workflows
+		verifyOrchestration();
+	}
+	private void verifyOrchestration()
+	{
+		webd.getLogger().info("Start to verify the OOB Dashboard");
+		//verify the current url
+		webd.getLogger().info("Verify the current url");
+
+		//verify the url of opened page
+		DashBoardUtils.verifyURL_WithPara(webd, "emcpdfui/builder.html?dashboardId=37");
+	
+		DashboardBuilderUtil.verifyWidget(webd, "Summary");
+		DashboardBuilderUtil.verifyWidget(webd, "Workflow Submission Alerts");
+		DashboardBuilderUtil.verifyWidget(webd, "Submissions by User");
+		DashboardBuilderUtil.verifyWidget(webd, "Submissions by Type");
+		DashboardBuilderUtil.verifyWidget(webd, "Histogram of Submissions by Average Failed Steps");
+		DashboardBuilderUtil.verifyWidget(webd, "Execution Details");
+
+		webd.getLogger().info("Verification end...");
+	}
 	private void verifyAPM()
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
@@ -1435,32 +1449,6 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Verification end...");
 	}
 
-	private void verifyCategoricalAdvanced()
-	{
-		webd.getLogger().info("Start to verify the OOB Dashboard");
-
-		//verify the dashboard open correctly
-		webd.getLogger().info("Start to verify the OOB Dashboard - Categorical - Advanced opened correctly");
-
-		//verify all the widgets displayed
-		webd.getLogger().info("Verify all the widgets in dashboard");
-		DashboardBuilderUtil.verifyWidget(webd, "Bar Chart with Top N");
-		DashboardBuilderUtil.verifyWidget(webd, "Bar Chart with Color and Group by option");
-		DashboardBuilderUtil.verifyWidget(webd, "Bar Chart with Color option");
-		DashboardBuilderUtil.verifyWidget(webd, "Pareto Chart");
-
-		webd.getLogger().info("Verify the icon in OOB");
-		verifyIconInOobDashboard();
-
-		webd.getLogger().info("Verify the icon in widget");
-		verifyIconInWidget(webd, "Bar Chart with Top N");
-		verifyIconInWidget(webd, "Bar Chart with Color and Group by option");
-		verifyIconInWidget(webd, "Bar Chart with Color option");
-		verifyIconInWidget(webd, "Pareto Chart");
-
-		webd.getLogger().info("Verification end...");
-	}
-
 	private void verifyCategoricalBasic()
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
@@ -1487,6 +1475,53 @@ public class VerifyOOB extends LoginAndLogout
 		verifyIconInWidget(webd, "Analytics Line - Categorical");
 		verifyIconInWidget(webd, "Bar Chart");
 		verifyIconInWidget(webd, "Stacked Bar Chart");
+
+		webd.getLogger().info("Verification end...");
+	}
+
+	private void verifyCategoricalAdvanced()
+	{
+		webd.getLogger().info("Start to verify the OOB Dashboard");
+
+		//verify the dashboard open correctly
+		webd.getLogger().info("Start to verify the OOB Dashboard - Categorical - Advanced opened correctly");
+
+		//verify all the widgets displayed
+		webd.getLogger().info("Verify all the widgets in dashboard");
+		DashboardBuilderUtil.verifyWidget(webd, "Bar Chart with Top N");
+		DashboardBuilderUtil.verifyWidget(webd, "Bar Chart with Color and Group by option");
+		DashboardBuilderUtil.verifyWidget(webd, "Bar Chart with Color option");
+		DashboardBuilderUtil.verifyWidget(webd, "Pareto Chart");
+
+		webd.getLogger().info("Verify the icon in OOB");
+		verifyIconInOobDashboard();
+
+		webd.getLogger().info("Verify the icon in widget");
+		verifyIconInWidget(webd, "Bar Chart with Top N");
+		verifyIconInWidget(webd, "Bar Chart with Color and Group by option");
+		verifyIconInWidget(webd, "Bar Chart with Color option");
+		verifyIconInWidget(webd, "Pareto Chart");
+
+		webd.getLogger().info("Verification end...");
+	}
+
+	private void verifyTrendAndForecasting()
+	{
+		webd.getLogger().info("Start to verify the OOB Dashboard");
+
+		//verify the dashboard open correctly
+		webd.getLogger().info("Start to verify the OOB Dashboard -Trend and Forecasting opened correctly");
+
+		//verify all the widgets displayed
+		webd.getLogger().info("Verify all the widgets in dashboard");
+		DashboardBuilderUtil.verifyWidget(webd, "Analytics Line with Trend and Forecasting");
+		DashboardBuilderUtil.verifyWidget(webd, "Line Chart with Trend and Forecasting");
+		webd.getLogger().info("Verify the icon in OOB");
+		verifyIconInOobDashboard();
+
+		webd.getLogger().info("Verify the icon in widget");
+		verifyIconInWidget(webd, "Analytics Line with Trend and Forecasting");
+		verifyIconInWidget(webd, "Line Chart with Trend and Forecasting");
 
 		webd.getLogger().info("Verification end...");
 	}
@@ -1833,25 +1868,6 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Verification end...");
 	}
 
-	private void verifyOrchestration()
-	{
-		webd.getLogger().info("Start to verify the OOB Dashboard");
-		//verify the current url
-		webd.getLogger().info("Verify the current url");
-
-		//verify the url of opened page
-		DashBoardUtils.verifyURL_WithPara(webd, "emcpdfui/builder.html?dashboardId=37");
-
-		DashboardBuilderUtil.verifyWidget(webd, "Summary");
-		DashboardBuilderUtil.verifyWidget(webd, "Workflow Submission Alerts");
-		DashboardBuilderUtil.verifyWidget(webd, "Submissions by User");
-		DashboardBuilderUtil.verifyWidget(webd, "Submissions by Type");
-		DashboardBuilderUtil.verifyWidget(webd, "Histogram of Submissions by Average Failed Steps");
-		DashboardBuilderUtil.verifyWidget(webd, "Workflow Submission Details");
-
-		webd.getLogger().info("Verification end...");
-	}
-
 	private void verifyOthers()
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
@@ -2051,25 +2067,28 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Verification end...");
 	}
 
-	private void verifyTimeseriesArea()
+	private void verifyTimeseriesLineBasic()
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
 
 		//verify the dashboard open correctly
-		webd.getLogger().info("Start to verify the OOB Dashboard - Timeseries - Area opened correctly");
+		webd.getLogger().info("Start to verify the OOB Dashboard - Timeseries - Line Basic opened correctly");
 
 		webd.getLogger().info("Verify all the widgets in dashboard");
-		DashboardBuilderUtil.verifyWidget(webd, "Area Chart");
-		DashboardBuilderUtil.verifyWidget(webd, "Stacked Area Chart");
-		DashboardBuilderUtil.verifyWidget(webd, "Stacked Area Chart with Group By");
+		DashboardBuilderUtil.verifyWidget(webd, "Line Chart");
+		DashboardBuilderUtil.verifyWidget(webd, "Analytics Line");
+		DashboardBuilderUtil.verifyWidget(webd, "Line Chart with Shared Y-axis");
+		DashboardBuilderUtil.verifyWidget(webd, "Line Chart with Reference Line");
+
 
 		webd.getLogger().info("Verify the icon in OOB");
 		verifyIconInOobDashboard();
 
 		webd.getLogger().info("Verify the icon in widget");
-		verifyIconInWidget(webd, "Area Chart");
-		verifyIconInWidget(webd, "Stacked Area Chart");
-		verifyIconInWidget(webd, "Stacked Area Chart with Group By");
+		verifyIconInWidget(webd, "Line Chart");
+		verifyIconInWidget(webd, "Analytics Line");
+		verifyIconInWidget(webd, "Line Chart with Shared Y-axis");
+		verifyIconInWidget(webd, "Line Chart with Reference Line");
 
 		webd.getLogger().info("the verification end...");
 	}
@@ -2086,6 +2105,7 @@ public class VerifyOOB extends LoginAndLogout
 		DashboardBuilderUtil.verifyWidget(webd, "Stacked Line Chart with Group By");
 		DashboardBuilderUtil.verifyWidget(webd, "Stacked Line Chart with Color and Group by");
 
+
 		webd.getLogger().info("Verify the icon in OOB");
 		verifyIconInOobDashboard();
 
@@ -2097,52 +2117,29 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("the verification end...");
 	}
 
-	private void verifyTimeseriesLineBasic()
+	private void verifyTimeseriesArea()
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
 
 		//verify the dashboard open correctly
-		webd.getLogger().info("Start to verify the OOB Dashboard - Timeseries - Line Basic opened correctly");
+		webd.getLogger().info("Start to verify the OOB Dashboard - Timeseries - Area opened correctly");
 
 		webd.getLogger().info("Verify all the widgets in dashboard");
-		DashboardBuilderUtil.verifyWidget(webd, "Line Chart");
-		DashboardBuilderUtil.verifyWidget(webd, "Analytics Line");
-		DashboardBuilderUtil.verifyWidget(webd, "Line Chart with Shared Y-axis");
-		DashboardBuilderUtil.verifyWidget(webd, "Line Chart with Reference Line");
+		DashboardBuilderUtil.verifyWidget(webd, "Area Chart");
+		DashboardBuilderUtil.verifyWidget(webd, "Stacked Area Chart");
+		DashboardBuilderUtil.verifyWidget(webd, "Stacked Area Chart with Group By");
+
 
 		webd.getLogger().info("Verify the icon in OOB");
 		verifyIconInOobDashboard();
 
 		webd.getLogger().info("Verify the icon in widget");
-		verifyIconInWidget(webd, "Line Chart");
-		verifyIconInWidget(webd, "Analytics Line");
-		verifyIconInWidget(webd, "Line Chart with Shared Y-axis");
-		verifyIconInWidget(webd, "Line Chart with Reference Line");
+		verifyIconInWidget(webd, "Area Chart");
+		verifyIconInWidget(webd, "Stacked Area Chart");
+		verifyIconInWidget(webd, "Stacked Area Chart with Group By");
 
 		webd.getLogger().info("the verification end...");
 	}
-
-	private void verifyTrendAndForecasting()
-	{
-		webd.getLogger().info("Start to verify the OOB Dashboard");
-
-		//verify the dashboard open correctly
-		webd.getLogger().info("Start to verify the OOB Dashboard -Trend and Forecasting opened correctly");
-
-		//verify all the widgets displayed
-		webd.getLogger().info("Verify all the widgets in dashboard");
-		DashboardBuilderUtil.verifyWidget(webd, "Analytics Line with Trend and Forecasting");
-		DashboardBuilderUtil.verifyWidget(webd, "Line Chart with Trend and Forecasting");
-		webd.getLogger().info("Verify the icon in OOB");
-		verifyIconInOobDashboard();
-
-		webd.getLogger().info("Verify the icon in widget");
-		verifyIconInWidget(webd, "Analytics Line with Trend and Forecasting");
-		verifyIconInWidget(webd, "Line Chart with Trend and Forecasting");
-
-		webd.getLogger().info("Verification end...");
-	}
-
 	private void verifyUIGallery()
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
