@@ -18,4 +18,6 @@ Rem
 SET FEEDBACK ON
 SET SERVEROUTPUT ON
 
+@&EMSAAS_SQL_ROOT/1.10.0/emaas_create_tables.sql
+
 

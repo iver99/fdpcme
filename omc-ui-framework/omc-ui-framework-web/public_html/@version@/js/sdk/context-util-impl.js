@@ -32,6 +32,19 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                 GLOBAL_APPLICATION_SELECTOR: 'OMC_UIFWK_APPLICATION_SELECTOR',
                 GLOBAL_TOPOLOGY: 'OMC_UIFWK_TOPOLOGY'
             };
+            
+            self.OMCEventContextNameConstants = {
+                ALL: "All",
+                START_TIME: "startTime",
+                END_TIME: "endTime",
+                TIME_PERIOD: "timePeriod",
+                START_END_TIME: "startEndTime",
+                COMPOSITE_MEID: "compositeMEID",
+                ENTITY_MEIDS: "entityMEIDs",
+                ENTITY: "entity",
+                COMPOSITE: "composite",
+                TIME: "time"
+            };
 
             self.OMCTimeConstants = {
                 TIME_UNIT: {
@@ -69,6 +82,8 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
             };
 
             //freeze every constant object inside
+            Object.freeze(self.OMCEventSourceConstants);
+            Object.freeze(self.OMCEventContextNameConstants);
             Object.freeze(self.OMCTimeConstants.TIME_UNIT);
             Object.freeze(self.OMCTimeConstants.QUICK_PICK);
             Object.freeze(self.OMCTimeConstants.timePeriodsSet);
