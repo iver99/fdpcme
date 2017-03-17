@@ -154,16 +154,10 @@ public class RestClient {
     }
 
     public void setAccept(String accept) {
-        if (StringUtil.isEmpty(accept)) {
-            accept = MediaType.APPLICATION_JSON;
-        }
         this.accept = accept;
     }
 
     public void setType(String type) {
-        if (StringUtil.isEmpty(type)) {
-            type = MediaType.APPLICATION_JSON;
-        }
         this.type = type;
     }
 }
