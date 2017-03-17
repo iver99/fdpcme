@@ -1226,6 +1226,9 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
 
                 self.startDateISO = ko.computed({
                     read: function () {
+                        if(isNaN(new Date(self.startDate()))) {
+                            return ko.unwrap(self.startDateISO);
+                        }
                         return oj.IntlConverterUtils.dateToLocalIso(new Date(self.startDate()));
                     },
                     write: function (value) {
@@ -1236,6 +1239,9 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
 
                 self.endDateISO = ko.computed({
                     read: function () {
+                        if(isNaN(new Date(self.endDate()))) {
+                             return ko.unwrap(self.endDateISO);
+                        }
                         return oj.IntlConverterUtils.dateToLocalIso(new Date(self.endDate()));
                     },
                     write: function (value) {
@@ -2155,6 +2161,9 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         return;
                     }
                     try {
+                        if(isNaN(new Date(data.value))) {
+                            throw true;
+                        }
                         //make sure the date is valid.
                         var convertedDate = self.dateConverter2.format(oj.IntlConverterUtils.dateToLocalIso(new Date(data.value)));
                         if(convertedDate !== data.value) {
