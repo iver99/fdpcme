@@ -2,9 +2,12 @@ package oracle.sysman.emaas.platform.dashboards.test.DPdashboard;
 
 import oracle.sysman.emaas.platform.dashboards.test.util.DashBoardUtils;
 import oracle.sysman.emaas.platform.dashboards.test.util.LoginAndLogout;
+import oracle.sysman.emaas.platform.dashboards.test.util.PageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -22,6 +25,7 @@ public class TestDashBoard extends LoginAndLogout
 	public static String dbName_DisableEntitiesTime = "Test Entities and Time Selector Disabled";
 	public static String WidgetName_LA = "Database Errors Trend";
 	public static String WidgetName_UDE = "Area Chart";
+	public static String dbName_GCenabled = "dbGCenabled";
 
 	@Test
 	public void createTestDashboard()
@@ -245,6 +249,67 @@ public class TestDashBoard extends LoginAndLogout
 
 	}
 
+	@Test
+    public void createDashboard_GCenabled()
+	{
+		String dbDesc = "Dashboard with GC enabled";
+
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test in createTestDashboard");
+
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//create dashboard
+		webd.getLogger().info("Start to create dashboard in grid view");
+		DashboardHomeUtil.gridView(webd);
+		DashboardHomeUtil.createDashboard(webd, dbName_GCenabled, dbDesc, DashboardHomeUtil.DASHBOARD);
+
+		//verify dashboard in builder page
+		webd.getLogger().info("Verify the dashboard created Successfully");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_GCenabled, dbDesc, true), "Create dashboard failed!");
+
+		//add widget
+		webd.getLogger().info("Start to add Widget into the dashboard");
+		DashboardBuilderUtil.addWidgetToDashboard(webd, WidgetName_LA);
+		webd.getLogger().info("Add widget finished");
+
+		//verify if the widget added successfully
+		Assert.assertTrue(DashboardBuilderUtil.verifyWidget(webd, WidgetName_LA), "Widget '" + WidgetName_LA + "' not found");
+
+		//save dashboard
+		webd.getLogger().info("save the dashboard");
+		DashboardBuilderUtil.saveDashboard(webd);	
+		
+		//find edit button and click it
+		WebElement editButton = webd.getWebDriver().findElement(By.xpath(PageId.DASHBOARDEDITBUTTON));		
+		Assert.assertTrue(editButton.isDisplayed(), "Edit button isn't displayed in self dashboard");
+		webd.click(PageId.DASHBOARDEDITBUTTON);
+		
+		//find the dashboard name and click it
+		WebElement dashboardName = webd.getWebDriver().findElement(By.xpath(PageId.DASHBOARDNAME));		
+		Assert.assertTrue(dashboardName.isDisplayed(), "dashboardName isn't displayed in self dashboard");
+		webd.click("css="+ PageId.DASHBOARDNAME_CSS);
+		
+		//find Dashboard Filters and click it
+		WebElement dashboardFilters = webd.getWebDriver().findElement(By.xpath(PageId.DASHBOARDFILTERS));
+		Assert.assertTrue(dashboardFilters.isDisplayed(), "Dashboard Filters isn't displayed in self dashboard");
+		webd.click(PageId.DASHBOARDFILTERS);
+		
+		//find "GC time range" radio button, then select it
+		WebElement useGCTimeRange = webd.getWebDriver().findElement(By.xpath(PageId.ENABLEGCTIMERANGE));
+		Assert.assertTrue(useGCTimeRange.isDisplayed(), "GC time range isn't displayed in self dashboard");
+		webd.click(PageId.ENABLEGCTIMERANGE);	
+		
+		webd.waitForServer();
+		
+		//find "GC entities" radio button, then select it
+		WebElement useGCEntities = webd.getWebDriver().findElement(By.xpath(PageId.ENABLEGCENTITYFILTER));
+		Assert.assertTrue(useGCEntities.isDisplayed(), "GC entities filter isn't displayed in self dashboard");
+		webd.click(PageId.ENABLEGCENTITYFILTER);					
+	}
+	
 	private String generateTimeStamp()
 	{
 		return String.valueOf(System.currentTimeMillis());
