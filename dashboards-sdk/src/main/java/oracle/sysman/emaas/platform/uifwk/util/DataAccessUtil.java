@@ -11,6 +11,14 @@
 package oracle.sysman.emaas.platform.uifwk.util;
 
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
+import oracle.sysman.emaas.platform.emcpdf.cache.api.ICache;
+import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
+import oracle.sysman.emaas.platform.emcpdf.cache.exception.ExecutionException;
+import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.DefaultKeyGenerator;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
+import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.StringUtil;
 
 import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
@@ -118,7 +126,7 @@ public class DataAccessUtil
 				+ subAppLink.getHref());
 		String subAppHref = subAppLink.getHref();
 		RestClient rc = new RestClient();
-		rc.setHeader(HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME, tenant);
+		rc.setHeader("X-USER-IDENTITY-DOMAIN-NAME", tenant);
 		rc.setHeader("X-REMOTE-USER", tenant + "." + user);
 		//EMCPDF-3448, FEB20: 3 admin link dif found in farm jobs
 		rc.setHeader("OAM_REMOTE_USER", tenant + "." + user);
