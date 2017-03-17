@@ -131,7 +131,9 @@ public class DataAccessUtil
 		//EMCPDF-3448, FEB20: 3 admin link dif found in farm jobs
 		rc.setHeader("OAM_REMOTE_USER", tenant + "." + user);
 		String subAppResponse = rc.get(subAppHref, tenant);
-		cache.put(tenantKey, subAppResponse);
+		if(subAppResponse!=null){
+			cache.put(tenantKey, subAppResponse);
+		}
 		LOGGER.info("Checking tenant (" + tenant + ") subscriptions. Dashboard-API subscribed app response is " + subAppResponse);
 		LOGGER.info("It takes {}ms to retrieve subscribed app data from Dashboard-API", System.currentTimeMillis() - startTime);
 		return subAppResponse;
@@ -183,7 +185,9 @@ public class DataAccessUtil
 				rc.setHeader("SESSION_EXP", sessionExp);
 			}
 			String response = rc.get(userInfoHref, tenantName);
-			cache.put(userTenantKey, response);
+			if(response!=null){
+				cache.put(userTenantKey, response);
+			}
 			LOGGER.info("Retrieved userInfo data is: {}", response);
 			LOGGER.info("It takes {}ms to retrieve userInfo data from Dashboard-API", System.currentTimeMillis() - start);
 			return response;
