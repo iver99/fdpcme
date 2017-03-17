@@ -79,21 +79,14 @@ public class DataFetcher
 				rc.setHeader("SESSION_EXP", sessionExp);
 			}
 			String response = null;
-			try{
-				response = rc.get(registrationHref, tenantIdParam);
-			}catch(UniformInterfaceException e){
-				LOGGER.error("Error occurred: status code of the HTTP response indicates a response that is not expected");
-				LOGGER.error(e);
-			}catch(ClientHandlerException e){//RestClient may timeout, so catch this runtime exception to make sure the response can return.
-				LOGGER.error("Error occurred: Signals a failure to process the HTTP request or HTTP response");
-				LOGGER.error(e);
+			response = rc.get(registrationHref, tenantIdParam);
+			if(response!=null){
+				cache.put(userTenantKey, response);
 			}
-			cache.put(userTenantKey, response);
 			LOGGER.info("Retrieved registration data is: {}", response);
 			LOGGER.info("It takes {}ms to retrieve registration data from Dashboard-API", System.currentTimeMillis() - start);
 			return response;
-		}
-		catch (Exception e) {
+		}catch (Exception e) {
 			LOGGER.error(e.getLocalizedMessage(), e);
 			return null;
 		}

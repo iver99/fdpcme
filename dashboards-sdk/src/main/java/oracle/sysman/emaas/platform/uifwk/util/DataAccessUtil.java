@@ -79,20 +79,11 @@ public class DataAccessUtil
 				rc.setHeader("SESSION_EXP", sessionExp);
 			}
 			String response = null;
-			try{
-				response = rc.get(registrationHref, tenantName);
-			}catch(UniformInterfaceException e){
-				LOGGER.error("Error occurred: status code of the HTTP response indicates a response that is not expected");
-				LOGGER.error(e);
-			}catch(ClientHandlerException e){//RestClient may timeout, so catch this runtime exception to make sure the response can return.
-				LOGGER.error("Error occurred: Signals a failure to process the HTTP request or HTTP response");
-				LOGGER.error(e);
-			}
+			response = rc.get(registrationHref, tenantName);
 			LOGGER.info("Retrieved brandingbar data is: {}", response);
 			LOGGER.info("It takes {}ms to retrieve brandingbar data from Dashboard-API", System.currentTimeMillis() - start);
 			return response;
-		}
-		catch (Exception e) {
+		}catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
 			return null;
 		}

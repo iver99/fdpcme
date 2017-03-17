@@ -53,15 +53,7 @@ public class TenantSubscriptionUtil
 		String domainHref = domainLink.getHref();
 		RestClient rc = new RestClient();
 		String domainsResponse = null;
-		try{
-			domainsResponse = rc.get(domainHref, tenant);
-		}catch(UniformInterfaceException e){
-			logger.error("Error occurred: status code of the HTTP response indicates a response that is not expected");
-			logger.error(e);
-		}catch(ClientHandlerException e){//RestClient may timeout, so catch this runtime exception to make sure the response can return.
-			logger.error("Error occurred: Signals a failure to process the HTTP request or HTTP response");
-			logger.error(e);
-		}
+		domainsResponse = rc.get(domainHref, tenant);
 		logger.info("Checking tenant (" + tenant + ") subscriptions. Domains list response is " + domainsResponse);
 		JsonUtil ju = JsonUtil.buildNormalMapper();
 		try {

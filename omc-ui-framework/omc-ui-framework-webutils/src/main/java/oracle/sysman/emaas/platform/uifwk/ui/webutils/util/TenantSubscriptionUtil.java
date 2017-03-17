@@ -79,16 +79,10 @@ public class TenantSubscriptionUtil
 		rc.setHeader(HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME, tenant);
 		rc.setHeader("X-REMOTE-USER", tenant + "." + user);
 		String subAppResponse = null;
-		try{
-			subAppResponse = rc.get(subAppHref, tenant);
-		}catch(UniformInterfaceException e){
-			LOGGER.error("Error occurred: status code of the HTTP response indicates a response that is not expected");
-			LOGGER.error(e);
-		}catch(ClientHandlerException e){//RestClient may timeout, so catch this runtime exception to make sure the response can return.
-			LOGGER.error("Error occurred: Signals a failure to process the HTTP request or HTTP response");
-			LOGGER.error(e);
+		subAppResponse = rc.get(subAppHref, tenant);
+		if(subAppResponse!=null){
+			cache.put(tenantKey, subAppResponse);
 		}
-		cache.put(tenantKey, subAppResponse);
 		LOGGER.info("Checking tenant (" + tenant + ") subscriptions. Dashboard-API subscribed app response is " + subAppResponse);
 		LOGGER.info("It takes {}ms to retrieve subscribed app data from Dashboard-API", System.currentTimeMillis() - startTime);
 		return subAppResponse;

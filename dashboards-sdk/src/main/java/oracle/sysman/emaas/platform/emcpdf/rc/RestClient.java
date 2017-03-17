@@ -1,6 +1,8 @@
 package oracle.sysman.emaas.platform.emcpdf.rc;
 
 import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientHandlerException;
+import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
@@ -34,6 +36,27 @@ public class RestClient {
     }
 
     public String get(String url, String tenant) {
+        try {
+            return innerGet(url, tenant);
+        }catch(UniformInterfaceException e){
+            LOGGER.error("Error occurred for [GET] action, URL is {}: status code of the HTTP response indicates a response that is not expected", url);
+            LOGGER.error(e);
+        }catch(ClientHandlerException e){//RestClient may timeout, so catch this runtime exception to make sure the response can return.
+            LOGGER.error("Error occurred for [GET] action, URL is {}: Signals a failure to process the HTTP request or HTTP response", url);
+            LOGGER.error(e);
+        }catch (Exception e) {
+            LOGGER.info("context", e);
+            LOGGER.error("Exception when RestClient trying to get response from specified service. Message:"
+                    + e.getLocalizedMessage());
+        }
+        return null;
+    }
+
+    public String getWithException(String url, String tenant)throws UniformInterfaceException,ClientHandlerException {
+        return innerGet(url, tenant);
+    }
+
+    private String innerGet(String url, String tenant)throws UniformInterfaceException,ClientHandlerException {
         if (url == null || "".equals(url)) {
             return null;
         }
@@ -50,25 +73,23 @@ public class RestClient {
 //            LogUtil.setInteractionLogThreadContext(tenant, url, InteractionLogDirection.OUT);
             LOGGER.info("RestClient is connecting to get response after getting authorization token from registration manager.");
         }
-        try {
-            WebResource.Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
-                    .type(type).accept(accept);
-            if (headers != null && !headers.isEmpty()) {
-                for (String key : headers.keySet()) {
-                    if (HttpHeaders.AUTHORIZATION.equals(key)) {
-                        continue;
-                    }
-                    builder.header(key, headers.get(key));
-                    LOGGER.info("Setting header ({}, {}) for call to {}", key, headers.get(key), url);
-                }
-            }
-            return builder.get(String.class);
-        } catch (Exception e) {
-            LOGGER.info("context", e);
-            LOGGER.error("Exception when RestClient trying to get response from specified service. Message:"
-                    + e.getLocalizedMessage());
-            return null;
+        WebResource.Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth);
+        if (type != null) {
+            builder = builder.type(type);
         }
+        if (accept != null) {
+            builder = builder.accept(accept);
+        }
+        if (headers != null && !headers.isEmpty()) {
+            for (String key : headers.keySet()) {
+                if (HttpHeaders.AUTHORIZATION.equals(key)) {
+                    continue;
+                }
+                builder.header(key, headers.get(key));
+                LOGGER.info("Setting header ({}, {}) for call to {}", key, headers.get(key), url);
+            }
+        }
+        return builder.get(String.class);
     }
 
     public String put(String url, Object requestEntity, String tenant) {
@@ -97,18 +118,32 @@ public class RestClient {
                     "RestClient is connecting to {} after getting authorization token from registration manager. HTTP method is post.",
                     url);
         }
-        WebResource.Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
-                .type(MediaType.APPLICATION_JSON).accept(accept);
-        if (headers != null) {
-            for (String key : headers.keySet()) {
-                Object value = headers.get(key);
-                if (value == null || HttpHeaders.AUTHORIZATION.equals(key)) {
-                    continue;
-                }
-                builder.header(key, value);
+        try{
+            WebResource.Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth);
+            if (type != null) {
+                builder = builder.type(type);
             }
+            if (accept != null) {
+                builder = builder.accept(accept);
+            }
+            if (headers != null) {
+                for (String key : headers.keySet()) {
+                    Object value = headers.get(key);
+                    if (value == null || HttpHeaders.AUTHORIZATION.equals(key)) {
+                        continue;
+                    }
+                    builder.header(key, value);
+                }
+            }
+            return builder.put(requestEntity.getClass(), requestEntity).toString();
+        }catch(UniformInterfaceException e){
+            LOGGER.error("Error occurred for [PUT] action, URL is {}: status code of the HTTP response indicates a response that is not expected", url);
+            LOGGER.error(e);
+        }catch(ClientHandlerException e){//RestClient may timeout, so catch this runtime exception to make sure the response can return.
+            LOGGER.error("Error occurred for [PUT] action, URL is {}: Signals a failure to process the HTTP request or HTTP response", url);
+            LOGGER.error(e);
         }
-        return builder.put(requestEntity.getClass(), requestEntity).toString();
+        return null;
     }
 
     public void setHeader(String header, Object value) {

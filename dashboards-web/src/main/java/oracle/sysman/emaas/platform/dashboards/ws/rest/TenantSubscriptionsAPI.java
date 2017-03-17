@@ -135,15 +135,7 @@ public class TenantSubscriptionsAPI extends APIBase
 			RestClient rc = new RestClient();
 			rc.setHeader("X-USER-IDENTITY-DOMAIN-NAME",tenantName);
 			String tenantResponse = null;
-			try{
-				tenantResponse = rc.get(tenantHref, tenantName);
-			}catch(UniformInterfaceException e){
-				LOGGER.error("Error occurred: status code of the HTTP response indicates a response that is not expected");
-				LOGGER.error(e);
-			}catch(ClientHandlerException e){//RestClient may timeout, so catch this runtime exception to make sure the response can return.
-				LOGGER.error("Error occurred: Signals a failure to process the HTTP request or HTTP response");
-				LOGGER.error(e);
-			}
+			tenantResponse = rc.get(tenantHref, tenantName);
 			LOGGER.debug("Checking tenant (" + tenantName + ") subscriptions with edition. Tenant response is " + tenantResponse);
 			JsonUtil ju = JsonUtil.buildNormalMapper();
 			TenantDetailEntity de = ju.fromJson(tenantResponse, TenantDetailEntity.class);

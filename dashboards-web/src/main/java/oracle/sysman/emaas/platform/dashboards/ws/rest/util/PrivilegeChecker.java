@@ -61,15 +61,7 @@ public class PrivilegeChecker
 					rc.setHeader("X-USER-IDENTITY-DOMAIN-NAME",tenantName);
 					rc.setHeader("OAM_REMOTE_USER",tenantDotUser);
 					String roleCheckResponse = null;
-					try{
-						roleCheckResponse = rc.get(secAuthRolesApiUrl, tenantName);
-					}catch(UniformInterfaceException e){
-						LOGGER.error("Error occurred: status code of the HTTP response indicates a response that is not expected");
-						LOGGER.error(e);
-					}catch(ClientHandlerException e){//RestClient may timeout, so catch this runtime exception to make sure the response can return.
-						LOGGER.error("Error occurred: Signals a failure to process the HTTP request or HTTP response");
-						LOGGER.error(e);
-					}
+					roleCheckResponse = rc.get(secAuthRolesApiUrl, tenantName);
 					LOGGER.debug("Checking roles for tenant user (" + tenantDotUser + "). The response is " + roleCheckResponse);
 					JsonUtil ju = JsonUtil.buildNormalMapper();
 					RoleNamesEntity rne = ju.fromJson(roleCheckResponse, RoleNamesEntity.class);
@@ -77,8 +69,7 @@ public class PrivilegeChecker
 						roleNames = rne.getRoleNames();
 					}
 				}
-			}
-			catch (IOException e) {
+			}catch (IOException e) {
 				LOGGER.error(e);
 			}
 		}

@@ -126,7 +126,7 @@ public class TenantSubscriptionUtil
                 try {
 					rc.setHeader("X-USER-IDENTITY-DOMAIN-NAME",tenant);
 					rc.setHeader("X-OMC-SERVICE-TRACE", "Dashboard-API");
-                    domainsResponse = rc.get(domainHref, tenant);
+					domainsResponse = rc.getWithException(domainHref, tenant);
                 } catch (UniformInterfaceException e) {
                     if (e.getResponse() != null && (e.getResponse().getStatus() == 404 || e.getResponse().getStatus() == 503)) {
                         LOGGER.error("Got status code {} when getting tenant app mapping domain", e.getResponse().getStatus());
