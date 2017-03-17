@@ -4,10 +4,9 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
     'jquery',
     'uifwk/@version@/js/util/ajax-util-impl',
     'uifwk/@version@/js/util/df-util-impl',
-    'uifwk/@version@/js/util/usertenant-util-impl',
-    'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg'
+    'uifwk/@version@/js/util/usertenant-util-impl'
 ],
-    function (oj, ko, $, ajaxUtilModel, dfuModel, userTenantModel, nls)
+    function (oj, ko, $, ajaxUtilModel, dfuModel, userTenantModel)
     {
         function UIFWKGlobalMenuUtil() {
             var self = this;
@@ -17,27 +16,41 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
             var host = window.location.host;
             var tenantName = userTenantUtil.getTenantName();
             
-            self.OMC_GLOBAL_MENU_HOME = 'omc_root_home';
-            self.OMC_GLOBAL_MENU_ALERTS = 'omc_root_alerts';
-            self.OMC_GLOBAL_MENU_DASHBOARDS = 'omc_root_dashboards';
-            self.OMC_GLOBAL_MENU_DATAEXPLORER = 'omc_root_dataexplorer';
-            self.OMC_GLOBAL_MENU_APM = 'omc_root_APM';
-            self.OMC_GLOBAL_MENU_MONITORING = 'omc_root_Monitoring';
-            self.OMC_GLOBAL_MENU_LOGANALYTICS = 'omc_root_LogAnalytics';
-            self.OMC_GLOBAL_MENU_ITANALYTICS = 'omc_root_ITAnalytics';
-            self.OMC_GLOBAL_MENU_ORCHESTRATION = 'omc_root_Orchestration';
-            self.OMC_GLOBAL_MENU_SECURITY = 'omc_root_SecurityAnalytics';
-            self.OMC_GLOBAL_MENU_COMPLIANCE = 'omc_root_Compliance';
-            self.OMC_GLOBAL_MENU_ADMIN = 'omc_root_admin';
-            self.OMC_GLOBAL_MENU_ADMIN_ALERTRULES = 'omc_root_admin_alertrules';
-            self.OMC_GLOBAL_MENU_ADMIN_AGENTS = 'omc_root_admin_agents';
-            self.OMC_GLOBAL_MENU_ADMIN_ENTITIESCONFIG = 'omc_root_admin_entitiesconfig';
-            self.OMC_GLOBAL_MENU_ADMIN_GRP_APM = 'omc_root_admin_grp_APM';
-            self.OMC_GLOBAL_MENU_ADMIN_GRP_MONITORING = 'omc_root_admin_grp_Monitoring';
-            self.OMC_GLOBAL_MENU_ADMIN_GRP_LOGANALYTICS = 'omc_root_admin_grp_LogAnalytics';
-            self.OMC_GLOBAL_MENU_ADMIN_GRP_SECURITY = 'omc_root_admin_grp_SecurityAnalytics';
-            self.OMC_GLOBAL_MENU_ADMIN_GRP_COMPLIANCE = 'omc_root_admin_grp_Compliance';
+            //Global menu id constants
+            self.OMCMenuConstants = {
+                'GLOBAL_HOME': 'omc_root_home',
+                'GLOBAL_ALERTS': 'omc_root_alerts',
+                'GLOBAL_DASHBOARDS': 'omc_root_dashboards',
+                'GLOBAL_DATAEXPLORER': 'omc_root_dataexplorer',
+                'GLOBAL_APM': 'omc_root_APM',
+                'GLOBAL_MONITORING': 'omc_root_Monitoring',
+                'GLOBAL_LOGANALYTICS': 'omc_root_LogAnalytics',
+                'GLOBAL_ITANALYTICS': 'omc_root_ITAnalytics',
+                'GLOBAL_ORCHESTRATION': 'omc_root_Orchestration',
+                'GLOBAL_SECURITY': 'omc_root_SecurityAnalytics',
+                'GLOBAL_COMPLIANCE': 'omc_root_Compliance',
+                'GLOBAL_ADMIN': 'omc_root_admin',
+                'GLOBAL_ADMIN_ALERTRULES': 'omc_root_admin_alertrules',
+                'GLOBAL_ADMIN_AGENTS': 'omc_root_admin_agents',
+                'GLOBAL_ADMIN_ENTITIESCONFIG': 'omc_root_admin_entitiesconfig',
+                'GLOBAL_ADMIN_GRP_APM': 'omc_root_admin_grp_APM',
+                'GLOBAL_ADMIN_GRP_MONITORING': 'omc_root_admin_grp_Monitoring',
+                'GLOBAL_ADMIN_GRP_LOGANALYTICS': 'omc_root_admin_grp_LogAnalytics',
+                'GLOBAL_ADMIN_GRP_SECURITY': 'omc_root_admin_grp_SecurityAnalytics',
+                'GLOBAL_ADMIN_GRP_COMPLIANCE': 'omc_root_admin_grp_Compliance'
+            };
+            //freeze every constant object
+            Object.freeze(self.OMCMenuConstants);
             
+            /**
+             * Fire event to show composite menu in OMC hamburger menu bar
+             * 
+             * @param {String} parentMenuId Parent menu item id
+             * @param {String} objMenuName Composite menu header
+             * @param {Object} menuJson JSON object for composite menus
+             * 
+             * @returns
+             */
             function fireCompositeMenuDisplayEvent(parentMenuId, objMenuName, menuJson) {
                 var message = {'tag': 'EMAAS_OMC_GLOBAL_MENU_COMPOSITE_DISPLAY'};
                 message.compositeParentMenuId = parentMenuId;
@@ -46,11 +59,23 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
                 window.postMessage(message, window.location.href);
             }
             
+            /**
+             * Fire event to indicate that OMC hamburger menu bar has finished loading
+             * 
+             * @returns
+             */
             self.fireServiceMenuLoadedEvent = function(){
                 var message = {'tag': 'EMAAS_OMC_GLOBAL_MENU_SERVICE_MENU_LOADED'};
                 window.postMessage(message, window.location.href);
             };
             
+            /**
+             * Add listener to repond to event when OMC hamburger menu bar has finished loading
+             * 
+             * @param {Function} callback Function to be invoked when OMC hamburger menu bar has finished loading
+             * 
+             * @returns
+             */
             self.subscribeServiceMenuLoadedEvent = function(callback) {
                 function onServiceMenuLoaded(event) {
                     if (event.origin !== window.location.protocol + '//' + window.location.host) {
@@ -67,18 +92,39 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
                 window.addEventListener("message", onServiceMenuLoaded, false);
             };
             
+            /**
+             * Set current menu item
+             * 
+             * @param {String} menuItemId Id of the menu item which should be set in selected and highlighted status
+             * 
+             * @returns
+             */
             self.setCurrentMenuItem = function(menuItemId) {
                 var message = {'tag': 'EMAAS_OMC_GLOBAL_MENU_SET_CURRENT_ITEM'};
                 message.menuItemId = menuItemId;
                 window.postMessage(message, window.location.href);
             };
             
+            /**
+             * Provide service menus meta-data at runtime to make it available in OMC hamburger menu bar
+             * 
+             * @param {Object} serviceMenuJson JSON object for service menus
+             * 
+             * @returns
+             */
             self.registerServiceMenus = function(serviceMenuJson) {
                 var message = {'tag': 'EMAAS_OMC_GLOBAL_MENU_REGISTER_SERVICE_MENU'};
                 message.serviceMenuJson = serviceMenuJson;
                 window.postMessage(message, window.location.href);
             };
             
+            /**
+             * Add listener to repond service menu registering event.
+             * 
+             * @param {Function} callback Callback to be invoked
+             * 
+             * @returns
+             */
             self.subscribeServiceMenuRegisterEvent = function(callback) {
                 function onServiceMenuRegister(event) {
                     if (event.origin !== window.location.protocol + '//' + window.location.host) {
@@ -95,10 +141,26 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
                 window.addEventListener("message", onServiceMenuRegister, false);
             };
             
+            /**
+             * Show composite object menu
+             * 
+             * @param {String} parentMenuId Parent menu item id
+             * @param {String} objMenuName Composite menu header
+             * @param {Object} menuJson JSON object for composite menus
+             * 
+             * @returns
+             */
             self.showCompositeObjectMenu = function(parentMenuId, objMenuName, menuJson){
                 fireCompositeMenuDisplayEvent(parentMenuId, objMenuName, menuJson);
             };
             
+            /**
+             * Add listener when show composite object menu event is fired
+             * 
+             * @param {Function} callback Callback function to be invoked
+             * 
+             * @returns
+             */
             self.subscribeCompositeMenuDisplayEvent = function(callback) {
                 function onCompositeMenuDisplay(event) {
                     if (event.origin !== window.location.protocol + '//' + window.location.host) {
@@ -115,6 +177,13 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
                 window.addEventListener("message", onCompositeMenuDisplay, false);
             };
             
+            /**
+             * Add listener to respond to menu selection event
+             * 
+             * @param {Function} callback Callback function to be invoked
+             * 
+             * @returns
+             */
             self.subscribeMenuSelectionEvent = function(callback) {
                 function onMenuSelection(event) {
                     if (event.origin !== window.location.protocol + '//' + window.location.host) {
@@ -131,6 +200,11 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
                 window.addEventListener("message", onMenuSelection, false);
             };
             
+            /**
+             * Set up a custom KO stopBinding handler
+             * 
+             * @returns
+             */
             self.setupCustomKOStopBinding = function() {
                 ko.bindingHandlers.stopBinding = {
                     init: function() {
@@ -140,6 +214,13 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
                 ko.virtualElements.allowedBindings.stopBinding = true;
             };
             
+            /**
+             * Get base vanity URLs for all services
+             * 
+             * @param {Function} callback Callback function to be invoked when base vanity URLs are fetched
+             * 
+             * @returns
+             */
             self.getServiceBaseVanityUrls = function(callbackForVanityUrls) {
                 if (window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.baseVanityUrls && 
                         ($.isFunction(window._uifwk.cachedData.baseVanityUrls) ? window._uifwk.cachedData.baseVanityUrls() : true)) {
@@ -191,6 +272,14 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
                 }
             };
             
+            /**
+             * Generate a vanity url based on specified base vanity URL and original URL
+             * 
+             * @param {String} originalUrl Original URL
+             * @param {String} baseVanityUrl Base vanity URL
+             * 
+             * @returns Full vanity URL constructed by original URL and base vanity URL
+             */
             self.generateVanityUrl = function(originalUrl, baseVanityUrl) {
                 var targetUrl = originalUrl;
                 if (baseVanityUrl && host.indexOf(tenantName + '.') === 0) {
@@ -208,6 +297,15 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
                 return targetUrl;
             };
             
+            /**
+             * Get service base vanity URL
+             * 
+             * @param {String} originalUrl Original URL
+             * @param {String} serviceName Service name
+             * @param {Function} callback Callback function to be invoked when base vanity URL is fetched
+             * 
+             * @returns
+             */
             self.getVanityUrlByServiceName = function(originalUrl, serviceName, callback) {
                 if (!originalUrl || !serviceName) {
                     oj.Logger.error("Error: Failed to get vanity URL: serviceName=" + serviceName + ', originalUrl=' + originalUrl);
