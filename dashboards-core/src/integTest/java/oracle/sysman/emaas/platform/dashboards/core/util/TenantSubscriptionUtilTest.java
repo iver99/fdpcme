@@ -363,8 +363,8 @@ public class TenantSubscriptionUtilTest
                 anyInstanceInfo.getLinksWithProtocol(anyString, anyString);
                 result = links;
 
-				anyClient.get(anyString, anyString);
-				returns(ENTITY_NAMING_DOMAIN, TENANT_LOOKUP_RESULT_EMPTY_APP_MAPPING_ENTITY);
+				anyClient.getWithException(anyString, anyString);
+				returns(TENANT_LOOKUP_RESULT_EMPTY_APP_MAPPING_ENTITY);
 			}
 		};
         List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1");
@@ -393,8 +393,8 @@ public class TenantSubscriptionUtilTest
                 anyInstanceInfo.getLinksWithProtocol(anyString, anyString);
                 result = links;
 
-                anyClient.get(anyString, anyString);
-				returns(ENTITY_NAMING_DOMAIN, "");
+                anyClient.getWithException(anyString, anyString);
+				returns("");
 			}
 		};
 		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1");
@@ -422,9 +422,8 @@ public class TenantSubscriptionUtilTest
                 result = insList;
                 anyInstanceInfo.getLinksWithProtocol(anyString, anyString);
                 result = links;
-
-                anyClient.get(anyString, anyString);
-				returns(ENTITY_NAMING_DOMAIN, TENANT_LOOKUP_RESULT_EMPTY_APP_MAPPINGS);
+                anyClient.getWithException(anyString, anyString);
+				returns(TENANT_LOOKUP_RESULT_EMPTY_APP_MAPPINGS);
 			}
 		};
 		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1");
@@ -481,13 +480,8 @@ public class TenantSubscriptionUtilTest
                 anyInstanceInfo.getLinksWithProtocol(anyString, anyString);
                 result = links;
 
-                anyClient.get(anyString, anyString);
-				JsonUtil.buildNormalMapper();
-				result = anyJsonUtil;
-				anyJsonUtil.fromJson(anyString, DomainsEntity.class);
-				result = anyDomainsEntity;
-				anyDomainsEntity.getItems();
-				result = null;
+                anyClient.getWithException(anyString, anyString);
+                returns(TENANT_LOOKUP_RESULT_EMPTY_APP_MAPPING_ENTITY);
 			}
 		};
 		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1");
@@ -517,7 +511,7 @@ public class TenantSubscriptionUtilTest
                 anyInstanceInfo.getLinksWithProtocol(anyString, anyString);
                 result = links;
 
-                anyClient.get(anyString, anyString);
+                anyClient.getWithException(anyString, anyString);
 				returns(ENTITY_NAMING_DOMAIN_EMPTY_TENANT_APP_URL, TENANT_LOOKUP_RESULT);
 			}
 		};
@@ -548,7 +542,7 @@ public class TenantSubscriptionUtilTest
                 anyInstanceInfo.getLinksWithProtocol(anyString, anyString);
                 result = links;
 
-                anyClient.get(anyString, anyString);
+                anyClient.getWithException(anyString, anyString);
 				JsonUtil.buildNormalMapper();
 				result = anyJsonUtil;
 				anyJsonUtil.fromJson(anyString, DomainsEntity.class);
@@ -588,11 +582,11 @@ public class TenantSubscriptionUtilTest
                 anyInstanceInfo.getLinksWithProtocol(anyString, anyString);
                 result = links;
 
-                anyClient.get(anyString, anyString);
-				result = ENTITY_NAMING_DOMAIN;
+				anyClient.getWithException(anyString, anyString);
+				result = TENANT_LOOKUP_RESULT;
 
-                anyClient.get(anyString, anyString);
-                result = TENANT_LOOKUP_RESULT;
+				anyClient.get(anyString, anyString);
+				result = TENANT_LOOKUP_RESULT;
 			}
 		};
 		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1");
