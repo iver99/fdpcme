@@ -61,7 +61,7 @@ public class TestErrorPage extends LoginAndLogout
 		DashBoardUtils.loadWebDriver(webd);
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testDefaultErrorPage()
 	{
 		try {
@@ -77,7 +77,7 @@ public class TestErrorPage extends LoginAndLogout
 		}
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testDefaultErrorPage_invalidURL()
 	{
 		try {
@@ -96,7 +96,7 @@ public class TestErrorPage extends LoginAndLogout
 
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testErrorPage_COMMON_ACCESS_NO_PERMISSION()
 	{
 		try {
@@ -112,7 +112,7 @@ public class TestErrorPage extends LoginAndLogout
 		}
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testErrorPage_COMMON_ACCESS_NO_PERMISSION_APM()
 	{
 		try {
@@ -131,7 +131,7 @@ public class TestErrorPage extends LoginAndLogout
 		}
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testErrorPage_COMMON_ACCESS_NO_PERMISSION_APM_invalidURL()
 	{
 		try {
@@ -152,7 +152,7 @@ public class TestErrorPage extends LoginAndLogout
 		}
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testErrorPage_COMMON_ACCESS_NO_PERMISSION_invalidURL()
 	{
 		try {
@@ -171,7 +171,7 @@ public class TestErrorPage extends LoginAndLogout
 		}
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testErrorPage_COMMON_ACCESS_NO_PERMISSION_ITA()
 	{
 		try {
@@ -190,7 +190,7 @@ public class TestErrorPage extends LoginAndLogout
 		}
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testErrorPage_COMMON_ACCESS_NO_PERMISSION_ITA_invalidURL()
 	{
 		try {
@@ -211,7 +211,7 @@ public class TestErrorPage extends LoginAndLogout
 		}
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testErrorPage_COMMON_ACCESS_NO_PERMISSION_LA()
 	{
 		try {
@@ -230,7 +230,7 @@ public class TestErrorPage extends LoginAndLogout
 		}
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testErrorPage_COMMON_ACCESS_NO_PERMISSION_LA_invalidURL()
 	{
 		try {
@@ -251,7 +251,7 @@ public class TestErrorPage extends LoginAndLogout
 		}
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testErrorPage_COMMON_ACCESS_NO_SUBS()
 	{
 		try {
@@ -267,7 +267,7 @@ public class TestErrorPage extends LoginAndLogout
 		}
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testErrorPage_COMMON_ACCESS_NO_SUBS_APM()
 	{
 		try {
@@ -286,7 +286,7 @@ public class TestErrorPage extends LoginAndLogout
 		}
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testErrorPage_COMMON_ACCESS_NO_SUBS_APM_invalidURL()
 	{
 		try {
@@ -307,7 +307,7 @@ public class TestErrorPage extends LoginAndLogout
 		}
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testErrorPage_COMMON_ACCESS_NO_SUBS_invalidURL()
 	{
 		try {
@@ -326,7 +326,7 @@ public class TestErrorPage extends LoginAndLogout
 		}
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testErrorPage_COMMON_ACCESS_NO_SUBS_ITA()
 	{
 		try {
@@ -345,7 +345,7 @@ public class TestErrorPage extends LoginAndLogout
 		}
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testErrorPage_COMMON_ACCESS_NO_SUBS_ITA_invalidURL()
 	{
 		try {
@@ -366,7 +366,7 @@ public class TestErrorPage extends LoginAndLogout
 		}
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testErrorPage_COMMON_ACCESS_NO_SUBS_LA()
 	{
 		try {
@@ -385,7 +385,7 @@ public class TestErrorPage extends LoginAndLogout
 		}
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testErrorPage_COMMON_ACCESS_NO_SUBS_LA_invalidURL()
 	{
 		try {
@@ -406,7 +406,7 @@ public class TestErrorPage extends LoginAndLogout
 		}
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testErrorPage_COMMON_PAGE_NO_SUBS()
 	{
 		try {
@@ -422,7 +422,7 @@ public class TestErrorPage extends LoginAndLogout
 		}
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testErrorPage_COMMON_PAGE_NO_SUBS_APM()
 	{
 		try {
@@ -441,7 +441,7 @@ public class TestErrorPage extends LoginAndLogout
 		}
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testErrorPage_COMMON_PAGE_NO_SUBS_APM_invalidURL()
 	{
 		try {
@@ -462,7 +462,7 @@ public class TestErrorPage extends LoginAndLogout
 		}
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testErrorPage_COMMON_PAGE_NO_SUBS_invalidURL()
 	{
 		try {
@@ -481,7 +481,7 @@ public class TestErrorPage extends LoginAndLogout
 		}
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testErrorPage_COMMON_PAGE_NO_SUBS_ITA()
 	{
 		try {
@@ -500,7 +500,7 @@ public class TestErrorPage extends LoginAndLogout
 		}
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testErrorPage_COMMON_PAGE_NO_SUBS_ITA_invalidURL()
 	{
 		try {
@@ -521,7 +521,7 @@ public class TestErrorPage extends LoginAndLogout
 		}
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testErrorPage_COMMON_PAGE_NO_SUBS_LA()
 	{
 		try {
@@ -540,7 +540,7 @@ public class TestErrorPage extends LoginAndLogout
 		}
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testErrorPage_COMMON_PAGE_NO_SUBS_LA_invalidURL()
 	{
 		try {
@@ -561,7 +561,7 @@ public class TestErrorPage extends LoginAndLogout
 		}
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testErrorPage_COMMON_PAGE_NOT_FOUND()
 	{
 		try {
@@ -577,7 +577,7 @@ public class TestErrorPage extends LoginAndLogout
 		}
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testErrorPage_COMMON_PAGE_NOT_FOUND_invalidURL()
 	{
 		try {
@@ -596,7 +596,7 @@ public class TestErrorPage extends LoginAndLogout
 		}
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testErrorPage_DBS_INTERNAL()
 	{
 		try {
@@ -612,7 +612,7 @@ public class TestErrorPage extends LoginAndLogout
 		}
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testErrorPage_DBS_INTERNAL_invalidURL()
 	{
 		try {
@@ -630,7 +630,7 @@ public class TestErrorPage extends LoginAndLogout
 		}
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testErrorPage_DBS_INVALID()
 	{
 		try {
@@ -646,7 +646,7 @@ public class TestErrorPage extends LoginAndLogout
 		}
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testErrorPage_DBS_INVALID_invalidURL()
 	{
 		try {
@@ -664,7 +664,7 @@ public class TestErrorPage extends LoginAndLogout
 		}
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testErrorPage_DBS_PAGE_NO_SUBS()
 	{
 		try {
@@ -680,7 +680,7 @@ public class TestErrorPage extends LoginAndLogout
 		}
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testErrorPage_DBS_PAGE_NO_SUBS_invalidURL()
 	{
 		try {
@@ -699,7 +699,7 @@ public class TestErrorPage extends LoginAndLogout
 		}
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testErrorPage_DBS_PAGE_NOT_FOUND()
 	{
 		try {
@@ -715,7 +715,7 @@ public class TestErrorPage extends LoginAndLogout
 		}
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testErrorPage_DBS_PAGE_NOT_FOUND_invalidURL()
 	{
 		try {

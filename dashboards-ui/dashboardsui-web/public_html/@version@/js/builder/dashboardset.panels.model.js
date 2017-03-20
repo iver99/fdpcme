@@ -75,7 +75,7 @@ define([
                     headerViewModel && headerViewModel.brandingbarParams.showTimeSelector(false);
                     headerViewModel && headerViewModel.brandingbarParams.showEntitySelector(false);
                 }else {
-                    if(dashboardsetToolBarModel.dashboardInst.enableEntityFilter()!=="FALSE" || dashboardsetToolBarModel.dashboardInst.enableTimeRange()!=="FALSE") {    
+                    if(dashboardsetToolBarModel.dashboardInst.enableEntityFilter()==="GC" || dashboardsetToolBarModel.dashboardInst.enableTimeRange()!=="FALSE") {    
                         headerViewModel && headerViewModel.brandingbarParams.showGlobalContextBanner(true);
                         if(dashboardsetToolBarModel.dashboardInst.enableTimeRange()==="FALSE") {
                             headerViewModel && headerViewModel.brandingbarParams.showTimeSelector(false);

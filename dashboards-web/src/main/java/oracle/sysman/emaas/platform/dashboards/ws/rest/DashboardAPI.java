@@ -46,6 +46,7 @@ import oracle.sysman.emaas.platform.dashboards.core.DashboardManager;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardsFilter;
 import oracle.sysman.emaas.platform.dashboards.core.UserOptionsManager;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DatabaseDependencyUnavailableException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.UserOptionsNotFoundException;
@@ -83,6 +84,7 @@ import oracle.sysman.emaas.platform.emcpdf.cache.util.ScreenshotPathGenerator;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import com.sun.jersey.core.util.Base64;
@@ -415,6 +417,14 @@ public class DashboardAPI extends APIBase
 			Long tenantId = getTenantId(tenantIdParam);
 			initializeUserContext(tenantIdParam, userTenant);
 			UserOptions options = userOptionsManager.getOptionsById(dashboardId, tenantId);
+			if (options != null) {
+				boolean validated = options.validateExtendedOptions();
+				if (!validated) { // if extended options is invalid, we simply return an empty extended option so that UI display won't be break
+					LOGGER.error("Extended option for dashboardID={} is {}, it's an invalid json string, so use empty extended option instead",
+							dashboardId, options.getExtendedOptions());
+					options.setExtendedOptions(null);
+				}
+			}
 			return Response.ok(getJsonUtil().toJson(options)).build();
 		}
 		catch (UserOptionsNotFoundException e){
@@ -555,7 +565,7 @@ public class DashboardAPI extends APIBase
 					try{
 						LOGGER.info("Parallel request registry info...");
 						initializeUserContext(tenantIdParam, userTenant);
-						return JsonUtil.buildNonNullMapper().toJson(new RegistrationEntity(sessionExpiryTime));
+						return JsonUtil.buildNonNullMapper().toJson(new RegistrationEntity(sessionExpiryTime, null));
 					}catch(Exception e){
 						LOGGER.error("Error occurred when retrieving registration data using parallel request!");
 						LOGGER.error(e);
@@ -825,6 +835,13 @@ public class DashboardAPI extends APIBase
 		UserOptions userOption;
 		try {
 			userOption = getJsonUtil().fromJson(inputJson.toString(), UserOptions.class);
+			boolean validated = userOption.validateExtendedOptions();
+			if (!validated) {
+				ErrorEntity error = new ErrorEntity(
+						new CommonFunctionalException(
+								MessageUtils.getDefaultBundleString(CommonFunctionalException.USER_OPTIONS_INVALID_EXTENDED_OPTIONS)));
+				return buildErrorResponse(error);
+			}
 		}
 		catch (IOException e) {
 			LOGGER.error(e.getLocalizedMessage(), e);
@@ -918,6 +935,13 @@ public class DashboardAPI extends APIBase
 		try {
 			userOption = getJsonUtil().fromJson(inputJson.toString(), UserOptions.class);
 			userOption.setDashboardId(dashboardId);
+			boolean validated = userOption.validateExtendedOptions();
+			if (!validated) {
+				ErrorEntity error = new ErrorEntity(
+						new CommonFunctionalException(
+								MessageUtils.getDefaultBundleString(CommonFunctionalException.USER_OPTIONS_INVALID_EXTENDED_OPTIONS)));
+				return buildErrorResponse(error);
+			}
 		}
 		catch (IOException e) {
 			LOGGER.error(e.getLocalizedMessage(), e);

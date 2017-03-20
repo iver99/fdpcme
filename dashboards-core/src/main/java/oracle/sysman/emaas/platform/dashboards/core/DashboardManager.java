@@ -15,7 +15,14 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
+import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
+import oracle.sysman.emaas.platform.emcpdf.cache.exception.ExecutionException;
+import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.DefaultKeyGenerator;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.ScreenshotData;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
+import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -450,7 +457,7 @@ public class DashboardManager
 					ssfIdList.add(edt.getWidgetUniqueId());
 				}
 			}
-			String savedSearchResponse = retrieveSavedSeasrch(ssfIdList);
+			String savedSearchResponse = retrieveSavedSeasrch(dashboardId, ed.getIsSystem() == 1, ssfIdList);
 
 			// combine single dashboard or selected dashbaord
 			CombinedDashboard cd = CombinedDashboard.valueOf(ed, ep, euo,savedSearchResponse);
@@ -471,8 +478,26 @@ public class DashboardManager
 	}
 	
 
-    private String retrieveSavedSeasrch(List<String> ssfIdList) {
-        TenantSubscriptionUtil.RestClient rc = new TenantSubscriptionUtil.RestClient();
+    private String retrieveSavedSeasrch(BigInteger dashboardId, boolean isOobDashboard, List<String> ssfIdList) {
+		ICacheManager cm= CacheManagers.getInstance().build();
+		String cachedData = null;
+		Object cacheKey = null;
+		if (dashboardId != null && isOobDashboard) {
+			cacheKey = DefaultKeyGenerator.getInstance().generate(new Tenant("COMMON_TENANT_FOR_OOB_DASHBOARD_CACHE"),
+					new Keys(CacheConstants.LOOKUP_CACHE_KEY_OOB_DASHBOARD_SAVEDSEARCH, dashboardId));
+			try {
+				cachedData = (String) cm.getCache(CacheConstants.CACHES_OOB_DASHBOARD_SAVEDSEARCH_CACHE).get(cacheKey);
+				if (cachedData != null) {
+					LOGGER.debug(
+							"retrieved OOB widget data for dashboard {} from cache: {}", dashboardId, cachedData);
+					return cachedData;
+				}
+			} catch (ExecutionException e) { // if we see this cache issue, we just log and go ahead
+				LOGGER.error(e);
+			}
+		}
+
+		TenantSubscriptionUtil.RestClient rc = new TenantSubscriptionUtil.RestClient();
         Link tenantsLink = RegistryLookupUtil.getServiceInternalLink(
         		"SavedSearch", "1.0+", "search", null);
         String tenantHref = tenantsLink.getHref() + "/list";
@@ -483,8 +508,11 @@ public class DashboardManager
         try {
         	savedSearchResponse = rc.put(tenantHref, headers, ssfIdList.toString(), tenantName);
         } catch (Exception e) {
-        	LOGGER.info("savedsearch response", e);
+        	LOGGER.error(e);
         }
+		if (!StringUtil.isEmpty(savedSearchResponse) && dashboardId != null && isOobDashboard) {
+			cm.getCache(CacheConstants.CACHES_OOB_DASHBOARD_SAVEDSEARCH_CACHE).put(cacheKey,savedSearchResponse);
+		}
         return savedSearchResponse;
     }
 
@@ -941,7 +969,12 @@ public class DashboardManager
 			LOGGER.debug(jpqlCount);
 			Query countQuery = em.createNativeQuery(jpqlCount);
 			initializeQueryParams(countQuery, paramList);
-			Long totalResults = ((BigDecimal) countQuery.getSingleResult()).longValue();
+			Long totalResults = 0L;
+			try{
+				totalResults = ((BigDecimal) countQuery.getSingleResult()).longValue();
+			}catch(NoResultException e){
+				LOGGER.warn("get all dashboards count did not retrieve any data!");
+			}
 			LOGGER.debug("Total results is " + totalResults);
 			PaginatedDashboards pd = new PaginatedDashboards(totalResults, firstResult, dbdList == null ? 0 : dbdList.size(),
 				maxResults, dbdList);
@@ -1491,10 +1524,10 @@ public class DashboardManager
 	{
 		if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_NAME.equals(orderBy)
 				|| DashboardConstants.DASHBOARD_QUERY_ORDER_BY_NAME_ASC.equals(orderBy)) {
-			return " order by lower(p.name), p.name, p.dashboard_Id DESC";
+			return " order by nlssort(name,'NLS_SORT=GENERIC_M'), p.dashboard_Id DESC";
 		}
 		else if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_NAME_DSC.equals(orderBy)) {
-			return " order by lower(p.name) DESC, p.name DESC, p.dashboard_Id DESC";
+			return " order by nlssort(name,'NLS_SORT=GENERIC_M') DESC, p.dashboard_Id DESC";
 		}
 		else if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_CREATE_TIME.equals(orderBy)
 				|| DashboardConstants.DASHBOARD_QUERY_ORDER_BY_CREATE_TIME_DSC.equals(orderBy)) {

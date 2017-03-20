@@ -47,7 +47,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 	private String dbName_duplicateOOB = "";
 	private String dbName_saveConfirmation = "";
 
-	private final String customWidgetName = "Workflow Submission Details";
+	private final String customWidgetName = "Summary";
 	private final String OOBName = "Middleware Operations";
 
 	@BeforeClass
@@ -153,6 +153,9 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 			webd.takeScreenShot();
 		}
 		webd.getLogger().info("Finished to get wider widgets");
+
+		webd.getLogger().info("Save the dashboard");
+		DashboardBuilderUtil.saveDashboard(webd);
 	}
 
 	@Test
