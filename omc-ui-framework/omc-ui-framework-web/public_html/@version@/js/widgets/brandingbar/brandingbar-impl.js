@@ -475,7 +475,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 "appId": appIdOcs,
                 "appName": "BRANDING_BAR_APP_NAME_ORCHESTRATION",
                 "serviceDisplayName": "BRANDING_BAR_APP_NAME_ORCHESTRATION",
-                "serviceName": "CosServiceUI",
+                "serviceName": "CosUIService",
                 "version": self.SERVICE_VERSION,
                 "helpTopicId": "em_home_gs"
             };

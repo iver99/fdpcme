@@ -265,33 +265,31 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 //Get all privileges that have been granted to current user
                 function getUserGrants() {
                     var dfdGetUserGrants = $.Deferred();
-                    if(!self.privilegeList || self.privilegeList.length < 1){
-                        var url = "/sso.static/getUserGrants";
+                    if (!self.privilegeList || self.privilegeList.length < 1) {
                         if (dfu.isDevMode()) {
-                            var odsUrl = dfu.getDevData().odsRestApiEndPoint;
-                            var odsBaseUrl = odsUrl.substring(0, odsUrl.indexOf('/ods-query'));
-                            url = odsBaseUrl + "/authorization/ws/api/v1/priv/grants/getUserGrants";
-//                            //testing
-//                            url = '/emsaasui/uifwk/test.html';
-//                            //testing
+                            var userGrants = dfu.getDevData().userGrants;
+                            self.privilegeList = userGrants;
+                            dfdGetUserGrants.resolve();
                         }
-                        url = url + '?granteeUser=' + tenantName + '.' + userName;
-                        var header = dfu.getDefaultHeader();
-                        dfu.ajaxWithRetry(url, {
-                                type: 'get',
-                                headers: header,
-                                success: function (data) {
-//                                    //testing
-//                                    data = 'ADMINISTER_LOG_TYPE,RUN_AWR_VIEWER_APP,USE_TARGET_ANALYTICS,ADMIN_ITA_WAREHOUSE,ADMINISTER_ROLE,RUN_MW_PERF_APP,MANAGE_CREDENTIALS,FULL_ANY_TARGET,RUN_DB_PERF_APP,DELETE_ANY_LOG,VIEW_SOURCE_DETAILS,OVERRIDE_OOTB_RULE_SETTINGS,CREATE_UPLOAD,RUN_DB_RESOURCE_APP,ADMIN_ITA_TARGET,RUN_FLEX_ANALYZER_APP,ASSOCIATE_RULE_TO_TARGET,VIEW_APMAAS_MONITORING_DATA,VIEW_LOG_TYPE_DETAILS,SET_RULE_TO_AUTO_ASSOCIATE,RUN_RESOURCE_ANALYTICS_APP,MANAGE_ALERT_SETUP,MANAGE_APMAAS_AGENT,VIEW_ANY_TARGET,ADMINISTER_SOURCE,SEARCH_LOGS';
-//                                    //testing
-                                    self.privilegeList = data;
-                                    dfdGetUserGrants.resolve();
-                                },
-                                error: function (xhr, textStatus, errorThrown) {
-                                    dfdGetUserGrants.reject();
-                                    oj.Logger.error("Failed to get UserGrants due to error: " + textStatus);
-                                }
-                            });
+                        else {
+                            var url = '/sso.static/getUserGrants?granteeUser=' + tenantName + '.' + userName;
+                            var header = dfu.getDefaultHeader();
+                            dfu.ajaxWithRetry(url, {
+                                    type: 'get',
+                                    headers: header,
+                                    success: function (data) {
+//                                        //testing
+//                                        data = 'ADMINISTER_LOG_TYPE,RUN_AWR_VIEWER_APP,USE_TARGET_ANALYTICS,ADMIN_ITA_WAREHOUSE,ADMINISTER_ROLE,RUN_MW_PERF_APP,MANAGE_CREDENTIALS,FULL_ANY_TARGET,RUN_DB_PERF_APP,DELETE_ANY_LOG,VIEW_SOURCE_DETAILS,OVERRIDE_OOTB_RULE_SETTINGS,CREATE_UPLOAD,RUN_DB_RESOURCE_APP,ADMIN_ITA_TARGET,RUN_FLEX_ANALYZER_APP,ASSOCIATE_RULE_TO_TARGET,VIEW_APMAAS_MONITORING_DATA,VIEW_LOG_TYPE_DETAILS,SET_RULE_TO_AUTO_ASSOCIATE,RUN_RESOURCE_ANALYTICS_APP,MANAGE_ALERT_SETUP,MANAGE_APMAAS_AGENT,VIEW_ANY_TARGET,ADMINISTER_SOURCE,SEARCH_LOGS';
+//                                        //testing
+                                        self.privilegeList = data;
+                                        dfdGetUserGrants.resolve();
+                                    },
+                                    error: function (xhr, textStatus, errorThrown) {
+                                        dfdGetUserGrants.reject();
+                                        oj.Logger.error("Failed to get UserGrants due to error: " + textStatus);
+                                    }
+                                });
+                        }
                     }
                     return dfdGetUserGrants;
                 }
@@ -384,6 +382,17 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     return {'id': dividerId, type: 'divider', 'labelKey': '', 'externalUrl': '#'};
                 };
                 
+                function getGlobalMenuUrls(menuItem) {
+                    if (menuItem) {
+                        menuItem.externalUrl = globalMenuIdHrefMapping[menuItem.id] ? globalMenuIdHrefMapping[menuItem.id] : '#';
+                        if (menuItem.children && menuItem.children.length > 0) {
+                            for (var i = 0; i < menuItem.children.length; i++) {
+                                getGlobalMenuUrls(menuItem.children[i]);
+                            }
+                        }
+                    }
+                }
+                
                 //If omc service menus have been cached in window session storage, get it directly from cache
                 var cachedMenus = sessionCaches[0].retrieveDataFromCache(sessionCacheAllMenusKey);
                 if (cachedMenus && cachedMenus[sessionCacheOmcMenusDataKey] && cachedMenus[sessionCacheOmcMenusServiceLinksKey] && cachedMenus[sessionCacheOmcMenusPrivilegeKey] && cachedMenus[sessionCacheOmcMenusSubscribedAppsKey]) {
@@ -404,7 +413,8 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 else {
                     $.when(loadServiceMenus(), getUserGrants(), getSubscribedApps(), fetchBaseVanityUrls()).done(function() {
                         for (var k = 0; k < rootMenuData.length; ++k) {
-                            rootMenuData[k].externalUrl = globalMenuIdHrefMapping[rootMenuData[k].id] ? globalMenuIdHrefMapping[rootMenuData[k].id] : '#';
+//                            rootMenuData[k].externalUrl = globalMenuIdHrefMapping[rootMenuData[k].id] ? globalMenuIdHrefMapping[rootMenuData[k].id] : '#';
+                            getGlobalMenuUrls(rootMenuData[k]);
                             self.serviceMenuData.push($.extend(true, {}, rootMenuData[k]));
                         }
                         self.allServiceData && $.each(self.allServiceData, function (idx, singleServiceData) {
@@ -784,9 +794,9 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     globalMenuIdHrefMapping['omc_root_Monitoring'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'MonitoringServiceUI');
                     globalMenuIdHrefMapping['omc_root_LogAnalytics'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'LogAnalyticsUI');
                     globalMenuIdHrefMapping['omc_root_ITAnalytics'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'emcitas-ui-apps');
-                    globalMenuIdHrefMapping['omc_root_Orchestration'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'CosServiceUI');
+                    globalMenuIdHrefMapping['omc_root_Orchestration'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'CosUIService');
                     globalMenuIdHrefMapping['omc_root_SecurityAnalytics'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'SecurityAnalyticsUI');
-                    globalMenuIdHrefMapping['omc_root_Compliance'] = fetchLinkFromRegistrationData(data, 'homeLinks', 'ComplianceUIService');
+                    globalMenuIdHrefMapping['omc_root_Compliance'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'ComplianceUIService');
                     globalMenuIdHrefMapping['omc_root_admin_alertrules'] = fetchLinkFromRegistrationData(data, 'adminLinks', 'EventUI');
                     globalMenuIdHrefMapping['omc_root_admin_agents'] = fetchLinkFromRegistrationData(data, 'adminLinks', 'TenantManagementUI');
                     globalMenuIdHrefMapping['omc_root_admin_entitiesconfig'] = fetchLinkFromRegistrationData(data, 'adminLinks', 'AdminConsoleSaaSUi');
