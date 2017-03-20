@@ -901,30 +901,14 @@ public class DataManager
 				+ "or (DESCRIPTION=? and OWNER=? AND TENANT_ID =? AND DELETED=?)";
 		Query query = entityManager.createNativeQuery(sql)
 				.setParameter(1, dashboardId)
-<<<<<<< HEAD
 				.setParameter(2, tenantId)
 				.setParameter(3, description)
 		.setParameter(4, owner)
 		.setParameter(5, tenantId)
 		.setParameter(6, deleted);
-<<<<<<< HEAD
-		long count = ((Number) query.getSingleResult()).longValue();
-		return count > 0;
-=======
-				.setParameter(2, tenantId);
-		try{
-			long count = ((Number) query.getSingleResult()).longValue();
-			return count > 0;
-		}catch(NoResultException e){
-			logger.warn("Is dashboard exist did not retrieve any data!");
-			return false;
-		}
->>>>>>> c01053645da5ba81dc69cb108d23d8d63eecc062
-=======
 		List<Object> result = query.getResultList();
 		
 		return result;
->>>>>>> 17f401a455bda09c6c1bff31d9a80dc0836ac7b8
 	}
 
 	private List<Object> getLastAccessDateForDashboardTile(EntityManager entityManager, String tileId, Long tenantId) {
@@ -932,26 +916,9 @@ public class DataManager
 		String sql = "SELECT to_char(LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') FROM EMS_DASHBOARD_TILE WHERE TILE_ID=? AND TENANT_ID=?";
 		Query query = entityManager.createNativeQuery(sql)
 				.setParameter(1, tileId)
-<<<<<<< HEAD
 				.setParameter(2, tenantId);
-<<<<<<< HEAD
-		long count = ((Number) query.getSingleResult()).longValue();
-		return count > 0;
-=======
-				.setParameter(2, dashboardId)
-				.setParameter(3, tenantId);
-		try{
-			long count = ((Number) query.getSingleResult()).longValue();
-			return count > 0;
-		}catch(NoResultException e){
-			logger.warn("Is dashboard tile exist did not retrieve any data!");
-			return false;
-		}
->>>>>>> c01053645da5ba81dc69cb108d23d8d63eecc062
-=======
 		List<Object> result = query.getResultList();
 		return result;
->>>>>>> 17f401a455bda09c6c1bff31d9a80dc0836ac7b8
 	}
 
 	private List<Object> getLastAccessDateForDashboardTileParam(EntityManager entityManager, String tileId, String paramName, Long tenantId) {
@@ -961,18 +928,9 @@ public class DataManager
 				.setParameter(1, tileId)
 				.setParameter(2, paramName)
 				.setParameter(3, tenantId);
-<<<<<<< HEAD
-		try{
-			long count = ((Number) query.getSingleResult()).longValue();
-			return count > 0;
-		}catch(NoResultException e){
-			logger.warn("Is dashboard tile param did not retrieve any data!");
-			return false;
-		}
-=======
+
 		List<Object> result = query.getResultList();
 		return result;
->>>>>>> 17f401a455bda09c6c1bff31d9a80dc0836ac7b8
 	}
 
 
@@ -984,18 +942,8 @@ public class DataManager
 				.setParameter(1, userName)
 				.setParameter(2, tenantId)
 				.setParameter(3, dashboardId);
-<<<<<<< HEAD
-		try{
-			long count = ((Number) query.getSingleResult()).longValue();
-			return count > 0;
-		}catch(NoResultException e){
-			logger.warn("Is dashboard user option exist did not retrieve any data!");
-			return false;
-		}
-=======
 		List<Object> result = query.getResultList();
 		return result;
->>>>>>> 17f401a455bda09c6c1bff31d9a80dc0836ac7b8
 	}
 
 	private List<Object> getLastAccessDateForDashboardSet(EntityManager entityManager, BigInteger dashboardSetId, Long tenantId, BigInteger subDashboardId) {
@@ -1005,18 +953,8 @@ public class DataManager
 				.setParameter(1, dashboardSetId)
 				.setParameter(2, tenantId)
 				.setParameter(3, subDashboardId);
-<<<<<<< HEAD
-		try{
-			long count = ((Number) query.getSingleResult()).longValue();
-			return count > 0;
-		}catch(NoResultException e){
-			logger.warn("Is dashboard set exist did not retrieve any data!");
-			return false;
-		}
-=======
 		List<Object> result = query.getResultList();
 		return result;
->>>>>>> 17f401a455bda09c6c1bff31d9a80dc0836ac7b8
 	}
 
 	private List<Object> getLastAccessDateForPreference(EntityManager entityManager, String userName, String prefKey, Long tenantId) {
@@ -1026,112 +964,10 @@ public class DataManager
 				.setParameter(1, userName)
 				.setParameter(2, prefKey)
 				.setParameter(3, tenantId);
-<<<<<<< HEAD
-		try{
-			long count = ((Number) query.getSingleResult()).longValue();
-			return count > 0;
-		}catch(NoResultException e){
-			logger.warn("Is preference exist did not retrieve any data!");
-			return false;
-		}
-	}
-
-	private String getDashboardLastModifiedDate(EntityManager entityManager,BigInteger dashboardId, Long tenantId) {
-		logger.debug("Calling the Datamanager.getDashboardsLastModifiedDate");
-		String sql = "SELECT LAST_MODIFICATION_DATE FROM EMS_DASHBOARD WHERE DASHBOARD_ID=? AND TENANT_ID=?";
-		Query query = entityManager.createNativeQuery(sql)
-				.setParameter(1, dashboardId)
-				.setParameter(2, tenantId);
-		try{
-			return query.getSingleResult().toString();
-		}catch(NoResultException e){
-			logger.warn("getDashboardLastModifiedDate did not retrieve any data!");
-			return null;
-		}
-
-	}
-
-	private String getDashboardTileLastModifiedDate(EntityManager entityManager, String tileId, BigInteger dashboardId, Long tenantId) {
-		logger.debug("Calling Datamanager.getDashboardTileLastModifiedDate");
-		String sql = "SELECT LAST_MODIFICATION_DATE FROM EMS_DASHBOARD_TILE WHERE TILE_ID=? AND DASHBOARD_ID=? AND TENANT_ID=?";
-		Query query = entityManager.createNativeQuery(sql)
-				.setParameter(1, tileId)
-				.setParameter(2, dashboardId)
-				.setParameter(3, tenantId);
-		try{
-			return query.getSingleResult().toString();
-		}catch(NoResultException e){
-			logger.warn("getDashboardTileLastModifiedDate did not retrieve any data!");
-			return null;
-		}
-	}
-
-	private String getDashboardTileParamLastModifiedDate(EntityManager entityManager, String tileId, String paramName, Long tenantId){
-		logger.debug("Calling DataManager.getDashboardTileParamLastModifiedDate");
-		String sql = "SELECT LAST_MODIFICATION_DATE FROM EMS_DASHBOARD_TILE_PARAMS WHERE TILE_ID=? AND PARAM_NAME=? AND TENANT_ID=?";
-		Query query = entityManager.createNativeQuery(sql)
-				.setParameter(1,tileId)
-				.setParameter(2,paramName)
-				.setParameter(3,tenantId);
-		try{
-			return query.getSingleResult().toString();
-		}catch(NoResultException e){
-			logger.warn("getDashboardTileLastModifiedDate did not retrieve any data!");
-			return null;
-		}
-	}
-
-
-	private String getDashboardUserOptionLastModifiedDate(EntityManager entityManager, String userName, Long tenantId, BigInteger dashboardId){
-		logger.debug("Calling DataManager.getDashboardUserOptionLastModifiedDate");
-		String sql = "SELECT LAST_MODIFICATION_DATE FROM EMS_DASHBOARD_USER_OPTIONS WHERE USER_NAME=? AND TENANT_ID=? AND DASHBOARD_ID=?";
-		Query query = entityManager.createNativeQuery(sql)
-				.setParameter(1, userName)
-				.setParameter(2, tenantId)
-				.setParameter(3, dashboardId);
-		try{
-			return  query.getSingleResult().toString();
-		}catch(NoResultException e){
-			logger.warn("getDashboardUserOptionLastModifiedDate did not retrieve any data!");
-			return null;
-		}
-	}
-
-	private String getDashboardSetLastModifiedDate(EntityManager entityManager, BigInteger dashboardSetId, Long tenantId, BigInteger subDashboardId){
-		logger.debug("Calling DataManager.getDashboardSetLastModifiedDate");
-		String sql = "SELECT LAST_MODIFICATION_DATE FROM EMS_DASHBOARD_SET WHERE DASHBOARD_SET_ID=? AND TENANT_ID=? AND SUB_DASHBOARD_ID=?";
-		Query query = entityManager.createNativeQuery(sql)
-				.setParameter(1,dashboardSetId)
-				.setParameter(2,tenantId)
-				.setParameter(3,subDashboardId);
-		try{
-			return query.getSingleResult().toString();
-		}catch(NoResultException e){
-			logger.warn("getDashboardSetLastModifiedDate did not retrieve any data!");
-			return null;
-		}
-	}
-
-	private String getPreferenceLastModifiedDate(EntityManager entityManager, String userName, String prefKey, Long tenantId){
-		logger.debug("Calling DataManager.isPreferenceExist");
-		String sql = "SELECT LAST_MODIFICATION_DATE FROM EMS_PREFERENCE WHERE USER_NAME=? AND PREF_KEY=? AND TENANT_ID=?";
-		Query query = entityManager.createNativeQuery(sql)
-				.setParameter(1,userName)
-				.setParameter(2,prefKey)
-				.setParameter(3,tenantId);
-		try{
-			return query.getSingleResult().toString();
-		}catch(NoResultException e){
-			logger.warn("getPreferenceLastModifiedDate did not retrieve any data!");
-			return null;
-		}
-	}
-=======
 		List<Object> result = query.getResultList();
 		return result;
 	}
 
->>>>>>> 17f401a455bda09c6c1bff31d9a80dc0836ac7b8
 	private boolean isAfter(String thisDate, String comparedDate){
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try{
