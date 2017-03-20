@@ -168,12 +168,14 @@ public class DataManagerTest
 		Integer enableDescription = 1;
 		String extendedOptions = "extendedoptions";
 		Integer showInHome = 1;
+		final List<Object> objs = new ArrayList<Object>();
+		objs.add("");
 		new Expectations(){
 			{
 				dashboardServiceFacade.getEntityManager();
 				result = entityManager;
-				query.getSingleResult();
-				result = 1;
+				query.getResultList();
+				result = objs;
 			}
 		};
 		dataManager.syncDashboardTableRow(
@@ -262,12 +264,14 @@ public void getSyncDashboardTableRowInsert(){
 	Integer enableDescription = 1;
 	String extendedOptions = "extendedoptions";
 	Integer showInHome = 1;
+	final List<Object> objs = new ArrayList<Object>();
+	objs.add("");
 	new Expectations(){
 		{
 			dashboardServiceFacade.getEntityManager();
 			result = entityManager;
-			query.getSingleResult();
-			result = 0;
+			query.getResultList();
+				result = objs;
 		}
 	};
 	dataManager.syncDashboardTableRow(
