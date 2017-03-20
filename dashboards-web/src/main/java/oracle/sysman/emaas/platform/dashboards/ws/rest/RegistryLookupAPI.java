@@ -87,11 +87,6 @@ public class RegistryLookupAPI extends APIBase
 				return Response.status(Status.NOT_FOUND).entity(JsonUtil.buildNormalMapper().toJson(error)).build();
 			}
 		}
-		catch (DashboardException e) {
-			LOGGER.error(e.getLocalizedMessage(), e);
-			ErrorEntity ee = new ErrorEntity(e);
-			return Response.status(ee.getStatusCode()).entity(JsonUtil.buildNormalMapper().toJson(ee)).build();
-		}
 		catch (Exception e) {
 			LOGGER.error(e.getLocalizedMessage(), e);
 			ErrorEntity error = new ErrorEntity(DashboardErrorConstants.UNKNOWN_ERROR_CODE, MessageUtils.getDefaultBundleString(
