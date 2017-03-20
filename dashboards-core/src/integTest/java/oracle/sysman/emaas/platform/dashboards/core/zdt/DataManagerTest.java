@@ -332,12 +332,15 @@ public void getSyncDashboardTableRowInsert(){
 		Integer widgetDeleted = 0; 
 		String widgetDeletionDate = "widgetDeletionDate" ;
 		Integer deleted = 0;
+		final List<Object> objs = new ArrayList<Object>();
+		objs.add("");
+
 		new Expectations(){
 			{
 				dashboardServiceFacade.getEntityManager();
 				result = entityManager;
-				query.getSingleResult();
-				result = 1;
+				query.getResultList();
+				result = objs;
 			}
 		};
 	 	dataManager.syncDashboardTile(tileId, dashboardId, creationDate, lastModificationDate, lastModifiedBy, owner, title, height,
@@ -438,12 +441,15 @@ public void getSyncDashboardTableRowInsert(){
 		Integer widgetDeleted = 0; 
 		String widgetDeletionDate = "widgetDeletionDate" ;
 		Integer deleted = 0;
+		final List<Object> objs = new ArrayList<Object>();
+		objs.add("");
+
 		new Expectations() {
 			{
 				dashboardServiceFacade.getEntityManager();
 				result = entityManager;
-				query.getSingleResult();
-				result = 0;
+				query.getResultList();
+				result = objs;
 			}
 		};
 		dataManager.syncDashboardTile(tileId, dashboardId, creationDate, lastModificationDate, lastModifiedBy, owner, title, height,
@@ -464,12 +470,15 @@ public void getSyncDashboardTableRowInsert(){
 		String creationDate = "creationDate";
 		String lastModificationDate = "lastmodificationdate";
 		Integer deleted = 0;
+		final List<Object> objs = new ArrayList<Object>();
+		objs.add("");
+
 		new Expectations(){
 			{
 				dashboardServiceFacade.getEntityManager();
 				result = entityManager;
-				query.getSingleResult();
-				result = 1;
+				query.getResultList();
+				result = objs;
 			}
 		};
 		dataManager.syncDashboardTileParam(tileId, paramName,
@@ -504,12 +513,15 @@ public void getSyncDashboardTableRowInsert(){
 		String creationDate = "creationDate";
 		String lastModificationDate = "lastmodificationdate";
 		Integer deleted = 0;
+		final List<Object> objs = new ArrayList<Object>();
+		objs.add("");
+
 		new Expectations(){
 			{
 				dashboardServiceFacade.getEntityManager();
 				result = entityManager;
-				query.getSingleResult();
-				result = 0;
+				query.getResultList();
+				result = objs;
 			}
 		};
 		dataManager.syncDashboardTileParam(tileId, paramName,
@@ -529,12 +541,15 @@ public void getSyncDashboardTableRowInsert(){
 		String creationDate = "creationDate";
 		String lastModificationDate = "lastModificationDate";
 		Integer deleted = 0;
+		final List<Object> objs = new ArrayList<Object>();
+		objs.add("");
+
 		new Expectations(){
 			{
 				dashboardServiceFacade.getEntityManager();
 				result = entityManager;
-				query.getSingleResult();
-				result = 1;
+				query.getResultList();
+				result = objs;
 			}
 		};
 		dataManager.syncDashboardUserOption(userName, tenantId, dashboardId,
@@ -562,12 +577,14 @@ public void getSyncDashboardTableRowInsert(){
 		String creationDate = "creationDate";
 		String lastModificationDate = "lastModificationDate";
 		Integer deleted = 0;
+		final List<Object> objs = new ArrayList<Object>();
+		objs.add("");
 		new Expectations(){
 			{
 				dashboardServiceFacade.getEntityManager();
 				result = entityManager;
-				query.getSingleResult();
-				result = 0;
+				query.getResultList();
+				result = objs;
 			}
 		};
 		dataManager.syncDashboardUserOption(userName, tenantId, dashboardId,
@@ -584,12 +601,14 @@ public void getSyncDashboardTableRowInsert(){
 		String creationDate = "creationDate";
 		String lastModificationDate = "lastModificationDate";
 		BigInteger deleted = new BigInteger("0");
+		final List<Object> objs = new ArrayList<Object>();
+		objs.add("");
 		new Expectations(){
 			{
 				dashboardServiceFacade.getEntityManager();
 				result = entityManager;
-				query.getSingleResult();
-				result = 1;
+				query.getResultList();
+				result = objs;
 			}
 		};
 		dataManager.syncDashboardSet(dashboardSetId, tenantId, subDashboardId,
@@ -613,12 +632,15 @@ public void getSyncDashboardTableRowInsert(){
 		String creationDate = "creationDate";
 		String lastModificationDate = "lastModificationDate";
 		BigInteger deleted = new BigInteger("0");
+		final List<Object> objs = new ArrayList<Object>();
+		objs.add("");
+
 		new Expectations(){
 			{
 				dashboardServiceFacade.getEntityManager();
 				result = entityManager;
-				query.getSingleResult();
-				result = 0;
+				query.getResultList();
+				result = objs;
 			}
 		};
 		dataManager.syncDashboardSet(dashboardSetId, tenantId, subDashboardId,
@@ -634,12 +656,14 @@ public void getSyncDashboardTableRowInsert(){
 		String creationDate = "creationDate";
 		String lastModificationDate = "lastModificationDate";
 		Integer deleted = 0;
+		final List<Object> objs = new ArrayList<Object>();
+		objs.add("");
 		new Expectations(){
 			{
 				dashboardServiceFacade.getEntityManager();
 				result = entityManager;
-				query.getSingleResult();
-				result = 1;
+				query.getResultList();
+				result = objs;
 			}
 		};
 		dataManager.syncPreferences(userName, prefKey, prefValue,
@@ -663,12 +687,14 @@ public void getSyncDashboardTableRowInsert(){
 		String creationDate = "creationDate";
 		String lastModificationDate = "lastModificationDate";
 		Integer deleted = 0;
+		final List<Object> objs = new ArrayList<Object>();
+		objs.add("");
 		new Expectations(){
 			{
 				dashboardServiceFacade.getEntityManager();
 				result = entityManager;
-				query.getSingleResult();
-				result = 0;
+				query.getResultList();
+				result = objs;
 			}
 		};
 		dataManager.syncPreferences(userName, prefKey, prefValue,
