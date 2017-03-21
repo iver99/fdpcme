@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -48,7 +47,7 @@ import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsPreference;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.ScreenshotData;
-
+import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.testng.Assert;
@@ -1247,7 +1246,7 @@ public class DashboardManagerTest_S2 extends BaseTest
 											 @Mocked final RegistryLookupUtil registryLookupUtil,
 											 @Mocked final VersionedLink tenantsLink,
 											 @Mocked final TenantContext tenantContext,
-	@Mocked final TenantSubscriptionUtil.RestClient restClient) throws DashboardNotFoundException, TenantWithoutSubscriptionException {
+	@Mocked final RestClient restClient) throws DashboardNotFoundException, TenantWithoutSubscriptionException {
 		final DashboardManager dashboardManager = DashboardManager.getInstance();
 		final List<DashboardApplicationType> datList =  Arrays.asList(APM, ITAnalytics, LogAnalytics, Monitoring, SecurityAnalytics, Orchestration, Compliance);
 		List<EmsDashboardTile> edbdtList = new ArrayList<>();
@@ -1283,7 +1282,7 @@ public class DashboardManagerTest_S2 extends BaseTest
 				result = "href";
 				TenantContext.getCurrentTenant();
 				result = "tenant";
-				restClient.put(anyString,(Map<String, Object>)any, anyString, anyString, anyString);
+				restClient.put(anyString, anyString, anyString, anyString);
 				result = "response";
 			}
 		};

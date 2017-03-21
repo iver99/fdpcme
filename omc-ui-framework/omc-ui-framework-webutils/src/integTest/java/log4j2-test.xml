@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="OFF">
+    <Properties>
+        <Property name="mainPattern">[%d{DEFAULT}{UTC}] [%p] [%t] [EMSAAS] [Dashboard-API] [%c{36}] %m%n</Property>
+    </Properties>
+    <Appenders>
+        <Console name="STDOUT" target="SYSTEM_OUT">
+            <PatternLayout pattern="${mainPattern}"/>
+        </Console>
+        <Async name="ASYNC_MAIN_LOG">
+            <AppenderRef ref="STDOUT"/>
+        </Async>
+    </Appenders>
+    <Loggers>
+        <Logger name="oracle.sysman.emaas.platform.uifwk.ui.interaction.log" level="FATAL">
+            <AppenderRef ref="ASYNC_MAIN_LOG"/>
+        </Logger>
+        <Logger name="oracle.sysman.emaas.platform.uifwk.ui.webutils" level="FATAL">
+            <AppenderRef ref="ASYNC_MAIN_LOG"/>
+        </Logger>
+        <Logger name="oracle.sysman.emaas.platform.uifwk.ui" level="FATAL"/>
+        <Root level="FATAL" additivity="false">
+            <AppenderRef ref="STDOUT"/>
+        </Root>
+    </Loggers>
+</Configuration>

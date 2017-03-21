@@ -2,35 +2,31 @@ package oracle.sysman.emaas.platform.dashboards.core.util;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceQuery;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
-import oracle.sysman.emaas.platform.dashboards.core.util.lookup.RetryableLookupClient;
-import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
-import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
-import oracle.sysman.emaas.platform.emcpdf.cache.support.lru.LRUCacheManager;
-import oracle.sysman.emaas.platform.emcpdf.cache.tool.DefaultKeyGenerator;
-import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
-import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
-import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
 import mockit.Deencapsulation;
 import mockit.Expectations;
 import mockit.Mocked;
 import mockit.NonStrictExpectations;
 import mockit.Verifications;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceQuery;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter;
 import oracle.sysman.emaas.platform.dashboards.core.restclient.DomainsEntity;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil.VersionedLink;
-import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil.RestClient;
-import oracle.sysman.emaas.platform.dashboards.core.util.lookup.RetryableLookupClient.RetryableRunner;
+import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
+import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.DefaultKeyGenerator;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
+import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
+import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
 
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
@@ -360,8 +356,8 @@ public class TenantSubscriptionUtilTest
                 anyInstanceInfo.getLinksWithProtocol(anyString, anyString);
                 result = links;
 
-				anyClient.getWithExeption(anyString, anyString, anyString, (Map<String, String>)any);
-				returns(ENTITY_NAMING_DOMAIN, TENANT_LOOKUP_RESULT_EMPTY_APP_MAPPING_ENTITY);
+				anyClient.getWithException(anyString, anyString, anyString);
+				returns(TENANT_LOOKUP_RESULT_EMPTY_APP_MAPPING_ENTITY);
 			}
 		};
         List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1");
@@ -388,8 +384,9 @@ public class TenantSubscriptionUtilTest
                 result = insList;
                 anyInstanceInfo.getLinksWithProtocol(anyString, anyString);
                 result = links;
-                anyClient.getWithExeption(anyString, anyString, anyString, (Map<String, String>) any);
-				returns(ENTITY_NAMING_DOMAIN, "");
+
+                anyClient.getWithException(anyString, anyString, anyString);
+				returns("");
 			}
 		};
 		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1");
@@ -415,9 +412,8 @@ public class TenantSubscriptionUtilTest
                 result = insList;
                 anyInstanceInfo.getLinksWithProtocol(anyString, anyString);
                 result = links;
-
-                anyClient.getWithExeption(anyString, anyString, anyString, (Map<String, String>) any);
-				returns(ENTITY_NAMING_DOMAIN, TENANT_LOOKUP_RESULT_EMPTY_APP_MAPPINGS);
+                anyClient.getWithException(anyString, anyString, anyString);
+				returns(TENANT_LOOKUP_RESULT_EMPTY_APP_MAPPINGS);
 			}
 		};
 		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1");
@@ -472,13 +468,8 @@ public class TenantSubscriptionUtilTest
                 anyInstanceInfo.getLinksWithProtocol(anyString, anyString);
                 result = links;
 
-                anyClient.getWithExeption(anyString, anyString, anyString, (Map<String, String>) any);
-				JsonUtil.buildNormalMapper();
-				result = anyJsonUtil;
-				anyJsonUtil.fromJson(anyString, DomainsEntity.class);
-				result = anyDomainsEntity;
-				anyDomainsEntity.getItems();
-				result = null;
+                anyClient.getWithException(anyString, anyString, anyString);
+                returns(TENANT_LOOKUP_RESULT_EMPTY_APP_MAPPING_ENTITY);
 			}
 		};
 		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1");
@@ -507,7 +498,7 @@ public class TenantSubscriptionUtilTest
                 anyInstanceInfo.getLinksWithProtocol(anyString, anyString);
                 result = links;
 
-                anyClient.getWithExeption(anyString, anyString, anyString, (Map<String, String>) any);
+                anyClient.getWithException(anyString, anyString, anyString);
 				returns(ENTITY_NAMING_DOMAIN_EMPTY_TENANT_APP_URL, TENANT_LOOKUP_RESULT);
 			}
 		};
@@ -536,7 +527,7 @@ public class TenantSubscriptionUtilTest
                 anyInstanceInfo.getLinksWithProtocol(anyString, anyString);
                 result = links;
 
-                anyClient.getWithExeption(anyString, anyString, anyString, (Map<String, String>) any);
+                anyClient.getWithException(anyString, anyString, anyString);
 				JsonUtil.buildNormalMapper();
 				result = anyJsonUtil;
 				anyJsonUtil.fromJson(anyString, DomainsEntity.class);
@@ -575,14 +566,33 @@ public class TenantSubscriptionUtilTest
                 anyInstanceInfo.getLinksWithProtocol(anyString, anyString);
                 result = links;
 
-                anyClient.getWithExeption(anyString, anyString, anyString, (Map<String, String>) any);
-				result = ENTITY_NAMING_DOMAIN;
-                anyClient.get(anyString, anyString, anyString);
-                result = TENANT_LOOKUP_RESULT;
+				anyClient.getWithException(anyString, anyString, anyString);
+				result = TENANT_LOOKUP_RESULT;
+
+				anyClient.get(anyString, anyString, anyString);
+				result = TENANT_LOOKUP_RESULT;
 			}
 		};
 		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1");
 		Assert.assertEquals(services, Arrays.asList("APM", "LogAnalytics", "ITAnalytics"));
+	}
+
+	@Test(groups = { "s2" })
+	public void testGetTenantSubscribedServicesString() {
+		new NonStrictExpectations(TenantSubscriptionUtil.class) {
+			{
+				TenantSubscriptionUtil.getTenantSubscribedServices(anyString);
+				returns(Arrays.asList("APM", "Compliance"), null, Arrays.asList());
+			}
+		};
+		String apps = TenantSubscriptionUtil.getTenantSubscribedServicesString("emaastesttenant1");
+		Assert.assertEquals(apps, "{\"applications\":[\"APM\",\"Compliance\"]}");
+
+		apps = TenantSubscriptionUtil.getTenantSubscribedServicesString("emaastesttenant1");
+		Assert.assertEquals(apps, null);
+
+		apps = TenantSubscriptionUtil.getTenantSubscribedServicesString("emaastesttenant1");
+		Assert.assertEquals(apps, null);
 	}
 
 	@Test(groups = { "s1" })
@@ -599,7 +609,7 @@ public class TenantSubscriptionUtilTest
 	@Test(groups = { "s2" })
 	public void testRestClientGetNull()
 	{
-		String res = new TenantSubscriptionUtil.RestClient().get(null, null, null);
+		String res = new RestClient().get(null, null, null);
 		Assert.assertNull(res);
 	}
 
@@ -617,7 +627,7 @@ public class TenantSubscriptionUtilTest
 				result = false;
 			}
 		};
-		new TenantSubscriptionUtil.RestClient().get("http://test.link.com", "emaastesttenant1", null);
+		new RestClient().get("http://test.link.com", "emaastesttenant1", null);
 		new Verifications() {
 			{
 				UriBuilder.fromUri(anyString).build();
@@ -638,7 +648,7 @@ public class TenantSubscriptionUtilTest
 				Client.create(anyClientConfig);
 			}
 		};
-		new TenantSubscriptionUtil.RestClient().get("http://test.link.com", "emaastesttenant1", null);
+		new RestClient().get("http://test.link.com", "emaastesttenant1", null);
 		new Verifications() {
 			{
 				UriBuilder.fromUri(anyString).build();

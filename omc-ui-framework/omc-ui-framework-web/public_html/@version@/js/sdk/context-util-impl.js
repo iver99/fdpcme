@@ -50,20 +50,28 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                     LAST_2_HOUR: 'LAST_2_HOUR',
                     LAST_4_HOUR: 'LAST_4_HOUR',
                     LAST_6_HOUR: 'LAST_6_HOUR',
+                    LAST_8_HOUR: 'LAST_8_HOUR',
+                    LAST_24_HOUR: 'LAST_24_HOUR',
                     LAST_1_DAY: 'LAST_1_DAY',
                     LAST_7_DAY: 'LAST_7_DAY',
                     LAST_14_DAY: 'LAST_14_DAY',
                     LAST_30_DAY: 'LAST_30_DAY',
                     LAST_90_DAY: 'LAST_90_DAY',
+                    LAST_12_MONTH: 'LAST_12_MONTH',
                     LAST_1_YEAR: 'LAST_1_YEAR',
                     LATEST: 'LATEST',
                     CUSTOM: 'CUSTOM'
+                },
+                timePeriodsSet: {
+                    SHORT_TERM: "SHORT_TERM",
+                    LONG_TERM: "LONG_TERM"
                 }
             };
 
             //freeze every constant object inside
             Object.freeze(self.OMCTimeConstants.TIME_UNIT);
             Object.freeze(self.OMCTimeConstants.QUICK_PICK);
+            Object.freeze(self.OMCTimeConstants.timePeriodsSet);
 
             //
             // sessionStorage cache
@@ -171,7 +179,12 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                         }
                         var cache = sessionCaches[1].retrieveDataFromCache(entityCacheKey);
                         if (cache && cache['entities']) {
-                            globalCtx['entity']['entities'] = cache['entities'];
+                            var entities = [];
+                            cache['entities'].forEach(function (item) {
+                                var entity = EntityObject.prototype.createFromObject(item);
+                                entities.push(entity);
+                            });
+                            globalCtx['entity']['entities'] = entities;
                         }
                     }
                 }

@@ -12,6 +12,7 @@ import java.util.regex.*
 allprojects{
     ext.TWORK = (System.getenv('T_WORK') != null && !System.getenv('T_WORK').trim().isEmpty()) ? System.getenv('T_WORK') : buildUri(getGitRoot(),"oracle/work")
     ext.TENANT_FOR_QUERY="emaastesttenant1"
+    ext.TENANT_FOR_QUERY1="emaastesttenantnoita"
     ext.solr_url=null
 }
 String emaasPropertiesLogPath=TWORK+"/emaas.properties.log"
@@ -92,7 +93,88 @@ task onboardTenant << {
 /* *************************************************************************************************
  *                   END OF SETUP-BLOCK
  ***************************************************************************************************/
+ 
+task onboardNewTenant(dependsOn: onboardTenant) << {
+    File emaasFile=new File(emaasPropertiesLogPath)
+    if(emaasFile.exists())
+    {
+            Properties emaas = new Properties()
+            emaas.load(new FileInputStream(emaasFile))
+            smUrl= emaas.SERVICE_MANAGER_URL
+            userName= emaas.SSO_USERNAME
+            tenantId=emaas.TENANT_ID
+            tenantIdBackup=emaas.TENANT_ID
+            authToken=emaas.SAAS_AUTH_TOKEN
+            dbSchemaPassword=emaas.ODS_OTHER_PWD
+            ldapServer=emaas.LDAP_SERVER
+            ldapPort=emaas.LDAP_PORT
+            ldapUser=emaas.LDAP_ADMIN_USER
+            ldapPwd=emaas.LDAP_ADMIN_PASSWORD               
+    }
+    else
+    {
+        throw new GradleException(emaasPropertiesLogPath+" doesn't exist!Please put one under T_WORK.")
+    }
 
+    if(smUrl == null) {
+        throw new GradleException("Failed to load service manager url")
+    }
+
+    if(!smUrl.endsWith("/")){
+        smUrl=smUrl+"/"
+    }	
+	
+    if(userName == null) {
+        throw new GradleException("Failed to load user name")
+    }
+
+    if(authToken == null){
+        throw new GradleException("Failed to load authToken")
+    }
+
+    println "user name= " + userName
+    println "authToken = " + authToken
+    println "Service Manager Url: " + smUrl 
+
+    servicemanagerVersion = smUrl.substring(smUrl.lastIndexOf("registry/")+"registry/".length()).replace("/","")
+    println "Service Manager Version = "+servicemanagerVersion
+    println "Try to onboard tenant? ${isOnboardTenant}"
+        
+    if (isOnboardTenant == false) {
+        println "Nothing to do. No onboarding will be done"
+        return
+    }
+        
+    if(runOnboardTenant(smUrl,authToken,emaasPropertiesLogPath,TENANT_FOR_QUERY1))
+    {
+        println "Onboarded! Using test tenant: " + TENANT_FOR_QUERY1
+    }
+    else{
+        println "Couln't onboard tenant + " TENANT_FOR_QUERY1
+        throw new GradleException("Counln't onboard tenant " + TENANT_FOR_QUERY1);
+    }
+	
+    // Get the internal tenant id
+    tenantIdInternal = getInternalTenantId(smUrl, authToken, TENANT_FOR_QUERY1)
+
+    if (tenantIdInternal == null || tenantIdInternal.equals("null")) {
+        throw new GradleException("Failed to load tenant id")
+    }
+
+    if(!isTenantOnboarded(smUrl, authToken, TENANT_FOR_QUERY1)) {
+        throw new GradleException("The tenantId [" + TENANT_FOR_QUERY1 + "] has not been onboard yet" )
+    }
+
+    // Activate the tenant
+    println "Activate tenant " + TENANT_FOR_QUERY1
+    activateTenant(smUrl, authToken, TENANT_FOR_QUERY1, userName)
+
+    println "Tenant Id= " + TENANT_FOR_QUERY1 + " && Internal Tenant Id = " + tenantIdInternal		
+}
+/* *************************************************************************************************
+ *                   END OF SETUP-BLOCK
+ ***************************************************************************************************/
+ 
 /**
  * Get GIT root path.
  */

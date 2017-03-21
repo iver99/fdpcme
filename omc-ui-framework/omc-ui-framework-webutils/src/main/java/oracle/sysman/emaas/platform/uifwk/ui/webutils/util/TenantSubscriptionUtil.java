@@ -21,6 +21,7 @@ import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
 import oracle.sysman.emaas.platform.uifwk.ui.webutils.util.RegistryLookupUtil.VersionedLink;
 
+import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -71,11 +72,13 @@ public class TenantSubscriptionUtil
 		LOGGER.info("Checking tenant (" + tenant + ") subscriptions. Subscribedapp link retrieved from dashboard-api href is "
 				+ subAppLink.getHref());
 		String subAppHref = subAppLink.getHref();
-		DataFetcher.RestClient rc = new DataFetcher.RestClient();
+		RestClient rc = new RestClient();
 		rc.setHeader(HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME, tenant);
 		rc.setHeader("X-REMOTE-USER", tenant + "." + user);
 		String subAppResponse = rc.get(subAppHref, tenant, ((VersionedLink) subAppLink).getAuthToken());
-		cache.put(tenantKey, subAppResponse);
+		if(subAppResponse!=null){
+			cache.put(tenantKey, subAppResponse);
+		}
 		LOGGER.info("Checking tenant (" + tenant + ") subscriptions. Dashboard-API subscribed app response is " + subAppResponse);
 		LOGGER.info("It takes {}ms to retrieve subscribed app data from Dashboard-API", System.currentTimeMillis() - startTime);
 		return subAppResponse;

@@ -24,7 +24,6 @@ import javax.ws.rs.core.Response;
 
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
-import oracle.sysman.emaas.platform.dashboards.core.exception.resource.EntityNamingDependencyUnavailableException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.TenantWithoutSubscriptionException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
 import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
@@ -32,11 +31,11 @@ import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil.VersionedLink;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
-import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.subappedition.ServiceEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.subappedition.TenantDetailEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.subappedition.TenantEditionEntity;
+import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -131,7 +130,8 @@ public class TenantSubscriptionsAPI extends APIBase
 			LOGGER.debug("Checking tenant (" + tenantName + ") subscriptions with edition. The tenant service href is "
 					+ tenantsLink.getHref());
 			String tenantHref = tenantsLink.getHref() + "/" + tenantName;
-			TenantSubscriptionUtil.RestClient rc = new TenantSubscriptionUtil.RestClient();
+			RestClient rc = new RestClient();
+			rc.setHeader("X-USER-IDENTITY-DOMAIN-NAME",tenantName);
 			String tenantResponse = rc.get(tenantHref, tenantName, ((VersionedLink) tenantsLink).getAuthToken());
 			LOGGER.debug("Checking tenant (" + tenantName + ") subscriptions with edition. Tenant response is " + tenantResponse);
 			JsonUtil ju = JsonUtil.buildNormalMapper();

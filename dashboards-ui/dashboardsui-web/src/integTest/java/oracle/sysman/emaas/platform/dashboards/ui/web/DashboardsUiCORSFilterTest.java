@@ -78,6 +78,9 @@ public class DashboardsUiCORSFilterTest
 
 				RegistryLookupUtil.getServiceExternalLink(anyString, anyString, anyString, anyString);
 				returns(link, link); //4, 5
+
+				request.getRequestURI();
+				result = homePath;
 			}
 		};
 

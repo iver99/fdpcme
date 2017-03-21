@@ -12,16 +12,15 @@ import mockit.Expectations;
 import mockit.Mocked;
 import mockit.NonStrictExpectations;
 import mockit.Verifications;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.RegistryLookupUtil.VersionedLink;
-import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.TenantSubscriptionUtil.RestClient;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.subscription.SubscribedAppCacheUtil;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.subscription.SubscribedApps;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICache;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.exception.ExecutionException;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
+import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -446,7 +445,7 @@ public class TenantSubscriptionUtilTest
 	@Test(groups = { "s2" })
 	public void testRestClientGetNull()
 	{
-		String res = new TenantSubscriptionUtil.RestClient().get(null, null, null);
+		String res = new RestClient().get(null, null, null);
 		Assert.assertNull(res);
 	}
 
@@ -464,7 +463,7 @@ public class TenantSubscriptionUtilTest
 				result = false;
 			}
 		};
-		new TenantSubscriptionUtil.RestClient().get("http://test.link.com", "emaastesttenant1", "auth");
+		new RestClient().get("http://test.link.com", "emaastesttenant1", "auth");
 		new Verifications() {
 			{
 				UriBuilder.fromUri(anyString).build();
@@ -485,7 +484,7 @@ public class TenantSubscriptionUtilTest
 				Client.create(anyClientConfig);
 			}
 		};
-		new TenantSubscriptionUtil.RestClient().get("http://test.link.com", "emaastesttenant1", null);
+		new RestClient().get("http://test.link.com", "emaastesttenant1", null);
 		new Verifications() {
 			{
 				UriBuilder.fromUri(anyString).build();
