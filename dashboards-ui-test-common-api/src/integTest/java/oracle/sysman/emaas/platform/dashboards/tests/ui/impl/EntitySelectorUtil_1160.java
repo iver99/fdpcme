@@ -20,6 +20,7 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -157,26 +158,16 @@ public class EntitySelectorUtil_1160 extends EntitySelectorUtil_1140
                 //Wait until suggestions are displayed before typing the text to avoid timing issues
                 wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(DashBoardPageId.EntSelSuggestionPopup)));
 		element.clear();
-		element.sendKeys(text);
+                //metric with parenthesis in name loses the left parenthesis when added to data palette search box
+                //see Selenium Issue 1723 - Firefox Driver send_keys won't send left parenthesis
+                //Using workaround suggested in issue
+                element.sendKeys(interceptStringForSearch(logger, text));
 		driver.takeScreenShot();
 
 		//Wait until the results are displayed
 		logger.log(Level.INFO, "Waiting for results to be displayed for text ''{0}''", text);
-                final Logger finalLogger = logger;
-		wait.until(new ExpectedCondition<Boolean>() {
-			@Override
-			public Boolean apply(org.openqa.selenium.WebDriver webdriver)
-			{
-				List<WebElement> resultItems = webdriver.findElements(By.xpath(DashBoardPageId.EntSelSearchResultsItem));
-				int count = resultItems.size();
-				finalLogger.log(Level.INFO, "Waiting for search results to be updated. Current items displayed = {0}", count);
-				List<WebElement> resultItemsByText = webdriver.findElements(By.xpath(MessageFormat.format(
-						DashBoardPageId.EntSelSearchResultsItemByText, text)));
-
-				return count == resultItemsByText.size();
-			}
-		});
-
+                WaitUtil.waitForPageFullyLoaded(driver);
+                
 		driver.takeScreenShot();
 		logger.log(Level.INFO, "Results for ''{0}'' are available", text);
 
@@ -225,28 +216,28 @@ public class EntitySelectorUtil_1160 extends EntitySelectorUtil_1140
 	}
         
         @Override
-        public void verifyCompositePillContent(WebDriver driver, Logger logger, String text)
+        public void verifyCompositePillContent(WebDriver driver, Logger logger, String displayName)
         {
                 Assert.assertTrue(false, "This method is not available in the current version");
                 logger.info("Method not available in the current version");
         }
         
         @Override
-        public void verifyEntityPillContent(WebDriver driver, Logger logger, String text)
+        public void verifyEntityPillContent(WebDriver driver, Logger logger, String displayName)
         {
                 Assert.assertTrue(false, "This method is not available in the current version");
                 logger.info("Method not available in the current version");
         }
         
         @Override
-        public void verifyPillContains(WebDriver driver, Logger logger, String text)
+        public void verifyPillContains(WebDriver driver, Logger logger, String displayName)
         {
                 Assert.assertTrue(false, "This method is not available in the current version");
                 logger.info("Method not available in the current version");
         }
         
         @Override
-        public void verifyPillContentByIndex(WebDriver driver, Logger logger, int pillIndex, String text)
+        public void verifyPillContentByIndex(WebDriver driver, Logger logger, int pillIndex, String displayName)
         {
                 Assert.assertTrue(false, "This method is not available in the current version");
                 logger.info("Method not available in the current version");  
@@ -259,14 +250,18 @@ public class EntitySelectorUtil_1160 extends EntitySelectorUtil_1140
 	{
 		//select the first composite entity that matches category and entity type
 		logger.log(Level.INFO, "Waiting for the matching suggestion to be clickable");
+                driver.takeScreenShot();
+                driver.savePageToFile();
 		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), UNTIL_TIMEOUT);
-		String xpath = category == CATEGORY_COMPOSITE ? MessageFormat.format(DashBoardPageId.EntSelSuggestionByCompositeCategory,
-				entityType) : MessageFormat.format(DashBoardPageId.EntSelSuggestionByEntitiesCategory, entityType);
-		WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(xpath)));
 		logger.log(Level.INFO, "Click on first available suggestion");
                 // TODO Auto-generated method stub
 		final int prevCount = getNumberOfPills(driver, logger);
+		String xpath = category.equals(CATEGORY_COMPOSITE) ? MessageFormat.format(DashBoardPageId.EntSelSuggestionByCompositeCategory,
+				entityType) : MessageFormat.format(DashBoardPageId.EntSelSuggestionByEntitiesCategory, entityType);
+		WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(xpath)));
 		element.click();
+                driver.takeScreenShot();
+                driver.savePageToFile();
                 
                 if (!isEditingPill) {
                     //Wait until the page is done loading and the new pill is displayed
@@ -302,8 +297,11 @@ public class EntitySelectorUtil_1160 extends EntitySelectorUtil_1140
 			}
 		});
                 
+                //Disable pill text verification since it's possible to have entity name different than 
+                // entity display name, in which case a timeout will take place
+                //Pill text verification can be done after the replacement using the "entSel_verifyPill..." methods, if so desired.
                 //search for the new value in the edited pill
-                driver.waitForElementVisible("xpath=" + MessageFormat.format(DashBoardPageId.EntSelEditedPillByText, text));
+                //driver.waitForElementVisible("xpath=" + MessageFormat.format(DashBoardPageId.EntSelEditedPillByText, text));
                 logger.log(Level.INFO, "The pill was successfully edited with value: ''{0}''.", new Object[]{text});
                 driver.takeScreenShot();
         }
@@ -330,5 +328,21 @@ public class EntitySelectorUtil_1160 extends EntitySelectorUtil_1140
 		driver.takeScreenShot();
 
 	}
+        
+        /* (non-Javadoc)
+	* @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IEntitySelectorUtil#interceptStringForSearch(java.util.logging.Logger, String)
+	*/
+        private String interceptStringForSearch(Logger logger, String text) {
+                String correct = new String();
+                for (int i = 0; i < text.length(); i++) {
+                    if (text.charAt(i) == '(') {
+                        logger.info("Replace left parenthesis with shift 9");
+                        correct += new String(Keys.chord(Keys.SHIFT, "9"));
+                    } else {
+                        correct += text.charAt(i);
+                    }
+                }
+                return correct;
+        }
 
 }

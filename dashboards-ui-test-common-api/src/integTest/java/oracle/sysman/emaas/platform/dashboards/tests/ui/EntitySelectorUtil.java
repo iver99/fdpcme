@@ -124,10 +124,10 @@ public class EntitySelectorUtil
          * @param logger
          * @param text 
          */
-        public static void verifyCompositePillContent(WebDriver driver, Logger logger, String text)
+        public static void verifyCompositePillContent(WebDriver driver, Logger logger, String displayName)
         {
                 IEntitySelectorUtil esu = new UtilLoader<IEntitySelectorUtil>().loadUtil(driver, IEntitySelectorUtil.class);
-                esu.verifyCompositePillContent(driver, logger, text);
+                esu.verifyCompositePillContent(driver, logger, displayName);
         }
         
         /**
@@ -135,10 +135,10 @@ public class EntitySelectorUtil
          * @param logger
          * @param text 
          */
-        public static void verifyEntityPillContent(WebDriver driver, Logger logger, String text)
+        public static void verifyEntityPillContent(WebDriver driver, Logger logger, String displayName)
         {
                 IEntitySelectorUtil esu = new UtilLoader<IEntitySelectorUtil>().loadUtil(driver, IEntitySelectorUtil.class);
-                esu.verifyEntityPillContent(driver, logger, text);
+                esu.verifyEntityPillContent(driver, logger, displayName);
         }
         
         /**
@@ -146,10 +146,10 @@ public class EntitySelectorUtil
          * @param logger
          * @param text 
          */
-        public static void verifyPillContains(WebDriver driver, Logger logger, String text)
+        public static void verifyPillContains(WebDriver driver, Logger logger, String displayName)
         {
                 IEntitySelectorUtil esu = new UtilLoader<IEntitySelectorUtil>().loadUtil(driver, IEntitySelectorUtil.class);
-                esu.verifyPillContains(driver, logger, text);
+                esu.verifyPillContains(driver, logger, displayName);
         }
         
         /**
@@ -158,10 +158,10 @@ public class EntitySelectorUtil
          * @param pillIndex
          * @param text 
          */
-        public static void verifyPillContentByIndex(WebDriver driver, Logger logger, int pillIndex, String text)
+        public static void verifyPillContentByIndex(WebDriver driver, Logger logger, int pillIndex, String displayName)
         {
                 IEntitySelectorUtil esu = new UtilLoader<IEntitySelectorUtil>().loadUtil(driver, IEntitySelectorUtil.class);
-                esu.verifyPillContentByIndex(driver, logger, pillIndex, text);
+                esu.verifyPillContentByIndex(driver, logger, pillIndex, displayName);
         }
 
 }
