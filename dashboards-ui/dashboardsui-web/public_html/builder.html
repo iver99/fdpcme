@@ -17,7 +17,7 @@
 
     </head>
     <body onload="serverSideInit()">
-        <div style="position: fixed; top: 0; margin-left: -65px; width: 120px; height: 15px; left: 50%; z-index: 999; background-color: #e6ffe0; padding: 5px; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; text-align: center; border-style: solid; border-width: 1px; border-top: none; box-shadow: 2px 2px 2px #888888;" class="loadingIndicator" id="loading">Loading</div>
+        <div data-bind="text:getNlsString('DBS_HOME_LOADING')" style="position: fixed; top: 0; margin-left: -65px; width: 120px; height: 15px; left: 50%; z-index: 999; background-color: #e6ffe0; padding: 5px; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; text-align: center; border-style: solid; border-width: 1px; border-top: none; box-shadow: 2px 2px 2px #888888;" class="loadingIndicator" id="loading"></div>
         <div class="loadingIndicator" id="printLoading" style="display: none; z-index:1000">Loading Content</div>
         <div id="globalBody" style="display: none;">
             <!-- ko stopBinding: true -->
@@ -493,7 +493,9 @@
                 <!-- /ko -->
             </script>
 
-            <div id="popUp-dialog" data-bind="with:selectedDashboardInst">
+            <div id="popUp-dialog">
+                <!--ko with: selectedDashboardInst-->
+                <div>
                 <!--ko if: $data.type === 'included'-->
                 <!-- delete dilog start -->
                 <div style="display:none" id="delete-dashboard"
@@ -628,6 +630,8 @@
                 </div>
                 <!-- set as home confirm dilog end -->
                 <!--/ko-->
+                </div>
+                <!--/ko-->            
             </div>
 
             <div class="df-right-panel no-print" data-bind="stopDataBinding:isDashboardSet ? isOobDashboardset() : ($b.dashboard.systemDashboard&&$b.dashboard.systemDashboard()),style:{top:isDashboardSet() ?'100px':'91px'},visible:!rightPanelControl.completelyHidden()">
@@ -680,6 +684,7 @@
                 <div class="dbd-left-panel no-print fit-size"
                         data-bind="stopDataBinding: isDashboardSet ? isOobDashboardset() : ($b.dashboard.systemDashboard&&$b.dashboard.systemDashboard()),css: {'dbd-left-panel-show' : rightPanelControl.showRightPanel(), 'dbd-left-panel-hide' : !rightPanelControl.showRightPanel()},
                                    style: {right: rightPanelControl.scrollbarWidth + 'px'}">
+                    <!-- ko if: rightPanelControl.initializeRightPanel() === true -->
                     <div class="dbd-right-panel-contents">
                         <!-- ko if: $data.isDashboardSet -->
                         <div class="dbd-right-panel-editdashboardset" data-bind="visible:rightPanelControl.rightPanelIcon()=='pencil'&&$data.rightPanelControl.editPanelContent()=='editset'">
@@ -1081,7 +1086,8 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                    <!-- /ko -->
+                </div> 
             </div>
 
         </div>

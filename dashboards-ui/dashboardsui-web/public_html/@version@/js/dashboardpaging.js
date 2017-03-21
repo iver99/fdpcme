@@ -129,7 +129,10 @@ DashboardPaging.prototype.IterativeAt = function (start, end) {
                                     model.set('enableEntityFilter','',{silent:true});
                                     model.set('lastModifiedBy','',{silent:true});
                                     model.set('buildPageUrl',_url,{silent:true});
-
+                                    model.set('isFavorite','',{silent:true});
+                                    model.set('selectedSsData','',{silent:true});
+                                    model.set('preference','',{silent:true});
+                                    model.set('userOptions','',{silent:true});
                                     if (model.get('description') && model.get('description') !== null)
                                     {
                                         var __ddesc =  $("<div/>").html(model.get('description')).text();

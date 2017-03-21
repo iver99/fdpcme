@@ -6,6 +6,7 @@ import oracle.sysman.emaas.platform.emcpdf.cache.api.ICache;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.exception.ExecutionException;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
+import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -20,7 +21,7 @@ import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.registration.Str
 public class DashboardDataAccessUtilTest {
     @Test(groups = { "s2" })
     public void testGetDashboardData(@Mocked final RegistryLookupUtil anyRegistryLookupUtil, @Mocked final Link anyLink,
-                                     @Mocked final TenantSubscriptionUtil.RestClient anyRestClient) {
+                                     @Mocked final RestClient anyRestClient) {
         final String dashboard = "{dashboardId: 1, name: 'test'}";
         new Expectations() {
             {
@@ -32,7 +33,7 @@ public class DashboardDataAccessUtilTest {
                 result = dashboard;
             }
         };
-        String dsb = DashboardDataAccessUtil.getDashboardData("tenant", "tenant.user", null, BigInteger.ONE);
+        String dsb = DashboardDataAccessUtil.getCombinedData("tenant", "tenant.user", null, null, BigInteger.ONE);
         Assert.assertEquals(dsb, dashboard);
     }
 
@@ -44,11 +45,11 @@ public class DashboardDataAccessUtilTest {
                 result = null;
             }
         };
-        String dsb = DashboardDataAccessUtil.getDashboardData("tenant", "tenant.user", null, BigInteger.ONE);
+        String dsb = DashboardDataAccessUtil.getCombinedData("tenant", "tenant.user", null, null, BigInteger.ONE);
         Assert.assertNull(dsb);
     }
 
-    @Test(groups = { "s2" })
+    /*@Test(groups = { "s2" })
     public void testGetUserTenantInfo(@Mocked final CacheManagers anyCacheManagers, @Mocked final ICacheManager anyCacheManager,
                                       @Mocked final ICache anyCache, @Mocked final RegistryLookupUtil anyRegistryLookupUtil,
                                       @Mocked final Link anyLink, @Mocked final TenantSubscriptionUtil.RestClient anyRestClient) throws ExecutionException {
@@ -121,5 +122,5 @@ public class DashboardDataAccessUtilTest {
         };
         String res = DashboardDataAccessUtil.getRegistrationData("tenant", "tenant.user", null, null);
         Assert.assertNull(res);
-    }
+    }*/
 }

@@ -16,6 +16,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.ScreenshotData;
+import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -437,7 +438,7 @@ public class DashboardManager
 						ep = null;
 						edbdtList = ed.getDashboardTileList();
 					} catch (DashboardException e) {
-						LOGGER.error(e.getStackTrace());
+						LOGGER.error(e);
 						return cdSet;
 					}
 				}
@@ -472,18 +473,17 @@ public class DashboardManager
 	
 
     private String retrieveSavedSeasrch(List<String> ssfIdList) {
-        TenantSubscriptionUtil.RestClient rc = new TenantSubscriptionUtil.RestClient();
+        RestClient rc = new RestClient();
         Link tenantsLink = RegistryLookupUtil.getServiceInternalLink(
         		"SavedSearch", "1.0+", "search", null);
         String tenantHref = tenantsLink.getHref() + "/list";
         String tenantName = TenantContext.getCurrentTenant();
-        Map<String, Object> headers = new HashMap<String, Object>();
-        headers.put("X-USER-IDENTITY-DOMAIN-NAME", tenantName);
         String savedSearchResponse = null;
         try {
-        	savedSearchResponse = rc.put(tenantHref, headers, ssfIdList.toString(), tenantName);
-        } catch (Exception e) {
-        	LOGGER.info("savedsearch response", e);
+			rc.setHeader("X-USER-IDENTITY-DOMAIN-NAME", tenantName);
+        	savedSearchResponse = rc.put(tenantHref, ssfIdList.toString(), tenantName);
+        }catch (Exception e) {
+        	LOGGER.error(e);
         }
         return savedSearchResponse;
     }
@@ -1448,40 +1448,40 @@ public class DashboardManager
 			Locale locale)
 	{
 		if (!ic) {
-			sb.append(" and (p.name LIKE ?" + index++);
+			sb.append(" and (p.name LIKE ?" + index++ +" escape '\\' ");
 			paramList.add("%" + StringEscapeUtils.escapeHtml4(queryString) + "%");
 		}
 		else {
-			sb.append(" and (lower(p.name) LIKE ?" + index++);
+			sb.append(" and (lower(p.name) LIKE ?" + index++ +" escape '\\' ");
 			paramList.add("%" + StringEscapeUtils.escapeHtml4(queryString.toLowerCase(locale)) + "%");
 		}
 
 		if (!ic) {
-			sb.append(" or p.description like ?" + index++);
+			sb.append(" or p.description like ?" + index++ +" escape '\\' ");
 			paramList.add("%" + StringEscapeUtils.escapeHtml4(queryString) + "%");
 		}
 		else {
-			sb.append(" or lower(p.description) like ?" + index++);
+			sb.append(" or lower(p.description) like ?" + index++ +" escape '\\' ");
 			paramList.add("%" + StringEscapeUtils.escapeHtml4(queryString.toLowerCase(locale)) + "%");
 		}
 
 		if (!ic) {
-			sb.append(" or p.owner like ?" + index++);
+			sb.append(" or p.owner like ?" + index++ +" escape '\\' ");
 			paramList.add("%" + StringEscapeUtils.escapeHtml4(queryString) + "%");
 		}
 		else {
-			sb.append(" or lower(p.owner) like ?" + index++);
+			sb.append(" or lower(p.owner) like ?" + index++ +" escape '\\' ");
 			paramList.add("%" + StringEscapeUtils.escapeHtml4(queryString.toLowerCase(locale)) + "%");
 		}
 
 		if (!ic) {
 			sb.append(" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where t.type <> 1 and t.title like ?"
-					+ index++ + " )) ");
+					+ index++ +" escape '\\' " + " )) ");
 			paramList.add("%" + queryString + "%");
 		}
 		else {
 			sb.append(" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where t.type <> 1 and lower(t.title) like ?"
-					+ index++ + " )) ");
+					+ index++ +" escape '\\' " + " )) ");
 			paramList.add("%" + queryString.toLowerCase(locale) + "%");
 		}
 		return index;

@@ -2,7 +2,7 @@ Rem --DDL change during upgrade
 Rem
 Rem upgrade_impl_ddl.sql
 Rem
-Rem Copyright (c) 2013, 2014, 2015, 2016,　2017 Oracle and/or its affiliates.
+Rem Copyright (c) 2013, 2014, 2015, 2016 Oracle and/or its affiliates.
 Rem All rights reserved.
 Rem
 Rem    NAME
@@ -14,4 +14,10 @@ Rem
 Rem    NOTES
 Rem      None
 Rem
+
+SET FEEDBACK ON
+SET SERVEROUTPUT ON
+
+@&EMSAAS_SQL_ROOT/1.10.0/emaas_create_tables.sql
+
 
