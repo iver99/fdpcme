@@ -422,7 +422,7 @@ public class RegistrationEntity implements Serializable
 		try {
 			return (List<ServiceMenuEntity>) cm.getCache(CacheConstants.CACHES_SERVICE_MENU_CACHE).get(
 					DefaultKeyGenerator.getInstance().generate(cacheTenant,
-							new Keys(CacheConstants.LOOKUP_CACHE_KEY_SERVICE_MENU, UserContext.getCurrentUser())),
+							new Keys(CacheConstants.LOOKUP_CACHE_KEY_SERVICE_MENU)),
 					new CacheLoader() {
 						@Override
 						public Object load(Object key) throws Exception
