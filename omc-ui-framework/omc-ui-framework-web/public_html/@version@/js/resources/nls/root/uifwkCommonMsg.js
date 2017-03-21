@@ -178,6 +178,9 @@ define({
       "TIME_FILTER_MONTHS_FILTER_ERRMSG": "Select at least one month.",
 
       //Misc messages
-      "PILL_REMOVE_TITLE": "Remove"
+      "PILL_REMOVE_TITLE": "Remove",
+      
+      //Help message
+      "DATETIME_PICKER_RADIO_LATEST_HELP":"The latest data the system can return."
 });
 

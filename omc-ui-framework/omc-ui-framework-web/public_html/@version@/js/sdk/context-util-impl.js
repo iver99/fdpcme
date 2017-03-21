@@ -61,12 +61,17 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                     LAST_1_YEAR: 'LAST_1_YEAR',
                     LATEST: 'LATEST',
                     CUSTOM: 'CUSTOM'
+                },
+                timePeriodsSet: {
+                    SHORT_TERM: "SHORT_TERM",
+                    LONG_TERM: "LONG_TERM"
                 }
             };
 
             //freeze every constant object inside
             Object.freeze(self.OMCTimeConstants.TIME_UNIT);
             Object.freeze(self.OMCTimeConstants.QUICK_PICK);
+            Object.freeze(self.OMCTimeConstants.timePeriodsSet);
 
             //
             // sessionStorage cache
