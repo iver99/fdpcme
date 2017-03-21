@@ -13,11 +13,14 @@ package oracle.sysman.emaas.platform.dashboards.ws.rest.util;
 import java.io.IOException;
 import java.util.List;
 
+import com.sun.jersey.api.client.ClientHandlerException;
+import com.sun.jersey.api.client.UniformInterfaceException;
 import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.model.RoleNamesEntity;
 
+import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -54,8 +57,12 @@ public class PrivilegeChecker
 					String tenantDotUser = tenantName + "." + userName;
 					String secAuthRolesApiUrl = endPoint.endsWith("/") ? endPoint + SECURITY_AUTH_ROLE_CHECK_API + tenantDotUser
 							: endPoint + "/" + SECURITY_AUTH_ROLE_CHECK_API + tenantDotUser;
-					TenantSubscriptionUtil.RestClient rc = new TenantSubscriptionUtil.RestClient();
-					String roleCheckResponse = rc.get(secAuthRolesApiUrl, tenantName, userName);
+					RestClient rc = new RestClient();
+					rc.setHeader("X-USER-IDENTITY-DOMAIN-NAME",tenantName);
+					rc.setHeader("OAM_REMOTE_USER",tenantDotUser);
+					rc.setType(null);
+					rc.setAccept(null);
+					String roleCheckResponse = rc.get(secAuthRolesApiUrl, tenantName);
 					LOGGER.debug("Checking roles for tenant user (" + tenantDotUser + "). The response is " + roleCheckResponse);
 					JsonUtil ju = JsonUtil.buildNormalMapper();
 					RoleNamesEntity rne = ju.fromJson(roleCheckResponse, RoleNamesEntity.class);
@@ -63,8 +70,7 @@ public class PrivilegeChecker
 						roleNames = rne.getRoleNames();
 					}
 				}
-			}
-			catch (IOException e) {
+			}catch (IOException e) {
 				LOGGER.error(e);
 			}
 		}
