@@ -23,6 +23,9 @@ import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 
 public class BrandingBarUtil_1170 extends BrandingBarUtil_1160
 {
@@ -447,6 +450,53 @@ public class BrandingBarUtil_1170 extends BrandingBarUtil_1160
 	}
 
 	@Override
+	public void userMenuOptions(WebDriver driver, String option)
+	{
+		Validator.fromValidValues("option", option, USERMENU_OPTION_HELP, USERMENU_OPTION_ABOUT, USERMENU_OPTION_SIGNOUT);
+
+		if (isHamburgerMenuEnabled(driver)) {
+			if (isHamburgerMenuDisplayed(driver)) {
+				driver.getLogger().info("Hamburger menu displayed, need to hide it");
+				Assert.assertFalse(toggleHamburgerMenu(driver), "Hide Hamburger Menu failed!");
+			}
+		}
+		driver.getLogger().info("Start to do branding bar user menu option: " + option);
+		driver.waitForElementPresent(DashBoardPageId.BRAND_BAR_USER_MENU);
+		driver.getLogger().info("Click branding bar user menu button.");
+		driver.click(DashBoardPageId.BRAND_BAR_USER_MENU);
+
+		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), 900L);
+		By locator = By.id(DashBoardPageId.USERMENUPOPUPID);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+		driver.takeScreenShot();
+		Assert.assertTrue(driver.isDisplayed("id=" + DashBoardPageId.USERMENUPOPUPID));
+		driver.getLogger().info("User menu popup is displayed.");
+
+		switch (option) {
+			case USERMENU_OPTION_HELP:
+				driver.takeScreenShot();
+				driver.getLogger().info("Click Help menu.");
+				driver.click(DashBoardPageId.OPTION_HELP);
+				break;
+			case USERMENU_OPTION_ABOUT:
+				driver.takeScreenShot();
+				driver.getLogger().info("Click About menu.");
+				driver.click(DashBoardPageId.OPTION_ABOUT);
+				driver.takeScreenShot();
+				driver.getLogger().info("Close the About dialog.");
+				driver.click(DashBoardPageId.ABOUTDIALOGCLOSE);
+				break;
+			case USERMENU_OPTION_SIGNOUT:
+				driver.getLogger().info("Click Sign Out menu.");
+				driver.click(DashBoardPageId.OPTION_LOGOUT);
+				break;
+			default:
+				break;
+		}
+		driver.takeScreenShot();
+	}
+
+	@Override
 	public void visitApplicationAdministration(WebDriver driver, String adminLinkName)
 	{
 		Validator.notEmptyString("adminLinkName in [visitApplicationAdministration]", adminLinkName);
@@ -539,7 +589,7 @@ public class BrandingBarUtil_1170 extends BrandingBarUtil_1160
 		else {
 			//the branding bar
 			driver.getLogger()
-			.info("Start to visit visual analyzer link from branding bar. Link name: " + visualAnalyzerLinkName);
+					.info("Start to visit visual analyzer link from branding bar. Link name: " + visualAnalyzerLinkName);
 			visitApplicationLink(driver, "va", visualAnalyzerLinkName);
 		}
 		driver.getLogger().info("visitApplicationVisualAnalyzer ended");

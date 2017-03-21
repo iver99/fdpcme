@@ -1,5 +1,7 @@
 package oracle.sysman.emaas.platform.dashboards.test.ui.util;
 
+import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_1170;
 import oracle.sysman.emsaas.login.LoginUtils;
 import oracle.sysman.emsaas.login.PageUtils;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
@@ -16,6 +18,11 @@ public class LoginAndLogout
 	public static void logoutMethod()
 	{
 		if (webd != null) {
+			if (webd.isElementPresent("css=" + DashBoardPageId_1170.HAMBURGERMENU_ICON_CSS)) {
+				if (BrandingBarUtil.isHamburgerMenuDisplayed(webd)) {
+					BrandingBarUtil.toggleHamburgerMenu(webd);
+				}
+			}
 			((JavascriptExecutor) webd.getWebDriver()).executeScript("scroll(0,0)");
 			LoginUtils.doLogout(webd);
 			try {
