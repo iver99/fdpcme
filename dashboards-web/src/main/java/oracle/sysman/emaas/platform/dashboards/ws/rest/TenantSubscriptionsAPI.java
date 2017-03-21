@@ -37,6 +37,7 @@ import oracle.sysman.emaas.platform.dashboards.ws.rest.subappedition.ServiceEnti
 import oracle.sysman.emaas.platform.dashboards.ws.rest.subappedition.TenantDetailEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.subappedition.TenantEditionEntity;
 
+import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -130,7 +131,8 @@ public class TenantSubscriptionsAPI extends APIBase
 			LOGGER.debug("Checking tenant (" + tenantName + ") subscriptions with edition. The tenant service href is "
 					+ tenantsLink.getHref());
 			String tenantHref = tenantsLink.getHref() + "/" + tenantName;
-			TenantSubscriptionUtil.RestClient rc = new TenantSubscriptionUtil.RestClient();
+			RestClient rc = new RestClient();
+			rc.setHeader("X-USER-IDENTITY-DOMAIN-NAME",tenantName);
 			String tenantResponse = rc.get(tenantHref, tenantName);
 			LOGGER.debug("Checking tenant (" + tenantName + ") subscriptions with edition. Tenant response is " + tenantResponse);
 			JsonUtil ju = JsonUtil.buildNormalMapper();
