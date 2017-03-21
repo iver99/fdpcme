@@ -458,27 +458,7 @@ a:hover {
     content:"\f066";
 }
 
-.emaas-appheader-hamburger-menu{
-    .emaas-appheader-hamburger-button{
-        float: left;
-    }
-}
 
-#hamburger-menu{
-    position: absolute;
-    width: 300px;
-    left: 0;
-    opacity: 1;
-    z-index: 999999;
-    background-color: #313334;
-    color: #c0c4c8;
-    .oj-navigationlist-current-header{
-        color: #c0c4c8;
-    }
-    .hamburger-menu-container{
-        .oj-navigationlist-item.oj-selected, .oj-hover{
-            background-color: #202324;
-            color: #fafafa;
-        }
-    }
+.emaas-appheader-hamburger-button {
+    float: left;
 }
