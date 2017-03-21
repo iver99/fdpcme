@@ -19,6 +19,7 @@ import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.subappedition.ServiceEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.subappedition.TenantDetailEntity;
 
+import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -75,7 +76,7 @@ public class TenantSubscriptionsAPITest {
     }
 
     @Test
-    public void testGetSubscribedApplications3(@Mocked final TenantSubscriptionUtil.RestClient restClient, @Mocked final Link link) {
+    public void testGetSubscribedApplications3(@Mocked final RestClient restClient, @Mocked final Link link) {
         new MockUp<APIBase>() {
             @Mock
             public void initializeUserContext(String opcTenantId, String userTenant) throws CommonSecurityException {
@@ -86,7 +87,7 @@ public class TenantSubscriptionsAPITest {
     }
 
     @Test
-    public void testGetSubscribedApplications4(@Mocked final ServiceEntity serviceEntity, @Mocked final TenantDetailEntity tenantDetailEntity, @Mocked final JsonUtil jsonUtil, @Mocked final TenantSubscriptionUtil.RestClient restClient, @Mocked final Link link, @Mocked final RegistryLookupUtil registryLookupUtil) throws IOException {
+    public void testGetSubscribedApplications4(@Mocked final ServiceEntity serviceEntity, @Mocked final TenantDetailEntity tenantDetailEntity, @Mocked final JsonUtil jsonUtil, @Mocked final RestClient restClient, @Mocked final Link link, @Mocked final RegistryLookupUtil registryLookupUtil) throws IOException {
 
         new MockUp<APIBase>() {
             @Mock
