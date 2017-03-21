@@ -144,7 +144,6 @@ task DEVUiTest(type:EMTest,dependsOn:omcSetup){
 	ext.set("testType", "unit")
 }
 
-
 task QATest1(type:EMTest,dependsOn:omcSetup){ 
 	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/TestAnalyzerPage.class"
 	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/TestDashboardPage.class"
@@ -155,7 +154,6 @@ task QATest1(type:EMTest,dependsOn:omcSetup){
         useWebdriver = true
 	useRestAssured=true
 }
-
 
 //Task is added from "emcpdf_dev_test_3n"
 task DEVTest(type:EMTest,dependsOn:omcSetup){
@@ -168,8 +166,6 @@ task DEVTest(type:EMTest,dependsOn:omcSetup){
 	ext.set("testType", "unit")
 }
 
-
-
 //Task is added from "emcpdf_uifwk_dev_test_3n"
 task DEVTest2(type:EMTest,dependsOn:omcSetup){ 
 	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/util/StringUtilTest.class"
@@ -177,7 +173,6 @@ task DEVTest2(type:EMTest,dependsOn:omcSetup){
 	useRestAssured=true
 	ext.set("testType", "unit")
 }
-
 
 //Task is for dashboard UI Test
 task e2e (type: EMTest,dependsOn:[omcSetup, onboardNewTenant] ){
@@ -193,6 +188,7 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n','parallel':
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet_DashboardRelated_CreatedOutsideSet')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet_DuplicateDashboard')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboard_NegativeCases')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestRightPanel_DashboardFilters')
             }
 	}
 	test('name': 'DashboardUITest_testDashboardSet_SetHome', 'preserve-order':'true'){
@@ -209,10 +205,6 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n','parallel':
     useWebdriver = true
     useRestAssured = true
 }
-
-
-
-
 
 task emcpdf_test_3n (dependsOn:[QATest,DEVUiTest,QATest1,DEVTest,DEVTest2,e2e, omcTeardown]) {
     omcTeardown.mustRunAfter([QATest,DEVUiTest,QATest1,DEVTest,DEVTest2,e2e])

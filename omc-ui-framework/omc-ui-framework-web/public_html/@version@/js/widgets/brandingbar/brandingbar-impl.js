@@ -379,6 +379,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             var dfWelcomeUrl = dfu.discoverWelcomeUrl();
             var subscribedApps = null;
             var appIdAPM = "APM";
+            var appIdDBPerfDiag = "DBPerfDiag";
             var appIdITAnalytics = "ITAnalytics";
             var appIdLogAnalytics = "LogAnalytics";
             var appIdDashboard = "Dashboard";
@@ -407,6 +408,13 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 "serviceName": "emcitas-ui-apps",
                 "version": self.SERVICE_VERSION,
                 "helpTopicId": "em_it_gs"
+            };
+            appMap[appIdDBPerfDiag] = {
+                "appId": "DBPerfDiag",
+                "appName": "BRANDING_BAR_APP_NAME_DB_PERF_DIAGNOSTICS",
+                "serviceName": "emcitas-dbcsperf",
+                "version": self.SERVICE_VERSION,
+                "helpTopicId": "em_dbperfdiag_gs"
             };
             appMap[appIdLogAnalytics] = {
                 "appId": "LogAnalytics",

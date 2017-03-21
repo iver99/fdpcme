@@ -24,6 +24,8 @@ define({
       "COMMON_TEXT_NO": "No",
       "COMMON_TEXT_CLOSE": "CLOSE",
       "COMMON_TEXT_CREATE": "Create",
+      "COMMON_TEXT_WIDGETS": "Widgets",
+      "COMMON_TEXT_DASHBOARD": "Dashboard",
       "COMMON_TEXT_ERROR": "Error",
       "COMMON_REQUIRE_ERROR": "{0} is required",
       "COMMON_DASHBAORD_SAME_NAME_ERROR": "Name already exists.",

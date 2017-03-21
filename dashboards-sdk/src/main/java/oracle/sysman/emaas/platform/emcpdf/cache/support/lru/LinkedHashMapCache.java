@@ -26,7 +26,7 @@ public class LinkedHashMapCache extends AbstractCache{
     private Integer capacity;
     private Long timeToLive;
     private Long creationTime;
-    Timer timer;
+    private Timer timer;
 
     public LinkedHashMapCache(String name, Integer capacity, Long timeToLive){
         this.name=name;
@@ -138,5 +138,8 @@ public class LinkedHashMapCache extends AbstractCache{
     }
 
 
+    public Timer getTimer() {
+        return timer;
+    }
 }
 
