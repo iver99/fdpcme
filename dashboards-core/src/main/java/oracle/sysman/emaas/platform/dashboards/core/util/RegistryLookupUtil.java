@@ -341,7 +341,7 @@ public class RegistryLookupUtil
 	public static Map<String, String> getVanityBaseURLs(String tenantName)
 	{
 		ICacheManager cm = CacheManagers.getInstance().build();
-		LOGGER.debug("/getVanityBaseURLs/ Trying to retrieve service internal link for tenant: \"{}\"", tenantName);
+		LOGGER.debug("/getVanityBaseURLs/ trying to get base vanity URLs for tenant: \"{}\"", tenantName);
 		Tenant cacheTenant = new Tenant(tenantName);
 		Map<String, String> map = null;
 		try {
