@@ -791,6 +791,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 
                 var menuUtil = new menuModel();
                 menuUtil.subscribeServiceMenuLoadedEvent(function(){
+                    if(self.xlargeScreen()){
                     $((function(){
                         oj.OffcanvasUtils.open({
                                 "edge": "start",
@@ -799,6 +800,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                                 "autoDismiss": "none"
                             });
                     })());
+                    }
                 });
             }
             
