@@ -606,6 +606,24 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
 //                    }
                 }
                 
+                function getNlsString(key, bundle)
+                {
+                  // Account for dot separated nested keys
+                  var keys = key ? key.split(".") : [], iteration = keys.length, index = 0, subkey = keys[index];
+
+                  // even though we start with a valid bundle it's possible that part or all of the key is invalid, 
+                  // so check we have a valid bundle in the while loop
+                  while (--iteration > 0 && bundle) 
+                  {
+                    // if we have a key like a.b.c
+                    bundle = bundle[subkey];
+                    index++;
+                    subkey = keys[index];
+                  }
+
+                  return bundle ? (bundle[subkey] || null) : null;
+                }
+                
                 //Get NLSed string for menu item label and tooltips
                 function applyNlsOnMenu(rawMenuObj, nlsObj){
                     var _idx;
@@ -620,11 +638,13 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                         }
                         if(menuItem && menuItem.labelKey){
                             var _labelKey = menuItem.labelKey;
-                            menuItem.labelKey = (nlsObj&&nlsObj[_labelKey])?nlsObj[_labelKey]:_labelKey;
+                            var _labelValue = getNlsString(_labelKey, nlsObj);
+                            menuItem.labelKey = _labelValue ? _labelValue : _labelKey;
                         }
                         if(menuItem && menuItem.tooltipKey){
                             var _tooltipKey = menuItem.tooltipKey;
-                            menuItem.tooltipKey = (nlsObj&&nlsObj[_tooltipKey])?nlsObj[_tooltipKey]:_tooltipKey;
+                            var _tooltipValue = getNlsString(_tooltipKey, nlsObj);
+                            menuItem.tooltipKey = _tooltipValue ? _tooltipValue : _tooltipKey;
                         }
                         if(menuItem.children){
                             for(_idx = 0; _idx < menuItem.children.length; ++_idx){
