@@ -473,7 +473,7 @@ require(['ojs/ojcore',
 //                ko.applyBindings(titleViewModel, $("#globalBody")[0]);
 //                ko.applyBindings(headerViewModel, document.getElementById('headerWrapper'));
                 ko.applyBindings(titleViewModel, $("title")[0]);
-                ko.applyBindings(new landingHomeModel(), document.getElementById("#globalBody"));
+                ko.applyBindings(new landingHomeModel(), document.getElementById("globalBody"));
                 $("#loading").hide();
                 $("#globalBody").show();
             });

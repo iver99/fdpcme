@@ -23,6 +23,7 @@ import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.ScreenshotData;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
+import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -497,17 +498,16 @@ public class DashboardManager
 			}
 		}
 
-		TenantSubscriptionUtil.RestClient rc = new TenantSubscriptionUtil.RestClient();
+        RestClient rc = new RestClient();
         Link tenantsLink = RegistryLookupUtil.getServiceInternalLink(
         		"SavedSearch", "1.0+", "search", null);
         String tenantHref = tenantsLink.getHref() + "/list";
         String tenantName = TenantContext.getCurrentTenant();
-        Map<String, Object> headers = new HashMap<String, Object>();
-        headers.put("X-USER-IDENTITY-DOMAIN-NAME", tenantName);
         String savedSearchResponse = null;
         try {
-        	savedSearchResponse = rc.put(tenantHref, headers, ssfIdList.toString(), tenantName);
-        } catch (Exception e) {
+			rc.setHeader("X-USER-IDENTITY-DOMAIN-NAME", tenantName);
+        	savedSearchResponse = rc.put(tenantHref, ssfIdList.toString(), tenantName);
+        }catch (Exception e) {
         	LOGGER.error(e);
         }
 		if (!StringUtil.isEmpty(savedSearchResponse) && dashboardId != null && isOobDashboard) {
