@@ -755,8 +755,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     });
                 }
 
-                var xlQuery = oj.ResponsiveUtils.getFrameworkQuery(oj.ResponsiveUtils.FRAMEWORK_QUERY_KEY.XL_UP);
-                self.xlargeScreen = oj.ResponsiveKnockoutUtils.createMediaQueryObservable(xlQuery);
+                self.xlargeScreen = oj.ResponsiveKnockoutUtils.createMediaQueryObservable('(min-width: 1440px)');
 
                 self.xlargeScreen.subscribe(function(isXlarge){
                     if(!isXlarge){
