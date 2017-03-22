@@ -792,6 +792,13 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 menuUtil.subscribeServiceMenuLoadedEvent(function(){
                     if(self.xlargeScreen()){
                     $((function(){
+                        $("#omcHamburgerMenu").on("ojopen", function(event, offcanvas) {
+                        if(offcanvas.displayMode === "push")
+                            $("#offcanvasInnerContainer").width(document.body.clientWidth-250);
+                        });
+                        $("#omcHamburgerMenu").on("ojbeforeclose", function(event, offcanvas) {
+                            $("#offcanvasInnerContainer").width(document.body.clientWidth);
+                        });
                         oj.OffcanvasUtils.open({
                                 "edge": "start",
                                 "displayMode": "push",
