@@ -57,36 +57,36 @@ public class EntitySelectorUtil_1170 extends EntitySelectorUtil_1160
         }
         
         @Override
-        public void verifyCompositePillContent(WebDriver driver, Logger logger, String text)
+        public void verifyCompositePillContent(WebDriver driver, Logger logger, String displayName)
         {
-                logger.log(Level.INFO, "Verify Global Context bar contains a composite entity pill with text \"{0}\".", new Object[]{ text });
-                driver.waitForElementVisible("xpath=" + MessageFormat.format(DashBoardPageId.ENTSEL_COMPOSITE_PILL_BYTEXT, text));
-                logger.log(Level.INFO, "A composite entity pill matching text \"{0}\" was found in Global Context bar.", new Object[]{ text });
+                logger.log(Level.INFO, "Verify Global Context bar contains a composite entity pill with text \"{0}\".", new Object[]{ displayName });
+                driver.waitForElementVisible("xpath=" + MessageFormat.format(DashBoardPageId.ENTSEL_COMPOSITE_PILL_BYTEXT, displayName));
+                logger.log(Level.INFO, "A composite entity pill matching text \"{0}\" was found in Global Context bar.", new Object[]{ displayName });
         }
         
         @Override
-        public void verifyEntityPillContent(WebDriver driver, Logger logger, String text)
+        public void verifyEntityPillContent(WebDriver driver, Logger logger, String displayName)
         {
-                logger.log(Level.INFO, "Verify Global Context bar contains an entity pill with text \"{0}\".", new Object[]{ text });
-                driver.waitForElementVisible("xpath=" + MessageFormat.format(DashBoardPageId.ENTSEL_ENTITY_PILL_BYTEXT, text));
-                logger.log(Level.INFO, "An entity pill matching text \"{0}\" was found in Global Context bar.", new Object[]{ text });
+                logger.log(Level.INFO, "Verify Global Context bar contains an entity pill with text \"{0}\".", new Object[]{ displayName });
+                driver.waitForElementVisible("xpath=" + MessageFormat.format(DashBoardPageId.ENTSEL_ENTITY_PILL_BYTEXT, displayName));
+                logger.log(Level.INFO, "An entity pill matching text \"{0}\" was found in Global Context bar.", new Object[]{ displayName });
         }
         
         @Override
-        public void verifyPillContains(WebDriver driver, Logger logger, String text)
+        public void verifyPillContains(WebDriver driver, Logger logger, String displayName)
         {
-                logger.log(Level.INFO, "Verify Global Context bar has a pill containing text \"{0}\".", new Object[]{ text });
-                driver.waitForElementVisible("xpath=" + MessageFormat.format(DashBoardPageId.ENTSEL_PILL_BYCONTAINSTEXT, text));
-                logger.log(Level.INFO, "A pill containing text \"{0}\" was found in Global Context bar.", new Object[]{ text });
+                logger.log(Level.INFO, "Verify Global Context bar has a pill containing text \"{0}\".", new Object[]{ displayName });
+                driver.waitForElementVisible("xpath=" + MessageFormat.format(DashBoardPageId.ENTSEL_PILL_BYCONTAINSTEXT, displayName));
+                logger.log(Level.INFO, "A pill containing text \"{0}\" was found in Global Context bar.", new Object[]{ displayName });
         }
         
         @Override
-        public void verifyPillContentByIndex(WebDriver driver, Logger logger, int pillIndex, String text)
+        public void verifyPillContentByIndex(WebDriver driver, Logger logger, int pillIndex, String displayName)
         {
-                logger.log(Level.INFO, "Verify the pill at index [{0}] in the Global Context bar contains text: \"{1}\".", new Object[]{ pillIndex, text });
+                logger.log(Level.INFO, "Verify the pill at index [{0}] in the Global Context bar contains text: \"{1}\".", new Object[]{ pillIndex, displayName });
                 //Take in consideration that XPath uses 1-based indexing
                 pillIndex++;
-                driver.waitForElementVisible("xpath=" + MessageFormat.format(DashBoardPageId.ENTSEL_PILL_CONTAINSTEXT_BYINDEX, pillIndex, text));
-                logger.log(Level.INFO, "A pill containing text \"{0}\" was found in Global Context bar at position [{1}].", new Object[]{ text, --pillIndex });
+                driver.waitForElementVisible("xpath=" + MessageFormat.format(DashBoardPageId.ENTSEL_PILL_CONTAINSTEXT_BYINDEX, pillIndex, displayName));
+                logger.log(Level.INFO, "A pill containing text \"{0}\" was found in Global Context bar at position [{1}].", new Object[]{ displayName, --pillIndex });
         }
 }

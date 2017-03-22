@@ -31,9 +31,8 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter;
 import oracle.sysman.emaas.platform.dashboards.core.restclient.DomainsEntity;
-import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil.RestClient;
-import oracle.sysman.emaas.platform.dashboards.core.util.lookup.RetryableLookupClient.RetryableRunner;
 
+import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -364,37 +363,8 @@ public class TenantSubscriptionUtilTest
                 anyInstanceInfo.getLinksWithProtocol(anyString, anyString);
                 result = links;
 
-				anyClient.getWithExeption(anyString, anyString, (Map<String, String>)any);
-				returns(TENANT_LOOKUP_RESULT_EMPTY_APP_MAPPING_ENTITY);
-			}
-		};
-        List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1");
-		Assert.assertTrue(services == null || services.isEmpty());
-		Assert.assertEquals(TenantSubscriptionUtil.isAPMServiceOnly(Arrays.asList(new String[] { "APM" })), true);
-	}
-
-	@Test(groups = { "s2" })
-	public void testGetTenantSubscribedServicesEmptyAppMappingJsonS2(@Mocked RegistryLookupUtil anyUtil,
-			@Mocked final RestClient anyClient, @Mocked final InstanceInfo anyInstanceInfo,
-            @Mocked final LookupManager anyLookupManager) throws Exception
-	{
-		final Link link = new Link();
-
-		link.withHref("http://den00zyr.us.oracle.com:7007/naming/entitynaming/v1/domains");
-		link.withRel("");
-		final List<Link> links = Arrays.asList(link);
-		final List<InstanceInfo> insList = new ArrayList<InstanceInfo>();
-		insList.add(anyInstanceInfo);
-		new Expectations() {
-			{
-				Deencapsulation.setField(TenantSubscriptionUtil.class, "IS_TEST_ENV", null);
-
-                LookupManager.getInstance().getLookupClient().lookup((InstanceQuery) any);
-                result = insList;
-                anyInstanceInfo.getLinksWithProtocol(anyString, anyString);
-                result = links;
-
-                anyClient.getWithExeption(anyString, anyString, (Map<String, String>) any);
+				anyClient.getWithException(anyString, anyString);
+                anyClient.getWithException(anyString, anyString);
 				returns("");
 			}
 		};
@@ -423,8 +393,7 @@ public class TenantSubscriptionUtilTest
                 result = insList;
                 anyInstanceInfo.getLinksWithProtocol(anyString, anyString);
                 result = links;
-
-                anyClient.getWithExeption(anyString, anyString, (Map<String, String>) any);
+                anyClient.getWithException(anyString, anyString);
 				returns(TENANT_LOOKUP_RESULT_EMPTY_APP_MAPPINGS);
 			}
 		};
@@ -480,7 +449,7 @@ public class TenantSubscriptionUtilTest
                 anyInstanceInfo.getLinksWithProtocol(anyString, anyString);
                 result = links;
 
-                anyClient.getWithExeption(anyString, anyString, (Map<String, String>) any);
+                anyClient.getWithException(anyString, anyString);
                 returns(TENANT_LOOKUP_RESULT_EMPTY_APP_MAPPING_ENTITY);
 			}
 		};
@@ -511,7 +480,7 @@ public class TenantSubscriptionUtilTest
                 anyInstanceInfo.getLinksWithProtocol(anyString, anyString);
                 result = links;
 
-                anyClient.getWithExeption(anyString, anyString, (Map<String, String>) any);
+                anyClient.getWithException(anyString, anyString);
 				returns(ENTITY_NAMING_DOMAIN_EMPTY_TENANT_APP_URL, TENANT_LOOKUP_RESULT);
 			}
 		};
@@ -542,7 +511,7 @@ public class TenantSubscriptionUtilTest
                 anyInstanceInfo.getLinksWithProtocol(anyString, anyString);
                 result = links;
 
-                anyClient.getWithExeption(anyString, anyString, (Map<String, String>) any);
+                anyClient.getWithException(anyString, anyString);
 				JsonUtil.buildNormalMapper();
 				result = anyJsonUtil;
                 anyJsonUtil.fromJson(anyString, AppMappingCollection.class);
@@ -582,8 +551,9 @@ public class TenantSubscriptionUtilTest
                 anyInstanceInfo.getLinksWithProtocol(anyString, anyString);
                 result = links;
 
-                anyClient.getWithExeption(anyString, anyString, (Map<String, String>) any);
+				anyClient.getWithException(anyString, anyString);
 				result = TENANT_LOOKUP_RESULT;
+
 			}
 		};
 		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1");
@@ -629,7 +599,7 @@ public class TenantSubscriptionUtilTest
 	@Test(groups = { "s2" })
 	public void testRestClientGetNull()
 	{
-		String res = new TenantSubscriptionUtil.RestClient().get(null, null);
+		String res = new RestClient().get(null, null);
 		Assert.assertNull(res);
 	}
 
@@ -648,7 +618,7 @@ public class TenantSubscriptionUtilTest
 				result = false;
 			}
 		};
-		new TenantSubscriptionUtil.RestClient().get("http://test.link.com", "emaastesttenant1");
+		new RestClient().get("http://test.link.com", "emaastesttenant1");
 		new Verifications() {
 			{
 				RegistrationManager.getInstance().getAuthorizationToken();
@@ -671,7 +641,7 @@ public class TenantSubscriptionUtilTest
 				Client.create(anyClientConfig);
 			}
 		};
-		new TenantSubscriptionUtil.RestClient().get("http://test.link.com", "emaastesttenant1");
+		new RestClient().get("http://test.link.com", "emaastesttenant1");
 		new Verifications() {
 			{
 				RegistrationManager.getInstance().getAuthorizationToken();
