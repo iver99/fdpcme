@@ -7,9 +7,10 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
     'uifwk/@version@/js/util/preference-util-impl', 
     'uifwk/@version@/js/sdk/context-util-impl',
     'uifwk/@version@/js/sdk/menu-util-impl',
-    'uifwk/@version@/js/sdk/SessionCacheUtil',
-    'ojs/ojnavigationlist',
-    'ojs/ojjsontreedatasource'],
+    'uifwk/@version@/js/sdk/SessionCacheUtil'
+    //'ojs/ojnavigationlist',
+    //'ojs/ojjsontreedatasource'
+    ],
         function ($, oj, ko, nls, dfumodel, pfumodel, ctxmodel, menumodel, sessionCacheModel) {
             function HamburgerMenuViewModel(params) {
                 var self = this;
