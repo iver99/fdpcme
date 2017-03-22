@@ -90,21 +90,21 @@ public interface IEntitySelectorUtil extends IUiTestCommonAPI
          * @param logger
          * @param text 
          */
-        public void verifyCompositePillContent(WebDriver driver, Logger logger, String text);
+        public void verifyCompositePillContent(WebDriver driver, Logger logger, String displayName);
         
         /**
          * @param driver
          * @param logger
          * @param text 
          */
-        public void verifyEntityPillContent(WebDriver driver, Logger logger, String text);
+        public void verifyEntityPillContent(WebDriver driver, Logger logger, String displayName);
         
         /**
          * @param driver
          * @param logger
          * @param text 
          */
-        public void verifyPillContains(WebDriver driver, Logger logger, String text);
+        public void verifyPillContains(WebDriver driver, Logger logger, String displayName);
         
         /**
          * @param driver
@@ -112,5 +112,5 @@ public interface IEntitySelectorUtil extends IUiTestCommonAPI
          * @param pillIndex
          * @param text 
          */
-        public void verifyPillContentByIndex(WebDriver driver, Logger logger, int pillIndex, String text);
+        public void verifyPillContentByIndex(WebDriver driver, Logger logger, int pillIndex, String displayName);
 }

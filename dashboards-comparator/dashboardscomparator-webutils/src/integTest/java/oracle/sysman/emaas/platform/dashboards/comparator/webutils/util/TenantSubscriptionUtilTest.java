@@ -13,6 +13,7 @@ import oracle.sysman.emaas.platform.dashboards.comparator.webutils.json.AppMappi
 import oracle.sysman.emaas.platform.dashboards.comparator.webutils.json.AppMappingEntity;
 import oracle.sysman.emaas.platform.dashboards.comparator.webutils.json.DomainEntity;
 import oracle.sysman.emaas.platform.dashboards.comparator.webutils.json.DomainsEntity;
+import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -346,7 +347,7 @@ public class TenantSubscriptionUtilTest {
 
     @Test(groups = {"s2"})
     public void testRestClientGetNull() {
-        String res = new TenantSubscriptionUtil.RestClient().get(null, null, null);
+        String res = new RestClient().get(null, null,null);
         org.testng.Assert.assertNull(res);
     }
 
@@ -364,7 +365,7 @@ public class TenantSubscriptionUtilTest {
                 result = false;
             }
         };
-        new TenantSubscriptionUtil.RestClient().get("http://test.link.com", "emaastesttenant1", null);
+        new RestClient().get("http://test.link.com", "emaastesttenant1", null);
         new Verifications() {
             {
                 RegistrationManager.getInstance().getAuthorizationToken();
@@ -386,7 +387,7 @@ public class TenantSubscriptionUtilTest {
                 Client.create(anyClientConfig);
             }
         };
-        new TenantSubscriptionUtil.RestClient().get("http://test.link.com", "emaastesttenant1", null);
+        new RestClient().get("http://test.link.com", "emaastesttenant1");
         new Verifications() {
             {
                 RegistrationManager.getInstance().getAuthorizationToken();
@@ -401,7 +402,7 @@ public class TenantSubscriptionUtilTest {
     private RegistryLookupUtil registryLookupUtil;
     @Test
     public void testGetTenantSubscribedServices(@Mocked final DefaultClientConfig anyClientConfig,final @Mocked JsonUtil jsonUtil,
-                                                final @Mocked InstanceInfo instanceInfo,final @Mocked TenantSubscriptionUtil.RestClient rs) throws Exception {
+                                                final @Mocked InstanceInfo instanceInfo,final @Mocked RestClient rs) throws Exception {
         final Link link = new Link();
 
         link.withHref("http://den00zyr.us.oracle.com:7007/naming/entitynaming/v1/domains");
@@ -482,7 +483,7 @@ public class TenantSubscriptionUtilTest {
             }
         };
 
-        new TenantSubscriptionUtil.RestClient().put("url",new Object(),"emaastesttenant1", null);
+        new RestClient().put("url",new Object(),"emaastesttenant1");
     }
 
 

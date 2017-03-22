@@ -14,20 +14,22 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriBuilder;
-
+import com.sun.jersey.api.client.ClientHandlerException;
+import com.sun.jersey.api.client.UniformInterfaceException;
+import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+<<<<<<< HEAD
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource.Builder;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 
+=======
+>>>>>>> 87d796517a7c59cfc4c3cbd2a8e708a0b75958fe
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter;
@@ -35,13 +37,13 @@ import oracle.sysman.emaas.platform.dashboards.comparator.webutils.json.AppMappi
 import oracle.sysman.emaas.platform.dashboards.comparator.webutils.json.AppMappingEntity;
 import oracle.sysman.emaas.platform.dashboards.comparator.webutils.json.DomainEntity;
 import oracle.sysman.emaas.platform.dashboards.comparator.webutils.json.DomainsEntity;
-import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.LogUtil.InteractionLogDirection;
 
 /**
  * @author guobaochen
  */
 public class TenantSubscriptionUtil
 {
+/*
 	public static class RestClient
 	{
 		public RestClient()
@@ -88,7 +90,7 @@ public class TenantSubscriptionUtil
 		 * @param requestEntity
 		 * @param tenant
 		 * @return
-		 */
+		 
 		public String put(String url, Object requestEntity, String tenant, String userTenant)
 		{
 			logger.info("start to call sync web service!");
@@ -135,6 +137,7 @@ public class TenantSubscriptionUtil
 			return response;
 		}
 	}
+*/
 
 	private static Logger logger = LogManager.getLogger(TenantSubscriptionUtil.class);
 	private static Logger itrLogger = LogUtil.getInteractionLogger();
