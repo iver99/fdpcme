@@ -143,7 +143,10 @@ public class DashboardCountsComparator extends AbstractComparator
 		}
 		logger.info("lookup link is {}", lk.getHref());		
 		//String response = new TenantSubscriptionUtil.RestClient().get(lk.getHref(), tenantId, userTenant);
-		String response = new RestClient().get(lk.getHref(), tenantId, userTenant);
+		RestClient restClient = new RestClient();
+		restClient.setHeader("X-USER-IDENTITY-DOMAIN-NAME",tenantId);
+		restClient.setHeader("X-REMOTE-USER", userTenant);
+		String response = restClient.get(lk.getHref(), tenantId);
 		logger.info("Checking dashboard OMC instance counts. Response is " + response);
 		JsonUtil ju = JsonUtil.buildNormalMapper();
 		CountsEntity ze = ju.fromJson(response, CountsEntity.class);

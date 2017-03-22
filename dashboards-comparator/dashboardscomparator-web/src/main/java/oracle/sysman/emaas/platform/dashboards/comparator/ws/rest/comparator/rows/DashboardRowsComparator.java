@@ -274,8 +274,10 @@ public class DashboardRowsComparator extends AbstractComparator
 			return null;
 		}
 		//String response = new TenantSubscriptionUtil.RestClient().get(lk.getHref(), tenantId, userTenant);
-
-		String response = new RestClient().get(lk.getHref(), tenantId, userTenant);
+		RestClient restClient = new RestClient();
+		restClient.setHeader("X-USER-IDENTITY-DOMAIN-NAME",tenantId);
+		restClient.setHeader("X-REMOTE-USER", userTenant);
+		String response = restClient.get(lk.getHref(), tenantId);
 		logger.info("Checking dashboard OMC instance table rows. Response is " + response);
 		return retrieveRowsEntityFromJsonForSingleInstance(response);
 	}
@@ -294,7 +296,10 @@ public class DashboardRowsComparator extends AbstractComparator
 		String entityStr = jsonUtil.toJson(entity);
 		logger.info("print the put data {} !",entityStr);
 		//String response = new TenantSubscriptionUtil.RestClient().put(lk.getHref(), entityStr, tenantId, userTenant);
-		String response = new RestClient().put(lk.getHref(), entityStr, tenantId, userTenant);
+		RestClient restClient = new RestClient();
+		restClient.setHeader("X-USER-IDENTITY-DOMAIN-NAME",tenantId);
+		restClient.setHeader("X-REMOTE-USER", userTenant);
+		String response = restClient.put(lk.getHref(), entityStr, tenantId);
 		logger.info("Checking sync reponse. Response is " + response);
 		return response;
 	}

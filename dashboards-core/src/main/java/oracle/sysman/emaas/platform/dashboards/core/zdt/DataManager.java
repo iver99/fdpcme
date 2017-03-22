@@ -18,15 +18,13 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
-import javax.swing.text.DateFormatter;
+
+import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.persistence.config.QueryHints;
 import org.eclipse.persistence.config.ResultType;
-
-import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
-import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 
 /**
  * @author guochen
@@ -51,12 +49,9 @@ public class DataManager
 	 *
 	 * @return
 	 */
-	public long getAllDashboardsCount()
+	public long getAllDashboardsCount(EntityManager em)
 	{
-		EntityManager em = null;
 		try {
-			DashboardServiceFacade dsf = new DashboardServiceFacade();
-			em = dsf.getEntityManager();
 			String sql = "SELECT COUNT(1) FROM EMS_DASHBOARD WHERE DELETED <> 1";
 			Query query = em.createNativeQuery(sql);
 			long count = ((Number) query.getSingleResult()).longValue();
@@ -65,11 +60,6 @@ public class DataManager
 			logger.warn("Get all dashboards count did not retrieve any data!");
 			return 0L;
 		}
-		finally {
-			if (em != null) {
-				em.close();
-			}
-		}
 	}
 
 	/**
@@ -77,12 +67,9 @@ public class DataManager
 	 *
 	 * @return
 	 */
-	public long getAllFavoriteCount()
+	public long getAllFavoriteCount(EntityManager em)
 	{
-		EntityManager em = null;
 		try {
-			DashboardServiceFacade dsf = new DashboardServiceFacade();
-			em = dsf.getEntityManager();
 			String sql = "SELECT COUNT(1) FROM EMS_DASHBOARD d, EMS_DASHBOARD_USER_OPTIONS uo WHERE d.DASHBOARD_ID=uo.DASHBOARD_ID AND d.TENANT_ID=uo.TENANT_ID AND d.DELETED<>1 AND IS_FAVORITE=1";
 			Query query = em.createNativeQuery(sql);
 			long count = ((Number) query.getSingleResult()).longValue();
@@ -91,11 +78,7 @@ public class DataManager
 			logger.warn("Get all favorite count did not retrieve any data!");
 			return 0L;
 		}
-		finally {
-			if (em != null) {
-				em.close();
-			}
-		}
+		
 	}
 
 	/**
@@ -103,12 +86,9 @@ public class DataManager
 	 *
 	 * @return
 	 */
-	public long getAllPreferencessCount()
+	public long getAllPreferencessCount(EntityManager em)
 	{
-		EntityManager em = null;
 		try {
-			DashboardServiceFacade dsf = new DashboardServiceFacade();
-			em = dsf.getEntityManager();
 			String sql = "SELECT COUNT(1) FROM EMS_PREFERENCE";
 			Query query = em.createNativeQuery(sql);
 			long count = ((Number) query.getSingleResult()).longValue();
@@ -117,11 +97,7 @@ public class DataManager
 			logger.warn("Get all preference count did not retrieve any data!");
 			return 0L;
 		}
-		finally {
-			if (em != null) {
-				em.close();
-			}
-		}
+		
 	}
 
 	
@@ -131,12 +107,12 @@ public class DataManager
 	 *
 	 * @return
 	 */
-	public List<Map<String, Object>> getDashboardSetTableData()
+	public List<Map<String, Object>> getDashboardSetTableData(EntityManager em)
 	{
 		String sql = "SELECT TO_CHAR(DASHBOARD_SET_ID) AS DASHBOARD_SET_ID, TENANT_ID, TO_CHAR(SUB_DASHBOARD_ID) AS SUB_DASHBOARD_ID, "
 				+ "POSITION, CREATION_DATE, LAST_MODIFICATION_DATE, TO_CHAR(DELETED) AS DELETED"
 				+ " FROM EMS_DASHBOARD_SET";
-		return getDatabaseTableData(sql);
+		return getDatabaseTableData(em,sql);
 	}
 
 	/**
@@ -144,12 +120,12 @@ public class DataManager
 	 *
 	 * @return
 	 */
-	public List<Map<String, Object>> getDashboardTableData()
+	public List<Map<String, Object>> getDashboardTableData(EntityManager em)
 	{
 		String sql = "SELECT  TO_CHAR(DASHBOARD_ID) AS DASHBOARD_ID,  NAME, TYPE, DESCRIPTION, CREATION_DATE, LAST_MODIFICATION_DATE, LAST_MODIFIED_BY,"
 				+ " OWNER, IS_SYSTEM, APPLICATION_TYPE, ENABLE_TIME_RANGE, SCREEN_SHOT, TO_CHAR(DELETED) AS DELETED, TENANT_ID, ENABLE_REFRESH, "
 				+ "SHARE_PUBLIC, ENABLE_ENTITY_FILTER, ENABLE_DESCRIPTION, EXTENDED_OPTIONS, SHOW_INHOME FROM EMS_DASHBOARD";
-		return getDatabaseTableData(sql);
+		return getDatabaseTableData(em,sql);
 	}
 
 	/**
@@ -157,11 +133,11 @@ public class DataManager
 	 *
 	 * @return
 	 */
-	public List<Map<String, Object>> getDashboardTileParamsTableData()
+	public List<Map<String, Object>> getDashboardTileParamsTableData(EntityManager em)
 	{
 		String sql = "SELECT TILE_ID, PARAM_NAME, TENANT_ID, IS_SYSTEM, PARAM_TYPE, PARAM_VALUE_STR, PARAM_VALUE_NUM, PARAM_VALUE_TIMESTAMP, "
 				+ "CREATION_DATE, LAST_MODIFICATION_DATE, DELETED FROM EMS_DASHBOARD_TILE_PARAMS";
-		return getDatabaseTableData(sql);
+		return getDatabaseTableData(em,sql);
 	}
 
 	/**
@@ -169,13 +145,13 @@ public class DataManager
 	 *
 	 * @return
 	 */
-	public List<Map<String, Object>> getDashboardTileTableData()
+	public List<Map<String, Object>> getDashboardTileTableData(EntityManager em)
 	{
 		String sql = "SELECT TILE_ID, TO_CHAR(DASHBOARD_ID) AS DASHBOARD_ID, CREATION_DATE, LAST_MODIFICATION_DATE, LAST_MODIFIED_BY, OWNER, TITLE, HEIGHT, WIDTH, IS_MAXIMIZED, POSITION, TENANT_ID,"
 				+ "WIDGET_UNIQUE_ID, WIDGET_NAME, WIDGET_DESCRIPTION, WIDGET_GROUP_NAME, WIDGET_ICON, WIDGET_HISTOGRAM, WIDGET_OWNER, "
 				+ "WIDGET_CREATION_TIME, WIDGET_SOURCE, WIDGET_KOC_NAME, WIDGET_VIEWMODE, WIDGET_TEMPLATE, PROVIDER_NAME, PROVIDER_VERSION, PROVIDER_ASSET_ROOT, "
 				+ "TILE_ROW, TILE_COLUMN, TYPE, WIDGET_SUPPORT_TIME_CONTROL, WIDGET_LINKED_DASHBOARD, WIDGET_DELETED, WIDGET_DELETION_DATE, DELETED FROM EMS_DASHBOARD_TILE";
-		return getDatabaseTableData(sql);
+		return getDatabaseTableData(em,sql);
 	}
 
 	/**
@@ -183,11 +159,11 @@ public class DataManager
 	 *
 	 * @return
 	 */
-	public List<Map<String, Object>> getDashboardUserOptionsTableData()
+	public List<Map<String, Object>> getDashboardUserOptionsTableData(EntityManager em)
 	{
 		String sql = "SELECT USER_NAME, TENANT_ID, TO_CHAR(DASHBOARD_ID) AS DASHBOARD_ID, AUTO_REFRESH_INTERVAL, ACCESS_DATE, IS_FAVORITE, EXTENDED_OPTIONS, CREATION_DATE, LAST_MODIFICATION_DATE,"
 				+ " DELETED FROM EMS_DASHBOARD_USER_OPTIONS";
-		return getDatabaseTableData(sql);
+		return getDatabaseTableData(em,sql);
 	}
 
 	/**
@@ -195,10 +171,10 @@ public class DataManager
 	 *
 	 * @return
 	 */
-	public List<Map<String, Object>> getPreferenceTableData()
+	public List<Map<String, Object>> getPreferenceTableData(EntityManager em)
 	{
 		String sql = "SELECT USER_NAME, PREF_KEY, PREF_VALUE, TENANT_ID, CREATION_DATE, LAST_MODIFICATION_DATE,DELETED FROM EMS_PREFERENCE";
-		return getDatabaseTableData(sql);
+		return getDatabaseTableData(em,sql);
 	}
 
 	/**
@@ -206,14 +182,12 @@ public class DataManager
 	 *
 	 * @return
 	 */
-	private List<Map<String, Object>> getDatabaseTableData(String nativeSql)
+	private List<Map<String, Object>> getDatabaseTableData(EntityManager em, String nativeSql)
 	{
 		if (StringUtil.isEmpty(nativeSql)) {
 			logger.error("Can't query database table with null or empty SQL statement!");
 			return null;
 		}
-		DashboardServiceFacade dsf = new DashboardServiceFacade();
-		EntityManager em = dsf.getEntityManager();
 		Query query = em.createNativeQuery(nativeSql);
 		query.setHint(QueryHints.RESULT_TYPE, ResultType.Map);
 		@SuppressWarnings("unchecked")
@@ -221,7 +195,7 @@ public class DataManager
 		return list;
 	}
 
-	public int syncDashboardTableRow(BigInteger dashboardId, String name, Long type, String description, String creationDate, String lastModificationDate, String lastModifiedBy, String owner,
+	public int syncDashboardTableRow(EntityManager entityManager,BigInteger dashboardId, String name, Long type, String description, String creationDate, String lastModificationDate, String lastModifiedBy, String owner,
 									 Integer isSystem, Integer applicationType, Integer enableTimeRange, String screenShot, BigInteger deleted, Long tenantId, Integer enableRefresh, Integer sharePublic,
 									 Integer enableEntityFilter, Integer enableDescription, String extendedOptions, Integer showInHome) {
 		logger.debug("Calling the DataManager.syncDashboardTableRow");
@@ -250,7 +224,6 @@ public class DataManager
 			return 0;
 		}
 
-		EntityManager entityManager = new DashboardServiceFacade().getEntityManager();
 		if (!entityManager.getTransaction().isActive()) {
 			entityManager.getTransaction().begin();
 		}		
@@ -272,13 +245,10 @@ public class DataManager
 		} catch (Exception e) {
 			logger.error(e.getLocalizedMessage());
 			return 0;
-		} finally {
-			entityManager.getTransaction().commit();
-			entityManager.close();
-		}
+		} 
 	}
 
-	public int syncDashboardTile(String tileId, BigInteger dashboardId, String creationDate, String lastModificationDate, String lastModifiedBy, String owner, String title, Long height,
+	public int syncDashboardTile(EntityManager entityManager,String tileId, BigInteger dashboardId, String creationDate, String lastModificationDate, String lastModifiedBy, String owner, String title, Long height,
 								 Long width, Integer isMaximized, Long position, Long tenantId, String widgetUniqueId, String widgetName, String widgetDescription, String widgetGroupName,
 								 String widgetIcon, String widgetHistogram, String widgetOwner, String widgetCreationTime, Long widgetSource, String widgetKocName, String widgetViewmode, String widgetTemplate,
 								 String providerName, String providerVersion, String providerAssetRoot, Long tileRow, Long tileColumn, Long type, Integer widgetSupportTimeControl, 
@@ -344,7 +314,6 @@ public class DataManager
 			logger.debug("WIDGET_SUPPORT_TIME_CONTROL is null!");
 			return 0;
 		}
-		EntityManager entityManager = new DashboardServiceFacade().getEntityManager();
 		if (!entityManager.getTransaction().isActive()) {
 			entityManager.getTransaction().begin();
 		}
@@ -373,13 +342,10 @@ public class DataManager
 		} catch (Exception e) {
 			logger.error(e.getLocalizedMessage());
 			return 0;
-		} finally {
-			entityManager.getTransaction().commit();
-			entityManager.close();
-		}
+		} 
 	}
 
-	public int syncDashboardTileParam( String tileId, String paramName,
+	public int syncDashboardTileParam(EntityManager entityManager, String tileId, String paramName,
 									  Long tenantId, Integer isSystem, Long paramType, String paramValueStr,
 									  Long paramValueNum, String paramValueTimestamp, String creationDate, String lastModificationDate, Integer deleted) {
 		logger.debug("Calling DataManager.syncDashboardTileParam");
@@ -403,7 +369,6 @@ public class DataManager
 			logger.debug("PARAM_TYPE is null!");
 			return 0;
 		}
-		EntityManager entityManager = new DashboardServiceFacade().getEntityManager();
 		if (!entityManager.getTransaction().isActive()) {
 			entityManager.getTransaction().begin();
 		}
@@ -426,14 +391,11 @@ public class DataManager
 		}catch (Exception e){
 			logger.error(e.getLocalizedMessage());
 			return 0;
-		}finally {
-			entityManager.getTransaction().commit();
-			entityManager.close();
 		}
 	}
 
 
-	public int syncDashboardUserOption(String userName, Long tenantId, BigInteger dashboardId,
+	public int syncDashboardUserOption(EntityManager entityManager,String userName, Long tenantId, BigInteger dashboardId,
 									   Long autoRefreshInterval, String accessDate, Integer isFavorite, String extendedOptions,
 									   String creationDate, String lastModificationDate, Integer deleted) {
 		logger.debug("Calling DataManager.syncDashboardUserOption");
@@ -449,7 +411,6 @@ public class DataManager
 			logger.debug("DASHBOARD_ID is null !");
 			return 0;
 		}
-		EntityManager entityManager = new DashboardServiceFacade().getEntityManager();
 		if (!entityManager.getTransaction().isActive()) {
 			entityManager.getTransaction().begin();
 		}
@@ -472,13 +433,10 @@ public class DataManager
 		} catch (Exception e) {
 			logger.error(e.getLocalizedMessage());
 			return 0;
-		} finally {
-			entityManager.getTransaction().commit();
-			entityManager.close();
 		}
 	}
 
-	public int syncDashboardSet(BigInteger dashboardSetId, Long tenantId, BigInteger subDashboardId,
+	public int syncDashboardSet(EntityManager entityManager,BigInteger dashboardSetId, Long tenantId, BigInteger subDashboardId,
 								Long position, String creationDate, String lastModificationDate, BigInteger deleted) {
 		logger.debug("Calling DataManager.syncDashboardSet", dashboardSetId);
 		if (dashboardSetId == null) {
@@ -497,7 +455,6 @@ public class DataManager
 			logger.debug("POSITION is null !");
 			return 0;
 		}
-		EntityManager entityManager = new DashboardServiceFacade().getEntityManager();
 		if (!entityManager.getTransaction().isActive()) {
 			entityManager.getTransaction().begin();
 		}
@@ -517,13 +474,10 @@ public class DataManager
 		} catch (Exception e) {
 			logger.error(e.getLocalizedMessage());
 			return 0;
-		} finally {
-			entityManager.getTransaction().commit();
-			entityManager.close();
-		}
+		} 
 	}
 
-	public int syncPreferences(String userName, String prefKey, String prefValue,
+	public int syncPreferences(EntityManager entityManager,String userName, String prefKey, String prefValue,
 							   Long tenantId, String creationDate, String lastModificationDate, Integer deleted) {
 		logger.debug("Calling syncPreference");
 		if (StringUtil.isEmpty(userName)) {
@@ -542,7 +496,6 @@ public class DataManager
 			logger.debug("TENANT_ID is null");
 			return 0;
 		}
-		EntityManager entityManager = new DashboardServiceFacade().getEntityManager();
 		if (!entityManager.getTransaction().isActive()) {
 			entityManager.getTransaction().begin();
 		}
@@ -562,10 +515,7 @@ public class DataManager
 		} catch (Exception e) {
 			logger.error(e.getLocalizedMessage());
 			return 0;
-		} finally {
-			entityManager.getTransaction().commit();
-			entityManager.close();
-		}
+		} 
 	}
 
 	private int insertDashboard(EntityManager entityManager, BigInteger dashboardId, String name, Long type, String description, String creationDate, String lastModificationDate, String lastModifiedBy, String owner,

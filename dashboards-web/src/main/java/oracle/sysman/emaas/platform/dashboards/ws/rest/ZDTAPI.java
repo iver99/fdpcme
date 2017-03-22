@@ -15,6 +15,7 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.EntityManager;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -26,6 +27,7 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
+import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
 import oracle.sysman.emaas.platform.dashboards.core.zdt.DataManager;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.TableRowsSynchronizer;
@@ -60,22 +62,31 @@ public class ZDTAPI extends APIBase
 		infoInteractionLogAPIIncomingCall(null, null, "Service call to [GET] /v1/zdt/tablerows");
 
 		JSONObject obj = new JSONObject();
+		EntityManager em = null;
 		try {
-			JSONArray tableData = getDashboardTableData();
+			DashboardServiceFacade dsf = new DashboardServiceFacade();
+			em = dsf.getEntityManager();
+			
+			JSONArray tableData = getDashboardTableData(em);
 			obj.put(TABLE_DATA_KEY_DASHBOARD, tableData);
-			tableData = getDashboardSetTableData();
+			tableData = getDashboardSetTableData(em);
 			obj.put(TABLE_DATA_KEY_DASHBOARD_SET, tableData);
-			tableData = getDashboardTileTableData();
+			tableData = getDashboardTileTableData(em);
 			obj.put(TABLE_DATA_KEY_DASHBOARD_TILES, tableData);
-			tableData = getDashboardTileParamsTableData();
+			tableData = getDashboardTileParamsTableData(em);
 			obj.put(TABLE_DATA_KEY_DASHBOARD_TILE_PARAMS, tableData);
-			tableData = getDashboardUserOptionsTableData();
+			tableData = getDashboardUserOptionsTableData(em);
 			obj.put(TABLE_DATA_KEY_DASHBOARD_USER_OPTIONS, tableData);
-			tableData = getPreferenceTableData();
+			tableData = getPreferenceTableData(em);
 			obj.put(TABLE_DATA_KEY_DASHBOARD_PREFERENCES, tableData);
 		}
 		catch (JSONException e) {
 			logger.error(e.getLocalizedMessage(), e);
+		}
+		finally {
+			if (em != null) {
+				em.close();
+			}
 		}
 		return Response.status(Status.OK).entity(obj).build();
 	}
@@ -83,16 +94,29 @@ public class ZDTAPI extends APIBase
 	@GET
 	@Path("counts")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getEntitiesCoung()
+	public Response getEntitiesCount()
 	{
 		infoInteractionLogAPIIncomingCall(null, null, "Service call to [GET] /v1/zdt/counts");
-
-		long dashboardCount = DataManager.getInstance().getAllDashboardsCount();
-		long favoriteCount = DataManager.getInstance().getAllFavoriteCount();
-		long preferenceCount = DataManager.getInstance().getAllPreferencessCount();
-		logger.debug("ZDT counters: dashboards count - {}, favorite count - {}, preference count - {}", dashboardCount,
+		EntityManager em = null;
+		ZDTEntity zdte = null;
+		try {
+			DashboardServiceFacade dsf = new DashboardServiceFacade();
+			em = dsf.getEntityManager();
+			long dashboardCount = DataManager.getInstance().getAllDashboardsCount(em);
+			long favoriteCount = DataManager.getInstance().getAllFavoriteCount(em);
+			long preferenceCount = DataManager.getInstance().getAllPreferencessCount(em);
+			logger.debug("ZDT counters: dashboards count - {}, favorite count - {}, preference count - {}", dashboardCount,
 				favoriteCount, preferenceCount);
-		ZDTEntity zdte = new ZDTEntity(dashboardCount, favoriteCount, preferenceCount);
+			zdte = new ZDTEntity(dashboardCount, favoriteCount, preferenceCount);
+		
+		} catch (Exception e) {
+			logger.error("error while getting count of tables");
+		} finally {
+			if (em != null) {
+				em.close();
+			}
+
+		}
 		return Response.ok(getJsonUtil().toJson(zdte)).build();
 	}
 
@@ -104,45 +128,52 @@ public class ZDTAPI extends APIBase
 	{
 		infoInteractionLogAPIIncomingCall(null, null, "Service call to [PUT] /v1/zdt/sync");
 		logger.info("Service call to /v1/zdt/sync");
+		EntityManager em = null;
 		try {
+			DashboardServiceFacade dsf = new DashboardServiceFacade();
+			em = dsf.getEntityManager();
 			TableRowsEntity data = getJsonUtil().fromJson(dataToSync.toString(), TableRowsEntity.class);
-			new TableRowsSynchronizer().sync(data);
+			new TableRowsSynchronizer().sync(em,data);
 			return Response.status(Status.NO_CONTENT).build();
 		}
 		catch (IOException e) {
 			logger.error(e.getLocalizedMessage(), e);
 			ErrorEntity error = new ErrorEntity(e);
 			return buildErrorResponse(error);
+		} finally {
+			if (em != null) {
+				em.close();
+			}
 		}
 	}
 
-	private JSONArray getDashboardSetTableData()
+	private JSONArray getDashboardSetTableData(EntityManager em)
 	{
-		List<Map<String, Object>> list = DataManager.getInstance().getDashboardSetTableData();
+		List<Map<String, Object>> list = DataManager.getInstance().getDashboardSetTableData(em);
 		return getJSONArrayForListOfObjects(TABLE_DATA_KEY_DASHBOARD_SET, list);
 	}
 
-	private JSONArray getDashboardTableData()
+	private JSONArray getDashboardTableData(EntityManager em)
 	{
-		List<Map<String, Object>> list = DataManager.getInstance().getDashboardTableData();
+		List<Map<String, Object>> list = DataManager.getInstance().getDashboardTableData(em);
 		return getJSONArrayForListOfObjects(TABLE_DATA_KEY_DASHBOARD, list);
 	}
 
-	private JSONArray getDashboardTileParamsTableData()
+	private JSONArray getDashboardTileParamsTableData(EntityManager em)
 	{
-		List<Map<String, Object>> list = DataManager.getInstance().getDashboardTileParamsTableData();
+		List<Map<String, Object>> list = DataManager.getInstance().getDashboardTileParamsTableData(em);
 		return getJSONArrayForListOfObjects(TABLE_DATA_KEY_DASHBOARD_TILE_PARAMS, list);
 	}
 
-	private JSONArray getDashboardTileTableData()
+	private JSONArray getDashboardTileTableData(EntityManager em)
 	{
-		List<Map<String, Object>> list = DataManager.getInstance().getDashboardTileTableData();
+		List<Map<String, Object>> list = DataManager.getInstance().getDashboardTileTableData(em);
 		return getJSONArrayForListOfObjects(TABLE_DATA_KEY_DASHBOARD_TILES, list);
 	}
 
-	private JSONArray getDashboardUserOptionsTableData()
+	private JSONArray getDashboardUserOptionsTableData(EntityManager em)
 	{
-		List<Map<String, Object>> list = DataManager.getInstance().getDashboardUserOptionsTableData();
+		List<Map<String, Object>> list = DataManager.getInstance().getDashboardUserOptionsTableData(em);
 		return getJSONArrayForListOfObjects(TABLE_DATA_KEY_DASHBOARD_USER_OPTIONS, list);
 	}
 
@@ -164,9 +195,9 @@ public class ZDTAPI extends APIBase
 		return array;
 	}
 
-	private JSONArray getPreferenceTableData()
+	private JSONArray getPreferenceTableData(EntityManager em)
 	{
-		List<Map<String, Object>> list = DataManager.getInstance().getPreferenceTableData();
+		List<Map<String, Object>> list = DataManager.getInstance().getPreferenceTableData(em);
 		return getJSONArrayForListOfObjects(TABLE_DATA_KEY_DASHBOARD_PREFERENCES, list);
 	}
 }

@@ -344,7 +344,7 @@ public class TenantSubscriptionUtilTest {
         services.add("ITA");
         Assert.assertFalse(TenantSubscriptionUtil.isMonitoringServiceOnly(services));
     }
-
+/*
     @Test(groups = {"s2"})
     public void testRestClientGetNull() {
         String res = new RestClient().get(null, null,null);
@@ -397,7 +397,8 @@ public class TenantSubscriptionUtilTest {
             }
         };
     }
-
+*/
+    /*
     @Mocked
     private RegistryLookupUtil registryLookupUtil;
     @Test
@@ -474,18 +475,18 @@ public class TenantSubscriptionUtilTest {
                 result=uriBuilder;
                 uriBuilder.build();
                 result=uri;
-               /* client.resource(uri);
+                client.resource(uri);
                 result=webResource;
                 webResource.header(anyString,authToke);
-                result=builder;*/
+                result=builder;
                 builder.put(String.class, any);
                 result=putResult;
             }
         };
 
-        new RestClient().put("url",new Object(),"emaastesttenant1");
+        new RestClient().put("url",new Object(),"userTenant");
     }
 
-
+    */
 }
 

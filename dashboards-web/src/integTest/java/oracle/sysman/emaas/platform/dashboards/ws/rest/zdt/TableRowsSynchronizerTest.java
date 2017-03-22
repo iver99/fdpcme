@@ -2,6 +2,7 @@ package oracle.sysman.emaas.platform.dashboards.ws.rest.zdt;
 
 import mockit.Expectations;
 import mockit.Mocked;
+import oracle.sysman.emaas.platform.dashboards.core.persistence.PersistenceManager;
 import oracle.sysman.emaas.platform.dashboards.core.zdt.DataManager;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.DashboardRowEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.DashboardSetRowEntity;
@@ -10,11 +11,14 @@ import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.DashboardTi
 import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.DashboardUserOptionsRowEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.PreferenceRowEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.TableRowsEntity;
+
 import org.testng.annotations.Test;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.persistence.EntityManager;
 
 import static org.testng.Assert.*;
 
@@ -29,7 +33,8 @@ public class TableRowsSynchronizerTest {
 
     private TableRowsSynchronizer tableRowsSynchronizer = new TableRowsSynchronizer();
     @Test
-    public void testSync() throws Exception {
+    public void testSync(@Mocked final PersistenceManager persistenceManager, 
+			@Mocked final EntityManager em) throws Exception {
         TableRowsEntity tableRowsEntity = new TableRowsEntity();
 
         PreferenceRowEntity preferenceRowEntity = new PreferenceRowEntity();
@@ -152,31 +157,31 @@ public class TableRowsSynchronizerTest {
             {
                 DataManager.getInstance();
                 result = dataManager;
-                dataManager.syncPreferences(anyString, anyString, anyString, anyLong, anyString, anyString,(Integer)any);
+                dataManager.syncPreferences(em,anyString, anyString, anyString, anyLong, anyString, anyString,(Integer)any);
                 result = 1;
-                dataManager.syncDashboardTableRow((BigInteger)any, anyString, anyLong, anyString, anyString,anyString, anyString, anyString, (Integer)any, (Integer)any,(Integer)any, anyString, (BigInteger)any, anyLong, (Integer)any, (Integer)any,(Integer)any, (Integer)any, anyString,(Integer)any);
+                dataManager.syncDashboardTableRow(em,(BigInteger)any, anyString, anyLong, anyString, anyString,anyString, anyString, anyString, (Integer)any, (Integer)any,(Integer)any, anyString, (BigInteger)any, anyLong, (Integer)any, (Integer)any,(Integer)any, (Integer)any, anyString,(Integer)any);
                 result = 1;
-                dataManager.syncDashboardTile(anyString, (BigInteger)any, anyString, anyString, anyString, anyString, anyString, anyLong, anyLong, (Integer)any, anyLong,anyLong, anyString, anyString, anyString, anyString, anyString,anyString, anyString, anyString, anyLong,
+                dataManager.syncDashboardTile(em,anyString, (BigInteger)any, anyString, anyString, anyString, anyString, anyString, anyLong, anyLong, (Integer)any, anyLong,anyLong, anyString, anyString, anyString, anyString, anyString,anyString, anyString, anyString, anyLong,
                         anyString, anyString, anyString, anyString, anyString, anyString, anyLong, anyLong, anyLong, (Integer)any, anyLong,(Integer)any,anyString,(Integer)any);
                 result = 1;
-                dataManager.syncDashboardSet((BigInteger)any, anyLong, (BigInteger)any, anyLong, anyString, anyString, (BigInteger)any);
+                dataManager.syncDashboardSet(em,(BigInteger)any, anyLong, (BigInteger)any, anyLong, anyString, anyString, (BigInteger)any);
                 result = 1;
-                dataManager.syncDashboardTileParam(anyString, anyString, anyLong, (Integer)any, anyLong, anyString, anyLong, anyString, anyString, anyString, (Integer)any);
+                dataManager.syncDashboardTileParam(em,anyString, anyString, anyLong, (Integer)any, anyLong, anyString, anyLong, anyString, anyString, anyString, (Integer)any);
                 result = 1;
-                dataManager.syncDashboardUserOption(anyString,anyLong, (BigInteger)any, anyLong, anyString, (Integer)any, anyString, anyString, anyString, (Integer)any);
+                dataManager.syncDashboardUserOption(em,anyString,anyLong, (BigInteger)any, anyLong, anyString, (Integer)any, anyString, anyString, anyString, (Integer)any);
                 result = 1;
             }
         };
-        tableRowsSynchronizer.sync(tableRowsEntity);
+        tableRowsSynchronizer.sync(em,tableRowsEntity);
 
-        tableRowsSynchronizer.sync(null);
+        tableRowsSynchronizer.sync(em,null);
         tableRowsEntity.setEmsDashboard(dashboardRowEntities);
         tableRowsEntity.setEmsDashboardSet(dashboardSetRowEntities);
         tableRowsEntity.setEmsDashboardTile(dashboardTileRowEntities);
         tableRowsEntity.setEmsDashboardTileParams(dashboardTileParamsRowEntities);
         tableRowsEntity.setEmsDashboardUserOptions(dashboardUserOptionsRowEntities);
         tableRowsEntity.setEmsPreference(preferenceRowEntities);
-        tableRowsSynchronizer.sync(tableRowsEntity);
+        tableRowsSynchronizer.sync(em,tableRowsEntity);
 
     }
 

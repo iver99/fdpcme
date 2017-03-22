@@ -8,6 +8,7 @@ import org.testng.annotations.Test;
 import mockit.Expectations;
 import mockit.Mocked;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
+import oracle.sysman.emaas.platform.dashboards.core.persistence.PersistenceManager;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -26,128 +27,120 @@ public class DataManagerTest
     Query query;
 
     @Test
-    public void testGetALLDashboardsCount(){
+    public void testGetALLDashboardsCount(@Mocked final PersistenceManager persistenceManager, 
+			@Mocked final EntityManager entityManager, @Mocked final Query query){
         new Expectations(){
             {
-                dashboardServiceFacade.getEntityManager();
-                result = entityManager;
                 query.getSingleResult();
                 result = 1;
             }
         };
-        dataManager.getAllDashboardsCount();
+        dataManager.getAllDashboardsCount(entityManager);
     }
 
     @Test
-    public void testGetAllFavouriteCount(){
+    public void testGetAllFavouriteCount(@Mocked final PersistenceManager persistenceManager, 
+			@Mocked final EntityManager entityManager, @Mocked final Query query){
         new Expectations(){
             {
-                dashboardServiceFacade.getEntityManager();
-                result = entityManager;
                 query.getSingleResult();
                 result = 1;
             }
         };
-        dataManager.getAllFavoriteCount();
+        dataManager.getAllFavoriteCount(entityManager);
     }
 
     @Test
-    public void testGetAllPreferencessCount(){
+    public void testGetAllPreferencessCount(@Mocked final PersistenceManager persistenceManager, 
+			@Mocked final EntityManager entityManager, @Mocked final Query query){
         new Expectations(){
             {
-                dashboardServiceFacade.getEntityManager();
-                result = entityManager;
                 query.getSingleResult();
                 result = 1;
             }
         };
-        dataManager.getAllPreferencessCount();
+        dataManager.getAllPreferencessCount(entityManager);
     }
     @Test
-    public void testGetDashboardSetTableData(){
+    public void testGetDashboardSetTableData(@Mocked final PersistenceManager persistenceManager, 
+			@Mocked final EntityManager entityManager, @Mocked final Query query){
 		final List<Map<String, Object>> list = new ArrayList<>();
 		new Expectations(){
 			{
-				dashboardServiceFacade.getEntityManager();
-				result = entityManager;
 				query.getResultList();
 				result = list;
 			}
 		};
-		dataManager.getDashboardSetTableData();
+		dataManager.getDashboardSetTableData(entityManager);
 
 	}
 	@Test
-	public void testGetDasboardTableData(){
+	public void testGetDasboardTableData(@Mocked final PersistenceManager persistenceManager, 
+			@Mocked final EntityManager entityManager, @Mocked final Query query){
 		final List<Map<String, Object>> list = new ArrayList<>();
 		new Expectations(){
 			{
-				dashboardServiceFacade.getEntityManager();
-				result = entityManager;
 				query.getResultList();
 				result = list;
 			}
 		};
-		dataManager.getDashboardTableData();
+		dataManager.getDashboardTableData(entityManager);
 	}
 
 	@Test
-	public void testGetDasboardTileParamsTableData(){
+	public void testGetDasboardTileParamsTableData(@Mocked final PersistenceManager persistenceManager, 
+			@Mocked final EntityManager entityManager, @Mocked final Query query){
 		final List<Map<String, Object>> list = new ArrayList<>();
 		new Expectations(){
 			{
-				dashboardServiceFacade.getEntityManager();
-				result = entityManager;
 				query.getResultList();
 				result = list;
 			}
 		};
-		dataManager.getDashboardTileParamsTableData();
+		dataManager.getDashboardTileParamsTableData(entityManager);
 	}
 	@Test
-	public void testGetDahboardTileTableData(){
+	public void testGetDahboardTileTableData(@Mocked final PersistenceManager persistenceManager, 
+			@Mocked final EntityManager entityManager, @Mocked final Query query){
 		final List<Map<String, Object>> list = new ArrayList<>();
 		new Expectations(){
 			{
-				dashboardServiceFacade.getEntityManager();
-				result = entityManager;
 				query.getResultList();
 				result = list;
 			}
 		};
-		dataManager.getDashboardTileTableData();
+		dataManager.getDashboardTileTableData(entityManager);
 	}
 
 	@Test
-	public void testGetDahboardUserOptionsTableData(){
+	public void testGetDahboardUserOptionsTableData(@Mocked final PersistenceManager persistenceManager, 
+			@Mocked final EntityManager entityManager, @Mocked final Query query){
 		final List<Map<String, Object>> list = new ArrayList<>();
 		new Expectations(){
 			{
-				dashboardServiceFacade.getEntityManager();
-				result = entityManager;
 				query.getResultList();
 				result = list;
 			}
 		};
-		dataManager.getDashboardUserOptionsTableData();
+		dataManager.getDashboardUserOptionsTableData(entityManager);
 	}
 
 	@Test
-	public void testGetPreferenceTableData(){
+	public void testGetPreferenceTableData(@Mocked final PersistenceManager persistenceManager, 
+			@Mocked final EntityManager entityManager, @Mocked final Query query){
 		final List<Map<String, Object>> list = new ArrayList<>();
 		new Expectations(){
 			{
-				dashboardServiceFacade.getEntityManager();
-				result = entityManager;
 				query.getResultList();
 				result = list;
 			}
 		};
-		dataManager.getPreferenceTableData();
+		dataManager.getPreferenceTableData(entityManager);
 	}
 
 	@Test
-	public void getSyncDashboardTableRow(){
+	public void getSyncDashboardTableRow(@Mocked final PersistenceManager persistenceManager, 
+			@Mocked final EntityManager entityManager,@Mocked final Query query){
 		BigInteger dashboardId = new BigInteger("1");
 		String name = "name";
 		Long type = 1L;
@@ -172,13 +165,11 @@ public class DataManagerTest
 		objs.add("");
 		new Expectations(){
 			{
-				dashboardServiceFacade.getEntityManager();
-				result = entityManager;
 				query.getResultList();
 				result = objs;
 			}
 		};
-		dataManager.syncDashboardTableRow(
+		dataManager.syncDashboardTableRow(entityManager,
 				dashboardId,
 				name,
 				type,
@@ -199,42 +190,42 @@ public class DataManagerTest
 				enableDescription,
 				extendedOptions,
 				showInHome);
-		dataManager.syncDashboardTableRow(
+		dataManager.syncDashboardTableRow(entityManager,
 				null, name, type, description,
 				creationDate, lastModificationDate, lastModifiedBy,
 				owner, isSystem, applicationType, enableTimeRange,
 				screenShot, deleted, tenantId, enableRefresh,
 				sharePublic, enableEntityFilter, enableDescription,
 				extendedOptions, showInHome);
-		dataManager.syncDashboardTableRow(
+		dataManager.syncDashboardTableRow(entityManager,
 				dashboardId, null, type, description,
 				creationDate, lastModificationDate, lastModifiedBy,
 				owner, isSystem, applicationType, enableTimeRange,
 				screenShot, deleted, tenantId, enableRefresh,
 				sharePublic, enableEntityFilter, enableDescription,
 				extendedOptions, showInHome);
-		dataManager.syncDashboardTableRow(
+		dataManager.syncDashboardTableRow(entityManager,
 				dashboardId, name, null, description,
 				creationDate, lastModificationDate, lastModifiedBy,
 				owner, isSystem, applicationType, enableTimeRange,
 				screenShot, deleted, tenantId, enableRefresh,
 				sharePublic, enableEntityFilter, enableDescription,
 				extendedOptions, showInHome);
-		dataManager.syncDashboardTableRow(
+		dataManager.syncDashboardTableRow(entityManager,
 				dashboardId, name, type, description,
 				null, lastModificationDate, lastModifiedBy,
 				owner, isSystem, applicationType, enableTimeRange,
 				screenShot, deleted, tenantId, enableRefresh,
 				sharePublic, enableEntityFilter, enableDescription,
 				extendedOptions, showInHome);
-		dataManager.syncDashboardTableRow(
+		dataManager.syncDashboardTableRow(entityManager,
 				dashboardId, name, type, description,
 				creationDate, lastModificationDate, lastModifiedBy,
 				null, isSystem, applicationType, enableTimeRange,
 				screenShot, deleted, tenantId, enableRefresh,
 				sharePublic, enableEntityFilter, enableDescription,
 				extendedOptions, showInHome);
-		dataManager.syncDashboardTableRow(
+		dataManager.syncDashboardTableRow(entityManager,
 				dashboardId, name, type, description,
 				creationDate, lastModificationDate, lastModifiedBy,
 				owner, null, applicationType, enableTimeRange,
@@ -243,7 +234,8 @@ public class DataManagerTest
 				extendedOptions, showInHome);
 
 	}	@Test
-public void getSyncDashboardTableRowInsert(){
+public void getSyncDashboardTableRowInsert(@Mocked final PersistenceManager persistenceManager, 
+		@Mocked final EntityManager entityManager,@Mocked final Query query){
 	BigInteger dashboardId = new BigInteger("1");
 	String name = "name";
 	Long type = 1L;
@@ -268,13 +260,11 @@ public void getSyncDashboardTableRowInsert(){
 	objs.add("");
 	new Expectations(){
 		{
-			dashboardServiceFacade.getEntityManager();
-			result = entityManager;
 			query.getResultList();
 				result = objs;
 		}
 	};
-	dataManager.syncDashboardTableRow(
+	dataManager.syncDashboardTableRow(entityManager,
 			dashboardId,
 			name,
 			type,
@@ -300,7 +290,8 @@ public void getSyncDashboardTableRowInsert(){
 
 
 	@Test
-	public void testSyncDashboardTile(){
+	public void testSyncDashboardTile(@Mocked final PersistenceManager persistenceManager, 
+			@Mocked final EntityManager entityManager,@Mocked final Query query){
 		String tileId = "1";
 		BigInteger dashboardId = new BigInteger("1");
 		String creationDate = "creationdate";
@@ -341,75 +332,74 @@ public void getSyncDashboardTableRowInsert(){
 
 		new Expectations(){
 			{
-				dashboardServiceFacade.getEntityManager();
-				result = entityManager;
 				query.getResultList();
 				result = objs;
 			}
 		};
-	 	dataManager.syncDashboardTile(tileId, dashboardId, creationDate, lastModificationDate, lastModifiedBy, owner, title, height,
+	 	dataManager.syncDashboardTile(entityManager, tileId, dashboardId, creationDate, lastModificationDate, lastModifiedBy, owner, title, height,
 								   width, isMaximized, position, tenantId, widgetUniqueId, widgetName, widgetDescription, widgetGroupName,
 								   widgetIcon, widgetHistogram, widgetOwner, widgetCreationTime, widgetSource, widgetKocName, widgetViewmode, widgetTemplate,
 								   providerName, providerVersion, providerAssetRoot, tileRow, tileColumn, type, widgetSupportTimeControl, widgetLinkedDashboard, widgetDeleted,widgetDeletionDate,deleted);
-		dataManager.syncDashboardTile(null, dashboardId, creationDate, lastModificationDate, lastModifiedBy, owner, title, height,
+		dataManager.syncDashboardTile(entityManager,null, dashboardId, creationDate, lastModificationDate, lastModifiedBy, owner, title, height,
 				width, isMaximized, position, tenantId, widgetUniqueId, widgetName, widgetDescription, widgetGroupName,
 				widgetIcon, widgetHistogram, widgetOwner, widgetCreationTime, widgetSource, widgetKocName, widgetViewmode, widgetTemplate,
 				providerName, providerVersion, providerAssetRoot, tileRow, tileColumn, type, widgetSupportTimeControl, widgetLinkedDashboard, widgetDeleted,widgetDeletionDate,deleted);
-		dataManager.syncDashboardTile(tileId, null, creationDate, lastModificationDate, lastModifiedBy, owner, title, height,
+		dataManager.syncDashboardTile(entityManager,tileId, null, creationDate, lastModificationDate, lastModifiedBy, owner, title, height,
 				width, isMaximized, position, tenantId, widgetUniqueId, widgetName, widgetDescription, widgetGroupName,
 				widgetIcon, widgetHistogram, widgetOwner, widgetCreationTime, widgetSource, widgetKocName, widgetViewmode, widgetTemplate,
 				providerName, providerVersion, providerAssetRoot, tileRow, tileColumn, type, widgetSupportTimeControl, widgetLinkedDashboard, widgetDeleted,widgetDeletionDate,deleted);
-		dataManager.syncDashboardTile(tileId, dashboardId, null, lastModificationDate, lastModifiedBy, owner, null, height,
+		dataManager.syncDashboardTile(entityManager,tileId, dashboardId, null, lastModificationDate, lastModifiedBy, owner, null, height,
 				width, isMaximized, position, tenantId, widgetUniqueId, widgetName, widgetDescription, widgetGroupName,
 				widgetIcon, widgetHistogram, widgetOwner, widgetCreationTime, widgetSource, widgetKocName, widgetViewmode, widgetTemplate,
 				providerName, providerVersion, providerAssetRoot, tileRow, tileColumn, type, widgetSupportTimeControl, widgetLinkedDashboard, widgetDeleted,widgetDeletionDate,deleted);
-		dataManager.syncDashboardTile(tileId, dashboardId, creationDate, lastModificationDate, lastModifiedBy, owner, title, height,
+		dataManager.syncDashboardTile(entityManager,tileId, dashboardId, creationDate, lastModificationDate, lastModifiedBy, owner, title, height,
 				width, isMaximized, null, tenantId, widgetUniqueId, widgetName, widgetDescription, widgetGroupName,
 				widgetIcon, widgetHistogram, widgetOwner, widgetCreationTime, widgetSource, widgetKocName, widgetViewmode, widgetTemplate,
 				providerName, providerVersion, providerAssetRoot, tileRow, tileColumn, type, widgetSupportTimeControl, widgetLinkedDashboard, widgetDeleted,widgetDeletionDate,deleted);
-		dataManager.syncDashboardTile(tileId, dashboardId, creationDate, lastModificationDate, lastModifiedBy, owner, title, height,
+		dataManager.syncDashboardTile(entityManager,tileId, dashboardId, creationDate, lastModificationDate, lastModifiedBy, owner, title, height,
 				width, isMaximized, position, null, widgetUniqueId, widgetName, widgetDescription, widgetGroupName,
 				widgetIcon, widgetHistogram, widgetOwner, widgetCreationTime, widgetSource, widgetKocName, widgetViewmode, widgetTemplate,
 				providerName, providerVersion, providerAssetRoot, tileRow, tileColumn, type, widgetSupportTimeControl, widgetLinkedDashboard, widgetDeleted,widgetDeletionDate,deleted);
-		dataManager.syncDashboardTile(tileId, dashboardId, creationDate, lastModificationDate, lastModifiedBy, owner, title, height,
+		dataManager.syncDashboardTile(entityManager,tileId, dashboardId, creationDate, lastModificationDate, lastModifiedBy, owner, title, height,
 				width, isMaximized, position, tenantId, null, widgetName, widgetDescription, widgetGroupName,
 				widgetIcon, widgetHistogram, widgetOwner, widgetCreationTime, widgetSource, widgetKocName, widgetViewmode, widgetTemplate,
 				providerName, providerVersion, providerAssetRoot, tileRow, tileColumn, type, widgetSupportTimeControl, widgetLinkedDashboard, widgetDeleted,widgetDeletionDate,deleted);
-		dataManager.syncDashboardTile(tileId, dashboardId, creationDate, lastModificationDate, lastModifiedBy, owner, title, height,
+		dataManager.syncDashboardTile(entityManager,tileId, dashboardId, creationDate, lastModificationDate, lastModifiedBy, owner, title, height,
 				width, isMaximized, position, tenantId, widgetUniqueId, null, widgetDescription, widgetGroupName,
 				widgetIcon, widgetHistogram, widgetOwner, widgetCreationTime, widgetSource, widgetKocName, widgetViewmode, widgetTemplate,
 				providerName, providerVersion, providerAssetRoot, tileRow, tileColumn, type, widgetSupportTimeControl, widgetLinkedDashboard, widgetDeleted,widgetDeletionDate,deleted);
-		dataManager.syncDashboardTile(tileId, dashboardId, creationDate, lastModificationDate, lastModifiedBy, owner, title, height,
+		dataManager.syncDashboardTile(entityManager,tileId, dashboardId, creationDate, lastModificationDate, lastModifiedBy, owner, title, height,
 				width, isMaximized, position, tenantId, widgetUniqueId, widgetName, widgetDescription, widgetGroupName,
 				widgetIcon, widgetHistogram, null, widgetCreationTime, widgetSource, widgetKocName, widgetViewmode, widgetTemplate,
 				providerName, providerVersion, providerAssetRoot, tileRow, tileColumn, type, widgetSupportTimeControl, widgetLinkedDashboard, widgetDeleted,widgetDeletionDate,deleted);
-		dataManager.syncDashboardTile(tileId, dashboardId, creationDate, lastModificationDate, lastModifiedBy, owner, title, height,
+		dataManager.syncDashboardTile(entityManager,tileId, dashboardId, creationDate, lastModificationDate, lastModifiedBy, owner, title, height,
 				width, isMaximized, position, tenantId, widgetUniqueId, widgetName, widgetDescription, widgetGroupName,
 				widgetIcon, widgetHistogram, widgetOwner, null, widgetSource, widgetKocName, widgetViewmode, widgetTemplate,
 				providerName, providerVersion, providerAssetRoot, tileRow, tileColumn, type, widgetSupportTimeControl, widgetLinkedDashboard, widgetDeleted,widgetDeletionDate,deleted);
-		dataManager.syncDashboardTile(tileId, dashboardId, creationDate, lastModificationDate, lastModifiedBy, owner, title, height,
+		dataManager.syncDashboardTile(entityManager,tileId, dashboardId, creationDate, lastModificationDate, lastModifiedBy, owner, title, height,
 				width, isMaximized, position, tenantId, widgetUniqueId, widgetName, widgetDescription, widgetGroupName,
 				widgetIcon, widgetHistogram, widgetOwner, widgetCreationTime, null, widgetKocName, widgetViewmode, widgetTemplate,
 				providerName, providerVersion, providerAssetRoot, tileRow, tileColumn, type, widgetSupportTimeControl, widgetLinkedDashboard, widgetDeleted,widgetDeletionDate,deleted);
-		dataManager.syncDashboardTile(tileId, dashboardId, creationDate, lastModificationDate, lastModifiedBy, owner, title, height,
+		dataManager.syncDashboardTile(entityManager,tileId, dashboardId, creationDate, lastModificationDate, lastModifiedBy, owner, title, height,
 				width, isMaximized, position, tenantId, widgetUniqueId, widgetName, widgetDescription, widgetGroupName,
 				widgetIcon, widgetHistogram, widgetOwner, widgetCreationTime, widgetSource, null, widgetViewmode, widgetTemplate,
 				providerName, providerVersion, providerAssetRoot, tileRow, tileColumn, type, widgetSupportTimeControl, widgetLinkedDashboard, widgetDeleted,widgetDeletionDate,deleted);
-		dataManager.syncDashboardTile(tileId, dashboardId, creationDate, lastModificationDate, lastModifiedBy, owner, title, height,
+		dataManager.syncDashboardTile(entityManager,tileId, dashboardId, creationDate, lastModificationDate, lastModifiedBy, owner, title, height,
 				width, isMaximized, position, tenantId, widgetUniqueId, widgetName, widgetDescription, widgetGroupName,
 				widgetIcon, widgetHistogram, widgetOwner, widgetCreationTime, widgetSource, widgetKocName, null, widgetTemplate,
 				providerName, providerVersion, providerAssetRoot, tileRow, tileColumn, type, widgetSupportTimeControl, widgetLinkedDashboard, widgetDeleted,widgetDeletionDate,deleted);
-		dataManager.syncDashboardTile(tileId, dashboardId, creationDate, lastModificationDate, lastModifiedBy, owner, title, height,
+		dataManager.syncDashboardTile(entityManager,tileId, dashboardId, creationDate, lastModificationDate, lastModifiedBy, owner, title, height,
 				width, isMaximized, position, tenantId, widgetUniqueId, widgetName, widgetDescription, widgetGroupName,
 				widgetIcon, widgetHistogram, widgetOwner, widgetCreationTime, widgetSource, widgetKocName, widgetViewmode, null,
 				providerName, providerVersion, providerAssetRoot, tileRow, tileColumn, type, widgetSupportTimeControl, widgetLinkedDashboard, widgetDeleted,widgetDeletionDate,deleted);	 	
-		dataManager.syncDashboardTile(tileId, dashboardId, creationDate, lastModificationDate, lastModifiedBy, owner, title, height,
+		dataManager.syncDashboardTile(entityManager,tileId, dashboardId, creationDate, lastModificationDate, lastModifiedBy, owner, title, height,
 				width, isMaximized, position, tenantId, widgetUniqueId, widgetName, widgetDescription, widgetGroupName,
 				widgetIcon, widgetHistogram, widgetOwner, widgetCreationTime, widgetSource, widgetKocName, widgetViewmode, widgetTemplate,
 				providerName, providerVersion, providerAssetRoot, tileRow, tileColumn, type, null, widgetLinkedDashboard, widgetDeleted,widgetDeletionDate,deleted);
 	}
 	@Test
-	public void testSyncDashboardTileInsert() {
+	public void testSyncDashboardTileInsert(@Mocked final PersistenceManager persistenceManager, 
+			@Mocked final EntityManager entityManager,@Mocked final Query query) {
 		String tileId = "1";
 		BigInteger dashboardId = new BigInteger("1");
 		String creationDate = "creationdate";
@@ -450,19 +440,18 @@ public void getSyncDashboardTableRowInsert(){
 
 		new Expectations() {
 			{
-				dashboardServiceFacade.getEntityManager();
-				result = entityManager;
 				query.getResultList();
 				result = objs;
 			}
 		};
-		dataManager.syncDashboardTile(tileId, dashboardId, creationDate, lastModificationDate, lastModifiedBy, owner, title, height,
+		dataManager.syncDashboardTile(entityManager,tileId, dashboardId, creationDate, lastModificationDate, lastModifiedBy, owner, title, height,
 				width, isMaximized, position, tenantId, widgetUniqueId, widgetName, widgetDescription, widgetGroupName,
 				widgetIcon, widgetHistogram, widgetOwner, widgetCreationTime, widgetSource, widgetKocName, widgetViewmode, widgetTemplate,
 				providerName, providerVersion, providerAssetRoot, tileRow, tileColumn, type, widgetSupportTimeControl, widgetLinkedDashboard, widgetDeleted,widgetDeletionDate,deleted);
 	}
 	@Test
-	public void testSyncDashboardTileParam(){
+	public void testSyncDashboardTileParam(@Mocked final PersistenceManager persistenceManager, 
+			@Mocked final EntityManager entityManager,@Mocked final Query query){
 		String tileId = "1";
 		String paramName = "paramName";
 		Long tenantId = 1L;
@@ -479,33 +468,32 @@ public void getSyncDashboardTableRowInsert(){
 
 		new Expectations(){
 			{
-				dashboardServiceFacade.getEntityManager();
-				result = entityManager;
 				query.getResultList();
 				result = objs;
 			}
 		};
-		dataManager.syncDashboardTileParam(tileId, paramName,
+		dataManager.syncDashboardTileParam(entityManager,tileId, paramName,
 				  tenantId, isSystem, paramType, paramValueStr,
 				  paramValueNum, paramValueTimestamp, creationDate, lastModificationDate, deleted);
-		dataManager.syncDashboardTileParam(null, paramName,
+		dataManager.syncDashboardTileParam(entityManager,null, paramName,
 				tenantId, isSystem, paramType, paramValueStr,
 				paramValueNum, paramValueTimestamp, creationDate, lastModificationDate, deleted);
-		dataManager.syncDashboardTileParam(tileId, paramName,
+		dataManager.syncDashboardTileParam(entityManager,tileId, paramName,
 				null, isSystem, paramType, paramValueStr,
 				paramValueNum, paramValueTimestamp, creationDate, lastModificationDate, deleted);
-		dataManager.syncDashboardTileParam(tileId, paramName,
+		dataManager.syncDashboardTileParam(entityManager,tileId, paramName,
 				tenantId, null, paramType, paramValueStr,
 				paramValueNum, paramValueTimestamp, creationDate, lastModificationDate, deleted);
-		dataManager.syncDashboardTileParam(tileId, paramName,
+		dataManager.syncDashboardTileParam(entityManager,tileId, paramName,
 				tenantId, isSystem, null, paramValueStr,
 				paramValueNum, paramValueTimestamp, creationDate, lastModificationDate, deleted);
-		dataManager.syncDashboardTileParam(tileId, null,
+		dataManager.syncDashboardTileParam(entityManager,tileId, null,
 				tenantId, isSystem, paramType, paramValueStr,
 				paramValueNum, paramValueTimestamp, creationDate, lastModificationDate, deleted);
 	}
 	@Test
-	public void testSyncDashboardTileParamInsert(){
+	public void testSyncDashboardTileParamInsert(@Mocked final PersistenceManager persistenceManager, 
+			@Mocked final EntityManager entityManager,@Mocked final Query query){
 		String tileId = "1";
 		String paramName = "paramName";
 		Long tenantId = 1L;
@@ -522,19 +510,18 @@ public void getSyncDashboardTableRowInsert(){
 
 		new Expectations(){
 			{
-				dashboardServiceFacade.getEntityManager();
-				result = entityManager;
 				query.getResultList();
 				result = objs;
 			}
 		};
-		dataManager.syncDashboardTileParam(tileId, paramName,
+		dataManager.syncDashboardTileParam(entityManager,tileId, paramName,
 				tenantId, isSystem, paramType, paramValueStr,
 				paramValueNum, paramValueTimestamp, creationDate, lastModificationDate,deleted);
 	}
 
 	@Test
-	public void testSyncDashboardUserOption() {
+	public void testSyncDashboardUserOption(@Mocked final PersistenceManager persistenceManager, 
+			@Mocked final EntityManager entityManager,@Mocked final Query query) {
 		String userName = "username";
 		Long tenantId = 1L;
 		BigInteger dashboardId = new BigInteger("1");
@@ -550,27 +537,26 @@ public void getSyncDashboardTableRowInsert(){
 
 		new Expectations(){
 			{
-				dashboardServiceFacade.getEntityManager();
-				result = entityManager;
 				query.getResultList();
 				result = objs;
 			}
 		};
-		dataManager.syncDashboardUserOption(userName, tenantId, dashboardId,
+		dataManager.syncDashboardUserOption(entityManager,userName, tenantId, dashboardId,
 				autoRefreshInterval, accessDate, isFavorite, extendedOptions,
 				creationDate, lastModificationDate,deleted);
-		dataManager.syncDashboardUserOption(null, tenantId, dashboardId,
+		dataManager.syncDashboardUserOption(entityManager,null, tenantId, dashboardId,
 				autoRefreshInterval, accessDate, isFavorite, extendedOptions,
 				creationDate, lastModificationDate,deleted);
-		dataManager.syncDashboardUserOption(userName, null, dashboardId,
+		dataManager.syncDashboardUserOption(entityManager,userName, null, dashboardId,
 				autoRefreshInterval, accessDate, isFavorite, extendedOptions,
 				creationDate, lastModificationDate,deleted);
-		dataManager.syncDashboardUserOption(userName, tenantId, null,
+		dataManager.syncDashboardUserOption(entityManager,userName, tenantId, null,
 				autoRefreshInterval, accessDate, isFavorite, extendedOptions,
 				creationDate, lastModificationDate,deleted);
 	}
 	@Test
-	public void testSyncDashboardUserOptionInsert() {
+	public void testSyncDashboardUserOptionInsert(@Mocked final PersistenceManager persistenceManager, 
+			@Mocked final EntityManager entityManager,@Mocked final Query query) {
 		String userName = "username";
 		Long tenantId = 1L;
 		BigInteger dashboardId = new BigInteger("1");
@@ -585,19 +571,18 @@ public void getSyncDashboardTableRowInsert(){
 		objs.add("");
 		new Expectations(){
 			{
-				dashboardServiceFacade.getEntityManager();
-				result = entityManager;
 				query.getResultList();
 				result = objs;
 			}
 		};
-		dataManager.syncDashboardUserOption(userName, tenantId, dashboardId,
+		dataManager.syncDashboardUserOption(entityManager,userName, tenantId, dashboardId,
 				autoRefreshInterval, accessDate, isFavorite, extendedOptions,
 				creationDate, lastModificationDate,deleted);
 	}
 
 	@Test
-	public void testSyncDashboardSet(){
+	public void testSyncDashboardSet(@Mocked final PersistenceManager persistenceManager, 
+			@Mocked final EntityManager entityManager,@Mocked final Query query){
 		BigInteger dashboardSetId = new BigInteger("1");
 		Long tenantId = 1L;
 		BigInteger subDashboardId = new BigInteger("1");
@@ -609,26 +594,25 @@ public void getSyncDashboardTableRowInsert(){
 		objs.add("");
 		new Expectations(){
 			{
-				dashboardServiceFacade.getEntityManager();
-				result = entityManager;
 				query.getResultList();
 				result = objs;
 			}
 		};
-		dataManager.syncDashboardSet(dashboardSetId, tenantId, subDashboardId,
+		dataManager.syncDashboardSet(entityManager,dashboardSetId, tenantId, subDashboardId,
 				  position, creationDate, lastModificationDate, deleted);
-		dataManager.syncDashboardSet(null, tenantId, subDashboardId,
+		dataManager.syncDashboardSet(entityManager,null, tenantId, subDashboardId,
 				position, creationDate, lastModificationDate, deleted);
-		dataManager.syncDashboardSet(dashboardSetId, null, subDashboardId,
+		dataManager.syncDashboardSet(entityManager,dashboardSetId, null, subDashboardId,
 				position, creationDate, lastModificationDate, deleted);
-		dataManager.syncDashboardSet(dashboardSetId, tenantId, null,
+		dataManager.syncDashboardSet(entityManager,dashboardSetId, tenantId, null,
 				position, creationDate, lastModificationDate, deleted);
-		dataManager.syncDashboardSet(dashboardSetId, tenantId, subDashboardId,
+		dataManager.syncDashboardSet(entityManager,dashboardSetId, tenantId, subDashboardId,
 				null, creationDate, lastModificationDate, deleted);
 	}
 
 	@Test
-	public void testSyncDashboardSetInsert(){
+	public void testSyncDashboardSetInsert(@Mocked final PersistenceManager persistenceManager, 
+			@Mocked final EntityManager entityManager,@Mocked final Query query){
 		BigInteger dashboardSetId = new BigInteger("1");
 		Long tenantId = 1L;
 		BigInteger subDashboardId = new BigInteger("1");
@@ -641,18 +625,17 @@ public void getSyncDashboardTableRowInsert(){
 
 		new Expectations(){
 			{
-				dashboardServiceFacade.getEntityManager();
-				result = entityManager;
 				query.getResultList();
 				result = objs;
 			}
 		};
-		dataManager.syncDashboardSet(dashboardSetId, tenantId, subDashboardId,
+		dataManager.syncDashboardSet(entityManager,dashboardSetId, tenantId, subDashboardId,
 				position, creationDate, lastModificationDate, deleted);
 	}
 
 	@Test
-	public void testSyncPreference(){
+	public void testSyncPreference(@Mocked final PersistenceManager persistenceManager, 
+			@Mocked final EntityManager entityManager,@Mocked final Query query){
 		String userName = "userName";
 		String prefKey = "prefKey";
 		String prefValue = "prefValue";
@@ -664,26 +647,25 @@ public void getSyncDashboardTableRowInsert(){
 		objs.add("");
 		new Expectations(){
 			{
-				dashboardServiceFacade.getEntityManager();
-				result = entityManager;
 				query.getResultList();
 				result = objs;
 			}
 		};
-		dataManager.syncPreferences(userName, prefKey, prefValue,
+		dataManager.syncPreferences(entityManager,userName, prefKey, prefValue,
 				  tenantId, creationDate, lastModificationDate, deleted);
-		dataManager.syncPreferences(null, prefKey, prefValue,
+		dataManager.syncPreferences(entityManager,null, prefKey, prefValue,
 				tenantId, creationDate, lastModificationDate, deleted);
-		dataManager.syncPreferences(userName, null, prefValue,
+		dataManager.syncPreferences(entityManager,userName, null, prefValue,
 				tenantId, creationDate, lastModificationDate, deleted);
-		dataManager.syncPreferences(userName, prefKey, null,
+		dataManager.syncPreferences(entityManager,userName, prefKey, null,
 				tenantId, creationDate, lastModificationDate, deleted);
-		dataManager.syncPreferences(userName, prefKey, prefValue,
+		dataManager.syncPreferences(entityManager,userName, prefKey, prefValue,
 				null, creationDate, lastModificationDate, deleted);
 	}
 
 	@Test
-	public void testSyncPreferenceInsert(){
+	public void testSyncPreferenceInsert(@Mocked final PersistenceManager persistenceManager, 
+			@Mocked final EntityManager entityManager,@Mocked final Query query){
 		String userName = "userName";
 		String prefKey = "prefKey";
 		String prefValue = "prefValue";
@@ -695,13 +677,11 @@ public void getSyncDashboardTableRowInsert(){
 		objs.add("");
 		new Expectations(){
 			{
-				dashboardServiceFacade.getEntityManager();
-				result = entityManager;
 				query.getResultList();
 				result = objs;
 			}
 		};
-		dataManager.syncPreferences(userName, prefKey, prefValue,
+		dataManager.syncPreferences(entityManager,userName, prefKey, prefValue,
 				tenantId, creationDate, lastModificationDate, deleted);
 	}
 }
