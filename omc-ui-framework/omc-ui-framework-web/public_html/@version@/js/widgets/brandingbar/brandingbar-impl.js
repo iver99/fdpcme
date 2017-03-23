@@ -790,15 +790,23 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 
                 var menuUtil = new menuModel();
                 menuUtil.subscribeServiceMenuLoadedEvent(function(){
-                    if(self.xlargeScreen()){
-                    $((function(){
-                        $("#omcHamburgerMenu").on("ojopen", function(event, offcanvas) {
+                    $("#omcHamburgerMenu").on("ojopen", function(event, offcanvas) {
                         if(offcanvas.displayMode === "push")
                             $("#offcanvasInnerContainer").width(document.body.clientWidth-250);
                         });
-                        $("#omcHamburgerMenu").on("ojbeforeclose", function(event, offcanvas) {
+                    $("#omcHamburgerMenu").on("ojbeforeclose", function(event, offcanvas) {
+                        $("#offcanvasInnerContainer").width(document.body.clientWidth);
+                    });
+                    $(window).resize(function() {
+                        if ($("#omcHamburgerMenu").hasClass("oj-offcanvas-open")) {
+                            $("#offcanvasInnerContainer").width(document.body.clientWidth - 250);
+                        } else {
                             $("#offcanvasInnerContainer").width(document.body.clientWidth);
-                        });
+                        }
+                    });
+
+                    if(self.xlargeScreen()){
+                    $((function(){
                         oj.OffcanvasUtils.open({
                                 "edge": "start",
                                 "displayMode": "push",
