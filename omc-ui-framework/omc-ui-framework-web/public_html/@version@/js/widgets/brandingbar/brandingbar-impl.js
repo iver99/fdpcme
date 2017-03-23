@@ -785,6 +785,21 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                                     "selector": "#omcHamburgerMenu",
                                     "autoDismiss": "none"
                                 });
+                        }else if($("#omcHamburgerMenu").hasClass("oj-offcanvas-overlay")){
+                                oj.OffcanvasUtils.close({
+                                    "edge": "start",
+                                    "displayMode": "overlay",
+                                    "selector": "#omcHamburgerMenu",
+                                    "autoDismiss": "focusLoss"
+                                });
+                                setTimeout(function(){
+                                        oj.OffcanvasUtils.open({
+                                            "edge": "start",
+                                            "displayMode": "push",
+                                            "selector": "#omcHamburgerMenu",
+                                            "autoDismiss": "none"
+                                        });
+                                },400);
                         }
                     }
                 });
@@ -805,11 +820,11 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         if(offcanvas.displayMode === "push")
                             $("#offcanvasInnerContainer").width(document.body.clientWidth-250);
                         });
-                    $("#omcHamburgerMenu").on("ojbeforeclose", function(event, offcanvas) {
+                    $("#omcHamburgerMenu").on("ojclose", function(event, offcanvas) {
                         $("#offcanvasInnerContainer").width(document.body.clientWidth);
                     });
                     $(window).resize(function() {
-                        if ($("#omcHamburgerMenu").hasClass("oj-offcanvas-open")) {
+                        if ($("#omcHamburgerMenu").hasClass("oj-offcanvas-open") && !$("#omcHamburgerMenu").hasClass("oj-offcanvas-overlay")) {
                             $("#offcanvasInnerContainer").width(document.body.clientWidth - 250);
                         } else {
                             $("#offcanvasInnerContainer").width(document.body.clientWidth);

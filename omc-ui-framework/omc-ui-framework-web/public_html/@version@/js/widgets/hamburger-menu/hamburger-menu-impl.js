@@ -7,11 +7,12 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
     'uifwk/@version@/js/util/preference-util-impl', 
     'uifwk/@version@/js/sdk/context-util-impl',
     'uifwk/@version@/js/sdk/menu-util-impl',
-    'uifwk/@version@/js/sdk/SessionCacheUtil'
+    'uifwk/@version@/js/sdk/SessionCacheUtil',
+    'uifwk/@version@/js/util/usertenant-util-impl'
     //'ojs/ojnavigationlist',
     //'ojs/ojjsontreedatasource'
     ],
-        function ($, oj, ko, nls, dfumodel, pfumodel, ctxmodel, menumodel, sessionCacheModel) {
+        function ($, oj, ko, nls, dfumodel, pfumodel, ctxmodel, menumodel, sessionCacheModel, utModel) {
             function HamburgerMenuViewModel(params) {
                 var self = this;
                 var userName = params.userName;
@@ -19,6 +20,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 var dfu = new dfumodel(userName, tenantName);
                 var ctxUtil = new ctxmodel();
                 var prefUtil = new pfumodel(dfu.getPreferencesUrl(), dfu.getDashboardsRequestHeader());
+                var userTenantUtil = new utModel();
                 var prefKeyHomeDashboardId = "Dashboards.homeDashboardId";
                 var isSetAsHomeChecked = false;
                 var omcHomeUrl = null;
@@ -32,6 +34,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 var sessionCacheOmcMenusPrivilegeKey = 'privilege_list';
                 var sessionCacheOmcMenusSubscribedAppsKey = 'subscribed_apps';
                 var sessionCacheBaseVanityUrlsKey = 'base_vanity_urls';
+                var sessionCacheUserRolesKey = 'user_roles';
                 var omcMenuSeparatorId = 'omc_service_menu_separator';
                 
                 var userName = params.userName;
@@ -214,9 +217,22 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 self.subscribedApps = [];
                 self.serviceMenuData = [];
                 self.baseVanityUrls = null;
+                self.userRoles = [];
                 self.dataSource = ko.observable();
                 var omcMenus = [];
                 var globalMenuIdHrefMapping = null;
+                
+                //Get role names for current user
+                function getUserRoles() {
+                    var dfdGetUserRoles = $.Deferred();
+                    userTenantUtil.getUserRoles(function(data) {
+                        if (data) {
+                            self.userRoles = data;
+                        }
+                        dfdGetUserRoles.resolve();
+                    }, true);
+                    return dfdGetUserRoles;
+                }
                 
                 //Get vanity base URLs for all subscribed services
                 function fetchBaseVanityUrls() {
@@ -403,6 +419,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     self.privilegeList = cachedMenus[sessionCacheOmcMenusPrivilegeKey];
                     self.serviceMenuData = cachedMenus[sessionCacheServiceMenuDataKey];
                     self.baseVanityUrls = cachedMenus[sessionCacheBaseVanityUrlsKey];
+                    self.userRoles = cachedMenus[sessionCacheUserRolesKey];
                     self.dataSource(new oj.JsonTreeDataSource(omcMenus));
                     menuUtil.fireServiceMenuLoadedEvent();
                     var selectedMenuId = params.omcCurrentMenuId;
@@ -412,7 +429,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 }
                 //otherwise, get all service menus from service registries
                 else {
-                    $.when(loadServiceMenus(), getUserGrants(), getSubscribedApps(), fetchBaseVanityUrls()).done(function() {
+                    $.when(loadServiceMenus(), getUserGrants(), getSubscribedApps(), fetchBaseVanityUrls(), getUserRoles()).done(function() {
                         for (var k = 0; k < rootMenuData.length; ++k) {
 //                            rootMenuData[k].externalUrl = globalMenuIdHrefMapping[rootMenuData[k].id] ? globalMenuIdHrefMapping[rootMenuData[k].id] : '#';
                             getGlobalMenuUrls(rootMenuData[k]);
@@ -465,6 +482,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                         sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheOmcMenusDataKey, omcMenus);
                         sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheServiceMenuDataKey, self.serviceMenuData);
                         sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheBaseVanityUrlsKey, self.baseVanityUrls);
+                        sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheUserRolesKey, self.userRoles);
                         self.dataSource(new oj.JsonTreeDataSource(omcMenus));
                         menuUtil.fireServiceMenuLoadedEvent();
                         //Set current menu item
@@ -482,17 +500,26 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     if (!requiredPrivilege) {
                         return true;
                     }
-
-                    if (Array.isArray(requiredPrivilege)) {
-                        for (var _idx = 0; _idx < requiredPrivilege.length; ++_idx) {
-                            if (self.privilegeList.indexOf(requiredPrivilege[_idx]) < 0) {
+                    
+                    //Determine check mode to see it's role check or privilege check
+                    var userPrivRoleList = [];
+                    if (requiredPrivilege.checkMode && requiredPrivilege.checkMode.toUpperCase() === 'ROLE') {
+                        userPrivRoleList = self.userRoles;
+                    }
+                    else if (requiredPrivilege.checkMode && requiredPrivilege.checkMode.toUpperCase() === 'PRIVILEGE') {
+                        userPrivRoleList = self.privilegeList;
+                    }
+                    var checkList = requiredPrivilege.checkList;
+                    if (Array.isArray(checkList)) {
+                        for (var _idx = 0; _idx < checkList.length; ++_idx) {
+                            if (userPrivRoleList.indexOf(checkList[_idx]) < 0) {
                                 return false;
                             }
                         }
                         return true;
                     } 
                     else {
-                        if (self.privilegeList.indexOf(requiredPrivilege) < 0) {
+                        if (userPrivRoleList.indexOf(checkList) < 0) {
                                 return false;
                         }
                         else {
@@ -773,7 +800,11 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                         clearCompositeMenuItems();
                         self.expanded([]);
                         self.dataSource(new oj.JsonTreeDataSource(omcMenus));
-                        $("#omcMenuNavList").ojNavigationList("refresh");
+                        //$("#omcMenuNavList").ojNavigationList("refresh");
+                        if (window._uifwk.compositeMenuCollapseCallback) {
+                            var callback = window._uifwk.compositeMenuCollapseCallback;
+                            callback();
+                        }
                     }
                     return true;
                     
@@ -801,7 +832,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                             }
                         }
                         else {
-                            fireMenuSelectionEvent(data);
+                            fireMenuSelectionEvent(item);
                         }
                     }
                 }

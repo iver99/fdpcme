@@ -147,10 +147,14 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
              * @param {String} parentMenuId Parent menu item id
              * @param {String} objMenuName Composite menu header
              * @param {Object} menuJson JSON object for composite menus
+             * @param {Function} collapseCallback Callback function to be invoked composite object menu is collapsed
              * 
              * @returns
              */
-            self.showCompositeObjectMenu = function(parentMenuId, objMenuName, menuJson){
+            self.showCompositeObjectMenu = function(parentMenuId, objMenuName, menuJson, collapseCallback) {
+                if ($.isFunction(collapseCallback)) {
+                    window._uifwk.compositeMenuCollapseCallback = collapseCallback;
+                }
                 fireCompositeMenuDisplayEvent(parentMenuId, objMenuName, menuJson);
             };
             
