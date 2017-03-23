@@ -210,14 +210,6 @@ public class RegistrationEntity implements Serializable
 		}
 	}
 
-	/**
-	 * @return the authorizationHeader
-	 */
-	//	public String getAuthToken()
-	//	{
-	//		return new String(LookupManager.getInstance().getAuthorizationToken());
-	//	}
-
 	@SuppressWarnings("unchecked")
 	public List<LinkEntity> getCloudServices()
 	{

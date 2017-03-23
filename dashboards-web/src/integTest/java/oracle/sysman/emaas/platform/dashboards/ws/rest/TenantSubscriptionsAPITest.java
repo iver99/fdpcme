@@ -13,6 +13,7 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
 import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
+import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil.VersionedLink;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
@@ -87,8 +88,7 @@ public class TenantSubscriptionsAPITest {
     }
 
     @Test
-    public void testGetSubscribedApplications4(@Mocked final ServiceEntity serviceEntity, @Mocked final TenantDetailEntity tenantDetailEntity, @Mocked final JsonUtil jsonUtil, @Mocked final RestClient restClient, @Mocked final Link link, @Mocked final RegistryLookupUtil registryLookupUtil) throws IOException {
-
+    public void testGetSubscribedApplications4(@Mocked final ServiceEntity serviceEntity, @Mocked final TenantDetailEntity tenantDetailEntity, @Mocked final JsonUtil jsonUtil, @Mocked final RestClient restClient, @Mocked final VersionedLink link, @Mocked final RegistryLookupUtil registryLookupUtil) throws IOException {
         new MockUp<APIBase>() {
             @Mock
             public void initializeUserContext(String opcTenantId, String userTenant) throws CommonSecurityException {
@@ -101,7 +101,7 @@ public class TenantSubscriptionsAPITest {
             RegistryLookupUtil.getServiceInternalLink(anyString,anyString,anyString,null);
             result = link;
 
-            restClient.get(anyString,anyString);
+            restClient.get(anyString,anyString, anyString);
             result = "tenantResponse";
 
             link.getHref();
