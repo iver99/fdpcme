@@ -742,18 +742,29 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             };
             
             self.hamburgerMenuEnabled = omcHamburgerMenuOptIn ? true : false;
+            self.isHamburgerMenuRegistered = ko.observable(false);
             if (omcHamburgerMenuOptIn) {
                 self.hamburgerBtnLabel = nls.BRANDING_BAR_HAMBURGER_BTN_LABEL;
                 self.menuParams = {'appId': self.appId, 'userName': self.userName, 'tenantName': self.tenantName, 'omcCurrentMenuId': params.omcCurrentMenuId};
-                //Register a Knockout component for hamburger menu
-                if (!ko.components.isRegistered('omc-uifwk-hamburger-menu')) {
-                    var hamburgerVMPath = "uifwk/js/widgets/hamburger-menu/js/hamburger-menu";
-                    var hamburgerTemplatePath = "uifwk/js/widgets/hamburger-menu/html/hamburger-menu.html";
-                    ko.components.register("omc-uifwk-hamburger-menu", {
-                        viewModel: {require: hamburgerVMPath},
-                        template: {require: 'text!' + hamburgerTemplatePath}
+                if (!self.isHamburgerMenuRegistered()) {
+                    require(['ojs/ojnavigationlist','ojs/ojjsontreedatasource'], function () {
+                    //Register a Knockout component for hamburger menu
+                        var hamburgerVMPath = "uifwk/js/widgets/hamburger-menu/js/hamburger-menu";
+                        var hamburgerTemplatePath = "uifwk/js/widgets/hamburger-menu/html/hamburger-menu.html";
+                        if (!ko.components.isRegistered('omc-uifwk-hamburger-menu')) {
+                            ko.components.register("omc-uifwk-hamburger-menu", {
+                                viewModel: {require: hamburgerVMPath},
+                                template: {require: 'text!' + hamburgerTemplatePath}
+                            });
+                            self.isHamburgerMenuRegistered(true);
+                        }                        
                     });
                 }
+                else {
+                    self.isHamburgerMenuRegistered(true);
+                }
+                
+                
 
                 self.xlargeScreen = oj.ResponsiveKnockoutUtils.createMediaQueryObservable('(min-width: 1440px)');
 

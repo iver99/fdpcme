@@ -7,9 +7,10 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
     'uifwk/@version@/js/util/preference-util-impl', 
     'uifwk/@version@/js/sdk/context-util-impl',
     'uifwk/@version@/js/sdk/menu-util-impl',
-    'uifwk/@version@/js/sdk/SessionCacheUtil',
-    'ojs/ojnavigationlist',
-    'ojs/ojjsontreedatasource'],
+    'uifwk/@version@/js/sdk/SessionCacheUtil'
+    //'ojs/ojnavigationlist',
+    //'ojs/ojjsontreedatasource'
+    ],
         function ($, oj, ko, nls, dfumodel, pfumodel, ctxmodel, menumodel, sessionCacheModel) {
             function HamburgerMenuViewModel(params) {
                 var self = this;
@@ -94,7 +95,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                                                     'labelKey': rootMenuLabel, 
                                                     'externalUrl': '#', 
                                                     'children': menuJson.serviceCompositeMenus};
-                                rootCompositMenuItem = applyNlsOnMenu(rootCompositMenuItem, _nls);
+                                rootCompositMenuItem = applyNlsOnMenu(rootCompositMenuItem, _nls, serviceAppId);
                                 self.serviceMenuData.push(rootCompositMenuItem);
                                 var compositeMenu = getMenuItem(rootCompositMenuItem);
                                 omcMenus.push(compositeMenu);
@@ -121,8 +122,8 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                         //Load resource bundle file for NLSed strings
                         require(['ojL10n!' + msgBundleUrl], function (_nls) {
                             serviceItem.serviceMenuMsgBundle = _nls;
-                            serviceItem.serviceMenus = applyNlsOnMenu(serviceItem.serviceMenus, _nls);
-                            serviceItem.serviceAdminMenus = applyNlsOnMenu(serviceItem.serviceAdminMenus, _nls);
+                            serviceItem.serviceMenus = applyNlsOnMenu(serviceItem.serviceMenus, _nls, serviceAppId);
+                            serviceItem.serviceAdminMenus = applyNlsOnMenu(serviceItem.serviceAdminMenus, _nls, serviceAppId);
                             
                             var menuId = findAppItemIndex(rootMenuData, 'omc_root_' + serviceAppId);
                             if (self.serviceMenuData[menuId]) {
@@ -171,31 +172,31 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 
                 self.hamburgerRootMenuLabel = nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_LABEL;
                 var rootMenuData = [
-                    {'id': 'omc_root_home', type: 'menu_item', 'labelKey': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_HOME_LABEL, 'externalUrl': '#'},
-                    {'id': 'omc_root_alerts', type: 'menu_item', 'labelKey': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_ALERTS_LABEL, 'externalUrl': '#'},
-//                    {'id': 'omc_root_applications', type: 'menu_item', 'labelKey': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_APPS_LABEL, 'externalUrl': '#'},
-                    {'id': 'omc_root_dashboards', type: 'menu_item', 'labelKey': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_DASHBOARDS_LABEL, 'externalUrl': '#'},
-//                    {'id': 'omc_root_savedsearches', type: 'menu_item', 'labelKey': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_SAVEDSEARCH_LABEL, 'externalUrl': '#'},
-                    {'id': 'omc_root_dataexplorer', type: 'menu_item', 'labelKey': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_DATAEXPLORER_LABEL, 'externalUrl': '#'},
-                    {'id': 'omc_root_divider', type: 'divider', 'labelKey': '', 'externalUrl': '#'},
-                    {'id': 'omc_root_APM', type: 'menu_item', 'labelKey': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_APM_LABEL, 'externalUrl': '#'},
-                    {'id': 'omc_root_Monitoring', type: 'menu_item', 'labelKey': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_MONITORING_LABEL, 'externalUrl': '#'},
-                    {'id': 'omc_root_LogAnalytics', type: 'menu_item', 'labelKey': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_LA_LABEL, 'externalUrl': '#'},
-                    {'id': 'omc_root_ITAnalytics', type: 'menu_item', 'labelKey': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_ITA_LABEL, 'externalUrl': '#'},
-                    {'id': 'omc_root_Orchestration', type: 'menu_item', 'labelKey': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_ORCHESTRATION_LABEL, 'externalUrl': '#'},
-                    {'id': 'omc_root_SecurityAnalytics', type: 'menu_item', 'labelKey': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_SECURITY_LABEL, 'externalUrl': '#'},
-                    {'id': 'omc_root_Compliance', type: 'menu_item', 'labelKey': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_COMPLIANCE_LABEL, 'externalUrl': '#'},
-                    {'id': 'omc_root_divider1', type: 'divider', 'labelKey': '', 'externalUrl': '#'},
-                    {'id': 'omc_root_admin', type: 'menu_group', 'labelKey': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_ADMIN_LABEL, 'externalUrl': '#', children: [
-                            {'id': 'omc_root_admin_alertrules', type: 'menu_item', 'labelKey': nls.BRANDING_BAR_HAMBURGER_MENU_ADMIN_ALERTRULES_LABEL, 'externalUrl': '#'},
-                            {'id': 'omc_root_admin_agents', type: 'menu_item', 'labelKey': nls.BRANDING_BAR_HAMBURGER_MENU_ADMIN_AGENTS_LABEL, 'externalUrl': '#'},
-                            {'id': 'omc_root_admin_entitiesconfig', type: 'menu_item', 'labelKey': nls.BRANDING_BAR_HAMBURGER_MENU_ADMIN_ENTITIESCONFIG_LABEL, 'externalUrl': '#'},
-                            {'id': 'omc_root_admin_divider', type: 'divider', 'labelKey': '', 'externalUrl': '#'},
-                            {'id': 'omc_root_admin_grp_APM', type: 'menu_item', 'labelKey': nls.BRANDING_BAR_HAMBURGER_MENU_APM_ADMIN_LABEL, 'externalUrl': '#'},
-                            {'id': 'omc_root_admin_grp_Monitoring', type: 'menu_item', 'labelKey': nls.BRANDING_BAR_HAMBURGER_MENU_MONITORING_ADMIN_LABEL, 'externalUrl': '#'},
-                            {'id': 'omc_root_admin_grp_LogAnalytics', type: 'menu_item', 'labelKey': nls.BRANDING_BAR_HAMBURGER_MENU_LOG_ADMIN_LABEL, 'externalUrl': '#'},
-                            {'id': 'omc_root_admin_grp_SecurityAnalytics', type: 'menu_item', 'labelKey': nls.BRANDING_BAR_HAMBURGER_MENU_SECURITY_ADMIN_LABEL, 'externalUrl': '#'},
-                            {'id': 'omc_root_admin_grp_Compliance', type: 'menu_item', 'labelKey': nls.BRANDING_BAR_HAMBURGER_MENU_COMPLIANCE_ADMIN_LABEL, 'externalUrl': '#'}
+                    {'id': 'omc_root_home', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_HOME_LABEL, 'externalUrl': '#'},
+                    {'id': 'omc_root_alerts', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_ALERTS_LABEL, 'externalUrl': '#'},
+//                    {'id': 'omc_root_applications', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_APPS_LABEL, 'externalUrl': '#'},
+                    {'id': 'omc_root_dashboards', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_DASHBOARDS_LABEL, 'externalUrl': '#'},
+//                    {'id': 'omc_root_savedsearches', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_SAVEDSEARCH_LABEL, 'externalUrl': '#'},
+                    {'id': 'omc_root_dataexplorer', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_DATAEXPLORER_LABEL, 'externalUrl': '#'},
+                    {'id': 'omc_root_divider', type: 'divider', 'label': '', 'externalUrl': '#'},
+                    {'id': 'omc_root_APM', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_APM_LABEL, 'externalUrl': '#'},
+                    {'id': 'omc_root_Monitoring', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_MONITORING_LABEL, 'externalUrl': '#'},
+                    {'id': 'omc_root_LogAnalytics', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_LA_LABEL, 'externalUrl': '#'},
+                    {'id': 'omc_root_ITAnalytics', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_ITA_LABEL, 'externalUrl': '#'},
+                    {'id': 'omc_root_Orchestration', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_ORCHESTRATION_LABEL, 'externalUrl': '#'},
+                    {'id': 'omc_root_SecurityAnalytics', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_SECURITY_LABEL, 'externalUrl': '#'},
+                    {'id': 'omc_root_Compliance', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_COMPLIANCE_LABEL, 'externalUrl': '#'},
+                    {'id': 'omc_root_divider1', type: 'divider', 'label': '', 'externalUrl': '#'},
+                    {'id': 'omc_root_admin', type: 'menu_group', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_ADMIN_LABEL, 'externalUrl': '#', children: [
+                            {'id': 'omc_root_admin_alertrules', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ADMIN_ALERTRULES_LABEL, 'externalUrl': '#'},
+                            {'id': 'omc_root_admin_agents', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ADMIN_AGENTS_LABEL, 'externalUrl': '#'},
+                            {'id': 'omc_root_admin_entitiesconfig', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ADMIN_ENTITIESCONFIG_LABEL, 'externalUrl': '#'},
+                            {'id': 'omc_root_admin_divider', type: 'divider', 'label': '', 'externalUrl': '#'},
+                            {'id': 'omc_root_admin_grp_APM', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_APM_ADMIN_LABEL, 'externalUrl': '#'},
+                            {'id': 'omc_root_admin_grp_Monitoring', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_MONITORING_ADMIN_LABEL, 'externalUrl': '#'},
+                            {'id': 'omc_root_admin_grp_LogAnalytics', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_LOG_ADMIN_LABEL, 'externalUrl': '#'},
+                            {'id': 'omc_root_admin_grp_SecurityAnalytics', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_SECURITY_ADMIN_LABEL, 'externalUrl': '#'},
+                            {'id': 'omc_root_admin_grp_Compliance', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_COMPLIANCE_ADMIN_LABEL, 'externalUrl': '#'}
                     ]}
                 ];
                 
@@ -361,8 +362,8 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                                     //Load resource bundle files
                                     require(['ojL10n!' + url], function (_nls) {
                                         serviceItem.serviceMenuMsgBundle = _nls;
-                                        serviceItem.serviceMenus = applyNlsOnMenu(serviceItem.serviceMenus, _nls);
-                                        serviceItem.serviceAdminMenus = applyNlsOnMenu(serviceItem.serviceAdminMenus, _nls);
+                                        serviceItem.serviceMenus = applyNlsOnMenu(serviceItem.serviceMenus, _nls, serviceItem.appId);
+                                        serviceItem.serviceAdminMenus = applyNlsOnMenu(serviceItem.serviceAdminMenus, _nls, serviceItem.appId);
                                         self.allServiceData.push(serviceItem);
                                         self.loadedServiceCnt(self.loadedServiceCnt() + 1);
                                     });
@@ -625,10 +626,11 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 }
                 
                 //Get NLSed string for menu item label and tooltips
-                function applyNlsOnMenu(rawMenuObj, nlsObj){
+                function applyNlsOnMenu(rawMenuObj, nlsObj, appId){
                     var _idx;
                     if(rawMenuObj && !Array.isArray(rawMenuObj)){
                         var menuItem = $.extend(true,{},rawMenuObj);
+                        menuItem.appId = appId;
                         if (menuItem.id === omcMenuSeparatorId) {
                             menuItem.type = 'divider';
                             return menuItem;
@@ -639,16 +641,16 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                         if(menuItem && menuItem.labelKey){
                             var _labelKey = menuItem.labelKey;
                             var _labelValue = getNlsString(_labelKey, nlsObj);
-                            menuItem.labelKey = _labelValue ? _labelValue : _labelKey;
+                            menuItem.label = _labelValue ? _labelValue : _labelKey;
                         }
                         if(menuItem && menuItem.tooltipKey){
                             var _tooltipKey = menuItem.tooltipKey;
                             var _tooltipValue = getNlsString(_tooltipKey, nlsObj);
-                            menuItem.tooltipKey = _tooltipValue ? _tooltipValue : _tooltipKey;
+                            menuItem.tooltip = _tooltipValue ? _tooltipValue : _tooltipKey;
                         }
                         if(menuItem.children){
                             for(_idx = 0; _idx < menuItem.children.length; ++_idx){
-                                menuItem.children[_idx] = applyNlsOnMenu(menuItem.children[_idx],nlsObj);
+                                menuItem.children[_idx] = applyNlsOnMenu(menuItem.children[_idx], nlsObj, appId);
                             }
                         }
                         return menuItem;
@@ -656,7 +658,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                         var menuItemList = [];
                         for(_idx = 0; _idx < rawMenuObj.length; ++_idx){
                             var menuItem = $.extend(true,{},rawMenuObj[_idx]);
-                            menuItemList.push(applyNlsOnMenu(menuItem,nlsObj));
+                            menuItemList.push(applyNlsOnMenu(menuItem, nlsObj, appId));
                         }
                         return menuItemList;
                     }
@@ -698,9 +700,9 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                                 }
                             }
                         }
-                        var menuItem = {'attr': {'id': item.id, 'type': item.type, 'label': item.labelKey, 'externalUrl': item.externalUrl, 
+                        var menuItem = {'attr': {'appId': item.appId, 'id': item.id, 'type': item.type, 'label': item.label, 'externalUrl': item.externalUrl, 
                                 'disabled': item.disabled, 'selfHandleMenuSelection': item.selfHandleMenuSelection, 
-                                'tooltip': item.tooltipKey, 'serviceNameForVanityUrl': item.serviceNameForVanityUrl}};
+                                'tooltip': item.tooltip, 'serviceNameForVanityUrl': item.serviceNameForVanityUrl}};
                         if (item && item.children && item.children.length > 0) {
                             menuItem.children = [];
                             for (var i = 0; i < item.children.length; i++) {
@@ -755,7 +757,8 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 //Menu selection handler when a menu is clicked
                 self.selectionHandler = function(data, event) {
                     self.selectedItem(data.id);
-                    if (event.type === 'click' && (data.id.indexOf('omc_root_') !== -1 || data.selfHandleMenuSelection === 'false')) {
+                    if (event.type === 'click' && (data.id.indexOf('omc_root_') !== -1 || data.selfHandleMenuSelection === 'false' 
+                            || !serviceAppId || data.appId !== serviceAppId)) {
                         handleMenuSelection(true, data);
                     }
                     else {
