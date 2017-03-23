@@ -6,6 +6,7 @@ import javax.ws.rs.core.MediaType;
 
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 
+import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,31 +30,26 @@ public class DashboardDataAccessUtil {
         }
         LOGGER.info("Dashboard REST API from dashboard-api href is: " + dashboardsLink.getHref());
         String dashboardHref = dashboardsLink.getHref() + "/" + dashboardId.toString() + "/"+ "combinedData";
-        TenantSubscriptionUtil.RestClient rc = new TenantSubscriptionUtil.RestClient();
+        RestClient rc = new RestClient();
         rc.setHeader("X-USER-IDENTITY-DOMAIN-NAME", tenantIdParam);
         rc.setHeader("X-REMOTE-USER", userTenant);
         rc.setHeader("SESSION_EXP", sessionExp);
         //EMCPDF-3448, FEB20: 3 admin link dif found in farm jobs
         rc.setHeader("OAM_REMOTE_USER", userTenant);
         rc.setHeader("Referer", referer);
+        rc.setAccept(MediaType.TEXT_PLAIN);
         try{
-        	String response = rc.get(dashboardHref, tenantIdParam,MediaType.TEXT_PLAIN);
+        	String response = rc.get(dashboardHref, tenantIdParam);
         	LOGGER.debug("Retrieved combined data is: {}", response);
             LOGGER.info("It takes {}ms to retrieve dashboard data from Dashboard-API", (System.currentTimeMillis() - start));
             return response;
-        }catch(UniformInterfaceException e){
-        	LOGGER.error("Error occurred: status code of the HTTP response indicates a response that is not expected");
-        	LOGGER.error(e);
-        }catch(ClientHandlerException e){//RestClient may timeout, so catch this runtime exception to make sure the response can return.
-        	LOGGER.error("Error occurred: Signals a failure to process the HTTP request or HTTP response");
-        	LOGGER.error(e);
         }catch(Exception e){
             LOGGER.error("Error occurred when retrieving combined data from Dashboard-UI!");
             LOGGER.error(e);
         }
         
         LOGGER.warn("Error occurred when retrieve combined data, returning empty string now...");
-        return "";
+        return null;
         
     	
     }
