@@ -832,7 +832,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                             }
                         }
                         else {
-                            fireMenuSelectionEvent(data);
+                            fireMenuSelectionEvent(item);
                         }
                     }
                 }
