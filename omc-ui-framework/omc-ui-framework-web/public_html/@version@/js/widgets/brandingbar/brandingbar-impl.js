@@ -809,7 +809,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         $("#offcanvasInnerContainer").width(document.body.clientWidth);
                     });
                     $(window).resize(function() {
-                        if ($("#omcHamburgerMenu").hasClass("oj-offcanvas-open")) {
+                        if ($("#omcHamburgerMenu").hasClass("oj-offcanvas-open") && !$("#omcHamburgerMenu").hasClass("oj-offcanvas-overlay")) {
                             $("#offcanvasInnerContainer").width(document.body.clientWidth - 250);
                         } else {
                             $("#offcanvasInnerContainer").width(document.body.clientWidth);
