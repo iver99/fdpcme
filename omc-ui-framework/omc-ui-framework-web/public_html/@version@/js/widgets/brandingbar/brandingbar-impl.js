@@ -785,6 +785,21 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                                     "selector": "#omcHamburgerMenu",
                                     "autoDismiss": "none"
                                 });
+                        }else if($("#omcHamburgerMenu").hasClass("oj-offcanvas-overlay")){
+                                oj.OffcanvasUtils.close({
+                                    "edge": "start",
+                                    "displayMode": "overlay",
+                                    "selector": "#omcHamburgerMenu",
+                                    "autoDismiss": "focusLoss"
+                                });
+                                setTimeout(function(){
+                                        oj.OffcanvasUtils.open({
+                                            "edge": "start",
+                                            "displayMode": "push",
+                                            "selector": "#omcHamburgerMenu",
+                                            "autoDismiss": "none"
+                                        });
+                                },400);
                         }
                     }
                 });
