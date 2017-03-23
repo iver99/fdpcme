@@ -742,21 +742,31 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             };
             
             self.hamburgerMenuEnabled = omcHamburgerMenuOptIn ? true : false;
+            self.isHamburgerMenuRegistered = ko.observable(false);
             if (omcHamburgerMenuOptIn) {
                 self.hamburgerBtnLabel = nls.BRANDING_BAR_HAMBURGER_BTN_LABEL;
                 self.menuParams = {'appId': self.appId, 'userName': self.userName, 'tenantName': self.tenantName, 'omcCurrentMenuId': params.omcCurrentMenuId};
-                //Register a Knockout component for hamburger menu
-                if (!ko.components.isRegistered('omc-uifwk-hamburger-menu')) {
-                    var hamburgerVMPath = "uifwk/js/widgets/hamburger-menu/js/hamburger-menu";
-                    var hamburgerTemplatePath = "uifwk/js/widgets/hamburger-menu/html/hamburger-menu.html";
-                    ko.components.register("omc-uifwk-hamburger-menu", {
-                        viewModel: {require: hamburgerVMPath},
-                        template: {require: 'text!' + hamburgerTemplatePath}
+                if (!self.isHamburgerMenuRegistered()) {
+                    require(['ojs/ojnavigationlist','ojs/ojjsontreedatasource'], function () {
+                    //Register a Knockout component for hamburger menu
+                        var hamburgerVMPath = "uifwk/js/widgets/hamburger-menu/js/hamburger-menu";
+                        var hamburgerTemplatePath = "uifwk/js/widgets/hamburger-menu/html/hamburger-menu.html";
+                        if (!ko.components.isRegistered('omc-uifwk-hamburger-menu')) {
+                            ko.components.register("omc-uifwk-hamburger-menu", {
+                                viewModel: {require: hamburgerVMPath},
+                                template: {require: 'text!' + hamburgerTemplatePath}
+                            });
+                            self.isHamburgerMenuRegistered(true);
+                        }                        
                     });
                 }
+                else {
+                    self.isHamburgerMenuRegistered(true);
+                }
+                
+                
 
-                var xlQuery = oj.ResponsiveUtils.getFrameworkQuery(oj.ResponsiveUtils.FRAMEWORK_QUERY_KEY.XL_UP);
-                self.xlargeScreen = oj.ResponsiveKnockoutUtils.createMediaQueryObservable(xlQuery);
+                self.xlargeScreen = oj.ResponsiveKnockoutUtils.createMediaQueryObservable('(min-width: 1440px)');
 
                 self.xlargeScreen.subscribe(function(isXlarge){
                     if(!isXlarge){
@@ -791,6 +801,22 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 
                 var menuUtil = new menuModel();
                 menuUtil.subscribeServiceMenuLoadedEvent(function(){
+                    $("#omcHamburgerMenu").on("ojopen", function(event, offcanvas) {
+                        if(offcanvas.displayMode === "push")
+                            $("#offcanvasInnerContainer").width(document.body.clientWidth-250);
+                        });
+                    $("#omcHamburgerMenu").on("ojbeforeclose", function(event, offcanvas) {
+                        $("#offcanvasInnerContainer").width(document.body.clientWidth);
+                    });
+                    $(window).resize(function() {
+                        if ($("#omcHamburgerMenu").hasClass("oj-offcanvas-open")) {
+                            $("#offcanvasInnerContainer").width(document.body.clientWidth - 250);
+                        } else {
+                            $("#offcanvasInnerContainer").width(document.body.clientWidth);
+                        }
+                    });
+
+                    if(self.xlargeScreen()){
                     $((function(){
                         oj.OffcanvasUtils.open({
                                 "edge": "start",
@@ -799,6 +825,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                                 "autoDismiss": "none"
                             });
                     })());
+                    }
                 });
             }
             

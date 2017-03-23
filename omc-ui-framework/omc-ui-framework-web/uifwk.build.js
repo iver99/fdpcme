@@ -25,7 +25,9 @@
                 "ojs/ojnavigationlist",
                 "ojs/ojjsontreedatasource",
                 "ojs/ojoffcanvas",
-                "ojs/ojinputnumber"
+                "ojs/ojinputnumber",
+		"ojs/ojdomscroller",
+		"ojs/ojlistview"
             ]
         },
         {

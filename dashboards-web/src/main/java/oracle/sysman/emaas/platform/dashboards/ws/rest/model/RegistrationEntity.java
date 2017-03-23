@@ -435,7 +435,7 @@ public class RegistrationEntity implements Serializable
 								if (serviceAppMapping.containsKey(serviceName)) {
 									sme.setAppId(serviceAppMapping.get(serviceName));
 								}
-								//testing code end
+
 								sme.setServiceName(serviceName);
 								sme.setVersion(le.getVersion());
 								sme.setMetaDataHref(le.getHref());
