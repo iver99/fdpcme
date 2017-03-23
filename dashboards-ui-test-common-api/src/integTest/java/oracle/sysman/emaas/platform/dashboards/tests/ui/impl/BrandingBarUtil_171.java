@@ -184,21 +184,10 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 	}
 
 	/* (non-Javadoc)
-	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IBrandingBarUtil#isMenuClickable(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
-	 */
-	@Override
-	public boolean isMenuClickable(WebDriver driver, String locator)
-	{
-		Assert.assertTrue(false, "This method is not available in the current version");
-		driver.getLogger().info("Method not available in the current version");
-		return false;
-	}
-
-	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IBrandingBarUtil#isMenuItemEnabled(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
 	@Override
-	public boolean isMenuItemEnabled(WebDriver driver, String locator)
+	public boolean isMenuItemEnabled(WebDriver driver, String menuitem)
 	{
 		Assert.assertTrue(false, "This method is not available in the current version");
 		driver.getLogger().info("Method not available in the current version");

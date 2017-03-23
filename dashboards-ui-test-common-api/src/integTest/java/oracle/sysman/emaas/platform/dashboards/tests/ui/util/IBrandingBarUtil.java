@@ -47,7 +47,7 @@ public interface IBrandingBarUtil extends IUiTestCommonAPI
 	public static final String ROOT_MENU_HOME = "Home";
 	public static final String ROOT_MENU_ALERTS = "Alerts";
 	public static final String ROOT_MENU_DASHBOARDS = "Dashboards";
-	public static final String ROOT_MENU_DATAEXPLORER = "Data Explore";
+	public static final String ROOT_MENU_DATAEXPLORER = "Data Explorer";
 	public static final String ROOT_MENU_APM = "APM";
 	public static final String ROOT_MENU_MONITORING = "Infrastructure Monitoring";
 	public static final String ROOT_MENU_LA = "Log Analytics";
@@ -128,18 +128,7 @@ public interface IBrandingBarUtil extends IUiTestCommonAPI
 	 */
 	public boolean isHomeLinkExisted(WebDriver driver, String homeLinkName);
 
-	/**
-	 * Check if the hamburger menu item is clickable or not
-	 *
-	 * @param driver
-	 *            WebDriver driver
-	 * @param locator
-	 *            the locator of menu item
-	 * @return
-	 */
-	public boolean isMenuClickable(WebDriver driver, String locator);
-
-	public boolean isMenuItemEnabled(WebDriver driver, String locator);
+	public boolean isMenuItemEnabled(WebDriver driver, String menuitem);
 
 	public boolean isMenuItemExisted(WebDriver driver, String menuitem);
 
