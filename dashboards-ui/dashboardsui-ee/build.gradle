@@ -7,7 +7,6 @@ configurations {
 
 //version = '1.0.0'
 version = project.ext.getServiceVersion("DashboardService-ui")
-group = 'emaas/applications/dashboards-framework'
 deployname=artifactPrefix+'dashboards-ui'
 def artifactId = 'dashboardsui' 
 def groupId = group 

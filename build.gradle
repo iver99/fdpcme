@@ -346,3 +346,13 @@ task cleanUpDB4LocalLRG<<{
 	println "\t================================"
     }
 }
+
+allprojects {
+  /* The name of your repository, either hardcoded or from a property */
+  project.group = "${project.baseGroup}.emcpdf"
+  if (project != rootProject) {
+    project.group += project.path.replaceAll(~/:/, '.')
+  }
+}
+
+
