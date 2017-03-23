@@ -282,32 +282,9 @@ public class TestDashBoard extends LoginAndLogout
 		webd.getLogger().info("save the dashboard");
 		DashboardBuilderUtil.saveDashboard(webd);	
 		
-		//find edit button and click it
-		WebElement editButton = webd.getWebDriver().findElement(By.xpath(PageId.DASHBOARDEDITBUTTON));		
-		Assert.assertTrue(editButton.isDisplayed(), "Edit button isn't displayed in self dashboard");
-		webd.click(PageId.DASHBOARDEDITBUTTON);
-		
-		//find the dashboard name and click it
-		WebElement dashboardName = webd.getWebDriver().findElement(By.xpath(PageId.DASHBOARDNAME));		
-		Assert.assertTrue(dashboardName.isDisplayed(), "dashboardName isn't displayed in self dashboard");
-		webd.click("css="+ PageId.DASHBOARDNAME_CSS);
-		
-		//find Dashboard Filters and click it
-		WebElement dashboardFilters = webd.getWebDriver().findElement(By.xpath(PageId.DASHBOARDFILTERS));
-		Assert.assertTrue(dashboardFilters.isDisplayed(), "Dashboard Filters isn't displayed in self dashboard");
-		webd.click(PageId.DASHBOARDFILTERS);
-		
-		//find "GC time range" radio button, then select it
-		WebElement useGCTimeRange = webd.getWebDriver().findElement(By.xpath(PageId.ENABLEGCTIMERANGE));
-		Assert.assertTrue(useGCTimeRange.isDisplayed(), "GC time range isn't displayed in self dashboard");
-		webd.click(PageId.ENABLEGCTIMERANGE);	
-		
-		webd.waitForServer();
-		
-		//find "GC entities" radio button, then select it
-		WebElement useGCEntities = webd.getWebDriver().findElement(By.xpath(PageId.ENABLEGCENTITYFILTER));
-		Assert.assertTrue(useGCEntities.isDisplayed(), "GC entities filter isn't displayed in self dashboard");
-		webd.click(PageId.ENABLEGCENTITYFILTER);					
+		//Enable the GC 
+		DashboardBuilderUtil.respectGCForEntity(webd);
+		DashboardBuilderUtil.respectGCForTimeRange(webd);						
 	}
 	
 	private String generateTimeStamp()
