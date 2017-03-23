@@ -805,7 +805,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         if(offcanvas.displayMode === "push")
                             $("#offcanvasInnerContainer").width(document.body.clientWidth-250);
                         });
-                    $("#omcHamburgerMenu").on("ojbeforeclose", function(event, offcanvas) {
+                    $("#omcHamburgerMenu").on("ojclose", function(event, offcanvas) {
                         $("#offcanvasInnerContainer").width(document.body.clientWidth);
                     });
                     $(window).resize(function() {
