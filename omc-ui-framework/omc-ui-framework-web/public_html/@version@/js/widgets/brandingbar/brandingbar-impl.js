@@ -799,7 +799,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                                             "selector": "#omcHamburgerMenu",
                                             "autoDismiss": "none"
                                         });
-                                },400);
+                                },500);
                         }
                     }
                 });
