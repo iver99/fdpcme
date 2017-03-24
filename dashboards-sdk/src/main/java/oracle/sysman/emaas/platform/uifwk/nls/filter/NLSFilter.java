@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 public class NLSFilter implements Filter
 {
 
-    private static final Pattern pattern = Pattern.compile("lang=\"en(-US)?\"");
+    private static final Pattern pattern = Pattern.compile("lang=\"en(-US|-us)?\"");
     private static final String defaultLocale = "en-US";
     private static final String[] supportedLanguages = new String[]{"en", "fr", "ko", "zh-Hans", "zh-Hant", "zh"};
     private static org.apache.logging.log4j.Logger LOGGER = LogManager.getLogger(NLSFilter.class);
@@ -80,7 +80,7 @@ public class NLSFilter implements Filter
         if (alh != null && !alh.isEmpty()) {
             String locale = alh.split(",")[0].split(";")[0];
             for (String lang : supportedLanguages) {
-                if (locale.matches("^" + lang + "(-[A-Z]{2})?$")) {
+                if (locale.matches("^" + lang + "(-[A-Za-z]{2})?$")) {
                     return locale;
                 }
             }
