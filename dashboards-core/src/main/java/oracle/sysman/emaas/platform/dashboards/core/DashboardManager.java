@@ -981,7 +981,12 @@ public class DashboardManager
 			LOGGER.debug(jpqlCount);
 			Query countQuery = em.createNativeQuery(jpqlCount);
 			initializeQueryParams(countQuery, paramList);
-			Long totalResults = ((BigDecimal) countQuery.getSingleResult()).longValue();
+			Long totalResults = 0L;
+			try{
+				totalResults = ((BigDecimal) countQuery.getSingleResult()).longValue();
+			}catch(NoResultException e){
+				LOGGER.warn("get all dashboards count did not retrieve any data!");
+			}
 			LOGGER.debug("Total results is " + totalResults);
 			PaginatedDashboards pd = new PaginatedDashboards(totalResults, firstResult, dbdList == null ? 0 : dbdList.size(),
 				maxResults, dbdList);

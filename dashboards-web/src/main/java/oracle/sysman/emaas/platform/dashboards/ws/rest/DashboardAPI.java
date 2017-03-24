@@ -18,6 +18,7 @@ import oracle.sysman.emaas.platform.dashboards.core.DashboardsFilter;
 import oracle.sysman.emaas.platform.dashboards.core.UserOptionsManager;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.functional.DashboardSameNameException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DatabaseDependencyUnavailableException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.UserOptionsNotFoundException;
@@ -103,7 +104,11 @@ public class DashboardAPI extends APIBase
 			return buildErrorResponse(error);
 		}
 		catch (DashboardException e) {
-			LOGGER.error(e.getLocalizedMessage(), e);
+			if(e instanceof DashboardSameNameException){
+				LOGGER.warn("Dashboard with the same name exists already!");
+			}else{
+				LOGGER.error(e.getLocalizedMessage(), e);
+			}
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (BasicServiceMalfunctionException e) {
