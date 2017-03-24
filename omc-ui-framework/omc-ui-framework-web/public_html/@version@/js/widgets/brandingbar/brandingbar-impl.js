@@ -832,14 +832,26 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     });
 
                     if(self.xlargeScreen()){
-                    $((function(){
-                        oj.OffcanvasUtils.open({
-                                "edge": "start",
-                                "displayMode": "push",
-                                "selector": "#omcHamburgerMenu",
-                                "autoDismiss": "none"
-                            });
-                    })());
+                        $((function(){
+                            oj.OffcanvasUtils.open({
+                                    "edge": "start",
+                                    "displayMode": "push",
+                                    "selector": "#omcHamburgerMenu",
+                                    "autoDismiss": "none"
+                                });
+                        })());
+                    }
+                    
+                    //Set current menu item if specified by API call
+                    if (window._uifwk && window._uifwk.currentOmcMenuItemId) {
+                        menuUtil.setCurrentMenuItem(window._uifwk.currentOmcMenuItemId);
+                    }
+                    else {
+                        //Set current menu item if specified from branding bar params
+                        var selectedMenuId = params.omcCurrentMenuId;
+                        if (selectedMenuId) {
+                            menuUtil.setCurrentMenuItem(selectedMenuId);
+                        }
                     }
                 });
             }
