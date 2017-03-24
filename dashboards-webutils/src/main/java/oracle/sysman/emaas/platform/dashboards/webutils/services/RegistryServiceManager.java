@@ -209,7 +209,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	private static final String NAV_ZDT_COUNTS = NAV_API_BASE + "zdt/counts";
 	private static final String NAV_STATIC_OMCSTATUS = NAV_API_BASE + "omcstatus";
 	private static final String NAV_WIDGET_NOTIFY = NAV_API_BASE + "widgetnotification";
-	private static final String NAV_SSF_LIFECYCLE = NAV_API_BASE + "ssflifecycle";
+	private static final String NAV_SSF_LIFECYCLE = NAV_API_BASE + "ssflifecycle.ntf";
 
 	public static final ObjectName WLS_RUNTIME_SERVICE_NAME;
 
