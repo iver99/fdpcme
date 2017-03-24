@@ -171,7 +171,7 @@
                             <!-- ko with:toolbarModel -->
                             <div class="builder-dbd-description" data-bind="visible: dashboardDescriptionEnabled()==='TRUE'">
                                 <div class="builder-dbd-description-display-area dbd-display-area" data-bind="css: {'dbd-edit-disabled': editDisabled()}">
-                                               <div data-bind="text: dashboardDescription()?dashboardDescription:'No description', 
+                                               <div data-bind="text: dashboardDescription()?dashboardDescription:getNlsString('DBS_BUILDER_WIDGET_NO_DESCRIPTION'), 
                                                      css:{'font-style-italic':!dashboardDescription()},
                                                      attr: {title: dashboardDescription}" 
                                                class="dbd-display-area-text single-dbd-description" style="display:block; white-space: pre;"></div>          
