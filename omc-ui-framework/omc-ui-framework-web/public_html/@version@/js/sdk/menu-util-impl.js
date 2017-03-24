@@ -100,6 +100,10 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
              * @returns
              */
             self.setCurrentMenuItem = function(menuItemId) {
+                if (!window._uifwk) {
+                    window._uifwk = {};
+                }
+                window._uifwk.currentOmcMenuItemId = menuItemId;
                 var message = {'tag': 'EMAAS_OMC_GLOBAL_MENU_SET_CURRENT_ITEM'};
                 message.menuItemId = menuItemId;
                 window.postMessage(message, window.location.href);
@@ -153,6 +157,9 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
              */
             self.showCompositeObjectMenu = function(parentMenuId, objMenuName, menuJson, collapseCallback) {
                 if ($.isFunction(collapseCallback)) {
+                    if (!window._uifwk) {
+                        window._uifwk = {};
+                    }
                     window._uifwk.compositeMenuCollapseCallback = collapseCallback;
                 }
                 fireCompositeMenuDisplayEvent(parentMenuId, objMenuName, menuJson);

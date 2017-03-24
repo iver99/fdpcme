@@ -422,10 +422,6 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     self.userRoles = cachedMenus[sessionCacheUserRolesKey];
                     self.dataSource(new oj.JsonTreeDataSource(omcMenus));
                     menuUtil.fireServiceMenuLoadedEvent();
-                    var selectedMenuId = params.omcCurrentMenuId;
-                    if (selectedMenuId) {
-                        menuUtil.setCurrentMenuItem(selectedMenuId);
-                    }
                 }
                 //otherwise, get all service menus from service registries
                 else {
@@ -485,13 +481,6 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                         sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheUserRolesKey, self.userRoles);
                         self.dataSource(new oj.JsonTreeDataSource(omcMenus));
                         menuUtil.fireServiceMenuLoadedEvent();
-                        //Set current menu item
-                        setTimeout(function(){
-                            var selectedMenuId = params.omcCurrentMenuId;
-                            if (selectedMenuId) {
-                                menuUtil.setCurrentMenuItem(selectedMenuId);
-                            }
-                        }, 10);
                     });
                 }
                 
