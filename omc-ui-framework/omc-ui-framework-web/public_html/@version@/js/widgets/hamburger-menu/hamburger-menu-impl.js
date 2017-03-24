@@ -104,7 +104,15 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                                 omcMenus.push(compositeMenu);
                                 self.expanded([rootCompositeMenuid]);
                                 self.dataSource(new oj.JsonTreeDataSource(omcMenus));
-                                $("#omcMenuNavList").ojNavigationList("refresh");
+//                                $("#omcMenuNavList").ojNavigationList("refresh");
+                                //Set current composite menu item if set
+                                if (window._uifwk && window._uifwk.currentOmcMenuItemId) {
+                                    var currentMenuId = window._uifwk.currentOmcMenuItemId;
+                                    var foundCompositeItem = findItem(rootCompositMenuItem, currentMenuId);
+                                    if (foundCompositeItem) {
+                                        menuUtil.setCurrentMenuItem(currentMenuId);
+                                    }
+                                }
                             });
                         }
                     }                  
