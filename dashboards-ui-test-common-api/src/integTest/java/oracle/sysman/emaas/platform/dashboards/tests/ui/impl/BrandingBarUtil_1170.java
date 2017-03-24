@@ -7,7 +7,6 @@
  * $$Author: $$
  * $$Revision: $$
  */
-
 package oracle.sysman.emaas.platform.dashboards.tests.ui.impl;
 
 import java.util.List;
@@ -589,7 +588,7 @@ public class BrandingBarUtil_1170 extends BrandingBarUtil_1160
 		else {
 			//the branding bar
 			driver.getLogger()
-					.info("Start to visit visual analyzer link from branding bar. Link name: " + visualAnalyzerLinkName);
+			.info("Start to visit visual analyzer link from branding bar. Link name: " + visualAnalyzerLinkName);
 			visitApplicationLink(driver, "va", visualAnalyzerLinkName);
 		}
 		driver.getLogger().info("visitApplicationVisualAnalyzer ended");
@@ -703,5 +702,4 @@ public class BrandingBarUtil_1170 extends BrandingBarUtil_1160
 			return false;
 		}
 	}
-
 }
