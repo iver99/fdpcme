@@ -9,9 +9,9 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
-  <listener>
-    <listener-class>oracle.sysman.emSDK.emaas.authz.listener.AuthorizationListener</listener-class>
-  </listener>
+    <listener>
+        <listener-class>oracle.sysman.emSDK.emaas.authz.listener.AuthorizationListener</listener-class>
+    </listener>
   <filter>
     <filter-name>CORS.filter</filter-name>
     <filter-class>oracle.sysman.emaas.platform.dashboards.ws.rest.DashboardsCORSFilter</filter-class>
