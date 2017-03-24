@@ -48,6 +48,7 @@ public class SSFLifeCycleNotificationAPI extends APIBase {
 			// only care about the SSSF up lifecycle. This will clear the dashboard-api side OOB widget cache
 			if (ssflcne != null && SSFLifeCycleNotifyEntity.SSFNotificationType.UP.equals(ssflcne.getType())) {
 				CacheUtil.clearCacheGroup(CacheConstants.CACHES_OOB_DASHBOARD_SAVEDSEARCH_CACHE);
+				LOGGER.info("Cached OOB widget data now is cleaned after getting notification from SSF side");
 			}
 			return Response.status(Response.Status.NO_CONTENT).build();
 		}
