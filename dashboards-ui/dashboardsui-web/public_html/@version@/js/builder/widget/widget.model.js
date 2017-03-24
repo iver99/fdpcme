@@ -10,6 +10,11 @@ define(['jquery',
         'builder/builder.core'], function($, oj, dfu) {
     function WidgetDataSource() {
         var self = this;
+        
+        if(typeof WidgetDataSource.instance === 'object') {
+            return WidgetDataSource.instance;
+        }  
+        self.allWidgets=undefined;
 
         self.loadWidgetData = function(keyword, successCallback) {
             initialize();
@@ -20,23 +25,29 @@ define(['jquery',
             self.widget = [];
         }
 
-        function loadWidgets(keyword,successCallback) {
+        function loadWidgets(keyword, successCallback) {
             var widgetsUrl = dfu.getWidgetsUrl();
 
-            dfu.ajaxWithRetry({
-                type: 'get',
-                url: widgetsUrl,
-                headers: dfu.getSavedSearchRequestHeader(),
-                success: function(data) {
-                    sortWidgetsData(data);
-                    data && data.length > 0 && (filterWidgetsData(data, keyword));
-                    successCallback && successCallback(self.widget);
-                },
-                error: function(){
-                    oj.Logger.error('Error when fetching widgets by URL: '+ widgetsUrl + '.');
-                },
-                async: true
-            });
+            if (!self.allWidgets) {
+                dfu.ajaxWithRetry({
+                    type: 'get',
+                    url: widgetsUrl,
+                    headers: dfu.getSavedSearchRequestHeader(),
+                    success: function (data) {
+                        sortWidgetsData(data);
+                        data && data.length > 0 && (filterWidgetsData(data, keyword));
+                        self.allWidgets = self.widget;
+                        successCallback && successCallback(self.widget);
+                    },
+                    error: function () {
+                        oj.Logger.error('Error when fetching widgets by URL: ' + widgetsUrl + '.');
+                    },
+                    async: true
+                });
+            } else {
+                filterWidgetsData(self.allWidgets, keyword);
+                successCallback && successCallback(self.widget);
+            }
         };
 
         function sortWidgetsData(widgets) {
@@ -67,6 +78,7 @@ define(['jquery',
                 widget && self.widget.push(widget);
             }
         }
+         WidgetDataSource.instance = self;
     }
     Builder.registerModule(WidgetDataSource, "WidgetDataSource");
 

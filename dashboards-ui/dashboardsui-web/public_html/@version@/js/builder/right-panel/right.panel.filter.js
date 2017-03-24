@@ -113,7 +113,7 @@ define([
                                 headerViewModel && headerViewModel.brandingbarParams.showEntitySelector(true);
                             }
 
-                            if(val === "FALSE" && self.getFilterEnabledValue(self.enableTimeRangeFilter()) === "FALSE" && headerViewModel) {
+                            if((val !== "GC") && self.getFilterEnabledValue(self.enableTimeRangeFilter()) === "FALSE" && headerViewModel) {
                                 headerViewModel.brandingbarParams.showGlobalContextBanner(false);
                             }else {
                                 headerViewModel.brandingbarParams.showGlobalContextBanner(true);

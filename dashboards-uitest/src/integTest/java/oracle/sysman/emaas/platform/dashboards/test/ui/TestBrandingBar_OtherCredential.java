@@ -3,6 +3,8 @@ package oracle.sysman.emaas.platform.dashboards.test.ui;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.DashBoardUtils;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.LoginAndLogout;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 
 import org.testng.Assert;
@@ -23,12 +25,20 @@ public class TestBrandingBar_OtherCredential extends LoginAndLogout
 		DashBoardUtils.loadWebDriver(webd);
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testAdminLinkAPMAdmin()
 	{
 		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_apm_admin1");
 		webd.getLogger().info("start to test in testAdminLinkAPMAdmin");
 		WaitUtil.waitForPageFullyLoaded(webd);
+		//validate admin link from Home page
+		webd.getLogger().info("test admin link from dashboard home page");
+
+		Assert.assertTrue(BrandingBarUtil.isAdmin(webd));
+
+		Assert.assertTrue(BrandingBarUtil.isAdminLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_AGENT));
+		Assert.assertTrue(BrandingBarUtil.isAdminLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_ALERT));
+		BrandingBarUtil.visitApplicationAdministration(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_ALERT);
 
 		// navigate to APM page
 		webd.getLogger().info("Nagivate to APM page");
@@ -82,7 +92,7 @@ public class TestBrandingBar_OtherCredential extends LoginAndLogout
 		BrandingBarUtil.visitApplicationAdministration(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_ALERT);
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testAdminLinkAPMUser()
 	{
 		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_apm_user1");
@@ -101,7 +111,7 @@ public class TestBrandingBar_OtherCredential extends LoginAndLogout
 		Assert.assertFalse(BrandingBarUtil.isAdmin(webd));
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testAdminLinkITAAdmin()
 	{
 		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_ita_admin1");
@@ -141,7 +151,7 @@ public class TestBrandingBar_OtherCredential extends LoginAndLogout
 		Assert.assertTrue(BrandingBarUtil.isAdminLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_AGENT));
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testAdminLinkITAUser()
 	{
 		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_ita_user1");
@@ -165,16 +175,21 @@ public class TestBrandingBar_OtherCredential extends LoginAndLogout
 		Assert.assertFalse(BrandingBarUtil.isAdmin(webd));
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testAdminLinkLAAdmin()
 	{
 		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_la_admin1");
 		webd.getLogger().info("start to test in testAdminLinkLAAdmin");
 		WaitUtil.waitForPageFullyLoaded(webd);
 
+		DashboardHomeUtil.createDashboard(webd, "test_adminlink", null);
+		webd.waitForServer();
+		Assert.assertTrue(BrandingBarUtil.isAdmin(webd));
+		Assert.assertTrue(BrandingBarUtil.isAdminLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_AGENT));
+		DashboardBuilderUtil.deleteDashboard(webd);
+
 		BrandingBarUtil.visitApplicationCloudService(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_LA);
 		WaitUtil.waitForPageFullyLoaded(webd);
-
 		//verify the url of opened page
 		DashBoardUtils.verifyURL(webd, "emlacore/html/log-analytics-search.html");
 
@@ -211,7 +226,7 @@ public class TestBrandingBar_OtherCredential extends LoginAndLogout
 		Assert.assertTrue(BrandingBarUtil.isAdminLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_ALERT));
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testAdminLinkLAUser()
 	{
 		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_la_user1");

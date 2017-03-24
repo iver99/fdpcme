@@ -23,6 +23,7 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceI
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
+import oracle.sysman.emaas.platform.emcpdf.cache.util.StringUtil;
 import oracle.sysman.emaas.platform.uifwk.util.DataAccessUtil;
 
 import org.testng.Assert;
@@ -39,6 +40,7 @@ public class HtmlBootstrapJsUtilTest
 		final String registration = "{\"cloudServices\":[],\"visualAnalyzers\":[],\"assetRoots\":[],\"adminLinks\":[],\"homeLinks\":[],\"sessionExpiryTime\":\"20170214103126\",\"ssoLogoutUrl\":\"https://host:port/ssoLogout\"}";
 		final String sdkVersionJS = "if(!window.sdkFilePath){window.sdkFilePath={};}window.sdkFilePath={};window.getSDKVersionFile=function(nonCacheableVersion){console.log(\"getSDKVersionFile() for: \"+nonCacheableVersion);var versionFile=nonCacheableVersion;if(window.sdkFilePath){versionFile=window.sdkFilePath[nonCacheableVersion];}if(!versionFile){versionFile=nonCacheableVersion;}console.log(\"getSDKVersionFile(), found version: \"+versionFile);return versionFile;};";
 		final String subscribedApps = "{\"applications\":[\"APM\",\"LogAnalytics\",\"ITAnalytics\"]}";
+        final String brandingBarData = "window._uifwk.cachedData.userInfo="+userInfo+"window._uifwk.cachedData.registrations="+registration+"window._uifwk.cachedData.subscribedapps="+subscribedApps;
 		new Expectations() {
 			{
 				httpReq.getHeader("referer");
@@ -47,12 +49,8 @@ public class HtmlBootstrapJsUtilTest
 				result = "20170214103126";
 				httpReq.getHeader("OAM_REMOTE_USER");
 				result = "tenant.user";
-				DataAccessUtil.getUserTenantInfo(anyString, anyString, anyString, anyString);
-				result = userInfo;
-				DataAccessUtil.getRegistrationData(anyString, anyString, anyString, anyString);
-				result = registration;
-				DataAccessUtil.getTenantSubscribedServices(anyString, anyString);
-				result = subscribedApps;
+				DataAccessUtil.getBrandingBarData(anyString, anyString, anyString, anyString);
+				result = brandingBarData;
 
 				lookupClient.getInstancesWithLinkRelPrefix(anyString, anyString);
 				result = new ArrayList<>(Arrays.asList(instanceInfo));
@@ -63,10 +61,7 @@ public class HtmlBootstrapJsUtilTest
 			}
 		};
 		String newJs = HtmlBootstrapJsUtil.getAllBootstrapJS(httpReq);
-		String expectedJs = sdkVersionJS
-				+ "if(!window._uifwk){window._uifwk={};}if(!window._uifwk.cachedData){window._uifwk.cachedData={};}"
-				+ "window._uifwk.cachedData.userInfo=" + userInfo + ";window._uifwk.cachedData.registrations=" + registration
-				+ ";window._uifwk.cachedData.subscribedapps=" + subscribedApps + ";";
+		String expectedJs = sdkVersionJS + "if(!window._uifwk){window._uifwk={};}if(!window._uifwk.cachedData){window._uifwk.cachedData={};}" + brandingBarData;
 		Assert.assertEquals(newJs, expectedJs);
 	}
 
@@ -76,7 +71,8 @@ public class HtmlBootstrapJsUtilTest
 		final String userInfo = "{\"currentUser\":\"emaastesttenant1.emcsadmin\",\"userRoles\":[\"APM Administrator\",\"APM User\"]}";
 		final String registration = "{\"cloudServices\":[],\"visualAnalyzers\":[],\"assetRoots\":[],\"adminLinks\":[],\"homeLinks\":[],\"sessionExpiryTime\":\"20170214103126\",\"ssoLogoutUrl\":\"https://host:port/ssoLogout\"}";
 		final String subscribedApps = "{\"applications\":[\"APM\",\"LogAnalytics\",\"ITAnalytics\"]}";
-		new Expectations() {
+        final String brandingBarData = "window._uifwk.cachedData.userInfo="+userInfo+"window._uifwk.cachedData.registrations="+registration+"window._uifwk.cachedData.subscribedapps="+subscribedApps;
+        new Expectations() {
 			{
 				httpReq.getHeader("referer");
 				result = "referer";
@@ -84,18 +80,12 @@ public class HtmlBootstrapJsUtilTest
 				result = "20170214103126";
 				httpReq.getHeader("OAM_REMOTE_USER");
 				result = "tenant.user";
-				DataAccessUtil.getUserTenantInfo(anyString, anyString, anyString, anyString);
-				result = userInfo;
-				DataAccessUtil.getRegistrationData(anyString, anyString, anyString, anyString);
-				result = registration;
-				DataAccessUtil.getTenantSubscribedServices(anyString, anyString);
-				result = subscribedApps;
+				DataAccessUtil.getBrandingBarData(anyString, anyString, anyString, anyString);
+				result = brandingBarData;
 			}
 		};
 		String newJs = HtmlBootstrapJsUtil.getBrandingDataJS(httpReq);
-		String expectedJs = "if(!window._uifwk){window._uifwk={};}if(!window._uifwk.cachedData){window._uifwk.cachedData={};}"
-				+ "window._uifwk.cachedData.userInfo=" + userInfo + ";window._uifwk.cachedData.registrations=" + registration
-				+ ";window._uifwk.cachedData.subscribedapps=" + subscribedApps + ";";
+		String expectedJs = "if(!window._uifwk){window._uifwk={};}if(!window._uifwk.cachedData){window._uifwk.cachedData={};}" + brandingBarData;
 		Assert.assertEquals(newJs, expectedJs);
 
 		new Expectations() {
