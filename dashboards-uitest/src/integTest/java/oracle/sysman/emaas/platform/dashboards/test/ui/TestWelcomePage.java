@@ -26,7 +26,7 @@ public class TestWelcomePage extends LoginAndLogout
 		DashBoardUtils.loadWebDriver(webd);
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testOpenAPMPage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -41,7 +41,7 @@ public class TestWelcomePage extends LoginAndLogout
 		webd.getLogger().info("Test open APM in welcome page finished!!!");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testOpenCompliancePage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -56,7 +56,7 @@ public class TestWelcomePage extends LoginAndLogout
 		webd.getLogger().info("Test open Compliance in welcome page finished!!!");
 	}
 
-	//	@Test
+	//	@Test(alwaysRun = true)
 	//	public void testOpenServiceOfferingPage()
 	//	{
 	//		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -71,7 +71,7 @@ public class TestWelcomePage extends LoginAndLogout
 	//		webd.getLogger().info("Test opening 'Service Offerings' in welcome page finished!!!");
 	//	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testOpenDashboardPage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -86,7 +86,7 @@ public class TestWelcomePage extends LoginAndLogout
 		webd.getLogger().info("Test open dashboards in welcome page finished!!!");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testOpenDE_LAPage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -101,7 +101,7 @@ public class TestWelcomePage extends LoginAndLogout
 		webd.getLogger().info("Test opening Data Explorers-Log in welcome page finished!!!");
 	}
 
-	//	@Test
+	//	@Test(alwaysRun = true)
 	//	public void testOpenGetStartedPage()
 	//	{
 	//		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -116,7 +116,7 @@ public class TestWelcomePage extends LoginAndLogout
 	//		webd.getLogger().info("Test opening 'How to get started' in welcome page finished!!!");
 	//	}
 
-	//	@Test
+	//	@Test(alwaysRun = true)
 	//	public void testOpenInfraMonitoring()
 	//	{
 	//		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -130,7 +130,7 @@ public class TestWelcomePage extends LoginAndLogout
 	//		webd.getLogger().info("Test open Infrastructure Monitoring in welcome page finished!!!");
 	//	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testOpenDE_SearchPage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -145,7 +145,7 @@ public class TestWelcomePage extends LoginAndLogout
 		webd.getLogger().info("Test opening Data Explorers-Search in welcome page finished!!!");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testOpenInfrastructureMonitoringPage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -160,7 +160,7 @@ public class TestWelcomePage extends LoginAndLogout
 		webd.getLogger().info("Test opening Infrastructure Monitoring in welcome page finished!!!");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testOpenITA_ApPrefPage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -175,7 +175,7 @@ public class TestWelcomePage extends LoginAndLogout
 		webd.getLogger().info("Test opening ITA: Application Performance Analytics in welcome page finished!!!");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testOpenITA_AvailPage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -190,7 +190,7 @@ public class TestWelcomePage extends LoginAndLogout
 		webd.getLogger().info("Test opening ITA: Availability Analytics in welcome page finished!!!");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testOpenITA_DEPage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -205,7 +205,7 @@ public class TestWelcomePage extends LoginAndLogout
 		webd.getLogger().info("Test opening ITA: Data Explorer in welcome page finished!!!");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testOpenITA_PADatabasePage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -220,7 +220,7 @@ public class TestWelcomePage extends LoginAndLogout
 		webd.getLogger().info("Test opening ITA: Performance Analytics-Database in welcome page finished!!!");
 	}
 
-	//@Test
+	//@Test(alwaysRun = true)
 	public void testOpenITA_PAMiddlewarePage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -235,7 +235,7 @@ public class TestWelcomePage extends LoginAndLogout
 		webd.getLogger().info("Test opening ITA: Performance Analytics-Middleware in welcome page finished!!!");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testOpenITA_RADatabasePage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -250,7 +250,7 @@ public class TestWelcomePage extends LoginAndLogout
 		webd.getLogger().info("Test opening ITA: Resource Analytics-Database in welcome page finished!!!");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testOpenITA_RAHostPage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -265,7 +265,7 @@ public class TestWelcomePage extends LoginAndLogout
 		webd.getLogger().info("Test opening ITA: Resource Analytics-Host in welcome page finished!!!");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testOpenITA_RAMiddlewarePage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -280,7 +280,7 @@ public class TestWelcomePage extends LoginAndLogout
 		webd.getLogger().info("Test opening ITA: Resource Analytics-Middleware in welcome page finished!!!");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testOpenITA_ServerPage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -295,7 +295,7 @@ public class TestWelcomePage extends LoginAndLogout
 		webd.getLogger().info("Test opening ITA: Application Server Analytics in welcome page finished!!!");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testOpenITAPage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -316,7 +316,7 @@ public class TestWelcomePage extends LoginAndLogout
 		webd.getLogger().info("Test open ITA in welcome page finished!!!");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testOpenLAPage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -331,7 +331,7 @@ public class TestWelcomePage extends LoginAndLogout
 		webd.getLogger().info("Test open LA in welcome page finished!!!");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testOpenOrchestrationPage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -346,7 +346,7 @@ public class TestWelcomePage extends LoginAndLogout
 		webd.getLogger().info("Test open Security Analytics in welcome page finished!!!");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testOpenSecurityPage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -361,7 +361,7 @@ public class TestWelcomePage extends LoginAndLogout
 		webd.getLogger().info("Test open Security Analytics in welcome page finished!!!");
 	}
 
-	//	@Test
+	//	@Test(alwaysRun = true)
 	//	public void testOpenVideosPage()
 	//	{
 	//		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -376,7 +376,7 @@ public class TestWelcomePage extends LoginAndLogout
 	//		webd.getLogger().info("Test opening 'Videos' in welcome page finished!!!");
 	//	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testWelcomepage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
