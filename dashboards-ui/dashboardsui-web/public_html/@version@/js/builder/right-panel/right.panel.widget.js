@@ -9,46 +9,48 @@ function (ko, $, oj, dfu) {
         self.widgets = ko.observableArray([]);
         self.keyword = ko.observable('');
         self.keywordInput=ko.observable('');
-        self.keywordInput.extend({rateLimit: 700, method: 'notifyWhenChangesStop '});
+        self.keywordInput.extend({rateLimit: 1000, method: 'notifyWhenChangesStop '});
+        self.searchStaus = ko.observable('initialize');
         self.clearRightPanelSearch = ko.observable(false);
         self.isWidgetLoaded =ko.observable(false);
         self.tilesViewModel = ko.observable($b.getDashboardTilesViewModel && $b.getDashboardTilesViewModel());
 
         self.loadWidgets = function (req,successCallback) {
             var widgetDS = new Builder.WidgetDataSource();
-
-            widgetDS.loadWidgetData(
-                    req && (typeof req.term === "string") ? req.term : self.keyword(),
-                    function (widgets) {
-                        self.widgets([]);
-                        if (widgets && widgets.length > 0) {
-                            for (var i = 0; i < widgets.length; i++) {
-                                if (!widgets[i].WIDGET_DESCRIPTION) {
-                                    widgets[i].WIDGET_DESCRIPTION = null;
-                                }
-                                var wgt = ko.mapping.fromJS(widgets[i]); 
+            self.searchStaus('searching');
+                widgetDS.loadWidgetData(
+                        req && (typeof req.term === "string") ? req.term : self.keyword(),
+                        function (widgets) {
+                            self.widgets([]);
+                            if (widgets && widgets.length > 0) {
+                                for (var i = 0; i < widgets.length; i++) {
+                                    if (!widgets[i].WIDGET_DESCRIPTION) {
+                                        widgets[i].WIDGET_DESCRIPTION = null;
+                                    }
+                                    var wgt = ko.mapping.fromJS(widgets[i]);
                                 if(widgets[i].WIDGET_DESCRIPTION){
                                     wgt.WIDGET_DESCRIPTION = widgets[i].WIDGET_DESCRIPTION.toString().replace(/\n/g,"<br>");
+                                    }
+                                    if (wgt && !wgt.WIDGET_VISUAL) {
+                                        wgt.WIDGET_VISUAL = ko.observable('');
+                                    }
+                                    if (wgt && !wgt.imgWidth) {
+                                        wgt.imgWidth = ko.observable('120px');
+                                    }
+                                    if (wgt && !wgt.imgHeight) {
+                                        wgt.imgHeight = ko.observable('120px');
+                                    }
+                                    self.widgets.push(wgt);
                                 }
-                                if (wgt && !wgt.WIDGET_VISUAL) {
-                                    wgt.WIDGET_VISUAL = ko.observable('');
-                                }
-                                if (wgt && !wgt.imgWidth) {
-                                    wgt.imgWidth = ko.observable('120px');
-                                }
-                                if (wgt && !wgt.imgHeight) {
-                                    wgt.imgHeight = ko.observable('120px');
-                                }
-                                self.widgets.push(wgt);
                             }
+                            self.initWidgetDraggable();
+                            self.isWidgetLoaded(true);
+                            self.searchStaus('search-complete');
+                            successCallback && successCallback();
                         }
-                        self.initWidgetDraggable();
-                        self.isWidgetLoaded(true);
-                        successCallback && successCallback();
-                    }
-            );
+                );
         };
-
+        
         self.getWidgetScreenshot = function (wgt) {
             var url = null;
             if (wgt.WIDGET_SCREENSHOT_HREF) {

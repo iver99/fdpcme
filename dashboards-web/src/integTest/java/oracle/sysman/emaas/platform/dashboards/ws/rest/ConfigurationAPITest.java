@@ -48,4 +48,16 @@ public class ConfigurationAPITest {
         configurationAPI.getRolesAndPriviledges("10000", "user.tenant","","");
     }
 
+    @Test
+    public void testQueryCombinedBrandingBarData() {
+        new Expectations(){
+            {
+                DependencyStatus.getInstance();
+                result = dependencyStatus;
+                dependencyStatus.isEntityNamingUp();
+                result = true;
+            }
+        };
+        configurationAPI.getCombinedBrandingBarData("10000", "user.tenant", "", "");
+    }
 }

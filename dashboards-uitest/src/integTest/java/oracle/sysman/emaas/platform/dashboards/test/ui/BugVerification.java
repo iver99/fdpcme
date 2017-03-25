@@ -6,6 +6,7 @@ import oracle.sysman.emaas.platform.dashboards.test.ui.util.PageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.GlobalContextUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.WelcomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
@@ -55,6 +56,7 @@ public class BugVerification extends LoginAndLogout
 		webd.getLogger().info("Start to remove the test data...");
 
 		DashBoardUtils.deleteDashboard(webd, "Dashboard_EMCPDF2040");
+		DashBoardUtils.deleteDashboard(webd, "Dashboard_EMCPDF2856");
 
 		webd.getLogger().info("All test data have been removed");
 
@@ -135,6 +137,66 @@ public class BugVerification extends LoginAndLogout
 	}
 
 	@Test
+	public void testEMCPDF_2856()
+	{
+		//Initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test case: testEMCPDF_2856");
+
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//create dashboard
+		BrandingBarUtil.visitDashboardHome(webd);
+		DashboardHomeUtil.gridView(webd);
+		DashboardHomeUtil.createDashboard(webd, "Dashboard_EMCPDF2856", null);
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, "Dashboard_EMCPDF2856", null, true),
+				"Create dashboard failed!");
+
+		//set it as home
+		webd.getLogger().info("Set home page");
+		Assert.assertTrue(DashboardBuilderUtil.toggleHome(webd), "Set the Dashboard_EMCPDF2856 as Home failed!");
+
+		//check home page
+		webd.getLogger().info("Access to the home page");
+		BrandingBarUtil.visitMyHome(webd);
+		webd.getLogger().info("Verfiy the home page");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, "Dashboard_EMCPDF2856", null, true),
+				"It is NOT the home page!");
+
+		//logout and login
+		LoginAndLogout.logoutMethod();
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Logout and login");
+
+		//visit welcome page
+		webd.getLogger().info("Visit Welcome Page");
+		BrandingBarUtil.visitWelcome(webd);
+		Assert.assertFalse(GlobalContextUtil.isGlobalContextExisted(webd), "The global context exists in Welcome Page");
+
+		//verify omcCtx exist in the Welcome page url
+		String wCtx_url = webd.getWebDriver().getCurrentUrl();
+		webd.getLogger().info("start to verify omcCtx exist in the welcome page url");
+		Assert.assertTrue(wCtx_url.contains("omcCtx="), "The global context infomation in URL is lost");
+
+		//visit home page
+		webd.getLogger().info("Access to the home page");
+		BrandingBarUtil.visitMyHome(webd);
+
+		//set it not "home"
+		webd.getLogger().info("Set Dashboard_EMCPDF2856 not home page");
+		Assert.assertFalse(DashboardBuilderUtil.toggleHome(webd), "Remove the dasbhoard Dashboard_EMCPDF2856 as Home failed!");
+
+		//check home page
+		webd.getLogger().info("Access to the home page");
+		BrandingBarUtil.visitMyHome(webd);
+		webd.getLogger().info("Verfiy the home page");
+		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, WelcomeUtil.SERVICE_NAME_DASHBOARDS),
+				"It is NOT the home page!");
+	}
+
+	@Test
 	public void testEMPCDF_2970()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -201,7 +263,7 @@ public class BugVerification extends LoginAndLogout
 		webd.getLogger().info("current url = " + url);
 
 		webd.getWebDriver().navigate()
-				.to(url.substring(0, url.indexOf("emsaasui")) + "emsaasui/emcpdfui/error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_MSG");
+		.to(url.substring(0, url.indexOf("emsaasui")) + "emsaasui/emcpdfui/error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_MSG");
 		webd.waitForElementPresent("css=" + PageId.ERRORPAGESINGOUTBTNCSS);
 		webd.takeScreenShot();
 
@@ -220,5 +282,4 @@ public class BugVerification extends LoginAndLogout
 		webd.getLogger().info("welcome page is verified successfully");
 		webd.getLogger().info("complete testing in testEMPCDF_832");
 	}
-
 }

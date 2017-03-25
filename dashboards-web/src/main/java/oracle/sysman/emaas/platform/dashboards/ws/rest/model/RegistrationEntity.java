@@ -142,6 +142,7 @@ public class RegistrationEntity implements Serializable
 	}
 
 	private String sessionExpirationTime = null;
+	private List<String> userRoles = null;
 
 	//Default constructor
 	public RegistrationEntity()
@@ -149,10 +150,12 @@ public class RegistrationEntity implements Serializable
 
 	}
 
-	//Constructor with session expiration time
-	public RegistrationEntity(String sessionExpirationTime)
+	//Constructor with session expiration time & userRoles
+	// if userRoles have been retrieved previously, no need to retrieve again
+	public RegistrationEntity(String sessionExpirationTime, List<String> userRoles)
 	{
 		this.sessionExpirationTime = sessionExpirationTime;
+		this.userRoles = userRoles;
 	}
 
 	/**
@@ -169,8 +172,10 @@ public class RegistrationEntity implements Serializable
 						@Override
 						public Object load(Object key) throws Exception
 						{
-							List<String> userRoles = PrivilegeChecker.getUserRoles(TenantContext.getCurrentTenant(),
-							UserContext.getCurrentUser());
+							if (userRoles == null) {
+								userRoles = PrivilegeChecker.getUserRoles(TenantContext.getCurrentTenant(),
+										UserContext.getCurrentUser());
+							}
 							if (!PrivilegeChecker.isAdminUser(userRoles)) {
 								return null;
 							}

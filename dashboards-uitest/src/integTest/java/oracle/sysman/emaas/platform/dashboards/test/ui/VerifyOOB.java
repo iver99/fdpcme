@@ -30,7 +30,7 @@ public class VerifyOOB extends LoginAndLogout
 		DashboardHomeUtil.resetFilterOptions(webd);
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyAPM_GridView()
 	{
 		//initTest
@@ -48,7 +48,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyAPM();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyAPM_ListView()
 	{
 		//initTest
@@ -66,7 +66,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyAPM();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyAPM_withFilter_GridView()
 	{
 		//initTest
@@ -89,7 +89,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyAPM();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyAPM_withFilter_ListView()
 	{
 		//initTest
@@ -112,7 +112,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyAPM();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyApplicationPerfAnalytics_GridView()
 	{
 		//initTest
@@ -131,7 +131,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyApplicationPerfAnalytics();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyApplicationPerfAnalytics_ListView()
 	{
 		//initTest
@@ -150,7 +150,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyApplicationPerfAnalytics();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyApplicationPerfAnalytics_withFilter_GridView()
 	{
 		//initTest
@@ -173,7 +173,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyApplicationPerfAnalytics();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyApplicationPerfAnalytics_withFilter_ListView()
 	{
 		//initTest
@@ -196,7 +196,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyApplicationPerfAnalytics();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyAvailabilityAnalytics_GridView()
 	{
 		//initTest
@@ -215,7 +215,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyAvailabilityAnalytics();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyAvailabilityAnalytics_ListView()
 	{
 		//initTest
@@ -234,7 +234,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyAvailabilityAnalytics();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyAvailabilityAnalytics_WithFilter_GridView()
 	{
 		//initTest
@@ -257,7 +257,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyAvailabilityAnalytics();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyAvailabilityAnalytics_WithFilter_ListView()
 	{
 		//initTest
@@ -280,7 +280,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyAvailabilityAnalytics();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyDatabaseOperations_GridView()
 	{
 		//initTest
@@ -302,7 +302,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyDatabaseOperations_Details();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyDatabaseOperations_ListView()
 	{
 		//initTest
@@ -323,7 +323,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyDatabaseOperations();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyDatabaseOperations_WithFilter_GridView()
 	{
 		//initTest
@@ -348,7 +348,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyDatabaseOperations();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyDatabaseOperations_WithFilter_ListView()
 	{
 		//initTest
@@ -373,7 +373,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyDatabaseOperations();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyEnterpriseHealth_GridView()
 	{
 		//initTest
@@ -395,7 +395,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyEnterpriseHealth_Details();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyEnterpriseHealth_ListView()
 	{
 		//initTest
@@ -416,7 +416,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyEnterpriseHealth();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyEnterpriseHealth_WithFilter_GridView()
 	{
 		//initTest
@@ -441,7 +441,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyEnterpriseHealth();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyEnterpriseHealth_WithFilter_ListView()
 	{
 		//initTest
@@ -466,7 +466,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyEnterpriseHealth();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyExadataHealth_GridView()
 	{
 		//initTest
@@ -488,7 +488,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyExadataHealth_Details();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyExadataHealth_ListView()
 	{
 		//initTest
@@ -509,7 +509,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyExadataHealth();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyExadataHealth_WithFilter_GridView()
 	{
 		//initTest
@@ -534,7 +534,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyExadataHealth();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyExadataHealth_WithFilter_ListView()
 	{
 		//initTest
@@ -559,7 +559,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyExadataHealth();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyHostOperations_GridView()
 	{
 		//initTest
@@ -581,7 +581,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyHostOperations_Details();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyHostOperations_ListView()
 	{
 		//initTest
@@ -602,7 +602,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyHostOperations();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyHostOperations_WithFilter_GridView()
 	{
 		//initTest
@@ -627,7 +627,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyHostOperations();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyHostOperations_WithFilter_ListView()
 	{
 		//initTest
@@ -652,7 +652,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyHostOperations();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyMiddlewareOperations_GridView()
 	{
 		//initTest
@@ -674,7 +674,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyMiddlewareOperations_Details();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyMiddlewareOperations_ListView()
 	{
 		//initTest
@@ -695,7 +695,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyMiddlewareOperations();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyMiddlewareOperations_WithFilter_GridView()
 	{
 		//initTest
@@ -720,7 +720,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyMiddlewareOperations();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyMiddlewareOperations_WithFilter_ListView()
 	{
 		//initTest
@@ -745,7 +745,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyMiddlewareOperations();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyPerfAnalyticsApplication_GridView()
 	{
 		//initTest
@@ -764,7 +764,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyPerfAnalyticsApplication();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyPerfAnalyticsApplication_ListView()
 	{
 		//initTest
@@ -783,7 +783,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyPerfAnalyticsApplication();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyPerfAnalyticsApplication_WithFilter_GridView()
 	{
 		//initTest
@@ -806,7 +806,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyPerfAnalyticsApplication();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyPerfAnalyticsApplication_WithFilter_ListView()
 	{
 		//initTest
@@ -829,7 +829,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyPerfAnalyticsApplication();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyPerfAnalyticsDatabase_GridView()
 	{
 		//initTest
@@ -848,7 +848,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyPerfAnalyticsDatabase();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyPerfAnalyticsDatabase_ListView()
 	{
 		//initTest
@@ -867,7 +867,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyPerfAnalyticsDatabase();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyPerfAnalyticsDatabase_WithFilter_GridView()
 	{
 		//initTest
@@ -890,7 +890,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyPerfAnalyticsDatabase();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyPerfAnalyticsDatabase_WithFilter_ListView()
 	{
 		//initTest
@@ -913,7 +913,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyPerfAnalyticsDatabase();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyResourceAnalyticsDatabase_GridView()
 	{
 		//initTest
@@ -932,7 +932,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyResourceAnalyticsDatabase();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyResourceAnalyticsDatabase_ListView()
 	{
 		//initTest
@@ -951,7 +951,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyResourceAnalyticsDatabase();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyResourceAnalyticsDatabase_WithFilter_GridView()
 	{
 		//initTest
@@ -974,7 +974,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyResourceAnalyticsDatabase();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyResourceAnalyticsDatabase_WithFilter_ListView()
 	{
 		//initTest
@@ -997,7 +997,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyResourceAnalyticsDatabase();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyResourceAnalyticsHost_GridView()
 	{
 		//initTest
@@ -1016,7 +1016,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyResourceAnalyticsHost();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyResourceAnalyticsHost_ListView()
 	{
 		//initTest
@@ -1035,7 +1035,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyResourceAnalyticsHost();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyResourceAnalyticsHost_WithFilter_GridView()
 	{
 		//initTest
@@ -1058,7 +1058,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyResourceAnalyticsHost();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyResourceAnalyticsHost_WithFilter_ListView()
 	{
 		//initTest
@@ -1081,7 +1081,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyResourceAnalyticsHost();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyResourceAnalyticsMiddleware_GridView()
 	{
 		//initTest
@@ -1100,7 +1100,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyResourceAnalyticsMiddleware();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyResourceAnalyticsMiddleware_ListView()
 	{
 		//initTest
@@ -1119,7 +1119,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyResourceAnalyticsMiddleware();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyResourceAnalyticsMiddleware_WithFilter_GridView()
 	{
 		//initTest
@@ -1142,7 +1142,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyResourceAnalyticsMiddleware();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyResourceAnalyticsMiddleware_WithFilter_ListView()
 	{
 		//initTest
@@ -1165,7 +1165,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyResourceAnalyticsMiddleware();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyUIGallery_GridView()
 	{
 		//initTest
@@ -1187,7 +1187,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyUIGallery_Details();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyUIGallery_ListView()
 	{
 		//initTest
@@ -1208,7 +1208,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyUIGallery();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyUIGallery_WithFilter_GridView()
 	{
 		//initTest
@@ -1231,9 +1231,9 @@ public class VerifyOOB extends LoginAndLogout
 
 		//verify UI Gallery
 		verifyUIGallery();
-	}	
+	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyUIGallery_WithFilter_ListView()
 	{
 		//initTest
@@ -1258,7 +1258,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyUIGallery();
 	}
 	
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyOrchestration_GridView()
 	{
 		//initTest
@@ -1278,7 +1278,7 @@ public class VerifyOOB extends LoginAndLogout
 		//verify Orchestration Workflows
 		verifyOrchestration();
 	}
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyOrchestration_ListView()
 	{
 		//initTest
@@ -1298,7 +1298,7 @@ public class VerifyOOB extends LoginAndLogout
 		//verify Orchestration Workflows
 		verifyOrchestration();
 	}
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyOrchestration_WithFilter_GridView()
 	{
 		//initTest
@@ -1322,7 +1322,7 @@ public class VerifyOOB extends LoginAndLogout
 		//verify Orchestration Workflows
 		verifyOrchestration();
 	}
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyOrchestration_WithFilter_ListView()
 	{
 		//initTest
@@ -2140,7 +2140,6 @@ public class VerifyOOB extends LoginAndLogout
 
 		webd.getLogger().info("the verification end...");
 	}
-
 	private void verifyUIGallery()
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");

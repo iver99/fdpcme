@@ -22,7 +22,7 @@ public class TestBrandingBar_BasicTest extends LoginAndLogout
 		DashBoardUtils.loadWebDriver(webd);
 	}
 
-	//@Test
+	//@Test(alwaysRun = true)
 	public void testAdminConsoleLink()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -37,7 +37,7 @@ public class TestBrandingBar_BasicTest extends LoginAndLogout
 		DashBoardUtils.verifyURL(webd, "admin-console/ac/adminConsole.html");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testAdminLink()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -45,7 +45,7 @@ public class TestBrandingBar_BasicTest extends LoginAndLogout
 		WaitUtil.waitForPageFullyLoaded(webd);
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testAgentsLink()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -60,7 +60,7 @@ public class TestBrandingBar_BasicTest extends LoginAndLogout
 		DashBoardUtils.verifyURL(webd, "tenantmgmt/services/customersoftware");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testAPMLink()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -75,7 +75,7 @@ public class TestBrandingBar_BasicTest extends LoginAndLogout
 		DashBoardUtils.verifyURL(webd, "apmUi/index.html");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testComplianceLink()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -90,7 +90,7 @@ public class TestBrandingBar_BasicTest extends LoginAndLogout
 		DashBoardUtils.verifyURL_WithPara(webd, "complianceuiservice/index.html");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testDashBoardHomeLink()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -105,7 +105,7 @@ public class TestBrandingBar_BasicTest extends LoginAndLogout
 		DashBoardUtils.verifyURL(webd, "emcpdfui/home.html");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testHomeLink()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -120,7 +120,7 @@ public class TestBrandingBar_BasicTest extends LoginAndLogout
 		DashBoardUtils.verifyURL(webd, "emcpdfui/welcome.html");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testInfrastructureMonitoringLink()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -135,7 +135,7 @@ public class TestBrandingBar_BasicTest extends LoginAndLogout
 		DashBoardUtils.verifyURL(webd, "monitoringservicesui/cms/index.html");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testITALink()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -150,7 +150,7 @@ public class TestBrandingBar_BasicTest extends LoginAndLogout
 		DashBoardUtils.verifyURL_WithPara(webd, "emcpdfui/home.html?filter=ita");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testLALink()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -165,7 +165,7 @@ public class TestBrandingBar_BasicTest extends LoginAndLogout
 		DashBoardUtils.verifyURL(webd, "emlacore/html/log-analytics-search.html");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testLogLink()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -180,7 +180,7 @@ public class TestBrandingBar_BasicTest extends LoginAndLogout
 		DashBoardUtils.verifyURL(webd, "emlacore/html/log-analytics-search.html");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testOrchestrationLink()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -195,7 +195,7 @@ public class TestBrandingBar_BasicTest extends LoginAndLogout
 		DashBoardUtils.verifyURL_WithPara(webd, "emcpdfui/home.html?filter=ocs");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testSearchLink()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -210,7 +210,7 @@ public class TestBrandingBar_BasicTest extends LoginAndLogout
 		DashBoardUtils.verifyURL(webd, "emcta/ta/analytics.html");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testSecurityLink()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());

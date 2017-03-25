@@ -59,7 +59,7 @@ public class AvailabilityNotificationTest
 				result = Boolean.TRUE;
 				anyDcm.isDatabaseConnectionAvailable();
 				result = true;
-				RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, null);
+				RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, false, null,false);
 				result = new Link().withRel("collection/domains").withHref(
 						"http://den00zyr.us.oracle.com:7007/naming/entitynaming/v1/domains");
 			}
@@ -86,7 +86,7 @@ public class AvailabilityNotificationTest
 				result = Boolean.TRUE;
 				anyDcm.isDatabaseConnectionAvailable();
 				result = true;
-				RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, null);
+				RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString,false, null,false);
 				result = null;
 //				anyRsm.markOutOfService((List<InstanceInfo>) any, (List<NonServiceResource>) any, (List<String>) any);
 			}
@@ -114,7 +114,7 @@ public class AvailabilityNotificationTest
 				result = Boolean.TRUE;
 				anyDcm.isDatabaseConnectionAvailable();
 				result = true;
-				RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, null);
+				RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, false, null, false);
 				result = new Exception();
 //				anyRsm.markOutOfService((List<InstanceInfo>) any, (List<NonServiceResource>) any, (List<String>) any);
 			}
