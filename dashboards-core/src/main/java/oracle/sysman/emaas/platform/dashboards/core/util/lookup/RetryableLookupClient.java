@@ -51,7 +51,7 @@ public class RetryableLookupClient<T> {
         // here is the logic for doing somework
         int retry = 0;
         //int retry_on_same = 0;
-        int MAX_TOTAL_RETRY = 10;
+        int MAX_TOTAL_RETRY = 6; //as discussed in review meeting, we will retry for ~(2+4+8+16+32+64)s
 //        int MAX_RETRY_ON_SAME_INSTANCE = 10; // 10 exponential retries will get us close to 6 minutes
         double delaySecs = 2;
 
@@ -60,7 +60,7 @@ public class RetryableLookupClient<T> {
         RegistryLookupUtil.VersionedLink lk = null;
 
         Random delayRand = new Random(System.currentTimeMillis());
-        while((retry++)<=MAX_TOTAL_RETRY /*&& (retry_on_same < MAX_RETRY_ON_SAME_INSTANCE)*/) {
+        while((retry++)<MAX_TOTAL_RETRY /*&& (retry_on_same < MAX_RETRY_ON_SAME_INSTANCE)*/) {
             LOGGER.info("Retry for the {} time", retry);
             Link link = null;
 
@@ -105,7 +105,7 @@ public class RetryableLookupClient<T> {
             }
 
             // Delay between retries grows over time
-            LOGGER.info("Waiting for {}ms before next retry", delaySecs);
+            LOGGER.info("Waiting for {}s before next retry", delaySecs);
             try { Thread.sleep((long)(delaySecs * 1000)); } catch(InterruptedException ie) {}
             LOGGER.info("After waiting, will retry or abort the retry procedure");
             delaySecs = delaySecs * 2 * (0.9 + delayRand.nextDouble() * 0.2); // Grow by 1.8 to 2.2 each time

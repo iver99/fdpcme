@@ -32,6 +32,19 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                 GLOBAL_APPLICATION_SELECTOR: 'OMC_UIFWK_APPLICATION_SELECTOR',
                 GLOBAL_TOPOLOGY: 'OMC_UIFWK_TOPOLOGY'
             };
+            
+            self.OMCEventContextNameConstants = {
+                ALL: "All",
+                START_TIME: "startTime",
+                END_TIME: "endTime",
+                TIME_PERIOD: "timePeriod",
+                START_END_TIME: "startEndTime",
+                COMPOSITE_MEID: "compositeMEID",
+                ENTITY_MEIDS: "entityMEIDs",
+                ENTITY: "entity",
+                COMPOSITE: "composite",
+                TIME: "time"
+            };
 
             self.OMCTimeConstants = {
                 TIME_UNIT: {
@@ -69,6 +82,8 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
             };
 
             //freeze every constant object inside
+            Object.freeze(self.OMCEventSourceConstants);
+            Object.freeze(self.OMCEventContextNameConstants);
             Object.freeze(self.OMCTimeConstants.TIME_UNIT);
             Object.freeze(self.OMCTimeConstants.QUICK_PICK);
             Object.freeze(self.OMCTimeConstants.timePeriodsSet);
@@ -1050,17 +1065,20 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
 //                omcContext.previousEntityMeIds = ids ? ids : [];
 
                 var meIds = null;
+                var _meIds = null;
 
                 //If it's an array, convert to a comma separated string
                 if ($.isArray(entityMEIDs)) {
-                    meIds = entityMEIDs.sort().join();
+                    meIds = entityMEIDs.join();
+                    _meIds = entityMEIDs.sort().join();
                 }
 //                //If it's a string
                 else if (entityMEIDs) {
                     meIds = entityMEIDs;
+                    _meIds = entityMEIDs;
                 }
                 var currentEntityIds = self.getEntityMeIds();
-                if (meIds !== (currentEntityIds ? currentEntityIds.sort().join() : null)) {
+                if (_meIds !== (currentEntityIds ? currentEntityIds.sort().join() : null)) {
                     console.log("****************** updating entity ids");
                     setIndividualContext('entity', 'entityMEIDs', meIds, true, true, false, source);
                     //Set entity meIds will reset the cached entity objects, 
@@ -1083,6 +1101,42 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                 else if (entityMEIDs) {
                     //Convert to a array
                     return entityMEIDs.split(',');
+                }
+                return null;
+            };
+
+            /**
+             * Set Non-Removable EntityMeId. GC Emctas components like Topology and ContextSelector
+             * will prevent deletion of this entity.
+             *
+             * @param {String} entityMEID entity meid
+             * @param {String} source Source name to tell where the API is called
+             * @returns
+             */
+            self.setNonRemovableEntityMeId = function (entityMEID, source) {
+                if (self.getNonRemovableEntity() !== entityMEID) {
+                    setIndividualContext('entity', 'nonRemovableEntityMEID', entityMEID, false, false, false, source);
+                }
+            };
+
+            /**
+             * Get Non-Removable Entity. GC Emctas components like Topology and ContextSelector
+             * will prevent deletion of this entity.
+             *
+             * @param
+             * @returns {Object} an Entity object
+             */
+            self.getNonRemovableEntity = function () {
+                var entityMEID = getIndividualContext('entity', 'nonRemovableEntityMEID');
+                if (entityMEID) {
+                    var entities = self.getEntities();
+                    for (var i = 0; i < entities.length; i++) {
+                        var entity = entities[i];
+                        if (entity.meId === entityMEID) {
+                            return entity;
+                        }
+                    }
+                    ;
                 }
                 return null;
             };
@@ -1551,6 +1605,11 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
             var entitiesFetched = [];
             function loadEntities(data) {
                 entitiesFetched = [];
+                var entityMeIds = self.getEntityMeIds();
+                var meIdIndex = null;
+                if(!$.isArray(entityMeIds)) {
+                    return;
+                }
                 if (data && data['rows']) {
                     var dataRows = data['rows'];
                     for (var i = 0; i < dataRows.length; i++) {
@@ -1560,7 +1619,9 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                         entity['entityName'] = dataRows[i][2];
                         entity['entityType'] = dataRows[i][4];
                         entity['meClass'] = dataRows[i][5];
-                        entitiesFetched.push(entity);
+                        
+                        meIdIndex = entityMeIds.indexOf(entity['meId']);
+                        (meIdIndex > -1) && (entitiesFetched[meIdIndex] = entity);
                     }
                 }
             }
@@ -1593,14 +1654,6 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                                 "not": false,
                                 "lhs": {"expr": "column", "table": "me", "column": "meId"},
                                 "rhs": []
-                            },
-                            "orderBy": {
-                                "entries": [{
-                                        "entry": "expr",
-                                        "item": {"expr": "function", "name": "UPPER", "args": [{"expr": "column", "table": "me", "column": "entityName"}]},
-                                        "direction": "DESC",
-                                        "nulls": "LAST"
-                                    }]
                             },
                             "groupBy": null
                         }
@@ -1642,14 +1695,6 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                             "where": {"cond": "compare", "comparator": "EQ",
                                 "lhs": {"expr": "column", "table": "me", "column": "entityType"},
                                 "rhs": {'expr': 'str', 'val': entityType}
-                            },
-                            "orderBy": {
-                                "entries": [{
-                                        "entry": "expr",
-                                        "item": {"expr": "function", "name": "UPPER", "args": [{"expr": "column", "table": "me", "column": "entityName"}]},
-                                        "direction": "DESC",
-                                        "nulls": "LAST"
-                                    }]
                             },
                             "groupBy": null
                         }

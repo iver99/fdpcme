@@ -9,14 +9,12 @@
         <link rel="stylesheet" href="libs/@version@/js/oraclejet/css/libs/oj/v2.0.2/alta/oj-alta-min.css" type="text/css"/>
 
         <script type="text/javascript">
-            function serverSideInit() {
                 ////ADDITIONALDATA////
-            }
         </script>
         <script data-main="@version@/js/builderMain" src="libs/@version@/js/oraclejet/js/libs/require/require.js"></script>
 
     </head>
-    <body onload="serverSideInit()">
+    <body>
         <div data-bind="text:getNlsString('DBS_HOME_LOADING')" style="position: fixed; top: 0; margin-left: -65px; width: 120px; height: 15px; left: 50%; z-index: 999; background-color: #e6ffe0; padding: 5px; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; text-align: center; border-style: solid; border-width: 1px; border-top: none; box-shadow: 2px 2px 2px #888888;" class="loadingIndicator" id="loading"></div>
         <div class="loadingIndicator" id="printLoading" style="display: none; z-index:1000">Loading Content</div>
         <div id="globalBody" style="display: none;">
@@ -171,7 +169,7 @@
                             <!-- ko with:toolbarModel -->
                             <div class="builder-dbd-description" data-bind="visible: dashboardDescriptionEnabled()==='TRUE'">
                                 <div class="builder-dbd-description-display-area dbd-display-area" data-bind="css: {'dbd-edit-disabled': editDisabled()}">
-                                               <div data-bind="text: dashboardDescription()?dashboardDescription:'No description', 
+                                               <div data-bind="text: dashboardDescription()?dashboardDescription:getNlsString('DBS_BUILDER_WIDGET_NO_DESCRIPTION'), 
                                                      css:{'font-style-italic':!dashboardDescription()},
                                                      attr: {title: dashboardDescription}" 
                                                class="dbd-display-area-text single-dbd-description" style="display:block; white-space: pre;"></div>          
@@ -194,7 +192,7 @@
                             </ul>
                             <!-- /ko -->
                             <span role="separator" aria-orientation="vertical" class="oj-toolbar-separator no-print"></span>
-                            <!--ko if: dashboard.enableEntityFilter && (dashboard.enableEntityFilter() === 'TRUE' || dashboard.enableEntityFilter() === 'GC') -->
+                            <!--ko if: dashboard.enableEntityFilter && ((dashboard.enableEntityFilter() === 'TRUE') || (isUnderSet && dashboard.enableEntityFilter() === 'GC')) -->
                             <div class="df-target-selector">   
                                 <emcta-target-selector data-bind="attr: {id: 'tsel_'+dashboard.id()}"
                                                        params="returnFunction: returnFromTsel,
@@ -233,7 +231,7 @@
                                 <!-- ko if: type() === 'DEFAULT' -->
                                 <div class="dbd-widget" data-bind="attr: {style: cssStyle, id: 'tile'+clientGuid, ismobile: $root.isMobileDevice,'data-tile-name':WIDGET_NAME}, css: tileDisplayClass(), 
                                                                     event: {mouseover: function(data, event) {$root.showPullRightBtn(clientGuid, data, event)}, mouseout: function(data, event) {$root.hidePullRightBtn(clientGuid, data, event)}}">
-                                    <div class="dbd-tile-container" tabindex="0" data-bind="event: {focus: function(data, event) {$root.focusOnTile(clientGuid, data, event)}}">
+                                    <div class="dbd-tile-container" role="presentation" tabindex="0" data-bind="event: {focus: function(data, event) {$root.focusOnTile(clientGuid, data, event)}}">
                                         <div class="dbd-tile-header tile-drag-handle" style="display: flex">
                                           <!-- ko if: $root.dashboard.systemDashboard() && linkedDashboard && linkedDashboard() !== '#'-->
                                             <h2 class="dbd-tile-title"><a data-bind="text:hideTitle() === 'true' ? '': title, attr: {href: linkedDashboard, 'data-tile-title': title}"></a></h2>
@@ -266,7 +264,7 @@
                                                         }"></button>
                                               </div>
                                                 <div class="dbd-btn-group" data-bind="stopDataBinding: $root.dashboard.systemDashboard && $root.dashboard.systemDashboard()==true">
-                                                    <button class="oj-button-half-chrome dbd-tile-action" id="dbd-tile-action" tabindex="0"
+                                                    <button class="oj-button-half-chrome dbd-tile-action" tabindex="0"
                                                             data-bind="attr: {'id': 'actionButton' + clientGuid, title: getNlsString('DBS_BUILDER_TILE_ACTIONS')},
                                                                        visible: ($root.dashboard.systemDashboard()===false)&& !(($root.dashboard.sharePublic ===true)&&($root.dashboard.owner()!==$root.loginUser())) &&($root.isMobileDevice !== 'true')&&($root.toolbarModel.notZdtStatus),
                                                                        ojComponent: {component: 'ojButton', 
@@ -1039,7 +1037,7 @@
                                     </div>
                                 </div>
                                 <div class="dbd-left-panel-widgets fit-size" data-bind="event:{scroll: rightPanelWidget.widgetListScroll}" style="overflow-y: scroll">
-                                    <div class="oj-col stretch-width" data-bind="foreach: rightPanelWidget.widgets">
+                                    <div class="oj-col stretch-width" data-bind="foreach: rightPanelWidget.widgets,attr:{'searchStaus':rightPanelWidget.searchStaus}">
                                         <div class="dbd-left-panel-widget" data-bind="css: 'widget-item-'+WIDGET_UNIQUE_ID()">
                                             <div data-bind="event: {mouseover: $root.rightPanelWidget.widgetMouseOverHandler, mouseout: $root.rightPanelWidget.widgetMouseOutHandler}">
                                                 <div class="dbd-left-panel-widget-text">
