@@ -49,8 +49,9 @@ public class SSFLifeCycleNotificationAPI extends APIBase {
 			if (ssflcne != null && SSFLifeCycleNotifyEntity.SSFNotificationType.UP.equals(ssflcne.getType())) {
 				CacheUtil.clearCacheGroup(CacheConstants.CACHES_OOB_DASHBOARD_SAVEDSEARCH_CACHE);
 				LOGGER.info("Cached OOB widget data now is cleaned after getting notification from SSF side");
+				return Response.status(Response.Status.NO_CONTENT).build();
 			}
-			return Response.status(Response.Status.NO_CONTENT).build();
+			return Response.status(Response.Status.FORBIDDEN).build();
 		}
 		catch (IOException e) {
 			LOGGER.error(e.getLocalizedMessage(), e);
