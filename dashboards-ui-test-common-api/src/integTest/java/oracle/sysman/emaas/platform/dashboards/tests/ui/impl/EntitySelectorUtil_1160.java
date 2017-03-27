@@ -30,7 +30,7 @@ import org.testng.Assert;
 /**
  * @author cawei
  */
-public class EntitySelectorUtil_1160 extends EntitySelectorUtil_1140
+public class EntitySelectorUtil_1160 extends EntitySelectorUtil_1150
 {
 	private static final int UNTIL_TIMEOUT = 900;
 
