@@ -478,7 +478,7 @@ public class DashboardAPI extends APIBase
 			initializeUserContext(tenantIdParam, userTenant);
 			final String curTenant = TenantContext.getCurrentTenant();
 			final String curUser = UserContext.getCurrentUser();
-			infoInteractionLogAPIIncomingCall(curTenant, referer, "Service call to [GET] /v1/dashboards/{}", dashboardId);
+			infoInteractionLogAPIIncomingCall(curTenant, referer, "Service call to [GET] /v1/dashboards/{}/combinedData", dashboardId);
 			final DashboardManager dm = DashboardManager.getInstance();
 			StringBuilder sb=new StringBuilder();
 			ExecutorService pool = ParallelThreadPool.getThreadPool();
@@ -527,45 +527,6 @@ public class DashboardAPI extends APIBase
 				}
 			});
 
-			Future<String> futureReg = null;
-			//retrieve registration info
-			String regEntity = null;
-			try {
-				if (futureUserInfo != null) {
-					final List<String> fUserInfo = userInfo = futureUserInfo.get(TIMEOUT, TimeUnit.MILLISECONDS); // retrieve reg info after user info thread is done
-					if (userInfo != null) {
-						futureReg = pool.submit(new Callable<String>() {
-							@Override
-							public String call() throws Exception {
-								try {
-									long startRegInfo = System.currentTimeMillis();
-									LOGGER.info("2 round parallel to request registry info after thread for user info thread is completed...");
-									initializeUserContext(curTenant, userTenant);
-									String reg = JsonUtil.buildNonNullMapper().toJson(new RegistrationEntity(sessionExpiryTime, fUserInfo));
-									long endRegInfo = System.currentTimeMillis();
-									LOGGER.info("Time to get registration info: {}ms, registration info are: {}", (endRegInfo - startRegInfo), reg);
-									return reg;
-								} catch (Exception e) {
-									LOGGER.error("Error occurred when retrieving registration data using parallel request!");
-									LOGGER.error(e);
-									throw e;
-								} finally {
-									clearUserContext();
-								}
-							}
-						});
-					} else {
-						LOGGER.warn("Failed to get futureUserInfo, won't continue to start registry info thread");
-					}
-				}
-			} catch (InterruptedException e) {
-				LOGGER.error(e);
-			} catch (ExecutionException e) {
-				LOGGER.error(e.getCause() == null ? e : e.getCause());
-			} catch (TimeoutException e) {
-				LOGGER.error(e);
-			}
-
 			Future<Dashboard> futureDashboard = null;
 			try {
 				if (!DependencyStatus.getInstance().isDatabaseUp()) {
@@ -604,6 +565,45 @@ public class DashboardAPI extends APIBase
 						} else {
 							LOGGER.warn("Failed to get subscribed app data, won't continue to start dashboard data thread");
 						}
+					}
+				}
+			} catch (InterruptedException e) {
+				LOGGER.error(e);
+			} catch (ExecutionException e) {
+				LOGGER.error(e.getCause() == null ? e : e.getCause());
+			} catch (TimeoutException e) {
+				LOGGER.error(e);
+			}
+
+			Future<String> futureReg = null;
+			//retrieve registration info
+			String regEntity = null;
+			try {
+				if (futureUserInfo != null) {
+					final List<String> fUserInfo = userInfo = futureUserInfo.get(TIMEOUT, TimeUnit.MILLISECONDS); // retrieve reg info after user info thread is done
+					if (userInfo != null) {
+						futureReg = pool.submit(new Callable<String>() {
+							@Override
+							public String call() throws Exception {
+								try {
+									long startRegInfo = System.currentTimeMillis();
+									LOGGER.info("2 round parallel to request registry info after thread for user info thread is completed...");
+									initializeUserContext(curTenant, userTenant);
+									String reg = JsonUtil.buildNonNullMapper().toJson(new RegistrationEntity(sessionExpiryTime, fUserInfo));
+									long endRegInfo = System.currentTimeMillis();
+									LOGGER.info("Time to get registration info: {}ms, registration info are: {}", (endRegInfo - startRegInfo), reg);
+									return reg;
+								} catch (Exception e) {
+									LOGGER.error("Error occurred when retrieving registration data using parallel request!");
+									LOGGER.error(e);
+									throw e;
+								} finally {
+									clearUserContext();
+								}
+							}
+						});
+					} else {
+						LOGGER.warn("Failed to get futureUserInfo, won't continue to start registry info thread");
 					}
 				}
 			} catch (InterruptedException e) {
