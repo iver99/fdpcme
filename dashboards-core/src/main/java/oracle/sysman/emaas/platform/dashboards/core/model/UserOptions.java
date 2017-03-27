@@ -15,7 +15,7 @@ import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
  */
 public class UserOptions {
     private String userName;
-    private BigInteger dashboardId;
+    private String dashboardId;
     private Long autoRefreshInterval;
     private String extendedOptions;
 
@@ -27,11 +27,11 @@ public class UserOptions {
         this.userName = userName;
     }
 
-    public BigInteger getDashboardId() {
+    public String getDashboardId() {
         return dashboardId;
     }
 
-    public void setDashboardId(BigInteger id) {
+    public void setDashboardId(String id) {
         this.dashboardId = id;
     }
 
@@ -64,7 +64,7 @@ public class UserOptions {
         }
         userOptions.setAutoRefreshInterval(Long.valueOf(emsUserOptions.getAutoRefreshInterval()));
         userOptions.setUserName(emsUserOptions.getUserName());
-        userOptions.setDashboardId(emsUserOptions.getDashboardId());
+        userOptions.setDashboardId((emsUserOptions.getDashboardId() ==null?null:emsUserOptions.getDashboardId().toString()));
         userOptions.setExtendedOptions(emsUserOptions.getExtendedOptions());
         return userOptions;
     }
@@ -87,7 +87,7 @@ public class UserOptions {
         }
 
         euo.setAutoRefreshInterval(autoRefreshInterval);
-        euo.setDashboardId(dashboardId);
+        euo.setDashboardId(new BigInteger(dashboardId));
         euo.setUserName(userName);
         euo.setExtendedOptions(extendedOptions);
 

@@ -84,7 +84,7 @@ public class UserOptionsManager {
             DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
             em = dsf.getEntityManager();
 
-            BigInteger dashboardId = userOptions.getDashboardId();
+            BigInteger dashboardId = new BigInteger(userOptions.getDashboardId());
             if (dashboardId == null || dashboardId.compareTo(BigInteger.ZERO) <= 0) {
                 LOGGER.debug("Dashboard not found for id {} is invalid", dashboardId);
                 throw new DashboardNotFoundException();
@@ -95,7 +95,7 @@ public class UserOptionsManager {
                 throw new DashboardNotFoundException();
             }else{
                 // create or update if exists
-                EmsUserOptions emsUserOptions = dsf.getEmsUserOptions(currentUser, userOptions.getDashboardId());
+                EmsUserOptions emsUserOptions = dsf.getEmsUserOptions(currentUser, new BigInteger(userOptions.getDashboardId()));
                 if(null == emsUserOptions){
                     dsf.persistEmsUserOptions(userOptions.toEntity(null, currentUser));
                 }else{

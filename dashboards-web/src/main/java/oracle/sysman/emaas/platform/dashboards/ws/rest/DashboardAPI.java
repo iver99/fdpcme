@@ -14,6 +14,7 @@ package oracle.sysman.emaas.platform.dashboards.ws.rest;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +63,7 @@ import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableTimeRa
 import oracle.sysman.emaas.platform.dashboards.core.model.PaginatedDashboards;
 import oracle.sysman.emaas.platform.dashboards.core.model.Tile;
 import oracle.sysman.emaas.platform.dashboards.core.model.UserOptions;
+import oracle.sysman.emaas.platform.dashboards.core.model.combined.CombinedDashboard;
 import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
@@ -850,7 +852,7 @@ public class DashboardAPI extends APIBase
 			}
 			Long tenantId = getTenantId(tenantIdParam);
 			initializeUserContext(tenantIdParam, userTenant);
-			userOption.setDashboardId(dashboardId);//override id in consumed json if exist;
+			userOption.setDashboardId(dashboardId.toString());//override id in consumed json if exist;
 			userOptionsManager.saveOrUpdateUserOptions(userOption, tenantId);
 			return Response.ok(getJsonUtil().toJson(userOption)).build();
 		}
@@ -927,7 +929,7 @@ public class DashboardAPI extends APIBase
 		UserOptions userOption;
 		try {
 			userOption = getJsonUtil().fromJson(inputJson.toString(), UserOptions.class);
-			userOption.setDashboardId(dashboardId);
+			userOption.setDashboardId(dashboardId.toString());
 		}
 		catch (IOException e) {
 			LOGGER.error(e.getLocalizedMessage(), e);
@@ -1025,24 +1027,31 @@ public class DashboardAPI extends APIBase
 			}
 			logkeyHeaders("export()", userTenant, tenantIdParam);
 			Long tenantId = getTenantId(tenantIdParam);
-			initializeUserContext(tenantIdParam, userTenant);					
-			List<BigInteger> dbdIds = dm.getDashboardIdsByNames(dbdNames, tenantId);
+			initializeUserContext(tenantIdParam, userTenant);
 			String userName = UserContext.getCurrentUser();
+			List<BigInteger> dbdIds = dm.getDashboardIdsByNames(dbdNames, tenantId);
 			List<String> widgetIds = new ArrayList<String>();
 			JSONArray dbdArray = new JSONArray();
-			for (BigInteger id : dbdIds) {
-				Dashboard dbd = dm.getCombinedDashboardById(id, tenantId, userName);
-				List<Tile> tiles = dbd.getTileList();
-				if (tiles != null) {
-					for (Tile tile : tiles) {
+			for (int i = 0; i < dbdIds.size(); i++) {
+				BigInteger id = dbdIds.get(i);
+				CombinedDashboard dbd = dm.getCombinedDashboardById(id, tenantId, userName);
+				List<Tile> allTiles = null;
+				if (dbd.getSelected() != null && dbd.getSelected().getTileList() != null) {
+					allTiles = dbd.getSelected().getTileList();
+				}
+				if (allTiles != null) {
+					for (Tile tile : allTiles) {
 						String widgetUniqueId = tile.getWidgetUniqueId();
 						widgetIds.add(widgetUniqueId);
 					}
 				}
 				updateDashboardAllHref(dbd, tenantIdParam);
 				String dbdJson = getJsonUtil().toJson(dbd);
-				dbdArray.put(dbdJson);
+				JSONObject dbdJsonObj = new JSONObject(dbdJson);
+				dbdArray.put(dbdJsonObj);
 			}
+			JSONObject finalObject = new JSONObject();
+			finalObject.put("Dashboard", dbdArray);
 			//Savedsearch data
 			JSONArray requestEntity = new JSONArray();
 			if (widgetIds != null) {				
@@ -1050,12 +1059,16 @@ public class DashboardAPI extends APIBase
 					requestEntity.put(widgetId);
 				}
 			}
-			String ssfDataResponse = SSFDataUtil.getSSFData(userTenant, requestEntity.toString());
-			JSONObject ssfObject = new JSONObject(ssfDataResponse);
+			JSONArray ssfObject = null;
+			if (requestEntity.length() > 0) {
+				String ssfDataResponse = SSFDataUtil.getSSFData(userTenant, requestEntity.toString());
+				ssfObject = new JSONArray(ssfDataResponse);
+			}
 			
 			//Combine dbd json and savedsearch json
-			JSONObject finalObject = new JSONObject();
-			finalObject.append("Dashboard", dbdArray).append("Savedsearch", ssfObject);
+			if (ssfObject != null) {
+				finalObject.put("Savedsearch", ssfObject);
+			}
 			return Response.ok(finalObject.toString()).build();
 		}
 		catch(DashboardNotFoundException e){
@@ -1071,8 +1084,9 @@ public class DashboardAPI extends APIBase
 			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.error(e.getLocalizedMessage(), e);		
+		} catch (Exception e) {
+			LOGGER.error(e.getLocalizedMessage(), e);
 		}
 		finally {
 			clearUserContext();
@@ -1143,42 +1157,55 @@ public class DashboardAPI extends APIBase
 			@HeaderParam(value = "X-REMOTE-USER") String userTenant,
 			JSONObject jsonObject){
 		
-		infoInteractionLogAPIIncomingCall(null, null, "Service call to [PUT] /v1/dashboards/import");
-		LOGGER.info("Service call to /v1/import/dashboards");
-		Long tenantId = null;
-        try {
-            tenantId = getTenantId(tenantIdParam);
-        } catch (BasicServiceMalfunctionException | DashboardException e) {
-            LOGGER.debug("could not get tenant ID from header");
-        }
-        String user = null;
-        if (userTenant != null) {
-        	user = userTenant.substring(userTenant.indexOf(".")-1,userTenant.length()-1);
-        }
-        
-		ImportDataUtil importUtil = new ImportDataUtil();
+		infoInteractionLogAPIIncomingCall(tenantIdParam, null, "Service call to [PUT] /v1/dashboards/import");
 		try {
-			DataRowsEntity data = getJsonUtil().fromJson(jsonObject.toString(), DataRowsEntity.class);
-			//save dashboard data
-			importUtil.saveDashboardData(data,tenantId, user);
-			//save savedsearch data
-			JSONArray savedSearchObject = jsonObject.getJSONArray("EMS_ANALYTICS_SEARCH");
-			JSONArray savedSearchParamObject = jsonObject.getJSONArray("EMS_ANALYTICS_SEARCH_PARAMS");
-			JSONObject obj = new JSONObject();
-			obj.put("EMS_ANALYTICS_SEARCH", savedSearchObject);
-			obj.put("EMS_ANALYTICS_SEARCH_PARAMS", savedSearchParamObject);
-			SSFDataUtil.saveSSFData(userTenant, obj.toString());
-			return Response.status(Status.NO_CONTENT).build();
+			if (!DependencyStatus.getInstance().isDatabaseUp())  {
+				LOGGER.error("Error to call [POST] /v1/dashboards: database is down");
+				throw new DatabaseDependencyUnavailableException();
+			}
+			
+			JSONArray dbdArray = jsonObject.getJSONArray("Dashboard");
+			JSONArray ssfArray = jsonObject.getJSONArray("Savedsearch");
+			StringBuilder dbdStr = new StringBuilder("");
+			if (dbdArray != null) {
+				 for (int i = 0; i < dbdArray.length(); i++) {
+				      JSONObject dbdObj = dbdArray.getJSONObject(i);
+				      logkeyHeaders("createDashboard()", userTenant, tenantIdParam);
+						Dashboard d = getJsonUtil().fromJson(dbdObj.toString(), Dashboard.class);
+						DashboardManager manager = DashboardManager.getInstance();
+						Long tenantId = getTenantId(tenantIdParam);
+						initializeUserContext(tenantIdParam, userTenant);
+						d = manager.saveNewDashboard(d, tenantId);
+						updateDashboardAllHref(d, tenantIdParam);
+						dbdStr.append(getJsonUtil().toJson(d));
+				  }
+			}			
+			if (ssfArray != null) {
+				SSFDataUtil.saveSSFData(userTenant, ssfArray.toString());
+			}
+			return Response.status(Status.CREATED).entity(dbdStr.toString()).build();
 		}
 		catch (IOException e) {
 			LOGGER.error(e.getLocalizedMessage(), e);
 			ErrorEntity error = new ErrorEntity(e);
 			return buildErrorResponse(error);
+		}
+		catch (DashboardException e) {
+			LOGGER.error(e.getLocalizedMessage(), e);
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+		catch (BasicServiceMalfunctionException e) {
+			//e.printStackTrace();
+			LOGGER.error(e.getLocalizedMessage(), e);
+			return buildErrorResponse(new ErrorEntity(e));
 		} catch (JSONException e) {
 			LOGGER.error(e.getLocalizedMessage(), e);
-			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e).build();
+		} catch (Exception e) {
+			LOGGER.error(e.getLocalizedMessage(), e);
 		}
-		
+		finally {
+			clearUserContext();
+		}	
+		return Response.status(Status.BAD_REQUEST).build();
 	}
-
 }

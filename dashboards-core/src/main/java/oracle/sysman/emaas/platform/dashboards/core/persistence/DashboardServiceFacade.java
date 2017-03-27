@@ -22,8 +22,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
+
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -106,6 +109,7 @@ public class DashboardServiceFacade
 	
 	public List<BigInteger> getDashboardIdsByNames(List<String> names, Long tenantId) {
 		StringBuilder parameters = new StringBuilder();
+		List<BigInteger> ids = new ArrayList<BigInteger>();
 		int flag = 0;
 		for (String name : names) {
 			if (flag++ > 0) {
@@ -115,8 +119,14 @@ public class DashboardServiceFacade
 		}
 		String sql = "select dashboard_id from ems_dashboard t where t.name in (" + parameters.toString() + ")" + " and t.tenant_id = " + tenantId;
 		Query query = em.createNativeQuery(sql);
-		List<BigInteger> result = query.getResultList();
-		return result;
+		List<Object> result = query.getResultList();
+		if (result != null && !result.isEmpty()) {
+			for (Object obj : result) {
+				BigInteger id = new BigInteger(obj.toString());
+				ids.add(id);
+			}
+		}
+		return ids;
 	}
 
 	public CombinedDashboard getCombinedEmsDashboardById(BigInteger dashboardId, String userName) {
