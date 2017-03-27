@@ -108,9 +108,10 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                                 //Set current composite menu item if set
                                 if (window._uifwk && window._uifwk.currentOmcMenuItemId) {
                                     var currentMenuId = window._uifwk.currentOmcMenuItemId;
+                                    var underOmcAdmin = window._uifwk.underOmcAdmin;
                                     var foundCompositeItem = findItem(rootCompositMenuItem, currentMenuId);
                                     if (foundCompositeItem) {
-                                        menuUtil.setCurrentMenuItem(currentMenuId);
+                                        menuUtil.setCurrentMenuItem(currentMenuId, underOmcAdmin);
                                     }
                                 }
                             });
@@ -461,7 +462,10 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                                     var adminMenuId = findAppItemIndex(self.serviceMenuData,'omc_root_admin');
                                     var adminSubMenuId = findAppItemIndex(self.serviceMenuData[adminMenuId].children, 'omc_root_admin_grp_'+singleServiceData.appId);
                                     if (adminSubMenuId > -1) {
-                                        self.serviceMenuData[adminMenuId].children[adminSubMenuId].children = singleServiceData.serviceAdminMenus.children;
+                                        self.serviceMenuData[adminMenuId].children[adminSubMenuId].children = [];
+                                                for(var i = 0; i< singleServiceData.serviceAdminMenus.children.length; ++i){
+                                        self.serviceMenuData[adminMenuId].children[adminSubMenuId].children.push($.extend(true, {}, singleServiceData.serviceAdminMenus.children[i]));
+                                                }
                                     }
                                     else {
                                         if (!self.serviceMenuData[adminMenuId].children) {
@@ -470,6 +474,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                                         self.serviceMenuData[adminMenuId].children.push($.extend(true, {}, singleServiceData.serviceAdminMenus));
                                         self.serviceMenuData[adminMenuId].children[rootMenuData[adminMenuId].children.length].id = 'omc_root_admin_grp_'+singleServiceData.appId;
                                     }
+                                    self.serviceMenuData[adminMenuId].children[adminSubMenuId].children = addPrefixForRootAdminSubMenu(self.serviceMenuData[adminMenuId].children[adminSubMenuId].children);
                                 }
                             }
                         });
@@ -767,7 +772,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                                 itemStack.push(_item);
                                 var foundItem = _findItem(_item.children[i], menuId);
                                 if (foundItem){
-                                    break;
+                                    return true;
                                 }else{
                                     itemStack.pop();
                                 }
@@ -778,6 +783,31 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     return itemStack;
                 }
                 
+                //Add prefix for menu items in root admin menu to prevent duplicated id to the service admin menu
+                function addPrefixForRootAdminSubMenu(rootAdminSubMenuList){
+                    var _idx;
+                    if(rootAdminSubMenuList && !Array.isArray(rootAdminSubMenuList)){
+                        var menuItem = $.extend(true,{},rootAdminSubMenuList);
+                        if (!menuItem || !menuItem.id || menuItem.id === omcMenuSeparatorId) {
+                            return menuItem;
+                        }
+                        menuItem.id = "omcadmin_"+menuItem.id;
+                        if(menuItem.children){
+                            for(_idx = 0; _idx < menuItem.children.length; ++_idx){
+                                menuItem.children[_idx] = addPrefixForRootAdminSubMenu(menuItem.children[_idx]);
+                            }
+                        }
+                        return menuItem;
+                    } else if (rootAdminSubMenuList) {
+                        var menuItemList = [];
+                        for(_idx = 0; _idx < rootAdminSubMenuList.length; ++_idx){
+                            var menuItem = $.extend(true,{},rootAdminSubMenuList[_idx]);
+                            menuItemList.push(addPrefixForRootAdminSubMenu(menuItem));
+                        }
+                        return menuItemList;
+                    }
+                }
+
                 //Menu selection handler when a menu is clicked
                 self.selectionHandler = function(data, event) {
                     self.selectedItem(data.id);
@@ -904,6 +934,16 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                         //Only handle received message for global menu selection
                         if (eventData && eventData.tag && eventData.tag === messageTag) {
                             if(eventData.menuItemId){
+                                if(eventData.underOmcAdmin){
+                                    for(var Key in menuUtil.OMCMenuConstants){
+                                        if(menuUtil.OMCMenuConstants[Key] === eventData.menuItemId){
+                                            eventData.underOmcAdmin = false;
+                                        }
+                                    }
+                                }
+                                if(eventData.underOmcAdmin){
+                                    eventData.menuItemId = "omcadmin_" + eventData.menuItemId;
+                                }
                                 var itemTrack;
                                 for (var j = 0; j < self.serviceMenuData.length; j++) {
                                     itemTrack = findItemTrack(self.serviceMenuData[j], eventData.menuItemId);

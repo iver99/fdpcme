@@ -99,13 +99,15 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
              * 
              * @returns
              */
-            self.setCurrentMenuItem = function(menuItemId) {
+            self.setCurrentMenuItem = function(menuItemId, underOmcAdmin) {
                 if (!window._uifwk) {
                     window._uifwk = {};
                 }
                 window._uifwk.currentOmcMenuItemId = menuItemId;
+                window._uifwk.underOmcAdmin = underOmcAdmin;
                 var message = {'tag': 'EMAAS_OMC_GLOBAL_MENU_SET_CURRENT_ITEM'};
                 message.menuItemId = menuItemId;
+                message.underOmcAdmin = underOmcAdmin;
                 window.postMessage(message, window.location.href);
             };
             

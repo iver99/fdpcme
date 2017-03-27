@@ -844,7 +844,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     
                     //Set current menu item if specified by API call
                     if (window._uifwk && window._uifwk.currentOmcMenuItemId) {
-                        menuUtil.setCurrentMenuItem(window._uifwk.currentOmcMenuItemId);
+                        menuUtil.setCurrentMenuItem(window._uifwk.currentOmcMenuItemId, window._uifwk.underOmcAdmin);
                     }
                     else {
                         //Set current menu item if specified from branding bar params
