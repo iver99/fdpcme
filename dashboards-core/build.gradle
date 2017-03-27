@@ -71,9 +71,3 @@ dependencies {
 	compile getProjectArtifact('jersey-json') 
 }
 
-processResources {
-    from('src/main/resources') {
-        include '*.properties', '*.xml'
-        filter(ReplaceTokens, tokens: [version : versionPathElement])
-    }
-}
