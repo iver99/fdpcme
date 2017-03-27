@@ -44,7 +44,7 @@ requirejs.config({
         'emcta':'/emsaasui/emcta/ta/js',
 //        'emcta': '/emsaasui/emcta/ta/@version@/js', //for DEV_MODE
         'emcla':'/emsaasui/emlacore/js',
-        'emcsutl': '/emsaasui/uifwk/emcsDependencies/uifwk/js/util',
+        'emcsutl': '/emsaasui/uifwk/emcsDependencies/uifwk/js/util', // why we need this?
         'uifwk': '/emsaasui/uifwk'
     },
     bundles: ((window.DEV_MODE !==null && typeof window.DEV_MODE ==="object") ||
@@ -226,9 +226,11 @@ require(['knockout',
         var dashboard = null;
         var mode = null, normalMode = null, tabletMode = null;
         var timeSelectorModel = null;
+        // default targets for 'all entities',for both target selector shown or hidden scenarios
         var targets = ko.observable({"criteria":"{\"version\":\"1.0\",\"criteriaList\":[]}"});
         
         $(document).ready(function () {
+            // moved form java side, this won't cost time, as subscribed app data is frominjected html
             dfu.getSubscribedAppsWithoutEdition(function(apps) {
                 if (apps && (!apps.applications || apps.applications.length == 0)) {
                     oj.Logger.error("Tenant subscribes to no service. Redirect to dashboard error page", true);

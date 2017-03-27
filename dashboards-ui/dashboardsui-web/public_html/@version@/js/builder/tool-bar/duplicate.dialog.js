@@ -7,11 +7,13 @@ define(['knockout',
         'jquery',
         'ojs/ojcore',
         'dfutil',
-        'uifwk/js/util/screenshot-util'
+        'uifwk/js/util/screenshot-util',
+        'uifwk/js/sdk/context-util'
     ],
-    function(ko, $, oj, dfu, ssu) {
+    function(ko, $, oj, dfu, ssu, contextModel) {
         function DuplicateDashboardModel($b) {
             var self = this;
+            var ctxUtil = new contextModel();
             self.tilesViewModel = $b.getDashboardTilesViewModel();
             self.tracker = ko.observable();
             self.errorMessages = ko.observableArray([]);
@@ -74,10 +76,8 @@ define(['knockout',
                 newDashboard.id = undefined;
                 newDashboard.name = self.name();
                 newDashboard.description = self.description();
-                var enableTimeRange = $.isFunction(origDashboard.enableTimeRange) ? origDashboard.enableTimeRange() : origDashboard.enableTimeRange;
                 var enableRefresh = $.isFunction(origDashboard.enableRefresh) ? origDashboard.enableRefresh() : origDashboard.enableRefresh;
                 var systemDashboard = $.isFunction(origDashboard.systemDashboard) ? origDashboard.systemDashboard() : origDashboard.systemDashboard;
-                newDashboard.enableTimeRange = (enableTimeRange === true || enableTimeRange === "TRUE" || enableTimeRange === "true") ? "true" : "false";
                 newDashboard.enableRefresh = (enableRefresh === true || enableRefresh === "TRUE" || enableRefresh === "true") ? "true" : "false";
                 newDashboard.systemDashboard = "false";
                 newDashboard.showInHome=false;
@@ -113,7 +113,7 @@ define(['knockout',
                         selectedDashboardInst().toolBarModel.duplicateInSet(false);
                         $('#duplicateDsbDialog').ojDialog('close');
                         if (data && data.id()) {
-                            window.location.href = "/emsaasui/emcpdfui/builder.html?dashboardId=" + data.id();
+                            window.location.href = ctxUtil.appendOMCContext("/emsaasui/emcpdfui/builder.html?dashboardId=" + data.id(), true, true, true);
                         }
                     }
                 };
