@@ -14,7 +14,7 @@ import java.util.List;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_1170;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_1180;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
@@ -26,7 +26,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
-public class BrandingBarUtil_1170 extends BrandingBarUtil_1160
+public class BrandingBarUtil_1180 extends BrandingBarUtil_1160
 {
 	@Override
 	public void clickHierarchicalMenu(WebDriver driver, String menuitem)
@@ -34,15 +34,15 @@ public class BrandingBarUtil_1170 extends BrandingBarUtil_1160
 		boolean isExisted = false;
 		Validator.notEmptyString("menuitem in [clickHierarchicalMenu]", menuitem);
 
-		driver.waitForElementPresent("css=" + DashBoardPageId_1170.HAMBURGERMENU_CONTAINER_CSS);
+		driver.waitForElementPresent("css=" + DashBoardPageId_1180.HAMBURGERMENU_CONTAINER_CSS);
 		if (!isHamburgerMenuDisplayed(driver)) {
 			driver.getLogger().info("Not displayed hamburger menu, need to show it");
 			clickHamburgerMenuIcon(driver);
 		}
 
 		driver.getLogger().info("check if HierarchicalMenu existed or not");
-		if (driver.isDisplayed("css=" + DashBoardPageId_1170.HAMBURGERMENU_HIERARCHICALBTN_CSS)) {
-			driver.click("css=" + DashBoardPageId_1170.HAMBURGERMENU_HIERARCHICALBTN_CSS);
+		if (driver.isDisplayed("css=" + DashBoardPageId_1180.HAMBURGERMENU_HIERARCHICALBTN_CSS)) {
+			driver.click("css=" + DashBoardPageId_1180.HAMBURGERMENU_HIERARCHICALBTN_CSS);
 		}
 		else {
 			throw new NoSuchElementException("clickHierarchicalMenu: the Hierarchical Menu is not found");
@@ -51,7 +51,7 @@ public class BrandingBarUtil_1170 extends BrandingBarUtil_1160
 		driver.getLogger().info("Start to click menu itme in clickHierarchicalMenu");
 
 		List<WebElement> webd_menuitem = driver.getWebDriver().findElements(
-				By.cssSelector(DashBoardPageId_1170.HAMBURGERMENU_HIERARCHICALMENUITEM_CSS));
+				By.cssSelector(DashBoardPageId_1180.HAMBURGERMENU_HIERARCHICALMENUITEM_CSS));
 		if (webd_menuitem == null || webd_menuitem.isEmpty()) {
 			throw new NoSuchElementException("clickHierarchicalMenu: the Hierarchical menuitem is not found");
 		}
@@ -78,14 +78,14 @@ public class BrandingBarUtil_1170 extends BrandingBarUtil_1160
 		boolean isExisted = false;
 		Validator.notEmptyString("menuitem in [clickMenuItem]", menuitem);
 
-		driver.waitForElementPresent("css=" + DashBoardPageId_1170.HAMBURGERMENU_CONTAINER_CSS);
+		driver.waitForElementPresent("css=" + DashBoardPageId_1180.HAMBURGERMENU_CONTAINER_CSS);
 		if (!isHamburgerMenuDisplayed(driver)) {
 			driver.getLogger().info("Not displayed hamburger menu, need to show it");
 			clickHamburgerMenuIcon(driver);
 		}
 
 		List<WebElement> webd_menuitem = driver.getWebDriver().findElements(
-				By.cssSelector(DashBoardPageId_1170.HAMBURGERMENU_MENUITEM_LABEL_CSS));
+				By.cssSelector(DashBoardPageId_1180.HAMBURGERMENU_MENUITEM_LABEL_CSS));
 		if (webd_menuitem == null || webd_menuitem.isEmpty()) {
 			throw new NoSuchElementException("clickMenuItem: the menuitem element is not found");
 		}
@@ -109,24 +109,24 @@ public class BrandingBarUtil_1170 extends BrandingBarUtil_1160
 	public String getCurrentMenuHeader(WebDriver driver)
 	{
 		if (!isHamburgerMenuDisplayed(driver)) {
-			driver.click("css=" + DashBoardPageId_1170.HAMBURGERMENU_ICON_CSS);
+			driver.click("css=" + DashBoardPageId_1180.HAMBURGERMENU_ICON_CSS);
 			driver.takeScreenShot();
 			driver.savePageToFile();
 		}
-		return driver.getText("css=" + DashBoardPageId_1170.HAMBURGERMENU_TOOLBAR_CSS);
+		return driver.getText("css=" + DashBoardPageId_1180.HAMBURGERMENU_TOOLBAR_CSS);
 	}
 
 	@Override
 	public void goBackToParentMenu(WebDriver driver)
 	{
 		if (!isHamburgerMenuDisplayed(driver)) {
-			driver.click("css=" + DashBoardPageId_1170.HAMBURGERMENU_ICON_CSS);
+			driver.click("css=" + DashBoardPageId_1180.HAMBURGERMENU_ICON_CSS);
 			driver.takeScreenShot();
 			driver.savePageToFile();
 		}
 
-		if (driver.isDisplayed("css=" + DashBoardPageId_1170.HAMBURGERMENU_PREVIOUSICON_CSS)) {
-			driver.click("css=" + DashBoardPageId_1170.HAMBURGERMENU_PREVIOUSICON_CSS);
+		if (driver.isDisplayed("css=" + DashBoardPageId_1180.HAMBURGERMENU_PREVIOUSICON_CSS)) {
+			driver.click("css=" + DashBoardPageId_1180.HAMBURGERMENU_PREVIOUSICON_CSS);
 			driver.takeScreenShot();
 			driver.savePageToFile();
 		}
@@ -232,10 +232,10 @@ public class BrandingBarUtil_1170 extends BrandingBarUtil_1160
 	public boolean isHamburgerMenuDisplayed(WebDriver driver)
 	{
 		WaitUtil.waitForPageFullyLoaded(driver);
-		driver.waitForElementPresent("css=" + DashBoardPageId_1170.HAMBURGERMENU_CONTAINER_CSS);
+		driver.waitForElementPresent("css=" + DashBoardPageId_1180.HAMBURGERMENU_CONTAINER_CSS);
 		driver.takeScreenShot();
 		driver.savePageToFile();
-		if (driver.isDisplayed("css=" + DashBoardPageId_1170.HAMBURGERMENU_CONTAINER_CSS)) {
+		if (driver.isDisplayed("css=" + DashBoardPageId_1180.HAMBURGERMENU_CONTAINER_CSS)) {
 			return true;
 		}
 		else {
@@ -269,14 +269,14 @@ public class BrandingBarUtil_1170 extends BrandingBarUtil_1160
 		boolean isEnabled = false;
 		Validator.notEmptyString("menuitem in [isMenuItemEnabled]", menuitem);
 
-		driver.waitForElementPresent("css=" + DashBoardPageId_1170.HAMBURGERMENU_CONTAINER_CSS);
+		driver.waitForElementPresent("css=" + DashBoardPageId_1180.HAMBURGERMENU_CONTAINER_CSS);
 		if (!isHamburgerMenuDisplayed(driver)) {
 			driver.getLogger().info("Not displayed hamburger menu, need to show it");
 			clickHamburgerMenuIcon(driver);
 		}
 
 		List<WebElement> webd_menuitem = driver.getWebDriver().findElements(
-				By.cssSelector(DashBoardPageId_1170.HAMBURGERMENU_MENUITEM_LABEL_CSS));
+				By.cssSelector(DashBoardPageId_1180.HAMBURGERMENU_MENUITEM_LABEL_CSS));
 		if (webd_menuitem == null || webd_menuitem.isEmpty()) {
 			throw new NoSuchElementException("isMenuItemEnabled: the menuitem element is not found");
 		}
@@ -298,14 +298,14 @@ public class BrandingBarUtil_1170 extends BrandingBarUtil_1160
 		boolean isExisted = false;
 		Validator.notEmptyString("menuitem in [isMenuItemExisted]", menuitem);
 
-		driver.waitForElementPresent("css=" + DashBoardPageId_1170.HAMBURGERMENU_CONTAINER_CSS);
+		driver.waitForElementPresent("css=" + DashBoardPageId_1180.HAMBURGERMENU_CONTAINER_CSS);
 		if (!isHamburgerMenuDisplayed(driver)) {
 			driver.getLogger().info("Not displayed hamburger menu, need to show it");
 			clickHamburgerMenuIcon(driver);
 		}
 
 		List<WebElement> webd_menuitem = driver.getWebDriver().findElements(
-				By.cssSelector(DashBoardPageId_1170.HAMBURGERMENU_MENUITEM_LABEL_CSS));
+				By.cssSelector(DashBoardPageId_1180.HAMBURGERMENU_MENUITEM_LABEL_CSS));
 		if (webd_menuitem == null || webd_menuitem.isEmpty()) {
 			throw new NoSuchElementException("isMenuItemExisted: the menuitem element is not found");
 		}
@@ -431,7 +431,7 @@ public class BrandingBarUtil_1170 extends BrandingBarUtil_1160
 
 		//check if the hamburger menu container displayed
 		//if hamburger menu container displayed, return true, else return false
-		driver.waitForElementPresent("css=" + DashBoardPageId_1170.HAMBURGERMENU_CONTAINER_CSS);
+		driver.waitForElementPresent("css=" + DashBoardPageId_1180.HAMBURGERMENU_CONTAINER_CSS);
 		boolean hamburgerMenuElem = isHamburgerMenuDisplayed(driver);
 
 		if (hamburgerMenuElem) {
@@ -588,7 +588,7 @@ public class BrandingBarUtil_1170 extends BrandingBarUtil_1160
 		else {
 			//the branding bar
 			driver.getLogger()
-			.info("Start to visit visual analyzer link from branding bar. Link name: " + visualAnalyzerLinkName);
+					.info("Start to visit visual analyzer link from branding bar. Link name: " + visualAnalyzerLinkName);
 			visitApplicationLink(driver, "va", visualAnalyzerLinkName);
 		}
 		driver.getLogger().info("visitApplicationVisualAnalyzer ended");
@@ -658,9 +658,9 @@ public class BrandingBarUtil_1170 extends BrandingBarUtil_1160
 		if (isHamburgerMenuEnabled(driver)) {
 			//click the Oracle logo to go to Welcome page
 			driver.getLogger().info("[visitWelcome] start to click the Oracle logo from branding bar.");
-			driver.waitForElementPresent("css=" + DashBoardPageId_1170.ORACLE_LOGO_IMG_CSS);
-			if (driver.isDisplayed("css=" + DashBoardPageId_1170.ORACLE_LOGO_IMG_CSS)) {
-				driver.click("css=" + DashBoardPageId_1170.ORACLE_LOGO_IMG_CSS);
+			driver.waitForElementPresent("css=" + DashBoardPageId_1180.ORACLE_LOGO_IMG_CSS);
+			if (driver.isDisplayed("css=" + DashBoardPageId_1180.ORACLE_LOGO_IMG_CSS)) {
+				driver.click("css=" + DashBoardPageId_1180.ORACLE_LOGO_IMG_CSS);
 				driver.takeScreenShot();
 				driver.savePageToFile();
 			}
@@ -679,7 +679,7 @@ public class BrandingBarUtil_1170 extends BrandingBarUtil_1160
 
 	private void clickHamburgerMenuIcon(WebDriver driver)
 	{
-		driver.click("css=" + DashBoardPageId_1170.HAMBURGERMENU_ICON_CSS);
+		driver.click("css=" + DashBoardPageId_1180.HAMBURGERMENU_ICON_CSS);
 		driver.takeScreenShot();
 		driver.savePageToFile();
 	}
@@ -695,7 +695,7 @@ public class BrandingBarUtil_1170 extends BrandingBarUtil_1160
 
 	private boolean isHamburgerMenuEnabled(WebDriver driver)
 	{
-		if (driver.isElementPresent("css=" + DashBoardPageId_1170.HAMBURGERMENU_ICON_CSS)) {
+		if (driver.isElementPresent("css=" + DashBoardPageId_1180.HAMBURGERMENU_ICON_CSS)) {
 			return true;
 		}
 		else {

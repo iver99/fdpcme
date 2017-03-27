@@ -3,7 +3,7 @@ package oracle.sysman.emaas.platform.dashboards.tests.ui.util;
 /**
  * Created by shangping.wang on 2017/3/14.
  */
-public class DashBoardPageId_1170
+public class DashBoardPageId_1180
 {
 	//new page id for hamburger menu
 	public static final String HAMBURGERMENU_ICON_CSS = "#hamburgerButton";
@@ -18,7 +18,7 @@ public class DashBoardPageId_1170
 
 	public static final String ORACLE_LOGO_IMG_CSS = ".emaas-appheader-logo-img";
 
-	private DashBoardPageId_1170()
+	private DashBoardPageId_1180()
 	{
 	}
 }
