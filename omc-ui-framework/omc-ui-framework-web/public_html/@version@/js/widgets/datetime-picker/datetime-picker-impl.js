@@ -1979,14 +1979,53 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     self.endTime(end.slice(10));
                 }
                 
+                self.validateRelTimePeriodInput = function(num, opt) {
+                    var maxNum = 366;
+                    var nlsUnit = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_DAYS;
+                    var timeUnitConstants = ctxUtil.OMCTimeConstants.TIME_UNIT;
+                    var errorMsg;
+                    switch (opt) {
+                        case timeUnitConstants.SECOND:
+                            maxNum = 60;
+                            nlsUnit = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_SECONDS;
+                            break;
+                        case timeUnitConstants.MINUTE:
+                            maxNum = 60;
+                            nlsUnit = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_MINUTES;
+                            break;
+                        case timeUnitConstants.HOUR:
+                            maxNum = 24;
+                            nlsUnit = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_HOURS;
+                            break;
+                        case timeUnitConstants.DAY:
+                            maxNum = 366;
+                            nlsUnit = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_DAYS;
+                            break;
+                        case timeUnitConstants.WEEK:
+                            maxNum = 52;
+                            nlsUnit = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_WEEKS;
+                            break;
+                        case timeUnitConstants.MONTH:
+                            maxNum = 18;
+                            nlsUnit = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_MONTHS;
+                            break;
+                        case timeUnitConstants.YEAR:
+                            maxNum = 7;
+                            nlsUnit = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_YEARS;
+                            break;
+                    }
+                    
+                    if(num >= 1 && $.isNumeric(num) && (parseInt(num) === num) && num <= maxNum) {
+                        return true;
+                    }else {
+                        errorMsg = msgUtil.formatMessage(self.felRelTimeValError, maxNum+1, nlsUnit);
+                        throw new Error(errorMsg);
+                    }
+                };
+                
                 self.numberValidator = {
                     'validate': function(value) {
-                        //TO DO: Need to confirm with Juan what is the biggest number allowed
-                       if(value >= 1 && $.isNumeric(value) && (parseInt(value) === value) && value.toString().length<4) {
-                           return true;
-                       }else {
-                           throw new Error(self.felRelTimeValError);
-                       }
+                        self.validateRelTimePeriodInput(value, self.flexRelTimeOpt()[0]);
                     }
                 };
                      
@@ -2071,6 +2110,8 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     if(data.previousValue && data.value && (data.previousValue[0]===data.value[0])) {
                         return;
                     }
+                    
+                    $("#flexRelTimeVal_" + self.randomId).ojInputNumber('validate');
                     
                     var opt = data.value[0];
                     var num = self.flexRelTimeVal();
