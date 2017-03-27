@@ -374,6 +374,7 @@ public class DashboardManager
 			EmsUserOptions euo = dsf.getEmsUserOptions(userName, dashboardId);
 			List<EmsDashboardTile> edbdtList = ed.getDashboardTileList();
 			CombinedDashboard cdSet = null;
+			BigInteger selectedId = null;
 
 			if (Dashboard.DASHBOARD_TYPE_CODE_SET.equals(ed.getType())) {
 				// combine dashboard set
@@ -416,7 +417,6 @@ public class DashboardManager
 					// ahead w/o selected tab then...
 					LOGGER.error(e.getLocalizedMessage(), e);
 				}
-				BigInteger selectedId = null;
 
 				if (selected != null) {
 					try {
@@ -458,7 +458,7 @@ public class DashboardManager
 					ssfIdList.add(edt.getWidgetUniqueId());
 				}
 			}
-			String savedSearchResponse = retrieveSavedSeasrch(dashboardId, ed.getIsSystem() == 1, ssfIdList);
+			String savedSearchResponse = retrieveSavedSeasrch(selectedId != null ? selectedId : dashboardId, ed.getIsSystem() == 1, ssfIdList);
 
 			// combine single dashboard or selected dashbaord
 			CombinedDashboard cd = CombinedDashboard.valueOf(ed, ep, euo,savedSearchResponse);
