@@ -963,9 +963,10 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                                         expandedIdList.shift();
                                         trackIdList.shift();
                                     }
-                                    $.each(expandedIdList,function(idx, expandedItemId){
-                                        $("#hamburgerMenu #navlistcontainer>div").ojNavigationList("collapse",expandedItemId, true);
-                                    });
+                                    while(expandedIdList.length>0){
+                                        var parentItemId = expandedIdList.pop();
+                                        $("#hamburgerMenu #navlistcontainer>div").ojNavigationList("collapse",parentItemId, true);
+                                    }
                                     setTimeout(function(){
                                     while(trackIdList.length>1){
                                         var parentItemId = trackIdList.shift();
