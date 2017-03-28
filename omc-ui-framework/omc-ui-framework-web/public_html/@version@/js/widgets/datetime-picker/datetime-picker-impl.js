@@ -2028,7 +2028,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             break;
                     }
                     
-                    if(num >= 1 && $.isNumeric(num) && (parseInt(num) === num) && num <= maxNum) {
+                    if($.isNumeric(num) && num >= 1 && (parseInt(num) === num) && num <= maxNum) {
                         return true;
                     }else {
                         errorMsg = msgUtil.formatMessage(self.felRelTimeValError, maxNum+1, nlsUnit);
