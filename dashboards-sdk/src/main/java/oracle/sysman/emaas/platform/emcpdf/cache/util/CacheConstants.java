@@ -10,8 +10,6 @@ public class CacheConstants {
     public static final String CACHES_CLOUD_SERVICE_LINK_CACHE = "cloudServiceLinkCache";
     public static final String CACHES_HOME_LINK_CACHE = "homeLinkCache";
     public static final String CACHES_VISUAL_ANALYZER_LINK_CACHE = "visualAnalyzerLinkCache";
-    public static final String CACHES_SERVICE_EXTERNAL_LINK_CACHE = "externalLinkCache";
-    public static final String CACHES_SERVICE_INTERNAL_LINK_CACHE = "internalLinkCache";
     public static final String CACHES_VANITY_BASE_URL_CACHE = "vanityBaseUrlCache";
     public static final String CACHES_DOMAINS_DATA_CACHE = "domainsDataCache";
     public static final String CACHES_TENANT_APP_MAPPING_CACHE = "tenantAppMappingCache";

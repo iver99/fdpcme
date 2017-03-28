@@ -461,23 +461,9 @@ public class RegistryLookupUtil
 	private static VersionedLink getServiceExternalLink(String serviceName, String version, String rel, boolean prefixMatch,
 			String tenantName)
 	{
-		ICacheManager cm= CacheManagers.getInstance().build();
 		LOGGER.debug(
 				"/getServiceExternalLink/ Trying to retrieve service external link for service: \"{}\", version: \"{}\", rel: \"{}\", tenant: \"{}\"",
 				serviceName, version, rel, tenantName);
-		Tenant cacheTenant = new Tenant(tenantName);
-		try {
-			CachedLink cl=(CachedLink)cm.getCache(CacheConstants.CACHES_SERVICE_EXTERNAL_LINK_CACHE).get(DefaultKeyGenerator.getInstance().generate(cacheTenant, new Keys(CacheConstants.LOOKUP_CACHE_KEY_EXTERNAL_LINK, serviceName, version, rel, prefixMatch)));
-			if (cl != null) {
-				LOGGER.debug(
-						"Retrieved exteral link {} from cache, serviceName={}, version={}, rel={}, prefixMatch={}, tenantName={}",
-						cl.getHref(), serviceName, version, rel, prefixMatch, tenantName);
-				return cl.getLink();
-			}
-		}
-		catch (Exception e) {
-			LOGGER.error("Error to retrieve external link from cache. Try to lookup the link", e);
-		}
 
 		InstanceInfo.Builder builder = InstanceInfo.Builder.newBuilder().withServiceName(serviceName);
 		if (!StringUtil.isEmpty(version)) {
@@ -554,8 +540,6 @@ public class RegistryLookupUtil
 					LOGGER.debug(
 							"[branch 1] Retrieved link: \"{}\" for service: \"{}\", version: \"{}\", rel: \"{}\", tenant: \"{}\"",
 							lk.getHref(), serviceName, version, rel, tenantName);
-					cm.getCache(CacheConstants.CACHES_SERVICE_EXTERNAL_LINK_CACHE).put(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_EXTERNAL_LINK, serviceName, version, rel, prefixMatch)),
-							new CachedLink(lk));
 					return lk;
 				}
 
@@ -590,8 +574,6 @@ public class RegistryLookupUtil
 						LOGGER.debug(
 								"[branch 2] Retrieved link: \"{}\" for service: \"{}\", version: \"{}\", rel: \"{}\", tenant: \"{}\"",
 								lk == null ? null : lk.getHref(), serviceName, version, rel, tenantName);
-						cm.getCache(CacheConstants.CACHES_SERVICE_EXTERNAL_LINK_CACHE).put(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_EXTERNAL_LINK, serviceName, version, rel, prefixMatch)),
-								new CachedLink(lk));
 						return lk;
 					}
 				}
@@ -609,27 +591,9 @@ public class RegistryLookupUtil
 	public static Link getServiceInternalLink(String serviceName, String version, String rel, boolean prefixMatch,
 			String tenantName, Boolean useCache)
 	{
-		ICacheManager cm= CacheManagers.getInstance().build();
-		Tenant cacheTenant = new Tenant(tenantName);
-		Object cacheKey = DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_INTERNAL_LINK, serviceName, version, rel, prefixMatch));
-		if(useCache){
-			LOGGER.debug(
-					"/getServiceInternalLink/ Trying to retrieve service internal link for service: \"{}\", version: \"{}\", rel: \"{}\", prefixMatch: \"{}\", tenant: \"{}\"",
-					serviceName, version, rel, prefixMatch, tenantName);
-			try {
-				CachedLink cl=(CachedLink)cm.getCache(CacheConstants.CACHES_SERVICE_INTERNAL_LINK_CACHE).get(cacheKey);
-				if (cl != null) {
-					LOGGER.debug(
-							"Retrieved internal link {} from cache, serviceName={}, version={}, rel={}, prefixMatch={}, tenantName={}",
-							cl.getHref(), serviceName, version, rel, prefixMatch, tenantName);
-					return cl.getLink();
-				}
-			}
-			catch (Exception e) {
-				LOGGER.error("Error to retrieve internal link from cache. Try to lookup the link", e);
-			}
-		}
-
+		LOGGER.debug(
+				"/getServiceInternalLink/ Trying to retrieve service internal link for service: \"{}\", version: \"{}\", rel: \"{}\", prefixMatch: \"{}\", tenant: \"{}\"",
+				serviceName, version, rel, prefixMatch, tenantName);
 		LogUtil.setInteractionLogThreadContext(tenantName, "Retristry lookup client", LogUtil.InteractionLogDirection.OUT);
 		InstanceInfo info = InstanceInfo.Builder.newBuilder().withServiceName(serviceName).withVersion(version).build();
 		VersionedLink lk = null;
@@ -669,10 +633,6 @@ public class RegistryLookupUtil
 					if (links != null && !links.isEmpty()) {
 						lk = new VersionedLink(links.get(0), version);
 						itrLogger.debug("Retrieved link {}", lk == null ? null : lk.getHref());
-						if(useCache){
-							cm.getCache(CacheConstants.CACHES_SERVICE_INTERNAL_LINK_CACHE).put(cacheKey,
-									new CachedLink(lk));
-						}
 						return lk;
 					}
 				}

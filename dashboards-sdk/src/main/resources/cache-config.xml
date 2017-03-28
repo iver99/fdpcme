@@ -29,7 +29,7 @@
         <expiry>60</expiry>
     </cache-group>
 
-    <cache-group>
+    <!--<cache-group>
         <name>externalLinkCache</name>
         <capacity>1000</capacity>
         <expiry>60</expiry>
@@ -39,7 +39,7 @@
         <name>internalLinkCache</name>
         <capacity>1000</capacity>
         <expiry>60</expiry>
-    </cache-group>
+    </cache-group>-->
 
     <cache-group>
         <name>vanityBaseUrlCache</name>
