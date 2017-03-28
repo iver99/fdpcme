@@ -8,6 +8,7 @@ import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.StringUtil;
+import oracle.sysman.emaas.platform.uifwk.util.LogUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -22,6 +23,7 @@ import java.util.Map;
  */
 public class RestClient {
     private final Logger LOGGER = LogManager.getLogger(RestClient.class);
+    private Logger itrLogger = LogUtil.getInteractionLogger();
     private static final String HTTP_HEADER_OAM_REMOTE_USER = "OAM_REMOTE_USER";
     private static final String HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME = "X-USER-IDENTITY-DOMAIN-NAME";
     //timeout milli-seconds
@@ -32,6 +34,12 @@ public class RestClient {
     //Default type is json
     private String type = MediaType.APPLICATION_JSON;
 
+    public void setIteractionLogger(String loggerName){
+        if(!StringUtil.isEmpty(loggerName)){
+            itrLogger = LogUtil.getInteractionLogger(loggerName);
+        }
+    }
+
     public RestClient() {
     }
 
@@ -39,15 +47,19 @@ public class RestClient {
         try {
             return innerGet(url, tenant);
         }catch(UniformInterfaceException e){
-            LOGGER.error("Error occurred for [GET] action, URL is {}: status code of the HTTP response indicates a response that is not expected", url);
+            LOGGER.error("RestClient: Error occurred for [GET] action, URL is {}: status code of the HTTP response indicates a response that is not expected", url);
             LOGGER.error(e);
+            itrLogger.error("RestClient: Error occurred for [GET] action, URL is {}: status code of the HTTP response indicates a response that is not expected", url);
         }catch(ClientHandlerException e){//RestClient may timeout, so catch this runtime exception to make sure the response can return.
-            LOGGER.error("Error occurred for [GET] action, URL is {}: Signals a failure to process the HTTP request or HTTP response", url);
+            LOGGER.error("RestClient: Error occurred for [GET] action, URL is {}: Signals a failure to process the HTTP request or HTTP response", url);
             LOGGER.error(e);
+            itrLogger.error("RestClient: Error occurred for [GET] action, URL is {}: Signals a failure to process the HTTP request or HTTP response", url);
+
         }catch (Exception e) {
-            LOGGER.info("context", e);
-            LOGGER.error("Exception when RestClient trying to get response from specified service. Message:"
-                    + e.getLocalizedMessage());
+            LOGGER.error("RestClient: Exception when RestClient trying to get response from specified service. Message:"
+                    + e);
+            itrLogger.error("RestClient: Exception when RestClient trying to get response from specified service. Message:"
+                    + e);
         }
         return null;
     }
@@ -70,9 +82,10 @@ public class RestClient {
         if (StringUtil.isEmpty(auth)) {
             LOGGER.warn("Warning: RestClient get an empty auth token when connection to url {}", url);
         } else {
-//            LogUtil.setInteractionLogThreadContext(tenant, url, InteractionLogDirection.OUT);
-            LOGGER.info("RestClient is connecting to get response after getting authorization token from registration manager.");
+            LogUtil.setInteractionLogThreadContext(tenant, url, LogUtil.InteractionLogDirection.OUT);
+            itrLogger.info("RestClient is connecting to get response after getting authorization token from registration manager.");
         }
+        itrLogger.info("RestClient call to [GET] {}",url);
         WebResource.Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth);
         if (type != null) {
             builder = builder.type(type);
@@ -86,7 +99,7 @@ public class RestClient {
                     continue;
                 }
                 builder.header(key, headers.get(key));
-                LOGGER.info("Setting header ({}, {}) for call to {}", key, headers.get(key), url);
+                itrLogger.info("Setting header ({}, {}) for call to {}", key, headers.get(key), url);
             }
         }
         return builder.get(String.class);
@@ -113,11 +126,12 @@ public class RestClient {
         if (StringUtil.isEmpty(auth)) {
             LOGGER.warn("Warning: RestClient get an empty auth token when connection to url {}", url);
         } else {
-//            LogUtil.setInteractionLogThreadContext(tenant, url, InteractionLogDirection.OUT);
-            LOGGER.info(
+            LogUtil.setInteractionLogThreadContext(tenant, url, LogUtil.InteractionLogDirection.OUT);
+            itrLogger.info(
                     "RestClient is connecting to {} after getting authorization token from registration manager. HTTP method is post.",
                     url);
         }
+        itrLogger.info("RestClient call to [PUT] {}",url);
         try{
             WebResource.Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth);
             if (type != null) {
@@ -133,15 +147,18 @@ public class RestClient {
                         continue;
                     }
                     builder.header(key, value);
+                    itrLogger.info("Setting header ({}, {}) for call to {}", key, headers.get(key), url);
                 }
             }
             return builder.put(requestEntity.getClass(), requestEntity).toString();
         }catch(UniformInterfaceException e){
-            LOGGER.error("Error occurred for [PUT] action, URL is {}: status code of the HTTP response indicates a response that is not expected", url);
+            LOGGER.error("RestClient: Error occurred for [PUT] action, URL is {}: status code of the HTTP response indicates a response that is not expected", url);
             LOGGER.error(e);
+            itrLogger.error("RestClient: Error occurred for [PUT] action, URL is {}: status code of the HTTP response indicates a response that is not expected", url);
         }catch(ClientHandlerException e){//RestClient may timeout, so catch this runtime exception to make sure the response can return.
-            LOGGER.error("Error occurred for [PUT] action, URL is {}: Signals a failure to process the HTTP request or HTTP response", url);
+            LOGGER.error("RestClient: Error occurred for [PUT] action, URL is {}: Signals a failure to process the HTTP request or HTTP response", url);
             LOGGER.error(e);
+            itrLogger.error("RestClient: Error occurred for [PUT] action, URL is {}: Signals a failure to process the HTTP request or HTTP response", url);
         }
         return null;
     }
