@@ -26,7 +26,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
-public class BrandingBarUtil_1180 extends BrandingBarUtil_1160
+public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 {
 	@Override
 	public void clickHierarchicalMenu(WebDriver driver, String menuitem)
@@ -588,7 +588,7 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1160
 		else {
 			//the branding bar
 			driver.getLogger()
-					.info("Start to visit visual analyzer link from branding bar. Link name: " + visualAnalyzerLinkName);
+			.info("Start to visit visual analyzer link from branding bar. Link name: " + visualAnalyzerLinkName);
 			visitApplicationLink(driver, "va", visualAnalyzerLinkName);
 		}
 		driver.getLogger().info("visitApplicationVisualAnalyzer ended");
