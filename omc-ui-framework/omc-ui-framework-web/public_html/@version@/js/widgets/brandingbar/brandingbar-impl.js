@@ -741,6 +741,15 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 item.stopImmediatePropagation();
             };
             
+            function injectHamburgerMenuComponent() {
+                //Check if hamburger menu has been created or not, if not create it
+                if (!$('#omcHamburgerMenu').length) {
+                    var hamburgerDiv = $($("#omc-hamburger-menu-template").text());
+                    $('#offcanvasInnerContainer').append(hamburgerDiv);
+                    ko.applyBindings(self, hamburgerDiv[0]);
+                }
+            }
+            
             self.hamburgerMenuEnabled = omcHamburgerMenuOptIn ? true : false;
             self.isHamburgerMenuRegistered = ko.observable(false);
             if (omcHamburgerMenuOptIn) {
@@ -757,15 +766,15 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                                 template: {require: 'text!' + hamburgerTemplatePath}
                             });
                             self.isHamburgerMenuRegistered(true);
-                        }                        
+                        }     
+                        injectHamburgerMenuComponent();
                     });
                 }
                 else {
                     self.isHamburgerMenuRegistered(true);
+                    injectHamburgerMenuComponent();
                 }
                 
-                
-
                 self.xlargeScreen = oj.ResponsiveKnockoutUtils.createMediaQueryObservable('(min-width: 1440px)');
 
                 self.xlargeScreen.subscribe(function(isXlarge){

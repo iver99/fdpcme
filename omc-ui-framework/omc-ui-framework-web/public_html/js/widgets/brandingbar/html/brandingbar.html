@@ -1,15 +1,12 @@
-    <!-- ko if: hamburgerMenuEnabled -->
-    <!-- ko if: isHamburgerMenuRegistered -->
-    <!-- hamburger menu -->            
-    <div id="omcHamburgerMenu" style="width:250px;" class="oj-contrast-marker oj-web-applayout-offcanvas oj-offcanvas-start">
-        <div data-bind="component: {
-            name: 'omc-uifwk-hamburger-menu',
-            params: menuParams
-            }">
+    <script id="omc-hamburger-menu-template" type="text/html">
+        <div id="omcHamburgerMenu" style="width:250px;" class="oj-contrast-marker oj-web-applayout-offcanvas oj-offcanvas-start">
+            <div data-bind="component: {
+                name: 'omc-uifwk-hamburger-menu',
+                params: menuParams
+                }">
+            </div>
         </div>
-    </div>
-    <!-- /ko -->
-    <!-- /ko -->
+    </script>
     <div class="emaas-brandingbar">
         <div class="emaas-appheader">
             <!-- ko if: hamburgerMenuEnabled -->
