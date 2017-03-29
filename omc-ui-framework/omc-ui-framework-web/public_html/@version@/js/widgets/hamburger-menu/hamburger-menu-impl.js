@@ -922,32 +922,32 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     };
                     prefUtil.getAllPreferences(options);
                 }
-                $("#omcMenuNavList").on("ojbeforecurrentitem", function (event, ui) {
-                    // verify that the component firing the event is a component of interest ,
-                    //  verify whether the event is fired by js
-                    if ($(event.target).is("#omcMenuNavList") && !event.originalEvent) {
-                        $("#omcMenuNavList li").removeClass("oj-selected oj-focus");
-                        if(!self.onMenuItemExpand){
-                            $(ui.item[0]).addClass("oj-selected oj-focus");
-                        }else{
-                            self.onMenuItemExpand = false;
-                        }
-                    }
-                });
-                $("#omcMenuNavList").on("ojbeforeselect", function (event, ui) {
-                    // verify that the component firing the event is a component of interest ,
-                    //  verify whether the event is fired by js
-                    if ($(event.target).is("#omcMenuNavList")) {
-                        event.preventDefault();
-                    }
-                });
-                $("#omcMenuNavList").on("ojbeforeexpand", function (event, ui) {
-                    // verify that the component firing the event is a component of interest ,
-                    //  verify whether the event is fired by js
-                    if ($(event.target).is("#omcMenuNavList")) {
-                        self.onMenuItemExpand = true;
-                    }
-                });
+//                $("#omcMenuNavList").on("ojbeforecurrentitem", function (event, ui) {
+//                    // verify that the component firing the event is a component of interest ,
+//                    //  verify whether the event is fired by js
+//                    if ($(event.target).is("#omcMenuNavList") && !event.originalEvent) {
+//                        $("#omcMenuNavList li").removeClass("oj-selected oj-focus");
+//                        if(!self.onMenuItemExpand){
+//                            $(ui.item[0]).addClass("oj-selected oj-focus");
+//                        }else{
+//                            self.onMenuItemExpand = false;
+//                        }
+//                    }
+//                });
+//                $("#omcMenuNavList").on("ojbeforeselect", function (event, ui) {
+//                    // verify that the component firing the event is a component of interest ,
+//                    //  verify whether the event is fired by js
+//                    if ($(event.target).is("#omcMenuNavList")) {
+//                        event.preventDefault();
+//                    }
+//                });
+//                $("#omcMenuNavList").on("ojbeforeexpand", function (event, ui) {
+//                    // verify that the component firing the event is a component of interest ,
+//                    //  verify whether the event is fired by js
+//                    if ($(event.target).is("#omcMenuNavList")) {
+//                        self.onMenuItemExpand = true;
+//                    }
+//                });
                 //Set current menu item
                 function listenToSetCurrentMenuItem() {
                     var messageTag = 'EMAAS_OMC_GLOBAL_MENU_SET_CURRENT_ITEM';
@@ -997,6 +997,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                                         var parentItemId = trackIdList.shift();
                                         $("#hamburgerMenu #navlistcontainer>div").ojNavigationList("expand",parentItemId, true);
                                     }
+                                    $("#hamburgerMenu #navlistcontainer>div").ojNavigationList("option", "selection", eventData.menuItemId);
                                     $("#hamburgerMenu #navlistcontainer>div").ojNavigationList("option", "currentItem", eventData.menuItemId);
                                     },0);
                                 }
