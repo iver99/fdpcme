@@ -926,7 +926,26 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     // verify that the component firing the event is a component of interest ,
                     //  verify whether the event is fired by js
                     if ($(event.target).is("#omcMenuNavList") && !event.originalEvent) {
-                        $(ui.item[0]).addClass("oj-selected oj-focus");
+                        $("#omcMenuNavList li").removeClass("oj-selected oj-focus");
+                        if(!self.onMenuItemExpand){
+                            $(ui.item[0]).addClass("oj-selected oj-focus");
+                        }else{
+                            self.onMenuItemExpand = false;
+                        }
+                    }
+                });
+                $("#omcMenuNavList").on("ojbeforeselect", function (event, ui) {
+                    // verify that the component firing the event is a component of interest ,
+                    //  verify whether the event is fired by js
+                    if ($(event.target).is("#omcMenuNavList")) {
+                        event.preventDefault();
+                    }
+                });
+                $("#omcMenuNavList").on("ojbeforeexpand", function (event, ui) {
+                    // verify that the component firing the event is a component of interest ,
+                    //  verify whether the event is fired by js
+                    if ($(event.target).is("#omcMenuNavList")) {
+                        self.onMenuItemExpand = true;
                     }
                 });
                 //Set current menu item
