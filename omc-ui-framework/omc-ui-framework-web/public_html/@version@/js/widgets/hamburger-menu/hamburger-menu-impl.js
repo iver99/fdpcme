@@ -360,6 +360,9 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                             if (dfu.isDevMode()) {
                                 url = url.replace("https://", "http://").replace("4443", "7019");
                             }
+                            else {
+                                url = url.substring(url.indexOf('/emsaasui/'));
+                            }
                             dfu.ajaxWithRetry(url, {
                                 type: 'get',
                                 dataType: 'json',
