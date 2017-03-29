@@ -467,7 +467,7 @@ public class DashboardManager
 				}
 			}
 			// we've ensured that the dashoard id and SSF id list are all for the dashboard OR selected tab dashboard and is correctly set
-			String savedSearchResponse = retrieveSavedSeasrch(selectedId  != null ? selectedId : dashboardId, ed.getIsSystem() == 1, ssfIdList);
+			String savedSearchResponse = retrieveSavedSeasrch(selectedId != null ? selectedId : dashboardId, ed.getIsSystem() == 1, ssfIdList);
 
 			// combine single dashboard or selected dashbaord
 			CombinedDashboard cd = CombinedDashboard.valueOf(ed, ep, euo,savedSearchResponse);

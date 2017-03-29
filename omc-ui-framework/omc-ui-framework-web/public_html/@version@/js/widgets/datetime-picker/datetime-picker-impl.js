@@ -109,6 +109,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 var msgUtil = new msgUtilModel();
                 var ctxUtil = new contextModel();
                 var omcContext = ctxUtil.getOMCContext();
+                var eventSourceTimeSelector = ctxUtil.OMCEventSourceConstants.GLOBAL_TIME_SELECTOR;
                 self.badgeTimePeriod = ko.observable();
                 console.log("Initialize date time picker! The params are: ");
                 if(ko.mapping && ko.mapping.toJS) {
@@ -1225,6 +1226,9 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
 
                 self.startDateISO = ko.computed({
                     read: function () {
+                        if(isNaN(new Date(self.startDate()))) {
+                            return ko.unwrap(self.startDateISO);
+                        }
                         return oj.IntlConverterUtils.dateToLocalIso(new Date(self.startDate()));
                     },
                     write: function (value) {
@@ -1235,6 +1239,9 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
 
                 self.endDateISO = ko.computed({
                     read: function () {
+                        if(isNaN(new Date(self.endDate()))) {
+                             return ko.unwrap(self.endDateISO);
+                        }
                         return oj.IntlConverterUtils.dateToLocalIso(new Date(self.endDate()));
                     },
                     write: function (value) {
@@ -1762,6 +1769,9 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                         customClick(0);
                                     }
                                 }
+                                
+                                //update url with default time period when there is no global time context in url
+                                ctxUtil.setTimePeriod(self.defaultTimePeriod(), eventSourceTimeSelector);
                             }else if(isValidFlexRelTimePeriod(self.defaultTimePeriod())){ //for flexible relative time
                                 self.lrCtrlVal("flexRelTimeCtrl");
                                 
@@ -1794,6 +1804,9 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                 }else {
                                     self.timePeriod(self.timePeriodCustom);
                                 }
+                                
+                                //update url with default time period when there is no global time context in url
+                                ctxUtil.setTimePeriod(self.defaultTimePeriod(), eventSourceTimeSelector);
                             }else {
                                 //users input nothing
                                 if($.inArray(self.timePeriodLast15mins, tpNotToShow)<0) {
@@ -1979,14 +1992,53 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     self.endTime(end.slice(10));
                 }
                 
+                self.validateRelTimePeriodInput = function(num, opt) {
+                    var maxNum = 366;
+                    var nlsUnit = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_DAYS;
+                    var timeUnitConstants = ctxUtil.OMCTimeConstants.TIME_UNIT;
+                    var errorMsg;
+                    switch (opt) {
+                        case timeUnitConstants.SECOND:
+                            maxNum = 60;
+                            nlsUnit = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_SECONDS;
+                            break;
+                        case timeUnitConstants.MINUTE:
+                            maxNum = 60;
+                            nlsUnit = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_MINUTES;
+                            break;
+                        case timeUnitConstants.HOUR:
+                            maxNum = 24;
+                            nlsUnit = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_HOURS;
+                            break;
+                        case timeUnitConstants.DAY:
+                            maxNum = 366;
+                            nlsUnit = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_DAYS;
+                            break;
+                        case timeUnitConstants.WEEK:
+                            maxNum = 52;
+                            nlsUnit = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_WEEKS;
+                            break;
+                        case timeUnitConstants.MONTH:
+                            maxNum = 18;
+                            nlsUnit = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_MONTHS;
+                            break;
+                        case timeUnitConstants.YEAR:
+                            maxNum = 7;
+                            nlsUnit = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_YEARS;
+                            break;
+                    }
+                    
+                    if($.isNumeric(num) && num >= 1 && (parseInt(num) === num) && num <= maxNum) {
+                        return true;
+                    }else {
+                        errorMsg = msgUtil.formatMessage(self.felRelTimeValError, maxNum+1, nlsUnit);
+                        throw new Error(errorMsg);
+                    }
+                };
+                
                 self.numberValidator = {
                     'validate': function(value) {
-                        //TO DO: Need to confirm with Juan what is the biggest number allowed
-                       if(value >= 1 && $.isNumeric(value) && (parseInt(value) === value) && value.toString().length<4) {
-                           return true;
-                       }else {
-                           throw new Error(self.felRelTimeValError);
-                       }
+                        self.validateRelTimePeriodInput(value, self.flexRelTimeOpt()[0]);
                     }
                 };
                      
@@ -2072,6 +2124,8 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         return;
                     }
                     
+                    $("#flexRelTimeVal_" + self.randomId).ojInputNumber('validate');
+                    
                     var opt = data.value[0];
                     var num = self.flexRelTimeVal();
                     console.log("flexRelTimeOptChanged: num: " + num + ", opt: " + opt);
@@ -2107,6 +2161,9 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         return;
                     }
                     try {
+                        if(isNaN(new Date(data.value))) {
+                            throw true;
+                        }
                         //make sure the date is valid.
                         var convertedDate = self.dateConverter2.format(oj.IntlConverterUtils.dateToLocalIso(new Date(data.value)));
                         if(convertedDate !== data.value) {
@@ -2203,11 +2260,11 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 };
 
                 self.changeEndTime = function (event, data) {
-                    if((data.option !== "value" && data.option !== "rawValue") || (data.option === "rawValue" && !data.previousValue)) {
-                        return;
-                    }
                     if(data.option === "messagesShown" && oj.Message.getMaxSeverity(data.value)>=4) {
                         self.changeTimeError(event, data, 1);
+                        return;
+                    }
+                    if((data.option !== "value" && data.option !== "rawValue") || (data.option === "rawValue" && !data.previousValue)) {
                         return;
                     }
                     if (typeof data.value === "string") {
@@ -3152,7 +3209,6 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     self.endTime(end.slice(10));
                 }
                 
-                var eventSourceTimeSelector = ctxUtil.OMCEventSourceConstants.GLOBAL_TIME_SELECTOR;
                 function callbackForOmcCtxChange(ctxChangeEvent) {
                     if (ctxChangeEvent && ctxChangeEvent.source === eventSourceTimeSelector) {
                         return;
