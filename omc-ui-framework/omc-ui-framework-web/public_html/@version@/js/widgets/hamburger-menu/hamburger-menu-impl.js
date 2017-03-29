@@ -868,7 +868,12 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     
                     if (item && !item.children) {
                         if (uifwkControlled) {
-                            var linkHref = item.externalUrl; //globalMenuIdHrefMapping[data.id];
+//                            var linkHref = item.externalUrl; //globalMenuIdHrefMapping[data.id];
+                            if(self.hrefMap && self.hrefMap[data.id]){
+                                $("a#"+data.id)[0].href = self.hrefMap[data.id];
+                                var linkHref = self.hrefMap[data.id];
+                                delete self.hrefMap[data.id];
+                            }
                             if (linkHref && linkHref !== '#') {
                                 window.location.href = ctxUtil.appendOMCContext(linkHref, true, true, true);
                             }
@@ -877,6 +882,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                             fireMenuSelectionEvent(item);
                         }
                     }
+                    return false;
                 }
                 
                 //Build mapping from menu item id and service links fetched from dashborad registration data
@@ -949,13 +955,15 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
 //                        }
 //                    }
 //                });
-//                $("#omcMenuNavList").on("ojbeforeselect", function (event, ui) {
-//                    // verify that the component firing the event is a component of interest ,
-//                    //  verify whether the event is fired by js
-//                    if ($(event.target).is("#omcMenuNavList")) {
-//                        event.preventDefault();
-//                    }
-//                });
+                $("#omcMenuNavList").on("ojbeforeselect", function (event, ui) {
+                    // verify that the component firing the event is a component of interest ,
+                    //  verify whether the event is fired by js
+                    if ($(event.target).is("#omcMenuNavList")) {
+                            if(!self.hrefMap)self.hrefMap = [];
+                            self.hrefMap[ui.key] = $("a#"+ui.key)[0].href;
+                            $("a#"+ui.key)[0].href = "#";
+                    }
+                });
 //                $("#omcMenuNavList").on("ojbeforeexpand", function (event, ui) {
 //                    // verify that the component firing the event is a component of interest ,
 //                    //  verify whether the event is fired by js
@@ -963,6 +971,19 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
 //                        self.onMenuItemExpand = true;
 //                    }
 //                });
+                
+                window.addEventListener("mousedown", function(event){
+                    if (event.button === 2  && self.hrefMap) {
+                        if($(event.target).is("#omcMenuNavList li") && self.hrefMap[$(event.target).find("a")[0].id]){
+                            $(event.target).find("a")[0].href = self.hrefMap[$(event.target).find("a")[0].id];
+                        }else if($(event.target).is("#omcMenuNavList a") && self.hrefMap[$(event.target)[0].id]){
+                            $(event.target)[0].href = self.hrefMap[$(event.target)[0].id];
+                        }else if($(event.target).parent().is("#omcMenuNavList a") && self.hrefMap[$(event.target).parent()[0].id]){
+                            $(event.target).parent()[0].href = self.hrefMap[$(event.target).parent()[0].id];
+                        }
+                    }
+                    return true;
+                });
                 //Set current menu item
                 function listenToSetCurrentMenuItem() {
                     var messageTag = 'EMAAS_OMC_GLOBAL_MENU_SET_CURRENT_ITEM';
