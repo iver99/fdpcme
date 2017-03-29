@@ -844,13 +844,25 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 
                 function handleMenuSelection(uifwkControlled, data) {
                     var item = null;
-                    for (var j = 0; j < self.serviceMenuData.length; j++) {
-                        var found = findItem(self.serviceMenuData[j], data.id);
+                    var expandedIdList = $("#omcMenuNavList").ojNavigationList("getExpanded");
+                    //If from composite menu
+                    if (expandedIdList.length > 0 && expandedIdList[0] === rootCompositeMenuid) {
+                        var found = findItem(self.serviceMenuData[self.serviceMenuData.length - 1], data.id);
                         if (found) {
                             item = found;
-                            break;
                         }
                     }
+                    else {
+                        //Otherwise from service menu
+                        for (var j = 0; j < self.serviceMenuData.length; j++) {
+                            var found = findItem(self.serviceMenuData[j], data.id);
+                            if (found) {
+                                item = found;
+                                break;
+                            }
+                        }
+                    }
+                    
                     if (item && !item.children) {
                         if (uifwkControlled) {
                             var linkHref = item.externalUrl; //globalMenuIdHrefMapping[data.id];
