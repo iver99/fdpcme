@@ -1034,7 +1034,7 @@ public class DashboardAPI extends APIBase
 			JSONArray dbdArray = new JSONArray();
 			for (int i = 0; i < dbdIds.size(); i++) {
 				BigInteger id = dbdIds.get(i);
-				CombinedDashboard dbd = dm.getCombinedDashboardById(id, tenantId, userName);
+				Dashboard dbd = dm.getCombinedDashboardById(id, tenantId, userName);
 				List<Tile> allTiles = null;
 				if (dbd.getSelected() != null && dbd.getSelected().getTileList() != null) {
 					allTiles = dbd.getSelected().getTileList();
@@ -1171,11 +1171,11 @@ public class DashboardAPI extends APIBase
 				 for (int i = 0; i < dbdArray.length(); i++) {
 				      JSONObject dbdObj = dbdArray.getJSONObject(i);
 				      logkeyHeaders("createDashboard()", userTenant, tenantIdParam);
-						Dashboard d = getJsonUtil().fromJson(dbdObj.toString(), Dashboard.class);
+				      CombinedDashboard d = getJsonUtil().fromJson(dbdObj.toString(), CombinedDashboard.class);
 						DashboardManager manager = DashboardManager.getInstance();
 						Long tenantId = getTenantId(tenantIdParam);
 						initializeUserContext(tenantIdParam, userTenant);
-						d = manager.saveNewDashboard(d, tenantId);
+						//d = manager.saveNewDashboard(d, tenantId);
 						updateDashboardAllHref(d, tenantIdParam);
 						dbdStr.append(getJsonUtil().toJson(d));
 				  }
