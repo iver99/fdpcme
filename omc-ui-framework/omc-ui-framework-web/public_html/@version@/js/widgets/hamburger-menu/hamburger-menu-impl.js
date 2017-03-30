@@ -974,12 +974,24 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 
                 window.addEventListener("mousedown", function(event){
                     if (event.button === 2  && self.hrefMap) {
-                        if($(event.target).is("#omcMenuNavList li") && self.hrefMap[$(event.target).find("a")[0].id]){
-                            $(event.target).find("a")[0].href = self.hrefMap[$(event.target).find("a")[0].id];
-                        }else if($(event.target).is("#omcMenuNavList a") && self.hrefMap[$(event.target)[0].id]){
-                            $(event.target)[0].href = self.hrefMap[$(event.target)[0].id];
-                        }else if($(event.target).parent().is("#omcMenuNavList a") && self.hrefMap[$(event.target).parent()[0].id]){
-                            $(event.target).parent()[0].href = self.hrefMap[$(event.target).parent()[0].id];
+                        if($(event.target).is("#omcMenuNavList li")){
+                            if(self.hrefMap[$(event.target).find("a")[0].id]){
+                                $(event.target).find("a")[0].href = ctxUtil.appendOMCContext(self.hrefMap[$(event.target).find("a")[0].id], true, true, true);
+                            }else{
+                                $(event.target).find("a")[0].href = ctxUtil.appendOMCContext($(event.target).find("a")[0].href, true, true, true);
+                            }
+                        }else if($(event.target).is("#omcMenuNavList a")){
+                            if(self.hrefMap[$(event.target)[0].id]){
+                                $(event.target)[0].href = ctxUtil.appendOMCContext(self.hrefMap[$(event.target)[0].id], true, true, true);
+                            }else{
+                                $(event.target)[0].href = ctxUtil.appendOMCContext($(event.target)[0].href, true, true, true);
+                            }
+                        }else if($(event.target).parent().is("#omcMenuNavList a")){
+                            if(self.hrefMap[$(event.target).parent()[0].id]){
+                                $(event.target).parent()[0].href = ctxUtil.appendOMCContext(self.hrefMap[$(event.target).parent()[0].id], true, true, true);
+                            }else{
+                                $(event.target).parent()[0].href = ctxUtil.appendOMCContext($(event.target).parent()[0].href, true, true, true);
+                            }
                         }
                     }
                     return true;
