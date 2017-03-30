@@ -502,9 +502,7 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 		driver.getLogger().info("visitApplicationAdministration started");
 		//check if hamburger menu icon exist
 		if (isHamburgerMenuEnabled(driver)) {
-			//click the menu "Home" in hamburger menu
-			//TODO
-
+			throw new NoSuchElementException("This Method is not supported in Hamburger Menu.");
 		}
 		else {
 			//the branding bar
@@ -517,21 +515,21 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 	@Override
 	public void visitApplicationCloudService(WebDriver driver, String cloudServiceLinkName)
 	{
+		String HBGMenuItem = "";
 		Validator.notEmptyString("cloudServiceLinkName in [visitApplicationCloudService]", cloudServiceLinkName);
 		driver.getLogger().info("visitApplicationCloudService started");
 		//check if hamburger menu icon exist
 		if (isHamburgerMenuEnabled(driver)) {
-			//click the menu "Home" in hamburger menu
-			if (NAV_LINK_TEXT_CS_SECU.equals(cloudServiceLinkName)) {
-				cloudServiceLinkName = ROOT_MENU_SECURITY;
-				driver.getLogger().info("Use NEW menu name: " + cloudServiceLinkName);
+			HBGMenuItem = cloudServiceLinkToHamburgerMenuItem(driver, cloudServiceLinkName);
+
+			driver.getLogger().info("Start to visit cloud service link from hambuger menu. Link name: " + HBGMenuItem);
+			clickMenuItem(driver, HBGMenuItem);
+			if (NAV_LINK_TEXT_CS_APM.equals(cloudServiceLinkName)) {
+				clickMenuItem(driver, "Home");
 			}
-			else if (NAV_LINK_TEXT_CS_COMP.equals(cloudServiceLinkName)) {
-				cloudServiceLinkName = ROOT_MENU_COMPLIANCE;
-				driver.getLogger().info("Use NEW menu name: " + cloudServiceLinkName);
+			if (NAV_LINK_TEXT_ADMIN_AGENT.equals(cloudServiceLinkName)) {
+				clickMenuItem(driver, GLOBAL_ADMIN_MENU_AGENTS);
 			}
-			driver.getLogger().info("Start to visit cloud service link from hambuger menu. Link name: " + cloudServiceLinkName);
-			clickMenuItem(driver, cloudServiceLinkName);
 		}
 		else {
 			//the branding bar
@@ -588,7 +586,7 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 		else {
 			//the branding bar
 			driver.getLogger()
-			.info("Start to visit visual analyzer link from branding bar. Link name: " + visualAnalyzerLinkName);
+					.info("Start to visit visual analyzer link from branding bar. Link name: " + visualAnalyzerLinkName);
 			visitApplicationLink(driver, "va", visualAnalyzerLinkName);
 		}
 		driver.getLogger().info("visitApplicationVisualAnalyzer ended");
@@ -682,6 +680,27 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 		driver.click("css=" + DashBoardPageId_1180.HAMBURGERMENU_ICON_CSS);
 		driver.takeScreenShot();
 		driver.savePageToFile();
+	}
+
+	private String cloudServiceLinkToHamburgerMenuItem(WebDriver driver, String cloudServiceLinkName)
+	{
+		String menuItemName = "";
+		if (NAV_LINK_TEXT_CS_SECU.equals(cloudServiceLinkName)) {
+			menuItemName = ROOT_MENU_SECURITY;
+		}
+		else if (NAV_LINK_TEXT_CS_COMP.equals(cloudServiceLinkName)) {
+			menuItemName = ROOT_MENU_COMPLIANCE;
+		}
+		else if (NAV_LINK_TEXT_CS_APM.equals(cloudServiceLinkName)) {
+			menuItemName = ROOT_MENU_APM;
+		}
+		else if (NAV_LINK_TEXT_ADMIN_AGENT.equals(cloudServiceLinkName)) {
+			menuItemName = ROOT_MENU_ADMIN;
+		}
+		else {
+			menuItemName = cloudServiceLinkName;
+		}
+		return menuItemName;
 	}
 
 	/**
