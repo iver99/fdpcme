@@ -590,7 +590,7 @@ END IF;
   V_TILE_ID                     := 194;
   V_TITLE                       := 'Denied Connections by Destination Port';
   V_HEIGHT                      := 2;
-  V_WIDTH                       := 6;
+  V_WIDTH                       := 8;
   V_IS_MAXIMIZED                := 0;
   V_POSITION                    := 0;
   V_WIDGET_UNIQUE_ID            := 3311;
