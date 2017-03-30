@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -16,6 +18,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.ScreenshotData;
+
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -1046,6 +1049,55 @@ public class DashboardManager
 			}
 		}
 	}
+	
+	private String generateNewName(DashboardServiceFacade dsf,Long tenantId,String name) {
+		String existingName = dsf.getDashboardName(name, tenantId);
+		String finalString  = null;
+		if (existingName != null) {
+			Pattern pattern = Pattern.compile("\\d+$");
+			Matcher matcher = pattern.matcher(existingName);
+			if (matcher.find()) {
+				Integer num = new Integer(matcher.group());
+				int increaseNum = num.intValue() + 1;
+				finalString = existingName.replace(num.toString(), ("" + increaseNum));
+			} else {
+				finalString = existingName + "_1";
+			}
+		}
+		return finalString;
+	}
+	
+	public Dashboard saveForImportedDashboard(Dashboard dbd, Long tenantId, boolean overrided) throws DashboardException {		
+		EntityManager em = null;
+		try {
+			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+			em = dsf.getEntityManager();
+			Dashboard sameName = getDashboardByNameAndDescriptionAndOwner(dbd.getName(), dbd.getDescription(), tenantId);
+			if (sameName != null) {
+				if (overrided) {
+					// update existing row
+					dbd.setDashboardId(sameName.getDashboardId());
+					return updateDashboard(dbd,tenantId);
+				} else {
+					// regenerated id and name and then insert new row
+					dbd.setDashboardId(null);
+					dbd.setName(generateNewName(dsf, tenantId, sameName.getName()));					
+					return saveNewDashboard(dbd, tenantId);
+				}
+			} else {
+				// re-generate dashboard ID and then directly insert
+				 dbd.setDashboardId(null);
+				 return saveNewDashboard(dbd, tenantId);
+			}
+		}
+		finally {
+			if (em != null) {
+				em.close();
+			}
+		}
+	}
+	
+	
 
 	/**
 	 * Save a newly created dashboard for given tenant

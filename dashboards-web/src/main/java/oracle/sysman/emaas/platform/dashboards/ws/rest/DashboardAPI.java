@@ -17,6 +17,7 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -1031,45 +1032,75 @@ public class DashboardAPI extends APIBase
 			String userName = UserContext.getCurrentUser();
 			List<BigInteger> dbdIds = dm.getDashboardIdsByNames(dbdNames, tenantId);
 			List<String> widgetIds = new ArrayList<String>();
-			JSONArray dbdArray = new JSONArray();
+			JSONArray finalArray = new JSONArray();
+			List<JSONObject> jsonOjbects = new ArrayList<JSONObject>();
 			for (int i = 0; i < dbdIds.size(); i++) {
+				JSONArray dbdArray = new JSONArray();
+				JSONArray ssfArray = new JSONArray();
 				BigInteger id = dbdIds.get(i);
 				Dashboard dbd = dm.getCombinedDashboardById(id, tenantId, userName);
+				List<Dashboard> subDbds = null;
 				List<Tile> allTiles = null;
-				if (dbd.getSelected() != null && dbd.getSelected().getTileList() != null) {
-					allTiles = dbd.getSelected().getTileList();
+				if (dbd != null && dbd.getSubDashboards() != null && !dbd.getSubDashboards().isEmpty()) {
+					subDbds = new ArrayList<Dashboard>();
+					for (Dashboard subDbd : dbd.getSubDashboards()) {
+						BigInteger subId = subDbd.getDashboardId();
+						Dashboard completeSubDashboard = dm.getCombinedDashboardById(subId, tenantId, userName);
+						if (completeSubDashboard.getTileList() != null && !completeSubDashboard.getTileList().isEmpty()) {
+							if (allTiles == null) {
+								allTiles = new ArrayList<Tile>();
+							}
+							allTiles.addAll(completeSubDashboard.getTileList());
+						}
+						subDbds.add(completeSubDashboard);
+					}
 				}
+				
+				if (subDbds != null) {
+					for (Dashboard d : subDbds) {
+						updateDashboardAllHref(d, tenantIdParam);
+						String dbdJson = getJsonUtil().toJson(d);
+						JSONObject dbdJsonObjSub = new JSONObject(dbdJson);
+						dbdArray.put(dbdJsonObjSub);
+					}
+				}
+				// for original dbd
+				updateDashboardAllHref(dbd, tenantIdParam);
+				String dbdJson = getJsonUtil().toJson(dbd);
+				JSONObject dbdJsonObj = new JSONObject(dbdJson);
+				dbdArray.put(dbdJsonObj);
+				
+				JSONObject insideOjb = new JSONObject();
+				insideOjb.put("Dashboard", dbdArray);
+				
+				//Savedsearch data
 				if (allTiles != null) {
 					for (Tile tile : allTiles) {
 						String widgetUniqueId = tile.getWidgetUniqueId();
 						widgetIds.add(widgetUniqueId);
 					}
 				}
-				updateDashboardAllHref(dbd, tenantIdParam);
-				String dbdJson = getJsonUtil().toJson(dbd);
-				JSONObject dbdJsonObj = new JSONObject(dbdJson);
-				dbdArray.put(dbdJsonObj);
-			}
-			JSONObject finalObject = new JSONObject();
-			finalObject.put("Dashboard", dbdArray);
-			//Savedsearch data
-			JSONArray requestEntity = new JSONArray();
-			if (widgetIds != null) {				
-				for (String widgetId : widgetIds) {
-					requestEntity.put(widgetId);
+				
+				JSONArray requestEntity = new JSONArray();
+				if (widgetIds != null) {				
+					for (String widgetId : widgetIds) {
+						requestEntity.put(widgetId);
+					}
 				}
+				JSONArray ssfObject = null;
+				if (requestEntity.length() > 0) {
+					String ssfDataResponse = SSFDataUtil.getSSFData(userTenant, requestEntity.toString());
+					ssfObject = new JSONArray(ssfDataResponse);
+				}
+				
+				//Combine dbd json and savedsearch json
+				if (ssfObject != null) {
+					insideOjb.put("Savedsearch", ssfObject);
+				}
+				finalArray.put(insideOjb);
 			}
-			JSONArray ssfObject = null;
-			if (requestEntity.length() > 0) {
-				String ssfDataResponse = SSFDataUtil.getSSFData(userTenant, requestEntity.toString());
-				ssfObject = new JSONArray(ssfDataResponse);
-			}
-			
-			//Combine dbd json and savedsearch json
-			if (ssfObject != null) {
-				finalObject.put("Savedsearch", ssfObject);
-			}
-			return Response.ok(finalObject.toString()).build();
+		
+			return Response.ok(finalArray.toString()).build();
 		}
 		catch(DashboardNotFoundException e){
 			//suppress error information in log file
@@ -1154,8 +1185,8 @@ public class DashboardAPI extends APIBase
 	@Path("/import")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response importDashboards(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
-			@HeaderParam(value = "X-REMOTE-USER") String userTenant,
-			JSONObject jsonObject){
+			@HeaderParam(value = "X-REMOTE-USER") String userTenant,@QueryParam("override")boolean override,
+			JSONArray jsonArray){
 		
 		infoInteractionLogAPIIncomingCall(tenantIdParam, null, "Service call to [PUT] /v1/dashboards/import");
 		try {
@@ -1164,26 +1195,47 @@ public class DashboardAPI extends APIBase
 				throw new DatabaseDependencyUnavailableException();
 			}
 			
-			JSONArray dbdArray = jsonObject.getJSONArray("Dashboard");
-			JSONArray ssfArray = jsonObject.getJSONArray("Savedsearch");
-			StringBuilder dbdStr = new StringBuilder("");
-			if (dbdArray != null) {
-				 for (int i = 0; i < dbdArray.length(); i++) {
-				      JSONObject dbdObj = dbdArray.getJSONObject(i);
-				      logkeyHeaders("createDashboard()", userTenant, tenantIdParam);
-				      CombinedDashboard d = getJsonUtil().fromJson(dbdObj.toString(), CombinedDashboard.class);
-						DashboardManager manager = DashboardManager.getInstance();
-						Long tenantId = getTenantId(tenantIdParam);
-						initializeUserContext(tenantIdParam, userTenant);
-						//d = manager.saveNewDashboard(d, tenantId);
-						updateDashboardAllHref(d, tenantIdParam);
-						dbdStr.append(getJsonUtil().toJson(d));
-				  }
-			}			
-			if (ssfArray != null) {
-				SSFDataUtil.saveSSFData(userTenant, ssfArray.toString());
+			int length = jsonArray.length();
+			JSONArray outputJson = new JSONArray();
+			if (length > 0) {
+				for (int i = 0; i < length; i ++) {
+					JSONObject jsonObject = jsonArray.getJSONObject(i);
+					JSONArray dbdArray = jsonObject.getJSONArray("Dashboard");
+					JSONArray ssfArray = jsonObject.getJSONArray("Savedsearch");
+					if (dbdArray != null) {
+						Map<BigInteger, BigInteger> idMap = new HashMap<BigInteger, BigInteger>();
+						 for (int j = 0; j < dbdArray.length(); j++) {
+							// in dbd array, dbd is saved in order; Dashboard set will be saved at last
+						    JSONObject dbdObj = dbdArray.getJSONObject(i);
+						    logkeyHeaders("importDashboard()", userTenant, tenantIdParam);
+						    Dashboard d = getJsonUtil().fromJson(dbdObj.toString(), Dashboard.class);
+						    if (d.getType().equals(Dashboard.DASHBOARD_TYPE_SET)) {
+						    	if (d.getSubDashboards() != null) {
+						    		for (Dashboard dashboard : d.getSubDashboards()) {
+						    			if (idMap.containsKey(dashboard.getDashboardId())) {
+						    				dashboard.setDashboardId(idMap.get(dashboard.getDashboardId()));
+						    			}
+						    		}
+						    	}
+						    }
+						    BigInteger originalId = d.getDashboardId();
+							DashboardManager manager = DashboardManager.getInstance();
+							Long tenantId = getTenantId(tenantIdParam);
+							initializeUserContext(tenantIdParam, userTenant);
+							d = manager.saveForImportedDashboard(d, tenantId,override);
+							BigInteger changedId = d.getDashboardId();
+							updateDashboardAllHref(d, tenantIdParam);
+							outputJson.put(new JSONObject(getJsonUtil().toJson(d)));
+							idMap.put(originalId, changedId);
+						  }
+					}			
+					if (ssfArray != null) {
+						SSFDataUtil.saveSSFData(userTenant, ssfArray.toString());
+					}
+				}
 			}
-			return Response.status(Status.CREATED).entity(dbdStr.toString()).build();
+			
+			return Response.status(Status.CREATED).entity(outputJson.toString()).build();
 		}
 		catch (IOException e) {
 			LOGGER.error(e.getLocalizedMessage(), e);

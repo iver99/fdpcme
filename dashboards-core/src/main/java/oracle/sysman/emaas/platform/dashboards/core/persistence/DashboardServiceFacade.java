@@ -128,6 +128,16 @@ public class DashboardServiceFacade
 		}
 		return ids;
 	}
+	
+	public String getDashboardName(String name, Long tenantId) {
+		String sql = "select name from ems_dashboard where name like '" + name + "%' and tenantId = " + tenantId + " and rownum = 1 order by name desc";
+		Query query = em.createNativeQuery(sql);
+		Object result = query.getSingleResult();
+		if (result != null) {
+			return result.toString();
+		}
+		return null;
+	}
 
 	public CombinedDashboard getCombinedEmsDashboardById(BigInteger dashboardId, String userName) {
 		EmsDashboard ed = getEmsDashboardById(dashboardId);
