@@ -868,10 +868,10 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     
                     if (item && !item.children) {
                         if (uifwkControlled) {
-//                            var linkHref = item.externalUrl; //globalMenuIdHrefMapping[data.id];
+                            var linkHref = item.externalUrl; //globalMenuIdHrefMapping[data.id];
                             if(self.hrefMap && self.hrefMap[data.id]){
                                 $("a#"+data.id)[0].href = self.hrefMap[data.id];
-                                var linkHref = self.hrefMap[data.id];
+                                linkHref = self.hrefMap[data.id];
                                 delete self.hrefMap[data.id];
                             }
                             if (linkHref && linkHref !== '#') {
