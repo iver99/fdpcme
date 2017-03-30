@@ -101,6 +101,7 @@ require(['dashboards/dbsmodel',
     'uifwk/js/util/df-util',
     'dashboards/dashboardhome-impl',
     'uifwk/js/util/logging-util',
+    'uifwk/js/sdk/menu-util',
     'common.uifwk',
     'ojs/ojmodel',
     'ojs/ojknockout',
@@ -117,7 +118,7 @@ require(['dashboards/dbsmodel',
     'ojs/ojmenu',
     'ojs/ojtable'
 ],
-        function(model, ko, $, oj, dfu, dfumodel, dashboardhome_impl, _emJETCustomLogger) // this callback gets executed when all required modules are loaded
+        function(model, ko, $, oj, dfu, dfumodel, dashboardhome_impl, _emJETCustomLogger, menuModel) // this callback gets executed when all required modules are loaded
         {
             var logger = new _emJETCustomLogger();
             var logReceiver = dfu.getLogUrl();
@@ -134,7 +135,7 @@ require(['dashboards/dbsmodel',
                 oj.Logger.error(msg, true);
 
                 return false; 
-            }
+            };
 
 
             if (!ko.components.isRegistered('df-oracle-branding-bar')) {
@@ -158,7 +159,15 @@ require(['dashboards/dbsmodel',
             ko.virtualElements.allowedBindings.stopBinding = true;
 
             var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
-
+            var menuUtil = new menuModel();
+            var filterId = dfu_model.getUrlParam('filter');
+            var defaultMenuId = menuUtil.OMCMenuConstants.GLOBAL_DASHBOARDS;
+            if (filterId === 'ocs') {
+                defaultMenuId = menuUtil.OMCMenuConstants.GLOBAL_ORCHESTRATION;
+            } 
+            else if (filterId === 'ita') {
+                defaultMenuId = menuUtil.OMCMenuConstants.GLOBAL_ITANALYTICS;
+            }
             function HeaderViewModel() {
                 var self = this;
                 self.userName = dfu.getUserName();
@@ -169,7 +178,9 @@ require(['dashboards/dbsmodel',
                     tenantName: self.tenantName,
                     appId: self.appId,
                     isAdmin:true,
-                    showGlobalContextBanner: false
+                    showGlobalContextBanner: false,
+                    omcHamburgerMenuOptIn: true,
+                    omcCurrentMenuId: defaultMenuId
                 };
             }
 
