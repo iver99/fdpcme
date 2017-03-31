@@ -79,7 +79,7 @@ define(['knockout',
             };
 
             self.LOOKUP_REST_URL_BASE = "/sso.static/dashboards.registry/lookup/";
-            self.SUBSCIBED_APPS_REST_URL = "/sso.static/dashboards.subscribedapps";
+            self.SUBSCIBED_APPS_REST_URL = "/sso.static/dashboards.subscribedapps2";
             self.SSF_REST_API_BASE = "/sso.static/savedsearch.navigation";
             var devMode = (window.DEV_MODE !== null && typeof window.DEV_MODE === "object");
             var devData = window.DEV_MODE;
@@ -87,7 +87,7 @@ define(['knockout',
                 devMode = true;
                 devData.userTenant = {"tenant": devData.tenant, "user": devData.user, "tenantUser": devData.tenant + "." + devData.user};
                 self.LOOKUP_REST_URL_BASE = self.buildFullUrl(devData.dfRestApiEndPoint, "registry/lookup/");
-                self.SUBSCIBED_APPS_REST_URL = self.buildFullUrl(devData.dfRestApiEndPoint, "subscribedapps");
+                self.SUBSCIBED_APPS_REST_URL = self.buildFullUrl(devData.dfRestApiEndPoint, "subscribedapps2");
                 self.SSF_REST_API_BASE = devData.ssfRestApiEndPoint;
                 console.log("====>DEV MODE:" + devMode);
             }
@@ -961,9 +961,9 @@ define(['knockout',
                         }
                         var url = null;
                         if (self.isDevMode()) {
-                            url = self.buildFullUrl(self.getDevData().dfRestApiEndPoint, "subscribedapps");
+                            url = self.buildFullUrl(self.getDevData().dfRestApiEndPoint, "subscribedapps2");
                         } else {
-                            url = '/sso.static/dashboards.subscribedapps';
+                            url = '/sso.static/dashboards.subscribedapps2';
                         }
                         ajaxUtil.ajaxWithRetry({type: 'GET', contentType: 'application/json', url: url,
                             dataType: 'json',

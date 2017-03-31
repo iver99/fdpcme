@@ -221,11 +221,12 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
             localStorage.deleteHomeDbd = false;
         }
         self.dataExploreBtnVisible = function(){
-              var _i = 0;
-              $.each(self.subscription, function(i, _item) {
-                  if( _item === 'LogAnalytics' || _item === 'ITAnalytics') _i++;
-              });
-              return _i === 2;
+            return self.exploreDataLinkList().length > 0;
+//              var _i = 0;
+//              $.each(self.subscription, function(i, _item) {
+//                  if( _item.id === 'LogAnalytics' || _item.id === 'ITAnalytics') _i++;
+//              });
+//              return _i === 2;
         };
         self.subscription = predata&&predata.sApplications ? predata.sApplications['applications'] : [];
         self.showTilesMsg = ko.observable(false);

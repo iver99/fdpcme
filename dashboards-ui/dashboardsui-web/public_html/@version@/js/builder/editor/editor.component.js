@@ -352,11 +352,25 @@ define(['knockout',
                     return;
                 }
                 if (tile.PROVIDER_NAME() === 'TargetAnalytics') {
-                    var userTenantUtil = new userTenantUtilModel();
-                    var itaAdmin = userTenantUtil.userHasRole("IT Analytics Administrator") || userTenantUtil.userHasRole("IT Analytics User");
-                    if (!itaAdmin) {
-                        tile.isOpenInExplorerShown(false);
-                    }
+                    dfu.getSubscribedAppsWithoutEdition(
+                        //successCallback
+                        function(subscribedApps) {
+                            if(subscribedApps.applications) {
+                                if(dfu.isV1ServiceTypes(subscribedApps.applications)) {
+                                    var userTenantUtil = new userTenantUtilModel();
+                                    var itaAdmin = userTenantUtil.userHasRole("IT Analytics Administrator") || userTenantUtil.userHasRole("IT Analytics User");
+                                    if (!itaAdmin) {
+                                        tile.isOpenInExplorerShown(false);
+                                    }
+                                }                                
+                            }
+                        },
+                        //errorCallback
+                        function() {
+                            tile.isOpenInExplorerShown(false);
+                            console.error("Failed to get subscribedApps info");
+                    });
+                    
                 }
             }
             
