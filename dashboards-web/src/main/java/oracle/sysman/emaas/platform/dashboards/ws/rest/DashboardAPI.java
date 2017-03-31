@@ -1033,10 +1033,8 @@ public class DashboardAPI extends APIBase
 			List<BigInteger> dbdIds = dm.getDashboardIdsByNames(dbdNames, tenantId);
 			List<String> widgetIds = new ArrayList<String>();
 			JSONArray finalArray = new JSONArray();
-			List<JSONObject> jsonOjbects = new ArrayList<JSONObject>();
 			for (int i = 0; i < dbdIds.size(); i++) {
 				JSONArray dbdArray = new JSONArray();
-				JSONArray ssfArray = new JSONArray();
 				BigInteger id = dbdIds.get(i);
 				Dashboard dbd = dm.getCombinedDashboardById(id, tenantId, userName);
 				List<Dashboard> subDbds = null;
