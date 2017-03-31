@@ -109,8 +109,7 @@ test {
 dependencies {
 	compile configurations.restAssured 
 	
-    providedCompile project(':dashboards-sdk')
-	providedCompile project(':dashboards-comparator:dashboardscomparator-webutils')  { transitive = false }
+    providedCompile project(':dashboards-comparator:dashboardscomparator-webutils')  { transitive = false }
 	providedCompile(group: 'javax.servlet', name:'servlet-api', version:'2.5') { transitive = false }
 	providedCompile(group: 'com.sun.jersey', name: 'jersey-client', version: '1.17') { transitive = false }
 	providedCompile(group: 'com.sun.jersey', name: 'jersey-core', version: '1.17.1') {transitive=false}

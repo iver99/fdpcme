@@ -14,12 +14,19 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-import com.sun.jersey.api.client.ClientHandlerException;
-import com.sun.jersey.api.client.UniformInterfaceException;
-import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriBuilder;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource.Builder;
+import com.sun.jersey.api.client.config.ClientConfig;
+import com.sun.jersey.api.client.config.DefaultClientConfig;
 
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
@@ -28,13 +35,13 @@ import oracle.sysman.emaas.platform.dashboards.comparator.webutils.json.AppMappi
 import oracle.sysman.emaas.platform.dashboards.comparator.webutils.json.AppMappingEntity;
 import oracle.sysman.emaas.platform.dashboards.comparator.webutils.json.DomainEntity;
 import oracle.sysman.emaas.platform.dashboards.comparator.webutils.json.DomainsEntity;
+import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.LogUtil.InteractionLogDirection;
 
 /**
  * @author guobaochen
  */
 public class TenantSubscriptionUtil
 {
-/*
 	public static class RestClient
 	{
 		public RestClient()
@@ -81,7 +88,7 @@ public class TenantSubscriptionUtil
 		 * @param requestEntity
 		 * @param tenant
 		 * @return
-		 
+		 */
 		public String put(String url, Object requestEntity, String tenant, String userTenant)
 		{
 			logger.info("start to call sync web service!");
@@ -128,11 +135,10 @@ public class TenantSubscriptionUtil
 			return response;
 		}
 	}
-*/
 
 	private static Logger logger = LogManager.getLogger(TenantSubscriptionUtil.class);
 	private static Logger itrLogger = LogUtil.getInteractionLogger();
-/*
+
 	public static List<String> getTenantSubscribedServices(String tenant)
 	{
 		if (tenant == null) {
@@ -147,7 +153,7 @@ public class TenantSubscriptionUtil
 		logger.info("Checking tenant (" + tenant + ") subscriptions. The entity naming href is " + domainLink.getHref());
 		String domainHref = domainLink.getHref();
 		RestClient rc = new RestClient();
-		String domainsResponse = rc.get(domainHref, tenant);
+		String domainsResponse = rc.get(domainHref, tenant, null);
 		logger.info("Checking tenant (" + tenant + ") subscriptions. Domains list response is " + domainsResponse);
 		JsonUtil ju = JsonUtil.buildNormalMapper();
 		try {
@@ -171,7 +177,7 @@ public class TenantSubscriptionUtil
 			String appMappingUrl = tenantAppUrl + "/lookups?opcTenantId=" + tenant;
 			logger.info(
 					"Checking tenant (" + tenant + ") subscriptions. tenant application mapping lookup URL is " + appMappingUrl);
-			String appMappingJson = rc.get(appMappingUrl, tenant);
+			String appMappingJson = rc.get(appMappingUrl, tenant, null);
 			logger.info("Checking tenant (" + tenant + ") subscriptions. application lookup response json is " + appMappingJson);
 			if (appMappingJson == null || "".equals(appMappingJson)) {
 				return null;
@@ -220,7 +226,7 @@ public class TenantSubscriptionUtil
 			return null;
 		}
 	}
-*/
+
 	public static boolean isAPMServiceOnly(List<String> services)
 	{
 		if (services == null || services.size() != 1) {
