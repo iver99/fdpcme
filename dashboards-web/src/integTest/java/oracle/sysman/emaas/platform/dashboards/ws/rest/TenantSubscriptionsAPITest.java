@@ -11,6 +11,7 @@ import mockit.Mocked;
 import mockit.NonStrictExpectations;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
+import oracle.sysman.emaas.platform.dashboards.core.model.subscription2.TenantSubscriptionInfo;
 import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
@@ -59,7 +60,7 @@ public class TenantSubscriptionsAPITest {
 //            	result=true;
                 List<String> apps = new ArrayList<>();
                 apps.add("DBD");
-                TenantSubscriptionUtil.getTenantSubscribedServices(anyString);
+                TenantSubscriptionUtil.getTenantSubscribedServices(anyString,(TenantSubscriptionInfo)any);
                 result = apps;
             }
         };

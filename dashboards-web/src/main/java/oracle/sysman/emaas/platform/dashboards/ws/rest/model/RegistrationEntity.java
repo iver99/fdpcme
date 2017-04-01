@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import oracle.sysman.emaas.platform.dashboards.core.model.subscription2.TenantSubscriptionInfo;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.DefaultKeyGenerator;
@@ -627,10 +628,12 @@ public class RegistrationEntity implements Serializable
 		if (StringUtil.isEmpty(tenantName)) {
 			return appSet;
 		}
-		List<String> apps = TenantSubscriptionUtil.getTenantSubscribedServices(tenantName);
+		List<String> apps = TenantSubscriptionUtil.getTenantSubscribedServices(tenantName, new TenantSubscriptionInfo());
 		if (apps == null || apps.isEmpty()) {
 			return appSet;
 		}
+        boolean isV1Model = true;
+
 		for (String app : apps) {
 			// in case any bundle service is subscribed, all 7 (actually 8 including TA) services are subscribed
 			if (DashboardApplicationType.OMC_STRING.equals(app) ||
@@ -640,23 +643,23 @@ public class RegistrationEntity implements Serializable
 					DashboardApplicationType.OMCLOG_STRING.equals(app) ||
 					DashboardApplicationType.SECSE_STRING.equals(app) ||
 					DashboardApplicationType.SECSMA_STRING.equals(app)) {
-				appSet.add(APM_SERVICENAME);
+				/*appSet.add(APM_SERVICENAME);
 				appSet.add(ITA_SERVICENAME);
 				appSet.add(TA_SERVICENAME);
 				appSet.add(LA_SERVICENAME);
 				appSet.add(MONITORING_SERVICENAME);
 				appSet.add(SECURITY_ANALYTICS_SERVICENAME);
 				appSet.add(COMPLIANCE_SERVICENAME);
-				appSet.add(ORCHESTRATION_SERVICENAME);
-				LOGGER.info("Checking subscribed app set for app {}, it is a bundle service, so return all individual services", app);
-				break;
+				appSet.add(ORCHESTRATION_SERVICENAME);*/
+                isV1Model = false;
+				LOGGER.info("Service suite found in subscribed app services result, ignore it.");
+				continue;
 			}
 			if (ApplicationOPCName.APM.toString().equals(app)) {
 				appSet.add(APM_SERVICENAME);
 			}
 			else if (ApplicationOPCName.ITAnalytics.toString().equals(app)) {
 				appSet.add(ITA_SERVICENAME);
-				appSet.add(TA_SERVICENAME);
 			}
 			else if (ApplicationOPCName.LogAnalytics.toString().equals(app)) {
 				appSet.add(LA_SERVICENAME);
@@ -680,7 +683,13 @@ public class RegistrationEntity implements Serializable
 		}
 		//if any of APM/LA/TA is subscribed, TenantManagementUI/EventUI/AdminConsoleSaaSUi should be subscribed accordingly as agreement now
 		if (!appSet.isEmpty()) {
-			//			if (isAdmin) {
+            /**
+             * #1.For V1 model, only tenant subscribe ITA Service, we add TA Service
+             * #2.For V2/V3 model, we add TA service as long as tenant subscribe any service.
+             */
+            if(isV1Model == false || (isV1Model == true && appSet.contains(ITA_SERVICENAME))){
+                appSet.add(TA_SERVICENAME);
+            }
 			appSet.add(TMUI_SERVICENAME);
 			//			}
 			appSet.add(EVENTUI_SERVICENAME);

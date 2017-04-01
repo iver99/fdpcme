@@ -24,6 +24,7 @@ import javax.ws.rs.core.Response.Status;
 
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.EntityNamingDependencyUnavailableException;
+import oracle.sysman.emaas.platform.dashboards.core.model.subscription2.TenantSubscriptionInfo;
 import oracle.sysman.emaas.platform.dashboards.core.util.*;
 import oracle.sysman.emaas.platform.dashboards.webutils.ParallelThreadPool;
 import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
@@ -32,7 +33,6 @@ import oracle.sysman.emaas.platform.dashboards.ws.rest.model.RegistrationEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.model.UserInfoEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.TenantSubscriptionsAPI.SubscribedAppsEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.PrivilegeChecker;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -212,7 +212,7 @@ public class ConfigurationAPI extends APIBase
                         // this ensures subscribed app data inside cache, and reused by registration data retrieval
                         _LOGGER.info("Parallel request subscribed apps info...");
                         long startSubsApps = System.currentTimeMillis();
-                        List<String> apps = TenantSubscriptionUtil.getTenantSubscribedServices(tenantIdParam);
+                        List<String> apps = TenantSubscriptionUtil.getTenantSubscribedServices(tenantIdParam, new TenantSubscriptionInfo());
                         long endSubsApps = System.currentTimeMillis();
                         _LOGGER.info("Time to get subscribed app: {}ms. Retrieved data is: {}", (endSubsApps - startSubsApps), apps);
                         return apps;
