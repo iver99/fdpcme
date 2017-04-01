@@ -14,6 +14,7 @@ import oracle.sysman.emaas.platform.dashboards.core.restclient.AppMappingCollect
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceQuery;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
+import oracle.sysman.emaas.platform.dashboards.core.util.lookup.RetryableLookupClient;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.DefaultKeyGenerator;
@@ -510,8 +511,6 @@ public class TenantSubscriptionUtilTest
 
                 anyClient.getWithException(anyString, anyString);
 				JsonUtil.buildNormalMapper();
-				result = anyJsonUtil;
-                anyJsonUtil.fromJson(anyString, AppMappingCollection.class);
 				result = new IOException();
 			}
 		};
@@ -531,25 +530,20 @@ public class TenantSubscriptionUtilTest
 	@Test(groups = { "s2" })
 	public void testGetTenantSubscribedServicesS2(@Mocked RegistryLookupUtil anyUtil, @Mocked final RestClient anyClient,
                                                   @Mocked final InstanceInfo anyInstanceInfo,
-                                                  @Mocked final LookupManager anyLookupManager) throws Exception {
+                                                  @Mocked final LookupManager anyLookupManager,
+												  @Mocked final RetryableLookupClient retryableLookupClient) throws Exception {
 		final Link link = new Link();
 
 		link.withHref("http://den00zyr.us.oracle.com:7007/naming/entitynaming/v1/domains");
 		link.withRel("");
-		final List<Link> links = Arrays.asList(link);
 		final List<InstanceInfo> insList = new ArrayList<InstanceInfo>();
 		insList.add(anyInstanceInfo);
 		new Expectations() {
 			{
 				Deencapsulation.setField(TenantSubscriptionUtil.class, "IS_TEST_ENV", null);
 
-                LookupManager.getInstance().getLookupClient().lookup((InstanceQuery) any);
-                result = insList;
-                anyInstanceInfo.getLinksWithProtocol(anyString, anyString);
-                result = links;
-
-				anyClient.getWithException(anyString, anyString);
-				result = TENANT_LOOKUP_RESULT;
+				retryableLookupClient.connectAndDoWithRetry(anyString, anyString, anyString, anyBoolean, anyString, (RetryableLookupClient.RetryableRunner)any);
+				result =  Arrays.asList("APM", "LogAnalytics", "ITAnalytics");
 
 			}
 		};
@@ -558,10 +552,11 @@ public class TenantSubscriptionUtilTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testGetTenantSubscribedServicesString() {
+	public void testGetTenantSubscribedServicesString(@Mocked final RetryableLookupClient retryableLookupClient) {
 		new NonStrictExpectations(TenantSubscriptionUtil.class) {
 			{
-				TenantSubscriptionUtil.getTenantSubscribedServices(anyString, new TenantSubscriptionInfo());
+				Deencapsulation.setField(TenantSubscriptionUtil.class, "IS_TEST_ENV", null);
+				retryableLookupClient.connectAndDoWithRetry(anyString, anyString, anyString, anyBoolean, anyString, (RetryableLookupClient.RetryableRunner)any);
 				returns(Arrays.asList("APM", "Compliance"), null, Arrays.asList());
 			}
 		};
