@@ -58,6 +58,19 @@ dependencies{
      testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: emcpdfCommonAPIVer)
 }
 
+def testTenants = [:]
+testTenants["mytenant1"]= [ "OMC" : [ "Trial"]]
+testTenants["mytenant2"]= [ "OMC" : [ "Standard"] ]
+testTenants["mytenant3"]= [ "OMC" : [ "Enterprise"] ]
+testTenants["mytenant4"]= [ "OMC" : [ "Log"] ]
+testTenants["mytenant5"]= [ "OSMACC" : [ "Trail"] ]
+testTenants["mytenant6"]= [ "OSMACC" : [ "Compliance"] ]
+testTenants["mytenant7"]= [ "OSMACC" : [ "Security"] ]
+
+task onboardTestTenants(type: OnBoardTenants(testTenants)){
+
+}
+
 //Task is for dashboard UI Test
 task e2e (type: EMTest, dependsOn:[omcSetup, onboardTenant] ){
 options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
@@ -76,6 +89,14 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
     }
     useWebdriver = true
     useRestAssured = true
+}
+
+task suiteLicensingTest(type: EMTest, dependsOn:[omcSetup, onboardTestTenants])
+{
+	include "oracle/sysman/emaas/platform/dashboards/test/ui/TestSuiteLicensing_OMC.class"
+	include "oracle/sysman/emaas/platform/dashboards/test/ui/TestSuiteLicensing_OSMACC.class"
+        useWebdriver = true
+	useRestAssured=true
 }
 
 task preProdTests(type: EMTest ){
