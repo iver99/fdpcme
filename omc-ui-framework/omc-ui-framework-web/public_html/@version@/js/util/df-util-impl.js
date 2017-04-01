@@ -936,7 +936,7 @@ define(['knockout',
                 return assetRoot;
             }
             
-            self.getSubscribedAppsWithEdition = function(successCallback, errorCallback) {
+            self.getSubscribedApps2WithEdition = function(successCallback, errorCallback) {
                 if (window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.subscribedapps2 &&
                         ($.isFunction(window._uifwk.cachedData.subscribedapps2) ? window._uifwk.cachedData.subscribedapps2() : true)) {
                     successCallback($.isFunction(window._uifwk.cachedData.subscribedapps2) ? window._uifwk.cachedData.subscribedapps2() :

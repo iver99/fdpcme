@@ -352,7 +352,7 @@ define(['knockout',
                     return;
                 }
                 if (tile.PROVIDER_NAME() === 'TargetAnalytics') {
-                    dfu.getSubscribedAppsWithEdition(
+                    dfu.getSubscribedApps2WithEdition(
                         //successCallback
                         function(subscribedApps) {
                             if(subscribedApps.applications) {

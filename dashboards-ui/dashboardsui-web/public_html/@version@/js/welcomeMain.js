@@ -298,7 +298,7 @@ require(['ojs/ojcore',
 			    	landingHomeUrls[self.dataExplorer+" - " +dataExplorers[i].name] = dataExplorers[i].href;
                             }else if (dataExplorers[i].serviceName === "TargetAnalytics") {
                                 var targetAnalytics = dataExplorers[i];
-                                dfu.getSubscribedAppsWithEdition(
+                                dfu.getSubscribedApps2WithEdition(
                                     //check service type. If there is v2/v3 tenant, do not show "Data Explorer" in ITA dropdown
                                     function(subscribedApps) {
                                        if(subscribedApps.applications) {
@@ -485,10 +485,16 @@ require(['ojs/ojcore',
             }
 
             $(document).ready(function () {
-                dfu.getSubscribedAppsWithEdition(function(apps) {
-                    if (apps && (!apps.applications || apps.applications.length == 0)) {
+                dfu.getSubscribedApps2WithEdition(function(apps) {
+                    if (apps && (!apps.applications || apps.applications.length === 0)) {
                         oj.Logger.error("Tenant subscribes to no service. Redirect to dashboard error page", true);
                         location.href = "./error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_NO_SUBS_MSG";
+                    }else {
+                        ko.applyBindings(headerViewModel, document.getElementById('headerWrapper'));
+                        ko.applyBindings(titleViewModel, $("title")[0]);
+                        ko.applyBindings(new landingHomeModel(), document.getElementById("mainContent"));
+                        $("#loading").hide();
+                        $("#globalBody").show();
                     }
                 }, function(e) {
                     console.log(e.responseText);
@@ -497,11 +503,6 @@ require(['ojs/ojcore',
                         location.href = "./error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_NO_SUBS_MSG";
                     }
                 });
-                ko.applyBindings(headerViewModel, document.getElementById('headerWrapper'));
-                ko.applyBindings(titleViewModel, $("title")[0]);
-                ko.applyBindings(new landingHomeModel(), document.getElementById("mainContent"));
-                $("#loading").hide();
-                $("#globalBody").show();
             });
         }
 );

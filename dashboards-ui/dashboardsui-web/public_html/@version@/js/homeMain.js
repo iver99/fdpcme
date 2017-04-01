@@ -181,10 +181,26 @@ require(['dashboards/dbsmodel',
             var titleVM = new TitleViewModel();
 
             $(document).ready(function() {
-                dfu.getSubscribedAppsWithEdition(function(apps) {
-                    if (apps && (!apps.applications || apps.applications.length == 0)) {
+                dfu.getSubscribedApps2WithEdition(function(apps) {
+                    if (apps && (!apps.applications || apps.applications.length === 0)) {
                         oj.Logger.error("Tenant subscribes to no service. Redirect to dashboard error page", true);
                         location.href = "./error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_NO_SUBS_MSG";
+                    }else {
+                        ko.applyBindings({}, $('#loading')[0]);  //to make text binding on loading work
+                        ko.applyBindings(titleVM,$("title")[0]);
+                        //Caution: need below line to enable KO binding, otherwise KOC inside headerWrapper doesn't work
+                        ko.applyBindings(headerViewModel, document.getElementById('headerWrapper'));
+                        $("#loading").hide();
+                        $('#globalBody').show();
+
+                        var predataModel = new model.PredataModel();
+                        function init() {
+                            var dashboardsViewModle = new model.ViewModel(predataModel, "mainContent");
+                            ko.applyBindings(dashboardsViewModle, document.getElementById('mainContent'));
+                            $('#mainContent').show();
+
+                        }
+                        predataModel.loadAll().then(init, init); //nomatter there is error in predata loading, initiating
                     }
                 }, function(e) {
                     console.log(e.responseText);
@@ -194,21 +210,7 @@ require(['dashboards/dbsmodel',
                     }
                 });
                 
-                ko.applyBindings({}, $('#loading')[0]);  //to make text binding on loading work
-                ko.applyBindings(titleVM,$("title")[0]);
-                //Caution: need below line to enable KO binding, otherwise KOC inside headerWrapper doesn't work
-                ko.applyBindings(headerViewModel, document.getElementById('headerWrapper'));
-                $("#loading").hide();
-                $('#globalBody').show();
-
-                var predataModel = new model.PredataModel();
-                function init() {
-                    var dashboardsViewModle = new model.ViewModel(predataModel, "mainContent");
-                    ko.applyBindings(dashboardsViewModle, document.getElementById('mainContent'));
-                    $('#mainContent').show();
-
-                }
-                predataModel.loadAll().then(init, init); //nomatter there is error in predata loading, initiating
+                
 
             });
         }

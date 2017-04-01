@@ -845,7 +845,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
         };
 
         self.loadSubscribedApplications = function() {
-            dfu.getSubscribedAppsWithEdition(
+            dfu.getSubscribedApps2WithEdition(
                 function(subscribedapps) {
                     self.sApplications = subscribedapps;
                 },
