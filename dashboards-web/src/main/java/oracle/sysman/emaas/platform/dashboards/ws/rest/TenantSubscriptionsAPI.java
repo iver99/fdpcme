@@ -42,7 +42,6 @@ public class TenantSubscriptionsAPI extends APIBase
 	public static class SubscribedAppsEntity<E>
 	{
 		private List<E> applications;
-        private String version;
 
 		public SubscribedAppsEntity(List<E> apps)
 		{
@@ -51,15 +50,6 @@ public class TenantSubscriptionsAPI extends APIBase
 
         public SubscribedAppsEntity(List<E> applications, String version) {
             this.applications = applications;
-            this.version = version;
-        }
-
-        public String getVersion() {
-            return version;
-        }
-
-        public void setVersion(String version) {
-            this.version = version;
         }
 
         public List<E> getApplications()
