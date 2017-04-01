@@ -298,10 +298,9 @@ require(['ojs/ojcore',
 			    	landingHomeUrls[self.dataExplorer+" - " +dataExplorers[i].name] = dataExplorers[i].href;
                             }else if (dataExplorers[i].serviceName === "TargetAnalytics") {
                                 var targetAnalytics = dataExplorers[i];
-                                dfu.getSubscribedAppsWithoutEdition(
+                                dfu.getSubscribedAppsWithEdition(
                                     //check service type. If there is v2/v3 tenant, do not show "Data Explorer" in ITA dropdown
                                     function(subscribedApps) {
-                                        console.log(subscribedApps);
                                        if(subscribedApps.applications) {
                                            if(dfu.isV1ServiceTypes(subscribedApps.applications)) {
                                                 self.exploreDataInITA.push({id: 'ITA_Search', href: targetAnalytics.href, name: self.dataExplorer, serviceName: targetAnalytics.serviceName, version: targetAnalytics.version});
@@ -486,6 +485,18 @@ require(['ojs/ojcore',
             }
 
             $(document).ready(function () {
+                dfu.getSubscribedAppsWithEdition(function(apps) {
+                    if (apps && (!apps.applications || apps.applications.length == 0)) {
+                        oj.Logger.error("Tenant subscribes to no service. Redirect to dashboard error page", true);
+                        location.href = "./error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_NO_SUBS_MSG";
+                    }
+                }, function(e) {
+                    console.log(e.responseText);
+                    if (e.responseJSON && e.responseJSON.errorCode == 20002) {
+                        oj.Logger.error("Tenant subscribes to no service. Redirect to dashboard error page", true);
+                        location.href = "./error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_NO_SUBS_MSG";
+                    }
+                });
                 ko.applyBindings(headerViewModel, document.getElementById('headerWrapper'));
                 ko.applyBindings(titleViewModel, $("title")[0]);
                 ko.applyBindings(new landingHomeModel(), document.getElementById("mainContent"));

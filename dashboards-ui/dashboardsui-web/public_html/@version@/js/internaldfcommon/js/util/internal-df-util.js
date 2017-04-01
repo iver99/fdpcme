@@ -127,6 +127,10 @@ define(['knockout',
                 }
             };
 
+            self.getSubscribedAppsWithEdition = function(successCallback, errorCallback) {
+                dfu.getSubscribedAppsWithEdition(successCallback, errorCallback);
+            };
+            
             self.getSubscribedAppsWithoutEdition = function(successCallback, errorCallback) {
                 dfu.getSubscribedAppsWithoutEdition(successCallback, errorCallback);
             };
