@@ -72,6 +72,12 @@
     </cache-group>
 
     <cache-group>
+        <name>tenantSubscriptionInfoCache</name>
+        <capacity>5000</capacity>
+        <expiry>60</expiry>
+    </cache-group>
+
+    <cache-group>
         <name>assetRootCache</name>
         <capacity>1000</capacity>
         <expiry>60</expiry>

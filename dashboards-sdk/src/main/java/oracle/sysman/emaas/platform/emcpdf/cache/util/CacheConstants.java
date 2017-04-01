@@ -21,6 +21,7 @@ public class CacheConstants {
     public static final String CACHES_REGISTRY_CACHE = "registryCache";
     public static final String CACHES_TENANT_USER_CACHE = "tenantUserCache";
     public static final String CACHES_OOB_DASHBOARD_SAVEDSEARCH_CACHE = "oobDashboardSavedSearchCache";
+    public static final String CACHES_TENANT_SUBSCRIPTION_INFO_CACHE = "tenantSubscriptionInfoCache";
 
 
     public static final String LOOKUP_CACHE_KEY_SUBSCRIBED_APPS = "subscribedApps";
@@ -37,6 +38,7 @@ public class CacheConstants {
     public static final String LOOKUP_CACHE_KEY_REGISTRY = "registry";
     public static final String LOOKUP_CACHE_KEY_TENANT_USER = "tenantUser";
     public static final String LOOKUP_CACHE_KEY_OOB_DASHBOARD_SAVEDSEARCH = "oobDashboardSavedSearch";
+    public static final String LOOKUP_CACHE_KEY_TENANT_SUBSCRIPTION_INFO = "tenantSubscriptionInfo";
 
 
     //below are cache status related message

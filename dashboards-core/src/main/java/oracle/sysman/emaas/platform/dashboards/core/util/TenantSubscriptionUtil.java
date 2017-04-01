@@ -80,13 +80,21 @@ public class TenantSubscriptionUtil
 			return Collections.emptyList();
 		}
 		final long start = System.currentTimeMillis();
-		/*final ICacheManager cm= CacheManagers.getInstance().build();
+		final ICacheManager cm= CacheManagers.getInstance().build();
 		final Tenant cacheTenant = new Tenant(tenant);
         final Object cacheKey = DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS));
-		List<String> cachedApps;
+        final Object tenantSubscriptionInfocacheKey = DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_TENANT_SUBSCRIPTION_INFO));
+        List<String> cachedApps;
 		try {
 			cachedApps = (List<String>) cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE).get(cacheKey);
-		}
+            TenantSubscriptionInfo tenantSubscriptionInfo1 =(TenantSubscriptionInfo)cm.getCache(CacheConstants.CACHES_TENANT_SUBSCRIPTION_INFO_CACHE).get(tenantSubscriptionInfocacheKey);
+		    if(tenantSubscriptionInfo1 !=null){
+                LOGGER.info("retrieved tenantSubscriptionInfo for tenant {} from cache,data is {}",tenant,tenantSubscriptionInfo1);
+                copyTenantSubscriptionInfo(tenantSubscriptionInfo1, tenantSubscriptionInfo);
+            }else{
+                LOGGER.info("Did not retrieve tenantSubscriptionInfo in cache for tenant {}",tenant);
+            }
+        }
 		catch (Exception e) {
 			LOGGER.error("context", e);
 			return Collections.emptyList();
@@ -95,7 +103,7 @@ public class TenantSubscriptionUtil
 			LOGGER.info(
                     "retrieved subscribed apps for tenant {} from cache,data is {}",tenant,cachedApps);
 			return cachedApps;
-		}*/
+		}
 
 
         List<String> apps = new RetryableLookupClient<List<String>>().connectAndDoWithRetry("TenantService", "1.0+", "collection/tenants", false, null, new RetryableRunner<List<String>>() {
@@ -181,8 +189,10 @@ public class TenantSubscriptionUtil
                         LOGGER.error("After Mapping action,Empty subscription list found!");
                         return Collections.emptyList();
                     }
-                    LOGGER.info("Put subscribe apps into cache,{}",subscribeAppsList);
-//                    cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE).put(cacheKey,subscribeAppsList);
+                    LOGGER.info("Put subscribe apps into cache,{}", subscribeAppsList);
+                    cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE).put(cacheKey,subscribeAppsList);
+                    LOGGER.info("Put tenantSubscriptionInfo into cache,{}", tenantSubscriptionInfo);
+                    cm.getCache(CacheConstants.CACHES_TENANT_SUBSCRIPTION_INFO_CACHE).put(tenantSubscriptionInfocacheKey,tenantSubscriptionInfo);
                     return subscribeAppsList;
 
                 }
@@ -223,6 +233,16 @@ public class TenantSubscriptionUtil
 			}
 		}
 	}
+
+    private static void copyTenantSubscriptionInfo(TenantSubscriptionInfo from, TenantSubscriptionInfo to){
+        if(from == null || to == null){
+            LOGGER.error("Cannot copy value into or from null object!");
+            return;
+        }
+        List<AppsInfo> toAppsInfoList  = new ArrayList<AppsInfo>();
+        toAppsInfoList.addAll(from.getAppsInfoList());
+        to.setAppsInfoList(toAppsInfoList);
+    }
 
 	private TenantSubscriptionUtil()
 	{
