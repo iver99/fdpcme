@@ -130,7 +130,8 @@ public class DashboardServiceFacade
 	}
 	
 	public String getDashboardName(String name, Long tenantId) {
-		String sql = "select name from ems_dashboard where name like '" + name + "%' and tenantId = " + tenantId + " and rownum = 1 order by name desc";
+		String sql = "select name from (" + "select name from ems_dashboard where name like '" + name + "%' and tenant_Id = " + tenantId 
+				+ " order by name desc" + ") where rownum = 1";
 		Query query = em.createNativeQuery(sql);
 		Object result = query.getSingleResult();
 		if (result != null) {

@@ -75,33 +75,7 @@ public class DashboardAPITest
 		assertCreateDashboard();
 	}
 	
-	@Test
-	public void testExportDashboard(@Mocked final DependencyStatus anyDependencyStatus) throws CommonSecurityException, DashboardNotFoundException, TenantWithoutSubscriptionException, JSONException{
-		new Expectations() {
-			{
-				anyDependencyStatus.isDatabaseUp();
-				result = true;
-
-				mockedAPIBase.initializeUserContext(anyString, anyString);
-				result = null;
-				
-				mockedDashboardManager.getCombinedDashboardById((BigInteger) any, anyLong, anyString);
-				result = new CombinedDashboard();
-
-				Deencapsulation.invoke(dashboardAPI, "updateDashboardAllHref", withAny(new CombinedDashboard()), anyString);
-				result = any;
-
-				List<Dashboard> dashboardList = new ArrayList<>();
-				Dashboard dashboard1 = new Dashboard();
-				dashboardList.add(dashboard1);
-				result = dashboardList;
-				Deencapsulation.invoke(dashboardAPI, "updateDashboardAllHref", withAny(new Dashboard()), anyString);
-				result = any;
-			}
-		};
-		assertExportDashboard();
-	}
-
+	
 	@Test
 	public void testCreateDashboardWithBasicServiceMalfunctionException(@Mocked final DependencyStatus anyDependencyStatus) throws Exception
 	{

@@ -1202,9 +1202,10 @@ public class DashboardAPI extends APIBase
 					JSONArray ssfArray = jsonObject.getJSONArray("Savedsearch");
 					if (dbdArray != null) {
 						Map<BigInteger, BigInteger> idMap = new HashMap<BigInteger, BigInteger>();
+						Map<String, String> nameMap = new HashMap<String, String>();
 						 for (int j = 0; j < dbdArray.length(); j++) {
 							// in dbd array, dbd is saved in order; Dashboard set will be saved at last
-						    JSONObject dbdObj = dbdArray.getJSONObject(i);
+						    JSONObject dbdObj = dbdArray.getJSONObject(j);
 						    logkeyHeaders("importDashboard()", userTenant, tenantIdParam);
 						    Dashboard d = getJsonUtil().fromJson(dbdObj.toString(), Dashboard.class);
 						    if (d.getType().equals(Dashboard.DASHBOARD_TYPE_SET)) {
@@ -1213,18 +1214,24 @@ public class DashboardAPI extends APIBase
 						    			if (idMap.containsKey(dashboard.getDashboardId())) {
 						    				dashboard.setDashboardId(idMap.get(dashboard.getDashboardId()));
 						    			}
+						    			if (nameMap.containsKey(d.getName())) {
+						    				dashboard.setName(nameMap.get(dashboard.getName()));
+						    			}
 						    		}
 						    	}
 						    }
 						    BigInteger originalId = d.getDashboardId();
+						    String originalName = d.getName();
 							DashboardManager manager = DashboardManager.getInstance();
 							Long tenantId = getTenantId(tenantIdParam);
 							initializeUserContext(tenantIdParam, userTenant);
 							d = manager.saveForImportedDashboard(d, tenantId,override);
 							BigInteger changedId = d.getDashboardId();
+							String changedName = d.getName();
 							updateDashboardAllHref(d, tenantIdParam);
 							outputJson.put(new JSONObject(getJsonUtil().toJson(d)));
 							idMap.put(originalId, changedId);
+							nameMap.put(originalName, changedName);
 						  }
 					}			
 					if (ssfArray != null) {
