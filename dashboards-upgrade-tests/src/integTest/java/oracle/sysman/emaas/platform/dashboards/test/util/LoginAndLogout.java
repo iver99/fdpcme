@@ -89,7 +89,8 @@ public class LoginAndLogout
 		}
 		catch (Exception e) {
 			LOGGER.info("context",e);
-			url = oracle.sysman.emsaas.login.utils.Utils.getProperty("OMCS_DASHBOARD_URL");
+			//url = oracle.sysman.emsaas.login.utils.Utils.getProperty("OMCS_DASHBOARD_URL");
+			url = oracle.sysman.emsaas.login.utils.Utils.getProperty("OHS_URL")+"/emsaasui/emcpdfui/home.html";
 		}
 
 		String testPropertiesFile = System.getenv("EMAAS_PROPERTIES_FILE");
