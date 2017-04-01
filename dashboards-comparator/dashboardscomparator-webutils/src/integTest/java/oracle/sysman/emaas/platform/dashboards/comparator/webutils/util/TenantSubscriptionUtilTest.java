@@ -13,7 +13,6 @@ import oracle.sysman.emaas.platform.dashboards.comparator.webutils.json.AppMappi
 import oracle.sysman.emaas.platform.dashboards.comparator.webutils.json.AppMappingEntity;
 import oracle.sysman.emaas.platform.dashboards.comparator.webutils.json.DomainEntity;
 import oracle.sysman.emaas.platform.dashboards.comparator.webutils.json.DomainsEntity;
-import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
