@@ -96,15 +96,15 @@ public class TenantSubscriptionsAPI extends APIBase
 			String tenantName = TenantContext.getCurrentTenant();
             TenantSubscriptionInfo tenantSubscriptionInfo = new TenantSubscriptionInfo();
 			List<String> apps = TenantSubscriptionUtil.getTenantSubscribedServices(tenantName, tenantSubscriptionInfo);
+            if (apps == null || apps.isEmpty()) {
+                throw new TenantWithoutSubscriptionException();
+            }
 			//return subscribapps with editions
 			if(Boolean.valueOf(withEdition)){
                 LOGGER.info("Return subscrib apps data with edition..");
 				List<TenantEditionEntity> applications = getServicesWithEdition(tenantSubscriptionInfo);
 				SubscribedAppsEntityWithVersion saw = new SubscribedAppsEntityWithVersion(applications);
 				return Response.ok(getJsonUtil().toJson(saw)).build();
-			}
-			if (apps == null || apps.isEmpty()) {
-				throw new TenantWithoutSubscriptionException();
 			}
 			SubscribedAppsEntity<String> sae = new SubscribedAppsEntity<String>(apps);
 			return Response.ok(getJsonUtil().toJson(sae)).build();
