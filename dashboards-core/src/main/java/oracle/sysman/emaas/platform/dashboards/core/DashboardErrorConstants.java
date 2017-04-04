@@ -32,6 +32,7 @@ public class DashboardErrorConstants
 	public static final int REGISTRY_LOOKUP_LINK_NOT_FOUND_ERROR_CODE = 2001;
 	public static final int REGISTRY_LOOKUP_ENDPOINT_NOT_FOUND_ERROR_CODE = 2002;
 	public static final int REGISTRY_LOOKUP_LINK_WIT_REL_PREFIX_NOT_FOUND_ERROR_CODE = 2003;
+	public static final int REGISTRY_LOOKUP_VANITY_URL_NOT_FOUND_ERROR_CODE = 2004;
 
 	public static final int UNKNOWN_ERROR_CODE = 9999;
 

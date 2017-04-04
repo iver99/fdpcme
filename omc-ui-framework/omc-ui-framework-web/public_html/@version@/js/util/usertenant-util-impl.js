@@ -166,6 +166,9 @@ define(['jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk
                         .done(
                             function (data) {
                                 doneCallback(data);
+                            })
+                        .fail(function() {
+                                callback(null);
                             });
                     }
                 }
