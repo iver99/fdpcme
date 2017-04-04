@@ -33,6 +33,54 @@ public class BrandingBarUtil
 	public static final String NAV_LINK_TEXT_ADMIN_AGENT = IBrandingBarUtil.NAV_LINK_TEXT_ADMIN_AGENT;
 	public static final String NAV_LINK_TEXT_ADMIN_ALERT = IBrandingBarUtil.NAV_LINK_TEXT_ADMIN_ALERT;
 	public static final String NAV_LINK_TEXT_ADMIN_ADMINCONSOLE = IBrandingBarUtil.NAV_LINK_TEXT_ADMIN_ADMINCONSOLE;
+	//Hamburger Menu
+	public static final String ROOT_MENU_HOME = IBrandingBarUtil.ROOT_MENU_HOME;
+	public static final String ROOT_MENU_ALERTS = IBrandingBarUtil.ROOT_MENU_ALERTS;
+	public static final String ROOT_MENU_DASHBOARDS = IBrandingBarUtil.ROOT_MENU_DASHBOARDS;
+	public static final String ROOT_MENU_DATAEXPLORER = IBrandingBarUtil.ROOT_MENU_DATAEXPLORER;
+	public static final String ROOT_MENU_APM = IBrandingBarUtil.ROOT_MENU_APM;
+	public static final String ROOT_MENU_MONITORING = IBrandingBarUtil.ROOT_MENU_MONITORING;
+	public static final String ROOT_MENU_LA = IBrandingBarUtil.ROOT_MENU_LA;
+	public static final String ROOT_MENU_ITA = IBrandingBarUtil.ROOT_MENU_ITA;
+	public static final String ROOT_MENU_ORCHESTRATION = IBrandingBarUtil.ROOT_MENU_ORCHESTRATION;
+	public static final String ROOT_MENU_SECURITY = IBrandingBarUtil.ROOT_MENU_SECURITY;
+	public static final String ROOT_MENU_COMPLIANCE = IBrandingBarUtil.ROOT_MENU_COMPLIANCE;
+	public static final String ROOT_MENU_ADMIN = IBrandingBarUtil.ROOT_MENU_ADMIN;
+	public static final String GLOBAL_ADMIN_MENU_ALERT_RULES = IBrandingBarUtil.GLOBAL_ADMIN_MENU_ALERT_RULES;
+	public static final String GLOBAL_ADMIN_MENU_AGENTS = IBrandingBarUtil.GLOBAL_ADMIN_MENU_AGENTS;
+	public static final String GLOBAL_ADMIN_MENU_ENTITIES_CFG = IBrandingBarUtil.GLOBAL_ADMIN_MENU_ENTITIES_CFG;
+
+	/**
+	 * Click the Hierarchical menu item
+	 *
+	 * @param driver
+	 *            WebDriver instances
+	 * @param menuitem
+	 *            the menu item want to click, must give the exact string of the menu item
+	 */
+	public static void clickHierarchicalMenu(WebDriver driver, String menuitem)
+	{
+		IBrandingBarUtil bu = new UtilLoader<IBrandingBarUtil>().loadUtil(driver, IBrandingBarUtil.class);
+		bu.clickHierarchicalMenu(driver, menuitem);
+	}
+
+	public static void clickMenuItem(WebDriver driver, String menuitem)
+	{
+		IBrandingBarUtil bu = new UtilLoader<IBrandingBarUtil>().loadUtil(driver, IBrandingBarUtil.class);
+		bu.clickMenuItem(driver, menuitem);
+	}
+
+	public static String getCurrentMenuHeader(WebDriver driver)
+	{
+		IBrandingBarUtil bu = new UtilLoader<IBrandingBarUtil>().loadUtil(driver, IBrandingBarUtil.class);
+		return bu.getCurrentMenuHeader(driver);
+	}
+
+	public static void goBackToParentMenu(WebDriver driver)
+	{
+		IBrandingBarUtil bu = new UtilLoader<IBrandingBarUtil>().loadUtil(driver, IBrandingBarUtil.class);
+		bu.goBackToParentMenu(driver);
+	}
 
 	/**
 	 * Check whether admin field exist
@@ -114,6 +162,12 @@ public class BrandingBarUtil
 		return bu.isDashboardHomeLinkExisted(driver);
 	}
 
+	public static boolean isHamburgerMenuDisplayed(WebDriver driver)
+	{
+		IBrandingBarUtil bu = new UtilLoader<IBrandingBarUtil>().loadUtil(driver, IBrandingBarUtil.class);
+		return bu.isHamburgerMenuDisplayed(driver);
+	}
+
 	/**
 	 * Check if the specified home link is existed or not by given name
 	 *
@@ -127,6 +181,18 @@ public class BrandingBarUtil
 	{
 		IBrandingBarUtil bu = new UtilLoader<IBrandingBarUtil>().loadUtil(driver, IBrandingBarUtil.class);
 		return bu.isHomeLinkExisted(driver, homeLinkName);
+	}
+
+	public static boolean isMenuItemEnabled(WebDriver driver, String menuitem)
+	{
+		IBrandingBarUtil bu = new UtilLoader<IBrandingBarUtil>().loadUtil(driver, IBrandingBarUtil.class);
+		return bu.isMenuItemEnabled(driver, menuitem);
+	}
+
+	public static boolean isMenuItemExisted(WebDriver driver, String menuitem)
+	{
+		IBrandingBarUtil bu = new UtilLoader<IBrandingBarUtil>().loadUtil(driver, IBrandingBarUtil.class);
+		return bu.isMenuItemExisted(driver, menuitem);
 	}
 
 	/**
@@ -181,6 +247,19 @@ public class BrandingBarUtil
 	{
 		IBrandingBarUtil bu = new UtilLoader<IBrandingBarUtil>().loadUtil(driver, IBrandingBarUtil.class);
 		return bu.isWelcomeLinkExisted(driver);
+	}
+
+	/**
+	 * Show or hide hamburger menu
+	 *
+	 * @param driver
+	 *            WebDriver instance
+	 * @return
+	 */
+	public static boolean toggleHamburgerMenu(WebDriver driver)
+	{
+		IBrandingBarUtil bu = new UtilLoader<IBrandingBarUtil>().loadUtil(driver, IBrandingBarUtil.class);
+		return bu.toggleHamburgerMenu(driver);
 	}
 
 	/**
@@ -304,4 +383,5 @@ public class BrandingBarUtil
 	private BrandingBarUtil()
 	{
 	}
+
 }
