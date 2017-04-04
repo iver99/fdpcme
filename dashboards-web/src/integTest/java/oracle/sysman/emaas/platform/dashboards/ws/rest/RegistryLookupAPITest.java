@@ -1,5 +1,8 @@
 package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import mockit.Expectations;
 import mockit.Mock;
 import mockit.MockUp;
@@ -28,6 +31,39 @@ public class RegistryLookupAPITest
 	{
 		registryLookupAPI = new RegistryLookupAPI();
 
+	}
+	
+	@Test
+	public void testGetBaseVanityUrls(@Mocked final DependencyStatus anyDependencyStatus, @Mocked final RegistryLookupUtil lookupUtil)
+	{
+		final Map<String, String> vanityUrls = new HashMap<String, String>();
+		vanityUrls.put("ApmUI", "https://vanityhostname:4443");
+		vanityUrls.put("LogAnalyticsUI", "https://vanityhostname:4443");
+		vanityUrls.put("TargetAnalytics", "https://vanityhostname:4443");
+		
+		new Expectations() {
+			{
+				anyDependencyStatus.isEntityNamingUp();
+				result = true;
+				RegistryLookupUtil.getVanityBaseURLs(anyString);
+				result = vanityUrls;
+			}
+		};
+		// Test 200 status
+		Assert.assertEquals(registryLookupAPI.getBaseVanityUrls("tenantIdParam", "Tenant.user", "refer").getStatus(), 200);
+		
+		// Test 503 status
+		Assert.assertEquals(registryLookupAPI.getBaseVanityUrls("tenantIdParam", "Tenantuser", "refer").getStatus(), 503);
+		
+		new Expectations() {
+			{
+				RegistryLookupUtil.getVanityBaseURLs(anyString);
+				result = null;
+			}
+		};
+		
+		// Test 404 status
+		Assert.assertEquals(registryLookupAPI.getBaseVanityUrls("tenantIdParam", "Tenant.user", "refer").getStatus(), 404);
 	}
 
 	@Test

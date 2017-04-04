@@ -19,6 +19,7 @@ requirejs.config({
             'uifwk/js/util/usertenant-util',
             'uifwk/js/util/zdt-util',
             'uifwk/js/sdk/context-util',
+            'uifwk/js/sdk/menu-util',
             'uifwk/js/widgets/aboutbox/js/aboutbox',
             'uifwk/js/widgets/brandingbar/js/brandingbar',
             'uifwk/js/widgets/datetime-picker/js/datetime-picker',
@@ -134,7 +135,8 @@ require(['ojs/ojcore',
                     tenantName: self.tenantName,
                     appId: self.appId,
                     isAdmin: true,
-                    showGlobalContextBanner: false
+                    showGlobalContextBanner: false,
+                    omcHamburgerMenuOptIn: false
                 };
             }
 
@@ -152,7 +154,8 @@ require(['ojs/ojcore',
 
             function landingHomeModel() {
                 var self = this;
-
+                
+                self.brandingbarParams = headerViewModel.brandingbarParams;
                 self.dashboardsUrl = "/emsaasui/emcpdfui/home.html";
                 self.landingHomeUrls = null;
                 self.baseUrl = "http://www.oracle.com/pls/topic/lookup?ctx=cloud&id=";
@@ -490,9 +493,8 @@ require(['ojs/ojcore',
                         oj.Logger.error("Tenant subscribes to no service. Redirect to dashboard error page", true);
                         location.href = "./error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_NO_SUBS_MSG";
                     }else {
-                        ko.applyBindings(headerViewModel, document.getElementById('headerWrapper'));
                         ko.applyBindings(titleViewModel, $("title")[0]);
-                        ko.applyBindings(new landingHomeModel(), document.getElementById("mainContent"));
+                        ko.applyBindings(new landingHomeModel(), document.getElementById("globalBody"));
                         $("#loading").hide();
                         $("#globalBody").show();
                     }
