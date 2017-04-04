@@ -3,13 +3,17 @@
  */
 package oracle.sysman.emaas.platform.dashboards.core.persistence;
 
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 
+import oracle.sysman.emaas.platform.dashboards.core.BaseTest;
 import oracle.sysman.emaas.platform.dashboards.core.util.DateUtil;
+import oracle.sysman.emaas.platform.dashboards.core.util.IdGenerator;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
+import oracle.sysman.emaas.platform.dashboards.core.util.ZDTContext;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTileParams;
@@ -23,7 +27,7 @@ import org.testng.annotations.Test;
 /**
  * @author wenjzhu
  */
-public class DashboardServiceFacadeTest
+public class DashboardServiceFacadeTest extends BaseTest
 {
 
 	private static void assertEmsDashboard(EmsDashboard emsdashboard)
@@ -108,9 +112,10 @@ public class DashboardServiceFacadeTest
 	private static EmsDashboard newDashboard()
 	{
 		EmsDashboard d = new EmsDashboard();
+		d.setDashboardId(IdGenerator.getDashboardId(ZDTContext.getRequestId()));
 		d.setName("test" + System.currentTimeMillis());
 		d.setCreationDate(DateUtil.getCurrentUTCTime());
-		d.setDeleted(0L);
+		d.setDeleted(BigInteger.ZERO);
 		d.setDescription("test");
 		d.setEnableTimeRange(1);
 		d.setEnableRefresh(1);
@@ -128,6 +133,7 @@ public class DashboardServiceFacadeTest
 	private static EmsDashboardTile newTile()
 	{
 		EmsDashboardTile tile = new EmsDashboardTile();
+		tile.setTileId(IdGenerator.getTileId(ZDTContext.getRequestId(), 1));
 		tile.setCreationDate(DateUtil.getCurrentUTCTime());
 		tile.setHeight(1);
 		tile.setWidth(23);
@@ -154,7 +160,7 @@ public class DashboardServiceFacadeTest
 		tile.setWidgetViewmode("widgetViewmode");
 		tile.setWidgetHistogram("widgetHistogram");
 		tile.setWidgetSupportTimeControl(1);
-		tile.setWidgetLinkedDashboard(1L);
+		tile.setWidgetLinkedDashboard(BigInteger.valueOf(1L));
 		tile.setWidgetDeleted(0);
 		return tile;
 	}
@@ -189,21 +195,6 @@ public class DashboardServiceFacadeTest
 
 	private EmsDashboardTileParams emDashboardTileParam;
 
-	//	/**
-	//	 * @throws java.lang.Exception
-	//	 */
-	//	@BeforeClass
-	//	public static void setUpBeforeClass() {
-	//		PersistenceManager.setTestEnv(true);
-	//	}
-	//
-	//	/**
-	//	 * @throws java.lang.Exception
-	//	 */
-	//	@AfterClass
-	//	public static void tearDownAfterClass() {
-	//	}
-
 	private static int testSeq = 1;
 	private static final long TENANT_ID = 100L;
 
@@ -213,8 +204,6 @@ public class DashboardServiceFacadeTest
 	@BeforeTest
 	public void setUp()
 	{
-		PersistenceManager.setTestEnv(true);
-		UserContext.setCurrentUser("SYSMAN");
 		// tenant id updated to number type
 		EntityManager em = null;
 		try {

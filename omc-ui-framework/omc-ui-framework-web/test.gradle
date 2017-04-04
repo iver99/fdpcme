@@ -16,6 +16,6 @@ task integTestJar (type:Jar) {
 dependencies {
     testConfig getProjectArtifact('log4j-core')   
 	testConfig getProjectArtifact('log4j-api')   
-    testConfig project(':dashboards-ui-test-common-api')  
+    testConfig project('path':':dashboards-ui-test-common-api', 'configuration': 'integTestOutput')  
 }
 build.dependsOn integTestJar

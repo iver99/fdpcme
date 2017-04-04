@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-testapiversion="1.7.5" lang="en-US">
+<html data-testapiversion="1.15.0" lang="en-US">
     <head>
         <title data-bind="text: landingHomeTitle"></title>
         <meta charset="UTF-8">
@@ -11,7 +11,10 @@
 
         <link rel="stylesheet" href="@version@/css/dashboards-common-alta.css" type="text/css"/>
         <link rel="stylesheet" href="@version@/css/landing-home-alta.css" type="text/css"/>
-		       
+
+        <script type="text/javascript">
+            ////ADDITIONALDATA////
+        </script>
         <!-- RequireJS bootstrap file -->
         <script data-main="@version@/js/welcomeMain" src="libs/@version@/js/oraclejet/js/libs/require/require.js"></script>
 
@@ -32,11 +35,15 @@
                 <h1 class="welcome-slogan" data-bind="text: welcomeSlogan"></h1>
                 <div class="landing-home-box-wrapper">
                     <ul class="box-list-ul">
+                        <!-- ko if: showAPM -->
                         <li class="box-list-li box-list-a">
                             <a id="APM_wrapper" data-bind="attr: {href: 'javascript: this.click()'}, click: openAPM">
                                 <div class="service-box-wrapper">
                                     <div class="landing-home-box-img APM-box">
-                                        <img src="@version@/images/AppPerfMonitoring_w_92px.png" width="92" height="92" style="margin-top: 44px;" data-bind="attr: {alt: APM}"/>
+                                        <div class="landing-home-box-img-inner-container">
+                                        <!--AppPerfMonitoring_w_92px-->
+                                        <img src="@version@/images/welcomeSprite.png" width="92" style="background: url('@version@/images/welcomeSprite.png') no-repeat 0px -220px;" data-bind="attr: {alt: APM}"/>
+                                        </div>
                                     </div>
                                     <div class="landing-home-box-content">
                                         <div class="landing-home-box-content-head" data-bind="text: APM"></div>
@@ -45,12 +52,16 @@
                                 </div>
                             </a>
                         </li>
+                        <!-- /ko -->
                         <!-- ko if: showInfraMonitoring -->
                         <li class="box-list-li box-list-a">
                             <a id="infra_mon_wrapper" data-bind="attr: {href: 'javascript: this.click()'}, click: openInfraMonitoring">
                                 <div class="service-box-wrapper">
                                     <div class="landing-home-box-img infra-mon-box">
-                                        <img src="@version@/images/InfraMonitoring_w_92px.png" width="92" height="92" style="margin-top: 44px;" data-bind="attr: {alt: infraMonitoring}"/>
+                                        <div class="landing-home-box-img-inner-container">
+                                        <!--InfraMonitoring_w_92px-->
+                                        <img src="@version@/images/welcomeSprite.png" width="92" style="background: url('@version@/images/welcomeSprite.png') no-repeat 0px -588px;" data-bind="attr: {alt: infraMonitoring}"/>
+                                        </div>
                                     </div>
                                     <div class="landing-home-box-content">
                                         <div class="landing-home-box-content-head" data-bind="text: infraMonitoring"></div>
@@ -60,11 +71,15 @@
                             </a>
                         </li>
                         <!-- /ko -->
+                        <!-- ko if: showLA -->
                         <li class="box-list-li box-list-a">
                             <a id="LA_wrapper" data-bind="attr: {href: 'javascript: this.click()'}, click: openLogAnalytics">
                                 <div class="service-box-wrapper">
                                     <div class="landing-home-box-img LA-box">
-                                        <img src="@version@/images/LogAnalytics_w_92px.png" width="92" height="92" style="margin-top: 44px;" data-bind="attr: {alt: LA}"/>
+                                        <div class="landing-home-box-img-inner-container">
+                                        <!--LogAnalytics_w_92px-->
+                                        <img src="@version@/images/welcomeSprite.png" width="92" style="background: url('@version@/images/welcomeSprite.png') no-repeat 0px -772px;" data-bind="attr: {alt: LA}"/>
+                                        </div>
                                     </div>
                                     <div class="landing-home-box-content">
                                         <div class="landing-home-box-content-head" data-bind="text: LA"></div>
@@ -73,12 +88,17 @@
                                 </div>
                             </a>
                         </li>
+                        <!-- /ko -->
+                        <!-- ko if: showITA -->
                         <li class="box-list-li box-list-a">
                             <!--<a data-bind="attr: {href: 'javascript: this.click()'}, click: openITAnalytics">-->
                             <div id="ITA_wrapper" tabindex="0" aria-label="IT Analytics" data-bind="event: {click: openITAnalytics, keypress: openITAnalytics}" style="cursor: pointer">
                                 <div class="service-box-wrapper">
                                     <div class="landing-home-box-img ITA-box">
-                                        <img src="@version@/images/ItAnalytics_w_92px.png" width="92" height="92" style="margin-top: 44px;" data-bind="attr: {alt: ITA}"/>
+                                        <div class="landing-home-box-img-inner-container">
+                                        <!--ItAnalytics_w_92px-->
+                                        <img src="@version@/images/welcomeSprite.png" width="92" style="background: url('@version@/images/welcomeSprite.png') no-repeat 0px -680px;" data-bind="attr: {alt: ITA}"/>
+                                        </div>
                                     </div>
                                     <div class="landing-home-box-content">
                                         <div class="landing-home-box-content-head" data-bind="text: ITA"></div>
@@ -100,12 +120,16 @@
                                 </div>
                             <!--</a>-->
                         </li>
+                        <!-- /ko -->
                         <!-- ko if: showCompliance -->
                         <li class="box-list-li box-list-a">
                             <a id="compliance_wrapper" data-bind="attr: {href: 'javascript: this.click()'}, click: openCompliance">
                                 <div class="service-box-wrapper">
                                     <div class="landing-home-box-img compliance-box">
-                                        <img src="@version@/images/Compliance_w_92px.png" width="92" height="92" style="margin-top: 44px;" data-bind="attr: {alt: compliance}"/>
+                                        <div class="landing-home-box-img-inner-container">
+                                        <!--Compliance_w_92px-->
+                                        <img src="@version@/images/welcomeSprite.png" width="92" style="background: url('@version@/images/welcomeSprite.png') no-repeat 0px -312px;" data-bind="attr: {alt: compliance}"/>
+                                        </div>
                                     </div>
                                     <div class="landing-home-box-content">
                                         <div class="landing-home-box-content-head" data-bind="text: compliance"></div>
@@ -120,7 +144,10 @@
                             <a id="security_analytics_wrapper" data-bind="attr: {href: 'javascript: this.click()'}, click: openSecurityAnalytics">
                                 <div class="service-box-wrapper">
                                     <div class="landing-home-box-img security-analytics-box">
-                                        <img src="@version@/images/SecurityAnalytics_w_92px.png" width="92" height="92" style="margin-top: 44px;" data-bind="attr: {alt: securityAnalytics}"/>
+                                        <div class="landing-home-box-img-inner-container">
+                                        <!--SecurityAnalytics_w_92px-->
+                                        <img src="@version@/images/welcomeSprite.png" width="92" style="background: url('@version@/images/welcomeSprite.png') no-repeat 0px -956px;" data-bind="attr: {alt: securityAnalytics}"/>
+                                        </div>
                                     </div>
                                     <div class="landing-home-box-content">
                                         <div class="landing-home-box-content-head" data-bind="text: securityAnalytics"></div>
@@ -135,7 +162,10 @@
                             <a id="orchestration_wrapper" data-bind="attr: {href: 'javascript: this.click()'}, click: openOrchestration">
                                 <div class="service-box-wrapper">
                                     <div class="landing-home-box-img orchestration-box">
-                                        <img src="@version@/images/Orchestration_w_92px.png" width="92" height="92" style="margin-top: 44px;" data-bind="attr: {alt: orchestration}"/>
+                                        <div class="landing-home-box-img-inner-container">
+                                        <!--Orchestration_w_92px-->
+                                        <img src="@version@/images/welcomeSprite.png" width="92" style="background: url('@version@/images/welcomeSprite.png') no-repeat 0px -864px;" data-bind="attr: {alt: orchestration}"/>
+                                        </div>
                                     </div>
                                     <div class="landing-home-box-content">
                                         <div class="landing-home-box-content-head" data-bind="text: orchestration"></div>
@@ -145,11 +175,15 @@
                             </a>
                         </li>
                         <!-- /ko -->
+                        <!-- ko if: showDashboard -->
                         <li class="box-list-li box-list-a">
                             <a id="dashboards_wrapper" data-bind="attr: {href: 'javascript: this.click()'}, click: openDashboards">
                                 <div class="service-box-wrapper">
                                     <div class="landing-home-box-img dashboards-box">
-                                        <img src="@version@/images/Dashboards_w_92px.png" width="92" height="92" style="margin-top: 44px;" data-bind="attr: {alt: dashboards}"/>
+                                        <div class="landing-home-box-img-inner-container">
+                                        <!--Dashboards_w_92px-->
+                                        <img src="@version@/images/welcomeSprite.png" width="92" style="background: url('@version@/images/welcomeSprite.png') no-repeat 0px -404px;" data-bind="attr: {alt: dashboards}"/>
+                                        </div>
                                     </div>
                                     <div class="landing-home-box-content">
                                         <div class="landing-home-box-content-head" data-bind="text: dashboards"></div>
@@ -158,12 +192,17 @@
                                 </div>
                             </a>
                         </li>
+                        <!-- /ko -->
+                        <!-- ko if: showDataExplorer -->
                         <li class="box-list-li box-list-a">
                             <!--<a id="data_explore_wrapper" href="#">-->
                             <div id="data_explore_wrapper" tabindex="0" aria-label="Data Explorers">
                                 <div class="service-box-wrapper">
                                     <div class="landing-home-box-img data-explorers-box">
-                                        <img src="@version@/images/DataExplorers_w_92px.png" width="92" height="92" style="margin-top: 44px;" data-bind="attr: {alt: dataExplorers}"/>
+                                        <div class="landing-home-box-img-inner-container">
+                                        <!--DataExplorers_w_92px-->
+                                        <img src="@version@/images/welcomeSprite.png" width="92" style="background: url('@version@/images/welcomeSprite.png') no-repeat 0px -496px;" data-bind="attr: {alt: dataExplorers}"/>
+                                        </div>
                                     </div>
                                     <div class="landing-home-box-content">
                                         <div class="landing-home-box-content-head" data-bind="text: dataExplorers"></div>
@@ -171,7 +210,7 @@
                                         <select id="dataExp_options" aria-label="Select Data Explorers" style="float: right; margin-top: 25px; margin-right: 10px; width: 235px;" data-bind="ojComponent: {component: 'ojSelect', value: data_type, optionChange: dataExplorersChosen}">                                      
                                             <option value="select" id="dataExp_Select" data-bind="text: select"></option>                                            
                                             <!-- ko foreach: exploreDataLinkList -->
-                                            <option data-bind="attr: {id: 'dataExp_'+name}, value: name, text: name"></option>
+                                            <option data-bind="attr: {id: 'dataExp_'+name.split(' ')[0]}, value: name, text: name"></option>
                                             <!-- /ko -->
                                         </select>
 
@@ -180,6 +219,8 @@
                             </div>
                             <!--</a>-->
                         </li>
+                        <!-- /ko -->
+                        <!-- ko if: showLearnMore -->
                         <li class="box-list-li">
                             <div style="width: 276px; height: 296px; border: 2px solid #EBEBEB;">
                                 <div class="landing-home-box-learn-more-head" data-bind="text: learnMore"></div>
@@ -197,6 +238,7 @@
                                 </ul>
                             </div>
                         </li>
+                        <!-- /ko -->
                     </ul>
                 </div>
             </div>

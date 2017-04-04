@@ -1,17 +1,28 @@
 package oracle.sysman.emaas.platform.dashboards.core.model;
 
+import java.math.BigInteger;
+import java.util.Date;
+
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
+import oracle.sysman.emaas.platform.dashboards.core.util.DateUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
+import oracle.sysman.emaas.platform.dashboards.core.util.StringEscapeUtil;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 
 /**
  * @author jishshi
  * @since 2/2/2016.
  */
 public class UserOptions {
+    private static final Logger LOGGER = LogManager.getLogger(UserOptions.class);
+
     private String userName;
-    private Long dashboardId;
+    private BigInteger dashboardId;
     private Long autoRefreshInterval;
     private String extendedOptions;
 
@@ -23,11 +34,11 @@ public class UserOptions {
         this.userName = userName;
     }
 
-    public Long getDashboardId() {
+    public BigInteger getDashboardId() {
         return dashboardId;
     }
 
-    public void setDashboardId(Long id) {
+    public void setDashboardId(BigInteger id) {
         this.dashboardId = id;
     }
 
@@ -40,7 +51,7 @@ public class UserOptions {
     }
 
     public String getExtendedOptions() {
-        return extendedOptions;
+        return StringEscapeUtil.escapeWithCharPairs(extendedOptions, new String[][]{{"&", "&amp;"}, {"<", "&lt;"}, {">", "&gt;"}});
     }
 
     public void setExtendedOptions(String extendedOptions) {
@@ -60,7 +71,7 @@ public class UserOptions {
         }
         userOptions.setAutoRefreshInterval(Long.valueOf(emsUserOptions.getAutoRefreshInterval()));
         userOptions.setUserName(emsUserOptions.getUserName());
-        userOptions.setDashboardId(Long.valueOf(emsUserOptions.getDashboardId()));
+        userOptions.setDashboardId(emsUserOptions.getDashboardId());
         userOptions.setExtendedOptions(emsUserOptions.getExtendedOptions());
         return userOptions;
     }
@@ -88,5 +99,19 @@ public class UserOptions {
         euo.setExtendedOptions(extendedOptions);
 
         return euo;
+    }
+
+    public boolean validateExtendedOptions() {
+        try {
+            if (this.getExtendedOptions() != null) {
+                new JSONObject(this.getExtendedOptions());
+                // the value should be in format like {selectedTab: 15}, to validate the string, we wrap it as {'tempData' : {selectedTab: 15}} and validate it again
+                new JSONObject("{\"tempData\":" + extendedOptions + "}");
+            }
+        } catch (JSONException e) {
+            LOGGER.error(e);
+            return false;
+        }
+        return true;
     }
 }

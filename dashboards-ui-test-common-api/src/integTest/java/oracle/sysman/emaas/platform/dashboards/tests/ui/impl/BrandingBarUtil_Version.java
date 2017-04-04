@@ -26,6 +26,7 @@ public class BrandingBarUtil_Version implements IUiTestCommonAPI
 	public String getApiVersion(WebDriver wdriver)
 	{
 		// String version = wdriver.getElement("id=emaas-appheader-bar").getAttribute(VERSION_ATTR);
+		wdriver.waitForElementPresent("id=emaas-appheader-bar");
 		String version = wdriver.getAttribute("id=emaas-appheader-bar" + "@" + VERSION_ATTR);
 
 		if (version == null || "".equals(version.trim())) {

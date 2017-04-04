@@ -29,7 +29,8 @@ dependencies
 	deploy (project(path:':dashboards-web', configuration:'archives')) {transitive = false}
 	earlib (project(':dashboards-core')){transitive = false}
 	earlib (project(':dashboards-entities')){transitive = false}
-	earlib (project(':dashboards-webutils')){transitive = false} 
+	earlib (project(':dashboards-webutils')){transitive = false}
+	earlib (project(':dashboards-sdk')){transitive = false}
 	earlib getProjectArtifact('log4j-core')   
 	earlib getProjectArtifact('log4j-api')   
 	earlib getProjectArtifact('log4j-slf4j-impl')   
@@ -41,6 +42,7 @@ dependencies
 	earlib getProjectArtifact('commons-logging')   
         earlib  getProjectArtifact('zookeeper')   
         earlib getProjectArtifact('commons-lang3')   
+	earlib getProjectArtifact('security-client')
 }
 
 // All WLS Related things

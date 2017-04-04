@@ -34,7 +34,6 @@ define(['knockout',
 
             var widgetAreaWidth = 0;
             var widgetAreaContainer = null;
-            var DEFAULT_AUTO_REFRESH_INTERVAL = 300000;
             var ctxUtil = new contextModel();
             var omcContext = ctxUtil.getOMCContext();
 
@@ -43,11 +42,15 @@ define(['knockout',
             var self = this;
             $b.registerObject(self, 'DashboardTilesViewModel');
             self.scrollbarWidth = uiutil.getScrollbarWidth();
+            self.isUnderSet = ko.unwrap(dashboardInst.type) === "SET" ? true : false;
 
             widgetAreaContainer = $b.findEl('.widget-area');
 
-            self.normalMode = new Builder.NormalEditorMode();
-            self.tabletMode = new Builder.TabletEditorMode();
+            self.dashboard = $b.dashboard;
+            var ddsDashboard = new Builder.DashboardDataSource().dataSource[self.dashboard.id()];
+            var eagerCreated = ddsDashboard.eagerCreated ? ddsDashboard.eagerCreated : null;
+            self.normalMode = (eagerCreated && eagerCreated.normalMode) ? eagerCreated.normalMode : new Builder.NormalEditorMode();
+            self.tabletMode = (eagerCreated && eagerCreated.tabletMode) ? eagerCreated.tabletMode : new Builder.TabletEditorMode();
 
             self.editor = new Builder.TilesEditor($b, Builder.isSmallMediaQuery() ? self.tabletMode : self.normalMode);
             self.editor.tiles = $b.dashboard.tiles;
@@ -56,14 +59,12 @@ define(['knockout',
 
             self.previousDragCell = null;
 
-            self.dashboard = $b.dashboard;
             self.loginUser = ko.observable(dfu.getUserName());
             var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
 
-            self.targets = ko.observable({"criteria":"{\"version\":\"1.0\",\"criteriaList\":[]}"});
-
-
-            self.timeSelectorModel = new Builder.TimeSelectorModel();
+            self.targets = eagerCreated ? eagerCreated.targets : ko.observable(null);
+            self.timeSelectorModel = eagerCreated ? eagerCreated.timeSelector : null;
+            
             self.tilesView = $b.getDashboardTilesView();
             self.isOnePageType = (self.dashboard.type() === Builder.SINGLEPAGE_TYPE);
 
@@ -130,17 +131,16 @@ define(['knockout',
                 }
                 return false;
             };
-          
 
             self.appendNewTile = function(name, description, width, height, widget) {
                 if (widget) {
                     var newTile = self.editor.createNewTile(name, description, width, height, widget, self.timeSelectorModel, self.targets, true, dashboardInst);
+                    Builder.eagerLoadDahshboardSingleTileAtPageLoad(dfu, ko, newTile);                    
                     if (newTile){
                        self.editor.tiles.push(newTile);
                        self.show();
                        Builder.getTileConfigure(self.editor.mode, self.dashboard, newTile, self.timeSelectorModel, self.targets, dashboardInst);
                        $b.triggerEvent($b.EVENT_TILE_ADDED, null, newTile);
-                       self.triggerTileTimeControlSupportEvent((newTile.type() === 'DEFAULT' && newTile.WIDGET_SUPPORT_TIME_CONTROL())?true:null);
                     }
                 }
                 else {
@@ -240,7 +240,6 @@ define(['knockout',
                         self.notifyTileChange(tile, new Builder.TileChange("POST_DELETE"));
                         $b.triggerEvent($b.EVENT_TILE_RESTORED, 'triggerred by tile deletion', tile);
                         $b.triggerEvent($b.EVENT_TILE_DELETED, null, tile);
-                        self.triggerTileTimeControlSupportEvent();
                         break;
                     case "wider":
                         self.editor.broadenTile(tile);
@@ -413,7 +412,8 @@ define(['knockout',
                     if(isResizing) {
                         $('#globalBody').addClass('none-user-select');
                         self.resizingTile(ko.dataFor(targetHandler.closest('.dbd-widget')[0]));
-                        self.resizingOptions({mode:resizeMode});
+                        var changedingTarget=targetHandler.closest('.dbd-widget');
+                        self.resizingOptions({mode:resizeMode,containerTop:changedingTarget.offset().top,containerLeft:changedingTarget.offset().left});
                         self.beforeResizeWidth = self.resizingTile().cssWidth();
                         self.beforeResizeHeight = self.resizingTile().cssHeight();
                         self.currentWigedtWidth(self.resizingTile().cssWidth());
@@ -540,22 +540,6 @@ define(['knockout',
                 self.tilesView.enableDraggable();
                 var height = self.editor.tilesGrid.getHeight();
                 $b.findEl('.tiles-wrapper').height(height);
-            };
-
-            // trigger an event to indicates if there is tile(s) supporting time control or not
-            self.triggerTileTimeControlSupportEvent = function(exists) {
-                if (exists === true || exists === false) {
-                    $b.triggerEvent($b.EVENT_EXISTS_TILE_SUPPORT_TIMECONTROL, null, exists);
-                    return;
-                }
-                for (var i = 0; i < self.editor.tiles().length; i++) {
-                    var tile = self.editor.tiles()[i];
-                    if (tile && tile.type() === 'DEFAULT' && tile.WIDGET_SUPPORT_TIME_CONTROL()) {
-                        $b.triggerEvent($b.EVENT_EXISTS_TILE_SUPPORT_TIMECONTROL, null, true);
-                        return;
-                    }
-                }
-                $b.triggerEvent($b.EVENT_EXISTS_TILE_SUPPORT_TIMECONTROL, null, false);
             };
 
             self.reRender = function() {
@@ -733,6 +717,7 @@ define(['knockout',
                     }
                     if (!tile) {
                         tile = self.editor.createNewTile(widget.WIDGET_NAME, null, width, height, widget, self.timeSelectorModel, self.targets, true, dashboardInst);
+                        Builder.eagerLoadDahshboardSingleTileAtPageLoad(dfu, ko, tile);
                         u.helper.tile = tile;
                         self.editor.tiles.push(tile);
                         $b.triggerEvent($b.EVENT_TILE_ADDED, null, tile);
@@ -816,14 +801,8 @@ define(['knockout',
                 u.helper.tile = null;
                 self.previousDragCell = null;
                 Builder.getTileConfigure(self.editor.mode, self.dashboard, tile, self.timeSelectorModel, self.targets, dashboardInst);
-                tile && tile.WIDGET_SUPPORT_TIME_CONTROL && self.triggerTileTimeControlSupportEvent(tile.WIDGET_SUPPORT_TIME_CONTROL()?true:null);
             };
-
-            self.dashboardTileSupportTimeControlHandler = function(exists) {
-                window.DEV_MODE && console.debug('Received event EVENT_EXISTS_TILE_SUPPORT_TIMECONTROL with value of ' + exists + '. ' + (exists?'Show':'Hide') + ' date time picker accordingly (self.dashboard.enableTimeRange() value is: ' + self.dashboard.enableTimeRange() + ')');
-                self.showTimeRange(self.dashboard.enableTimeRange() !== 'FALSE' && exists);
-            };
-
+           
             self.dashboardTimeRangeChangedHandler = function() {
                 self.showTimeRange(self.dashboard.enableTimeRange() === 'TRUE');
             };
@@ -840,7 +819,6 @@ define(['knockout',
             self.postDocumentShow = function() {
                 self.initializeMaximization();
                 $b.triggerEvent($b.EVENT_TILE_EXISTS_CHANGED, null, self.editor.tiles().length > 0);
-                self.triggerTileTimeControlSupportEvent();
                 //avoid brandingbar disappear when set font-size of text
                 $("#globalBody").addClass("globalBody");
                 self.editor.initializeMode();
@@ -878,45 +856,9 @@ define(['knockout',
             };
 
             self.initUserFilterOptions = function() {
-                var dashboardDS = new Builder.DashboardDataSource();
-                
-                dashboardDS.loadDashboardUserOptionsData(
-                    self.dashboard.id(),
-                    function (data) {
-                        //sucessfully get extended options for page filters
-                        self.userExtendedOptions = data["extendedOptions"] ? JSON.parse(data["extendedOptions"]) : {};
-                        if(!self.userExtendedOptions.tsel || (self.userExtendedOptions.tsel && !self.userExtendedOptions.tsel.entityContext)) {
-                            self.userTsel = false;
-                            self.userExtendedOptions.tsel = {quickPick: "host", entityContext: ""};
-                        }else {
-                            self.userTsel= true;
-                        }
-                        if(!self.userExtendedOptions.timeSel || (self.userExtendedOptions.timeSel && !self.userExtendedOptions.timeSel.timePeriod)) {
-                            self.userTimeSel = false;
-                            self.userExtendedOptions.timeSel = {timePeriod: "last14days", start: new Date(new Date()-14*24*60*60*1000).getTime(), end: new Date().getTime()};
-                        }else {
-                            self.userTimeSel = true;
-                        }
-                        
-                        if(!self.userExtendedOptions.autoRefresh || isNaN(self.userExtendedOptions.autoRefresh.defaultValue)) {
-                            self.userExtendedOptions.autoRefresh = {"defaultValue": DEFAULT_AUTO_REFRESH_INTERVAL};
-                        }
-                        
-                    },
-                    function (jqXHR, textStatus, errorThrown) {
-                        if(jqXHR.status === 404){
-                            self.userTsel = false;
-                            self.userTimeSel = false;
-                            self.userExtendedOptions = {};
-                            self.userExtendedOptions.tsel = {quickPick: "host", entityContext: ""};
-                            self.userExtendedOptions.timeSel = {timePeriod: "last14days", start: new Date(new Date()-14*24*60*60*1000).getTime(), end: new Date().getTime()};
-                            self.userExtendedOptions.autoRefresh = {"defaultValue": DEFAULT_AUTO_REFRESH_INTERVAL};
-                        }
-                    });
+                Builder.loadDashboardUserOptions(self.dashboard.id(), self);
             };
 
-            self.userTsel = false;
-            self.userTimeSel = false;
             self.applyClickedByAutoRefresh = ko.observable(false);
             self.initUserFilterOptions();
             self.dashboardExtendedOptions = self.dashboard.extendedOptions ? JSON.parse(self.dashboard.extendedOptions()) : null;
@@ -929,12 +871,19 @@ define(['knockout',
                 if(!self.userExtendedOptions.tsel) {
                     self.userExtendedOptions.tsel = {};
                 }
-
+                
+                if(self.toolbarModel.zdtStatus()){
+                    return;
+                }
+                
                 self.userExtendedOptions.tsel.entityContext = targets;
-                self.saveUserFilterOptions();
 
+                self.saveUserFilterOptions(function(data) { //update userExtendedOptions
+                    self.initUserFilterOptions();
+                });
             };
 
+            self.entitySelectorInited = false;
             self.selectionMode = ko.observable("byCriteria");
             self.returnMode = ko.observable('criteria');
             self.dropdownInitialLabel = ko.observable(getNlsString("DBS_BUILDER_ALL_ENTITIES"));
@@ -952,34 +901,75 @@ define(['knockout',
                     self.returnFromPageTsel(targets);
             };
             
-            self.initializedCallback = function() {
-                require(['emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils'], function(TargetSelectorUtils) {
-                    $.when(TargetSelectorUtils.getCriteriaFromOmcContext().done(function (inputCriteria) {
-                        if (inputCriteria) {
-                            var selectionContext = {criteria: inputCriteria};
-                            self.targets(selectionContext);
-                        }
-                        for(var i=0; i<self.dashboard.tiles().length; i++) {
-                            var tile = self.dashboard.tiles()[i]; 
-                            tile.dashboardItemChangeEvent.targets = self.targets();
-                        }
-                        TargetSelectorUtils.setTargetSelectionContext("tsel_" + self.dashboard.id(), self.targets());
-                    }));
-                });
+            self.initializedCallback = function() {               
+                if(self.entitySelectorInited) {
+                   return;
+                }                
+                //apply criteriaList to widgets at load time
+                for(var i=0; i<self.dashboard.tiles().length; i++) {
+                    var tile = self.dashboard.tiles()[i]; 
+                    tile.dashboardItemChangeEvent && (tile.dashboardItemChangeEvent.targets = self.targets());
+                }
+                self.entitySelectorInited = true;
             };
             
-            var compressedTargets;
-            //set initial targets selector options. priority: user extendedOptions > dashboard extendedOptions
-            //1. set selectionMode: byCriteria/single. Default is "byCriteria"
-            //selectionMode is set in right.panel.model.js
-            //2. set selected targets/entityContext
-            if(self.userTsel && self.userExtendedOptions && !$.isEmptyObject(self.userExtendedOptions.tsel)) {
-                compressedTargets = self.userExtendedOptions.tsel.entityContext;
-            }else if(self.dashboardExtendedOptions && !$.isEmptyObject(self.dashboardExtendedOptions.tsel)) {
-                compressedTargets = self.dashboardExtendedOptions.tsel.entityContext;
-                self.userExtendedOptions.tsel = {};
-            }            
-            compressedTargets && self.targets(compressedTargets);
+            if(!self.targets()) {
+                $.when(Builder.loadEntityContext(self, self.dashboard.enableEntityFilter(), self.isUnderSet)).done(function(initTargets) {
+                    initTargets && self.targets(initTargets);
+                });
+            }
+            
+            function callbackForOmcCtxChange(ctxChangeEvent) {
+                //handle entity context changed by selecting GC entity selector
+                if(!ctxChangeEvent || !ctxChangeEvent.contextName) {
+                    return;
+                }
+                if(ctxChangeEvent.contextName !== "compositeMEID" && ctxChangeEvent.contextName !== "entityMEIDs" && ctxChangeEvent.contextName !== "composite" && ctxChangeEvent.contextName !== "entity") {
+                    console.log("***callbackForOmcCtxChange: contextName is " + ctxChangeEvent.contextName + ". It is not entity context change, so return***");
+                    return;
+                }
+                
+                Builder.requireTargetSelectorUtils(true, function(TargetSelectorUtils) {
+                    if (TargetSelectorUtils) {
+                        TargetSelectorUtils.registerComponents();
+                    }
+                    $.when(TargetSelectorUtils.getCriteriaFromOmcContext()).done(function (criteria) {
+                        var entityContext = {criteria: criteria};
+                        //save users' selection of entity context by GC entity selector
+                        self.returnFromPageTsel(entityContext);
+                    });
+                }); 
+                    
+            }
+            
+            ctxUtil.subscribeOMCContextChangeEvent(callbackForOmcCtxChange);
+            
+            if(!self.timeSelectorModel) {
+                self.timeSelectorModel = new Builder.TimeSelectorModel();
+                var timeContext = Builder.loadTimeContext(self, self.dashboard.enableTimeRange(), self.isUnderSet);
+                var initStart = timeContext.start;
+                var initEnd = timeContext.end;
+                var timePeriod = timeContext.timePeriod;
+                var current = new Date();
+
+                if(ctxUtil.formalizeTimePeriod(timePeriod)) {
+                    if(ctxUtil.formalizeTimePeriod(timePeriod) !== "CUSTOM") { //get start and end time for relative time period
+                        var tmp = ctxUtil.getStartEndTimeFromTimePeriod(ctxUtil.formalizeTimePeriod(timePeriod));
+                        if(tmp) {
+                            initStart = tmp.start;
+                            initEnd = tmp.end;
+                        }
+                    }
+                }
+
+                if(!(initStart instanceof Date && initEnd instanceof Date)) {
+                    initStart = new Date(current - 14*24*60*60*1000);
+                    initEnd = current;
+                }
+                self.timeSelectorModel.viewStart(initStart);
+                self.timeSelectorModel.viewEnd(initEnd);
+                self.timeSelectorModel.viewTimePeriod(timePeriod);
+            }
 
             var timeSelectorChangelistener = ko.computed(function(){
                 return {
@@ -994,104 +984,89 @@ define(['knockout',
                     self.timeSelectorModel.timeRangeChange(false);
                 }
             });
-
-            var current = new Date();
+         
+            self.initStart = ko.observable(self.timeSelectorModel.viewStart());
+            self.initEnd = ko.observable(self.timeSelectorModel.viewEnd());
+            self.timePeriod = ko.observable(self.timeSelectorModel.viewTimePeriod());
+           
+            var dashboardExdedOpt = self.dashboard.extendedOptions && JSON.parse(ko.unwrap(self.dashboard.extendedOptions()));
+            dashboardExdedOpt && dashboardExdedOpt.timePeriodNotShow ? self.timePeriodsNotToShow = dashboardExdedOpt.timePeriodNotShow :self.timePeriodsNotToShow = [];
             
-            var initStart = (omcContext.time && omcContext.time.startTime) ? new Date(parseInt(omcContext.time.startTime)) : null;
-            var initEnd = (omcContext.time && omcContext.time.endTime) ? new Date(parseInt(omcContext.time.endTime)) : null;
-            self.timePeriod = ko.observable((omcContext.time && omcContext.time.timePeriod) ? omcContext.time.timePeriod : null);
-            
-            //initialize time selector. priority: time in url > time in user extendedOptions > time in dashboard extendedOptions > default time
-            if(self.timePeriod() === null && (initStart === null || initEnd === null)) {
-                if(self.userTimeSel && self.userExtendedOptions && !$.isEmptyObject(self.userExtendedOptions.timeSel)) {
-                    initStart = new Date(parseInt(self.userExtendedOptions.timeSel.start));
-                    initEnd = new Date(parseInt(self.userExtendedOptions.timeSel.end));
-                    var tp = (self.userExtendedOptions.timeSel.timePeriod === "custom1") ? "custom" : self.userExtendedOptions.timeSel.timePeriod;
-                    self.timePeriod(Builder.getTimePeriodString(tp) ? Builder.getTimePeriodString(tp) : tp);
-                }else if(self.dashboardExtendedOptions && !$.isEmptyObject(self.dashboardExtendedOptions.timeSel)) {
-                    initStart = new Date(parseInt(self.dashboardExtendedOptions.timeSel.start));
-                    initEnd = new Date(parseInt(self.dashboardExtendedOptions.timeSel.end));
-                    var tp = (self.dashboardExtendedOptions.timeSel.defaultValue === "custom1") ? "custom" : self.dashboardExtendedOptions.timeSel.defaultValue;
-                    self.timePeriod(Builder.getTimePeriodString(tp) ? Builder.getTimePeriodString(tp) : tp);
-                    self.userExtendedOptions.timeSel = {};
-                }else {
-                    initStart = new Date(current - 14*24*60*60*1000);
-                    initEnd = current;
-                    self.timePeriod("Last 14 days");
-                }
-            }
-            
-            if(ctxUtil.formalizeTimePeriod(self.timePeriod())) {
-                if(ctxUtil.formalizeTimePeriod(self.timePeriod()) !== "CUSTOM") { //get start and end time for relative time period
-                    var tmp = ctxUtil.getStartEndTimeFromTimePeriod(ctxUtil.formalizeTimePeriod(self.timePeriod()));
-                    if(tmp) {
-                        initStart = tmp.start;
-                        initEnd = tmp.end;
+            if(self.isUnderSet) {
+                self.datetimePickerParams = {
+                    startDateTime: self.initStart,
+                    endDateTime: self.initEnd,
+                    timePeriod: self.timePeriod,
+                    hideMainLabel: true,
+                    timePeriodsNotToShow:self.timePeriodsNotToShow,
+                    callbackAfterApply: function(start, end, tp) {
+                        callbackAfterApply(start, end, tp);   
+                    }
+                };
+            }else {
+                var headerWrapper = $("#headerWrapper")[0];
+                if(headerWrapper) {
+                    var headerViewModel = ko.dataFor(headerWrapper);
+                    var headerViewModel = ko.dataFor(headerWrapper);
+                    headerViewModel.brandingbarParams.timeSelectorParams.startDateTime(ko.unwrap(self.initStart));
+                    headerViewModel.brandingbarParams.timeSelectorParams.endDateTime(ko.unwrap(self.initEnd));
+                    headerViewModel.brandingbarParams.timeSelectorParams.timePeriod(ko.unwrap(self.timePeriod));
+                    headerViewModel.brandingbarParams.timeSelectorParams.timePeriodsNotToShow(ko.unwrap(self.timePeriodsNotToShow));
+                    headerViewModel.brandingbarParams.timeSelectorParams.callbackAfterApply = function(start, end, tp) {
+                        callbackAfterApply(start, end, tp);
                     }
                 }
             }
             
-            if(!(initStart instanceof Date && initEnd instanceof Date)) {
-                initStart = new Date(current - 14*24*60*60*1000);
-                initEnd = current;
-            }
-            
-            self.initStart = ko.observable(initStart);
-            self.initEnd = ko.observable(initEnd);
-            self.timeSelectorModel.viewStart(initStart);
-            self.timeSelectorModel.viewEnd(initEnd);
-            self.timeSelectorModel.viewTimePeriod(self.timePeriod());
-            self.datetimePickerParams = {
-                startDateTime: self.initStart,
-                endDateTime: self.initEnd,
-                timePeriod: self.timePeriod,
-                hideMainLabel: true,
-                callbackAfterApply: function(start, end, tp) {
-                        self.timeSelectorModel.viewStart(start);
-                        self.timeSelectorModel.viewEnd(end);
-                        self.timeSelectorModel.viewTimePeriod(tp);
-                        if(tp === "Custom") {
-                            self.initStart(start);
-                            self.initEnd(end);
-                            self.timePeriod(tp);
-                        }else {
-                            self.timePeriod(tp);
-                        }
-                        self.timeSelectorModel.timeRangeChange(true);
-                        
-                        if(!self.applyClickedByAutoRefresh()) {
-                            if(!self.userExtendedOptions.timeSel) {
-                                self.userExtendedOptions.timeSel = {};
-                            }
-                            self.userExtendedOptions.timeSel.timePeriod = Builder.getTimePeriodValue(tp) ? Builder.getTimePeriodValue(tp) : tp;
-                            self.userExtendedOptions.timeSel.start = start.getTime();
-                            self.userExtendedOptions.timeSel.end = end.getTime();
-                            self.saveUserFilterOptions();
-
-//                            $b.triggerEvent($b.EVENT_TIME_SELECTION_CHANGED, "time selection is changed by selecting date/time picker", Builder.getTimePeriodValue(tp), start.getTime(), end.getTime());
-                        }
-                        self.applyClickedByAutoRefresh(false);
+            function callbackAfterApply(start, end, tp) {
+                self.timeSelectorModel.viewStart(start);
+                self.timeSelectorModel.viewEnd(end);
+                self.timeSelectorModel.viewTimePeriod(tp);
+                if (tp === "Custom") {
+                    self.initStart(start);
+                    self.initEnd(end);
+                    self.timePeriod(tp);
+                } else {
+                    self.timePeriod(tp);
                 }
-            };
+                self.timeSelectorModel.timeRangeChange(true);
 
-            self.saveUserFilterOptions = function() {
-                var userFilterOptions = {
-                    dashboardId: self.dashboard.id(),
-                    extendedOptions: JSON.stringify(self.userExtendedOptions),
-                    autoRefreshInterval: self.userExtendedOptions.autoRefresh.defaultValue
-                };
+                if (!self.applyClickedByAutoRefresh() && !self.toolbarModel.zdtStatus()) {
+                    if (!self.userExtendedOptions.timeSel) {
+                        self.userExtendedOptions.timeSel = {};
+                    }
+                    self.userExtendedOptions.timeSel.timePeriod = Builder.getTimePeriodValue(tp) ? Builder.getTimePeriodValue(tp) : tp;
+                    self.userExtendedOptions.timeSel.start = start.getTime();
+                    self.userExtendedOptions.timeSel.end = end.getTime();
+                    self.saveUserFilterOptions(function (data) { //update userExtendedOptions
+                        self.initUserFilterOptions();
+                    });
 
-                new Builder.DashboardDataSource().saveDashboardUserOptions(userFilterOptions);
+                        //                            $b.triggerEvent($b.EVENT_TIME_SELECTION_CHANGED, "time selection is changed by selecting date/time picker", Builder.getTimePeriodValue(tp), start.getTime(), end.getTime());
+                }
+                self.applyClickedByAutoRefresh(false);
+            }
+
+            self.saveUserFilterOptions = function (succCallback) {
+                if (!self.toolbarModel.zdtStatus()) {
+                    var userFilterOptions = {
+                        dashboardId: self.dashboard.id(),
+                        extendedOptions: JSON.stringify(self.userExtendedOptions),
+                        autoRefreshInterval: self.userExtendedOptions.autoRefresh.defaultValue
+                    };
+
+                    new Builder.DashboardDataSource().saveDashboardUserOptions(userFilterOptions, succCallback);
+                }
             };
             
             self.autoRefreshChanged = function(interval) {
                 self.userExtendedOptions.autoRefresh = {"defaultValue": interval};                
                 self.saveUserFilterOptions();
-            }
+            };
             
             self.autoRefreshingPage = function() {
                 self.applyClickedByAutoRefresh(true);
-            }
+            };
         }
 
         Builder.registerModule(DashboardTilesViewModel, 'DashboardTilesViewModel');

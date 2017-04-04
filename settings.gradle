@@ -4,6 +4,7 @@ include \
   'dashboards-ee',
   'dashboards-entities',
   'dashboards-schema',
+  'dashboards-sdk',
   'dashboards-ui',
   'dashboards-ui:dashboardsui-ee',
   'dashboards-ui:dashboardsui-web',

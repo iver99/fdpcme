@@ -8,42 +8,49 @@ function (ko, $, oj, dfu) {
         var self = this;
         self.widgets = ko.observableArray([]);
         self.keyword = ko.observable('');
+        self.keywordInput=ko.observable('');
+        self.keywordInput.extend({rateLimit: 1000, method: 'notifyWhenChangesStop '});
+        self.searchStaus = ko.observable('initialize');
         self.clearRightPanelSearch = ko.observable(false);
+        self.isWidgetLoaded =ko.observable(false);
         self.tilesViewModel = ko.observable($b.getDashboardTilesViewModel && $b.getDashboardTilesViewModel());
 
-        self.loadWidgets = function (req) {
+        self.loadWidgets = function (req,successCallback) {
             var widgetDS = new Builder.WidgetDataSource();
-
-            widgetDS.loadWidgetData(
-                    req && (typeof req.term === "string") ? req.term : self.keyword(),
-                    function (widgets) {
-                        self.widgets([]);
-                        if (widgets && widgets.length > 0) {
-                            for (var i = 0; i < widgets.length; i++) {
-                                if (!widgets[i].WIDGET_DESCRIPTION) {
-                                    widgets[i].WIDGET_DESCRIPTION = null;
-                                }
-                                var wgt = ko.mapping.fromJS(widgets[i]); 
+            self.searchStaus('searching');
+                widgetDS.loadWidgetData(
+                        req && (typeof req.term === "string") ? req.term : self.keyword(),
+                        function (widgets) {
+                            self.widgets([]);
+                            if (widgets && widgets.length > 0) {
+                                for (var i = 0; i < widgets.length; i++) {
+                                    if (!widgets[i].WIDGET_DESCRIPTION) {
+                                        widgets[i].WIDGET_DESCRIPTION = null;
+                                    }
+                                    var wgt = ko.mapping.fromJS(widgets[i]);
                                 if(widgets[i].WIDGET_DESCRIPTION){
                                     wgt.WIDGET_DESCRIPTION = widgets[i].WIDGET_DESCRIPTION.toString().replace(/\n/g,"<br>");
+                                    }
+                                    if (wgt && !wgt.WIDGET_VISUAL) {
+                                        wgt.WIDGET_VISUAL = ko.observable('');
+                                    }
+                                    if (wgt && !wgt.imgWidth) {
+                                        wgt.imgWidth = ko.observable('120px');
+                                    }
+                                    if (wgt && !wgt.imgHeight) {
+                                        wgt.imgHeight = ko.observable('120px');
+                                    }
+                                    self.widgets.push(wgt);
                                 }
-                                if (wgt && !wgt.WIDGET_VISUAL) {
-                                    wgt.WIDGET_VISUAL = ko.observable('');
-                                }
-                                if (wgt && !wgt.imgWidth) {
-                                    wgt.imgWidth = ko.observable('120px');
-                                }
-                                if (wgt && !wgt.imgHeight) {
-                                    wgt.imgHeight = ko.observable('120px');
-                                }
-                                self.widgets.push(wgt);
                             }
+                            self.initWidgetDraggable();
+                            self.isWidgetLoaded(true);
+                            self.searchStaus('search-complete');
+                            successCallback && successCallback();
                         }
-                        self.initWidgetDraggable();
-                    }
-            );
+                );
         };
-
+        
         self.getWidgetScreenshot = function (wgt) {
             var url = null;
             if (wgt.WIDGET_SCREENSHOT_HREF) {
@@ -88,8 +95,15 @@ function (ko, $, oj, dfu) {
                 async: true
             });
         };
-
+        
+        self.keywordInput.subscribe(function () {
+            self.keyword(self.keywordInput());
+            self.searchWidgetsClicked();
+            setInputClearIcon();
+        });
+        
         self.searchWidgetsInputKeypressed = function (e, d) {
+            setInputClearIcon();
             if (d.keyCode === 13) {
                 self.searchWidgetsClicked();
                 return false;
@@ -97,24 +111,14 @@ function (ko, $, oj, dfu) {
             return true;
         };
         self.searchWidgetsClicked = function () {
+            setInputClearIcon();
             self.loadWidgets();
         };
 
-        self.autoSearchWidgets = function (req) {
-            self.loadWidgets(req);
-            if (req.term.length === 0) {
-                self.clearRightPanelSearch(false);
-            } else {
-                self.clearRightPanelSearch(true);
-            }
-        };
-
         self.clearWidgetSearchInputClicked = function () {
-            if (self.keyword()) {
-                self.keyword(null);
+                self.keyword("");
                 self.searchWidgetsClicked();
                 self.clearRightPanelSearch(false);
-            }
         };
 
         self.widgetMouseOverHandler = function (widget, event) {
@@ -259,7 +263,14 @@ function (ko, $, oj, dfu) {
                 }
             }
         };
-
+        
+        function setInputClearIcon(){
+            if (self.keywordInput().length === 0) {
+                self.clearRightPanelSearch(false);
+            } else {
+                self.clearRightPanelSearch(true);
+            }
+        }
     }
     return {"rightPanelWidget": rightPanelWidget};
 }

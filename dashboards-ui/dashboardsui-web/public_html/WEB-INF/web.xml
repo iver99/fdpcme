@@ -63,19 +63,22 @@
     </filter>
     <filter-mapping>
         <filter-name>add.data.filter</filter-name>
+        <url-pattern>/welcome.html</url-pattern>
+        <url-pattern>/home.html</url-pattern>
+        <url-pattern>/error.html</url-pattern>
         <url-pattern>/builder.html</url-pattern>
     </filter-mapping>
-  <filter>
-    <filter-name>nls.filter</filter-name>
-    <filter-class>oracle.sysman.emaas.platform.dashboards.ui.web.NLSFilter</filter-class>
-  </filter>
-  <filter-mapping>
-    <filter-name>nls.filter</filter-name>
-    <url-pattern>/welcome.html</url-pattern>
-    <url-pattern>/home.html</url-pattern>
-    <url-pattern>/error.html</url-pattern>
-    <url-pattern>/builder.html</url-pattern>
-  </filter-mapping>
+    <!--<filter>
+      <filter-name>nls.filter</filter-name>
+      <filter-class>oracle.sysman.emaas.platform.uifwk.nls.filter.NLSFilter</filter-class>
+    </filter>
+    <filter-mapping>
+      <filter-name>nls.filter</filter-name>
+      <url-pattern>/welcome.html</url-pattern>
+      <url-pattern>/home.html</url-pattern>
+      <url-pattern>/error.html</url-pattern>
+      <url-pattern>/builder.html</url-pattern>
+    </filter-mapping>-->
   
   	<security-constraint>
 	  <web-resource-collection>

@@ -36,6 +36,8 @@ import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
 /* Your lrg specific code would come here */
 def emcpsmRegClientVer = getDependentSdkVersion('com.oracle.emaas.emcpsm', 'registry-client', '1.+')
 def emcpsmRegLookupClientVer = getDependentSdkVersion('com.oracle.emaas.emcpsm', 'registry-lookup-client', '1.+')
+def emcpdfDashboardSdkVer = getDependentSdkVersion('com.oracle.emaas.emcpdf', 'dashboards-sdk', '1.+')
+def emcpsfSdkVer =  getDependentSdkVersion('com.oracle.emaas.emcpsf.sdk', 'security-client', '1.+')
 
 dependencies {
 	testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-web-integ-tests', version: "${REPO_BID}") {
@@ -48,88 +50,70 @@ dependencies {
 	exclude('module':'groovy')}
 	testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-webutils-integ-tests', version: "${REPO_BID}") {
 	exclude('module':'groovy')}
+/*
+	testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardscomparator-web-integ-tests', version: "${REPO_BID}") {
+	exclude('module':'groovy')}
+	testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardscomparator-webutils-integ-tests', version: "${REPO_BID}") {
+	exclude('module':'groovy')}
+*/
+	testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-core-integ-tests', version: "${REPO_BID}") {
+	exclude('module':'groovy')}
+	testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-sdk-integ-tests', version: "${REPO_BID}") {
+	exclude('module':'groovy')}
+	testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'omc-ui-framework-webutils-integ-tests', version: "${REPO_BID}") {
+	exclude('module':'groovy')}
+	testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'omc-ui-framework-web-integ-tests', version: "${REPO_BID}") {
+		exclude('module':'groovy')}
 	
-	
-	testConfig(group: 'javax.servlet', name:'servlet-api', version:'2.5')  { transitive = false }
+    testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-web', version: "${REPO_BID}") {transitive=false}
+    testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-core', version: "${REPO_BID}") {transitive=false}
+    testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-entities', version: "${REPO_BID}") {transitive=false}
+    testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-webutils', version: "${REPO_BID}") {transitive=false}
+ /*   testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardscomparator-web', version: "${REPO_BID}") {transitive=false}
+    testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardscomparator-webutils', version: "${REPO_BID}") {transitive=false}
+*/   
+ testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardsui-web', version: "${REPO_BID}") {transitive=false}
+    testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardsui-webutils', version: "${REPO_BID}") {transitive=false}
+    testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'omc-ui-framework-webutils', version:"${REPO_BID}") {transitive=false}
+	testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'omc-ui-framework-web', version:"${REPO_BID}") {transitive=false}
+    testConfig(group: 'com.oracle.emaas.emcpdf', name: 'dashboards-sdk', version:emcpdfDashboardSdkVer) {transitive=false}
     
-        testConfig(group: 'com.sun.jersey.contribs', name: 'jersey-multipart', version: '1.17.1'){ transitive = false }
-        
-        testConfig(group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0'){ transitive = false }
-
-
-        testConfig(group: 'commons-logging', name:'commons-logging', version:'1.1.1'){ transitive = false }
-        
-	
-
-	testConfig('com.sun.jersey:jersey-servlet:1.17.1') { transitive = false }
-	testConfig('com.sun.jersey:jersey-server:1.17.1') { transitive = false }
-
-
-	testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-core-integ-tests', version: "${REPO_BID}"){
-		exclude('module':'groovy')
-	}
-  	testConfig(group: 'com.oracle.jdbc', name: 'ojdbc6', version: '12.1.0.1.0') { transitive = false }
-        testConfig(group: 'org.eclipse.persistence', name: 'javax.persistence', version: '2.0.5') { transitive = false }
-        testConfig(group: 'org.eclipse.persistence', name: 'eclipselink', version: '2.4.2')  { transitive = false }
-        testConfig(group: 'javax.transaction', name: 'javax.transaction-api', version: '1.2') { transitive = false }
-       testConfig(group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.9.13') { transitive = false }
-       testConfig(group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.13') { transitive = false }
-       testConfig(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2') { transitive = false }
- 	testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-web', version: "${REPO_BID}")
-        testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-core', version: "${REPO_BID}")
-        testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-entities', version: "${REPO_BID}")
-         testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-webutils', version: "${REPO_BID}")
-      	
- 	testConfig(group: 'org.codehaus.jettison', name: 'jettison', version: '1.3.4')  { transitive = false }
- 	testConfig(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1')  { transitive = false }
-        testConfig(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1')  { transitive = false }
-	testConfig(group: 'org.jacoco', name: 'org.jacoco.agent', version: '0.7.2.201409121644')
-	testConfig(group: 'org.ow2.asm', name: 'asm-debug-all', version: '5.0.1')
-	testConfig(group: 'com.sun.jersey', name: 'jersey-core', version: '1.17.1') {transitive=false}
-        testConfig(group: 'com.sun.jersey', name: 'jersey-client', version: '1.17.1') {transitive=false}
- 
-	testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardsui-web', version: "${REPO_BID}")
-	testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardsui-webutils', version: "${REPO_BID}")
- 
+    testConfig(group: 'com.oracle.emaas.emcpsrvs.sdk', name:'emaas-platform-tenant-sdk', version:'2.0.+') { transitive = false }
+    testConfig(group: 'com.oracle.emaas.emcpsm', name: 'registry-lookup-client', version: emcpsmRegLookupClientVer){ transitive = false }
+    testConfig(group: 'com.oracle.emaas.emcpsm', name: 'registry-client', version: emcpsmRegClientVer){ transitive = false }
     
-
-	 testConfig(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2') { transitive = false }
-
-	
-
-	testConfig(group: 'com.oracle.jdbc', name: 'ojdbc6', version: '12.1.0.1.0') { transitive = false }
-
-	testConfig(group: 'org.eclipse.persistence', name: 'eclipselink', version: '2.4.2')  { transitive = false }
-	testConfig(group: 'javax.transaction', name: 'javax.transaction-api', version: '1.2') { transitive = false }
-	testConfig(group: 'com.oracle.weblogic', name: 'wlfullclient', version: '12.1.2-0-0'){ transitive = false }
-	 testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'omc-ui-framework-webutils-integ-tests', version: "${REPO_BID}") {
-	exclude('module':'groovy')
+    testConfig(group: 'com.oracle.jdbc', name: 'ojdbc6', version: '12.1.0.1.0') { transitive = false }
+    testConfig(group: 'com.oracle.weblogic', name: 'wlfullclient', version: '12.1.2-0-0'){ transitive = false }
+    testConfig('com.sun.jersey:jersey-servlet:1.17.1') { transitive = false }
+    testConfig('com.sun.jersey:jersey-server:1.17.1') { transitive = false }
+    testConfig(group: 'com.sun.jersey', name: 'jersey-core', version: '1.17.1') {transitive=false}
+    testConfig(group: 'com.sun.jersey', name: 'jersey-client', version: '1.17.1') {transitive=false}
+    testConfig(group: 'com.sun.jersey.contribs', name: 'jersey-multipart', version: '1.17.1'){ transitive = false }
+    testConfig(group: 'commons-codec', name:'commons-codec', version:'1.6') { transitive = false }
+    testConfig(group: 'commons-logging', name:'commons-logging', version:'1.1.1'){ transitive = false }
+    testConfig(group: 'javax.servlet', name:'servlet-api', version:'2.5')  { transitive = false }
+    testConfig(group: 'javax.transaction', name: 'javax.transaction-api', version: '1.2') { transitive = false }
+    testConfig(group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0'){ transitive = false }
+    testConfig(group: 'org.eclipse.persistence', name: 'javax.persistence', version: '2.0.5') { transitive = false }
+    testConfig(group: 'org.eclipse.persistence', name: 'eclipselink', version: '2.4.2')  { transitive = false }
+    testConfig(group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.9.13') { transitive = false }
+    testConfig(group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.13') { transitive = false }
+    testConfig(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2') { transitive = false }
+    testConfig(group: 'org.codehaus.jettison', name: 'jettison', version: '1.3.4')  { transitive = false }
+    testConfig(group: 'org.jacoco', name: 'org.jacoco.agent', version: '0.7.2.201409121644') {transitive=false}
+    testConfig(group: 'org.ow2.asm', name: 'asm-debug-all', version: '5.0.1') {transitive=false}
+    testConfig(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
+    testConfig(group: 'org.apache.commons', name:'commons-lang3', version:'3.1') { transitive = false }
+    testConfig(group: 'org.apache.httpcomponents', name:'httpclient', version:'4.3.1') { transitive = false }
+    testConfig(group: 'org.apache.httpcomponents', name:'httpcore', version:'4.3') { transitive = false }
+    testConfig(group: 'org.apache.httpcomponents', name:'httpmime', version:'4.3.1') { transitive = false }
+    testConfig(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1')  { transitive = false }
+    testConfig(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1')  { transitive = false }
+    testConfig(group: 'com.oracle.emaas.emcpsf.sdk', name:'security-client', version:emcpsfSdkVer)  { transitive = false }
 }
 
-
-
-	testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'omc-ui-framework-webutils', version:"${REPO_BID}")
-	testConfig(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
-
-
-
-        testConfig(group: 'com.oracle.emaas.emcpsm', name: 'registry-lookup-client', version: emcpsmRegLookupClientVer){ transitive = false }
-        testConfig(group: 'com.oracle.emaas.emcpsm', name: 'registry-client', version: emcpsmRegClientVer){ transitive = false }
-
-   
- 	testConfig(group: 'commons-codec', name:'commons-codec', version:'1.6') { transitive = false }
-    	testConfig(group: 'org.apache.commons', name:'commons-lang3', version:'3.1') { transitive = false }
-    	testConfig(group: 'commons-logging', name:'commons-logging', version:'1.1.1') { transitive = false }
-    	testConfig(group: 'org.apache.httpcomponents', name:'httpclient', version:'4.3.1') { transitive = false }
-        testConfig(group: 'org.apache.httpcomponents', name:'httpcore', version:'4.3') { transitive = false }
-        testConfig(group: 'org.apache.httpcomponents', name:'httpmime', version:'4.3.1') { transitive = false }
-  	
-    	
-       testConfig(group: 'javax.servlet', name:'servlet-api', version:'2.5'){ transitive = false }
-        testConfig(group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0'){ transitive = false }
-}
-
-task DEVTest_ws(type:EMTest){ 
+task DEVTest_ws(type:EMTest){
+	//***************below are dashboards-web project test cases***************//
 	include "oracle/sysman/emaas/platform/dashboards/ws/ErrorEntityTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/APIBaseTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/ConfigurationAPITest.class"
@@ -145,154 +129,113 @@ task DEVTest_ws(type:EMTest){
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/RegistryLookupAPITest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/ScreenShotEntityTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/TenantSubscriptionsAPITest.class"
-	
-	
-	include "oracle/sysman/emaas/platform/dashboards/ws/rest/loggingconfig/LoggingItemsTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ws/rest/loggingconfig/LoggingItemTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ws/rest/loggingconfig/UpdatedLoggerLevelTest.class"
-	
-	include "oracle/sysman/emaas/platform/dashboards/ws/rest/model/LinkEntityTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ws/rest/model/RegistrationEntityTest.class"
-	
-	include "oracle/sysman/emaas/platform/dashboards/ws/rest/subappedition/ServiceEntityTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ws/rest/subappedition/TenantDetailEntityTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ws/rest/subappedition/TenantEditionEntityTest.class"
-	
-	include "oracle/sysman/emaas/platform/dashboards/ws/rest/util/DashboardAPIUtilTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ws/rest/util/PrivilegeCheckerTest.class"
+	include "oracle/sysman/emaas/platform/dashboards/ws/rest/ZDTAPITest.class"
+	include "oracle/sysman/emaas/platform/dashboards/ws/rest/WidgetNotificationAPITest_S2.class"
+
+	include "oracle/sysman/emaas/platform/dashboards/ws/rest/zdt/*.class"
+	include "oracle/sysman/emaas/platform/dashboards/ws/rest/loggingconfig/*.class"
+	include "oracle/sysman/emaas/platform/dashboards/ws/rest/model/*.class"
+	include "oracle/sysman/emaas/platform/dashboards/ws/rest/util/*.class"
+	include "oracle/sysman/emaas/platform/dashboards/ws/rest/subappedition/*.class"
+	include "oracle/sysman/emaas/platform/dashboards/ws/rest/zdt/tablerows/*.class"
+	include "oracle/sysman/emaas/platform/dashboards/ws/rest/ssfnotification/*.class"
+
+	//***************below are dashboardscomparator-web project test cases***************//
+	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/comparator/rows/*.class"
+	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/*.class"
+	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/comparator/rows/entities/*.class"
+
 	useRestAssured=true
 	ext.set("testType", "unit")
 }
 
 task DEVTest(type:EMTest,dependsOn: DEVTest_ws){
+	//***************below are dashboards-core project test cases***************//
 	include "oracle/sysman/emaas/platform/dashboards/core/DashboardExcepionsTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/DashboardManagerTest_S2.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/DBConnectionManagerTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/PreferenceManagerTest_S2.class"
-	//include "oracle/sysman/emaas/platform/dashboards/core/persistence/DashboardServiceFacadeTest_S2.class"
-	//include "oracle/sysman/emaas/platform/dashboards/core/persistence/PersistenceManagerTest_S2.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/UserOptionsManagerTest_S2.class"
-	include "oracle/sysman/emaas/platform/dashboards/core/model/DashboardApplicationTypeTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/core/model/PaginatedDashboardsTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/core/model/TileParamTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/core/model/TileTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/core/model/UserOptionsTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/core/model/DashboardTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/core/model/combined/CombinedDashboardTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/core/cache/CacheManagerTest_S2.class"
-	include "oracle/sysman/emaas/platform/dashboards/core/cache/TenantTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/core.cache/lru/CacheUnitTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/core.cache/lru/BinaryTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/core.cache/lru/ElementTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/core.cache/lru/TimeUtilTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/core/restclient/AppMappingKeyTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/core/restclient/AppMappingCollectionTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/core/restclient/DomainEntityTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/core/restclient/DomainsEntityTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/entity/EmsDashboardSetPKTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/entity/EmsSubDashboardTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/entity/EmsUserOptionsTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ws/rest/ssfnotification/WidgetNotificationTypeTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ws/rest/WidgetNotificationAPITest_S2.class"
-	include "oracle/sysman/emaas/platform/dashboards/core/util/FacadeUtilTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/core/util/UserContextTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/core/util/DataFormatUtilsTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/core/util/TenantContextTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/core/util/SchemaUtilTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/core/util/LogUtilTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/core/util/RegistryLookupUtilTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/core/util/TenantSubscriptionUtilTest.class"
+
+	include "oracle/sysman/emaas/platform/dashboards/core/model/*.class"
+	include "oracle/sysman/emaas/platform/dashboards/core/model/combined/*.class"
+	include "oracle/sysman/emaas/platform/dashboards/core/restclient/*.class"
+	include "oracle/sysman/emaas/platform/dashboards/core/util/*.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/wls/management/AppLoggingManageMXBeanTest_S2.class"
+	include "oracle/sysman/emaas/platform/dashboards/core/zdt/*.class"
+
+	//***************below are dashboardscomparator-webutils project test cases***************//
+	include "oracle/sysman/emaas/platform/dashboards/comparator/targetmodel/services/*.class"
+	include "oracle/sysman/emaas/platform/dashboards/comparator/webutils/**/*.class"
+
+	include "oracle/sysman/emaas/platform/emcpdf/cache/screenshot/*.class"
+	include "oracle/sysman/emaas/platform/emcpdf/cache/exception/*.class"
+	include "oracle/sysman/emaas/platform/emcpdf/cache/support/**/*.class"
+	include "oracle/sysman/emaas/platform/emcpdf/cache/tool/*.class"
+	include "oracle/sysman/emaas/platform/emcpdf/cache/util/*.class"
+	include "oracle/sysman/emaas/platform/uifwk/nls/filter/NLSFilterTest.class"
+        include "oracle/sysman/emaas/platform/uifwk/bootstrap/HtmlBootstrapJsUtilTest.class"
+        include "oracle/sysman/emaas/platform/uifwk/util/DataAccessUtilTest.class"
+        include "oracle/sysman/emaas/platform/uifwk/util/RegistryLookupUtilTest.class"
 	
 	useRestAssured=true
 	ext.set("testType", "unit")
 }
 
 task DEVUiTest(type:EMTest,dependsOn: DEVTest){
-	include "oracle/sysman/emaas/platform/dashboards/targetmodel/services/DashboardStatusTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/targetmodel/services/JMXUtilTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/webutils/services/AvailabilityServiceManagerTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/webutils/services/DashboardApiLifecycleServiceTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/webutils/services/EMTargetInitializerTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/webutils/services/EMTargetMXBeanTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/webutils/services/LoggingServiceManagerTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/webutils/services/PropertyReaderTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/webutils/services/RegistryServiceManagerTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/webutils/timer/AvailabilityNotificationTest.class"
-
+	//***************below are dashboards-webutils project test cases***************//
+	include "oracle/sysman/emaas/platform/dashboards/webutils/services/*.class"
+	include "oracle/sysman/emaas/platform/dashboards/targetmodel/services/*.class"
+	include "oracle/sysman/emaas/platform/dashboards/webutils/timer/*.class"
 
  	useRestAssured=true
 	ext.set("testType", "unit")
 }
 
-task DEVWebTest(type:EMTest,dependsOn: DEVUiTest){
-	include "oracle/sysman/emaas/platform/dashboards/ui/web/ClickjackingFilterTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/web/DashboardsUiCORSFilterTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/web/GzipFilterTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/web/HomePageFilterTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/web/gzip/GzipServletOutputStreamTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/web/gzip/GzipServletResponseWrapperTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/web/context/GlobalContextUtilTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/web/AdditionalDataFilterTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/web/MockCloseableHttpResponse.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/web/NLSFilterTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/DashboardDataAccessUtilTest.class"
+task DEVUiWebTest(type:EMTest,dependsOn: DEVUiTest){
+	//***************below are dashboardsui-web project test cases***************//
+	include "oracle/sysman/emaas/platform/dashboards/ui/web/*.class"
+	include "oracle/sysman/emaas/platform/dashboards/ui/web/gzip/*.class"
+	include "oracle/sysman/emaas/platform/dashboards/ui/web/context/*.class"
+	include "oracle/sysman/emaas/platform/dashboards/ui/web/additionaldata/*.class"
 
 }
 
-task DEVUIWebUtilTest(type:EMTest,dependsOn: DEVWebTest){
-	include "oracle/sysman/emaas/platform/dashboards/ui/targetmodel/services/DashboardUIStatusTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/targetmodel/services/JMXUtilTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/services/AvailabilityServiceManagerTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/services/DashboardUiLifecycleServiceTest.class"	
-	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/services/EMTargetInitializerTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/services/EMTargetMXBeanTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/services/LoggingServiceManagerTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/services/PropertyReaderTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/services/RegistryServiceManagerTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/JsonUtilTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/LogUtilTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/RegistryLookupUtilTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/StringUtilTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/TenantSubscriptionUtilTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/AppLoggingManageMXBeanTest_S2.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/StringCacheUtilTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/SubscribedAppCacheUtilTest.class"
+task DEVUIWebUtilTest(type:EMTest,dependsOn: DEVUiWebTest){
+	//***************below are dashboardsui-webutils project test cases***************//
+	include "oracle/sysman/emaas/platform/dashboards/ui/targetmodel/services/*.class"
+	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/services/*.class"
+	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/*.class"
 	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/wls/management/AppLoggingManageMXBeanTest_S2.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/json/AppMappingEntityTest.class"
+	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/json/*.class"
 }
 
-task DEVUiFWKTest(type:EMTest,dependsOn: DEVUIWebUtilTest){ 
+task DEVUiFWKTest(type:EMTest,dependsOn: DEVUIWebUtilTest){
+
+	//***************below are omc-ui-framework-webutils project test cases***************//
+	include "oracle/sysman/emaas/platform/uifwk/ui/target/services/*.class"
+	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/services/*.class"
+	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/wls/management/AppLoggingManageMXBeanTest_S2.class"
+//	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/util/DataFetcherTest.class"
+	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/util/LogUtilTest.class"
 	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/util/StringUtilTest.class"
 	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/util/RegistryLookupUtilTest.class"
-	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/util/LogUtilTest.class"
-	include "oracle/sysman/emaas/platform/uifwk/ui/target/services/JMXUtilTest.class"
-	include "oracle/sysman/emaas/platform/uifwk/ui/target/services/OmcUiStatusTest.class"
-	
-	
-	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/services/AvailabilityServiceManagerTest.class"
-	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/services/EMTargetInitializerTest.class"
-	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/services/EMTargetMXBeanTest.class"
-	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/services/LoggingServiceManagerTest.class"
-	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/services/OmcUiFrameworkLifecycleServiceTest.class"
-	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/services/PropertyReaderTest.class"
-	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/services/RegistryServiceManagerTest.class"
-        include "oracle/sysman/emaas/platform/uifwk/ui/webutils/wls/management/AppLoggingManageMXBeanTest_S2.class"
+	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/util/StringCacheUtilTest.class"
 
-	
+	//***************below are omc-ui-framework-web project test cases***************//
+	include "oracle/sysman/emaas/platform/uifwk/ui/web/UifwkPartitionJsFilterTest.class"
+
 	useRestAssured=true
 	ext.set("testType", "unit")
 
 }
 
 
-task EntityTest(type:EMTest,dependsOn: DEVUiFWKTest){ 
-	include "oracle/sysman/emaas/platform/dashboards/entity/EmsDashboardTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/entity/EmsDashboardTileParamsPKTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/entity/EmsDashboardTileParamsTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/entity/EmsDashboardTileTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/entity/EmsPreferencePKTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/entity/EmsPreferenceTest.class"
+task EntityTest(type:EMTest,dependsOn: DEVUiFWKTest){
+
+	//***************below are dashboards-entities project test cases***************//
+	include "oracle/sysman/emaas/platform/dashboards/entity/*.class"
+	include "oracle/sysman/emaas/platform/dashboards/entity/customizer/*.class"
 	useRestAssured=true
 	ext.set("testType", "unit")
 

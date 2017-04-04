@@ -10,6 +10,7 @@
 
 package oracle.sysman.emaas.platform.dashboards.core.model;
 
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -26,7 +27,7 @@ import org.testng.annotations.Test;
 public class TileTest
 {
 
-	@Test(groups = { "s2" })
+	@Test(groups = { "s1" })
 	public void testTile() throws DashboardException
 	{
 		Tile tile = new Tile();
@@ -51,7 +52,7 @@ public class TileTest
 		tile.setProviderName("ss");
 		tile.setProviderVersion("ss");
 		tile.setRow(1);
-		tile.setTileId(1L);
+		tile.setTileId("1");
 		tile.setTitle("ss");
 		tile.setType("ss");
 		tile.setWidgetCreationTime("ss");
@@ -61,7 +62,7 @@ public class TileTest
 		tile.setWidgetIcon("ss");
 		tile.setWidgetName("s");
 		tile.setWidgetKocName("ss");
-		tile.setWidgetLinkedDashboard(1L);
+		tile.setWidgetLinkedDashboard(BigInteger.valueOf(1L));
 		tile.setWidgetOwner("ss");
 		tile.setWidgetSource(1);
 		tile.setWidgetSupportTimeControl(true);

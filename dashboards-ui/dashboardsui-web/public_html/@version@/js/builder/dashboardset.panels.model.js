@@ -29,6 +29,7 @@ define([
 
             var dashboardInstMap =dashboardsetToolBarModel.dashboardInstMap = {};
             var options = {"autoRefreshInterval":dashboardsetToolBarModel.autoRefreshInterval};
+            var hasPopDialogBinded = false;
 
             window.selectedDashboardInst = self.selectedDashboardInst = ko.observable(null);
 
@@ -50,7 +51,7 @@ define([
             };
             
             self.showDashboard = function (dashboardsetToolBarModel) {
-                document.activeElement.blur();//to blur the focused item on another tab
+                document.activeElement && document.activeElement.blur();//to blur the focused item on another tab
                 var dashboardItem=dashboardsetToolBarModel.selectedDashboardItem(),               
                     dashboardId = dashboardItem.dashboardId,
                     divId = "dashboard-" + dashboardId,
@@ -64,12 +65,32 @@ define([
                     $(".dashboard-picker-container").removeClass("df-collaps");
                 }
                 
-                //show globalcontext banner for dashboards except Orchestration OOB dashboards
-                if(!(dashboardsetToolBarModel.dashboardExtendedOptions && dashboardsetToolBarModel.dashboardExtendedOptions.showGlobalContextBanner === false)) {                
-                    var headerWrapper = $("#headerWrapper")[0];
-                    if(headerWrapper) {
-                        var headerViewModel = ko.dataFor(headerWrapper);
-                        headerViewModel.brandingbarParams.showGlobalContextBanner(true);
+                var headerWrapper = $("#headerWrapper")[0];
+                if(headerWrapper) {
+                    var headerViewModel = ko.dataFor(headerWrapper);
+                }
+                
+                if(dashboardsetToolBarModel.isDashboardSet()) {
+                    headerViewModel && headerViewModel.brandingbarParams.showGlobalContextBanner(false);
+                    headerViewModel && headerViewModel.brandingbarParams.showTimeSelector(false);
+                    headerViewModel && headerViewModel.brandingbarParams.showEntitySelector(false);
+                }else {
+                    if(dashboardsetToolBarModel.dashboardInst.enableEntityFilter()==="GC" || dashboardsetToolBarModel.dashboardInst.enableTimeRange()!=="FALSE") {    
+                        headerViewModel && headerViewModel.brandingbarParams.showGlobalContextBanner(true);
+                        if(dashboardsetToolBarModel.dashboardInst.enableTimeRange()==="FALSE") {
+                            headerViewModel && headerViewModel.brandingbarParams.showTimeSelector(false);
+                        }else {
+                            headerViewModel && headerViewModel.brandingbarParams.showTimeSelector(true);
+                        }
+                        if(dashboardsetToolBarModel.dashboardInst.enableEntityFilter()==="FALSE" || dashboardsetToolBarModel.dashboardInst.enableEntityFilter()==="TRUE") {
+                            headerViewModel && headerViewModel.brandingbarParams.showEntitySelector(false);
+                        }else {
+                            headerViewModel && headerViewModel.brandingbarParams.showEntitySelector(true);
+                        }
+                    }else {
+                        headerViewModel && headerViewModel.brandingbarParams.showGlobalContextBanner(false);
+                        headerViewModel && headerViewModel.brandingbarParams.showTimeSelector(false);
+                        headerViewModel && headerViewModel.brandingbarParams.showEntitySelector(false);
                     }
                 }
 
@@ -120,7 +141,9 @@ define([
                     dashboardsViewModle.showExploreDataBtn(false);
 
                     dashboardsViewModle.handleDashboardClicked = function(event, data) {
-
+                        if(event){
+                            event.preventDefault();
+                        }
                         var hasDuplicatedDashboard = false;
                         var isCreator=dashboardsetToolBarModel.dashboardsetConfig.isCreator();
                         var dataId;
@@ -212,10 +235,23 @@ define([
 
                     var $b = new Builder.DashboardBuilder(dashboard, $dashboardEl);
                     var tilesView = new Builder.DashboardTilesView($b);
+                    /*var wrapperEleemnt = $b.find('.dbd-tile-widget-wrapper');
+                    if (wrapperEleemnt) {
+                        var el = $($("#dashboard-tile-widget-template").text());
+                        el.appendTo(wrapperEleemnt[0]);
+                    }*/
+
+                    var normalMode = new Builder.NormalEditorMode();
+                    var tabletMode = new Builder.TabletEditorMode();
+                    var mode = Builder.isSmallMediaQuery() ? tabletMode : normalMode;
+                    var timeSelectorModel = new Builder.TimeSelectorModel();
+                    var targets = ko.observable({"criteria":"{\"version\":\"1.0\",\"criteriaList\":[]}"});
+
+                $.when(Builder.eagerLoadDahshboardTilesAtPageLoad(dfu, ko, normalMode, tabletMode, mode, dashboardsetToolBarModel.isDashboardSet(), timeSelectorModel, targets)).done(function() {
                     var tilesViewModel = new Builder.DashboardTilesViewModel($b, dashboardsetToolBarModel.dashboardInst/*, tilesView, urlChangeView*/);
                     var toolBarModel = new Builder.ToolBarModel($b, options);
                     tilesViewModel.toolbarModel = toolBarModel;
-
+                        
                     //change dashboard name
                     toolBarModel.dashboardName.subscribe(function (dashboardName) {
                         var currentDashboardId = self.selectedDashboardInst().toolBarModel.dashboardId;
@@ -223,6 +259,8 @@ define([
                             if(value.dashboardId===currentDashboardId){
                                 value.name(dashboardName);
                                 $('#dashboardTab-'+currentDashboardId).find('.tabs-name').text(dashboardName);
+                                $('#dashboardTab-'+currentDashboardId).attr("data-tabs-name",dashboardName);
+                                $('#dashboardTab-'+currentDashboardId).attr("data-dashboard-name-in-set",dashboardName);
                             }
                         });
                         dashboardsetToolBarModel.reorderedDbsSetItems().filter(function(value) {
@@ -231,13 +269,14 @@ define([
                             }
                         });
                     });
-
+                    
                     if (dashboard.tiles && dashboard.tiles()) {
                         for (var i = 0; i < dashboard.tiles().length; i++) {
                             var tile = dashboard.tiles()[i];
                             if (tile.type() === "TEXT_WIDGET") {
                                 Builder.initializeTextTileAfterLoad(tilesViewModel.editor.mode, $b, tile, tilesViewModel.show, tilesViewModel.editor.tiles.deleteTile, Builder.isContentLengthValid);
                             } else {
+                                console.log('Initialize tile before getting its configuration');
                                 Builder.initializeTileAfterLoad(tilesViewModel.editor.mode, dashboard, tile, tilesViewModel.timeSelectorModel, tilesViewModel.targets, true, dashboardsetToolBarModel.dashboardInst);
                                 Builder.getTileConfigure(tilesViewModel.editor.mode, dashboard, tile, tilesViewModel.timeSelectorModel, tilesViewModel.targets, dashboardsetToolBarModel.dashboardInst);
                             }
@@ -322,6 +361,7 @@ define([
                     });
 
                     $("#loading").hide();
+                });
                     /*
                      * Code to test df_util_widget_lookup_assetRootUrl
                      var testvalue = df_util_widget_lookup_assetRootUrl('SavedSearch','0.1','search');
@@ -374,6 +414,16 @@ define([
                 var $container = $('#dashboards-tabs-contents');
                 $container.removeAttr("style");
             }
+            
+            //binding pop-up dialog
+            function startBindingPopupDialog() {
+                if(!hasPopDialogBinded){
+                   ko.applyBindings(self, document.getElementById('popUp-dialog'));
+                   hasPopDialogBinded=true;
+                }             
+            }
+
+            Builder.registerFunction(startBindingPopupDialog, 'startBindingPopupDialog');
         };
         Builder.registerModule(DashboardsetPanelsModel, 'DashboardsetPanelsModel');
         return DashboardsetPanelsModel;

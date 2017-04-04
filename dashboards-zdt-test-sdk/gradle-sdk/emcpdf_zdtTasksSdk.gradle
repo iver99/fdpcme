@@ -1,0 +1,55 @@
+/*
+ * NOTE that for version value of your test-dependency, you cannot use REPO_BID as that would be specific to
+ * repository where it is run. You need to use getRepoBuildIDInProduct api provided by DevTools to get the correct build id.
+ * Make sure to add <repoName> prefix to the variable to define the namespace so it does not conflict with any property
+ * created by LRG using your tasks file.
+ * NOTE that the below code expects SAAS_VERSION environment variable to be set correctly.
+ */
+buildscript {
+    repositories {
+	maven {
+            url = "${PUB_MAVEN_MY_MAVEN_REPO}"
+        }
+	maven {
+            url = "${artifactory_contextUrl}/${artifactory_virtual_repoKey}" }
+    }
+    dependencies {
+	classpath group: "com.oracle.emaas.emdi", name: "DevInfraPlugin", version: "${devinfraVersion}", transitive: true
+        classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
+    }
+}
+apply plugin: 'DevInfraPlugin'
+apply plugin: 'TestInfraPlugin'
+ext.emcpdf_REPO_BID = getRepoBuildIDInProduct(System.env.SAAS_VERSION, 'emcpdf')
+
+
+import com.oracle.emdi.gradle.testinfra.tasks.EMTest  
+
+dependencies
+{
+    //testConfig group: 'com.oracle.emaas.emcpdf.testsdk', name: 'dashboards-zdt-test-sdk', version: "${emcpdf_REPO_BID}"
+     	testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-web', version: "${emcpdf_REPO_BID}") {transitive = true}
+             testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-core', version: "${emcpdf_REPO_BID}") {transitive = true}
+             testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-entities', version: "${emcpdf_REPO_BID}") {transitive = true}
+             testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-webutils', version: "${emcpdf_REPO_BID}")
+     	testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardsui-webutils', version: "${emcpdf_REPO_BID}") {transitive = true}
+     
+
+}
+
+ 
+task emcpdf_zdtPlay(type: EMTest) {
+  //include "oracle/sysman/emaas/platform/dashboards/testsdk/DashboardOrderWriteCURD.class"  
+    include "oracle/sysman/emaas/platform/dashboards/test/dashboard/DashboardCRUD.class"
+}
+task emcpdf_zdtReplay(type: EMTest) {
+  //include "oracle/sysman/emaas/platform/dashboards/testsdk/DashboardOrderWriteCURD.class"
+  include "oracle/sysman/emaas/platform/dashboards/test/dashboard/DashboardCRUD.class"
+}
+ 
+//task emcpdf_zdtPlaySaveState(type: EMTest)
+ 
+//task emcpdf_zdtReplaySaveState(type: EMTest)
+ 
+task emcpdf_zdtCompare(type: EMTest)
+

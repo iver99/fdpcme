@@ -11,7 +11,8 @@ apply plugin: 'eclipse-wtp'
 apply plugin: 'compass'
 
 def jsversion = project.ext.getServiceVersion('OMC-UI-Framework')
-def versionPathElement = jsversion + "-"+ new SimpleDateFormat("yyMMdd.HHmmss").format(new Date())
+//def versionPathElement = jsversion + "-"+ new SimpleDateFormat("yyMMdd.HHmmss").format(new Date())
+def versionPathElement = jsversion + "-"+ rootProject.ext.get("appTimeStamp")
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
@@ -39,6 +40,8 @@ configurations {
 }
 
 dependencies {
+        //compile(group: 'com.oracle.emaas.emcpdf.common.tools', name: 'dashboards-common-tools', version: '1.0.0+')
+        compile project(':dashboards-sdk')
         providedCompile project(':dashboards-ui:dashboardsui-webutils') 
         compile getProjectArtifact('log4j-core')   
         compile getProjectArtifact('log4j-api')   

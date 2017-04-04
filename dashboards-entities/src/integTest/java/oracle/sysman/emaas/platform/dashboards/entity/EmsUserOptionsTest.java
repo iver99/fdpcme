@@ -1,15 +1,14 @@
 package oracle.sysman.emaas.platform.dashboards.entity;
 
-import org.testng.annotations.Test;
-
+import java.math.BigInteger;
 import java.util.Date;
 
-import static org.testng.Assert.*;
+import org.testng.annotations.Test;
 
  @Test(groups = {"s1"})
  public class EmsUserOptionsTest {
      private EmsUserOptions emsUserOptions = new EmsUserOptions();
-     private EmsUserOptionsPK emsUserOptionsPK = new EmsUserOptionsPK("", 1L);
+     private EmsUserOptionsPK emsUserOptionsPK = new EmsUserOptionsPK("", BigInteger.valueOf(1L));
     @Test
     public void testGetAccessDate() throws Exception {
         emsUserOptions.setAccessDate(new Date());
@@ -24,7 +23,7 @@ import static org.testng.Assert.*;
 
     @Test
     public void testGetDashboardId() throws Exception {
-        emsUserOptions.setDashboardId(1L);
+        emsUserOptions.setDashboardId(BigInteger.valueOf(1L));
         emsUserOptions.getDashboardId();
     }
 
@@ -46,9 +45,9 @@ import static org.testng.Assert.*;
         emsUserOptions.getUserName();
         emsUserOptionsPK.setUserName("name");
         emsUserOptionsPK.getUserName();
-        emsUserOptionsPK.setDashboardId(1L);
+        emsUserOptionsPK.setDashboardId(BigInteger.valueOf(1L));
         emsUserOptionsPK.getDashboardId();
-        emsUserOptions.setDashboardId(1L);
+        emsUserOptions.setDashboardId(BigInteger.valueOf(1L));
         emsUserOptionsPK.equals(emsUserOptions);
         emsUserOptions.hashCode();
     }

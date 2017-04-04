@@ -10,6 +10,7 @@
 
 package oracle.sysman.emaas.platform.dashboards.ws.rest.ssfnotification;
 
+import java.math.BigInteger;
 import java.util.Date;
 
 /**
@@ -17,7 +18,7 @@ import java.util.Date;
  */
 public class WidgetNotifyEntity
 {
-	private Long uniqueId;
+	private BigInteger uniqueId;
 	private String name;
 	private WidgetNotificationType type;
 	private Date notifyTime;
@@ -54,7 +55,7 @@ public class WidgetNotifyEntity
 	/**
 	 * @return the uniqueId
 	 */
-	public Long getUniqueId()
+	public BigInteger getUniqueId()
 	{
 		return uniqueId;
 	}
@@ -86,7 +87,7 @@ public class WidgetNotifyEntity
 	 * @param uniqueId
 	 *            the uniqueId to set
 	 */
-	public void setUniqueId(Long uniqueId)
+	public void setUniqueId(BigInteger uniqueId)
 	{
 		this.uniqueId = uniqueId;
 	}

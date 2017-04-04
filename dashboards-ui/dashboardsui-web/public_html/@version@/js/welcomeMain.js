@@ -6,7 +6,7 @@
 requirejs.config({
     bundles: ((window.DEV_MODE !==null && typeof window.DEV_MODE ==="object") ||
                 (window.gradleDevMode !==null && typeof window.gradleDevMode ==="boolean")) ? undefined : {
-        'uifwk/js/uifwk-partition':
+        'uifwk/@version@/js/uifwk-impl-partition-cached':
             [
             'uifwk/js/util/ajax-util',
             'uifwk/js/util/df-util',
@@ -17,7 +17,9 @@ requirejs.config({
             'uifwk/js/util/screenshot-util',
             'uifwk/js/util/typeahead-search',
             'uifwk/js/util/usertenant-util',
+            'uifwk/js/util/zdt-util',
             'uifwk/js/sdk/context-util',
+            'uifwk/js/sdk/menu-util',
             'uifwk/js/widgets/aboutbox/js/aboutbox',
             'uifwk/js/widgets/brandingbar/js/brandingbar',
             'uifwk/js/widgets/datetime-picker/js/datetime-picker',
@@ -133,7 +135,8 @@ require(['ojs/ojcore',
                     tenantName: self.tenantName,
                     appId: self.appId,
                     isAdmin: true,
-                    showGlobalContextBanner: false
+                    showGlobalContextBanner: false,
+                    omcHamburgerMenuOptIn: false
                 };
             }
 
@@ -151,7 +154,8 @@ require(['ojs/ojcore',
 
             function landingHomeModel() {
                 var self = this;
-
+                
+                self.brandingbarParams = headerViewModel.brandingbarParams;
                 self.dashboardsUrl = "/emsaasui/emcpdfui/home.html";
                 self.landingHomeUrls = null;
                 self.baseUrl = "http://www.oracle.com/pls/topic/lookup?ctx=cloud&id=";
@@ -205,13 +209,20 @@ require(['ojs/ojcore',
                 self.ITA_Type = "select";
                 self.data_type = "select";
 
+                self.showAPM = ko.observable(false);
+                self.showLA = ko.observable(false);
+                self.showITA = ko.observable(false);
+                self.showDashboard = ko.observable(false);
+                self.showDataExplorer = ko.observable(false);
+                self.showLearnMore = ko.observable(false);
+                
                 self.showInfraMonitoring = ko.observable(false);
                 self.showCompliance = ko.observable(false);
                 self.showSecurityAnalytics = ko.observable(false);
                 self.showOrchestration = ko.observable(false);
 
                 self.getServiceUrls = function() {
-                    dfu.getRegistrations(fetchServiceLinks);
+                    dfu.getRegistrations(fetchServiceLinks, true, errorCallback);
                 };
 
                 //get urls of databases and middleware
@@ -221,10 +232,27 @@ require(['ojs/ojcore',
                     var url = dfu_model.discoverUrl(serviceName, version, rel);
                     return url;
                 };
+                
+                function errorCallback() {
+                    self.showAPM(true);
+                    self.showLA(true);
+                    self.showITA(true);
+                    self.showDashboard(true);
+                    self.showDataExplorer(true);
+                    self.showLearnMore(true);
+                }
 
                 function fetchServiceLinks(data) {
                     var landingHomeUrls = {};
                     var i;
+                    
+                    self.showAPM(true);
+                    self.showLA(true);
+                    self.showITA(true);
+                    self.showDashboard(true);
+                    self.showDataExplorer(true);
+                    self.showLearnMore(true);
+                    
                     if(data.cloudServices && data.cloudServices.length>0) {
                         var cloudServices = data.cloudServices;
                         var cloudServicesNum = cloudServices.length;
@@ -250,7 +278,15 @@ require(['ojs/ojcore',
                         for(i=0; i<dataExplorersNum; i++) {
                             var originalName = dataExplorers[i].name;
                             dataExplorers[i].name = originalName.replace(/Visual Analyzer/i, '').replace(/^\s*|\s*$/g, '');
+                            if(dataExplorers[i].serviceName === "LogAnalyticsUI"){
+                                dataExplorers[i].name = getNlsString("LANDING_HOME_LOG_EXPLORER");
+                            }else if(dataExplorers[i].serviceName === "TargetAnalytics"){
+                                dataExplorers[i].name = getNlsString("LANDING_HOME_DATA_EXPLORER");
+                            }
                             self.exploreDataLinkList.push(dataExplorers[i]);
+                            self.exploreDataLinkList.sort(function(left,right){
+                                return left.name<=right.name?-1:1;
+                            });
                             landingHomeUrls[dataExplorers[i].name] = dataExplorers[i].href;
                             //change name of data explorer in ITA to "Data Explorer - Analyze" & "Data Explorer"
 
@@ -264,13 +300,6 @@ require(['ojs/ojcore',
                             //change name of data explorer in ITA starting with "Data Explorer - "
                         }
                     }
-                    landingHomeUrls["DB_perf"] = self.getITAVerticalAppUrl("verticalApplication.db-perf");
-                    landingHomeUrls["DB_resource"] = self.getITAVerticalAppUrl("verticalApplication.db-resource");
-                    landingHomeUrls["mw_perf"] = self.getITAVerticalAppUrl("verticalApplication.mw-perf");
-                    landingHomeUrls["mw_resource"] = self.getITAVerticalAppUrl("verticalApplication.mw-resource");
-                    landingHomeUrls["svr_resource"] = self.getITAVerticalAppUrl("verticalApplication.svr-resource");
-                    landingHomeUrls["avail-analytics"] = self.getITAVerticalAppUrl("verticalApplication.avail-analytics");
-                    landingHomeUrls["app_perf"] = self.getITAVerticalAppUrl("verticalApplication.app-perf-analytics");
                     self.landingHomeUrls = landingHomeUrls;
                 }
                 self.getServiceUrls();
@@ -327,13 +356,45 @@ require(['ojs/ojcore',
                     }
                 };
                 self.ITAOptionChosen = function(event, data) {
+                    var ITA_OPTION_MAP = {
+                        "DB_perf": "verticalApplication.db-perf",
+                        "DB_resource": "verticalApplication.db-resource",
+                        "mw_perf": "verticalApplication.mw-perf",
+                        "mw_resource": "verticalApplication.mw-resource",
+                        "svr_resource": "verticalApplication.svr-resource",
+                        "avail-analytics": "verticalApplication.avail-analytics",
+                        "app_perf": "verticalApplication.app-perf-analytics"
+                    };
+                    var ITA_OPTION_NAME_MAP = {
+                        "DB_perf": self.ITA_DB_Performance,
+                        "DB_resource": self.ITA_DB_Resource,
+                        "mw_perf": self.ITA_Middleware_Performance,
+                        "mw_resource": self.ITA_Middleware_Resource,
+                        "svr_resource": self.ITA_Server_Resource,
+                        "avail-analytics": self.ITA_Avail_Analytics,
+                        "app_perf": self.ITA_Application_Performance
+                    };
                     if(!self.landingHomeUrls) {
                         console.log("---fetching service links is not finished yet!---");
                         return;
                     }
-                    if(data.value && self.landingHomeUrls[data.value]) {
-                        oj.Logger.info('Trying to open ' + data.value + ' by URL: ' + self.landingHomeUrls[data.value]);
-                        window.location.href = cxtUtil.appendOMCContext(self.landingHomeUrls[data.value]);
+                    if(data.value && data.value.indexOf("select")<0){
+                        if(!self.landingHomeUrls[data.value]){
+                            self.landingHomeUrls[data.value] = self.getITAVerticalAppUrl(ITA_OPTION_MAP[data.value]);
+                        }
+                        if(!self.landingHomeUrls[data.value]){
+                            oj.Logger.error('Failed to open ' + data.value + '.');
+                            //show error message to user when the link is empty
+                            dfu.showMessage({
+                                type: 'error',
+                                summary: getNlsString('LANDING_HOME_URL_ERROR_MSG', ITA_OPTION_NAME_MAP[data.value]),
+                                detail: '',
+                                removeDelayTime: 5000
+                            });
+                        }else{
+                            oj.Logger.info('Trying to open ' + data.value + ' by URL: ' + self.landingHomeUrls[data.value]);
+                            window.location.href = cxtUtil.appendOMCContext(self.landingHomeUrls[data.value]);
+                        }
                     }
                 };
                 self.openInfraMonitoring = function() {
@@ -409,9 +470,10 @@ require(['ojs/ojcore',
             }
 
             $(document).ready(function () {
-                ko.applyBindings(headerViewModel, document.getElementById('headerWrapper'));
+//                ko.applyBindings(titleViewModel, $("#globalBody")[0]);
+//                ko.applyBindings(headerViewModel, document.getElementById('headerWrapper'));
                 ko.applyBindings(titleViewModel, $("title")[0]);
-                ko.applyBindings(new landingHomeModel(), document.getElementById("mainContent"));
+                ko.applyBindings(new landingHomeModel(), document.getElementById("globalBody"));
                 $("#loading").hide();
                 $("#globalBody").show();
             });

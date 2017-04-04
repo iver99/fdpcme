@@ -2,21 +2,32 @@ package oracle.sysman.emaas.platform.dashboards.core.persistence;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
+import java.sql.SQLException;
 import java.util.Properties;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-import oracle.sysman.emaas.platform.dashboards.core.util.SchemaUtil;
-import oracle.sysman.qatool.uifwk.utils.Utils;
+import oracle.sysman.emaas.platform.dashboards.core.util.SessionInfoUtil;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class PersistenceManager
 {
+    /** 
+     * mapping to QAToolUtil
+     * Picking up db env when running test cases
+     */
+    public static final String JDBC_PARAM_URL = "javax.persistence.jdbc.url";
+    public static final String JDBC_PARAM_USER = "javax.persistence.jdbc.user";
+    public static final String JDBC_PARAM_PASSWORD = "javax.persistence.jdbc.password";
+    public static final String JDBC_PARAM_DRIVER = "javax.persistence.jdbc.driver";
+    
+    private static final String MODULE_NAME = "DashboardService"; // application service name
+	private final String ACTION_NAME = this.getClass().getSimpleName();//current class name
+    
 	private static final Logger LOGGER = LogManager.getLogger(PersistenceManager.class);
 
 	/**
@@ -30,10 +41,6 @@ public class PersistenceManager
 	private static final String CONNECTION_PROPS_FILE = "TestNG.properties";
 	private static PersistenceManager singleton;
 	private static Object lock = new Object();
-	private static final String SERVICE_MANAGER_URL = "SERVICE_MANAGER_URL";
-	private static final String DEPLOY_URL = "/instances?servicename=LifecycleInventoryService";
-	private static final String SERVICE_NAME = "dashboardService-api";
-	private static final String DEPLY_SCHEMA = "/schemaDeployments?softwareName=dashboardService-api";
 
 	public static PersistenceManager getInstance()
 	{
@@ -79,9 +86,14 @@ public class PersistenceManager
 	{
 		if (emf == null) {
 			initialize();
-		}
+		}		
 		EntityManager em = emf.createEntityManager();
 		em.setProperty("tenant.id", tenantId);
+		try {
+			SessionInfoUtil.setModuleAndAction(em, MODULE_NAME, ACTION_NAME);
+		} catch (SQLException e) {
+			LOGGER.info("setModuleAndAction in PersistenceManager",e);
+		}
 		return em;
 	}
 
@@ -101,28 +113,10 @@ public class PersistenceManager
 			Properties props = loadProperties(CONNECTION_PROPS_FILE);
 			// lrg env only
 			if (System.getenv("T_WORK") != null) {
-
-				String url = "jdbc:oracle:thin:@" + Utils.getProperty("ODS_HOSTNAME") + ":" + Utils.getProperty("ODS_PORT") + ":"
-						+ Utils.getProperty("ODS_SID");
-				props.put("javax.persistence.jdbc.url", url);
-				SchemaUtil rct = new SchemaUtil();
-				String data = Utils.getProperty(SERVICE_MANAGER_URL) + DEPLOY_URL;
-				data = rct.get(data);
-				List<String> urlList = SchemaUtil.getDeploymentUrl(data);
-				String schemaName = null;
-				for (String tmp : urlList) {
-					data = rct.get(tmp + DEPLY_SCHEMA);
-					schemaName = rct.getSchemaUserBySoftwareName(data, SERVICE_NAME);
-					if (schemaName != null) {
-						break;
-					}
-				}
-
-				props.put("javax.persistence.jdbc.user", schemaName);
-				//	below hard coded password is being using in tests/dev mode only
-				String password = "welcome1";
-				props.put("javax.persistence.jdbc.password", password);
-
+                props.put(PersistenceManager.JDBC_PARAM_URL, System.getProperty(PersistenceManager.JDBC_PARAM_URL));
+                props.put(PersistenceManager.JDBC_PARAM_USER, System.getProperty(PersistenceManager.JDBC_PARAM_USER));
+                props.put(PersistenceManager.JDBC_PARAM_PASSWORD, System.getProperty(PersistenceManager.JDBC_PARAM_PASSWORD));
+                props.put(PersistenceManager.JDBC_PARAM_DRIVER, System.getProperty(PersistenceManager.JDBC_PARAM_DRIVER));
 			}
 			createEntityManagerFactory(TEST_PERSISTENCE_UNIT, props);
 		}
@@ -136,7 +130,7 @@ public class PersistenceManager
 		Properties connectionProps = new Properties();
 		InputStream input = null;
 		try {
-			input = PersistenceManager.class.getResourceAsStream("/" + testPropsFile);//new FileInputStream(testPropsFile);
+			input = PersistenceManager.class.getResourceAsStream(testPropsFile);//new FileInputStream(testPropsFile);
 			connectionProps.load(input);
 			return connectionProps;
 		}

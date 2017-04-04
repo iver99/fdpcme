@@ -80,14 +80,21 @@ define(['knockout',
                 newDashboard.enableTimeRange = (enableTimeRange === true || enableTimeRange === "TRUE" || enableTimeRange === "true") ? "true" : "false";
                 newDashboard.enableRefresh = (enableRefresh === true || enableRefresh === "TRUE" || enableRefresh === "true") ? "true" : "false";
                 newDashboard.systemDashboard = "false";
+                newDashboard.showInHome=false;
+                if (!selectedDashboardInst().toolBarModel.duplicateInSet()) {
+                    newDashboard.showInHome = true;
+                }
                 if (systemDashboard === true) {
-                	newDashboard.dupDashboardId = ko.unwrap(origDashboard.id);
+                    newDashboard.dupDashboardId = ko.unwrap(origDashboard.id);
                     self.saveDuplicatedDashboardToServer(newDashboard);
                 }
                 else {
                     if (newDashboard.tiles() && newDashboard.tiles().length > 0) {
-                        ssu.getBase64ScreenShot($b.findEl('.tiles-wrapper'), 314, 165, 0.8, function(data) {
+                        var elem = $b.findEl('.tiles-wrapper');
+                        var clone = Builder.createScreenshotElementClone(elem);
+                        ssu.getBase64ScreenShot(clone, 314, 165, 0.8, function(data) {
                             newDashboard.screenShot = data;
+                            Builder.removeScreenshotElementClone(clone);
                             self.saveDuplicatedDashboardToServer(newDashboard);
                         });
                     }
@@ -105,8 +112,8 @@ define(['knockout',
                     } else {
                         selectedDashboardInst().toolBarModel.duplicateInSet(false);
                         $('#duplicateDsbDialog').ojDialog('close');
-                        if (data && data.id) {
-                            window.location.href = "/emsaasui/emcpdfui/builder.html?dashboardId=" + data.id;
+                        if (data && data.id()) {
+                            window.location.href = "/emsaasui/emcpdfui/builder.html?dashboardId=" + data.id();
                         }
                     }
                 };

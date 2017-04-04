@@ -54,8 +54,8 @@ define(['jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk
                         }
                     }
 
-                    if (window._userInfoServerCache) {
-                        doneCallback(window._userInfoServerCache);
+                    if (window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.userInfo) {
+                        doneCallback(window._uifwk.cachedData.userInfo);
                     }
                     else {
                         ajaxUtil.ajaxWithRetry({
@@ -153,8 +153,8 @@ define(['jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk
                             callback(data["userRoles"]);
                         }
                     }
-                    if (window._userInfoServerCache) {
-                        doneCallback(window._userInfoServerCache);
+                    if (window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.userInfo) {
+                        doneCallback(window._uifwk.cachedData.userInfo);
                     }
                     else {
                         ajaxUtil.ajaxWithRetry({
@@ -166,6 +166,9 @@ define(['jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk
                         .done(
                             function (data) {
                                 doneCallback(data);
+                            })
+                        .fail(function() {
+                                callback(null);
                             });
                     }
                 }

@@ -2,9 +2,13 @@ package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
 import mockit.*;
 import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
+import oracle.sysman.emaas.platform.dashboards.core.util.LogUtil;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.loggingconfig.UpdatedLoggerLevel;
 import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.DefaultConfiguration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.codehaus.jettison.json.JSONObject;
@@ -58,30 +62,40 @@ public class LoggingConfigAPITest {
     }
 
     @Test
-    public void testChangeSpecificLoggerLevel(@Mocked final Level level, @Mocked final DefaultConfiguration configuration) throws IOException {
+    public void testChangeSpecificLoggerLevel(@Mocked final LogUtil logUtil,
+                                              @Mocked final LoggerContext loggerContext, @Mocked final LoggerConfig loggerConfig,
+                                              @Mocked final LogManager logManager, @Mocked final UpdatedLoggerLevel updatedLoggerLevel,
+                                              @Mocked final Level level, @Mocked final Configuration configuration) throws IOException {
 
         final String loggerName = "loggerName";
+        final Map<String, LoggerConfig> LOGGERs = new HashMap<>();
+        LOGGERs.put("1", loggerConfig);
         new Expectations() {
             {
-
-                UpdatedLoggerLevel updatedLoggerLevel  = new UpdatedLoggerLevel();
-                updatedLoggerLevel.setLevel("level");
 
                 apiBase.getJsonUtil().fromJson(anyString, UpdatedLoggerLevel.class);
                 result = updatedLoggerLevel;
 
-                Level.getLevel(anyString);
+                updatedLoggerLevel.getLevel();
+                result = "DEBUG";
+
+                Level.getLevel((String)any);
                 result = level;
 
+                LogManager.getContext(false);
+                result = loggerContext;
 
-                Map<String,LoggerConfig> loggers = new HashMap<>();
-                loggers.put(loggerName,new LoggerConfig(loggerName, level, true));
+                loggerContext.getConfiguration();
+                result = configuration;
 
                 configuration.getLoggers();
-                result = loggers;
+                result = LOGGERs;
 
-                configuration.getProperties();
-                result  = new HashMap<String,String>();
+                LogUtil.setLoggerUpdateTime((Configuration)any, (LoggerConfig)any, anyLong);
+                loggerConfig.getName();
+                result = "loggerName";
+
+                loggerConfig.setLevel(level);
 
             }
         };
@@ -103,11 +117,11 @@ public class LoggingConfigAPITest {
                 Map<String,LoggerConfig> loggers = new HashMap<>();
                 loggers.put(loggerName,new LoggerConfig(loggerName, level, true));
 
-                configuration.getLoggers();
+               /* configuration.getLoggers();
                 result = loggers;
 
                 configuration.getProperties();
-                result  = new HashMap<String,String>();
+                result  = new HashMap<String,String>();*/
 
             }
         };

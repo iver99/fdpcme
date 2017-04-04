@@ -1,0 +1,80 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+import java.text.SimpleDateFormat
+import java.util.Date
+
+apply from:'test.gradle'
+apply plugin: 'java'
+
+dfversion = project.ext.getServiceVersion('DashboardService-API')
+def versionPathElement = dfversion + "-"+ new SimpleDateFormat("yyMMdd.HHmmss").format(new Date())
+
+publishing.publications {
+    integTest(MavenPublication) {
+        setArtifactId(project.name + '-' + integTestJar.appendix)
+        setGroupId("${publishGroup}")
+        artifact integTestJar.archivePath
+    }
+    thisJarPublication(MavenPublication) {
+        from project.components.java
+	groupId "${publishGroup1}"
+        version "1.0.1-" + sdkPubTimestamp
+    }
+}
+
+dependencies {
+    compile getProjectArtifact('log4j-core')
+    compile getProjectArtifact('log4j-api')
+    compile getProjectArtifact('jackson-core-asl')
+    compile getProjectArtifact('servlet-api')
+    compile getProjectArtifact('commons-lang3')
+    compile getProjectArtifact('jackson-mapper-asl')
+    compile getProjectArtifact('jackson-xc')
+    compile getProjectArtifact('registry-lookup-client')
+    compile getProjectArtifact('registry-client')
+    compile getProjectArtifact('emaas-platform-tenant-sdk')
+    compile getProjectArtifact('security-client')
+    testCompile getProjectArtifact('jmockit')
+    
+}
+sourceSets {
+    main {
+        java {
+            srcDir 'src/main/java'
+        }
+        resources {
+            srcDirs = ['src/main/java', 'src/main/resources']
+        }
+    }
+}
+artifactoryPublish {
+    publications('integTest')
+    publications('thisJarPublication')
+
+}
+
+test {
+    classpath = sourceSets.test.compileClasspath + sourceSets.test.output
+    useTestNG()
+            {
+                //We explicity include only tests annotate as s1 or s2 - they are "short-running" tests,
+                //if you wish to run ALL tests within this projet - remove following.
+                includeGroups 's1' ,'s2'
+            }
+}
+
+
+clean{
+    delete 'build'
+}
+
+eclipse {
+    classpath {
+        plusConfigurations += configurations.testNG //avoid building error in Eclipse
+    }
+}
+processResources {
+    from('src/main/resources') {
+        include '*.properties', '*.xml'
+        filter(ReplaceTokens, tokens: [version : versionPathElement])
+    }
+}

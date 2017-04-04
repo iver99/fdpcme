@@ -32,6 +32,7 @@ public class DashboardErrorConstants
 	public static final int REGISTRY_LOOKUP_LINK_NOT_FOUND_ERROR_CODE = 2001;
 	public static final int REGISTRY_LOOKUP_ENDPOINT_NOT_FOUND_ERROR_CODE = 2002;
 	public static final int REGISTRY_LOOKUP_LINK_WIT_REL_PREFIX_NOT_FOUND_ERROR_CODE = 2003;
+	public static final int REGISTRY_LOOKUP_VANITY_URL_NOT_FOUND_ERROR_CODE = 2004;
 
 	public static final int UNKNOWN_ERROR_CODE = 9999;
 
@@ -58,4 +59,11 @@ public class DashboardErrorConstants
 
 	// important: don't assign value larger than this value to dashboard security errors
 	public static final Integer DASHBOARD_SECURITY_MAX_ERROR_CODE = 39999;
+
+	//keep cache code same with SSF side
+	public static final Integer DASHBOARD_CACHE_ERROR_CODE=50000;
+	public static final Integer DASHBOARD_CACHE_GROUP_NOT_FOUND_ERROR_CODE=50001;
+	public static final Integer DASHBOARD_CACHE_GROUP_NAME_EMPTY_ERROR_CODE=50002;
+	// important: don't assign value larger than this value to dashboard cache errors
+	public static final Integer DASHBOARD_CACHE_MAX_ERROR_CODE=59999;
 }

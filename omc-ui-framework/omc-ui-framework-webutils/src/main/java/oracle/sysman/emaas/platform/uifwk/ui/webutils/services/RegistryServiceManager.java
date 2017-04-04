@@ -323,7 +323,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 
 			ServiceConfigBuilder builder = new ServiceConfigBuilder();
 			builder.serviceName(serviceProps.getProperty("serviceName")).version(serviceProps.getProperty("version"))
-					.characteristics(serviceProps.getProperty("characteristics"));
+			.characteristics(serviceProps.getProperty("characteristics"));
 			StringBuilder virtualEndPoints = new StringBuilder();
 			StringBuilder canonicalEndPoints = new StringBuilder();
 			if (applicationUrlHttp != null) {
@@ -341,16 +341,33 @@ public class RegistryServiceManager implements ApplicationServiceManager
 
 			builder.virtualEndpoints(virtualEndPoints.toString()).canonicalEndpoints(canonicalEndPoints.toString());
 			builder.registryUrls(serviceProps.getProperty("registryUrls")).loadScore(0.9)
-					.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
+			.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
 
 			LOGGER.info("Initializing RegistrationManager");
 			RegistrationManager.getInstance().initComponent(builder.build());
 
+			Properties uifwkProps = PropertyReader.loadProperty(PropertyReader.UIFWK_CONFIG);
+			final String buildId = uifwkProps.getProperty("buildId");
+			final String sdkRel = "versionLookupSDK/emsaasui/uifwk/js/uifwk-partition";
+			final String sdkImplUrl = NAV_BASE + "/" + buildId + "/js/uifwk-impl-partition-cached";
+			if (buildId == null) {
+				LOGGER.error("buildId is null, please check /opt/ORCLemaas/Applications/OMC-UI-Framework/init/servicemanager.properties file!");
+			}
+			else {
+				LOGGER.info("buildId is " + buildId);
+			}
+
 			List<Link> links = new ArrayList<Link>();
 			if (applicationUrlHttp != null) {
+				if (buildId != null) {
+					links.add(new Link().withRel(sdkRel).withHref(applicationUrlHttp + sdkImplUrl));
+				}
 				links.add(new Link().withRel("test").withHref(applicationUrlHttp + NAV_BASE_HOME));
 			}
 			if (applicationUrlHttps != null) {
+				if (buildId != null) {
+					links.add(new Link().withRel(sdkRel).withHref(applicationUrlHttps + sdkImplUrl));
+				}
 				links.add(new Link().withRel("test").withHref(applicationUrlHttps + NAV_BASE_HOME));
 			}
 

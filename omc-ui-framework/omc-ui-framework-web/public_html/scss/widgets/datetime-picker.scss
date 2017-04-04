@@ -21,6 +21,10 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
+.fa-icon-font-14 {
+    font-size: 14px !important; 
+}
+
 .panel {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 14px;
@@ -34,7 +38,7 @@
     /*width: 630px;*/
 }
 .drawers {
-    width: 104px;
+    width: inline-block;
     /*float: left;*/
     /*border: 1px solid #F0F0F0;*/
     /*height: 396px;*/
@@ -57,9 +61,10 @@
     border-color: #FFFFFF; //#dfe4e7;*/
     padding-left: 10px;
     padding-top: 7px;
+    padding-right: 10px;
     padding-bottom: 6px;
     height: 18px; //20px;
-    width: 104px;
+    width: inline-block;
     display: block;
 }
 
@@ -107,9 +112,9 @@
 
 .pickerPanel {
     width: 550px; //510px;
-    height: 489px; //402px;
+    height: 449px; //402px;
     /*float: right;*/
-    padding-top: 10px;
+    padding-top: 16px;
     /*padding-left: 10px;*/
     margin-top: -1px;
     
@@ -160,6 +165,8 @@
 }
 .buttons {
     margin: 10px;
+    position: absolute;
+    bottom: 20px;
 }
 .errorMsg {
     margin: 10px;
@@ -167,6 +174,8 @@
     color: red;
     /*font-weight: bold;*/
     width: 510px;
+    position: absolute;
+    bottom: 0px;
 }
 .datePicker {
     font-size: 15px;
@@ -243,6 +252,58 @@
 .time-filter-indicator:before{
     content: "\f069";
 }
+
+.latest-enabled {
+    color: #333333;
+}
+
+.time-filter-latest-question{
+    right: initial;
+    position: relative;
+    display: inline-block;
+    color: grey;
+    .time-filter-latest-tooltip{
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-size: 12px;
+        visibility: hidden;
+        width: 210px;
+        background-color: #f7f8f9;
+        color: #333333;
+        text-align: center;
+        border-radius: 4px;
+        border: solid 1px #d9dfe3;
+        padding: 5px;
+        position: absolute;
+        z-index: 1;
+        margin-left: -15px;
+        opacity: 0;
+        transition: opacity 1s;
+    }
+    .time-filter-latest-tooltip.latest-enabled::after {        
+        content: "";
+        position: absolute;
+        bottom: 100%;
+        left: 5%;
+        border-width: 5px;
+        border-style: solid;
+        border-color: transparent transparent #f7f8f9 transparent;
+    }
+
+    &:hover .time-filter-latest-tooltip.latest-enabled{
+        visibility: visible;
+        opacity: 1;
+    }
+    &:before{
+        color: #8A8F92;
+        content: "\f059";
+    }
+    &.latest-enabled:hover{
+        &:before{
+            color:blue;
+        }
+    }
+}
+
 html:not([dir="rtl"]) .time-filter-indicator{
     right: 20px;
 }
@@ -283,4 +344,77 @@ html[dir="rtl"] .time-filter-indicator{
 /* remove search bar in time unit selection*/
 div[id^='pickerPanel'] .oj-listbox-search-wrapper {
     display: none;
+}
+
+.cancel-button {
+    margin-left: 4px;
+}
+
+.show-individual-time-span1{
+    display: block !important;
+    line-height: 0.5em;
+    font-size: 12px;
+    color:  #333333;
+    margin: 5px auto -4px 0;
+}
+
+.show-individual-time-span1-latest{
+    font-size: 12px;
+    color:  #333333;
+}
+
+.show-individual-time-span1-short{
+    font-size: 12px;
+    color:  #333333;
+}
+
+.show-individual-time-span2{
+/*    line-height: 0.5em;
+    font-size: 0.5em;*/
+}
+
+.show-individual-time-badge{
+    height:16px;
+    width:16px;
+    vertical-align:top;
+    margin-top:8px;
+    background: url('@version@/images/uifwkSprite.png') no-repeat 0px -46px;
+}
+
+.badge-message-detail{
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    color: #333333;
+    font-size: 12px;
+    padding: 0 10px 0 4px;
+}
+
+.badge-message-summary{
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    color: #333333;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 0 10px 0 0;
+}
+
+.oj-popup-content{
+    padding: 10px;
+}
+
+//hack default oj class
+div[id^='pickerPanel'] .oj-listbox-drop{
+    width:82px;
+}
+.pickerPanel .oj-select-choice{
+    width:82px
+}
+
+.overflowedLabel{
+    display: inline-block;
+    font-size: 10px;
+    background-color: #fcfdfe;
+    padding: 5px;
+    border: 1px solid #c4ced7;
+    border-radius: 1px;
+    box-shadow: 1px 1px 3px 0 rgba(0,0,0,35);
+    max-width: 340px;
 }

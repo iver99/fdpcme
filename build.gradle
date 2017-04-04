@@ -51,13 +51,12 @@ buildscript {
   }  
 }
 
-
-
-
 apply plugin: 'groovy'
 import groovy.sql.Sql
 import java.util.logging.LogManager.Cleaner;
 import org.gradle.api.artifacts.Configuration.State  
+import java.text.SimpleDateFormat
+import java.util.Date
 ext.distDir = "${rootDir}/dist"  
 ext.artifactPrefix = 'emaas-applications-' 
 ext.projectVersion = '0.1-SNAPSHOT'  
@@ -73,6 +72,9 @@ ext.registryClientResolver = 'com.oracle.emaas.emcpsm:registry-client:'+ regClie
 ext.regClientLookupVer = getDependentSdkVersion('com.oracle.emaas.emcpsm', 'registry-lookup-client', '1.+')
 ext.regClientLookupResolver = 'com.oracle.emaas.emcpsm:registry-lookup-client:' + regClientLookupVer
 ext.failedTestCount=0
+
+//def TimeStamp = new SimpleDateFormat("yyMMdd.HHmmss").format(new Date())
+ext.appTimeStamp = new SimpleDateFormat("yyMMdd.HHmmss").format(new Date())//"${TimeStamp}"
 
 // Disable running the build tests with this env var
 def disBuildTests = System.getenv("DISABLE_BUILD_TESTS")
@@ -241,17 +243,8 @@ task runS1Tests(type: Exec) {
 }
 runS1Tests.enabled = !project.disableBuildTests
 
-task runS2Tests(type: Exec) {
- executable = project.gradle.gradleHomeDir.absolutePath + '/bin/gradle'
-    args 'do_lrg', '-Plrgs=emcpdf_l1_test'
-    if (project.hasProperty('BuildID')) {
-        args "-PREPO_BID=${BuildID}"
-    }
-    if (project.hasProperty('ENABLE_CC')) {
-        args "-PENABLE_CC=1"
-    }
-    finalizedBy "print_results"
-
+task runS2Tests() {
+ 
 } 
 
 runS2Tests.enabled = !project.disableBuildTests

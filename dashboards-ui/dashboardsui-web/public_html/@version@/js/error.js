@@ -5,7 +5,7 @@
 requirejs.config({
     bundles: ((window.DEV_MODE !==null && typeof window.DEV_MODE ==="object") ||
                 (window.gradleDevMode !==null && typeof window.gradleDevMode ==="boolean")) ? undefined : {
-        'uifwk/js/uifwk-partition':
+        'uifwk/@version@/js/uifwk-impl-partition-cached':
             [
             'uifwk/js/util/ajax-util',
             'uifwk/js/util/df-util',
@@ -16,6 +16,7 @@ requirejs.config({
             'uifwk/js/util/screenshot-util',
             'uifwk/js/util/typeahead-search',
             'uifwk/js/util/usertenant-util',
+            'uifwk/js/util/zdt-util',
             'uifwk/js/sdk/context-util',
             'uifwk/js/widgets/aboutbox/js/aboutbox',
             'uifwk/js/widgets/brandingbar/js/brandingbar',

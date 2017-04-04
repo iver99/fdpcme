@@ -313,10 +313,13 @@ public class DashBoardPageId_190
 	public static final String RIGHTDRAWEREDITDBFILTERCSS = ".dbd-right-panel-editdashboard-filters>span";
 	public static final String RIGHTDRAWERSEARCHINPUTCSS = ".dbd-left-panel input.widget-search-input";
 
+	public static final String RIGHTDRAWEREDITDBFILTERCOLLAPSEDCSS = ".dbd-right-panel-editdashboard-filters.oj-collapsed";
+	public static final String RIGHTDRAWEREDITDBFILTEREXPANDCSS = ".dbd-right-panel-editdashboard-filters.oj-expanded";
+
 	public static final String RIGHTDRAWERSEARCHBUTTONCSS = ".dbd-left-panel button.dbd-left-panel-header-search-btn";
 	public static final String RIGHTDRAWERWIDGETTOAREACSS = ".tiles-wrapper";
 	//public static final String RIGHTDRAWERWIDGETCSS = ".dbd-left-panel .dbd-left-panel-widget";
-	public static final String RIGHTDRAWERWIDGETCSS = ".dbd-left-panel-widget-text";
+	public static final String RIGHTDRAWERWIDGETCSS = ".dbd-left-panel-widget-text span";
 	//right drawer setting
 	public static final String RIGHTDRAWEREDITDBENABLEENTITYFILTERCSS = "#enableEntityFilter";
 

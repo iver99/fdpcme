@@ -2,12 +2,15 @@ package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.core.Response;
 
+import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.resource.UserOptionsNotFoundException;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.testng.Assert;
@@ -31,6 +34,7 @@ import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencySta
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.DashboardAPIUtil;
 
 
+
 /**
  * @author danfjian
  * @since 2016/1/14.
@@ -43,7 +47,8 @@ public class DashboardAPITest
 	APIBase mockedAPIBase;
 	@Mocked
 	DashboardManager mockedDashboardManager;
-
+	@Mocked
+	Throwable throwable;
 	DashboardAPI dashboardAPI = new DashboardAPI();
 
 	@Test
@@ -53,7 +58,7 @@ public class DashboardAPITest
 			{
 				anyDependencyStatus.isDatabaseUp();
 				result = true;
-				
+
 				mockedAPIBase.initializeUserContext(anyString, anyString);
 				result = null;
 
@@ -120,7 +125,7 @@ public class DashboardAPITest
 			{
 				anyDependencyStatus.isDatabaseUp();
 				result = true;
-				mockedDashboardManager.deleteDashboard(anyLong, anyLong);
+				mockedDashboardManager.deleteDashboard((BigInteger) any, anyLong);
 			}
 		};
 		assertDeleteDashboard();
@@ -147,7 +152,7 @@ public class DashboardAPITest
 			{
 				anyDependencyStatus.isDatabaseUp();
 				result = true;
-				mockedDashboardManager.deleteDashboard(anyLong, anyLong);
+				mockedDashboardManager.deleteDashboard((BigInteger) any, anyLong);
 				result = new CommonSecurityException("Test Security Error");
 			}
 		};
@@ -161,13 +166,82 @@ public class DashboardAPITest
 			{
 				anyDependencyStatus.isDatabaseUp();
 				result = true;
-				mockedDashboardManager.getDashboardById(anyLong, anyLong);
+				mockedDashboardManager.getDashboardById((BigInteger) any, anyLong);
 				Dashboard mockDashboardResult = new Dashboard();
 				mockDashboardResult.setIsSystem(true);
 				result = mockDashboardResult;
 			}
 		};
 		assertDeleteDashboard();
+	}
+
+	@Test
+	public void getDashboardUserOptions(@Mocked final UserOptionsManager userOptionsManager,
+										@Mocked final DependencyStatus anyDependencyStatus,
+										@Mocked final UserOptions userOptions, @Mocked final UserOptionsNotFoundException userOptionNotFoundException) throws DashboardNotFoundException, UserOptionsNotFoundException {
+		new Expectations() {
+			{
+				anyDependencyStatus.isDatabaseUp();
+				result = true;
+				UserOptionsManager.getInstance();
+				result = userOptionsManager;
+				userOptionsManager.getOptionsById((BigInteger)any, anyLong);
+				result = userOptionNotFoundException;
+			}
+		};
+		dashboardAPI.getDashboardUserOptions("","","",new BigInteger("1"));
+	}
+
+
+	@Test
+	public void getDashboardUserOptions(@Mocked final UserOptionsManager userOptionsManager,
+										@Mocked final DependencyStatus anyDependencyStatus,
+										@Mocked final UserOptions userOptions, @Mocked final DashboardNotFoundException dashboardNotFoundException) throws DashboardNotFoundException, UserOptionsNotFoundException {
+		new Expectations() {
+			{
+				anyDependencyStatus.isDatabaseUp();
+				result = true;
+				UserOptionsManager.getInstance();
+				result = userOptionsManager;
+				userOptionsManager.getOptionsById((BigInteger)any, anyLong);
+				result = dashboardNotFoundException;
+			}
+		};
+		dashboardAPI.getDashboardUserOptions("","","",new BigInteger("1"));
+	}
+
+	@Test
+	public void getDashboardUserOptions(@Mocked final UserOptionsManager userOptionsManager,
+										@Mocked final DependencyStatus anyDependencyStatus,
+										@Mocked final UserOptions userOptions, @Mocked final DashboardException dashboardNotFoundException) throws DashboardNotFoundException, UserOptionsNotFoundException {
+		new Expectations() {
+			{
+				anyDependencyStatus.isDatabaseUp();
+				result = true;
+				UserOptionsManager.getInstance();
+				result = userOptionsManager;
+				userOptionsManager.getOptionsById((BigInteger)any, anyLong);
+				result = dashboardNotFoundException;
+			}
+		};
+		dashboardAPI.getDashboardUserOptions("","","",new BigInteger("1"));
+	}
+
+	@Test
+	public void getDashboardUserOptions(@Mocked final UserOptionsManager userOptionsManager,
+										@Mocked final DependencyStatus anyDependencyStatus,
+										@Mocked final UserOptions userOptions, @Mocked final BasicServiceMalfunctionException dashboardNotFoundException) throws DashboardNotFoundException, UserOptionsNotFoundException {
+		new Expectations() {
+			{
+				anyDependencyStatus.isDatabaseUp();
+				result = true;
+				UserOptionsManager.getInstance();
+				result = userOptionsManager;
+				userOptionsManager.getOptionsById((BigInteger)any, anyLong);
+				result = dashboardNotFoundException;
+			}
+		};
+		dashboardAPI.getDashboardUserOptions("","","",new BigInteger("1"));
 	}
 
 	@Test
@@ -204,7 +278,7 @@ public class DashboardAPITest
             	result=true;
 				//anyDependencyStatus.isEntityNamingUp();
             	//result=true;
-				mockedDashboardManager.getDashboardBase64ScreenShotById(anyLong, anyLong);
+				mockedDashboardManager.getDashboardBase64ScreenShotById((BigInteger) any, anyLong);
 				result = new CommonSecurityException("Test Security Error");
 			}
 		};
@@ -218,7 +292,8 @@ public class DashboardAPITest
 			{
 				anyDependencyStatus.isDatabaseUp();
 				result = true;
-				mockedDashboardManager.getCombinedDashboardById(anyLong, anyLong, anyString);
+
+				mockedDashboardManager.getCombinedDashboardById((BigInteger) any, anyLong, anyString);
 				result = new CombinedDashboard();
 
 				Deencapsulation.invoke(dashboardAPI, "updateDashboardAllHref", withAny(new CombinedDashboard()), anyString);
@@ -226,6 +301,22 @@ public class DashboardAPITest
 			}
 		};
 		assertQueryDashboardById();
+	}
+
+	@Test
+	public void testQueryCombinedData(@Mocked final DependencyStatus anyDependencyStatus) throws Exception
+	{
+		new Expectations() {
+			{
+				anyDependencyStatus.isDatabaseUp();
+				result = true;
+				mockedDashboardManager.getCombinedDashboardById((BigInteger) any, anyLong, anyString);
+				result = new CombinedDashboard();
+				Deencapsulation.invoke(dashboardAPI, "updateDashboardAllHref", withAny(new CombinedDashboard()), anyString);
+				result = any;
+			}
+		};
+		assertQueryCombinedDashboardById();
 	}
 
 	@Test
@@ -335,7 +426,7 @@ public class DashboardAPITest
 			{
 				anyDependencyStatus.isDatabaseUp();
 				result = true;
-				mockedDashboardManager.getDashboardById(anyLong, anyLong);
+				mockedDashboardManager.getDashboardById((BigInteger) any, anyLong);
 				Dashboard dashboardResult = new Dashboard();
 				dashboardResult.setIsSystem(true);
 				result = dashboardResult;
@@ -463,7 +554,8 @@ public class DashboardAPITest
 	}
 
 	@Test
-	public void testSaveUserOptions(@Mocked final UserOptionsManager mockedUserOptionsManager,@Mocked final DependencyStatus anyDependencyStatus) throws Exception {
+	public void testSaveUserOptions(@Mocked final UserOptionsManager mockedUserOptionsManager,@Mocked final DependencyStatus anyDependencyStatus,
+									@Mocked final UserOptions anyUserOptions) throws Exception {
         new Expectations() {
             {
             	anyDependencyStatus.isDatabaseUp();
@@ -471,7 +563,10 @@ public class DashboardAPITest
                 mockedAPIBase.initializeUserContext(anyString, anyString);
                 result = null;
 
-                mockedUserOptionsManager.saveOrUpdateUserOptions(withAny(new UserOptions()), anyLong);
+				anyUserOptions.validateExtendedOptions();
+				result = true;
+
+                mockedUserOptionsManager.saveOrUpdateUserOptions(anyUserOptions, anyLong);
                 result = any;
             }
         };
@@ -480,7 +575,8 @@ public class DashboardAPITest
 	}
 
 	@Test
-	public void testUpdateUserOptions(@Mocked final UserOptionsManager mockedUserOptionsManager,@Mocked final DependencyStatus anyDependencyStatus) throws Exception {
+	public void testUpdateUserOptions(@Mocked final UserOptionsManager mockedUserOptionsManager,@Mocked final DependencyStatus anyDependencyStatus,
+									  @Mocked final UserOptions anyUserOptions) throws Exception {
         new Expectations() {
             {
             	anyDependencyStatus.isDatabaseUp();
@@ -488,12 +584,15 @@ public class DashboardAPITest
                 mockedAPIBase.initializeUserContext(anyString, anyString);
                 result = null;
 
-                mockedUserOptionsManager.saveOrUpdateUserOptions(withAny(new UserOptions()), anyLong);
-                result = any;
-            }
-        };
+				anyUserOptions.validateExtendedOptions();
+				result = true;
 
-        assertUpdateUserOptions();
+				mockedUserOptionsManager.saveOrUpdateUserOptions(anyUserOptions, anyLong);
+				result = any;
+			}
+		};
+
+		assertUpdateUserOptions();
 	}
 
     @Test
@@ -507,7 +606,7 @@ public class DashboardAPITest
                 mockedAPIBase.initializeUserContext(anyString, anyString);
                 result = null;
 
-                mockedUserOptionsManager.getOptionsById(anyLong,anyLong);
+                mockedUserOptionsManager.getOptionsById((BigInteger) any, anyLong);
                 result = any;
             }
         };
@@ -524,64 +623,76 @@ public class DashboardAPITest
 	private void assertDeleteDashboard()
 	{
 		Response resp = dashboardAPI.deleteDashboard("tenant01", "tenant01.emcsadmin",
-				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101", 123L);
+				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101", BigInteger.valueOf(123L));
 		Assert.assertNotNull(resp);
 	}
 
 	private void assertGetDashboardBase64ScreenShot()
 	{
 		Assert.assertNotNull(dashboardAPI.getDashboardScreenShot("tenant01", "tenant01.emcsadmin",
-				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101", 123L, "1.0", "test.png"));
+				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101", BigInteger.valueOf(123L),
+				"1.0", "test.png"));
+	}
+
+	private void assertGetUserOptions()
+	{
+		Assert.assertNotNull(dashboardAPI.getDashboardUserOptions("tenant01", "tenant01.emcsadmin",
+				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101/options",
+				BigInteger.valueOf(123L)));
 	}
 
 	private void assertQueryDashboardById()
 	{
 		Assert.assertNotNull(dashboardAPI.queryDashboardById("tenant01", "tenant01.emcsadmin",
-				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101", 123L));
+				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101", BigInteger.valueOf(123L)));
+	}
+
+	private void assertQueryCombinedDashboardById()
+	{
+		Assert.assertNotNull(dashboardAPI.queryCombinedData("tenant01", "tenant01.emcsadmin",
+				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101", BigInteger.valueOf(123L), null));
 	}
 
 	private void assertQueryDashboards()
 	{
 		Assert.assertNotNull(dashboardAPI.queryDashboards("tenant01", "tenant01.emcsadmin",
-				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101", "query str", 10, 5, "name",
-				null));
+				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101", "query str", 10, 5,
+				"name", null));
 	}
 
 	private void assertQuickUpdateDashboard() throws JSONException
 	{
-		Assert.assertNotNull(dashboardAPI
-				.quickUpdateDashboard(
-						"tenant01",
-						"tenant01.emcsadmin",
-						"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101",
-						123L,
-						new JSONObject(
-								"{\"name\":\"daniel\",\"description\":\"DN\",\"sharePublic\":false, \"enableDescription\": false, \"enableEntityFilter\": true, \"enableTimeRange\": true}")));
+		Assert.assertNotNull(dashboardAPI.quickUpdateDashboard(
+				"tenant01",
+				"tenant01.emcsadmin",
+				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101",
+				BigInteger.valueOf(123L),
+				new JSONObject(
+						"{\"name\":\"daniel\",\"description\":\"DN\",\"sharePublic\":false, \"enableDescription\": false, \"enableEntityFilter\": true, \"enableTimeRange\": true}")));
+	}
+
+	private void assertSaveUserOptions() throws JSONException
+	{
+		Assert.assertNotNull(dashboardAPI.saveUserOptions("tenant01", "tenant01.emcsadmin",
+				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101/options", BigInteger
+						.valueOf(1101L), new JSONObject(
+						"{ \"dashboardId\": 1127, \"autoRefreshInterval\": 600000, \"extendedOptions\":\"2000\" }")));
 	}
 
 	private void assertUpdateDashboard() throws JSONException
 	{
 		Assert.assertNotNull(dashboardAPI.updateDashboard("tenant01", "tenant01.emcsadmin",
-				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101", 123L,
+				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101", BigInteger.valueOf(123L),
 				new JSONObject("{\"name\":\"daniel\",\"description\":\"DN\",\"sharePublic\":false}")));
 	}
 
-    private void assertGetUserOptions(){
-        Assert.assertNotNull(dashboardAPI.getDashboardUserOptions("tenant01", "tenant01.emcsadmin",
-                "https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101/options", 1101L));
-    }
-
-    private void assertSaveUserOptions() throws JSONException {
-        Assert.assertNotNull(dashboardAPI.saveUserOptions("tenant01", "tenant01.emcsadmin",
-                "https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101/options", 1101L,new JSONObject(
-                        "{ \"dashboardId\": 1127, \"autoRefreshInterval\": 600000, \"extendedOptions\":\"2000\" }")));
-    }
-
-    private void assertUpdateUserOptions() throws JSONException {
-        Assert.assertNotNull(dashboardAPI.updateUserOptions("tenant01", "tenant01.emcsadmin",
-                "https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101/options", 1101L,new JSONObject(
-                        "{ \"dashboardId\": 1127, \"autoRefreshInterval\": 600000, \"extendedOptions\":\"2000\" }")));
-    }
+	private void assertUpdateUserOptions() throws JSONException
+	{
+		Assert.assertNotNull(dashboardAPI.updateUserOptions("tenant01", "tenant01.emcsadmin",
+				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101/options", BigInteger
+						.valueOf(1101L), new JSONObject(
+						"{ \"dashboardId\": 1127, \"autoRefreshInterval\": 600000, \"extendedOptions\":\"2000\" }")));
+	}
 
 	@Test
 	public void testQueyDashboardSetsBySubId(@Mocked final DependencyStatus anyDependencyStatus){
@@ -593,8 +704,43 @@ public class DashboardAPITest
 				result = true;
 			}
 		};
-		dashboardAPI.queryDashboardSetsBySubId("", "", "", 1L);
+		dashboardAPI.queryDashboardSetsBySubId("", "", "", BigInteger.valueOf(1L));
 	}
 
+	@Test
+	public void testDeleteDashboards(){
+		new Expectations(){
+			{
+				DashboardManager.getInstance();
+				result = mockedDashboardManager;
+			}
+		};
+		dashboardAPI.deleteDashboards("tenandIdParam","userTenant","refer");
+	}
+	@Test
+	public void testDeleteDashboards(@Mocked final DashboardManager dashboardManager,
+									 @Mocked final DashboardException dashboardException) throws DashboardException {
+		new Expectations(){
+			{
+				DashboardManager.getInstance();
+				result = dashboardManager;
+				dashboardManager.deleteDashboards(anyLong);
+				result = dashboardException;
+			}
+		};
+		dashboardAPI.deleteDashboards("tenandIdParam","userTenant","refer");
+	}
+	@Test
+	public void testDeleteDashboards(@Mocked final DashboardManager dashboardManager,
+									 @Mocked final BasicServiceMalfunctionException dashboardException) throws DashboardException {
+		new Expectations(){
+			{
+				DashboardManager.getInstance();
+				result = dashboardManager;
+				dashboardManager.deleteDashboards(anyLong);
+				result = dashboardException;
+			}
+		};
+		dashboardAPI.deleteDashboards("tenandIdParam","userTenant","refer");
+	}
 }
-

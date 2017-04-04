@@ -29,14 +29,44 @@ public interface IBrandingBarUtil extends IUiTestCommonAPI
 	public static final String NAV_LINK_TEXT_CS_LA = "Log Analytics";
 	public static final String NAV_LINK_TEXT_CS_IM = "Infrastructure Monitoring";
 	public static final String NAV_LINK_TEXT_CS_OCS = "Orchestration";
-	//Visual Analyzers
+	public static final String NAV_LINK_TEXT_CS_SECU = "Security";
+	public static final String NAV_LINK_TEXT_CS_COMP = "Configuration and Compliance";
+	//Visual Analyzers, new name is Explorers
 	public static final String NAV_LINK_TEXT_VA_ITA = "Analyze";
 	public static final String NAV_LINK_TEXT_VA_TA = "Search";
 	public static final String NAV_LINK_TEXT_VA_LA = "Log";
+	public static final String NAV_LINK_TEXT_DATAEXPLORER = "Data Explorer";
+	public static final String NAV_LINK_TEXT_LOGEXPLORER = "Log Explorer";
+
 	//Administration
 	public static final String NAV_LINK_TEXT_ADMIN_AGENT = "Agents";
 	public static final String NAV_LINK_TEXT_ADMIN_ALERT = "Alert Rules";
 	public static final String NAV_LINK_TEXT_ADMIN_ADMINCONSOLE = "Administration";
+
+	//Hamburger menu items
+	public static final String ROOT_MENU_HOME = "Home";
+	public static final String ROOT_MENU_ALERTS = "Alerts";
+	public static final String ROOT_MENU_DASHBOARDS = "Dashboards";
+	public static final String ROOT_MENU_DATAEXPLORER = "Data Explorer";
+	public static final String ROOT_MENU_APM = "APM";
+	public static final String ROOT_MENU_MONITORING = "Infrastructure Monitoring";
+	public static final String ROOT_MENU_LA = "Log Analytics";
+	public static final String ROOT_MENU_ITA = "IT Analytics";
+	public static final String ROOT_MENU_ORCHESTRATION = "Orchestration";
+	public static final String ROOT_MENU_SECURITY = "Security Analytics";
+	public static final String ROOT_MENU_COMPLIANCE = "Compliance";
+	public static final String ROOT_MENU_ADMIN = "Administration";
+	public static final String GLOBAL_ADMIN_MENU_ALERT_RULES = "Alert Rules";
+	public static final String GLOBAL_ADMIN_MENU_AGENTS = "Agents";
+	public static final String GLOBAL_ADMIN_MENU_ENTITIES_CFG = "Entities Configuration";
+
+	public void clickHierarchicalMenu(WebDriver driver, String menuitem);
+
+	public void clickMenuItem(WebDriver driver, String menuitem);
+
+	public String getCurrentMenuHeader(WebDriver driver);
+
+	public void goBackToParentMenu(WebDriver driver);
 
 	/**
 	 * Check whether admin field exist
@@ -85,6 +115,8 @@ public interface IBrandingBarUtil extends IUiTestCommonAPI
 	 */
 	public boolean isDashboardHomeLinkExisted(WebDriver driver);
 
+	public boolean isHamburgerMenuDisplayed(WebDriver driver);
+
 	/**
 	 * Check if the specified home link is existed or not by given name
 	 *
@@ -95,6 +127,10 @@ public interface IBrandingBarUtil extends IUiTestCommonAPI
 	 * @return
 	 */
 	public boolean isHomeLinkExisted(WebDriver driver, String homeLinkName);
+
+	public boolean isMenuItemEnabled(WebDriver driver, String menuitem);
+
+	public boolean isMenuItemExisted(WebDriver driver, String menuitem);
 
 	/**
 	 * Check if the favorites link is existed or not
@@ -133,6 +169,15 @@ public interface IBrandingBarUtil extends IUiTestCommonAPI
 	 * @return
 	 */
 	public boolean isWelcomeLinkExisted(WebDriver driver);
+
+	/**
+	 * Show or hide hamburger menu
+	 *
+	 * @param driver
+	 *            WebDriver instance
+	 * @return
+	 */
+	public boolean toggleHamburgerMenu(WebDriver driver);
 
 	/**
 	 * Do the specified user option by the given option name
@@ -215,5 +260,4 @@ public interface IBrandingBarUtil extends IUiTestCommonAPI
 	 * @return
 	 */
 	public void visitWelcome(WebDriver driver);
-
 }

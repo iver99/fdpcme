@@ -26,8 +26,7 @@ sourceSets {
 		}	
 		resources {	
 			srcDirs = ['src/main/java', 'src/resources/java']
-		}	
-		compileClasspath += configurations.testNG
+		}
 	}
  }
 
@@ -48,6 +47,7 @@ test {
 
 dependencies {
 	compile project(':dashboards-entities')  
+	compile project(':dashboards-sdk')
 	testRuntime getProjectArtifact('ojdbc6')  
 	compile getProjectArtifact('log4j-core')   
 	compile getProjectArtifact('log4j-api')   
@@ -66,12 +66,8 @@ dependencies {
 	compile getProjectArtifact('coherence')  
 	compile getProjectArtifact('jersey-core')  
 	compile getProjectArtifact('jersey-client')  
-	compile getProjectArtifact('jmockit')    
+	compile getProjectArtifact('jmockit')  
+	compile getProjectArtifact('em-qatool-os-webdriver')  
+	compile getProjectArtifact('jersey-json') 
 }
 
-processResources {
-    from('src/main/resources') {
-        include '*.properties', '*.xml'
-        filter(ReplaceTokens, tokens: [version : versionPathElement])
-    }
-}

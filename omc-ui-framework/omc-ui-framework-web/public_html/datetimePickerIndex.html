@@ -51,7 +51,7 @@
             <button data-bind="ojComponent: {component: 'ojButton'}, click: changeOption1">I'm non-LA user</button>-->
             <div data-bind="component: {name: 'date-time-picker', params: timeParams3}, style: {/*'float': floatPosition3,*/ 'padding-right': '10px', 'padding-left': '10px', 'position': 'absolute', 'right': '10px'}"></div>
             
-            <div id="chartContainer">
+            <div id="chartContainer" style="padding: 30px;">
                 <div id="lineChart" data-bind="ojComponent: {
                     component: 'ojChart', 
                     type: 'line',
@@ -60,12 +60,41 @@
                     animationOnDisplay: 'auto',
                     animationOnDataChange: 'auto',
                     hoverBehavior: 'dim',                
-                }"  style="top:100px; width: 100%; height: 300px; border: 1px solid #dfe4e7;">
+                }"  style="top:30px; width: 100%; height: 300px; border: 1px solid #dfe4e7;">
                 </div>
             </div>
 
-            <div id="picker2" style="margin-top: 100px">
+            <div id="timeRangeWithDateOnly" style="font-size: 16px; font-weight: bold; padding-left: 10px; padding-top: 20px; display: inline-block;">
+                <span id="startWithDateOnly" data-bind="text: start2"></span> ~ 
+                <span id="endWithDateOnly" data-bind="text: end2"></span>
+            </div>
+            <div id="picker2" style="padding-top: 10px;">
                 <div data-bind="component: {name: 'date-time-picker', params: timeParams2}"></div>
+            </div>
+            
+            
+            <div id="timeRange4" style="font-size: 16px; font-weight: bold; padding: 10px; display: inline-block;">
+                <span id="start4" data-bind="text: start4"></span> ~ 
+                <span id="end4" data-bind="text: end4"></span>
+            </div>
+            <div id="picker4" style="padding-top: 10px;">
+                <div data-bind="component: {name: 'date-time-picker', params: timeParams4}"></div>
+            </div>
+            
+            <div id="timeRange5" style="font-size: 16px; font-weight: bold; padding: 10px; display: inline-block;">
+                <span id="start5" data-bind="text: start5"></span> ~ 
+                <span id="end5" data-bind="text: end5"></span>
+            </div>
+            <div id="picker5" style="padding-top: 10px;">
+                <div data-bind="component: {name: 'date-time-picker', params: timeParams5}"></div>
+            </div>
+            
+            <div id="timeRange6" style="font-size: 16px; font-weight: bold; padding: 10px; display: inline-block;">
+                <span id="start6" data-bind="text: start6"></span> ~ 
+                <span id="end6" data-bind="text: end6"></span>
+            </div>
+            <div id="picker6" style="padding-top: 10px;">
+                <div data-bind="component: {name: 'date-time-picker', params: timeParams6}"></div>
             </div>
         </div>
     </body>

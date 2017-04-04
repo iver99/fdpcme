@@ -10,6 +10,7 @@
  
 package oracle.sysman.emaas.platform.dashboards.core.model.combined;
 
+import java.math.BigInteger;
 import java.util.Date;
 
 import org.testng.Assert;
@@ -23,17 +24,17 @@ import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
  * @author guochen
  *
  */
-@Test(groups = {"s2"})
+@Test(groups = {"s1"})
 public class CombinedDashboardTest {
 	@Test
 	public void testValueOf() {
-		long dashboardId = 1L;
+		BigInteger dashboardId = BigInteger.ONE;
 		String prefKey = "prefKey";
 		
         EmsDashboard ed  = new EmsDashboard();
         ed .setCreationDate(new Date());
         ed.setDashboardId(dashboardId);
-        ed.setDeleted(0L);
+        ed.setDeleted(BigInteger.ZERO);
         ed.setName("dashboard1");
         ed.setDescription("desc");
         ed.setType(2);
@@ -49,10 +50,10 @@ public class CombinedDashboardTest {
         euo.setIsFavorite(1);
         euo.setAutoRefreshInterval(300L);
         
-        CombinedDashboard cd = CombinedDashboard.valueOf(ed, ep, euo);
-        Assert.assertEquals(cd.getDashboardId(), Long.valueOf(dashboardId));
+        CombinedDashboard cd = CombinedDashboard.valueOf(ed, ep, euo,null);
+        Assert.assertEquals(cd.getDashboardId().toString(), dashboardId.toString());
         Assert.assertEquals(cd.getPreference().getKey(), prefKey);
-        Assert.assertEquals(cd.getUserOptions().getDashboardId(), Long.valueOf(dashboardId));
+        Assert.assertEquals(cd.getUserOptions().getDashboardId().toString(), dashboardId.toString());
         Assert.assertTrue(cd.getIsFavorite());
 	}
 

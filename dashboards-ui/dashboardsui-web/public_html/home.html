@@ -2,7 +2,7 @@
 
 <!-- Dashboards home -->
 
-<html data-testapiversion="1.13.0" lang="en-US">
+<html data-testapiversion="1.15.0" lang="en-US">
     <head>
         <title data-bind="text:homeTitle"></title>
         
@@ -14,12 +14,14 @@
 
         <link rel="stylesheet" href="@version@/css/dashboards-common-alta.css" type="text/css"/>
         <link rel="stylesheet" href="@version@/css/dashboards-home-alta.css" type="text/css"/>
-    
+        <script type="text/javascript">
+            ////ADDITIONALDATA////
+        </script>
         <!-- RequireJS bootstrap file -->
         <script data-main="@version@/js/homeMain" src="libs/@version@/js/oraclejet/js/libs/require/require.js"></script>
     </head>
     <body>
-        <div class="loadingIndicator" id="loading">Loading</div>
+        <div class="loadingIndicator" id="loading" data-bind="text:getNlsString('DBS_HOME_LOADING')"></div>
         <div id="globalBody" style="display: none"> 
             <!-- Header section which contains the Global Branding, Global Navigation, and Application Navigation code.
                 Template is located in /templates/demoAppHeaderTemplate.html
@@ -43,7 +45,7 @@
                                                 <div style="margin-bottom: 20px;" data-bind="visible: isMobileDevice() !== true">
                                                     <button id="cbtn" 
                                                             data-bind="attr: { 'title': getNlsString('DBS_HOME_CREATE_BTN_TT_CONTENT') }, click: createDashboardClicked, 
-                                                                ojComponent: { component:'ojButton', rootAttributes: {'class': 'dbs-home-blue-button'}, label: getNlsString('DBS_HOME_CREATE_BTN_LABEL')}"></button>
+                                                                ojComponent: { component:'ojButton', disabled: zdtStatus,rootAttributes: {'class': 'dbs-home-blue-button'}, label: getNlsString('DBS_HOME_CREATE_BTN_LABEL')}"></button>
                                                 </div>
                                                 <div style="display:none; min-width:100px; min-height:50px;" id="cbtn-tooltip" 
                                                          data-bind="ojComponent: {component: 'ojPopup', tail: 'simple',
@@ -53,7 +55,7 @@
                                                 </div>
                                                 <div data-bind="visible: filter.showServiceFilter">
                                                     <label id="servicecblabel" data-bind="text: getNlsString('DBS_HOME_FILTER_SERVICE_LABEL')" ></label>
-                                                    <div id="servicecb" aria-controls="dtabhomesc" aria-labelledby="servicecblabel" data-bind="ojComponent: {component: 'ojCheckboxset', value: filter.serviceFilter, optionChange: null}">
+                                                    <div id="servicecb" aria-controls="dtabhomesc" aria-labelledby="servicecblabel" data-bind="ojComponent: {component: 'ojCheckboxset', value: filter.serviceFilter, optionChange: null,disabled:zdtStatus}">
                                                         <!-- ko foreach: filter.serviceFilterItems -->
                                                         <span class="oj-choice-row" data-bind="visible: $data.visible !== false">
                                                             <input type="checkbox" name="services" data-bind=" attr: {value: $data.value, id: $data.id}">
@@ -65,7 +67,7 @@
                                                 <br/>
                                                 <div>
                                                     <label id="creatorcblabel" data-bind="text: getNlsString('DBS_HOME_FILTER_CREATOR_LABEL')"></label>
-                                                    <div id="creatorcb" aria-controls="dtabhomesc" aria-labelledby="creatorcblabel" data-bind="ojComponent: {component: 'ojCheckboxset', value: filter.creatorFilter, optionChange: null}">
+                                                    <div id="creatorcb" aria-controls="dtabhomesc" aria-labelledby="creatorcblabel" data-bind="ojComponent: {component: 'ojCheckboxset', value: filter.creatorFilter, optionChange: null,disabled:zdtStatus}">
                                                         <!-- ko foreach: filter.creatorFilterItems -->
                                                         <span class="oj-choice-row" data-bind="visible: $data.visible !== false">
                                                             <input type="checkbox" name="services" data-bind=" attr: {value: $data.value, id: $data.id}">
@@ -76,7 +78,7 @@
                                                 </div>
                                                 <br/>
                                                 <label id="favoritescblabel" data-bind="text: getNlsString('DBS_HOME_FILTER_FAVORITES_LABEL')"></label>
-                                                <div id="favoritescb" aria-controls="dtabhomesc" aria-labelledby="favoritescblabel" data-bind="ojComponent: {component: 'ojCheckboxset', value: filter.favoritesFilter, optionChange: null}">
+                                                <div id="favoritescb" aria-controls="dtabhomesc" aria-labelledby="favoritescblabel" data-bind="ojComponent: {component: 'ojCheckboxset', value: filter.favoritesFilter, optionChange: null,disabled:zdtStatus}">
                                                         <!-- ko foreach: filter.favoritesFilterItems -->
                                                         <span class="oj-choice-row" data-bind="visible: $data.visible !== false">
                                                             <input type="checkbox" name="services" data-bind=" attr: {value: $data.value, id: $data.id}">

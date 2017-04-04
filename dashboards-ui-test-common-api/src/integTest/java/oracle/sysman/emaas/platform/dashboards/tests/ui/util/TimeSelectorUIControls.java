@@ -15,9 +15,6 @@ package oracle.sysman.emaas.platform.dashboards.tests.ui.util;
  */
 public class TimeSelectorUIControls
 {
-	private TimeSelectorUIControls() {
-	  }
-
 	// Begin: Text
 	public static final String sErrorMsg = "div.errorMsg";
 	//public static final String sFilterInfoLabel = "//*[@id='filterInfo']";
@@ -25,23 +22,24 @@ public class TimeSelectorUIControls
 
 	// Begin: InputText
 	public static final String sStartDateInput = "input[id^='inputStartDate_'].oj-inputtext-input";
+
 	public static final String sStartTimeInput = "input[id^='inputStartTime_'].oj-inputdatetime-input";
 	public static final String sEndDateInput = "input[id^='inputEndDate_'].oj-inputtext-input";
 	public static final String sEndTimeInput = "input[id^='inputEndTime_'].oj-inputdatetime-input";
 	//public static final String sTimeExcludedInput = "input.oj-col.oj-sm-10.oj-md-10.oj-inputtext-input";
 	// End: InputText
-
 	// Begin: Button
 	public static final String sApplyBtn = "button[id^='applyButton']";
-	public static final String sCancelBtn = "button[id^='cancelButton']";
 
+	public static final String sCancelBtn = "button[id^='cancelButton']";
 	public static final String sDateTimePick = "[id^='dateTimePicker_']";
+
 	public static final String sTimeRangeBtn = ".oj-select-choice[id^='dropDown']";//".dropdown[id^='dropDown']";"[id^='dateTimePicker_'] .oj-select-choice .oj-select-arrow";
 	public static final String sDisplayDateTime = "[id^='dateTimePicker_'] .oj-select-choice .oj-select-chosen";
 	//	public static final String sFilterInfoIndicator = "[id^='tfInfoIndicator_'].time-filter-indicator";
 	//	public static final String sFilterInfo = "div[id^='tfInfo_'] [data-bind='html: timeFilterInfo']";
-
 	public static final String sTimeRange_15Min = "a[data-bind*='timePeriodLast15mins']";
+
 	public static final String sTimeRange_30Min = "a[data-bind*='timePeriodLast30mins']";
 	public static final String sTimeRange_60Min = "a[data-bind*='timePeriodLast60mins']";
 	public static final String sTimeRange_2Hour = "a[data-bind*='timePeriodLast2hour']";
@@ -55,7 +53,14 @@ public class TimeSelectorUIControls
 	public static final String sTimeRange_1Year = "a[data-bind*='timePeriodLast1year']";
 	public static final String sTimeRange_Custom = "a[data-bind*='timePeriodCustom']";
 	public static final String sTimeRange_Latest = "a[data-bind*='timePeriodLatest']";
+	public static final String sTimeRange_24Hours = "a[data-bind*='timePeriodLast24hours']";
+	public static final String sTimeRange_12Months = "a[data-bind*='timePeriodLast12months']";
+	public static final String sTimeRange_8Hours = "a[data-bind*='timePeriodLast8hours']";
+	public static final String sTimeRange_New60Mins = "a[data-bind*='timePeriodLast60mins']";
+	public static final String sTimeRange_New7Days = "a[data-bind*='timePeriodLast7days']";
 	//	public static final String sTimeFilterIcon = "img[alt='Time Filter']";
+	// Begin: Icon
+	public static final String sStartTimeSelectIcon = "div[id^='divStartTime_'] .oj-inputdatetime-time-only .oj-inputdatetime-input-container .oj-inputdatetime-input-trigger .oj-inputdatetime-time-icon";
 
 	//	public static final String sDayAll = "input[id^='daysOptionAll_'].oj-checkbox";
 	//	public static final String sDayMonday = "input[id^='Monday'].oj-checkbox";
@@ -79,33 +84,36 @@ public class TimeSelectorUIControls
 	//	public static final String sMonthNovember = "input[id^='Nobember'].oj-checkbox";
 	//	public static final String sMonthDecember = "input[id^='December'].oj-checkbox";
 
-	// Begin: Icon
-	public static final String sStartTimeSelectIcon = "div[id^='divStartTime_'] .oj-inputdatetime-time-only .oj-inputdatetime-input-container .oj-inputdatetime-input-trigger .oj-inputdatetime-time-icon";
 	public static final String sEndTimeSelectIcon = "div[id^='divEndTime_'] .oj-inputdatetime-time-only .oj-inputdatetime-input-container .oj-inputdatetime-input-trigger .oj-inputdatetime-time-icon";
 	// End: Icon
-
 	// Begin: Components
 	public static final String sPickPanel = ".pickerPanel";//"[id^='pickerPanel_'].pickerPanel";
 	// End: Components
 
 	// Begin: Time Filter
 	public static final String sTimeFilterIcon = "img[id^='timeFilterIcon_']";
+
 	public static final String sTimeFilterHoursFilter = "div[id^='hoursFilter_']>div>input";
 	public static final String sTimeFilterDaysFilterAll = "input[id^='daysOptionAll_']";
 	public static final String sTimeFilterMonthsFilterAll = "input[id^='monthCheckAll_']";
 	public static final String sTimeFilterDaysMonthsFilterPrefix = "input[id^='";
 	public static final String sTimeFilterDaysMonthsFilterSuffix = "']";
 	// End: Time Filter
-	
 	// Begin: Flexible Relative Time Period
 	public static final String sLastRadio = "div[id^='pickerPanel'] input[value='flexRelTimeCtrl']";
+
 	public static final String sFlexRelTimeVal = "div[id^='pickerPanel'][id$='wrapper'] input[id^='flexRelTimeVal']";
 	public static final String sFlexRelTimeOpt = "div[id^='pickerPanel'][id$='wrapper'] div[id^='flexRelTimeOpt'] .oj-select-choice";
 	public static final String sFlexRelTimeOptList = "div[id^=pickerPanel][id$='wrapper'] div[id^='pickerPanel'] select option";
 	public static final String sFlexRelTimeOptStart = "div[id^='pickerPanel'][id$='_wrapper_layer'] div[data-oj-containerid^='flexRelTimeOpt'] ul li:nth-of-type(";
 	public static final String sFlexRelTimeOptEnd = ")";
-	
 	public static final String sRangeRadio = "div[id^='pickerPanel'] input[value='timeLevelCtrl']";
+	
+	public static final String sLatestRadio = "div[id^='pickerPanel'] input[value='latestOnCustom']";
 	// End: Flexible Relative Time Period
+
+	private TimeSelectorUIControls()
+	{
+	}
 
 }
