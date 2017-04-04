@@ -76,6 +76,8 @@
      --------------------------------------------------------------------------
 
    MODIFIED MM/DD/YY
+   skuchero 03/05/17 - replace all calls to file() with new File()
+   skuchero 02/16/17 - change Mac OS X dev_infra default location
    skuchero 12/02/16 - simplify artifactoryContextUrl so updates not needed
    skuchero 11/03/16 - download from artifactory to eliminate git usage
    skuchero 10/31/16 - PUB_SHELL overrides default bash shell on all platforms
@@ -98,12 +100,15 @@
 // Parent dirs of the new file are created before the download.
 // These parent dirs are not removed if there is an error.
 //
+// Parameter filename should be an absolute path,
+// otherwise it will be relative to the jvm current dir, not projectDir.
+//
 // throw Exception on error
 // -- caller should catch Exception
 //
 def downloadFile(String url, String filename) { // private
-  file(filename).parentFile.mkdirs()
-  def file = file(filename).newOutputStream()
+  new File(filename).parentFile.mkdirs()
+  def file = new File(filename).newOutputStream()
   file << url.toURL().openStream()
   file.close()
 }
@@ -117,7 +122,7 @@ def downloadFile(String url, String filename) { // private
 // to resolve artifacts (the alternative would be to fail without trying).
 //
 // After calling this method and processing the output,
-// the caller should call file(downloadDelegateOut.tempDir).deleteDir().
+// the caller should call new File(downloadDelegateOut.tempDir).deleteDir().
 //
 // Input arg delegateRelPath normally has the value
 // "pub/scripts/buildscript-delegate.gradle".
@@ -294,6 +299,7 @@ def getEnvProp(String propName) { // private
 assert project.hasProperty('commonBranchTopDir')
 
 def isUnix = ! System.getProperty('os.name').toLowerCase().startsWith('windows')
+def isMac = System.getProperty('os.name').toLowerCase().startsWith('mac os x')
 def isOffline = project.gradle.startParameter.isOffline()
 
 // set PUB_SHELL, PUB_USE_HTTPS, PUB_HTTP
@@ -316,7 +322,10 @@ if ( ! getEnvProp('PUB_REMOTE_EMDI_MASTER')) {
   project.ext.PUB_REMOTE_EMDI_MASTER = ''
   if ( ! isOffline) {
     def remotePrefix = System.env.EMAAS_DEV_INFRA_GENERIC_EMDEV ?:
-      (isUnix ? "/usr/dev_infra/generic/emdev" : "C:/ADE/dev_infra_generic/emdev")
+      (isUnix ?
+        (isMac ? "/usr/local/dev_infra/generic/emdev" : "/usr/dev_infra/generic/emdev")
+        : "C:/ADE/dev_infra_generic/emdev"
+      )
     // must not quote shell script pathname
     def command = "$project.PUB_SHELL $remotePrefix/pub/getStorageServerLoc.sh -base"
     def stdout = new StringBuilder(); def stderr = new StringBuilder(); def exitCode = 1
@@ -333,7 +342,7 @@ if ( ! getEnvProp('PUB_REMOTE_EMDI_MASTER')) {
       // -- buildscript-delegate.gradle may depend on this behavior
       project.ext.PUB_REMOTE_EMDI_MASTER = "$stdout".trim() + "/emdi"
       //
-      if ( ! file(project.PUB_REMOTE_EMDI_MASTER).isDirectory()) {
+      if ( ! new File(project.PUB_REMOTE_EMDI_MASTER).isDirectory()) {
         remoteMsg += "Default remote PUB_DIR_MASTER directory does not exist: $project.PUB_REMOTE_EMDI_MASTER\n\n"
       }
     }
@@ -350,7 +359,7 @@ if ( ! getEnvProp('PUB_DIR_MASTER')) {
   def isRemotePubDirMasterAvailable = (
        ! isOffline
     && project.PUB_REMOTE_EMDI_MASTER // not empty string
-    && file("$project.PUB_REMOTE_EMDI_MASTER/pub").isDirectory() // dir exists
+    && new File("$project.PUB_REMOTE_EMDI_MASTER/pub").isDirectory() // dir exists
     )
   project.ext.PUB_DIR_MASTER = isRemotePubDirMasterAvailable ?
     "$project.PUB_REMOTE_EMDI_MASTER/pub" :
@@ -361,13 +370,13 @@ if ( ! getEnvProp('PUB_DIR_MASTER')) {
 //
 def delegateRelPath = "pub/scripts/buildscript-delegate.gradle"
 def ourDelegate = "$project.commonBranchTopDir/$delegateRelPath"
-if (file(ourDelegate).exists()) {
+if (new File(ourDelegate).exists()) {
   // emdi project owns the CBF pub scripts
   apply from: ourDelegate
 } else {
   // non-emdi project
   def masterDelegate = "$project.PUB_DIR_MASTER/scripts/buildscript-delegate.gradle"
-  if (file(masterDelegate).exists()) {
+  if (new File(masterDelegate).exists()) {
     apply from: masterDelegate
   } else {
     // download CBF delegate script from CBF.zip in artifactory as a last resort
@@ -378,7 +387,7 @@ if (file(ourDelegate).exists()) {
     if ( ! artifactoryMsg) {
       apply from: downloadDelegateOut.tempDelegate
     }
-    file(downloadDelegateOut.tempDir).deleteDir() // delete recursively
+    new File(downloadDelegateOut.tempDir).deleteDir() // delete recursively
     //
     if (artifactoryMsg) {
       // throw helpful exception message

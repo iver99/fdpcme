@@ -13,7 +13,13 @@ buildscript {
     if ( ! project.hasProperty('PUB_SHELL') || ! project.PUB_SHELL) {
       project.ext.PUB_SHELL = System.env.PUB_SHELL ?: "bash"
     }
-    def command = "cd '$rootDir' && git rev-parse --show-toplevel"
+    def command = null
+    if ( ! System.env.APM_CYGWIN) {
+      command = "cd '$project.rootDir' && git rev-parse --show-toplevel"
+    } else {
+      // cygwin support: convert to a windows path
+      command = "cd '$project.rootDir' && cygpath -w `git rev-parse --show-toplevel`"
+    }
     def stdout = new StringBuilder(); def stderr = new StringBuilder(); def exitCode = 1
     try {
       def proc = new ProcessBuilder("$project.PUB_SHELL", "-c", command).start()
@@ -21,9 +27,9 @@ buildscript {
     } catch (Exception e) { stderr << e.message }
     if (exitCode) {
       throw new GradleException(
-        "[ERROR] shell or git command is not found or pwd=${System.properties.'user.dir'} is not a git project dir\n" +
-        "[Note] If git is not available, env variables BRANCH_TOP_DIR and BRANCH_NAME must be set\n" +
-        "[Note] PUB_SHELL=$project.PUB_SHELL\n" +
+        "[ERROR] $project.PUB_SHELL or git command is not found or $project.rootDir is not a git project dir\n" +
+        "[Note] If the git command is not found, env variables BRANCH_TOP_DIR and BRANCH_NAME must be set\n" +
+        "[Note] Setting the PUB_SHELL property or env variable will override the default PUB_SHELL=bash\n" +
         "[Command] $project.PUB_SHELL -c \"$command\"\n" + "[Error] $stderr")
     } else {
       project.ext.commonBranchTopDir = "$stdout".trim()

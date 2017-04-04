@@ -1,13 +1,14 @@
-/* Copyright (c) 2016, 2017 Oracle and/or its affiliates. All rights reserved.*/
+/* Copyright (c) 2016 Oracle and/or its affiliates. All rights reserved.*/
 
 /*
    DESCRIPTION
      Common gradle script to be applied for all lrgs.
-  
+
    MODIFIED MM/DD/YY
-   skuchero 01/16/17 - Update CBF template code
+   skuchero 11/21/16 - Update CBF template code
    skgupta  02/11/16 - Creation
 */
+
 //-----------------------------------------------------------------------------
 // Apply common plugins,
 // configure the common publishing repository,
