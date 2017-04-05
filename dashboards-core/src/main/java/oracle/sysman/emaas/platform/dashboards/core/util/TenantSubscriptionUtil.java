@@ -91,6 +91,9 @@ public class TenantSubscriptionUtil
             TenantSubscriptionInfo tenantSubscriptionInfo1 =(TenantSubscriptionInfo)cm.getCache(CacheConstants.CACHES_TENANT_SUBSCRIPTION_INFO_CACHE).get(tenantSubscriptionInfocacheKey);
 		    if(cachedApps ==null || tenantSubscriptionInfo1 ==null){
                 LOGGER.info("Did not retrieve tenantSubscriptionInfo or subcribedapps data in cache for tenant {}",tenant);
+                //Evict these 2 cache entries to make sure the cache consistent.
+                cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE).evict(cacheKey);
+                cm.getCache(CacheConstants.CACHES_TENANT_SUBSCRIPTION_INFO_CACHE).evict(tenantSubscriptionInfocacheKey);
                 throw new CacheInconsistencyException();
             }
             LOGGER.info("retrieved tenantSubscriptionInfo for tenant {} from cache,data is {}",tenant,tenantSubscriptionInfo1);
