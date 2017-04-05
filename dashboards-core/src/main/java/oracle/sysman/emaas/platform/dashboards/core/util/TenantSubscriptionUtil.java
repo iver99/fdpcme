@@ -24,6 +24,7 @@ import oracle.sysman.emaas.platform.dashboards.core.util.lookup.RetryableLookupC
 import oracle.sysman.emaas.platform.dashboards.core.util.lookup.RetryableLookupClient.RetryableRunner;
 
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
+import oracle.sysman.emaas.platform.emcpdf.cache.exception.CacheInconsistencyException;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.DefaultKeyGenerator;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
@@ -88,22 +89,22 @@ public class TenantSubscriptionUtil
 		try {
 			cachedApps = (List<String>) cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE).get(cacheKey);
             TenantSubscriptionInfo tenantSubscriptionInfo1 =(TenantSubscriptionInfo)cm.getCache(CacheConstants.CACHES_TENANT_SUBSCRIPTION_INFO_CACHE).get(tenantSubscriptionInfocacheKey);
-		    if(tenantSubscriptionInfo1 !=null){
-                LOGGER.info("retrieved tenantSubscriptionInfo for tenant {} from cache,data is {}",tenant,tenantSubscriptionInfo1);
-                copyTenantSubscriptionInfo(tenantSubscriptionInfo1, tenantSubscriptionInfo);
-            }else{
-                LOGGER.info("Did not retrieve tenantSubscriptionInfo in cache for tenant {}",tenant);
+		    if(cachedApps ==null || tenantSubscriptionInfo1 ==null){
+                LOGGER.info("Did not retrieve tenantSubscriptionInfo or subcribedapps data in cache for tenant {}",tenant);
+                throw new CacheInconsistencyException();
             }
-        }
-		catch (Exception e) {
-			LOGGER.error("context", e);
-			return Collections.emptyList();
-		}
-		if (cachedApps != null) {
-			LOGGER.info(
+            LOGGER.info("retrieved tenantSubscriptionInfo for tenant {} from cache,data is {}",tenant,tenantSubscriptionInfo1);
+            copyTenantSubscriptionInfo(tenantSubscriptionInfo1, tenantSubscriptionInfo);
+            LOGGER.info(
                     "retrieved subscribed apps for tenant {} from cache,data is {}",tenant,cachedApps);
-			return cachedApps;
-		}
+            return cachedApps;
+        }catch(CacheInconsistencyException e){
+            LOGGER.warn("Inconsistency Exception found of Subscribapps cache group and TenantsubcriptionInfo cache group, will not use data from cache!");
+
+        }catch (Exception e) {
+            LOGGER.error("context", e);
+            return Collections.emptyList();
+        }
 
 
         List<String> apps = new RetryableLookupClient<List<String>>().connectAndDoWithRetry("TenantService", "1.0+", "collection/tenants", false, null, new RetryableRunner<List<String>>() {
