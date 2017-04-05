@@ -343,10 +343,10 @@ public class TenantSubscriptionUtilTest {
         services.add("ITA");
         Assert.assertFalse(TenantSubscriptionUtil.isMonitoringServiceOnly(services));
     }
-/*
+
     @Test(groups = {"s2"})
     public void testRestClientGetNull() {
-        String res = new RestClient().get(null, null,null);
+        String res = new TenantSubscriptionUtil.RestClient().get(null, null, null);
         org.testng.Assert.assertNull(res);
     }
 
@@ -364,7 +364,7 @@ public class TenantSubscriptionUtilTest {
                 result = false;
             }
         };
-        new RestClient().get("http://test.link.com", "emaastesttenant1", null);
+        new TenantSubscriptionUtil.RestClient().get("http://test.link.com", "emaastesttenant1", null);
         new Verifications() {
             {
                 RegistrationManager.getInstance().getAuthorizationToken();
@@ -386,7 +386,7 @@ public class TenantSubscriptionUtilTest {
                 Client.create(anyClientConfig);
             }
         };
-        new RestClient().get("http://test.link.com", "emaastesttenant1");
+        new TenantSubscriptionUtil.RestClient().get("http://test.link.com", "emaastesttenant1", null);
         new Verifications() {
             {
                 RegistrationManager.getInstance().getAuthorizationToken();
@@ -396,13 +396,12 @@ public class TenantSubscriptionUtilTest {
             }
         };
     }
-*/
-    /*
+
     @Mocked
     private RegistryLookupUtil registryLookupUtil;
     @Test
     public void testGetTenantSubscribedServices(@Mocked final DefaultClientConfig anyClientConfig,final @Mocked JsonUtil jsonUtil,
-                                                final @Mocked InstanceInfo instanceInfo,final @Mocked RestClient rs) throws Exception {
+                                                final @Mocked InstanceInfo instanceInfo,final @Mocked TenantSubscriptionUtil.RestClient rs) throws Exception {
         final Link link = new Link();
 
         link.withHref("http://den00zyr.us.oracle.com:7007/naming/entitynaming/v1/domains");
@@ -474,18 +473,18 @@ public class TenantSubscriptionUtilTest {
                 result=uriBuilder;
                 uriBuilder.build();
                 result=uri;
-                client.resource(uri);
+               /* client.resource(uri);
                 result=webResource;
                 webResource.header(anyString,authToke);
-                result=builder;
+                result=builder;*/
                 builder.put(String.class, any);
                 result=putResult;
             }
         };
 
-        new RestClient().put("url",new Object(),"userTenant");
+        new TenantSubscriptionUtil.RestClient().put("url",new Object(),"emaastesttenant1", null);
     }
 
-    */
+
 }
 
