@@ -658,7 +658,7 @@ task minifyUIFwkImplPartitionJs(dependsOn: [minifyUIFwkPartitionJs],type: com.er
 	Files.copy(Paths.get(compiledDir+"/"+versionPathElement+"/js/uifwk-impl-partition.js"), Paths.get(compiledDir+"/"+versionPathElement+"/js/uifwk-impl-partition-cached.js"))
 	//Files.copy(Paths.get(compiledDir+"/js/uifwk-partition0.js"), Paths.get(compiledDir+"/"+versionPathElement+"/js/uifwk-impl-partition-cached.js"))
 
-	text = new File(compiledDir+"/js/uifwk-partition0.js").getText()
+	def text = new File(compiledDir+"/js/uifwk-partition0.js").getText()
 	File cachedFile = new File(compiledDir+"/"+versionPathElement+"/js/uifwk-impl-partition-cached.js")
 	cachedFile.append("\n"+text,'UTF-8')
     }
