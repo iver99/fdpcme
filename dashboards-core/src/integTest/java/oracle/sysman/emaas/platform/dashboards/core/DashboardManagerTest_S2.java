@@ -25,6 +25,7 @@ import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableTimeRa
 import oracle.sysman.emaas.platform.dashboards.core.model.DashboardApplicationType;
 import oracle.sysman.emaas.platform.dashboards.core.model.Tile;
 import oracle.sysman.emaas.platform.dashboards.core.model.TileParam;
+import oracle.sysman.emaas.platform.dashboards.core.model.subscription2.TenantSubscriptionInfo;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.MockDashboardServiceFacade;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
@@ -250,7 +251,7 @@ public class DashboardManagerTest_S2 extends BaseTest
 				result = ed;
 				TenantContext.getCurrentTenant();
 				result = "opcTenantId";
-				TenantSubscriptionUtil.getTenantSubscribedServices(anyString);
+				TenantSubscriptionUtil.getTenantSubscribedServices(anyString, (TenantSubscriptionInfo)any);
 				result = Arrays.asList(new String[] { "APM", "ITAnalytics" });
 			}
 		};
