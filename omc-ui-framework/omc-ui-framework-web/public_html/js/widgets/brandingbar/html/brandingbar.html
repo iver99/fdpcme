@@ -1,6 +1,26 @@
+    <script id="omc-hamburger-menu-template" type="text/html">
+        <div id="omcHamburgerMenu" style="width:250px;" class="oj-contrast-marker oj-web-applayout-offcanvas oj-offcanvas-start">
+            <div data-bind="component: {
+                name: 'omc-uifwk-hamburger-menu',
+                params: menuParams
+                }">
+            </div>
+        </div>
+    </script>
     <div class="emaas-brandingbar">
         <div class="emaas-appheader">
-            <div id="emaas-appheader-bar" data-testapiversion="1.17.0" class="oj-row emaas-appheader-lite" style="max-width: 1920px;padding-left: 10px">
+            <!-- ko if: hamburgerMenuEnabled -->
+            <!-- hamburger menu button-->
+            <div>
+                <button id="hamburgerButton" class="oj-button-half-chrome emaas-appheader-hamburger-button emaas-appheader-toolbar-button" 
+                    data-bind="ojComponent: {component:'ojButton', display:'icons', chroming: 'half',
+                                label: hamburgerBtnLabel, 
+                                icons: {start: 'fa-icon-font fa-bars'}}, 
+                    click: toggleHamburgerMenu, attr: {title: hamburgerBtnLabel}" role="button" tabindex="0">
+                </button>
+            </div>
+            <!-- /ko -->
+            <div id="emaas-appheader-bar" data-testapiversion="1.18.0" class="oj-row emaas-appheader-lite" style="max-width: 1920px;padding-left: 10px">
 
                 <!-- logo -->  
                 <div class="emaas-appheader-logo" data-bind="attr: {'aria-label': textOracle}">
