@@ -38,8 +38,12 @@ public class TenantSubscriptionInfo {
 
     public String toJson(TenantSubscriptionInfo obj){
         JsonUtil jsonUtil = JsonUtil.buildNonNullMapper();
-        SubscribedAppsEntity subscribedAppsEntity = new SubscribedAppsEntity(obj.getAppsInfoList());
-        String result = jsonUtil.toJson(subscribedAppsEntity);
+        String result = null;
+        if(obj !=null && obj.getAppsInfoList() !=null && !obj.getAppsInfoList().isEmpty()){
+
+            SubscribedAppsEntity subscribedAppsEntity = new SubscribedAppsEntity(obj.getAppsInfoList());
+            result = jsonUtil.toJson(subscribedAppsEntity);
+        }
         LOGGER.info("ToJson is {}",result);
         return result;
     }
