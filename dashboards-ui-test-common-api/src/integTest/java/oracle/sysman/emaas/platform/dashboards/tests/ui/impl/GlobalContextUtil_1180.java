@@ -10,7 +10,7 @@
 
 package oracle.sysman.emaas.platform.dashboards.tests.ui.impl;
 
-public class BrandingBarUtil_1170 extends BrandingBarUtil_1160
+public class GlobalContextUtil_1180 extends GlobalContextUtil_1170
 {
 
 }
