@@ -68,11 +68,10 @@ public class TenantSubscriptionsAPIv2 extends APIBase
             initializeUserContext(tenantIdParam, userTenant);
             String tenantName = TenantContext.getCurrentTenant();
             TenantSubscriptionInfo tenantSubscriptionInfo = new TenantSubscriptionInfo();
-            List<String> apps = TenantSubscriptionUtil.getTenantSubscribedServices(tenantName, tenantSubscriptionInfo);
-            if (apps == null || apps.isEmpty()) {
+            TenantSubscriptionUtil.getTenantSubscribedServices(tenantName, tenantSubscriptionInfo);
+            if (tenantSubscriptionInfo.getAppsInfoList() == null || tenantSubscriptionInfo.getAppsInfoList().isEmpty()) {
                 throw new TenantWithoutSubscriptionException();
             }
-            List<AppsInfoWeb> list = new ArrayList<>();
             SubscribedAppsEntity<AppsInfoWeb> subscribedAppsEntity = new SubscribedAppsEntity(tenantSubscriptionInfo.getAppsInfoList());
             return Response.ok(getJsonUtil().toJson(subscribedAppsEntity)).build();
         }
