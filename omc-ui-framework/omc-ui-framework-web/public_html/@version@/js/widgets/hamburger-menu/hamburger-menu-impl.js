@@ -870,7 +870,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                         }
                     }
                     
-                    if (item && !item.children) {
+                    if (item && !item.children && !item.disabled) {
                         if (uifwkControlled) {
                             var linkHref = item.externalUrl; //globalMenuIdHrefMapping[data.id];
                             if(self.hrefMap && self.hrefMap[data.id]){
