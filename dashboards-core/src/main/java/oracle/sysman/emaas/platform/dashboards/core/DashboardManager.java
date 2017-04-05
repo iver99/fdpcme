@@ -1293,9 +1293,9 @@ public class DashboardManager
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			em = dsf.getEntityManager();
 			EntityTransaction et = em.getTransaction();
-			String jql = "update EmsDashboardTile t set t.title = :widgetName, t.widgetName = :widgetName where t.widgetUniqueId = :widgetId";
+			String jql = "update EmsDashboardTile t set t.title = :widgetName, t.widgetName = :widgetName, t.lastModificationDate = :lastModificationDate where t.widgetUniqueId = :widgetId";
 			Query query = em.createQuery(jql).setParameter("widgetName", widgetName)
-					.setParameter("widgetId", String.valueOf(widgetId));
+					.setParameter("widgetId", String.valueOf(widgetId)).setParameter("lastModificationDate", DateUtil.getGatewayTime());
 			if (!et.isActive()) {
 				et.begin();
 			}			
@@ -1330,8 +1330,8 @@ public class DashboardManager
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			em = dsf.getEntityManager();
 			EntityTransaction et = em.getTransaction();
-			String jql = "update EmsDashboardTile t set t.widgetDeleted = 1 where t.widgetUniqueId = :widgetId";
-			Query query = em.createQuery(jql).setParameter("widgetId", String.valueOf(widgetId));
+			String jql = "update EmsDashboardTile t set t.widgetDeleted = 1, t.lastModificationDate = :lastModificationDate where t.widgetUniqueId = :widgetId";
+			Query query = em.createQuery(jql).setParameter("widgetId", String.valueOf(widgetId)).setParameter("lastModificationDate", DateUtil.getGatewayTime());
 			if (!et.isActive()) {
 				et.begin();
 			}
