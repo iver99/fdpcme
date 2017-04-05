@@ -79,12 +79,12 @@ BEGIN
 
         V_PARAM_NAME                  := 'DF_HIDE_TITLE';
         V_PARAM_TYPE                  := 1;
-        V_PARAM_VALUE_STR             := 'FALSE';
+        V_PARAM_VALUE_STR             := 'false';
         V_PARAM_VALUE_NUM             := null;
         V_PARAM_VALUE_TIMESTAMP       := null;
         V_TILE_ID                     :=127;
         SELECT COUNT(*) INTO V_COUNT FROM EMS_DASHBOARD_TILE_PARAMS
-        WHERE TILE_ID = V_TILE_ID AND PARAM_NAME = V_PARAM_NAME AND UPPER(PARAM_VALUE_STR) = V_PARAM_VALUE_STR AND TENANT_ID = V_TENANT_ID;
+        WHERE TILE_ID = V_TILE_ID AND PARAM_NAME = V_PARAM_NAME AND LOWER(PARAM_VALUE_STR) = V_PARAM_VALUE_STR AND TENANT_ID = V_TENANT_ID;
         IF v_count > 0 THEN
            V_PARAM_VALUE_STR :='true';
            UPDATE EMS_DASHBOARD_TILE_PARAMS SET PARAM_VALUE_STR = V_PARAM_VALUE_STR
