@@ -30,6 +30,42 @@ import org.apache.logging.log4j.Logger;
  */
 public class RegistryLookupUtil
 {
+    public static class VersionedLink extends Link
+    {
+        private String authToken;
+        /**
+         *
+         */
+        public VersionedLink()
+        {
+            // TODO Auto-generated constructor stub
+        }
+
+        public VersionedLink(Link link, String authToken)
+        {
+            withHref(link.getHref());
+            withOverrideTypes(link.getOverrideTypes());
+            withRel(link.getRel());
+            withTypesStr(link.getTypesStr());
+            this.authToken = authToken;
+        }
+        /**
+         * @return the authToken
+         */
+        public String getAuthToken()
+        {
+            return authToken;
+        }
+
+        /**
+         * @param authToken the authToken to set
+         */
+        public void setAuthToken(String authToken)
+        {
+            this.authToken = authToken;
+        }
+    }
+    
 	private static final Logger LOGGER = LogManager.getLogger(RegistryLookupUtil.class);
 
 	// keep the following the same with service name
@@ -43,12 +79,12 @@ public class RegistryLookupUtil
 	public static final String COMPLIANCE_SERVICE = "ComplianceUIService";
 	public static final String ORCHESTRATION_SERVICE = "CosUIService";
 
-	public static Link getServiceExternalLink(String serviceName, String version, String rel, String tenantName)
+	public static VersionedLink getServiceExternalLink(String serviceName, String version, String rel, String tenantName)
 	{
 		return RegistryLookupUtil.getServiceExternalLink(serviceName, version, rel, false, tenantName);
 	}
 
-	public static Link getServiceInternalLink(String serviceName, String version, String rel, String tenantName)
+	public static VersionedLink getServiceInternalLink(String serviceName, String version, String rel, String tenantName)
 	{
 		return RegistryLookupUtil.getServiceInternalLink(serviceName, version, rel, false, tenantName);
 	}
@@ -143,14 +179,27 @@ public class RegistryLookupUtil
 		return protocoledLinks;
 	}
 
-	private static Link getServiceExternalLink(String serviceName, String version, String rel, boolean prefixMatch,
+    private static String getAuthorizationAccessToken(InstanceInfo instanceInfo) {
+        char[] authToken = LookupManager.getInstance().getAuthorizationAccessToken(instanceInfo);
+        return new String(authToken);
+    }
+    
+    private static InstanceInfo getInstanceInfo(String serviceName, String version) {
+        InstanceInfo.Builder builder = InstanceInfo.Builder.newBuilder().withServiceName(serviceName);
+        if (!StringUtil.isEmpty(version)) {
+            builder = builder.withVersion(version);
+        }
+        return builder.build();
+    }
+    
+	private static VersionedLink getServiceExternalLink(String serviceName, String version, String rel, boolean prefixMatch,
 			String tenantName)
 	{
 		LOGGER.debug(
 				"/getServiceExternalLink/ Trying to retrieve service external link for service: \"{}\", version: \"{}\", rel: \"{}\", tenant: \"{}\"",
 				serviceName, version, rel, tenantName);
-		InstanceInfo info = InstanceInfo.Builder.newBuilder().withServiceName(serviceName).withVersion(version).build();
-		Link lk = null;
+		InstanceInfo info = getInstanceInfo(serviceName, version);
+		VersionedLink lk = null;
 		try {
 			List<InstanceInfo> result = null;
 			if (!StringUtil.isEmpty(tenantName)) {
@@ -193,7 +242,7 @@ public class RegistryLookupUtil
 						}
 					}
 					if (links != null && !links.isEmpty()) {
-						lk = links.get(0);
+						lk = new VersionedLink(links.get(0), getAuthorizationAccessToken(internalInstance));
 						break;
 					}
 				}
@@ -223,7 +272,7 @@ public class RegistryLookupUtil
 						}
 					}
 					if (links != null && !links.isEmpty()) {
-						lk = links.get(0);
+					    lk = new VersionedLink(links.get(0), getAuthorizationAccessToken(internalInstance));
 						return lk;
 					}
 				}
@@ -236,14 +285,14 @@ public class RegistryLookupUtil
 		}
 	}
 
-	private static Link getServiceInternalLink(String serviceName, String version, String rel, boolean prefixMatch,
+	private static VersionedLink getServiceInternalLink(String serviceName, String version, String rel, boolean prefixMatch,
 			String tenantName)
 	{
 		LOGGER.debug(
 				"/getServiceInternalLink/ Trying to retrieve service internal link for service: \"{}\", version: \"{}\", rel: \"{}\", prefixMatch: \"{}\", tenant: \"{}\"",
 				serviceName, version, rel, prefixMatch, tenantName);
-		InstanceInfo info = InstanceInfo.Builder.newBuilder().withServiceName(serviceName).withVersion(version).build();
-		Link lk = null;
+		InstanceInfo info = getInstanceInfo(serviceName, version);
+		VersionedLink lk = null;
 		try {
 			List<InstanceInfo> result = null;
 			if (!StringUtil.isEmpty(tenantName)) {
@@ -275,7 +324,7 @@ public class RegistryLookupUtil
 						links = internalInstance.getLinksWithProtocol(rel, "http");
 					}
 					if (links != null && !links.isEmpty()) {
-						lk = links.get(0);
+					    lk = new VersionedLink(links.get(0), getAuthorizationAccessToken(internalInstance));
 						return lk;
 					}
 				}
@@ -291,7 +340,7 @@ public class RegistryLookupUtil
 	private static Map<String, String> getVanityBaseURLs(String tenantName)
 	{
 		LOGGER.debug("/getVanityBaseURLs/ Trying to retrieve service internal link for tenant: \"{}\"", tenantName);
-		InstanceInfo info = InstanceInfo.Builder.newBuilder().withServiceName("OHS").build();
+		InstanceInfo info = getInstanceInfo("OHS", null);
 		Link lk = null;
 		Map<String, String> map = new HashMap<String, String>();
 		try {

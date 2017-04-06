@@ -40,6 +40,7 @@ public class RegistryLookupUtil
 	public static class VersionedLink extends Link
 	{
 		private String version;
+		private String authToken;
 
 		/**
 		 *
@@ -49,13 +50,14 @@ public class RegistryLookupUtil
 			// TODO Auto-generated constructor stub
 		}
 
-		public VersionedLink(Link link, String version)
+		public VersionedLink(Link link, String version, String authToken)
 		{
 			withHref(link.getHref());
 			withOverrideTypes(link.getOverrideTypes());
 			withRel(link.getRel());
 			withTypesStr(link.getTypesStr());
 			this.version = version;
+			this.authToken = authToken;
 		}
 
 		/**
@@ -75,6 +77,21 @@ public class RegistryLookupUtil
 			this.version = version;
 		}
 
+        /**
+         * @return the authToken
+         */
+        public String getAuthToken()
+        {
+            return authToken;
+        }
+
+        /**
+         * @param authToken the authToken to set
+         */
+        public void setAuthToken(String authToken)
+        {
+            this.authToken = authToken;
+        }
 	}
 
 	private static final Logger LOGGER = LogManager.getLogger(RegistryLookupUtil.class);
@@ -109,7 +126,7 @@ public class RegistryLookupUtil
 		LOGGER.debug(
 				"/getServiceExternalEndPoint/ Trying to retrieve service external end point for service: \"{}\", version: \"{}\", tenant: \"{}\"",
 				serviceName, version, tenantName);
-		InstanceInfo queryInfo = InstanceInfo.Builder.newBuilder().withServiceName(serviceName).withVersion(version).build();
+		InstanceInfo queryInfo = getInstanceInfo(serviceName, version);
 		LogUtil.setInteractionLogThreadContext(tenantName, "Retristry lookup client", LogUtil.InteractionLogDirection.OUT);
 		itrLogger.debug("Retrieved instance {}", queryInfo);
 		SanitizedInstanceInfo sanitizedInstance;
@@ -163,38 +180,6 @@ public class RegistryLookupUtil
 		else {
 			return null;
 		}
-		/*
-		InstanceInfo queryInfo = InstanceInfo.Builder.newBuilder().withServiceName(serviceName).withVersion(version).build();
-		SanitizedInstanceInfo sanitizedInstance;
-		InstanceInfo internalInstance = null;
-		try {
-		    internalInstance = LookupManager.getInstance().getLookupClient().getInstance(queryInfo);
-		    sanitizedInstance = LookupManager.getInstance().getLookupClient().getSanitizedInstanceInfo(internalInstance);
-		    if (sanitizedInstance == null) {
-		        String url = RegistryLookupUtil.getInternalEndPoint(internalInstance);
-		        return new EndpointEntity(serviceName, version, url);
-		        //                return "https://slc07hcn.us.oracle.com:4443/microservice/c8c62151-e90d-489a-83f8-99c741ace530/";
-		        // this happens when
-		        //    1. no instance exists based on the query criteria
-		        // or
-		        //    2. the selected instance does not expose any safe endpoints that are externally routeable (e.g., no HTTPS virtualEndpoints)
-		        //
-		        // In this case, need to trigger the failover scheme, or alternatively, one could use the plural form of the lookup, and loop through the returned instances
-		    }
-		    else {
-		        String url = RegistryLookupUtil.getExternalEndPoint(sanitizedInstance);
-		        return new EndpointEntity(serviceName, version, url);
-		    }
-		}
-		catch (Exception e) {
-		    e.printStackTrace();
-		    if (internalInstance != null) {
-		        String url = RegistryLookupUtil.getInternalEndPoint(internalInstance);
-		        return new EndpointEntity(serviceName, version, url);
-		    }
-		}
-		return null;
-		 */
 	}
 
 	public static VersionedLink getServiceExternalLink(String serviceName, String version, String rel, String tenantName)
@@ -208,14 +193,14 @@ public class RegistryLookupUtil
 		return RegistryLookupUtil.getServiceExternalLink(serviceName, version, rel, true, tenantName);
 	}
 
-	public static String getServiceInternalEndpoint(String serviceName, String version, String tenantName)
+	public static VersionedLink getServiceInternalEndpoint(String serviceName, String version, String tenantName)
 	{
 		LOGGER.debug(
 				"/getServiceInternalLink/ Trying to retrieve service internal link for service: \"{}\", version: \"{}\", tenant: \"{}\"",
 				serviceName, version, tenantName);
 		LogUtil.setInteractionLogThreadContext(tenantName, "Retristry lookup client", LogUtil.InteractionLogDirection.OUT);
-		InstanceInfo info = InstanceInfo.Builder.newBuilder().withServiceName(serviceName).withVersion(version).build();
-		String endpoint = null;
+		InstanceInfo info = getInstanceInfo(serviceName, version);
+		VersionedLink link = new VersionedLink();
 		try {
 			List<InstanceInfo> result = null;
 			if (!StringUtil.isEmpty(tenantName)) {
@@ -235,6 +220,7 @@ public class RegistryLookupUtil
 			else {
 				result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
 			}
+			String endpoint = null;
 			if (result != null && !result.isEmpty()) {
 				// [EMCPDF-733] Rest client can't handle https currently, so http protocol is enough for internal use
 				//https link is not found, then find http link
@@ -245,15 +231,17 @@ public class RegistryLookupUtil
 					}
 				}
 			}
-			return endpoint;
+			link.withHref(endpoint);
+			link.setAuthToken(getAuthorizationAccessToken(info));
+			return link;
 		}
 		catch (Exception e) {
 			LOGGER.error(e.getLocalizedMessage(), e);
-			return endpoint;
+			return link;
 		}
 	}
 
-	public static Link getServiceInternalLink(String serviceName, String version, String rel, boolean prefixMatch,
+	public static VersionedLink getServiceInternalLink(String serviceName, String version, String rel, boolean prefixMatch,
 			String tenantName, Boolean useCache)
 	{
 		ICacheManager cm = CacheManagers.getInstance().build();
@@ -315,7 +303,7 @@ public class RegistryLookupUtil
 						version = internalInstance.getVersion();
 					}
 					if (links != null && !links.isEmpty()) {
-						lk = new VersionedLink(links.get(0), version);
+						lk = new VersionedLink(links.get(0), version, getAuthorizationAccessToken(internalInstance));
 						itrLogger.debug("Retrieved link {}", lk == null ? null : lk.getHref());
 						if (useCache) {
 							cm.getCache(CacheConstants.CACHES_SERVICE_INTERNAL_LINK_CACHE).put(cacheKey, new CachedLink(lk));
@@ -676,6 +664,19 @@ public class RegistryLookupUtil
 
 		return protocoledLinks;
 	}
+	
+	public static String getAuthorizationAccessToken(InstanceInfo instanceInfo) {
+	    char[] authToken = LookupManager.getInstance().getAuthorizationAccessToken(instanceInfo);
+	    return new String(authToken);
+	}
+	
+	private static InstanceInfo getInstanceInfo(String serviceName, String version) {
+        InstanceInfo.Builder builder = InstanceInfo.Builder.newBuilder().withServiceName(serviceName);
+        if (!StringUtil.isEmpty(version)) {
+            builder = builder.withVersion(version);
+        }
+        return builder.build();
+	}
 
 	private static VersionedLink getServiceExternalLink(String serviceName, String version, String rel, boolean prefixMatch,
 			String tenantName)
@@ -699,17 +700,12 @@ public class RegistryLookupUtil
 		catch (Exception e) {
 			LOGGER.error("Error to retrieve external link from cache. Try to lookup the link", e);
 		}
-
-		InstanceInfo.Builder builder = InstanceInfo.Builder.newBuilder().withServiceName(serviceName);
-		if (!StringUtil.isEmpty(version)) {
-			builder = builder.withVersion(version);
-		}
-		InstanceInfo info = builder.build();
+		
+		InstanceInfo info = getInstanceInfo(serviceName, version);
 		LogUtil.setInteractionLogThreadContext(tenantName, "Retristry lookup client", LogUtil.InteractionLogDirection.OUT);
 		VersionedLink lk = null;
 		try {
 			List<InstanceInfo> result = null;
-
 			if (!StringUtil.isEmpty(tenantName)) {
 				InstanceInfo ins = LookupManager.getInstance().getLookupClient().getInstanceForTenant(info, tenantName);
 				itrLogger.debug("Retrieved instance {} by using getInstanceForTenant for tenant {}", ins, tenantName);
@@ -725,14 +721,12 @@ public class RegistryLookupUtil
 					result = new ArrayList<InstanceInfo>();
 					result.add(ins);
 				}
-
 			}
 			else {
 				result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
 				itrLogger.debug("Retrieved InstanceInfo list {} by using LookupClient.lookup for InstanceInfo {}", result, info);
 			}
 			if (result != null && !result.isEmpty()) {
-
 				//find https link first
 				for (InstanceInfo internalInstance : result) {
 					List<Link> links = null;
@@ -766,7 +760,7 @@ public class RegistryLookupUtil
 						}
 					}
 					if (links != null && !links.isEmpty()) {
-						lk = new VersionedLink(links.get(0), version);
+						lk = new VersionedLink(links.get(0), version, getAuthorizationAccessToken(internalInstance));
 						break;
 					}
 				}
@@ -810,7 +804,7 @@ public class RegistryLookupUtil
 						}
 					}
 					if (links != null && !links.isEmpty()) {
-						lk = new VersionedLink(links.get(0), version);
+						lk = new VersionedLink(links.get(0), version, getAuthorizationAccessToken(internalInstance));
 						LOGGER.debug(
 								"[branch 2] Retrieved link: \"{}\" for service: \"{}\", version: \"{}\", rel: \"{}\", tenant: \"{}\"",
 								lk == null ? null : lk.getHref(), serviceName, version, rel, tenantName);

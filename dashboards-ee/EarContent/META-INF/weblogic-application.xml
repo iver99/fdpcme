@@ -8,12 +8,6 @@
     <wls:listener>
         <wls:listener-class>oracle.sysman.emaas.platform.dashboards.webutils.services.DashboardApiLifecycleService</wls:listener-class>
     </wls:listener>
-	<wls:security>
-		<wls:security-role-assignment>
-	    	<wls:role-name>valid-users</wls:role-name>
-	    	<wls:principal-name>users</wls:principal-name>
-    	</wls:security-role-assignment>
-	</wls:security>    
     <wls:session-descriptor>
         <wls:tracking-enabled>false</wls:tracking-enabled>
     </wls:session-descriptor>

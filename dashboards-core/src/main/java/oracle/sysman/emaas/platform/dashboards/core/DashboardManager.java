@@ -53,6 +53,7 @@ import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.ZDTContext;
+import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil.VersionedLink;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsPreference;
@@ -499,14 +500,14 @@ public class DashboardManager
 		}
 
         RestClient rc = new RestClient();
-        Link tenantsLink = RegistryLookupUtil.getServiceInternalLink(
-        		"SavedSearch", "1.0+", "search", null);
+        Link tenantsLink = RegistryLookupUtil.getServiceInternalLink("SavedSearch", "1.0+", "search", null);
         String tenantHref = tenantsLink.getHref() + "/list";
         String tenantName = TenantContext.getCurrentTenant();
         String savedSearchResponse = null;
         try {
 			rc.setHeader("X-USER-IDENTITY-DOMAIN-NAME", tenantName);
-        	savedSearchResponse = rc.put(tenantHref, ssfIdList.toString(), tenantName);
+        	savedSearchResponse = rc.put(tenantHref, ssfIdList.toString(), tenantName, 
+        	        ((VersionedLink) tenantsLink).getAuthToken());
         }catch (Exception e) {
         	LOGGER.error(e);
         }
