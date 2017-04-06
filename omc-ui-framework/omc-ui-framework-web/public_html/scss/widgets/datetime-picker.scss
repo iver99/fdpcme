@@ -43,6 +43,7 @@
     /*border: 1px solid #F0F0F0;*/
     /*height: 396px;*/
     background-color: #fcfdfe;
+    white-space: nowrap;
 }
 
 .float-left {
@@ -419,7 +420,7 @@ div[id^='pickerPanel'] .oj-listbox-drop{
     max-width: 340px;
 }
 
-.lastRadio {
+.relRadios {
     vertical-align: top;
     display: inline-block;
     margin-top: 10px;

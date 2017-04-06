@@ -7,13 +7,15 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
     'ojs/ojcore',
     'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg',
     'uifwk/@version@/js/util/zdt-util-impl',
+    'uifwk/@version@/js/sdk/menu-util-impl',
     'ojs/ojknockout',
     'ojs/ojtoolbar',
     'ojs/ojmenu',
     'ojs/ojbutton',
-    'ojs/ojdialog'
+    'ojs/ojdialog',
+    'ojs/ojoffcanvas'
 ],
-    function (ko, $, dfumodel, msgUtilModel, contextModel, oj, nls, zdtUtilModel) {
+    function (ko, $, dfumodel, msgUtilModel, contextModel, oj, nls, zdtUtilModel, menuModel) {
         function BrandingBarViewModel(params) {
             var self = this;
             var msgUtil = new msgUtilModel();
@@ -69,10 +71,10 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.entityContextReadOnly.subscribe(function () {
                 if (!self.entityContextReadOnly()) {
                     var versionedContextSelectorUtils = window.getSDKVersionFile ?
-                                window.getSDKVersionFile('emsaasui/emcta/ta/js/sdk/contextSelector/api/ContextSelectorUtils') : null;
+                        window.getSDKVersionFile('emsaasui/emcta/ta/js/sdk/contextSelector/api/ContextSelectorUtils') : null;
                     var contextSelectorUtil = versionedContextSelectorUtils ? versionedContextSelectorUtils :
-                                '/emsaasui/emcta/ta/js/sdk/contextSelector/api/ContextSelectorUtils.js';
-                    
+                        '/emsaasui/emcta/ta/js/sdk/contextSelector/api/ContextSelectorUtils.js';
+
                     require([contextSelectorUtil], function (EmctaContextSelectorUtil) {
                         EmctaContextSelectorUtil.registerComponents();
                         self.showEntityContextSelector(true);
@@ -187,17 +189,16 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             ;
 
             function handleShowHideTopology() {
+                if (self.topologyNeedRefresh && !self.isTopologyDisplayed()) {
+                    //when expanding the topology, do a refresh if needed
+                    console.log("**************topology displayed");
+                    console.log("**************refreshTopologyParams");
+                    refreshTopologyParams();
+                }
                 $("#ude-topology-div").slideToggle("fast", function () {
                     self.isTopologyDisplayed(!self.isTopologyDisplayed());
 
                     if (self.isTopologyDisplayed()) {
-                        //when expanding the topology, do a refresh if needed
-                        console.log("**************topology displayed");
-                        console.log("**************self.topologyNeedRefresh" + self.topologyNeedRefresh);
-                        if (self.topologyNeedRefresh) {
-                            console.log("**************refreshTopologyParams");
-                            refreshTopologyParams();
-                        }
                         var entityMeIds = cxtUtil.getEntityMeIds();
                         if (entityMeIds && entityMeIds.length) {
                             self.highlightedEntities(entityMeIds.concat([CONTEXT_CHANGE, NO_HIGHLIGHT]));
@@ -295,10 +296,10 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 } else {
                     self.topologyCssHeight(201);
                 }
-                
-                if($("#ude_topology_legend").length > 0) {
+
+                if ($("#ude_topology_legend").length > 0) {
                     self.maxIconToRight("180px");
-                }else {
+                } else {
                     self.maxIconToRight("30px");
                 }
             });
@@ -478,18 +479,19 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 "appId": appIdOcs,
                 "appName": "BRANDING_BAR_APP_NAME_ORCHESTRATION",
                 "serviceDisplayName": "BRANDING_BAR_APP_NAME_ORCHESTRATION",
-                "serviceName": "CosServiceUI",
+                "serviceName": "CosUIService",
                 "version": self.SERVICE_VERSION,
                 "helpTopicId": "em_home_gs"
             };
 
+            var omcHamburgerMenuOptIn = $.isFunction(params.omcHamburgerMenuOptIn) ? params.omcHamburgerMenuOptIn() : params.omcHamburgerMenuOptIn;
             self.appId = $.isFunction(params.appId) ? params.appId() : params.appId;
             self.relNotificationCheck = $.isFunction(params.relNotificationCheck) ? params.relNotificationCheck() : params.relNotificationCheck;
             self.relNotificationShow = $.isFunction(params.relNotificationShow) ? params.relNotificationShow() : params.relNotificationShow;
             self.notificationVisible = ko.observable(false);
             self.notificationDisabled = ko.observable(true);
             self.notificationPageUrl = null;
-            self.navLinksVisible = true;
+            self.navLinksVisible = omcHamburgerMenuOptIn ? false : true;
             self.navLinksImmediateLoading = ko.observable(false);
 
             var isAppIdNotEmpty = self.appId && $.trim(self.appId) !== "";
@@ -742,7 +744,131 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 $("#links_menu").slideToggle('normal');
                 item.stopImmediatePropagation();
             };
+            
+            function injectHamburgerMenuComponent() {
+                //Check if hamburger menu has been created or not, if not create it
+                if (!$('#omcHamburgerMenu').length) {
+                    var hamburgerDiv = $($("#omc-hamburger-menu-template").text());
+                    $('#offcanvasInnerContainer').append(hamburgerDiv);
+                    ko.applyBindings(self, hamburgerDiv[0]);
+                }
+            }
+            
+            self.hamburgerMenuEnabled = omcHamburgerMenuOptIn ? true : false;
+            self.isHamburgerMenuRegistered = ko.observable(false);
+            if (omcHamburgerMenuOptIn) {
+                self.hamburgerBtnLabel = nls.BRANDING_BAR_HAMBURGER_BTN_LABEL;
+                self.menuParams = {'appId': self.appId, 'userName': self.userName, 'tenantName': self.tenantName, 'omcCurrentMenuId': params.omcCurrentMenuId};
+                if (!self.isHamburgerMenuRegistered()) {
+                    require(['ojs/ojnavigationlist','ojs/ojjsontreedatasource'], function () {
+                    //Register a Knockout component for hamburger menu
+                        var hamburgerVMPath = "uifwk/js/widgets/hamburger-menu/js/hamburger-menu";
+                        var hamburgerTemplatePath = "uifwk/js/widgets/hamburger-menu/html/hamburger-menu.html";
+                        if (!ko.components.isRegistered('omc-uifwk-hamburger-menu')) {
+                            ko.components.register("omc-uifwk-hamburger-menu", {
+                                viewModel: {require: hamburgerVMPath},
+                                template: {require: 'text!' + hamburgerTemplatePath}
+                            });
+                            self.isHamburgerMenuRegistered(true);
+                        }     
+                        injectHamburgerMenuComponent();
+                    });
+                }
+                else {
+                    self.isHamburgerMenuRegistered(true);
+                    injectHamburgerMenuComponent();
+                }
+                
+                self.xlargeScreen = oj.ResponsiveKnockoutUtils.createMediaQueryObservable('(min-width: 1440px)');
 
+                self.xlargeScreen.subscribe(function(isXlarge){
+                    if(!isXlarge){
+                        if($("#omcHamburgerMenu").hasClass("oj-offcanvas-open")){
+                            oj.OffcanvasUtils.close({
+                                    "edge": "start",
+                                    "displayMode": "push",
+                                    "selector": "#omcHamburgerMenu"
+                                });
+                        }
+                    }else{
+                        if(!$("#omcHamburgerMenu").hasClass("oj-offcanvas-open")){
+                            oj.OffcanvasUtils.toggle({
+                                    "edge": "start",
+                                    "displayMode": "push",
+                                    "selector": "#omcHamburgerMenu",
+                                    "autoDismiss": "none"
+                                });
+                        }else if($("#omcHamburgerMenu").hasClass("oj-offcanvas-overlay")){
+                                oj.OffcanvasUtils.close({
+                                    "edge": "start",
+                                    "displayMode": "overlay",
+                                    "selector": "#omcHamburgerMenu",
+                                    "autoDismiss": "focusLoss"
+                                });
+                                setTimeout(function(){
+                                        oj.OffcanvasUtils.open({
+                                            "edge": "start",
+                                            "displayMode": "push",
+                                            "selector": "#omcHamburgerMenu",
+                                            "autoDismiss": "none"
+                                        });
+                                },500);
+                        }
+                    }
+                });
+
+                self.toggleHamburgerMenu = function() {
+                    return oj.OffcanvasUtils.toggle({
+                            "edge": "start",
+                            "displayMode": self.xlargeScreen() ? "push" : "overlay",
+    //                      "content": "#main-container",
+                            "selector": "#omcHamburgerMenu",
+                            "autoDismiss": self.xlargeScreen() ? "none" : "focusLoss"
+                        });
+                };
+
+                var menuUtil = new menuModel();
+                menuUtil.subscribeServiceMenuLoadedEvent(function(){
+                    $("#omcHamburgerMenu").on("ojopen", function(event, offcanvas) {
+                        if(offcanvas.displayMode === "push")
+                            $("#offcanvasInnerContainer").width(document.body.clientWidth-250);
+                        });
+                    $("#omcHamburgerMenu").on("ojclose", function(event, offcanvas) {
+                        $("#offcanvasInnerContainer").width(document.body.clientWidth);
+                    });
+                    $(window).resize(function() {
+                        if ($("#omcHamburgerMenu").hasClass("oj-offcanvas-open") && !$("#omcHamburgerMenu").hasClass("oj-offcanvas-overlay")) {
+                            $("#offcanvasInnerContainer").width(document.body.clientWidth - 250);
+                        } else {
+                            $("#offcanvasInnerContainer").width(document.body.clientWidth);
+                        }
+                    });
+
+                    if(self.xlargeScreen()){
+                        $((function(){
+                            oj.OffcanvasUtils.open({
+                                    "edge": "start",
+                                    "displayMode": "push",
+                                    "selector": "#omcHamburgerMenu",
+                                    "autoDismiss": "none"
+                                });
+                        })());
+                    }
+                    
+                    //Set current menu item if specified by API call
+                    if (window._uifwk && window._uifwk.currentOmcMenuItemId) {
+                        menuUtil.setCurrentMenuItem(window._uifwk.currentOmcMenuItemId, window._uifwk.underOmcAdmin);
+                    }
+                    else {
+                        //Set current menu item if specified from branding bar params
+                        var selectedMenuId = params.omcCurrentMenuId;
+                        if (selectedMenuId) {
+                            menuUtil.setCurrentMenuItem(selectedMenuId);
+                        }
+                    }
+                });
+            }
+            
             /**
              * Notifications button click handler
              */

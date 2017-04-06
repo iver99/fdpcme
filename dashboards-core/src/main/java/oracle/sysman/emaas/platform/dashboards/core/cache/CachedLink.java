@@ -24,12 +24,14 @@ public class CachedLink implements Serializable
 	private final String href;
 	private final String rel;
 	private final String version;
+	private final String authToken;
 
 	public CachedLink(VersionedLink link)
 	{
 		href = link.getHref();
 		rel = link.getRel();
 		version = link.getVersion();
+		authToken = link.getAuthToken();
 	}
 
 	/**
@@ -46,6 +48,7 @@ public class CachedLink implements Serializable
 		link.withHref(href);
 		link.withRel(rel);
 		link.setVersion(version);
+		link.setAuthToken(authToken);
 		return link;
 	}
 
@@ -64,4 +67,12 @@ public class CachedLink implements Serializable
 	{
 		return version;
 	}
+
+    /**
+     * @return the authToken
+     */
+    public String getAuthToken()
+    {
+        return authToken;
+    }
 }

@@ -7,7 +7,6 @@ import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.StringUtil;
 
 import org.apache.logging.log4j.LogManager;
@@ -38,9 +37,9 @@ public class RestClient {
     public RestClient() {
     }
 
-    public String get(String url, String tenant) {
+    public String get(String url, String tenant, String auth) {
         try {
-            return innerGet(url, tenant);
+            return innerGet(url, tenant, auth);
         }catch(UniformInterfaceException e){
             LOGGER.error("Error occurred for [GET] action, URL is {}: status code of the HTTP response indicates a response that is not expected", url);
             LOGGER.error(e);
@@ -55,11 +54,11 @@ public class RestClient {
         return null;
     }
 
-    public String getWithException(String url, String tenant)throws UniformInterfaceException,ClientHandlerException {
-        return innerGet(url, tenant);
+    public String getWithException(String url, String tenant, String auth)throws UniformInterfaceException,ClientHandlerException {
+        return innerGet(url, tenant, auth);
     }
 
-    private String innerGet(String url, String tenant)throws UniformInterfaceException,ClientHandlerException {
+    private String innerGet(String url, String tenant, String auth)throws UniformInterfaceException,ClientHandlerException {
         if (url == null || "".equals(url)) {
             return null;
         }
@@ -68,8 +67,7 @@ public class RestClient {
         Client client = Client.create(cc);
         client.setConnectTimeout(DEFAULT_TIMEOUT);
         client.setReadTimeout(DEFAULT_TIMEOUT);
-        char[] authToken = RegistrationManager.getInstance().getAuthorizationToken();
-        String auth = String.copyValueOf(authToken);
+
         if (StringUtil.isEmpty(auth)) {
             LOGGER.warn("Warning: RestClient get an empty auth token when connection to url {}", url);
         } else {
@@ -95,7 +93,7 @@ public class RestClient {
         return builder.get(String.class);
     }
 
-    public String put(String url, Object requestEntity, String tenant) {
+    public String put(String url, Object requestEntity, String tenant, String auth) {
         if (StringUtil.isEmpty(url)) {
             LOGGER.error("Unable to post to an empty URL for requestEntity: \"{}\", tenant: \"{}\"", requestEntity, tenant);
             return null;
@@ -111,8 +109,7 @@ public class RestClient {
         Client client = Client.create(cc);
         client.setConnectTimeout(DEFAULT_TIMEOUT);
         client.setReadTimeout(DEFAULT_TIMEOUT);
-        char[] authToken = RegistrationManager.getInstance().getAuthorizationToken();
-        String auth = String.copyValueOf(authToken);
+
         if (StringUtil.isEmpty(auth)) {
             LOGGER.warn("Warning: RestClient get an empty auth token when connection to url {}", url);
         } else {

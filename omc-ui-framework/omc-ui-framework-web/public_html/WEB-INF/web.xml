@@ -9,6 +9,7 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
+  
   <filter>
       <filter-name>uifwkJsFilter</filter-name>
       <filter-class>oracle.sysman.emaas.platform.uifwk.ui.web.UifwkPartitionJsFilter</filter-class>
@@ -17,20 +18,21 @@
       <filter-name>uifwkJsFilter</filter-name>
       <url-pattern>/js/uifwk-partition.js</url-pattern>
   </filter-mapping>
-    	<security-constraint>
-	  <web-resource-collection>
-	    <web-resource-name>secure-pages</web-resource-name>
-	    <url-pattern>/*</url-pattern>
-	    <http-method-omission>OPTIONS</http-method-omission>
-	  </web-resource-collection>
-	  <auth-constraint>
-	    <role-name>valid-users</role-name>
-	  </auth-constraint>
-	</security-constraint>
-	<security-role>
-	  <role-name>valid-users</role-name>
-	</security-role>
-	<login-config>
-	    <auth-method>CLIENT-CERT,BASIC</auth-method>
-	</login-config>  
+  
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>secure-pages</web-resource-name>
+      <url-pattern>/*</url-pattern>
+      <http-method-omission>OPTIONS</http-method-omission>
+    </web-resource-collection>
+    <auth-constraint>
+      <role-name>valid-users</role-name>
+    </auth-constraint>
+  </security-constraint>
+  <security-role>
+    <role-name>valid-users</role-name>
+  </security-role>
+  <login-config>
+    <auth-method>CLIENT-CERT,BASIC</auth-method>
+  </login-config>
 </web-app>

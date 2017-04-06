@@ -53,6 +53,7 @@ import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.ZDTContext;
+import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil.VersionedLink;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsPreference;
@@ -374,6 +375,7 @@ public class DashboardManager
 			EmsUserOptions euo = dsf.getEmsUserOptions(userName, dashboardId);
 			List<EmsDashboardTile> edbdtList = ed.getDashboardTileList();
 			CombinedDashboard cdSet = null;
+			BigInteger selectedId = null;
 
 			if (Dashboard.DASHBOARD_TYPE_CODE_SET.equals(ed.getType())) {
 				// combine dashboard set
@@ -416,7 +418,6 @@ public class DashboardManager
 					// ahead w/o selected tab then...
 					LOGGER.error(e.getLocalizedMessage(), e);
 				}
-				BigInteger selectedId = null;
 
 				if (selected != null) {
 					try {
@@ -458,7 +459,7 @@ public class DashboardManager
 					ssfIdList.add(edt.getWidgetUniqueId());
 				}
 			}
-			String savedSearchResponse = retrieveSavedSeasrch(dashboardId, ed.getIsSystem() == 1, ssfIdList);
+			String savedSearchResponse = retrieveSavedSeasrch(selectedId != null ? selectedId : dashboardId, ed.getIsSystem() == 1, ssfIdList);
 
 			// combine single dashboard or selected dashbaord
 			CombinedDashboard cd = CombinedDashboard.valueOf(ed, ep, euo,savedSearchResponse);
@@ -499,14 +500,14 @@ public class DashboardManager
 		}
 
         RestClient rc = new RestClient();
-        Link tenantsLink = RegistryLookupUtil.getServiceInternalLink(
-        		"SavedSearch", "1.0+", "search", null);
+        Link tenantsLink = RegistryLookupUtil.getServiceInternalLink("SavedSearch", "1.0+", "search", null);
         String tenantHref = tenantsLink.getHref() + "/list";
         String tenantName = TenantContext.getCurrentTenant();
         String savedSearchResponse = null;
         try {
 			rc.setHeader("X-USER-IDENTITY-DOMAIN-NAME", tenantName);
-        	savedSearchResponse = rc.put(tenantHref, ssfIdList.toString(), tenantName);
+        	savedSearchResponse = rc.put(tenantHref, ssfIdList.toString(), tenantName, 
+        	        ((VersionedLink) tenantsLink).getAuthToken());
         }catch (Exception e) {
         	LOGGER.error(e);
         }

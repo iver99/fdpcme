@@ -132,12 +132,16 @@ define(['knockout',
             if (!self.dataSource[dashboardId]) {
                 self.dataSource[dashboardId] = {};
             }
-            if (window._dashboardServerCache && window._dashboardServerCache.id == dashboardId) {
-                var kodsb = getKODashboardForUI(window._dashboardServerCache);
-                initializeDashboardAfterLoad(dashboardId, kodsb, window._dashboardServerCache);
-                window._dashboardServerCache = undefined;
+            if (isEmptyObject(self.dataSource[dashboardId]) || !self.dataSource[dashboardId].dashboard) {
+                if (window._dashboardServerCache && window._dashboardServerCache.id == dashboardId) {
+                    console.log('Load dashboard meta data from the injected html');
+                    var kodsb = getKODashboardForUI(window._dashboardServerCache);
+                    initializeDashboardAfterLoad(dashboardId, kodsb, window._dashboardServerCache);
+                    window._dashboardServerCache = undefined;
+                }
             }
             if (isEmptyObject(self.dataSource[dashboardId]) || !self.dataSource[dashboardId].dashboard) {
+                console.log('Load dashboard meta data with an Ajax call');
                 Builder.loadDashboard(dashboardId,
                         function (dsb) {
                             var kodsb = getKODashboardForUI(dsb);
@@ -146,6 +150,7 @@ define(['knockout',
                         },
                         errorCallback);
             } else {
+                console.log('Dashboard meta data has been loaded previously');
                 successCallback && successCallback(self.dataSource[dashboardId].dashboard);
             }
         };
