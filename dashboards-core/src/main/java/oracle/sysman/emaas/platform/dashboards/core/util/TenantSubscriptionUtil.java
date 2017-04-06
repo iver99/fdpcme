@@ -11,43 +11,33 @@
 package oracle.sysman.emaas.platform.dashboards.core.util;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.net.SocketTimeoutException;
 
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriBuilder;
-
-import com.sun.jersey.api.client.ClientHandlerException;
-import com.sun.jersey.api.client.UniformInterfaceException;
+import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter;
+import oracle.sysman.emaas.platform.dashboards.core.restclient.AppMappingCollection;
+import oracle.sysman.emaas.platform.dashboards.core.restclient.AppMappingEntity;
+import oracle.sysman.emaas.platform.dashboards.core.restclient.DomainEntity;
+import oracle.sysman.emaas.platform.dashboards.core.restclient.DomainsEntity;
+import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil.VersionedLink;
+import oracle.sysman.emaas.platform.dashboards.core.util.lookup.RetryableLookupClient;
+import oracle.sysman.emaas.platform.dashboards.core.util.lookup.RetryableLookupClient.RetryableLookupException;
+import oracle.sysman.emaas.platform.dashboards.core.util.lookup.RetryableLookupClient.RetryableRunner;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.DefaultKeyGenerator;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
-import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter;
-import oracle.sysman.emaas.platform.dashboards.core.restclient.AppMappingCollection;
-import oracle.sysman.emaas.platform.dashboards.core.restclient.AppMappingEntity;
-import oracle.sysman.emaas.platform.dashboards.core.restclient.DomainEntity;
-import oracle.sysman.emaas.platform.dashboards.core.restclient.DomainsEntity;
-import oracle.sysman.emaas.platform.dashboards.core.util.LogUtil.InteractionLogDirection;
-import oracle.sysman.emaas.platform.dashboards.core.util.lookup.RetryableLookupClient;
-import oracle.sysman.emaas.platform.dashboards.core.util.lookup.RetryableLookupClient.RetryableLookupException;
-import oracle.sysman.emaas.platform.dashboards.core.util.lookup.RetryableLookupClient.RetryableRunner;
-
 import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-
+import com.sun.jersey.api.client.ClientHandlerException;
+import com.sun.jersey.api.client.UniformInterfaceException;
 
 /**
  * @author guobaochen
@@ -113,7 +103,7 @@ public class TenantSubscriptionUtil
 
 
         List<String> apps = new RetryableLookupClient<List<String>>().connectAndDoWithRetry("EntityNaming", "1.0+", "collection/lookups", false, null, new RetryableRunner<List<String>>() {
-            public List<String> runWithLink(Link lookupLink) throws Exception {
+            public List<String> runWithLink(VersionedLink lookupLink) throws Exception {
                 if (lookupLink == null || lookupLink.getHref() == null || "".equals(lookupLink.getHref())) {
                     LOGGER.warn(
                             "Failed to get entity naming service, or its rel (collection/lookups) link is empty. Exists the retrieval of subscribed service for tenant {}",
@@ -130,7 +120,7 @@ public class TenantSubscriptionUtil
                 try {
 					rc.setHeader("X-USER-IDENTITY-DOMAIN-NAME",tenant);
 					rc.setHeader("X-OMC-SERVICE-TRACE", "Dashboard-API");
-                    appsResponse = rc.getWithException(queryHref, tenant);
+                    appsResponse = rc.getWithException(queryHref, tenant, lookupLink.getAuthToken());
                 } catch (UniformInterfaceException e) {
                     if (e.getResponse() != null && (e.getResponse().getStatus() == 404 || e.getResponse().getStatus() == 503)) {
                         LOGGER.error("Got status code {} when getting tenant subscribed apps", e.getResponse().getStatus());

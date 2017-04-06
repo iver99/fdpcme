@@ -6,8 +6,6 @@ import java.io.InputStream;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -16,12 +14,10 @@ import mockit.Expectations;
 import mockit.Mocked;
 import mockit.NonStrictExpectations;
 import mockit.Verifications;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.RegistryLookupUtil;
+import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.RegistryLookupUtil.VersionedLink;
 
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -32,24 +28,20 @@ public class HomePageFilterTest
 {
 	@Test(groups = { "s2" })
 	public void testDoFilter(@Mocked final FilterChain chain, @Mocked final HttpServletRequest request,
-			@Mocked final HttpServletResponse response, @Mocked final LookupManager lookupManager,
-			@Mocked final CloseableHttpClient httpClient, @Mocked final RegistryLookupUtil anyUtil) throws Exception
+			@Mocked final HttpServletResponse response, @Mocked final CloseableHttpClient httpClient, 
+			@Mocked final RegistryLookupUtil anyUtil) throws Exception
 	{
 		final HomePageFilter filter = new HomePageFilter();
 		final StringBuffer homeUrl = new StringBuffer("https://xxx.us.oracle.com:4443/emsaasui/emcpdfui/home.html");
 		final String testString = "xxxvalueid=12345678";
 		final String tenant = "tenant01.emcsadmin";
 		final String oamPath = "oam/server/auth_cred_submit";
-		final Link link = new Link();
+		final VersionedLink link = new VersionedLink();
 		link.withHref("http://xxxx/naming/entitynaming/v1/domains");
 		final InputStream is = new ByteArrayInputStream(testString.getBytes(Charsets.UTF_8));
 
 		new NonStrictExpectations() {
 			{
-				// authorization
-				LookupManager.getInstance().getAuthorizationToken();
-				result = "authorization".toCharArray();
-
 				// getPreference
 				RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, anyString);
 				result = link;
@@ -96,14 +88,10 @@ public class HomePageFilterTest
 	@Test(groups = { "s2" }, expectedExceptions = {NullPointerException.class})
 	public void testDoFilter_ClientProtocolException(@Mocked final HttpServletRequest request, @Mocked HttpServletResponse response,
 													 @Mocked FilterChain chain, @Mocked final CloseableHttpClient httpClient,
-													 @Mocked final LookupManager lookupManager,
 													 @Mocked HttpClients httpClients,@Mocked final RegistryLookupUtil anyUtil) throws IOException, ServletException {
-
-		final StringBuffer homeUrl = new StringBuffer("https://xxx.us.oracle.com:4443/emsaasui/emcpdfui/home.html");
-		final String testString = "xxxvalueid=12345678";
 		final String tenant = "tenant01.emcsadmin";
 		final String oamPath = "oam/server/auth_cred_submit";
-		final Link link = new Link();
+		final VersionedLink link = new VersionedLink();
 		link.withHref("http://xxxx/naming/entitynaming/v1/domains");
 		final HomePageFilter filter = new HomePageFilter();
 		new Expectations(){
@@ -114,8 +102,6 @@ public class HomePageFilterTest
 				String oamUser = Deencapsulation.getField(filter, "OAM_REMOTE_USER_HEADER");
 				request.getHeader(oamUser);
 				result= tenant;
-				LookupManager.getInstance().getAuthorizationToken();
-				result = "authorization".toCharArray();
 				RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, anyString);
 				result = link;
 				httpClient.execute((HttpUriRequest) any);
@@ -129,14 +115,10 @@ public class HomePageFilterTest
 	@Test(groups = { "s2" }, expectedExceptions = {NullPointerException.class})
 	public void testDoFilter_IOException(@Mocked final HttpServletRequest request, @Mocked HttpServletResponse response,
 													 @Mocked FilterChain chain, @Mocked final CloseableHttpClient httpClient,
-													 @Mocked final LookupManager lookupManager,
 													 @Mocked HttpClients httpClients,@Mocked final RegistryLookupUtil anyUtil) throws IOException, ServletException {
-
-		final StringBuffer homeUrl = new StringBuffer("https://xxx.us.oracle.com:4443/emsaasui/emcpdfui/home.html");
-		final String testString = "xxxvalueid=12345678";
 		final String tenant = "tenant01.emcsadmin";
 		final String oamPath = "oam/server/auth_cred_submit";
-		final Link link = new Link();
+		final VersionedLink link = new VersionedLink();
 		link.withHref("http://xxxx/naming/entitynaming/v1/domains");
 		final HomePageFilter filter = new HomePageFilter();
 		new Expectations(){
@@ -147,8 +129,6 @@ public class HomePageFilterTest
 				String oamUser = Deencapsulation.getField(filter, "OAM_REMOTE_USER_HEADER");
 				request.getHeader(oamUser);
 				result= tenant;
-				LookupManager.getInstance().getAuthorizationToken();
-				result = "authorization".toCharArray();
 				RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, anyString);
 				result = link;
 				httpClient.execute((HttpUriRequest) any);
