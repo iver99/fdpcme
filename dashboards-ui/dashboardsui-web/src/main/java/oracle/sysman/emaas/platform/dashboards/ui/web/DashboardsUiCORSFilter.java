@@ -70,18 +70,6 @@ public class DashboardsUiCORSFilter implements Filter
 					"Origin, X-Requested-With, Content-Type, Accept, Authorization, X-USER-IDENTITY-DOMAIN-NAME, X-REMOTE-USER,X-SSO-CLIENT");
 		}
 
-		//handle Authorization header
-		/*
-		if (LookupManager.getInstance().getAuthorizationToken() != null) {
-			if (!hRes.containsHeader(AUTHORIZATION_HEADER)) {
-				String token = new String(LookupManager.getInstance().getAuthorizationToken());
-				if (token != null) {
-					hRes.addHeader(AUTHORIZATION_HEADER, token);
-				}
-			}
-		}
-		 */
-
 		// handling the OAM info from SSO
 		HttpServletRequest httpReq = (HttpServletRequest) request;
 		String userTenant = httpReq.getHeader(OAM_REMOTE_USER_HEADER);
