@@ -97,7 +97,7 @@ public class HtmlFragmentCache {
             return;
         }
         pageCache.cacheHtmlFragments(beforeLangPart, beforeAdditionalDataPart, afterAdditionalDataPart);
-        LOGGER.info("Cached html framements for url {}, beforelangpart is {}, beforeadditionalDataPart is {}, afterAdditionalDataPart is {}",
+        LOGGER.debug("Cached html framements for url {}, beforelangpart is {}, beforeadditionalDataPart is {}, afterAdditionalDataPart is {}",
                 uri, beforeLangPart, beforeAdditionalDataPart, afterAdditionalDataPart);
     }
 }

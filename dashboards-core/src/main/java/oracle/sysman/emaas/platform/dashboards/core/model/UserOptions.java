@@ -1,20 +1,29 @@
 package oracle.sysman.emaas.platform.dashboards.core.model;
 
 import java.math.BigInteger;
-import java.util.Date;
 
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
-import oracle.sysman.emaas.platform.dashboards.core.util.DateUtil;
+import oracle.sysman.emaas.platform.dashboards.core.util.BigIntegerSerializer;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
+import oracle.sysman.emaas.platform.dashboards.core.util.StringEscapeUtil;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 /**
  * @author jishshi
  * @since 2/2/2016.
  */
 public class UserOptions {
+    private static final Logger LOGGER = LogManager.getLogger(UserOptions.class);
+
     private String userName;
+    @JsonSerialize(using = BigIntegerSerializer.class)
     private BigInteger dashboardId;
     private Long autoRefreshInterval;
     private String extendedOptions;
@@ -44,7 +53,7 @@ public class UserOptions {
     }
 
     public String getExtendedOptions() {
-        return extendedOptions;
+        return StringEscapeUtil.escapeWithCharPairs(extendedOptions, new String[][]{{"&", "&amp;"}, {"<", "&lt;"}, {">", "&gt;"}});
     }
 
     public void setExtendedOptions(String extendedOptions) {
@@ -92,5 +101,19 @@ public class UserOptions {
         euo.setExtendedOptions(extendedOptions);
 
         return euo;
+    }
+
+    public boolean validateExtendedOptions() {
+        try {
+            if (this.getExtendedOptions() != null) {
+                new JSONObject(this.getExtendedOptions());
+                // the value should be in format like {selectedTab: 15}, to validate the string, we wrap it as {'tempData' : {selectedTab: 15}} and validate it again
+                new JSONObject("{\"tempData\":" + extendedOptions + "}");
+            }
+        } catch (JSONException e) {
+            LOGGER.error(e);
+            return false;
+        }
+        return true;
     }
 }

@@ -1,0 +1,29 @@
+<div id="hamburgerMenu">
+    <div id="navlistcontainer" class="demo-panel-contrast1 oj-contrast-marker">
+        <div id="omcMenuNavList" data-bind="ojComponent:{
+                            component:'ojNavigationList',
+                            rootLabel: hamburgerRootMenuLabel,
+                            drillMode: 'sliding',
+                            data : dataSource,
+                            expanded: expanded,
+                            beforeCollapse: beforeCollapse,
+                            selection: selectedItem,
+                            hierarchyMenuDisplayThresholdLevel: 2,
+                            item: { template: function(itemContext) {
+                                           return itemContext['type'] !== 'divider'?'hamburgerMenuItemTemplate':
+                                                   'hamburgerMenuDividerTemplate';},
+                                    selectable: function(itemContext) {
+                                           return itemContext['type'] !== 'divider';} }
+                            }">
+        </div>
+    </div>
+</div>
+<script type="text/html" id="hamburgerMenuItemTemplate">
+    <li data-bind="attr: {id: $data['id'] + '_li'},css:{'oj-disabled':$data['disabled']}" class="oj-navigationlist-item-element oj-collapsed">
+        <!--<a data-bind="text: $data['label'],attr:{id: $data['id'], title: $data['tooltip'], href: $data['externalUrl']?$data['externalUrl']:'#'},click: $parent.selectionHandler"></a>-->
+        <a data-bind="text: $data['label'],attr:{id: $data['id'], title: $data['tooltip']},click: $parent.selectionHandler"></a>
+    </li>
+</script>
+<script type="text/html" id="hamburgerMenuDividerTemplate">
+    <li class="oj-navigationlist-category-divider"></li>
+</script>
