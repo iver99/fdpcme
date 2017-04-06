@@ -1067,7 +1067,21 @@ public class DashboardManager
 		return finalString;
 	}
 	
+	private Dashboard resetDateAndOwnerForDashboard(Dashboard dbd) {
+		dbd.setCreationDate(null);
+		dbd.setOwner(null);
+		if (dbd.getTileList() != null) {
+			for (Tile tile : dbd.getTileList()) {
+				tile.setCreationDate(null);
+				tile.setOwner(null);
+			}
+		}
+		return dbd;
+	}
+	
 	public Dashboard saveForImportedDashboard(Dashboard dbd, Long tenantId, boolean overrided) throws DashboardException {		
+		//reset creation date and owner
+		resetDateAndOwnerForDashboard(dbd);
 		EntityManager em = null;
 		try {
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
