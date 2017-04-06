@@ -21,7 +21,13 @@
                 "ojs/ojselectcombobox", 
                 "ojs/ojinputtext",
                 "text",
-                "ojL10n"
+                "ojL10n",
+                "ojs/ojnavigationlist",
+                "ojs/ojjsontreedatasource",
+                "ojs/ojoffcanvas",
+                "ojs/ojinputnumber",
+		"ojs/ojdomscroller",
+		"ojs/ojlistview"
             ]
         },
         {
@@ -42,7 +48,11 @@
                 "ojs/ojinputtext",
                 "text",
                 "ojL10n",
-                "ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg"
+                "ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg",
+                "ojs/ojnavigationlist",
+                "ojs/ojjsontreedatasource",
+                "ojs/ojoffcanvas",
+                "ojs/ojinputnumber"
             ]
         }
     ],
