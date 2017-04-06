@@ -39,3 +39,10 @@ artifactoryPublish{
 
 check.dependsOn integTestJar
 
+eclipse {
+    classpath {
+        plusConfigurations += configurations.testConfig //avoid building error in Eclipse
+        plusConfigurations += configurations.testNG //avoid building error in Eclipse
+    }
+}
+
