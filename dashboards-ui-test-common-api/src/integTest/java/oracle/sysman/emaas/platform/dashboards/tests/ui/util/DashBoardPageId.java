@@ -465,7 +465,7 @@ public class DashBoardPageId
 
 	//ude ID
         public static final String EntSelReadOnlyPill = "//div[@id='globalBar_pillWrapper']";
-        public static final String EntSelTypeAheadField = "//div[@id='emaas-appheader-globalcxt']//div[contains(@id,'pit_') and contains(@class,'dropZoneText')]";
+        public static final String EntSelTypeAheadField = "//div[@id='emcta-ctxtSel_bar']";
         public static final String EntSelTypeAheadFieldInput = "//div[@id='emaas-appheader-globalcxt']//input[contains(@id, 'pit_')]";
         public static final String EntSelSuggestionPopup= "//div[@id='emcta-ctxtSel_suggestPopup']";
         public static final String EntSelPills = "//div[@id='emaas-appheader-globalcxt']//pill";
