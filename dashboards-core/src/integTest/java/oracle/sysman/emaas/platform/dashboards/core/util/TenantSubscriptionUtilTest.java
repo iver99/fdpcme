@@ -2,9 +2,9 @@ package oracle.sysman.emaas.platform.dashboards.core.util;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.ArrayList;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
@@ -15,6 +15,17 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceI
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceQuery;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emaas.platform.dashboards.core.util.lookup.RetryableLookupClient;
+import mockit.Deencapsulation;
+import mockit.Expectations;
+import mockit.Mocked;
+import mockit.NonStrictExpectations;
+import mockit.Verifications;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceQuery;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
+import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter;
+import oracle.sysman.emaas.platform.dashboards.core.restclient.AppMappingCollection;
+import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil.VersionedLink;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.DefaultKeyGenerator;
@@ -31,6 +42,7 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.R
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter;
 
 import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
+
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -345,24 +357,22 @@ public class TenantSubscriptionUtilTest
 			@Mocked final RestClient anyClient, @Mocked final InstanceInfo anyInstanceInfo,
             @Mocked final LookupManager anyLookupManager) throws Exception
 	{
-		final Link link = new Link();
-
+		final VersionedLink link = new VersionedLink();
 		link.withHref("http://den00zyr.us.oracle.com:7007/naming/entitynaming/v1/domains");
 		link.withRel("");
-		final List<Link> links = Arrays.asList(link);
+		final List<VersionedLink> links = Arrays.asList(link);
 		final List<InstanceInfo> insList = new ArrayList<InstanceInfo>();
 		insList.add(anyInstanceInfo);
 		new Expectations() {
 			{
 				Deencapsulation.setField(TenantSubscriptionUtil.class, "IS_TEST_ENV", null);
-
                 LookupManager.getInstance().getLookupClient().lookup((InstanceQuery)any);
                 result = insList;
                 anyInstanceInfo.getLinksWithProtocol(anyString, anyString);
                 result = links;
 
-				anyClient.getWithException(anyString, anyString);
-                anyClient.getWithException(anyString, anyString);
+				anyClient.getWithException(anyString, anyString, anyString);
+                anyClient.getWithException(anyString, anyString, anyString);
 				returns("");
 			}
 		};
@@ -376,11 +386,10 @@ public class TenantSubscriptionUtilTest
 			@Mocked final RestClient anyClient, @Mocked final InstanceInfo anyInstanceInfo,
             @Mocked final LookupManager anyLookupManager) throws Exception
 	{
-		final Link link = new Link();
-
+	    final VersionedLink link = new VersionedLink();
 		link.withHref("http://den00zyr.us.oracle.com:7007/naming/entitynaming/v1/domains");
 		link.withRel("");
-		final List<Link> links = Arrays.asList(link);
+		final List<VersionedLink> links = Arrays.asList(link);
 		final List<InstanceInfo> insList = new ArrayList<InstanceInfo>();
 		insList.add(anyInstanceInfo);
 		new Expectations() {
@@ -391,7 +400,7 @@ public class TenantSubscriptionUtilTest
                 result = insList;
                 anyInstanceInfo.getLinksWithProtocol(anyString, anyString);
                 result = links;
-                anyClient.getWithException(anyString, anyString);
+                anyClient.getWithException(anyString, anyString, anyString);
 				returns(TENANT_LOOKUP_RESULT_EMPTY_APP_MAPPINGS);
 			}
 		};
@@ -404,11 +413,11 @@ public class TenantSubscriptionUtilTest
 	public void testGetTenantSubscribedServicesEmptyDomainS2(@Mocked RegistryLookupUtil anyUtil,
 			@Mocked final RestClient anyClient, @Mocked final InstanceInfo anyInstanceInfo,
             @Mocked final LookupManager anyLookupManager) throws Exception {
-		final Link link = new Link();
+		final VersionedLink link = new VersionedLink();
 
 		link.withHref("");
 		link.withRel("");
-		final List<Link> links = Arrays.asList(link);
+		final List<VersionedLink> links = Arrays.asList(link);
 		final List<InstanceInfo> insList = new ArrayList<InstanceInfo>();
 		insList.add(anyInstanceInfo);
 		new Expectations() {
@@ -431,11 +440,10 @@ public class TenantSubscriptionUtilTest
             @Mocked final LookupManager anyLookupManager)
             throws Exception
 	{
-		final Link link = new Link();
-
+	    final VersionedLink link = new VersionedLink();
 		link.withHref("http://den00zyr.us.oracle.com:7007/naming/entitynaming/v1/domains");
 		link.withRel("");
-		final List<Link> links = Arrays.asList(link);
+		final List<VersionedLink> links = Arrays.asList(link);
 		final List<InstanceInfo> insList = new ArrayList<InstanceInfo>();
 		insList.add(anyInstanceInfo);
 		new Expectations() {
@@ -447,7 +455,7 @@ public class TenantSubscriptionUtilTest
                 anyInstanceInfo.getLinksWithProtocol(anyString, anyString);
                 result = links;
 
-                anyClient.getWithException(anyString, anyString);
+                anyClient.getWithException(anyString, anyString, anyString);
                 returns(TENANT_LOOKUP_RESULT_EMPTY_APP_MAPPING_ENTITY);
 			}
 		};
@@ -462,11 +470,10 @@ public class TenantSubscriptionUtilTest
             @Mocked final InstanceInfo anyInstanceInfo,
             @Mocked final LookupManager anyLookupManager) throws Exception
 	{
-		final Link link = new Link();
-
+	    final VersionedLink link = new VersionedLink();
 		link.withHref("http://den00zyr.us.oracle.com:7007/naming/entitynaming/v1/domains");
 		link.withRel("");
-		final List<Link> links = Arrays.asList(link);
+		final List<VersionedLink> links = Arrays.asList(link);
 		final List<InstanceInfo> insList = new ArrayList<InstanceInfo>();
 		insList.add(anyInstanceInfo);
 		new Expectations() {
@@ -478,7 +485,7 @@ public class TenantSubscriptionUtilTest
                 anyInstanceInfo.getLinksWithProtocol(anyString, anyString);
                 result = links;
 
-                anyClient.getWithException(anyString, anyString);
+                anyClient.getWithException(anyString, anyString, anyString);
 				returns(ENTITY_NAMING_DOMAIN_EMPTY_TENANT_APP_URL, TENANT_LOOKUP_RESULT);
 			}
 		};
@@ -493,23 +500,21 @@ public class TenantSubscriptionUtilTest
             @Mocked final InstanceInfo anyInstanceInfo,
             @Mocked final LookupManager anyLookupManager) throws Exception
 	{
-		final Link link = new Link();
-
+	    final VersionedLink link = new VersionedLink();
 		link.withHref("http://den00zyr.us.oracle.com:7007/naming/entitynaming/v1/domains");
 		link.withRel("");
-        final List<Link> links = Arrays.asList(link);
+        final List<VersionedLink> links = Arrays.asList(link);
         final List<InstanceInfo> insList = new ArrayList<InstanceInfo>();
         insList.add(anyInstanceInfo);
 		new Expectations() {
 			{
 				Deencapsulation.setField(TenantSubscriptionUtil.class, "IS_TEST_ENV", null);
-
                 LookupManager.getInstance().getLookupClient().lookup((InstanceQuery) any);
                 result = insList;
                 anyInstanceInfo.getLinksWithProtocol(anyString, anyString);
                 result = links;
 
-                anyClient.getWithException(anyString, anyString);
+                anyClient.getWithException(anyString, anyString, anyString);
 				JsonUtil.buildNormalMapper();
 				result = new IOException();
 			}
@@ -532,10 +537,11 @@ public class TenantSubscriptionUtilTest
                                                   @Mocked final InstanceInfo anyInstanceInfo,
                                                   @Mocked final LookupManager anyLookupManager,
 												  @Mocked final RetryableLookupClient retryableLookupClient) throws Exception {
-		final Link link = new Link();
+		final VersionedLink link = new VersionedLink();
 
 		link.withHref("http://den00zyr.us.oracle.com:7007/naming/entitynaming/v1/domains");
 		link.withRel("");
+		final List<VersionedLink> links = Arrays.asList(link);
 		final List<InstanceInfo> insList = new ArrayList<InstanceInfo>();
 		insList.add(anyInstanceInfo);
 		new Expectations() {
@@ -544,6 +550,7 @@ public class TenantSubscriptionUtilTest
 
 				retryableLookupClient.connectAndDoWithRetry(anyString, anyString, anyString, anyBoolean, anyString, (RetryableLookupClient.RetryableRunner)any);
 				result =  Arrays.asList("APM", "LogAnalytics", "ITAnalytics");
+
 
 			}
 		};
@@ -584,14 +591,13 @@ public class TenantSubscriptionUtilTest
 	@Test(groups = { "s2" })
 	public void testRestClientGetNull()
 	{
-		String res = new RestClient().get(null, null);
+		String res = new RestClient().get(null, null, null);
 		Assert.assertNull(res);
 	}
 
 	@Test(groups = { "s2" })
 	public void testRestClientGetNullAuthS2(@Mocked final DefaultClientConfig anyClientConfig, @Mocked final Client anyClient,
-			@Mocked final RegistrationManager anyRegistrationManager, @Mocked final URI anyUri,
-			@Mocked final UriBuilder anyUriBuilder, @Mocked final MediaType anyMediaType,
+			@Mocked final URI anyUri, @Mocked final UriBuilder anyUriBuilder, @Mocked final MediaType anyMediaType,
 			@Mocked final com.sun.jersey.api.client.WebResource.Builder anyBuilder, @Mocked final StringUtil anyStringUtil)
 			throws Exception
 	{
@@ -603,10 +609,9 @@ public class TenantSubscriptionUtilTest
 				result = false;
 			}
 		};
-		new RestClient().get("http://test.link.com", "emaastesttenant1");
+		new RestClient().get("http://test.link.com", "emaastesttenant1", null);
 		new Verifications() {
 			{
-				RegistrationManager.getInstance().getAuthorizationToken();
 				UriBuilder.fromUri(anyString).build();
 				anyClient.resource(anyUri).header(anyString, any);
 				anyBuilder.get(String.class);
@@ -616,8 +621,7 @@ public class TenantSubscriptionUtilTest
 
 	@Test(groups = { "s2" })
 	public void testRestClientGetS2(@Mocked final DefaultClientConfig anyClientConfig, @Mocked final Client anyClient,
-			@Mocked final RegistrationManager anyRegistrationManager, @Mocked final URI anyUri,
-			@Mocked final UriBuilder anyUriBuilder, @Mocked final MediaType anyMediaType,
+			@Mocked final URI anyUri, @Mocked final UriBuilder anyUriBuilder, @Mocked final MediaType anyMediaType,
 			@Mocked final com.sun.jersey.api.client.WebResource.Builder anyBuilder)
 	{
 		new NonStrictExpectations() {
@@ -626,10 +630,9 @@ public class TenantSubscriptionUtilTest
 				Client.create(anyClientConfig);
 			}
 		};
-		new RestClient().get("http://test.link.com", "emaastesttenant1");
+		new RestClient().get("http://test.link.com", "emaastesttenant1", null);
 		new Verifications() {
 			{
-				RegistrationManager.getInstance().getAuthorizationToken();
 				UriBuilder.fromUri(anyString).build();
 				anyClient.resource(anyUri).header(anyString, any);
 				anyBuilder.get(String.class);

@@ -25,16 +25,33 @@ import oracle.sysman.emaas.platform.dashboards.core.util.lookup.RetryableLookupC
 
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.exception.CacheInconsistencyException;
+import java.net.SocketTimeoutException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter;
+import oracle.sysman.emaas.platform.dashboards.core.restclient.AppMappingCollection;
+import oracle.sysman.emaas.platform.dashboards.core.restclient.AppMappingEntity;
+import oracle.sysman.emaas.platform.dashboards.core.restclient.DomainEntity;
+import oracle.sysman.emaas.platform.dashboards.core.restclient.DomainsEntity;
+import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil.VersionedLink;
+import oracle.sysman.emaas.platform.dashboards.core.util.lookup.RetryableLookupClient;
+import oracle.sysman.emaas.platform.dashboards.core.util.lookup.RetryableLookupClient.RetryableLookupException;
+import oracle.sysman.emaas.platform.dashboards.core.util.lookup.RetryableLookupClient.RetryableRunner;
+import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.DefaultKeyGenerator;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
 import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-
+import com.sun.jersey.api.client.ClientHandlerException;
+import com.sun.jersey.api.client.UniformInterfaceException;
 
 /**
  * @author guobaochen
@@ -111,7 +128,7 @@ public class TenantSubscriptionUtil
 
 
         List<String> apps = new RetryableLookupClient<List<String>>().connectAndDoWithRetry("TenantService", "1.0+", "collection/tenants", false, null, new RetryableRunner<List<String>>() {
-            public List<String> runWithLink(Link lookupLink) throws Exception {
+            public List<String> runWithLink(VersionedLink lookupLink) throws Exception {
                 if (lookupLink == null || lookupLink.getHref() == null || "".equals(lookupLink.getHref())) {
                     LOGGER.warn(
                             "Failed to get entity naming service, or its rel (collection/lookups) link is empty. Exists the retrieval of subscribed service for tenant {}",
@@ -130,9 +147,7 @@ public class TenantSubscriptionUtil
                 LOGGER.info("current user is {}",user);
                 try {
 					rc.setHeader("X-USER-IDENTITY-DOMAIN-NAME",tenant);
-//                    rc.setHeader("OAM_REMOTE_USER",tenant+"."+user);
-//					rc.setHeader("X-OMC-SERVICE-TRACE", "Dashboard-API");
-                    appsResponse = rc.getWithException(queryHref, tenant);
+                    appsResponse = rc.getWithException(queryHref, tenant, lookupLink.getAuthToken());
                 } catch (UniformInterfaceException e) {
                     if (e.getResponse() != null && (e.getResponse().getStatus() == 404 || e.getResponse().getStatus() == 503)) {
                         LOGGER.error("Got status code {} when getting tenant {} subscribed apps", e.getResponse().getStatus(),tenant);

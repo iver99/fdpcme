@@ -1,8 +1,19 @@
 package oracle.sysman.emaas.platform.dashboards.core;
 
+import static oracle.sysman.emaas.platform.dashboards.core.model.DashboardApplicationType.APM;
+import static oracle.sysman.emaas.platform.dashboards.core.model.DashboardApplicationType.Compliance;
+import static oracle.sysman.emaas.platform.dashboards.core.model.DashboardApplicationType.ITAnalytics;
+import static oracle.sysman.emaas.platform.dashboards.core.model.DashboardApplicationType.LogAnalytics;
+import static oracle.sysman.emaas.platform.dashboards.core.model.DashboardApplicationType.Monitoring;
+import static oracle.sysman.emaas.platform.dashboards.core.model.DashboardApplicationType.Orchestration;
+import static oracle.sysman.emaas.platform.dashboards.core.model.DashboardApplicationType.SecurityAnalytics;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -12,7 +23,6 @@ import javax.persistence.Query;
 import mockit.Expectations;
 import mockit.Mocked;
 import mockit.NonStrictExpectations;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
@@ -29,11 +39,11 @@ import oracle.sysman.emaas.platform.dashboards.core.model.subscription2.TenantSu
 import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.MockDashboardServiceFacade;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
+import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil.VersionedLink;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
-
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsPreference;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
@@ -43,8 +53,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import static oracle.sysman.emaas.platform.dashboards.core.model.DashboardApplicationType.*;
 
 /**
  * @author guobaochen
@@ -1231,12 +1239,13 @@ public class DashboardManagerTest_S2 extends BaseTest
 		dashboardManager.deleteDashboards(null);
 	}
 
-	@Test(groups = {"s2"})
+	@SuppressWarnings("unchecked")
+    @Test(groups = {"s2"})
 	public void testGetCombinedDashboardById(@Mocked final DashboardServiceFacade dashboardServiceFacade,
 											 @Mocked final EntityManager entityManager,
 											 @Mocked final DashboardApplicationType dashboardApplicationType,
 											 @Mocked final RegistryLookupUtil registryLookupUtil,
-											 @Mocked final Link tenantsLink,
+											 @Mocked final VersionedLink tenantsLink,
 											 @Mocked final TenantContext tenantContext,
 	@Mocked final RestClient restClient) throws DashboardNotFoundException, TenantWithoutSubscriptionException {
 		final DashboardManager dashboardManager = DashboardManager.getInstance();
@@ -1266,7 +1275,7 @@ public class DashboardManagerTest_S2 extends BaseTest
 				result = emsPreference;
 				dashboardServiceFacade.getEmsUserOptions(anyString, (BigInteger)any);
 				result = emsUserOptions;
-				DashboardApplicationType.getBasicServiceList((ArrayList)any);
+				DashboardApplicationType.getBasicServiceList((ArrayList<DashboardApplicationType>)any);
 				result = datList;
 				RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, anyString);
 				result = tenantsLink;
@@ -1274,7 +1283,7 @@ public class DashboardManagerTest_S2 extends BaseTest
 				result = "href";
 				TenantContext.getCurrentTenant();
 				result = "tenant";
-				restClient.put(anyString, anyString, anyString);
+				restClient.put(anyString, anyString, anyString, anyString);
 				result = "response";
 			}
 		};

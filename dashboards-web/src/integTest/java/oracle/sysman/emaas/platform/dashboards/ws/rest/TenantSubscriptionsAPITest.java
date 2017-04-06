@@ -15,6 +15,7 @@ import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSec
 import oracle.sysman.emaas.platform.dashboards.core.model.subscription2.TenantSubscriptionInfo;
 import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
+import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil.VersionedLink;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
@@ -83,14 +84,38 @@ public class TenantSubscriptionsAPITest {
     }
 
     @Test
-    public void testGetSubscribedApplications4(@Mocked final ServiceEntity serviceEntity, @Mocked final TenantDetailEntity tenantDetailEntity, @Mocked final JsonUtil jsonUtil, @Mocked final RestClient restClient, @Mocked final Link link, @Mocked final RegistryLookupUtil registryLookupUtil) throws IOException {
-
+    public void testGetSubscribedApplications4(@Mocked final ServiceEntity serviceEntity, @Mocked final TenantDetailEntity tenantDetailEntity, @Mocked final JsonUtil jsonUtil, @Mocked final RestClient restClient, @Mocked final VersionedLink link, @Mocked final RegistryLookupUtil registryLookupUtil) throws IOException {
         new MockUp<APIBase>() {
             @Mock
             public void initializeUserContext(String opcTenantId, String userTenant) throws CommonSecurityException {
                 //do nothing
             }
         };
+
+        new Expectations(){{
+
+            /*RegistryLookupUtil.getServiceInternalLink(anyString,anyString,anyString,null);
+            result = link;
+
+            restClient.get(anyString,anyString, anyString);
+            result = "tenantResponse";
+
+            link.getHref();
+            result = "http://sample";
+
+            jsonUtil.fromJson(anyString, TenantDetailEntity.class);
+            returns(null,tenantDetailEntity);
+
+            List<ServiceEntity> teeList = new ArrayList<>();
+            teeList.add(serviceEntity);
+            teeList.add(serviceEntity);
+
+            tenantDetailEntity.getServices();
+            result = teeList;
+
+            serviceEntity.getStatus();
+            returns("TENANT_ONBOARDED","TENANT_ONBOARDED","TENANT_ONBOARDED","Other","Other","Other");*/
+        }};
 
         Assert.assertNotNull(tenantSubscriptionsAPI.getSubscribedApplications("", "userTenant", "userTenant", "true"));
         Assert.assertNotNull(tenantSubscriptionsAPI.getSubscribedApplications("", "userTenant", "userTenant", "true"));
