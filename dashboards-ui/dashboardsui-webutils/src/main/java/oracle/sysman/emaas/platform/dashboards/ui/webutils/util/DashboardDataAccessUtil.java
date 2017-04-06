@@ -5,14 +5,12 @@ import java.math.BigInteger;
 import javax.ws.rs.core.MediaType;
 
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
-
+import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.RegistryLookupUtil.VersionedLink;
 import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import com.sun.jersey.api.client.ClientHandlerException;
-import com.sun.jersey.api.client.UniformInterfaceException;
 
 /**
  * Created by guochen on 11/18/16.
@@ -39,7 +37,7 @@ public class DashboardDataAccessUtil {
         rc.setHeader("Referer", referer);
         rc.setAccept(MediaType.TEXT_PLAIN);
         try{
-        	String response = rc.get(dashboardHref, tenantIdParam);
+        	String response = rc.get(dashboardHref, tenantIdParam, ((VersionedLink) dashboardsLink).getAuthToken());
         	LOGGER.debug("Retrieved combined data is: {}", response);
             LOGGER.info("It takes {}ms to retrieve dashboard data from Dashboard-API", (System.currentTimeMillis() - start));
             return response;
