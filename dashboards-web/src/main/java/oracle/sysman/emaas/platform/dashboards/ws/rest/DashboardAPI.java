@@ -1088,7 +1088,10 @@ public class DashboardAPI extends APIBase
 				JSONArray ssfObject = null;
 				if (requestEntity.length() > 0) {
 					String ssfDataResponse = SSFDataUtil.getSSFData(userTenant, requestEntity.toString());
-					ssfObject = new JSONArray(ssfDataResponse);
+					if (ssfDataResponse != null && ssfDataResponse.startsWith("[")) {
+						ssfObject = new JSONArray(ssfDataResponse);
+					}
+					
 				}
 				
 				//Combine dbd json and savedsearch json
@@ -1183,7 +1186,7 @@ public class DashboardAPI extends APIBase
 	@Path("/import")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response importDashboards(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
-			@HeaderParam(value = "X-REMOTE-USER") String userTenant,@QueryParam("override")boolean override,
+			@HeaderParam(value = "X-REMOTE-USER") String userTenant,@QueryParam("override") boolean override,
 			JSONArray jsonArray){
 		
 		infoInteractionLogAPIIncomingCall(tenantIdParam, null, "Service call to [PUT] /v1/dashboards/import");
@@ -1192,7 +1195,6 @@ public class DashboardAPI extends APIBase
 				LOGGER.error("Error to call [POST] /v1/dashboards: database is down");
 				throw new DatabaseDependencyUnavailableException();
 			}
-			
 			int length = jsonArray.length();
 			JSONArray outputJson = new JSONArray();
 			if (length > 0) {
@@ -1214,7 +1216,7 @@ public class DashboardAPI extends APIBase
 						    			if (idMap.containsKey(dashboard.getDashboardId())) {
 						    				dashboard.setDashboardId(idMap.get(dashboard.getDashboardId()));
 						    			}
-						    			if (nameMap.containsKey(d.getName())) {
+						    			if (nameMap.containsKey(dashboard.getName())) {
 						    				dashboard.setName(nameMap.get(dashboard.getName()));
 						    			}
 						    		}
