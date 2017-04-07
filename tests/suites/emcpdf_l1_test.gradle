@@ -167,6 +167,7 @@ task DEVTest(type:EMTest,dependsOn: DEVTest_ws){
 
 	include "oracle/sysman/emaas/platform/dashboards/core/model/*.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/model/combined/*.class"
+	include "oracle/sysman/emaas/platform/dashboards/core/model/subscription2/*.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/restclient/*.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/util/*.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/wls/management/AppLoggingManageMXBeanTest_S2.class"
