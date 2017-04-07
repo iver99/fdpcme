@@ -330,11 +330,11 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                                 dfdGetSubscribedApps.reject();
                             }
                             else {
-                                self.subscribedApps = data;
+                                self.subscribedApps = data.applications;
                                 dfdGetSubscribedApps.resolve();
                             }
                         }
-                        dfu.checkSubscribedApplications(subscribedAppsCallback);
+                        dfu.getSubscribedApps2WithEdition(subscribedAppsCallback);
                     }
                     return dfdGetSubscribedApps;
                 }
@@ -538,7 +538,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 function isAppSubscribed(appId) {
                     if (self.subscribedApps) {
                         for (var i = 0; i < self.subscribedApps.length; i++) {
-                            if (self.subscribedApps[i] === appId) {
+                            if (self.subscribedApps[i].id === appId) {
                                 return true;
                             }
                         }
@@ -563,7 +563,11 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                             var appId = null;
                             //Do subscription check for Data Explorer, which is included in ITAnalytics service
                             if (menuItem.id === 'omc_root_dataexplorer') {
-                                appId = 'ITAnalytics';
+                                if(dfu.isV1ServiceTypes(self.subscribedApps)){
+                                    appId = 'ITAnalytics';
+                                }else{
+                                    return menuItem;
+                                }
                             }
                             else if(menuItem.id === 'omc_root_admin_clouddiscoveryprofiles'){
                                 appId = "Monitoring";
