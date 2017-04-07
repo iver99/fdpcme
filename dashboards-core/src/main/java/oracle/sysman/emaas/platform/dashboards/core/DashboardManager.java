@@ -1312,16 +1312,17 @@ public class DashboardManager
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			em = dsf.getEntityManager();
 			EntityTransaction et = em.getTransaction();
-			String jql = "update EmsDashboardTile t set t.title = :widgetName, t.widgetName = :widgetName where t.widgetUniqueId = :widgetId";
+			Date gtwTime = DateUtil.getGatewayTime();
+			String jql = "update EmsDashboardTile t set t.title = :widgetName, t.widgetName = :widgetName, t.lastModificationDate = :lastModificationDate where t.widgetUniqueId = :widgetId";
 			Query query = em.createQuery(jql).setParameter("widgetName", widgetName)
-					.setParameter("widgetId", String.valueOf(widgetId));
+					.setParameter("widgetId", String.valueOf(widgetId)).setParameter("lastModificationDate", gtwTime);
 			if (!et.isActive()) {
 				et.begin();
 			}			
 			int affacted = query.executeUpdate();
 			et.commit();
-			LOGGER.info("Update dashboard tiles name: title for {} tiles have been updated to \"{}\" for specified widget ID {}",
-					affacted, widgetName, widgetId);
+			LOGGER.info("Update dashboard tiles name: title for {} tiles have been updated to \"{}\" for specified widget ID {}, APIGWTime is {}",
+					affacted, widgetName, widgetId, gtwTime);
 			return affacted;
 		}
 		finally {
@@ -1349,16 +1350,17 @@ public class DashboardManager
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			em = dsf.getEntityManager();
 			EntityTransaction et = em.getTransaction();
-			String jql = "update EmsDashboardTile t set t.widgetDeleted = 1 where t.widgetUniqueId = :widgetId";
-			Query query = em.createQuery(jql).setParameter("widgetId", String.valueOf(widgetId));
+			Date gtwTime = DateUtil.getGatewayTime();
+			String jql = "update EmsDashboardTile t set t.widgetDeleted = 1, t.lastModificationDate = :lastModificationDate where t.widgetUniqueId = :widgetId";
+			Query query = em.createQuery(jql).setParameter("widgetId", String.valueOf(widgetId)).setParameter("lastModificationDate", gtwTime);
 			if (!et.isActive()) {
 				et.begin();
 			}
 			int affacted = query.executeUpdate();
 			et.commit();
 			LOGGER.info(
-					"Update dashboard tile 'widgetDeleted': {} tiles have been updated to widgetDeleted=true for specified widget ID {}",
-					affacted, widgetId);
+					"Update dashboard tile 'widgetDeleted': {} tiles have been updated to widgetDeleted=true for specified widget ID {}, APIGWTime is {}",
+					affacted, widgetId, gtwTime);
 			return affacted;
 		}
 		finally {
