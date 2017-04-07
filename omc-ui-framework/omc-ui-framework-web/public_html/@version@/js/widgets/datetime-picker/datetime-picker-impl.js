@@ -109,6 +109,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 var msgUtil = new msgUtilModel();
                 var ctxUtil = new contextModel();
                 var omcContext = ctxUtil.getOMCContext();
+                var eventSourceTimeSelector = ctxUtil.OMCEventSourceConstants.GLOBAL_TIME_SELECTOR;
                 self.badgeTimePeriod = ko.observable();
                 console.log("Initialize date time picker! The params are: ");
                 if(ko.mapping && ko.mapping.toJS) {
@@ -1225,6 +1226,9 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
 
                 self.startDateISO = ko.computed({
                     read: function () {
+                        if(isNaN(new Date(self.startDate()))) {
+                            return ko.unwrap(self.startDateISO);
+                        }
                         return oj.IntlConverterUtils.dateToLocalIso(new Date(self.startDate()));
                     },
                     write: function (value) {
@@ -1235,6 +1239,9 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
 
                 self.endDateISO = ko.computed({
                     read: function () {
+                        if(isNaN(new Date(self.endDate()))) {
+                             return ko.unwrap(self.endDateISO);
+                        }
                         return oj.IntlConverterUtils.dateToLocalIso(new Date(self.endDate()));
                     },
                     write: function (value) {
@@ -1762,6 +1769,9 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                         customClick(0);
                                     }
                                 }
+                                
+                                //update url with default time period when there is no global time context in url
+                                ctxUtil.setTimePeriod(self.defaultTimePeriod(), eventSourceTimeSelector);
                             }else if(isValidFlexRelTimePeriod(self.defaultTimePeriod())){ //for flexible relative time
                                 self.lrCtrlVal("flexRelTimeCtrl");
                                 
@@ -1794,6 +1804,9 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                 }else {
                                     self.timePeriod(self.timePeriodCustom);
                                 }
+                                
+                                //update url with default time period when there is no global time context in url
+                                ctxUtil.setTimePeriod(self.defaultTimePeriod(), eventSourceTimeSelector);
                             }else {
                                 //users input nothing
                                 if($.inArray(self.timePeriodLast15mins, tpNotToShow)<0) {
@@ -2107,6 +2120,9 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         return;
                     }
                     try {
+                        if(isNaN(new Date(data.value))) {
+                            throw true;
+                        }
                         //make sure the date is valid.
                         var convertedDate = self.dateConverter2.format(oj.IntlConverterUtils.dateToLocalIso(new Date(data.value)));
                         if(convertedDate !== data.value) {
@@ -2203,11 +2219,11 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 };
 
                 self.changeEndTime = function (event, data) {
-                    if((data.option !== "value" && data.option !== "rawValue") || (data.option === "rawValue" && !data.previousValue)) {
-                        return;
-                    }
                     if(data.option === "messagesShown" && oj.Message.getMaxSeverity(data.value)>=4) {
                         self.changeTimeError(event, data, 1);
+                        return;
+                    }
+                    if((data.option !== "value" && data.option !== "rawValue") || (data.option === "rawValue" && !data.previousValue)) {
                         return;
                     }
                     if (typeof data.value === "string") {
@@ -2649,7 +2665,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     var flexRelTimeOpt = null;
                     var flexRelTimePeriodId = null;
                     var recentTimePeriodId = null;
-                    if(self.shouldSetOmcCtx !== false && ko.isObservable(params.showBadge)) {
+                    if(shouldSetOmcCtx !== false && ko.isObservable(params.showBadge)) {
                         params.showBadge(false);
                     }
                     self.timeFilter = ko.observable(null);
@@ -3152,7 +3168,6 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     self.endTime(end.slice(10));
                 }
                 
-                var eventSourceTimeSelector = ctxUtil.OMCEventSourceConstants.GLOBAL_TIME_SELECTOR;
                 function callbackForOmcCtxChange(ctxChangeEvent) {
                     if (ctxChangeEvent && ctxChangeEvent.source === eventSourceTimeSelector) {
                         return;

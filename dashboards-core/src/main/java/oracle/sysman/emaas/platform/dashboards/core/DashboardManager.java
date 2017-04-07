@@ -53,6 +53,7 @@ import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.ZDTContext;
+import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil.VersionedLink;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsPreference;
@@ -374,6 +375,7 @@ public class DashboardManager
 			EmsUserOptions euo = dsf.getEmsUserOptions(userName, dashboardId);
 			List<EmsDashboardTile> edbdtList = ed.getDashboardTileList();
 			CombinedDashboard cdSet = null;
+			BigInteger selectedId = null;
 
 			if (Dashboard.DASHBOARD_TYPE_CODE_SET.equals(ed.getType())) {
 				// combine dashboard set
@@ -416,7 +418,6 @@ public class DashboardManager
 					// ahead w/o selected tab then...
 					LOGGER.error(e.getLocalizedMessage(), e);
 				}
-				BigInteger selectedId = null;
 
 				if (selected != null) {
 					try {
@@ -458,7 +459,7 @@ public class DashboardManager
 					ssfIdList.add(edt.getWidgetUniqueId());
 				}
 			}
-			String savedSearchResponse = retrieveSavedSeasrch(dashboardId, ed.getIsSystem() == 1, ssfIdList);
+			String savedSearchResponse = retrieveSavedSeasrch(selectedId != null ? selectedId : dashboardId, ed.getIsSystem() == 1, ssfIdList);
 
 			// combine single dashboard or selected dashbaord
 			CombinedDashboard cd = CombinedDashboard.valueOf(ed, ep, euo,savedSearchResponse);
@@ -499,14 +500,14 @@ public class DashboardManager
 		}
 
         RestClient rc = new RestClient();
-        Link tenantsLink = RegistryLookupUtil.getServiceInternalLink(
-        		"SavedSearch", "1.0+", "search", null);
+        Link tenantsLink = RegistryLookupUtil.getServiceInternalLink("SavedSearch", "1.0+", "search", null);
         String tenantHref = tenantsLink.getHref() + "/list";
         String tenantName = TenantContext.getCurrentTenant();
         String savedSearchResponse = null;
         try {
 			rc.setHeader("X-USER-IDENTITY-DOMAIN-NAME", tenantName);
-        	savedSearchResponse = rc.put(tenantHref, ssfIdList.toString(), tenantName);
+        	savedSearchResponse = rc.put(tenantHref, ssfIdList.toString(), tenantName, 
+        	        ((VersionedLink) tenantsLink).getAuthToken());
         }catch (Exception e) {
         	LOGGER.error(e);
         }
@@ -1298,16 +1299,17 @@ public class DashboardManager
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			em = dsf.getEntityManager();
 			EntityTransaction et = em.getTransaction();
-			String jql = "update EmsDashboardTile t set t.title = :widgetName, t.widgetName = :widgetName where t.widgetUniqueId = :widgetId";
+			Date gtwTime = DateUtil.getGatewayTime();
+			String jql = "update EmsDashboardTile t set t.title = :widgetName, t.widgetName = :widgetName, t.lastModificationDate = :lastModificationDate where t.widgetUniqueId = :widgetId";
 			Query query = em.createQuery(jql).setParameter("widgetName", widgetName)
-					.setParameter("widgetId", String.valueOf(widgetId));
+					.setParameter("widgetId", String.valueOf(widgetId)).setParameter("lastModificationDate", gtwTime);
 			if (!et.isActive()) {
 				et.begin();
 			}			
 			int affacted = query.executeUpdate();
 			et.commit();
-			LOGGER.info("Update dashboard tiles name: title for {} tiles have been updated to \"{}\" for specified widget ID {}",
-					affacted, widgetName, widgetId);
+			LOGGER.info("Update dashboard tiles name: title for {} tiles have been updated to \"{}\" for specified widget ID {}, APIGWTime is {}",
+					affacted, widgetName, widgetId, gtwTime);
 			return affacted;
 		}
 		finally {
@@ -1335,16 +1337,17 @@ public class DashboardManager
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			em = dsf.getEntityManager();
 			EntityTransaction et = em.getTransaction();
-			String jql = "update EmsDashboardTile t set t.widgetDeleted = 1 where t.widgetUniqueId = :widgetId";
-			Query query = em.createQuery(jql).setParameter("widgetId", String.valueOf(widgetId));
+			Date gtwTime = DateUtil.getGatewayTime();
+			String jql = "update EmsDashboardTile t set t.widgetDeleted = 1, t.lastModificationDate = :lastModificationDate where t.widgetUniqueId = :widgetId";
+			Query query = em.createQuery(jql).setParameter("widgetId", String.valueOf(widgetId)).setParameter("lastModificationDate", gtwTime);
 			if (!et.isActive()) {
 				et.begin();
 			}
 			int affacted = query.executeUpdate();
 			et.commit();
 			LOGGER.info(
-					"Update dashboard tile 'widgetDeleted': {} tiles have been updated to widgetDeleted=true for specified widget ID {}",
-					affacted, widgetId);
+					"Update dashboard tile 'widgetDeleted': {} tiles have been updated to widgetDeleted=true for specified widget ID {}, APIGWTime is {}",
+					affacted, widgetId, gtwTime);
 			return affacted;
 		}
 		finally {

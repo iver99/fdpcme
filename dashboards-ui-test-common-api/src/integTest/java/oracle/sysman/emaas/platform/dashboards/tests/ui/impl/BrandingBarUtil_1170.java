@@ -7,13 +7,9 @@
  * $$Author: $$
  * $$Revision: $$
  */
- 
+
 package oracle.sysman.emaas.platform.dashboards.tests.ui.impl;
 
-/**
- * @author miao
- *
- */
 public class BrandingBarUtil_1170 extends BrandingBarUtil_1160
 {
 

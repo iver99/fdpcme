@@ -1,16 +1,18 @@
 package oracle.sysman.emaas.platform.uifwk.ui.webutils.util;
 
-import com.sun.jersey.api.client.WebResource;
 import mockit.Expectations;
 import mockit.Mocked;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICache;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.exception.ExecutionException;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
+import oracle.sysman.emaas.platform.uifwk.ui.webutils.util.RegistryLookupUtil.VersionedLink;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import com.sun.jersey.api.client.WebResource;
 
 /**
  * Created by guochen on 1/18/17.
@@ -48,9 +50,7 @@ public class TenantSubscriptionUtilTest {
         new Expectations() {
             {
                 RegistryLookupUtil.getServiceInternalLink("Dashboard-API", "1.0+", "static/dashboards.subscribedapps", null);
-                result = new Link();
-                RegistrationManager.getInstance().getAuthorizationToken();
-                result = "Basic Auth".toCharArray();
+                result = new VersionedLink();
                 builder.get(String.class);
                 result = "{subscribedApplicationsData}";
             }
@@ -58,7 +58,7 @@ public class TenantSubscriptionUtilTest {
         subscribedApps = TenantSubscriptionUtil.getTenantSubscribedServices("tenant", "user");
         Assert.assertNull(subscribedApps);
 
-        final Link lk = new Link();
+        final VersionedLink lk = new VersionedLink();
         lk.withHref("http://slc10uan.us.oracle.com:7019/emcpdf/api/v1/subscribedapps");
         new Expectations() {
             {
