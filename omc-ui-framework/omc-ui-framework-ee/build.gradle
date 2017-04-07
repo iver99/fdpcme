@@ -6,7 +6,6 @@ configurations {
 }
 
 version = project.ext.getServiceVersion("OMC-UI-Framework")
-group = 'emaas/applications/omc-ui-framework'
 
 def artifactId = 'omc-ui-framework' 
 def groupId = group 
