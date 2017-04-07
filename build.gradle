@@ -38,6 +38,13 @@ apply from: new File(pubAllprojects).isAbsolute() ?
   "$pubAllprojects" : "$project.commonBranchTopDir/$pubAllprojects"
 //
 //-----------------------------------------------------------------------------
+allprojects {
+	/* The name of your repository, either hardcoded or from a property */
+	project.group = "${project.baseGroup}.emcpdf"
+	if (project != rootProject) {
+		project.group += project.path.replaceAll(~/:/, '.')
+	}
+}
 
 buildscript {  
   dependencies {  
@@ -346,3 +353,7 @@ task cleanUpDB4LocalLRG<<{
 	println "\t================================"
     }
 }
+
+
+
+

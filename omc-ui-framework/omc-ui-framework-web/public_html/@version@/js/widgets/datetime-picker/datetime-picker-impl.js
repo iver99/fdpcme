@@ -2665,7 +2665,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     var flexRelTimeOpt = null;
                     var flexRelTimePeriodId = null;
                     var recentTimePeriodId = null;
-                    if(self.shouldSetOmcCtx !== false && ko.isObservable(params.showBadge)) {
+                    if(shouldSetOmcCtx !== false && ko.isObservable(params.showBadge)) {
                         params.showBadge(false);
                     }
                     self.timeFilter = ko.observable(null);
