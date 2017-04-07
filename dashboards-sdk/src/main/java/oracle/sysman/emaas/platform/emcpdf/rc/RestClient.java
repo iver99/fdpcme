@@ -23,8 +23,13 @@ import java.util.Map;
 public class RestClient {
     private final Logger LOGGER = LogManager.getLogger(RestClient.class);
     private Logger itrLogger = LogUtil.getInteractionLogger();
-    private static final String HTTP_HEADER_OAM_REMOTE_USER = "OAM_REMOTE_USER";
-    private static final String HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME = "X-USER-IDENTITY-DOMAIN-NAME";
+    public static final String OAM_REMOTE_USER = "OAM_REMOTE_USER";
+    public static final String X_USER_IDENTITY_DOMAIN_NAME = "X-USER-IDENTITY-DOMAIN-NAME";
+    public static final String X_REMOTE_USER = "X-REMOTE-USER";
+    public static final String REFERER = "Referer";
+    public static final String SESSION_EXP = "SESSION_EXP";
+    public static final String X_OMC_SERVICE_TRACE = "X-OMC-SERVICE-TRACE";
+
     //timeout milli-seconds
     private static final Integer DEFAULT_TIMEOUT = 30000;
     private Map<String, Object> headers;

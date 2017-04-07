@@ -505,7 +505,7 @@ public class DashboardManager
         String tenantName = TenantContext.getCurrentTenant();
         String savedSearchResponse = null;
         try {
-			rc.setHeader("X-USER-IDENTITY-DOMAIN-NAME", tenantName);
+			rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME, tenantName);
         	savedSearchResponse = rc.put(tenantHref, ssfIdList.toString(), tenantName, 
         	        ((VersionedLink) tenantsLink).getAuthToken());
         }catch (Exception e) {

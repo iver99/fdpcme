@@ -118,8 +118,8 @@ public class TenantSubscriptionUtil
                 long subappQueryStart = System.currentTimeMillis();
                 String appsResponse = null;
                 try {
-					rc.setHeader("X-USER-IDENTITY-DOMAIN-NAME",tenant);
-					rc.setHeader("X-OMC-SERVICE-TRACE", "Dashboard-API");
+					rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME,tenant);
+					rc.setHeader(RestClient.X_OMC_SERVICE_TRACE, "Dashboard-API");
                     appsResponse = rc.getWithException(queryHref, tenant, lookupLink.getAuthToken());
                 } catch (UniformInterfaceException e) {
                     if (e.getResponse() != null && (e.getResponse().getStatus() == 404 || e.getResponse().getStatus() == 503)) {

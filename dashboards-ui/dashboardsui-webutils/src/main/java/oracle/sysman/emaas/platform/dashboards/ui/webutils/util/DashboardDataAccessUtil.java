@@ -29,12 +29,12 @@ public class DashboardDataAccessUtil {
         LOGGER.info("Dashboard REST API from dashboard-api href is: " + dashboardsLink.getHref());
         String dashboardHref = dashboardsLink.getHref() + "/" + dashboardId.toString() + "/"+ "combinedData";
         RestClient rc = new RestClient();
-        rc.setHeader("X-USER-IDENTITY-DOMAIN-NAME", tenantIdParam);
-        rc.setHeader("X-REMOTE-USER", userTenant);
-        rc.setHeader("SESSION_EXP", sessionExp);
+        rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME, tenantIdParam);
+        rc.setHeader(RestClient.X_REMOTE_USER, userTenant);
+        rc.setHeader(RestClient.SESSION_EXP, sessionExp);
         //EMCPDF-3448, FEB20: 3 admin link dif found in farm jobs
-        rc.setHeader("OAM_REMOTE_USER", userTenant);
-        rc.setHeader("Referer", referer);
+        rc.setHeader(RestClient.OAM_REMOTE_USER, userTenant);
+        rc.setHeader(RestClient.REFERER, referer);
         rc.setAccept(MediaType.TEXT_PLAIN);
         try{
         	String response = rc.get(dashboardHref, tenantIdParam, ((VersionedLink) dashboardsLink).getAuthToken());
