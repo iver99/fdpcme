@@ -28,7 +28,7 @@ public class DashboardDataAccessUtil {
         }
         LOGGER.info("Dashboard REST API from dashboard-api href is: " + dashboardsLink.getHref());
         String dashboardHref = dashboardsLink.getHref() + "/" + dashboardId.toString() + "/"+ "combinedData";
-        RestClient rc = new RestClient();
+        RestClient rc = RestClientProxy.getRestClient();
         rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME, tenantIdParam);
         rc.setHeader(RestClient.X_REMOTE_USER, userTenant);
         rc.setHeader(RestClient.SESSION_EXP, sessionExp);

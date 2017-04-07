@@ -68,7 +68,7 @@ public class DataFetcher
 			}
 			LOGGER.info("Configurations REST API link from dashboard-api href is: " + configurationsLink.getHref());
 			String registrationHref = configurationsLink.getHref() + "/registration";
-			RestClient rc = new RestClient();
+			RestClient rc = RestClientProxy.getRestClient();
 			rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME, tenantIdParam);
 			rc.setHeader(RestClient.X_REMOTE_USER, userTenant);
 			rc.setHeader(RestClient.OAM_REMOTE_USER, userTenant);
