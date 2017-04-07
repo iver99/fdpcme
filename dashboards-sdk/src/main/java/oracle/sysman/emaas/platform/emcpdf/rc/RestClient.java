@@ -38,14 +38,16 @@ public class RestClient {
     //Default type is json
     private String type = MediaType.APPLICATION_JSON;
 
-    public void setIteractionLogger(String loggerName){
+    public RestClient(String loggerName){
         if(!StringUtil.isEmpty(loggerName)){
             itrLogger = LogUtil.getInteractionLogger(loggerName);
+            LOGGER.info("Interaction logger name is set to {}",loggerName);
         }
     }
 
     public RestClient() {
     }
+
 
     public String get(String url, String tenant, String auth) {
         try {

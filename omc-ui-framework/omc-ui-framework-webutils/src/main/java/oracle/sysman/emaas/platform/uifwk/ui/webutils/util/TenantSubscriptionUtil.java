@@ -71,7 +71,7 @@ public class TenantSubscriptionUtil
 		LOGGER.info("Checking tenant (" + tenant + ") subscriptions. Subscribedapp link retrieved from dashboard-api href is "
 				+ subAppLink.getHref());
 		String subAppHref = subAppLink.getHref();
-		RestClient rc = new RestClient();
+		RestClient rc = RestClientProxy.getRestClient();
 		rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME, tenant);
 		rc.setHeader(RestClient.X_REMOTE_USER, tenant + "." + user);
 		String subAppResponse = rc.get(subAppHref, tenant, ((VersionedLink) subAppLink).getAuthToken());
