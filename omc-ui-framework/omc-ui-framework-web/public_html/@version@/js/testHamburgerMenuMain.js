@@ -335,7 +335,7 @@ require(['knockout',
                     menuUtil.registerServiceMenus(menus);
                 };
                 self.setCurrentMenuItem = function() {
-                    menuUtil.setCurrentMenuItem('omc_apm_alerts');
+                    menuUtil.setCurrentMenuItem(menuUtil.OMCMenuConstants['GLOBAL_ADMIN_ALERTRULES']);
                 };
                 
                 function compositeMenuCallback() {
