@@ -3,8 +3,11 @@ package oracle.sysman.emaas.platform.dashboards.test.ui.util;
 import java.util.List;
 
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.WelcomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_1150;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_190;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
@@ -89,6 +92,119 @@ public class DashBoardUtils
 		webdriver.getLogger().info("click button on the dialog, should navigate to the home page");
 		alert.accept();
 		//webdriver.takeScreenShot();
+	}
+
+	/**
+	 * @param driver
+	 * @param filteroption
+	 *            option value - la, ita, apm, orchestration
+	 * @return
+	 */
+	public static boolean isFilterOptionExisted(WebDriver driver, String filteroption)
+	{
+		boolean isExisted = false;
+		driver.getLogger().info("isFilterOptionExisted filter: " + filteroption);
+		Validator.notEmptyString("filter", filteroption);
+		if ("apm".equals(filteroption)) {
+			if (driver.isElementPresent(DashBoardPageId.FILTERAPMLOCATOR)) {
+				isExisted = driver.isDisplayed(DashBoardPageId.FILTERAPMLOCATOR);
+			}
+		}
+		else if ("la".equals(filteroption)) {
+			if (driver.isElementPresent(DashBoardPageId.FILTERLALOCATOR)) {
+				isExisted = driver.isDisplayed(DashBoardPageId.FILTERLALOCATOR);
+			}
+		}
+		else if ("ita".equals(filteroption)) {
+			if (driver.isElementPresent(DashBoardPageId.FILTERITALOCATOR)) {
+				isExisted = driver.isDisplayed(DashBoardPageId.FILTERITALOCATOR);
+			}
+		}
+		else if ("orchestration".equals(filteroption)) {
+			if (driver.isElementPresent(DashBoardPageId.FILTERORCHESTRATIONLOCATOR)) {
+				isExisted = driver.isDisplayed(DashBoardPageId.FILTERORCHESTRATIONLOCATOR);
+			}
+		}
+		else {
+			throw new IllegalArgumentException("Unkonw filter option: " + filteroption);
+		}
+		return isExisted;
+	}
+
+	public static boolean isHomePageExploreItemExisted(WebDriver driver, String listItem)
+	{
+		driver.getLogger().info("Check if '" + listItem + "' existed in Home page Explore drop down list");
+		driver.getLogger().info("click Explore drop down list");
+		driver.click("name=" + DashBoardPageId.EXPLOREDATABTNID);
+
+		if (listItem.trim().equals(DashboardHomeUtil.EXPLOREDATA_MENU_DATAEXPLORER)) {
+			return driver.isDisplayed(DashBoardPageId_1150.XPATH_EXPLORE_Search);
+		}
+		else if (listItem.trim().equals(DashboardHomeUtil.EXPLOREDATA_MENU_LOGEXPLORER)) {
+			return driver.isDisplayed(DashBoardPageId_1150.XPATH_EXPLORE_LOG);
+		}
+		return false;
+	}
+
+	/**
+	 * @param driver
+	 * @param listItem
+	 *            Data Explorer|Log Explorer
+	 * @return
+	 */
+
+	public static boolean isWelcomePageDataExplorerItemExisted(WebDriver driver, String listItem)
+	{
+		driver.getLogger().info("Check if '" + listItem + "' existed in Welcome page Explorers drop down list");
+		driver.getLogger().info("Click IT Analytics drop down list if it existed");
+		if (driver.isElementPresent("id=oj-select-choice-" + DashBoardPageId.WELCOME_DATAEXP_SELECTID)
+				&& driver.isDisplayed("id=oj-select-choice-" + DashBoardPageId.WELCOME_DATAEXP_SELECTID)) {
+			driver.click("id=oj-select-choice-" + DashBoardPageId.WELCOME_DATAEXP_SELECTID);
+
+			driver.getLogger().info("Check if drop down list item: '" + listItem + "' existed");
+			List<WebElement> webe = driver.getWebDriver().findElements(
+					By.cssSelector("#oj-listbox-results-dataExp_options>li>div"));
+			if (webe == null || webe.isEmpty()) {
+				throw new NoSuchElementException("drop down listitem is not found");
+			}
+			for (WebElement nav : webe) {
+				if (nav.getText().trim().equals(listItem) && nav.isEnabled()) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * @param driver
+	 * @param listItem
+	 *            selection Select | Performance Analytics - Database | Performance Analytics Application Server | Resource
+	 *            Analytics - Database | Resource Analytics - Middleware | Resource Analytics - Host | Application Performance
+	 *            Analytics| Availability Analytics | Data Explorer
+	 * @return
+	 */
+
+	public static boolean isWelcomePageITADataExplorerItemExisted(WebDriver driver, String listItem)
+	{
+		driver.getLogger().info("Check if '" + listItem + "' existed in Welcome page IT Analytics drop down list");
+		driver.getLogger().info("Click IT Analytics drop down list if it existed");
+		if (driver.isElementPresent("id=oj-select-choice-" + DashBoardPageId.WELCOME_ITA_SELECTID)
+				&& driver.isDisplayed("id=oj-select-choice-" + DashBoardPageId.WELCOME_ITA_SELECTID)) {
+			driver.click("id=oj-select-choice-" + DashBoardPageId.WELCOME_ITA_SELECTID);
+
+			driver.getLogger().info("Check if drop down list item: '" + listItem + "' existed");
+			List<WebElement> webe = driver.getWebDriver().findElements(By.cssSelector("#oj-listbox-results-ITA_options>li>div"));
+			if (webe == null || webe.isEmpty()) {
+				throw new NoSuchElementException("drop down listitem is not found");
+			}
+			for (WebElement nav : webe) {
+				if (nav.getText().trim().equals(listItem) && nav.isEnabled()) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	public static void itaOobExist()
@@ -264,8 +380,16 @@ public class DashBoardUtils
 		return false;
 	}
 
+	public static boolean verifyOpenInIconExist(WebDriver driver, String widgetName)
+	{
+		return DashBoardUtils.verifyOpenInIconExist(driver, widgetName, 1);
+	}
+
 	public static boolean verifyOpenInIconExist(WebDriver driver, String widgetName, int index)
 	{
+		//verify the index, it should equal or larger than 1
+		Validator.equalOrLargerThan("index", index, 1);
+
 		//find the widget
 		driver.waitForElementPresent(DashBoardPageId_190.BUILDERTILESEDITAREA);
 		driver.click(DashBoardPageId_190.BUILDERTILESEDITAREA);
@@ -273,16 +397,16 @@ public class DashBoardUtils
 
 		String titleTitlesLocator = String.format(DashBoardPageId_190.BUILDERTILETITLELOCATOR, widgetName);
 		List<WebElement> tileTitles = driver.getWebDriver().findElements(By.xpath(titleTitlesLocator));
-		if (tileTitles == null || tileTitles.size() <= index) {
+		if (tileTitles == null || tileTitles.size() < index) {
 			throw new NoSuchElementException("Tile with title=" + widgetName + ", index=" + index + " is not found");
 		}
-		tileTitles.get(index).click();
+		tileTitles.get(index - 1).click();
 		driver.takeScreenShot();
 
 		//move the mouse to the title of the widget
 
 		driver.getLogger().info("Start to find widget with widgetName=" + widgetName + ", index=" + index);
-		WebElement widgetTitle = tileTitles.get(index);
+		WebElement widgetTitle = tileTitles.get(index - 1);
 		if (widgetTitle == null) {
 			throw new NoSuchElementException("Widget with title=" + widgetName + ", index=" + index + " is not found");
 		}
@@ -307,6 +431,16 @@ public class DashBoardUtils
 		//check if the Open In icon displayed or not
 	}
 
+	public static void VerifyServiceAlwaysDisplayedInWelcomePage(WebDriver webdriver)
+	{
+		webdriver.getLogger().info("'Dashboards','Explorers' and 'Learn More' always disaplyed...");
+		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webdriver, "dashboards"));
+		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webdriver, "dataExplorers"));
+		Assert.assertTrue(WelcomeUtil.isLearnMoreItemExisted(webdriver, "getStarted"));
+		Assert.assertTrue(WelcomeUtil.isLearnMoreItemExisted(webdriver, "videos"));
+		Assert.assertTrue(WelcomeUtil.isLearnMoreItemExisted(webdriver, "serviceOfferings"));
+	}
+
 	public static void verifyURL(WebDriver webdriver, String url)
 	{
 		webdriver.takeScreenShot();
@@ -328,7 +462,7 @@ public class DashBoardUtils
 		webdriver.takeScreenShot();
 
 		webdriver.getLogger().info("the expected relative url = " + url);
-		
+
 		String currurl = webdriver.getWebDriver().getCurrentUrl();
 
 		webdriver.getLogger().info("the current url = " + currurl);
@@ -337,7 +471,7 @@ public class DashBoardUtils
 
 		webdriver.getLogger().info("the relative url to compare = " + tmpurl);
 
-		Assert.assertTrue(tmpurl.contains(url), tmpurl+ " does NOT contain " + url);
+		Assert.assertTrue(tmpurl.contains(url), tmpurl + " does NOT contain " + url);
 	}
 
 	private static String trimUrlParameters(String url)
