@@ -5,7 +5,7 @@ import org.apache.tools.ant.filters.ReplaceTokens
 
 apply from:'test.gradle'
 
-jsversion = project.ext.getServiceVersion('OMC-UI-Framework')
+def jsversion = project.ext.getServiceVersion('OMC-UI-Framework')
 def versionPathElement = jsversion + "-"+ rootProject.ext.get("appTimeStamp")
 
 jar {
