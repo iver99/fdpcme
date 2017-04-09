@@ -50,8 +50,9 @@ public class SSFDataUtil {
 		return accessSSFWebService(userTenant,GET_SEARCH_DATA_URI,requestEntity);
 	}
 	
-	public static String saveSSFData(String userTenant, String requestEntity) {
-		return accessSSFWebService(userTenant, SAVE_SEARCH_DATA_URI,requestEntity);
+	public static String saveSSFData(String userTenant, String requestEntity, boolean override) {
+		String queryParam = override?"?override=true":"override=false";
+		return accessSSFWebService(userTenant, SAVE_SEARCH_DATA_URI + queryParam,requestEntity);
 	}
 	/*
 	private static String accessSSFWebService(String userTenant, String tenantIdParam, 

@@ -1097,7 +1097,7 @@ public class DashboardAPI extends APIBase
 				//Combine dbd json and savedsearch json
 				if (ssfObject != null) {
 					insideOjb.put("Savedsearch", ssfObject);
-				}
+				} 
 				finalArray.put(insideOjb);
 			}
 		
@@ -1237,7 +1237,7 @@ public class DashboardAPI extends APIBase
 						  }
 					}			
 					if (ssfArray != null) {
-						SSFDataUtil.saveSSFData(userTenant, ssfArray.toString());
+						SSFDataUtil.saveSSFData(userTenant, ssfArray.toString(),override);
 					}
 				}
 			}
