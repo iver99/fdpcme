@@ -30,6 +30,7 @@ import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableEntity
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableTimeRangeState;
 import oracle.sysman.emaas.platform.dashboards.core.model.PaginatedDashboards;
 import oracle.sysman.emaas.platform.dashboards.core.model.UserOptions;
+import oracle.sysman.emaas.platform.dashboards.core.model.subscription2.TenantSubscriptionInfo;
 import oracle.sysman.emaas.platform.dashboards.core.util.*;
 import oracle.sysman.emaas.platform.dashboards.webutils.ParallelThreadPool;
 import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
@@ -472,6 +473,19 @@ public class DashboardAPI extends APIBase
 			@HeaderParam(value = "X-REMOTE-USER") final String userTenant, @HeaderParam(value = "Referer") String referer,
 			@PathParam("id") final BigInteger dashboardId,@HeaderParam(value = "SESSION_EXP") final String sessionExpiryTime)
 	{
+		/*final long TIMEOUT=30000;
+		Long begin=System.currentTimeMillis();
+		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [GET] /v1/dashboards/{}", dashboardId);
+		final DashboardManager dm = DashboardManager.getInstance();
+		StringBuilder sb=new StringBuilder();
+		ExecutorService pool = ParallelThreadPool.getThreadPool();
+
+		Dashboard dbd =null;
+		Future<Dashboard> futureDashboard=null;
+		Future<String> futureUserInfo =null;
+		Future<String> futureReg =null;
+		Future<String> futureSubscried =null;
+		Future<String> futureSubscried2 =null;*/
 		try {
 			final long TIMEOUT=30000;
 			Long begin=System.currentTimeMillis();
@@ -505,7 +519,7 @@ public class DashboardAPI extends APIBase
 				}
 			});
 
-			//retrieve subscribed apps info
+			//retrieve subscribed apps API info
 			List<String> subscribedApps = null;
 			final Future<List<String>> futureSubscried = pool.submit(new Callable<List<String>>() {
 				@Override
@@ -513,7 +527,7 @@ public class DashboardAPI extends APIBase
 					try {
 						long startApps = System.currentTimeMillis();
 						LOGGER.info("Parallel request subscribed apps info...");
-						List<String> apps = TenantSubscriptionUtil.getTenantSubscribedServices(curTenant);
+						List<String> apps = TenantSubscriptionUtil.getTenantSubscribedServices(curTenant, new TenantSubscriptionInfo());
 						long endApps = System.currentTimeMillis();
 						LOGGER.info("Time to get subscribed apps: {}ms, subscribed apps are: {}", (endApps - startApps), apps);
 						return apps;
@@ -567,13 +581,13 @@ public class DashboardAPI extends APIBase
 						}
 					}
 				}
-			} catch (InterruptedException e) {
-				LOGGER.error(e);
-			} catch (ExecutionException e) {
-				LOGGER.error(e.getCause() == null ? e : e.getCause());
-			} catch (TimeoutException e) {
-				LOGGER.error(e);
-			}
+		} catch (InterruptedException e) {
+			LOGGER.error(e);
+		} catch (ExecutionException e) {
+			LOGGER.error(e.getCause() == null ? e : e.getCause());
+		} catch (TimeoutException e) {
+			LOGGER.error(e);
+		}
 
 			Future<String> futureReg = null;
 			//retrieve registration info
@@ -614,8 +628,27 @@ public class DashboardAPI extends APIBase
 				LOGGER.error(e);
 			}
 
-			Dashboard dbd = null;
-			//get data
+			//retrieve subscribeapps2 API info
+			String subscribedApps2=null;
+			final Future<String> futureSubscried2 = pool.submit(new Callable<String>() {
+				@Override
+				public String call() throws Exception {
+					try{
+						LOGGER.info("Parallel request subscribed apps2 API info...");
+						TenantSubscriptionInfo tenantSubscriptionInfo= new TenantSubscriptionInfo();
+						TenantSubscriptionUtil.getTenantSubscribedServices(tenantIdParam,tenantSubscriptionInfo);
+						String result = tenantSubscriptionInfo.toJson(tenantSubscriptionInfo);
+						LOGGER.info("Result is {}",result);
+						return result;
+					}catch(Exception e){
+						LOGGER.error("Error occurred when retrieving subscribed app2 data using parallel request!");
+						LOGGER.error(e);
+						throw e;
+					}
+				}
+			});
+
+			//get reg data
 			try {
 				if (futureReg != null) {
 					regEntity = futureReg.get(TIMEOUT, TimeUnit.MILLISECONDS);
@@ -648,6 +681,26 @@ public class DashboardAPI extends APIBase
 			}
 			LOGGER.debug("Subscribed applications data is " + apps);
 
+			//get subscribedapps2 data
+			try{
+				if (futureSubscried2 != null) {
+					subscribedApps2 = futureSubscried2.get(TIMEOUT, TimeUnit.MILLISECONDS);
+					if (!StringUtils.isEmpty(subscribedApps2)) {
+						sb.append("window._uifwk.cachedData.subscribedapps2=");
+						sb.append(subscribedApps2).append(";");
+					}
+					LOGGER.info("Subscribed applications data2 is " + subscribedApps2);
+				}
+			}catch (ExecutionException e) {
+				LOGGER.error(e.getCause() == null ? e : e.getCause());
+			} catch (InterruptedException e) {
+				LOGGER.error(e);
+			} catch (TimeoutException e) {
+				LOGGER.error(e);
+			}
+
+			//get meta dashboard data
+			Dashboard dbd = null;
 			try {
 				if (futureDashboard != null) {
 					dbd = futureDashboard.get(TIMEOUT, TimeUnit.MILLISECONDS);
@@ -665,6 +718,30 @@ public class DashboardAPI extends APIBase
 			} catch (TimeoutException e) {
 				LOGGER.error(e);
 			}
+		/*try {
+			if (futureSubscried2 != null) {
+				subscribedApps2 = futureSubscried2.get(TIMEOUT, TimeUnit.MILLISECONDS);
+				if (!StringUtils.isEmpty(subscribedApps2)) {
+					sb.append("window._uifwk.cachedData.subscribedapps2=");
+					sb.append(subscribedApps2).append(";");
+				}
+				LOGGER.info("Subscribed applications data2 is " + subscribedApps2);
+			}
+		} catch (InterruptedException e) {
+			LOGGER.error(e);
+		} catch (ExecutionException e) {
+			LOGGER.error(e.getCause());
+		}catch(TimeoutException e){
+			LOGGER.error(e);
+		}*/
+
+		/*try {
+			if(futureDashboard!=null){
+				dbd = futureDashboard.get(TIMEOUT, TimeUnit.MILLISECONDS);
+				if(dbd !=null){
+					sb.append("window._dashboardServerCache=");
+					sb.append(getJsonUtil().toJson(dbd)).append(";");*/
+
 
 			LOGGER.info("Retrieving combined data cost {}ms", (System.currentTimeMillis() - begin));
 			return Response.ok(sb.toString()).build();

@@ -5,16 +5,15 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
+import oracle.sysman.emaas.platform.dashboards.core.model.subscription2.TenantSubscriptionInfo;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.exception.ExecutionException;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
@@ -1606,7 +1605,7 @@ public class DashboardManager
 			LOGGER.warn("When trying to retrieve subscribed application, it's found the tenant context is not set (TenantContext.getCurrentTenant() == null)");
 			return Collections.emptyList();
 		}
-		List<String> appNames = subscribedApps != null ? subscribedApps : TenantSubscriptionUtil.getTenantSubscribedServices(opcTenantId);
+		List<String> appNames =subscribedApps != null ? subscribedApps : TenantSubscriptionUtil.getTenantSubscribedServices(opcTenantId, new TenantSubscriptionInfo());
 		if (appNames == null || appNames.isEmpty()) {
 			return Collections.emptyList();
 		}

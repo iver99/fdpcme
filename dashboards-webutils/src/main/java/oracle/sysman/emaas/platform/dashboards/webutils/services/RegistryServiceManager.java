@@ -202,6 +202,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	private static final String NAV_STATIC_DASHBOARDS = NAV_API_BASE + "dashboards";
 	private static final String NAV_STATIC_PREFERENCE = NAV_API_BASE + "preferences";
 	private static final String NAV_STATIC_SUBSCRIBEDAPPS = NAV_API_BASE + "subscribedapps";
+	private static final String NAV_STATIC_SUBSCRIBEDAPPS_V2 = NAV_API_BASE + "subscribedapps2";
 	private static final String NAV_STATIC_LOGGING = NAV_API_BASE + "logging";
 	private static final String NAV_STATIC_REGISTRY = NAV_API_BASE + "registry";
 	private static final String NAV_STATIC_CONFIGURATIONS = NAV_API_BASE + "configurations";
@@ -384,6 +385,14 @@ public class RegistryServiceManager implements ApplicationServiceManager
 			if (applicationUrlHttps != null) {
 				links.add(new Link().withRel("static/dashboards.subscribedapps").withHref(
 						applicationUrlHttps + NAV_STATIC_SUBSCRIBEDAPPS));
+			}
+			if (applicationUrlHttp != null) {
+				links.add(new Link().withRel("static/dashboards.subscribedapps2").withHref(
+						applicationUrlHttp + NAV_STATIC_SUBSCRIBEDAPPS_V2));
+			}
+			if (applicationUrlHttps != null) {
+				links.add(new Link().withRel("static/dashboards.subscribedapps2").withHref(
+						applicationUrlHttps + NAV_STATIC_SUBSCRIBEDAPPS_V2));
 			}
 			if (applicationUrlHttp != null) {
 				links.add(new Link().withRel("static/dashboards.logging").withHref(applicationUrlHttp + NAV_STATIC_LOGGING));
