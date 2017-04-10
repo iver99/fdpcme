@@ -131,6 +131,8 @@ task DEVTest_ws(type:EMTest){
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/TenantSubscriptionsAPITest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/ZDTAPITest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/WidgetNotificationAPITest_S2.class"
+	include "oracle/sysman/emaas/platform/dashboards/ws/rest/CacheAPITest.class"
+	include "oracle/sysman/emaas/platform/dashboards/ws/rest/OMCStatusAPITest.class"
 
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/zdt/*.class"
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/loggingconfig/*.class"
