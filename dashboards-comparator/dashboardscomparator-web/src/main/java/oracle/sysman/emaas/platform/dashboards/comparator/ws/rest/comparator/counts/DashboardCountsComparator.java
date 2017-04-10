@@ -14,8 +14,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import com.sun.jersey.api.client.ClientHandlerException;
-import com.sun.jersey.api.client.UniformInterfaceException;
+import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.RestClientProxy;
+import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
+import oracle.sysman.emaas.platform.uifwk.util.RegistryLookupUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -87,9 +88,7 @@ public class DashboardCountsComparator extends AbstractComparator
 	 * Compare the data/counts from the 2 instances<br>
 	 * The returned <code>ComparedData</code> will contain only the different counts, and leave the same counts null
 	 *
-	 * @param ins1
 	 * @param ze1
-	 * @param ins2
 	 * @param ze2
 	 */
 	private InstancesComparedData<CountsEntity> compareInstancesCounts(String key1, LookupClient client1, CountsEntity ze1,
@@ -140,12 +139,11 @@ public class DashboardCountsComparator extends AbstractComparator
 			logger.warn("Get a null or empty link for one single instance!");
 			return null;
 		}
-		logger.info("lookup link is {}", lk.getHref());		
-		String response = new TenantSubscriptionUtil.RestClient().get(lk.getHref(), tenantId, userTenant);
-		//RestClient restClient = new RestClient();
-		//restClient.setHeader("X-USER-IDENTITY-DOMAIN-NAME",tenantId);
-		//restClient.setHeader("X-REMOTE-USER", userTenant);
-		//String response = restClient.get(lk.getHref(), tenantId);
+		logger.info("lookup link is {}", lk.getHref());
+		RestClient rc = RestClientProxy.getRestClient();
+		rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME,tenantId);
+		rc.setHeader(RestClient.X_REMOTE_USER,userTenant);
+		String response = rc.get(lk.getHref(),tenantId, ((RegistryLookupUtil.VersionedLink) lk).getAuthToken());
 		logger.info("Checking dashboard OMC instance counts. Response is " + response);
 		JsonUtil ju = JsonUtil.buildNormalMapper();
 		CountsEntity ze = ju.fromJson(response, CountsEntity.class);

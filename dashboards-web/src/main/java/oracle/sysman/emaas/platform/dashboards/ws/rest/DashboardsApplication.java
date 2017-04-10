@@ -37,7 +37,9 @@ public class DashboardsApplication extends Application
 		hs.add(ZDTAPI.class);
 		hs.add(OMCStatusAPI.class);
 		hs.add(WidgetNotificationAPI.class);
+		hs.add(SSFLifeCycleNotificationAPI.class);
 		hs.add(CacheAPI.class);
+		hs.add(TenantSubscriptionsAPIv2.class);
 		return hs;
 	}
 }

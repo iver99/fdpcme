@@ -202,6 +202,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	private static final String NAV_STATIC_DASHBOARDS = NAV_API_BASE + "dashboards";
 	private static final String NAV_STATIC_PREFERENCE = NAV_API_BASE + "preferences";
 	private static final String NAV_STATIC_SUBSCRIBEDAPPS = NAV_API_BASE + "subscribedapps";
+	private static final String NAV_STATIC_SUBSCRIBEDAPPS_V2 = NAV_API_BASE + "subscribedapps2";
 	private static final String NAV_STATIC_LOGGING = NAV_API_BASE + "logging";
 	private static final String NAV_STATIC_REGISTRY = NAV_API_BASE + "registry";
 	private static final String NAV_STATIC_CONFIGURATIONS = NAV_API_BASE + "configurations";
@@ -211,6 +212,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	private static final String NAV_ZDT_SYNC = NAV_API_BASE + "zdt/sync";
 	private static final String NAV_STATIC_OMCSTATUS = NAV_API_BASE + "omcstatus";
 	private static final String NAV_WIDGET_NOTIFY = NAV_API_BASE + "widgetnotification";
+	private static final String NAV_SSF_LIFECYCLE = NAV_API_BASE + "ssflifecycle.ntf";
 
 	public static final ObjectName WLS_RUNTIME_SERVICE_NAME;
 
@@ -387,6 +389,14 @@ public class RegistryServiceManager implements ApplicationServiceManager
 						applicationUrlHttps + NAV_STATIC_SUBSCRIBEDAPPS));
 			}
 			if (applicationUrlHttp != null) {
+				links.add(new Link().withRel("static/dashboards.subscribedapps2").withHref(
+						applicationUrlHttp + NAV_STATIC_SUBSCRIBEDAPPS_V2));
+			}
+			if (applicationUrlHttps != null) {
+				links.add(new Link().withRel("static/dashboards.subscribedapps2").withHref(
+						applicationUrlHttps + NAV_STATIC_SUBSCRIBEDAPPS_V2));
+			}
+			if (applicationUrlHttp != null) {
 				links.add(new Link().withRel("static/dashboards.logging").withHref(applicationUrlHttp + NAV_STATIC_LOGGING));
 			}
 			if (applicationUrlHttps != null) {
@@ -441,6 +451,12 @@ public class RegistryServiceManager implements ApplicationServiceManager
 			}
 			if (applicationUrlHttps != null) {
 				links.add(new Link().withRel("ssf.widget.changed").withHref(applicationUrlHttps + NAV_WIDGET_NOTIFY));
+			}
+			if (applicationUrlHttp != null) {
+				links.add(new Link().withRel("ssf.lifecycle.notify").withHref(applicationUrlHttp + NAV_SSF_LIFECYCLE));
+			}
+			if (applicationUrlHttps != null) {
+				links.add(new Link().withRel("ssf.lifecycle.notify").withHref(applicationUrlHttps + NAV_SSF_LIFECYCLE));
 			}
 			InfoManager.getInstance().getInfo().setLinks(links);
 

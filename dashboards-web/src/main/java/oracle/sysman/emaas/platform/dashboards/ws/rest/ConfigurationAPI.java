@@ -24,6 +24,7 @@ import javax.ws.rs.core.Response.Status;
 
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.EntityNamingDependencyUnavailableException;
+import oracle.sysman.emaas.platform.dashboards.core.model.subscription2.TenantSubscriptionInfo;
 import oracle.sysman.emaas.platform.dashboards.core.util.*;
 import oracle.sysman.emaas.platform.dashboards.webutils.ParallelThreadPool;
 import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
@@ -32,7 +33,6 @@ import oracle.sysman.emaas.platform.dashboards.ws.rest.model.RegistrationEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.model.UserInfoEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.TenantSubscriptionsAPI.SubscribedAppsEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.PrivilegeChecker;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -46,17 +46,28 @@ public class ConfigurationAPI extends APIBase
 	private static final Logger _LOGGER = LogManager.getLogger(ConfigurationAPI.class);
 
 	private static class CombinedBrandingBarData {
-		public CombinedBrandingBarData(UserInfoEntity userInfo, RegistrationEntity registration, SubscribedAppsEntity subscribedApps) {
+		public CombinedBrandingBarData(UserInfoEntity userInfo, RegistrationEntity registration, SubscribedAppsEntity subscribedApps,String subscribedApps2) {
 			this.userInfo = userInfo;
 			this.registration = registration;
 			this.subscribedApps = subscribedApps;
+            this.subscribedApps2 = subscribedApps2;
+
 		}
 
 		private UserInfoEntity userInfo;
 		private RegistrationEntity registration;
-		private SubscribedAppsEntity subscribedApps;
+		private String subscribedApps2;
+        private SubscribedAppsEntity subscribedApps;
 
-		public UserInfoEntity getUserInfo() {
+        public String getSubscribedApps2() {
+            return subscribedApps2;
+        }
+
+        public void setSubscribedApps2(String subscribedApps2) {
+            this.subscribedApps2 = subscribedApps2;
+        }
+
+        public UserInfoEntity getUserInfo() {
 			return userInfo;
 		}
 
@@ -99,6 +110,12 @@ public class ConfigurationAPI extends APIBase
 				sb.append(JsonUtil.buildNormalMapper().toJson(subscribedApps));
 				sb.append(";");
 			}
+
+            if (subscribedApps2 != null) {
+                sb.append("window._uifwk.cachedData.subscribedapps2=");
+                sb.append(subscribedApps2);
+                sb.append(";");
+            }
 			return sb.toString();
 		}
 	}
@@ -184,6 +201,7 @@ public class ConfigurationAPI extends APIBase
 
             Future<List<String>> futureUserRoles =null;
             Future<List<String>> futureSubscribedApps =null;
+            Future<String> futureSubscribedApps2 =null;
             ExecutorService pool = ParallelThreadPool.getThreadPool();
 
             final String curTenant = TenantContext.getCurrentTenant();
@@ -204,7 +222,8 @@ public class ConfigurationAPI extends APIBase
                     }
                 }
             });
-
+            //retrieve subscribapp api data
+			final TenantSubscriptionInfo tenantSubscriptionInfo= new TenantSubscriptionInfo();
             futureSubscribedApps = pool.submit(new Callable<List<String>>() {
                 @Override
                 public List<String> call() throws Exception {
@@ -212,7 +231,7 @@ public class ConfigurationAPI extends APIBase
                         // this ensures subscribed app data inside cache, and reused by registration data retrieval
                         _LOGGER.info("Parallel request subscribed apps info...");
                         long startSubsApps = System.currentTimeMillis();
-                        List<String> apps = TenantSubscriptionUtil.getTenantSubscribedServices(tenantIdParam);
+                        List<String> apps = TenantSubscriptionUtil.getTenantSubscribedServices(tenantIdParam, tenantSubscriptionInfo);
                         long endSubsApps = System.currentTimeMillis();
                         _LOGGER.info("Time to get subscribed app: {}ms. Retrieved data is: {}", (endSubsApps - startSubsApps), apps);
                         return apps;
@@ -224,7 +243,7 @@ public class ConfigurationAPI extends APIBase
             });
 
             final long TIMEOUT=30000;
-            //get subscribed apps
+            //get subscribed apps data
             List<String> subApps = null;
             try {
                 if(futureSubscribedApps!=null){
@@ -238,6 +257,8 @@ public class ConfigurationAPI extends APIBase
             }catch(TimeoutException e){
                 _LOGGER.error(e);
             }
+            //get subscribapps2 API data
+            String subApps2 = tenantSubscriptionInfo.toJson(tenantSubscriptionInfo);
 
             List<String> userRoles = null;
             try {
@@ -255,7 +276,7 @@ public class ConfigurationAPI extends APIBase
 
 			SubscribedAppsEntity sae = subApps == null ? null : new SubscribedAppsEntity(subApps);
 			RegistrationEntity re = new RegistrationEntity(sessionExpiryTime, userRoles);
-			CombinedBrandingBarData cbbd = new CombinedBrandingBarData(new UserInfoEntity(userRoles), re, sae);
+			CombinedBrandingBarData cbbd = new CombinedBrandingBarData(new UserInfoEntity(userRoles), re, sae,subApps2);
 			String brandingBarData = cbbd.getBrandingbarInjectedJS();
             long end = System.currentTimeMillis();
 			_LOGGER.info("Response for [GET] /v1/configurations/brandingbardata is \"{}\". It takes {}ms for this API", brandingBarData, (end - start));

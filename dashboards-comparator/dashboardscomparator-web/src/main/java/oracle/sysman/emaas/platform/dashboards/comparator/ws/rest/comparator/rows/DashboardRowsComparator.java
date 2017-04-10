@@ -11,12 +11,14 @@
 package oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows;
 
 import java.io.IOException;
+import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
-import com.sun.jersey.api.client.ClientHandlerException;
-import com.sun.jersey.api.client.UniformInterfaceException;
+import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.RestClientProxy;
+import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
+import oracle.sysman.emaas.platform.uifwk.util.RegistryLookupUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -272,11 +274,10 @@ public class DashboardRowsComparator extends AbstractComparator
 			logger.warn("Get a null or empty link for one single instance!");
 			return null;
 		}
-		String response = new TenantSubscriptionUtil.RestClient().get(lk.getHref(), tenantId, userTenant);
-		//RestClient restClient = new RestClient();
-		//restClient.setHeader("X-USER-IDENTITY-DOMAIN-NAME",tenantId);
-		//restClient.setHeader("X-REMOTE-USER", userTenant);
-		//String response = restClient.get(lk.getHref(), tenantId);
+		RestClient rc = RestClientProxy.getRestClient();
+		rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME, tenantId);
+		rc.setHeader(RestClient.X_REMOTE_USER, userTenant);
+		String response = rc.get(lk.getHref(), tenantId,((RegistryLookupUtil.VersionedLink) lk).getAuthToken());
 		logger.info("Checking dashboard OMC instance table rows. Response is " + response);
 		return retrieveRowsEntityFromJsonForSingleInstance(response);
 	}
@@ -294,11 +295,10 @@ public class DashboardRowsComparator extends AbstractComparator
 		jsonUtil.setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 		String entityStr = jsonUtil.toJson(entity);
 		logger.info("print the put data {} !",entityStr);
-		String response = new TenantSubscriptionUtil.RestClient().put(lk.getHref(), entityStr, tenantId, userTenant);
-		//RestClient restClient = new RestClient();
-		//restClient.setHeader("X-USER-IDENTITY-DOMAIN-NAME",tenantId);
-		//restClient.setHeader("X-REMOTE-USER", userTenant);
-		//String response = restClient.put(lk.getHref(), entityStr, tenantId);
+		RestClient rc = RestClientProxy.getRestClient();
+		rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME,tenantId);
+		rc.setHeader(RestClient.X_REMOTE_USER,userTenant);
+		String response = rc.put(lk.getHref(), entityStr, tenantId, ((RegistryLookupUtil.VersionedLink) lk).getAuthToken());
 		logger.info("Checking sync reponse. Response is " + response);
 		return response;
 	}
