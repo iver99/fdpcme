@@ -101,22 +101,22 @@ public class TenantSubscriptionUtil
 		final ICacheManager cm= CacheManagers.getInstance().build();
 		final Tenant cacheTenant = new Tenant(tenant);
         final Object cacheKey = DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS));
-        final Object tenantSubscriptionInfocacheKey = DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_TENANT_SUBSCRIPTION_INFO));
+        final Object tenantSubscriptionInfoCacheKey = DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_TENANT_SUBSCRIPTION_INFO));
         List<String> cachedApps;
 		try {
 			cachedApps = (List<String>) cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE).get(cacheKey);
-            TenantSubscriptionInfo tenantSubscriptionInfo1 =(TenantSubscriptionInfo)cm.getCache(CacheConstants.CACHES_TENANT_SUBSCRIPTION_INFO_CACHE).get(tenantSubscriptionInfocacheKey);
+            TenantSubscriptionInfo tenantSubscriptionInfo1 =(TenantSubscriptionInfo)cm.getCache(CacheConstants.CACHES_TENANT_SUBSCRIPTION_INFO_CACHE).get(tenantSubscriptionInfoCacheKey);
 		    if(cachedApps ==null || tenantSubscriptionInfo1 ==null){
                 LOGGER.info("Did not retrieve tenantSubscriptionInfo or subcribedapps data in cache for tenant {}",tenant);
                 //Evict these 2 cache entries to make sure the cache consistent.
                 cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE).evict(cacheKey);
-                cm.getCache(CacheConstants.CACHES_TENANT_SUBSCRIPTION_INFO_CACHE).evict(tenantSubscriptionInfocacheKey);
+                cm.getCache(CacheConstants.CACHES_TENANT_SUBSCRIPTION_INFO_CACHE).evict(tenantSubscriptionInfoCacheKey);
                 throw new CacheInconsistencyException();
             }
             LOGGER.info("retrieved tenantSubscriptionInfo for tenant {} from cache,data is {}",tenant,tenantSubscriptionInfo1);
             copyTenantSubscriptionInfo(tenantSubscriptionInfo1, tenantSubscriptionInfo);
             LOGGER.info(
-                    "retrieved subscribed apps for tenant {} from cache,data is {}",tenant,cachedApps);
+                    "retrieved subscribed apps for tenant {} from cache,data is {}, cost is {}ms",tenant,cachedApps,(System.currentTimeMillis() - start));
             return cachedApps;
         }catch(CacheInconsistencyException e){
             LOGGER.warn("Inconsistency Exception found of Subscribapps cache group and TenantsubcriptionInfo cache group, will not use data from cache!");
@@ -211,7 +211,8 @@ public class TenantSubscriptionUtil
                     LOGGER.info("Put subscribe apps into cache,{}", subscribeAppsList);
                     cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE).put(cacheKey,subscribeAppsList);
                     LOGGER.info("Put tenantSubscriptionInfo into cache,{}", tenantSubscriptionInfo);
-                    cm.getCache(CacheConstants.CACHES_TENANT_SUBSCRIPTION_INFO_CACHE).put(tenantSubscriptionInfocacheKey,tenantSubscriptionInfo);
+                    cm.getCache(CacheConstants.CACHES_TENANT_SUBSCRIPTION_INFO_CACHE).put(tenantSubscriptionInfoCacheKey,tenantSubscriptionInfo);
+                    LOGGER.info("Retrieved subscribed service from serviceRequest for tenant {], data is {}, cost is {}ms",tenant, subAppsList, (System.currentTimeMillis()-start));
                     return subscribeAppsList;
 
 				} catch (IOException e) {

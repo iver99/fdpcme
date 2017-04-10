@@ -519,15 +519,17 @@ public class DashboardAPI extends APIBase
 				}
 			});
 
-			//retrieve subscribed apps API info
+			//retrieve subscribedapps API and subscribedapps2 API info
 			List<String> subscribedApps = null;
+			String subscribedApps2=null;
+			final TenantSubscriptionInfo tenantSubscriptionInfo = new TenantSubscriptionInfo();
 			final Future<List<String>> futureSubscried = pool.submit(new Callable<List<String>>() {
 				@Override
 				public List<String> call() throws Exception {
 					try {
 						long startApps = System.currentTimeMillis();
 						LOGGER.info("Parallel request subscribed apps info...");
-						List<String> apps = TenantSubscriptionUtil.getTenantSubscribedServices(curTenant, new TenantSubscriptionInfo());
+						List<String> apps = TenantSubscriptionUtil.getTenantSubscribedServices(curTenant, tenantSubscriptionInfo);
 						long endApps = System.currentTimeMillis();
 						LOGGER.info("Time to get subscribed apps: {}ms, subscribed apps are: {}", (endApps - startApps), apps);
 						return apps;
@@ -535,6 +537,7 @@ public class DashboardAPI extends APIBase
 						LOGGER.error("Error occurred when retrieving subscribed data using parallel request!");
 						LOGGER.error(e);
 						throw e;
+
 					} finally {
 						clearUserContext();
 					}
@@ -628,26 +631,6 @@ public class DashboardAPI extends APIBase
 				LOGGER.error(e);
 			}
 
-			//retrieve subscribeapps2 API info
-			String subscribedApps2=null;
-			final Future<String> futureSubscried2 = pool.submit(new Callable<String>() {
-				@Override
-				public String call() throws Exception {
-					try{
-						LOGGER.info("Parallel request subscribed apps2 API info...");
-						TenantSubscriptionInfo tenantSubscriptionInfo= new TenantSubscriptionInfo();
-						TenantSubscriptionUtil.getTenantSubscribedServices(tenantIdParam,tenantSubscriptionInfo);
-						String result = tenantSubscriptionInfo.toJson(tenantSubscriptionInfo);
-						LOGGER.info("Result is {}",result);
-						return result;
-					}catch(Exception e){
-						LOGGER.error("Error occurred when retrieving subscribed app2 data using parallel request!");
-						LOGGER.error(e);
-						throw e;
-					}
-				}
-			});
-
 			//get reg data
 			try {
 				if (futureReg != null) {
@@ -682,22 +665,12 @@ public class DashboardAPI extends APIBase
 			LOGGER.debug("Subscribed applications data is " + apps);
 
 			//get subscribedapps2 data
-			try{
-				if (futureSubscried2 != null) {
-					subscribedApps2 = futureSubscried2.get(TIMEOUT, TimeUnit.MILLISECONDS);
-					if (!StringUtils.isEmpty(subscribedApps2)) {
-						sb.append("window._uifwk.cachedData.subscribedapps2=");
-						sb.append(subscribedApps2).append(";");
-					}
-					LOGGER.info("Subscribed applications data2 is " + subscribedApps2);
-				}
-			}catch (ExecutionException e) {
-				LOGGER.error(e.getCause() == null ? e : e.getCause());
-			} catch (InterruptedException e) {
-				LOGGER.error(e);
-			} catch (TimeoutException e) {
-				LOGGER.error(e);
+			subscribedApps2 = tenantSubscriptionInfo.toJson(tenantSubscriptionInfo);
+			if(!StringUtils.isEmpty(subscribedApps2)){
+				sb.append("window._uifwk.cachedData.subscribedapps2=");
+				sb.append(subscribedApps2).append(";");
 			}
+			LOGGER.info("Subscribed applications data2 is " + subscribedApps2);
 
 			//get meta dashboard data
 			Dashboard dbd = null;
@@ -718,29 +691,6 @@ public class DashboardAPI extends APIBase
 			} catch (TimeoutException e) {
 				LOGGER.error(e);
 			}
-		/*try {
-			if (futureSubscried2 != null) {
-				subscribedApps2 = futureSubscried2.get(TIMEOUT, TimeUnit.MILLISECONDS);
-				if (!StringUtils.isEmpty(subscribedApps2)) {
-					sb.append("window._uifwk.cachedData.subscribedapps2=");
-					sb.append(subscribedApps2).append(";");
-				}
-				LOGGER.info("Subscribed applications data2 is " + subscribedApps2);
-			}
-		} catch (InterruptedException e) {
-			LOGGER.error(e);
-		} catch (ExecutionException e) {
-			LOGGER.error(e.getCause());
-		}catch(TimeoutException e){
-			LOGGER.error(e);
-		}*/
-
-		/*try {
-			if(futureDashboard!=null){
-				dbd = futureDashboard.get(TIMEOUT, TimeUnit.MILLISECONDS);
-				if(dbd !=null){
-					sb.append("window._dashboardServerCache=");
-					sb.append(getJsonUtil().toJson(dbd)).append(";");*/
 
 
 			LOGGER.info("Retrieving combined data cost {}ms", (System.currentTimeMillis() - begin));
