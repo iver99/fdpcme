@@ -9,6 +9,7 @@ public class CacheErrorConstants {
     public static final Integer CACHE_GROUP_NOT_FOUND_ERROR_CODE =50001;
     public static final Integer CACHE_GROUP_NAME_EMPTY_ERROR_CODE =50002;
     public static final Integer CACHE_EXECUTION_ERROR_CODE =50002;
+    public static final Integer CACHE_INCONSISTENCY_ERROR_CODE =50002;
     // important: don't assign value larger than this value to dashboard cache errors
     public static final Integer CACHE_MAX_ERROR_CODE =59999;
 }

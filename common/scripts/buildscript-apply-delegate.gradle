@@ -1,78 +1,88 @@
 /* Copyright (c) 2015, 2016 Oracle and/or its affiliates. All rights reserved.*/
- 
+
 /*
    DESCRIPTION
      This is script buildscript-apply-delegate.gradle.
- 
+
      --------------------------------------------------------------------------
      The Common Build Framework (CBF) buildscript{} calling chain
      starts like this:
- 
+
      In a rootProject build.gradle script, buildscript{...} applies script
      $project.commonBranchTopDir/common/scripts/buildscript-apply-delegate.gradle
      which finds and applies script
-     $project.PUB_DIR_MASTER/scripts/buildscript-delegate.gradle
-     (or the same file from orahub when the remote and local CBF dirs
-     are not accessible),
-     which finds pubDir and applies $pubDir/scripts/buildscript.gradle.
+     $project.PUB_DIR_MASTER/scripts/buildscript-delegate.gradle if it exists,
+     and otherwise applies that script from CBF.zip in artifactory,
+     which then finds pubDir and applies $pubDir/scripts/buildscript.gradle.
      --------------------------------------------------------------------------
- 
+
      Prerequisites to calling this buildscript-apply-delegate.gradle script:
      -- project property commonBranchTopDir must have been set by buildscript{}
         in the root project build.gradle or other main gradle script
- 
-     This script sets properties:
-       PUB_DIR_MASTER -- caller may override
-       PUB_LOCAL_EMDI_MASTER
-       PUB_REMOTE_EMDI_MASTER
+
+     This script sets these properties that buildscript-delegate.gradle can
+     depend on being set.
+       PUB_DIR_MASTER -- override is fine
+       PUB_LOCAL_EMDI_MASTER -- override not recommended
+       PUB_REMOTE_EMDI_MASTER -- override not recommended
      Then it finds and applies buildscript-delegate.gradle.
- 
-     Any PUB_DIR* override, such as PUB_DIR_MASTER, may be set as a property
-     or env variable.
- 
+
+     buildscript-delegate.gradle cannot depend on any properties being set
+     other than the three above, but it will use properties such as PUB_SHELL
+     and PUB_HTTP if they are already set by this script.
+
+     Any PUB_* override, such as PUB_DIR_MASTER, may be set as a property
+     or env variable, with the property override taking precedence.
+
      Env variables EMAAS_LOCAL_SCRATCH_BASE and EMAAS_DEV_INFRA_GENERIC_EMDEV
-     override the builtin property defaults.
-     These properties provide the basis for setting the properties
-     PUB_LOCAL_EMDI_MASTER and PUB_REMOTE_EMDI_MASTER.
- 
+     override the builtin defaults, and provide the basis for setting
+     the properties PUB_LOCAL_EMDI_MASTER and PUB_REMOTE_EMDI_MASTER.
+
      --------------------------------------------------------------------------
- 
+
      Overview of script buildscript-delegate.gradle:
- 
+
      First the local CBF pub scripts are installed or refreshed to PUB_DIR
-     from PUB_DIR_MASTER.
+     from PUB_DIR_MASTER if possible, otherwise from CBF.zip in artifactory.
+
      Special case: this PUB_DIR refresh is skipped for a farm job
      that does not set PUB_DIR or set PUB_DIR_RUN_FROM_INSTALL=1.
- 
+
      The CBF local installation is available for anytime gradle --offline use
      after the first automatic installation by this script to the local machine
      during the configuration phase when any gradle task is run,
      such as "gradle projects".
- 
+
        -- PUB_DIR (local CBF installation) default: /scratch/<user>/.emdi/pub
        -- PUB_DIR_MASTER default: remote master CBF location if accessible,
           otherwise default local CBF installation
- 
+
      After PUB_DIR is potentially refreshed,
      the CBF pub scripts are by default run from PUB_DIR_MASTER,
      except project emdi (which owns CBF) runs from emdi/pub.
- 
+
      When PUB_DIR_RUN_FROM_INSTALL=1, CBF scripts are run from PUB_DIR
      (local CBF installation) instead of from PUB_DIR_MASTER.
- 
-     An install or refresh to PUB_DIR from PUB_DIR_MASTER is done when:
-       PUB_DIR_MASTER exists
-       and PUB_DIR is not equal to PUB_DIR_MASTER
-       and PUB_DIR is not the same as <pubDirThisProject> (branch protection)
+
+     An install or refresh to PUB_DIR from PUB_DIR_MASTER if possible,
+     otherwise from CBF.zip in artifactory, is done when:
+       PUB_DIR is not the same as <pubDirThisProject> (branch protection)
        and (not a farm job or PUB_DIR is set or PUB_DIR_RUN_FROM_INSTALL=1)
        and PUB_DIR_REFRESH days (default 7) have elapsed since the last update
          PUB_DIR_REFRESH < 0  => force refresh each time
          PUB_DIR_REFRESH == 0 => never refresh
          PUB_DIR_REFRESH > 0  => refresh every this many days
- 
+
      --------------------------------------------------------------------------
- 
+
    MODIFIED MM/DD/YY
+   skuchero 03/05/17 - replace all calls to file() with new File()
+   skuchero 02/16/17 - change Mac OS X dev_infra default location
+   skuchero 12/02/16 - simplify artifactoryContextUrl so updates not needed
+   skuchero 11/03/16 - download from artifactory to eliminate git usage
+   skuchero 10/31/16 - PUB_SHELL overrides default bash shell on all platforms
+   skuchero 10/23/16 - fix download error checking
+   skuchero 10/04/16 - improve PUB_DIR_MASTER existence check
    skuchero 09/01/16 - call waitForProcessOutput for sh commands
    skuchero 08/09/16 - download delegate from orahub when no PUB_DIR_MASTER
    skuchero 04/12/16 - tweak code style
@@ -84,15 +94,35 @@
    skuchero 05/12/15 - created
  */
 //-----------------------------------------------------------------------------
- 
+
 //-----------------------------------------------------------------------------
-// Download CBF delegate script from orahub to a temporary file.
+// Download url to a new file.
+// Parent dirs of the new file are created before the download.
+// These parent dirs are not removed if there is an error.
+//
+// Parameter filename should be an absolute path,
+// otherwise it will be relative to the jvm current dir, not projectDir.
+//
+// throw Exception on error
+// -- caller should catch Exception
+//
+def downloadFile(String url, String filename) { // private
+  new File(filename).parentFile.mkdirs()
+  def file = new File(filename).newOutputStream()
+  file << url.toURL().openStream()
+  file.close()
+}
+
+//-----------------------------------------------------------------------------
+// Download CBF delegate script from CBF.zip in artifactory to a temporary file.
 //
 // This is called as a last resort when PUB_DIR_MASTER does not exist,
-// even for the "gradle --offline" case when NFS dirs are not to be accessed.
+// even for the "gradle --offline" case when NFS dirs are normally
+// not to be accessed and artifactory is normally not accessed
+// to resolve artifacts (the alternative would be to fail without trying).
 //
 // After calling this method and processing the output,
-// the caller should call file(downloadDelegateOut.tempDir).deleteDir().
+// the caller should call new File(downloadDelegateOut.tempDir).deleteDir().
 //
 // Input arg delegateRelPath normally has the value
 // "pub/scripts/buildscript-delegate.gradle".
@@ -100,138 +130,272 @@
 // Return downloadDelegateOut map:
 //   downloadDelegateOut.tempDir -- temporary dir path
 //   downloadDelegateOut.tempDelegate -- temporary delegate script path
-//   downloadDelegateOut.orahubMsg -- error message if orahub command failed
+//   downloadDelegateOut.artifactoryMsg -- error message if download fails
 //
-def downloadDelegate(delegateRelPath) { // private
- 
+def downloadDelegate(String delegateRelPath) { // private
+
   def downloadDelegateOut = [:]
   downloadDelegateOut.tempDir = java.nio.file.Files.createTempDirectory("cbf-delegate-").toString()
   downloadDelegateOut.tempDelegate = "$downloadDelegateOut.tempDir/$delegateRelPath"
-  downloadDelegateOut.orahubMsg = ''
+  downloadDelegateOut.artifactoryMsg = ''
   //
-  // orahub emdi branch matches the default remote PUB_DIR_MASTER code
-  def orahubBranch = 'master'
-  def orahubRepo = 'emdi'
-  def command =
-    "cd '$project.rootDir' || exit 1; " +
-    "git archive " +
-      "--format=tar " +
-      "--remote='git@orahub.oraclecorp.com:emaas/${orahubRepo}.git' " +
-      "-- " +
-      "'$orahubBranch' " +
-      "'$delegateRelPath' " +
-      "| (cd '$downloadDelegateOut.tempDir' && tar -xf -)"
-  //
-  def stdout = new StringBuilder(); def stderr = new StringBuilder(); def exitCode = 1
+  def repoContextUrl = artifactoryContextUrl()
+  // emaas-stage-local is the lowest pipeline level in emaas-release-virtual
+  def repoKey = "emaas-release-virtual"
+  def artGroup = "com.oracle.emaas.emdi.pub"
+  def artName = "CBF"
+  def artVersion = getEnvProp('PUB_CBF_VERSION') ?: "1.+"
+  // use '*' as wildcard for url line
+  def searchVersion = artVersion.replaceAll(~/[+]$/, '*')
+  def findLatestVersion = repoContextUrl +
+        "/api/search/latestVersion?g=$artGroup&a=$artName&v=$searchVersion&repos=$repoKey"
+  def versionMax = null
   try {
-    def proc = new ProcessBuilder("sh", "-c", command).start()
-    proc.waitForProcessOutput(stdout, stderr); exitCode = proc.exitValue()
-  } catch (Exception e) { stderr << e.message }
-  if (exitCode) {
-    // filter for useful error output from this specific command
-    def commandErrors = "$stderr".split("\\n").findAll {it =~ ~/^\S+:|[Cc]annot/}
-    downloadDelegateOut.orahubMsg =
-      "Failed to download $orahubRepo/$delegateRelPath from orahub\n" +
-      "[Command] sh -c \"$command\"\n" + "[Error] " + commandErrors.join("\n        ") + "\n\n"
+    versionMax = findLatestVersion.toURL().text.trim()
+  } catch (Exception e) {
+    // matching version not found in this repo
+    downloadDelegateOut.artifactoryMsg +=
+      // same leading phrase (Could...matches) as internal gradle error message
+      "Could not find any version that matches \"$artVersion\" " +
+      "for artifact \"$artName\" in repo \"$repoKey\".\n" +
+      "[URL] $findLatestVersion\n" + "[Error] " + e.message + "\n\n"
   }
- 
+  if (versionMax) {
+    def artOrg = artGroup.replaceAll(~/[.]/, '/')
+    def artExt = "zip"
+    // download one file from CBF zip using special "!" notation
+    // -- artifact classifier is ignored if it exists
+    def artUrl = repoContextUrl +
+      "/" + repoKey +
+      "/" + artOrg +
+      "/" + artName +
+      "/" + versionMax +
+      "/" + "$artName-$versionMax.$artExt!$delegateRelPath" // cool
+    try {
+      downloadFile(artUrl, downloadDelegateOut.tempDelegate)
+    } catch (Exception e) {
+      downloadDelegateOut.artifactoryMsg +=
+        "Failed to download artifact \"$artName\" version \"$versionMax\" to temporary file $downloadDelegateOut.tempDelegate\n" +
+        "[URL] $artUrl\n" + "[Error] " + e.message + "\n\n"
+    }
+  }
+
   downloadDelegateOut
 }
- 
+
+//-----------------------------------------------------------------------------
+// Artifactory remote repository base url.
+// This is a remote url used for searching repos to resolve dependencies.
+//
+// Property PUB_ARTIFACTORY_CONTEXT_URL (if set),
+// otherwise artifactory_contextUrl (if set),
+// overrides the default value http://artifactory.oraclecorp.com/artifactory.
+//
+// Since the small file buildscript-delegate.gradle is only rarely downloaded,
+// there is no need to optimize the artifactory url
+// based on the env variable ADE_SITE location.
+// Thus all projects do not have the burden of updating their copy of this code
+// when new ADE_SITE locations are enabled.
+//
+// It is important that this method does _not_ set any global project property
+// in order to allow buildscript-delegate.gradle and buildscript-methods.gradle
+// to optimize the artifactory url for all other downloads.
+//
+// return: artifactory remote repository base url
+//
+def artifactoryContextUrl() { // private
+
+  def repoContextUrl = "$project.PUB_HTTP://artifactory.oraclecorp.com/artifactory"
+  if (project.hasProperty('PUB_ARTIFACTORY_CONTEXT_URL') && project.PUB_ARTIFACTORY_CONTEXT_URL) {
+    repoContextUrl = project.PUB_ARTIFACTORY_CONTEXT_URL
+  } else if (project.hasProperty('artifactory_contextUrl') && project.artifactory_contextUrl) {
+    repoContextUrl = project.artifactory_contextUrl
+  }
+  repoContextUrl = standardizeUrl(repoContextUrl)
+  //
+  // this ping is done to print the most informative message even when offline
+  // since an artifactory download will be done to avoid certain failure
+  //
+  def pingResponse = ''
+  def errMsg = ''
+  def pingUrl = repoContextUrl + "/api/system/ping"
+  try {
+    pingResponse = new URL(pingUrl).text.trim()
+  } catch (Exception e) {
+    errMsg = e.message
+  }
+  if (pingResponse != "OK") {
+    project.logger.warn "[WARN][CBF][$project.name] " +
+      "Artifactory $repoContextUrl is not accessible\n" +
+      "[Note] An error like this may be reported later: Could not find any version that matches ...\n" +
+      "[URL] $pingUrl\n" + "[Error] $errMsg\n"
+  }
+
+  repoContextUrl
+}
+
+//-----------------------------------------------------------------------------
+// Return standardized url.
+// No-op if url arg is a filesystem pathname.
+//
+// Change "http" or "https" prefix to be project.PUB_HTTP.
+// Chop optional trailing "/".
+//
+def standardizeUrl(String url) { // private
+
+  if (url =~ ~/^https?:\/\//) {
+    return url.replaceAll(~/^https?/, project.PUB_HTTP).replaceAll(~/\/$/, '')
+  } else {
+    return url
+  }
+}
+
+//-----------------------------------------------------------------------------
+// Respect the environment and simplify code by calling this method :o).
+//
+// => Every code occurrence of "hasProperty" or "System.env"
+//    which has a name with all upper-case letters (eg. CBF PUB_* properties)
+//    is a good candidate to consider calling method getEnvProp.
+//
+// => A property name with some lower-case letters (eg. artifactory_contextUrl)
+//    currently indicates that env variable overrides are not relevant
+//    and this method should not be called. This policy is enforced.
+//
+// If project does not have "global" project.ext property propName:
+//     if ( ! project.hasProperty(propName))
+// set the property to the System.env environment variable with the same name
+// (which may be the empty string or null, both of which are groovy "false").
+//
+// Return the value of the property.
+//
+// A null value and empty string should be treated the same by the caller.
+// Code can simply do:
+//     if (getEnvProp('PUB_...'))
+//
+// Note: "project" is a free variable (value is from scope it is declared in)
+// which works fine for CBF scripts and keeps the method calls simplest.
+// Non-CBF code may want to change its version of this method to be:
+//     def getEnvProp(String propName, Project thisProject)
+//
+def getEnvProp(String propName) { // private
+
+  assert ! (propName =~ ~/[a-z]/) // lower-case not allowed
+
+  if ( ! project.hasProperty(propName)) {
+    project.ext."$propName" = System.env."$propName" // null if not set
+  }
+
+  // null value and empty string should be treated the same by the caller
+  project."$propName"
+}
+
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 // MAIN CODE
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
- 
+
 // property must be set by buildscript{} code prior to applying this script
 assert project.hasProperty('commonBranchTopDir')
- 
+
 def isUnix = ! System.getProperty('os.name').toLowerCase().startsWith('windows')
+def isMac = System.getProperty('os.name').toLowerCase().startsWith('mac os x')
 def isOffline = project.gradle.startParameter.isOffline()
- 
+
+// set PUB_SHELL, PUB_USE_HTTPS, PUB_HTTP
+//
+project.ext.PUB_SHELL = getEnvProp('PUB_SHELL') ?: "bash"
+project.ext.PUB_USE_HTTPS = getEnvProp('PUB_USE_HTTPS') ?: "0"
+project.ext.PUB_HTTP = (getEnvProp('PUB_USE_HTTPS') == "1") ? "https" : "http"
+
 // set PUB_LOCAL_EMDI_MASTER and PUB_REMOTE_EMDI_MASTER
 //
-def localPrefix = System.env.EMAAS_LOCAL_SCRATCH_BASE ?:
-  (isUnix ? "/scratch" : "C:/scratch")
-def localUser = isUnix ? "$System.env.USER" : "$System.env.USERNAME"
-project.ext.PUB_LOCAL_EMDI_MASTER = "$localPrefix/$localUser/.emdi"
+if ( ! getEnvProp('PUB_LOCAL_EMDI_MASTER')) {
+  def localPrefix = System.env.EMAAS_LOCAL_SCRATCH_BASE ?:
+    (isUnix ? "/scratch" : "C:/scratch")
+  def localUser = isUnix ? "$System.env.USER" : "$System.env.USERNAME"
+  project.ext.PUB_LOCAL_EMDI_MASTER = "$localPrefix/$localUser/.emdi"
+}
 //
-project.ext.PUB_REMOTE_EMDI_MASTER = ''
 def remoteMsg = ''
-if ( ! isOffline) {
-  def remotePrefix = System.env.EMAAS_DEV_INFRA_GENERIC_EMDEV ?:
-    (isUnix ? "/usr/dev_infra/generic/emdev" : "C:/ADE/dev_infra_generic/emdev")
-  // must not quote sh script pathname
-  def command = "sh $remotePrefix/pub/getStorageServerLoc.sh -base"
-  def stdout = new StringBuilder(); def stderr = new StringBuilder(); def exitCode = 1
-  try {
-    def proc = new ProcessBuilder("sh", "-c", command).start()
-    proc.waitForProcessOutput(stdout, stderr); exitCode = proc.exitValue()
-  } catch (Exception e) { stderr << e.message }
-  if (exitCode) {
-    remoteMsg += "Failed to find the default remote PUB_DIR_MASTER directory\n" +
-      "[Command] sh -c \"$command\"\n" + "[Error] $stderr\n\n"
-  } else {
-    // set even if this standard development remote dir is not accessible
-    // -- buildscript-delegate.gradle may depend on this behavior
-    project.ext.PUB_REMOTE_EMDI_MASTER = "$stdout".trim() + "/emdi"
-    if ( ! file(project.PUB_REMOTE_EMDI_MASTER).isDirectory()) {
-      remoteMsg += "Default remote PUB_DIR_MASTER directory does not exist: $project.PUB_REMOTE_EMDI_MASTER\n\n"
+if ( ! getEnvProp('PUB_REMOTE_EMDI_MASTER')) {
+  project.ext.PUB_REMOTE_EMDI_MASTER = ''
+  if ( ! isOffline) {
+    def remotePrefix = System.env.EMAAS_DEV_INFRA_GENERIC_EMDEV ?:
+      (isUnix ?
+        (isMac ? "/usr/local/dev_infra/generic/emdev" : "/usr/dev_infra/generic/emdev")
+        : "C:/ADE/dev_infra_generic/emdev"
+      )
+    // must not quote shell script pathname
+    def command = "$project.PUB_SHELL $remotePrefix/pub/getStorageServerLoc.sh -base"
+    def stdout = new StringBuilder(); def stderr = new StringBuilder(); def exitCode = 1
+    try {
+      def proc = new ProcessBuilder("$project.PUB_SHELL", "-c", command).start()
+      proc.waitForProcessOutput(stdout, stderr); exitCode = proc.exitValue()
+    } catch (Exception e) { stderr << e.message }
+    if (exitCode) {
+      remoteMsg += "Failed to find the default remote PUB_DIR_MASTER directory\n" +
+        "[Note] PUB_SHELL=$project.PUB_SHELL\n" +
+        "[Command] $project.PUB_SHELL -c \"$command\"\n" + "[Error] $stderr\n\n"
+    } else {
+      // set even if this standard development remote dir is not accessible
+      // -- buildscript-delegate.gradle may depend on this behavior
+      project.ext.PUB_REMOTE_EMDI_MASTER = "$stdout".trim() + "/emdi"
+      //
+      if ( ! new File(project.PUB_REMOTE_EMDI_MASTER).isDirectory()) {
+        remoteMsg += "Default remote PUB_DIR_MASTER directory does not exist: $project.PUB_REMOTE_EMDI_MASTER\n\n"
+      }
     }
   }
 }
- 
+
 // set PUB_DIR_MASTER
 //
 // Note that an emdi project dir is not by default considered stable
 // enough to install/update to a pubDir shared between projects,
 // so PUB_DIR_MASTER is never set by default to a project branch dir.
 //
-if ( ! project.hasProperty('PUB_DIR_MASTER') && System.env.PUB_DIR_MASTER) {
-  project.ext.PUB_DIR_MASTER = System.env.PUB_DIR_MASTER
-}
-if ( ! project.hasProperty('PUB_DIR_MASTER')) {
+if ( ! getEnvProp('PUB_DIR_MASTER')) {
   def isRemotePubDirMasterAvailable = (
        ! isOffline
     && project.PUB_REMOTE_EMDI_MASTER // not empty string
-    && file("$project.PUB_REMOTE_EMDI_MASTER/pub").isDirectory() // dir exists
+    && new File("$project.PUB_REMOTE_EMDI_MASTER/pub").isDirectory() // dir exists
     )
   project.ext.PUB_DIR_MASTER = isRemotePubDirMasterAvailable ?
     "$project.PUB_REMOTE_EMDI_MASTER/pub" :
     "$project.PUB_LOCAL_EMDI_MASTER/pub"
 }
- 
+
 // apply buildscript-delegate.gradle
 //
 def delegateRelPath = "pub/scripts/buildscript-delegate.gradle"
 def ourDelegate = "$project.commonBranchTopDir/$delegateRelPath"
-if (file(ourDelegate).exists()) {
+if (new File(ourDelegate).exists()) {
   // emdi project owns the CBF pub scripts
   apply from: ourDelegate
 } else {
   // non-emdi project
-  if (file(project.PUB_DIR_MASTER).isDirectory()) {
-    apply from: "$project.PUB_DIR_MASTER/scripts/buildscript-delegate.gradle"
+  def masterDelegate = "$project.PUB_DIR_MASTER/scripts/buildscript-delegate.gradle"
+  if (new File(masterDelegate).exists()) {
+    apply from: masterDelegate
   } else {
-    // download CBF delegate script from orahub as a last resort
+    // download CBF delegate script from CBF.zip in artifactory as a last resort
     // when PUB_DIR_MASTER does not exist, even for the "gradle --offline" case
-    // when NFS dirs are not to be accessed
     //
     def downloadDelegateOut = downloadDelegate(delegateRelPath)
-    def orahubMsg = downloadDelegateOut.orahubMsg
-    if ( ! orahubMsg) {
+    def artifactoryMsg = downloadDelegateOut.artifactoryMsg
+    if ( ! artifactoryMsg) {
       apply from: downloadDelegateOut.tempDelegate
     }
-    file(downloadDelegateOut.tempDir).deleteDir() // delete recursively
+    new File(downloadDelegateOut.tempDir).deleteDir() // delete recursively
     //
-    if (orahubMsg) {
+    if (artifactoryMsg) {
       // throw helpful exception message
       //
       def offlineMsg = isOffline ?
         "Install CBF scripts locally for later offline use " +
           "by running \"gradle projects\" (or any gradle task) when " +
-          "orahub.oraclecorp.com is accessible\n\n"
+          "$project.artifactory_contextUrl is accessible\n\n"
         : ''
       def windowsMsg = ( ! isUnix) ?
         "For Windows OMC initial setup requirements, see " +
@@ -240,12 +404,13 @@ if (file(ourDelegate).exists()) {
       // blank line between different messages
       throw new GradleException(
         "[ERROR][CBF][$project.name] " +
-        "PUB_DIR_MASTER directory does not exist: $project.PUB_DIR_MASTER\n\n" +
+        "PUB_DIR_MASTER script does not exist: $masterDelegate\n\n" +
         "$remoteMsg" +
-        "$orahubMsg" +
+        "$artifactoryMsg" +
         "$offlineMsg" +
         "$windowsMsg" +
         "See also https://confluence.oraclecorp.com/confluence/display/DevTools/Essential+File+Templates+for+the+CBF#EssentialFileTemplatesfortheCBF-common/scripts/buildscript-apply-delegate.gradle--emaasprojecttemplatecode")
     }
   }
 }
+

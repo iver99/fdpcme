@@ -9,6 +9,20 @@ import java.util.List;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 
+import oracle.sysman.emaas.platform.dashboards.core.model.subscription2.TenantSubscriptionInfo;
+import oracle.sysman.emaas.platform.dashboards.core.restclient.AppMappingCollection;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceQuery;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
+import oracle.sysman.emaas.platform.dashboards.core.util.lookup.RetryableLookupClient;
+import mockit.Deencapsulation;
+import mockit.Expectations;
+import mockit.Mocked;
+import mockit.NonStrictExpectations;
+import mockit.Verifications;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceQuery;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import mockit.Deencapsulation;
 import mockit.Expectations;
 import mockit.Mocked;
@@ -26,6 +40,15 @@ import oracle.sysman.emaas.platform.emcpdf.cache.tool.DefaultKeyGenerator;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
+import mockit.Deencapsulation;
+import mockit.Expectations;
+import mockit.Mocked;
+import mockit.NonStrictExpectations;
+import mockit.Verifications;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
+import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter;
+
 import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
 
 import org.testng.Assert;
@@ -361,7 +384,8 @@ public class TenantSubscriptionUtilTest
 				returns("");
 			}
 		};
-		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1");
+		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1", new TenantSubscriptionInfo());
+		//Assert.assertNull(services);
 		Assert.assertTrue(services == null || services.isEmpty());
 	}
 
@@ -388,7 +412,8 @@ public class TenantSubscriptionUtilTest
 				returns(TENANT_LOOKUP_RESULT_EMPTY_APP_MAPPINGS);
 			}
 		};
-		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1");
+		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1", new TenantSubscriptionInfo());
+		//Assert.assertNull(services);
 		Assert.assertTrue(services == null || services.isEmpty());
 	}
 
@@ -413,7 +438,7 @@ public class TenantSubscriptionUtilTest
                 result = links;
 			}
 		};
-		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1");
+		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1", new TenantSubscriptionInfo());
 		Assert.assertTrue(services == null || services.isEmpty());
 	}
 
@@ -442,7 +467,7 @@ public class TenantSubscriptionUtilTest
                 returns(TENANT_LOOKUP_RESULT_EMPTY_APP_MAPPING_ENTITY);
 			}
 		};
-		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1");
+		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1", new TenantSubscriptionInfo());
 		//Assert.assertNull(services);
 		Assert.assertTrue(services == null || services.isEmpty());
 	}
@@ -472,7 +497,7 @@ public class TenantSubscriptionUtilTest
 				returns(ENTITY_NAMING_DOMAIN_EMPTY_TENANT_APP_URL, TENANT_LOOKUP_RESULT);
 			}
 		};
-		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1");
+		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1", new TenantSubscriptionInfo());
 		//Assert.assertNull(services);
 		Assert.assertTrue(services == null || services.isEmpty());
 	}
@@ -499,12 +524,10 @@ public class TenantSubscriptionUtilTest
 
                 anyClient.getWithException(anyString, anyString, anyString);
 				JsonUtil.buildNormalMapper();
-				result = anyJsonUtil;
-                anyJsonUtil.fromJson(anyString, AppMappingCollection.class);
 				result = new IOException();
 			}
 		};
-		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1");
+		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1", new TenantSubscriptionInfo());
 		//Assert.assertNull(services);
 		Assert.assertTrue(services == null || services.isEmpty());
 	}
@@ -512,14 +535,16 @@ public class TenantSubscriptionUtilTest
 	@Test(groups = { "s2" })
 	public void testGetTenantSubscribedServicesNullTenantS2()
 	{
-		List<String> rtn = TenantSubscriptionUtil.getTenantSubscribedServices(null);
+		List<String> rtn = TenantSubscriptionUtil.getTenantSubscribedServices(null, new TenantSubscriptionInfo());
+		//Assert.assertNull(rtn);
 		Assert.assertTrue(rtn == null || rtn.isEmpty());
 	}
 
 	@Test(groups = { "s2" })
 	public void testGetTenantSubscribedServicesS2(@Mocked RegistryLookupUtil anyUtil, @Mocked final RestClient anyClient,
                                                   @Mocked final InstanceInfo anyInstanceInfo,
-                                                  @Mocked final LookupManager anyLookupManager) throws Exception {
+                                                  @Mocked final LookupManager anyLookupManager,
+												  @Mocked final RetryableLookupClient retryableLookupClient) throws Exception {
 		final VersionedLink link = new VersionedLink();
 
 		link.withHref("http://den00zyr.us.oracle.com:7007/naming/entitynaming/v1/domains");
@@ -531,25 +556,21 @@ public class TenantSubscriptionUtilTest
 			{
 				Deencapsulation.setField(TenantSubscriptionUtil.class, "IS_TEST_ENV", null);
 
-                LookupManager.getInstance().getLookupClient().lookup((InstanceQuery) any);
-                result = insList;
-                anyInstanceInfo.getLinksWithProtocol(anyString, anyString);
-                result = links;
-
-				anyClient.getWithException(anyString, anyString, anyString);
-				result = TENANT_LOOKUP_RESULT;
+				retryableLookupClient.connectAndDoWithRetry(anyString, anyString, anyString, anyBoolean, anyString, (RetryableLookupClient.RetryableRunner)any);
+				result =  Arrays.asList("APM", "LogAnalytics", "ITAnalytics");
 
 			}
 		};
-		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1");
+		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1", new TenantSubscriptionInfo());
         Assert.assertEquals(services, Arrays.asList("APM", "LogAnalytics", "ITAnalytics"));
 	}
 
 	@Test(groups = { "s2" })
-	public void testGetTenantSubscribedServicesString() {
+	public void testGetTenantSubscribedServicesString(@Mocked final RetryableLookupClient retryableLookupClient) {
 		new NonStrictExpectations(TenantSubscriptionUtil.class) {
 			{
-				TenantSubscriptionUtil.getTenantSubscribedServices(anyString);
+				Deencapsulation.setField(TenantSubscriptionUtil.class, "IS_TEST_ENV", null);
+				retryableLookupClient.connectAndDoWithRetry(anyString, anyString, anyString, anyBoolean, anyString, (RetryableLookupClient.RetryableRunner)any);
 				returns(Arrays.asList("APM", "Compliance"), null, Arrays.asList());
 			}
 		};
