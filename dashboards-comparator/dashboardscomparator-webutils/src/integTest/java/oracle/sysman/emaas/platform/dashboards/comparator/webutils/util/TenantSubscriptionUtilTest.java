@@ -345,7 +345,7 @@ public class TenantSubscriptionUtilTest {
         Assert.assertFalse(TenantSubscriptionUtil.isMonitoringServiceOnly(services));
     }
 
-    @Test(groups = {"s2"})
+   /* @Test(groups = {"s2"})
     public void testRestClientGetNull() {
         String res = new RestClient().get(null, null, null);
         org.testng.Assert.assertNull(res);
@@ -374,9 +374,9 @@ public class TenantSubscriptionUtilTest {
                 anyBuilder.get(String.class);
             }
         };
-    }
+    }*/
 
-    @Test(groups = {"s2"})
+    /*@Test(groups = {"s2"})
     public void testRestClientGetS2(@Mocked final DefaultClientConfig anyClientConfig, @Mocked final Client anyClient,
                                     @Mocked final RegistrationManager anyRegistrationManager, @Mocked final URI anyUri,
                                     @Mocked final UriBuilder anyUriBuilder, @Mocked final MediaType anyMediaType,
@@ -396,7 +396,7 @@ public class TenantSubscriptionUtilTest {
                 anyBuilder.get(String.class);
             }
         };
-    }
+    }*/
 
     @Mocked
     private RegistryLookupUtil registryLookupUtil;
@@ -459,32 +459,6 @@ public class TenantSubscriptionUtilTest {
     private WebResource webResource;
     @Mocked
     private UriBuilder uriBuilder;
-    @Test
-    public void testRCPut(){
-        final char[] authToke={'a','u','t','h'};
-        final String putResult="result";
-        ClientConfig cc = new DefaultClientConfig();
-        client=Client.create(cc);
-//        UriBuilder.fromUri(url).build()
-        new Expectations(){
-            {
-                registrationManager.getInstance().getAuthorizationToken() ;
-                result=authToke;
-                uriBuilder.fromUri("url");
-                result=uriBuilder;
-                uriBuilder.build();
-                result=uri;
-               /* client.resource(uri);
-                result=webResource;
-                webResource.header(anyString,authToke);
-                result=builder;*/
-                builder.put(String.class, any);
-                result=putResult;
-            }
-        };
-
-        new RestClient().put("url",new Object(),"emaastesttenant1", null);
-    }
 
 
 }
