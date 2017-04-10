@@ -29,6 +29,7 @@ import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableEntity
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableTimeRangeState;
 import oracle.sysman.emaas.platform.dashboards.core.model.PaginatedDashboards;
 import oracle.sysman.emaas.platform.dashboards.core.model.UserOptions;
+import oracle.sysman.emaas.platform.dashboards.core.model.subscription2.TenantSubscriptionInfo;
 import oracle.sysman.emaas.platform.dashboards.core.util.*;
 import oracle.sysman.emaas.platform.dashboards.webutils.ParallelThreadPool;
 import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
@@ -477,6 +478,7 @@ public class DashboardAPI extends APIBase
 		Future<String> futureUserInfo =null;
 		Future<String> futureReg =null;
 		Future<String> futureSubscried =null;
+		Future<String> futureSubscried2 =null;
 		try {
 			if (!DependencyStatus.getInstance().isDatabaseUp())  {
 				LOGGER.error("Error to call [GET] /v1/dashboards/{}/combinedData: database is down", dashboardId);
@@ -543,7 +545,7 @@ public class DashboardAPI extends APIBase
 				}
 			});
 
-		//retrieve subscribed apps info
+		//retrieve subscribeapps API info
 		String subscribedApps=null;
 		futureSubscried = pool.submit(new Callable<String>() {
 			@Override
@@ -552,7 +554,27 @@ public class DashboardAPI extends APIBase
 					LOGGER.info("Parallel request subscribed apps info...");
 					return TenantSubscriptionUtil.getTenantSubscribedServicesString(tenantIdParam);
 				}catch(Exception e){
-					LOGGER.error("Error occurred when retrieving subscribed data using parallel request!");
+					LOGGER.error("Error occurred when retrieving subscribed app data using parallel request!");
+					LOGGER.error(e);
+					throw e;
+				}
+			}
+		});
+		//retrieve subscribeapps2 API info
+		String subscribedApps2=null;
+		futureSubscried2 = pool.submit(new Callable<String>() {
+			@Override
+			public String call() throws Exception {
+				try{
+					LOGGER.info("Parallel request subscribed apps2 info...");
+//					return TenantSubscriptionUtil.getTenantSubscribedServicesString(tenantIdParam);
+					TenantSubscriptionInfo tenantSubscriptionInfo= new TenantSubscriptionInfo();
+					TenantSubscriptionUtil.getTenantSubscribedServices(tenantIdParam,tenantSubscriptionInfo);
+					String result = tenantSubscriptionInfo.toJson(tenantSubscriptionInfo);
+					LOGGER.info("Result is {}",result);
+					return result;
+				}catch(Exception e){
+					LOGGER.error("Error occurred when retrieving subscribed app2 data using parallel request!");
 					LOGGER.error(e);
 					throw e;
 				}
@@ -603,6 +625,23 @@ public class DashboardAPI extends APIBase
 					sb.append(subscribedApps).append(";");
 				}
 				LOGGER.debug("Subscribed applications data is " + subscribedApps);
+			}
+		} catch (InterruptedException e) {
+			LOGGER.error(e);
+		} catch (ExecutionException e) {
+			LOGGER.error(e.getCause());
+		}catch(TimeoutException e){
+			LOGGER.error(e);
+		}
+
+		try {
+			if (futureSubscried2 != null) {
+				subscribedApps2 = futureSubscried2.get(TIMEOUT, TimeUnit.MILLISECONDS);
+				if (!StringUtils.isEmpty(subscribedApps2)) {
+					sb.append("window._uifwk.cachedData.subscribedapps2=");
+					sb.append(subscribedApps2).append(";");
+				}
+				LOGGER.info("Subscribed applications data2 is " + subscribedApps2);
 			}
 		} catch (InterruptedException e) {
 			LOGGER.error(e);

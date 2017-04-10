@@ -1,6 +1,7 @@
-apply from:'test.gradle'
+apply from: 'test.gradle'
 //Security client version
 ext.emaasSecurityClientVersion = getDependentSdkVersion('com.oracle.emaas.emcpsf.sdk', 'security-client', '1.+')
+
 ext.customPomDefinition = {
     def dependencies = asNode().appendNode('dependencies')
     configurations.testConfig.allDependencies.each { dep ->
@@ -13,12 +14,13 @@ ext.customPomDefinition = {
     }
 }
 
+
 project.publishing.publications {
      integTest(MavenPublication) {
-                setArtifactId(project.name)
-                setGroupId(project.zdtTasksGroup)
+				setArtifactId(project.name + '-' + integTestJar.appendix)
+                setGroupId(project.publishGroup)
                 artifact integTestJar.archivePath
-		pom.withXml customPomDefinition
+				pom.withXml customPomDefinition
         }
     
         zdtTasksPub(MavenPublication) {
@@ -30,14 +32,28 @@ project.publishing.publications {
                 extension "gradle"
             }
         }
-}
+	}
+
+
 
 artifactoryPublish{
     publications('zdtTasksPub')
      publications('integTest')
 }
 
-check.dependsOn integTestJar
+
+
+dependencies {
+    testConfig project(path: ':dashboards-ui-test-common-api', configuration: 'integTestOutput')  
+    testConfig getProjectArtifact('jmockit')   	
+	testConfig getProjectArtifact('log4j-api')   	
+	testConfig getProjectArtifact('log4j-core')   	
+	testConfig getProjectArtifact('log4j-slf4j-impl')   
+}
+
+
+
+
 
 eclipse {
     classpath {
@@ -45,4 +61,5 @@ eclipse {
         plusConfigurations += configurations.testNG //avoid building error in Eclipse
     }
 }
-
+check.dependsOn integTestJar
+build.dependsOn integTestJar
