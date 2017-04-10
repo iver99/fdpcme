@@ -14,8 +14,10 @@ include \
   'dashboards-upgrade-tests',
   'dashboards-web',
   'dashboards-webutils',
+  'dashboards-zdt-test-sdk',
   'omc-ui-framework',
   'omc-ui-framework:omc-ui-framework-ee',
   'omc-ui-framework:omc-ui-framework-web',
   'omc-ui-framework:omc-ui-framework-webutils'
+
 
