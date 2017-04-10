@@ -868,6 +868,15 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     }
                     
                     if (item && !item.children && !item.disabled) {
+                        //Auto close hamburger menu when it's not in pinned status
+                        if($("#omcHamburgerMenu").hasClass("oj-offcanvas-overlay")) {
+                            oj.OffcanvasUtils.close({
+                                "edge": "start",
+                                "displayMode": "overlay",
+                                "selector": "#omcHamburgerMenu",
+                                "autoDismiss": "focusLoss"
+                            });
+                        }
                         if (uifwkControlled) {
                             var linkHref = item.externalUrl; //globalMenuIdHrefMapping[data.id];
                             if(self.hrefMap && self.hrefMap[data.id]){
