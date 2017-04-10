@@ -164,7 +164,7 @@ DashboardsFilter.prototype._setFilterItem = function(attrFind, attrFindValue, at
 {
     var self = this;
     $.each(self.serviceFilterItems, function( i, _item ) {
-        if (_item[attrFind] && _item[attrFind] === attrFindValue)
+        if (_item[attrFind] && _item[attrFind] === attrFindValue.id)
         {
             _item[attrSet] = attrSetValue;
         }
