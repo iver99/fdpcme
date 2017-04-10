@@ -49,7 +49,7 @@ public class TenantSubscriptionUtil
 		logger.info("Checking tenant (" + tenant + ") subscriptions. The entity naming href is " + domainLink.getHref());
 		String domainHref = domainLink.getHref();
 		RestClient rc = RestClientProxy.getRestClient();
-		String domainsResponse = rc.get(domainHref, tenant, null);//FIXME
+		String domainsResponse = rc.get(domainHref, tenant, ((VersionedLink)domainLink).getAuthToken());
 		logger.info("Checking tenant (" + tenant + ") subscriptions. Domains list response is " + domainsResponse);
 		JsonUtil ju = JsonUtil.buildNormalMapper();
 		try {
@@ -152,6 +152,39 @@ public class TenantSubscriptionUtil
 			return true;
 		}
 		return false;
+	}
+
+	public static class VersionedLink extends Link {
+		private String authToken;
+
+		public VersionedLink() {
+
+		}
+
+		public VersionedLink(Link link, String authToken) {
+			withHref(link.getHref());
+			withOverrideTypes(link.getOverrideTypes());
+			withRel(link.getRel());
+			withTypesStr(link.getTypesStr());
+			this.authToken = authToken;
+		}
+
+		/**
+		 * @return the authToken
+		 */
+		public String getAuthToken()
+		{
+			return authToken;
+		}
+
+		/**
+		 * @param authToken
+		 *            the authToken to set
+		 */
+		public void setAuthToken(String authToken)
+		{
+			this.authToken = authToken;
+		}
 	}
 
 }
