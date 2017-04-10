@@ -111,6 +111,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 var omcContext = ctxUtil.getOMCContext();
                 var eventSourceTimeSelector = ctxUtil.OMCEventSourceConstants.GLOBAL_TIME_SELECTOR;
                 self.badgeTimePeriod = ko.observable();
+                self.badgeMsgTitle = ko.observable();
                 console.log("Initialize date time picker! The params are: ");
                 if(ko.mapping && ko.mapping.toJS) {
                     console.log(ko.mapping.toJS(params));
@@ -966,6 +967,8 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         self.badgeTimePeriod(defaultTP);
                     }
                 }
+                
+                self.badgeMsgTitle(msgUtil.formatMessage(nls.DATETIME_PICKER_BADGE_MESSAGE_TITLE, self.timePeriodsNlsObject[self.badgeTimePeriod()]));
 
                 if(!ko.components.isRegistered("time-filter")) {
                     ko.components.register("time-filter", {

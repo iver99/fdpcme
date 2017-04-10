@@ -174,7 +174,7 @@ define({
       "DATETIME_PICKER_RADIO_RANGE": "Range",
       "DATETIME_PICKER_BUTTONS_APPLY_BUTTON": "Apply",
       "DATETIME_PICKER_BUTTONS_CANCEL_BUTTON": "Cancel",
-      "DATETIME_PICKER_BADGE_MESSAGE_TITLE": "Showing data for ",
+      "DATETIME_PICKER_BADGE_MESSAGE_TITLE": "Showing data for {0}", //{0} is a time period like "Last 7 days" indicating the page is showing data for this time period
       "DATETIME_PICKER_BUTTONS_REPORTING_TIMEZONE": "Reporting time in UTC{0}{1}:{2}",
       "DATETIME_PICKER_ERROR": "Error!",
       "DATETIME_PICKER_TIME_VALIDATE_ERROR_MSG": "The start date/time is after the end date/time.",
