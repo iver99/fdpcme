@@ -462,3 +462,18 @@ a:hover {
 .emaas-appheader-hamburger-button {
     float: left;
 }
+
+/*#omcMenuNavList .emaas-hamburger-menu-root-not-admin>.oj-navigationlist-item.oj-hover>a:hover{
+    background-color: #85bbe7;
+}*/
+
+#omcMenuNavList .emaas-hamburger-menu-root-not-admin>.oj-navigationlist-item>a:last-child{
+    border-right: #616161 solid 1px;
+    border-bottom: transparent solid;
+    border-top: transparent solid;
+    border-radius: 5px;
+}
+
+#omcMenuNavList .emaas-hamburger-menu-root-not-admin>.oj-navigationlist-item>a:first-child{
+    margin-left: 10px;
+}
