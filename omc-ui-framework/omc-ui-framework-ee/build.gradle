@@ -30,29 +30,24 @@ dependencies
 {
 	deploy (project(path:':omc-ui-framework:omc-ui-framework-web', configuration:'archives')) {transitive = false}
 	
-	earlib (project(':omc-ui-framework:omc-ui-framework-webutils')){transitive = false} 
-
-    
+	earlib (project(':omc-ui-framework:omc-ui-framework-webutils')){transitive = false}
+	earlib (project(':dashboards-sdk')){transitive = false}
+	
     earlib getProjectArtifact('log4j-core')   
 	earlib getProjectArtifact('log4j-api')	
 	earlib getProjectArtifact('jackson-core')   
 	earlib getProjectArtifact('jackson-databind')   
 	earlib getProjectArtifact('jackson-annotations')   
-  
     earlib	getProjectArtifact('zookeeper') 
     earlib	getProjectArtifact('registry-client') 
     earlib getProjectArtifact('registry-lookup-client')  
 	earlib getProjectArtifact('emaas-platform-tenant-sdk')
-	earlib (project(':dashboards-sdk')){transitive = false}
-
-
 	earlib getProjectArtifact('log4j-slf4j-impl')   
 	earlib getProjectArtifact('httpclient')   
 	earlib getProjectArtifact('httpcore')   
-
 	earlib getProjectArtifact('commons-logging')   
-        earlib  getProjectArtifact('zookeeper')   
-        earlib getProjectArtifact('commons-lang3')   
+    earlib  getProjectArtifact('zookeeper')   
+    earlib getProjectArtifact('commons-lang3')   
 }
 
 // All WLS Related things
@@ -62,11 +57,11 @@ loadConfiguration()
 def loadConfiguration() {
 
     def environment = hasProperty('env') ? env : 'dev'
-    setProperty 'environment', environment
+    project.ext.environment = environment
     
     def configFile = file("${rootDir}/appServerConfig.config")
     def appServerconfig = new ConfigSlurper(environment).parse(configFile.toURL())
-    setProperty 'appServerconfig', appServerconfig
+    project.ext.appServerconfig = appServerconfig
 }
 
 task appServerInit << {
