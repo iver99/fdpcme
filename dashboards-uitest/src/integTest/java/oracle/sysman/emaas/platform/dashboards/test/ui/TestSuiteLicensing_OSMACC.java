@@ -18,9 +18,9 @@ import org.testng.annotations.Test;
 
 public class TestSuiteLicensing_OSMACC extends LoginAndLogout
 {
-	private final String tenant_OSMACC_Trail = "mytenant5";
-	private final String tenant_OSMACC_Compliance = "mytenant6";
-	private final String tenant_OSMACC_Security = "mytenant7";
+	private final String tenant_OSMACC_Trail = "df_osmacc_trial";
+	private final String tenant_OSMACC_Compliance = "df_osmacc_compliance";
+	private final String tenant_OSMACC_Security = "df_osmacc_security";
 	private final String tenant_username = "emcsadmin";
 	private final String UDEWidget = "Analytics Line";
 	private String dbName_Trail = "";
@@ -53,7 +53,7 @@ public class TestSuiteLicensing_OSMACC extends LoginAndLogout
 				"'Compliance' should in clould service link");
 
 		webd.getLogger()
-		.info("'APM','Log Analytics','Monitoring', 'IT Analytics', 'Orchestraion' and 'Security' NOT displayed for OSMACC Trail Edition");
+				.info("'APM','Log Analytics','Monitoring', 'IT Analytics', 'Orchestraion' and 'Security' NOT displayed for OSMACC Trail Edition");
 		Assert.assertFalse(BrandingBarUtil.isCloudServiceLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_APM),
 				"'APM' should not in clould service link");
 		Assert.assertFalse(BrandingBarUtil.isCloudServiceLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_ITA),
@@ -88,7 +88,7 @@ public class TestSuiteLicensing_OSMACC extends LoginAndLogout
 				"'Security' should in clould service link");
 
 		webd.getLogger()
-		.info("'APM','Log Analytics','Monitoring', 'IT Analytics', 'Orchestraion' and 'Compliance' NOT displayed for OSMACC Trail Edition");
+				.info("'APM','Log Analytics','Monitoring', 'IT Analytics', 'Orchestraion' and 'Compliance' NOT displayed for OSMACC Trail Edition");
 		Assert.assertFalse(BrandingBarUtil.isCloudServiceLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_APM),
 				"'APM' should not in clould service link");
 		Assert.assertFalse(BrandingBarUtil.isCloudServiceLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_ITA),
@@ -311,7 +311,7 @@ public class TestSuiteLicensing_OSMACC extends LoginAndLogout
 		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, "compliance"), "'Compliance' servie should in welcome page");
 
 		webd.getLogger()
-		.info("'APM','Log Analytics','Monitoring', 'IT Analytics', 'Orchestraion' and 'Security' NOT displayed for OSMACC Compliance Edition");
+				.info("'APM','Log Analytics','Monitoring', 'IT Analytics', 'Orchestraion' and 'Security' NOT displayed for OSMACC Compliance Edition");
 		Assert.assertFalse(WelcomeUtil.isServiceExistedInWelcome(webd, "APM"), "'APM' servie should not in welcome page");
 		Assert.assertFalse(WelcomeUtil.isServiceExistedInWelcome(webd, "LA"), "'Log Analytics' servie should not in welcome page");
 		Assert.assertFalse(WelcomeUtil.isServiceExistedInWelcome(webd, "ITA"), "'IT Analytics' servie should not in welcome page");
@@ -346,7 +346,7 @@ public class TestSuiteLicensing_OSMACC extends LoginAndLogout
 				"'Security' servie should in welcome page");
 
 		webd.getLogger()
-		.info("'APM','Log Analytics','Monitoring', 'IT Analytics', 'Orchestraion' and 'Compliance' NOT displayed for OSMACC Security Edition");
+				.info("'APM','Log Analytics','Monitoring', 'IT Analytics', 'Orchestraion' and 'Compliance' NOT displayed for OSMACC Security Edition");
 		Assert.assertFalse(WelcomeUtil.isServiceExistedInWelcome(webd, "compliance"),
 				"'Compliance' servie should not in welcome page");
 		Assert.assertFalse(WelcomeUtil.isServiceExistedInWelcome(webd, "APM"), "'APM' servie should not in welcome page");

@@ -18,10 +18,10 @@ import org.testng.annotations.Test;
 
 public class TestSuiteLicensing_OMC extends LoginAndLogout
 {
-	private final String tenant_OMC_Trail = "mytenant1";
-	private final String tenant_OMC_Standard = "mytenant2";
-	private final String tenant_OMC_Enterprise = "mytenant3";
-	private final String tenant_OMC_Log = "mytenant4";
+	private final String tenant_OMC_Trail = "df_omc_trial";
+	private final String tenant_OMC_Standard = "df_omc_standard";
+	private final String tenant_OMC_Enterprise = "df_omc_enterprise";
+	private final String tenant_OMC_Log = "df_omc_log";
 	private final String UDEWidget = "Analytics Line";
 	private String dbName_Trail = "";
 	private String dbName_Standard = "";
@@ -315,7 +315,7 @@ public class TestSuiteLicensing_OMC extends LoginAndLogout
 	@Test(alwaysRun = true)
 	public void testHomePage_OMC_Log()
 	{
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_OMC_Enterprise);
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_OMC_Log);
 		webd.getLogger().info("start to test in Home Page -- with OMC Enterprise");
 
 		//verify Data Explorer in Explore drop down in home page
