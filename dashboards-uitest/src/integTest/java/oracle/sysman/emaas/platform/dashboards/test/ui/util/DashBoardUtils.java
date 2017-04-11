@@ -4,6 +4,7 @@ import java.util.List;
 
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_1180;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_190;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
@@ -89,6 +90,16 @@ public class DashBoardUtils
 		webdriver.getLogger().info("click button on the dialog, should navigate to the home page");
 		alert.accept();
 		//webdriver.takeScreenShot();
+	}
+
+	public static boolean isHamburgerMenuEnabled(WebDriver driver)
+	{
+		if (driver.isElementPresent("css=" + DashBoardPageId_1180.HAMBURGERMENU_ICON_CSS)) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 
 	public static void itaOobExist()
@@ -328,7 +339,7 @@ public class DashBoardUtils
 		webdriver.takeScreenShot();
 
 		webdriver.getLogger().info("the expected relative url = " + url);
-		
+
 		String currurl = webdriver.getWebDriver().getCurrentUrl();
 
 		webdriver.getLogger().info("the current url = " + currurl);
@@ -337,7 +348,7 @@ public class DashBoardUtils
 
 		webdriver.getLogger().info("the relative url to compare = " + tmpurl);
 
-		Assert.assertTrue(tmpurl.contains(url), tmpurl+ " does NOT contain " + url);
+		Assert.assertTrue(tmpurl.contains(url), tmpurl + " does NOT contain " + url);
 	}
 
 	private static String trimUrlParameters(String url)
