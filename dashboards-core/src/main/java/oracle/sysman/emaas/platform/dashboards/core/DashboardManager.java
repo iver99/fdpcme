@@ -1069,11 +1069,16 @@ public class DashboardManager
 	
 	private Dashboard resetDateAndOwnerForDashboard(Dashboard dbd) {
 		dbd.setCreationDate(null);
+		dbd.setLastModifiedBy(null);
 		dbd.setOwner(null);
+		dbd.setIsSystem(false);
+		dbd.setLastModificationDate(null);
 		if (dbd.getTileList() != null) {
 			for (Tile tile : dbd.getTileList()) {
 				tile.setCreationDate(null);
 				tile.setOwner(null);
+				tile.setLastModifiedBy(null);
+				tile.setLastModificationDate(null);
 			}
 		}
 		return dbd;
