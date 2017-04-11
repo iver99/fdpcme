@@ -11,20 +11,15 @@
 package oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows;
 
 import java.io.IOException;
-import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map.Entry;
-
-import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.RestClientProxy;
-import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
-import oracle.sysman.emaas.platform.uifwk.util.RegistryLookupUtil;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
 import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.JsonUtil;
+import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.RestClientProxy;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.AbstractComparator;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.RowEntityComparator.CompareListPair;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.DashboardRowEntity;
@@ -34,6 +29,11 @@ import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.row
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.DashboardUserOptionsRowEntity;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.PreferenceRowEntity;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.TableRowsEntity;
+import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 /**
  * @author guochen
@@ -276,7 +276,9 @@ public class DashboardRowsComparator extends AbstractComparator
 		RestClient rc = RestClientProxy.getRestClient();
 		rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME, tenantId);
 		rc.setHeader(RestClient.X_REMOTE_USER, userTenant);
-		String response = rc.get(lk.getHref(), tenantId,((RegistryLookupUtil.VersionedLink) lk).getAuthToken());
+		//char[] authToken = RegistrationManager.getInstance().getAuthorizationToken();
+		char[] authToken = LookupManager.getInstance().getAuthorizationToken();
+		String response = rc.get(lk.getHref(), tenantId, new String(authToken));
 		logger.info("Checking dashboard OMC instance table rows. Response is " + response);
 		return retrieveRowsEntityFromJsonForSingleInstance(response);
 	}
@@ -297,7 +299,8 @@ public class DashboardRowsComparator extends AbstractComparator
 		RestClient rc = RestClientProxy.getRestClient();
 		rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME,tenantId);
 		rc.setHeader(RestClient.X_REMOTE_USER,userTenant);
-		String response = rc.put(lk.getHref(), entityStr, tenantId, ((RegistryLookupUtil.VersionedLink) lk).getAuthToken());
+		char[] authToken = LookupManager.getInstance().getAuthorizationToken();
+		String response = rc.put(lk.getHref(), entityStr, tenantId, new String(authToken));
 		logger.info("Checking sync reponse. Response is " + response);
 		return response;
 	}

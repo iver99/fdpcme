@@ -16,12 +16,13 @@ import java.util.Map.Entry;
 
 import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.RestClientProxy;
 import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
-import oracle.sysman.emaas.platform.uifwk.util.RegistryLookupUtil;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.AbstractComparator;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.InstancesComparedData;
@@ -142,7 +143,8 @@ public class DashboardCountsComparator extends AbstractComparator
 		RestClient rc = RestClientProxy.getRestClient();
 		rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME,tenantId);
 		rc.setHeader(RestClient.X_REMOTE_USER,userTenant);
-		String response = rc.get(lk.getHref(),tenantId, ((RegistryLookupUtil.VersionedLink) lk).getAuthToken());
+		char[] authToken = LookupManager.getInstance().getAuthorizationToken();
+		String response = rc.get(lk.getHref(),tenantId,new String(authToken));
 		logger.info("Checking dashboard OMC instance counts. Response is " + response);
 		JsonUtil ju = JsonUtil.buildNormalMapper();
 		CountsEntity ze = ju.fromJson(response, CountsEntity.class);
