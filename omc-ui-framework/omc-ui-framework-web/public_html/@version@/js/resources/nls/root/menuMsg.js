@@ -37,5 +37,8 @@ define({
       "SAMPLE_SERVICE_MENU_3": "Service menu 3",
       "SAMPLE_SERVICE_ADMIN_MENU_GRP": "Sample Admin",
       "SAMPLE_SERVICE_ADMIN_MENU_1": "Sample admin menu 1",
-      "SAMPLE_SERVICE_ADMIN_MENU_2": "Sample admin menu 2"
+      "SAMPLE_SERVICE_ADMIN_MENU_2": "Sample admin menu 2",
+      "headerProperties": {
+          "HOME_TITLE": "Sample Home"
+      }
 });
