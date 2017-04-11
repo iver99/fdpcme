@@ -496,7 +496,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 
 		//verify the the Open In Icon is hidden
 		webd.getLogger().info("Start to verify the the Open In Icon is hidden");
-		Assert.assertFalse(DashBoardUtils.verifyOpenInIconExist(webd, customWidgetName, 0),
+		Assert.assertFalse(DashBoardUtils.verifyOpenInIconExist(webd, customWidgetName),
 				"The 'Open In' icon is displayed for the custom widget");
 	}
 
