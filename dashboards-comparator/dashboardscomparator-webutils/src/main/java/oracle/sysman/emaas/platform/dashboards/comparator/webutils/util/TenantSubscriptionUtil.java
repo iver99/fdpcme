@@ -34,7 +34,7 @@ public class TenantSubscriptionUtil
 	
 	private static Logger logger = LogManager.getLogger(TenantSubscriptionUtil.class);
 	private static Logger itrLogger = LogUtil.getInteractionLogger();
-
+/*
 	public static List<String> getTenantSubscribedServices(String tenant)
 	{
 		if (tenant == null) {
@@ -122,7 +122,7 @@ public class TenantSubscriptionUtil
 			return null;
 		}
 	}
-
+*/
 	public static boolean isAPMServiceOnly(List<String> services)
 	{
 		if (services == null || services.size() != 1) {
@@ -153,7 +153,7 @@ public class TenantSubscriptionUtil
 		}
 		return false;
 	}
-
+/*
 	public static class VersionedLink extends Link {
 		private String authToken;
 
@@ -171,7 +171,7 @@ public class TenantSubscriptionUtil
 
 		/**
 		 * @return the authToken
-		 */
+		 
 		public String getAuthToken()
 		{
 			return authToken;
@@ -180,11 +180,12 @@ public class TenantSubscriptionUtil
 		/**
 		 * @param authToken
 		 *            the authToken to set
-		 */
+		 
 		public void setAuthToken(String authToken)
 		{
 			this.authToken = authToken;
 		}
-	}
+		
+	} */
 
 }

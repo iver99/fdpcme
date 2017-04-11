@@ -400,7 +400,7 @@ public class TenantSubscriptionUtilTest {
 
     @Mocked
     private RegistryLookupUtil registryLookupUtil;
-    @Test
+   /* @Test
     public void testGetTenantSubscribedServices(@Mocked final DefaultClientConfig anyClientConfig,final @Mocked JsonUtil jsonUtil,
                                                 final @Mocked InstanceInfo instanceInfo,final @Mocked RestClient rs) throws Exception {
         final Link link = new Link();
@@ -460,6 +460,6 @@ public class TenantSubscriptionUtilTest {
     @Mocked
     private UriBuilder uriBuilder;
 
-
+*/
 }
 
