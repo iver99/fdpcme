@@ -26,9 +26,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emaas.platform.dashboards.ui.web.context.GlobalContextUtil;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.RegistryLookupUtil;
+import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.RegistryLookupUtil.VersionedLink;
 
 import org.apache.commons.codec.EncoderException;
 import org.apache.commons.codec.net.URLCodec;
@@ -86,8 +86,7 @@ public class HomePageFilter implements Filter
 				LOGGER.info("Current tenant user is: \"{}\"", userTenant);
 				if (userTenant != null && !"".equals(userTenant)) {
 					String domainName = userTenant.substring(0, userTenant.indexOf("."));
-					String authorization = new String(LookupManager.getInstance().getAuthorizationToken());
-					String preference = getPreference(domainName, authorization, userTenant);
+					String preference = getPreference(domainName, userTenant);
 					LOGGER.info("Get the user preference of Home settings. Result: \"{}\"", preference);
 					if (preference != null && !"".equals(preference)) {
 						int flag = preference.indexOf("value");
@@ -107,10 +106,10 @@ public class HomePageFilter implements Filter
 									LOGGER.info("failed to encode the url", e);
 								}
 								String redirectUrl = "./builder.html?dashboardId=" + urlEscaped;
-								if (!isHomeDashboardExists(domainName, authorization, userTenant, value)) {
+								if (!isHomeDashboardExists(domainName, userTenant, value)) {
 									LOGGER.info("The dashboard which has been set as Home is not existed. Id: \"{}\"", value);
 									LOGGER.info("Removing the dashboard as Home from the user preferences...");
-									removeDashboardAsHomePreference(domainName, authorization, userTenant);
+									removeDashboardAsHomePreference(domainName, userTenant);
 									redirectUrl = "./error.html?msg=DBS_ERROR_HOME_PAGE_NOT_FOUND_MSG";
 									LOGGER.info("Redirecting to the error page. URL: \"{}\"", redirectUrl);
 								}
@@ -138,7 +137,7 @@ public class HomePageFilter implements Filter
 
 	}
 
-	private String getPreference(String domainName, String authorization, String remoteUser)
+	private String getPreference(String domainName, String remoteUser)
 	{
 		String value = "";
 		CloseableHttpClient client = HttpClients.createDefault();
@@ -148,7 +147,7 @@ public class HomePageFilter implements Filter
 			String url = href + "/" + HOME_PAGE_PREFERENCE_KEY;
 			HttpGet get = new HttpGet(url);
 			get.addHeader(USER_IDENTITY_DOMAIN_NAME, domainName);
-			get.addHeader(AUTHORIZATION, authorization);
+			get.addHeader(AUTHORIZATION, ((VersionedLink) link).getAuthToken());
 			get.addHeader(REMOTE_USER, remoteUser);
 			CloseableHttpResponse response = null;
 			try {
@@ -227,7 +226,7 @@ public class HomePageFilter implements Filter
 		return buffer.toString();
 	}
 
-	private boolean isHomeDashboardExists(String domainName, String authorization, String remoteUser, String dashboardId)
+	private boolean isHomeDashboardExists(String domainName, String remoteUser, String dashboardId)
 	{
 		boolean isExisted = false;
 		if (dashboardId != null && !"".equals(dashboardId)) {
@@ -240,7 +239,7 @@ public class HomePageFilter implements Filter
 			String url = href + "/" + dashboardId;
 			HttpGet get = new HttpGet(url);
 			get.addHeader(USER_IDENTITY_DOMAIN_NAME, domainName);
-			get.addHeader(AUTHORIZATION, authorization);
+			get.addHeader(AUTHORIZATION, ((VersionedLink) link).getAuthToken());
 			get.addHeader(REMOTE_USER, remoteUser);
 			CloseableHttpResponse response = null;
 			try {
@@ -269,7 +268,7 @@ public class HomePageFilter implements Filter
 		return isExisted;
 	}
 
-	private void removeDashboardAsHomePreference(String domainName, String authorization, String remoteUser)
+	private void removeDashboardAsHomePreference(String domainName, String remoteUser)
 	{
 		CloseableHttpClient client = HttpClients.createDefault();
 		Link link = RegistryLookupUtil.getServiceInternalLink(SERVICE_NAME, VERSION, PATH, domainName);
@@ -278,7 +277,7 @@ public class HomePageFilter implements Filter
 			String url = href + "/" + HOME_PAGE_PREFERENCE_KEY;
 			HttpDelete delete = new HttpDelete(url);
 			delete.addHeader(USER_IDENTITY_DOMAIN_NAME, domainName);
-			delete.addHeader(AUTHORIZATION, authorization);
+			delete.addHeader(AUTHORIZATION, ((VersionedLink) link).getAuthToken());
 			delete.addHeader(REMOTE_USER, remoteUser);
 			CloseableHttpResponse response = null;
 			try {

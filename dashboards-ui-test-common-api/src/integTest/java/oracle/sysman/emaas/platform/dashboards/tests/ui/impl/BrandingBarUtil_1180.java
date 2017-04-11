@@ -94,8 +94,6 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 				isExisted = true;
 				nav.click();
 				WaitUtil.waitForPageFullyLoaded(driver);
-				driver.takeScreenShot();
-				driver.savePageToFile();
 				driver.getLogger().info("clickMenuItem has click on the given menu item: " + menuitem);
 				break;
 			}
@@ -113,7 +111,7 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 			driver.takeScreenShot();
 			driver.savePageToFile();
 		}
-		return driver.getText("css=" + DashBoardPageId_1180.HAMBURGERMENU_TOOLBAR_CSS);
+		return driver.getText("css=" + DashBoardPageId_1180.HAMBURGERMENU_CURRENTHEADER_CSS);
 	}
 
 	@Override
@@ -182,7 +180,7 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 		driver.getLogger().info("isAlertsLinkExisted(WebDriver) started");
 		//check if hamburger menu icon exist
 		if (isHamburgerMenuEnabled(driver)) {
-			driver.getLogger().info("Start to check if 'Home' menu is existed in hamburger menu.");
+			driver.getLogger().info("Start to check if 'Alert' menu is existed in hamburger menu.");
 			isExisted = isMenuItemExisted(driver, ROOT_MENU_ALERTS);
 		}
 		else {
@@ -586,7 +584,7 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 		else {
 			//the branding bar
 			driver.getLogger()
-					.info("Start to visit visual analyzer link from branding bar. Link name: " + visualAnalyzerLinkName);
+			.info("Start to visit visual analyzer link from branding bar. Link name: " + visualAnalyzerLinkName);
 			visitApplicationLink(driver, "va", visualAnalyzerLinkName);
 		}
 		driver.getLogger().info("visitApplicationVisualAnalyzer ended");
@@ -663,20 +661,18 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 				driver.savePageToFile();
 			}
 			WaitUtil.waitForPageFullyLoaded(driver);
-			driver.takeScreenShot();
-			driver.savePageToFile();
 		}
 		else {
 			//branding bar
 			driver.getLogger().info("[visitWelcome] start to visit 'Welcome' link from branding bar.");
 			visitApplicationLink(driver, DashBoardPageId.BRANDINGBARWELCOMELINKID);
 		}
-
 		driver.getLogger().info("visitWelcome ended");
 	}
 
 	private void clickHamburgerMenuIcon(WebDriver driver)
 	{
+		driver.getLogger().info("Click Hamburger Menu Icon");
 		driver.click("css=" + DashBoardPageId_1180.HAMBURGERMENU_ICON_CSS);
 		driver.takeScreenShot();
 		driver.savePageToFile();

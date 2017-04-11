@@ -50,14 +50,23 @@ public class TestBrandingBar_BasicTest extends LoginAndLogout
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testAgentsLink");
-		WaitUtil.waitForPageFullyLoaded(webd);
+		if (!DashBoardUtils.isHamburgerMenuEnabled(webd)) {
+			WaitUtil.waitForPageFullyLoaded(webd);
 
-		// Agents link
-		BrandingBarUtil.visitApplicationAdministration(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_AGENT);
-		WaitUtil.waitForPageFullyLoaded(webd);
+			// Agents link
+			BrandingBarUtil.visitApplicationAdministration(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_AGENT);
+			WaitUtil.waitForPageFullyLoaded(webd);
 
-		//verify the url of opened page
-		DashBoardUtils.verifyURL(webd, "tenantmgmt/services/customersoftware");
+			//verify the url of opened page
+			DashBoardUtils.verifyURL(webd, "tenantmgmt/services/customersoftware");
+		}
+		else {
+			BrandingBarUtil.clickMenuItem(webd, BrandingBarUtil.ROOT_MENU_ADMIN);
+			BrandingBarUtil.clickMenuItem(webd, BrandingBarUtil.GLOBAL_ADMIN_MENU_AGENTS);
+			WaitUtil.waitForPageFullyLoaded(webd);
+			//verify the url of opened page
+			DashBoardUtils.verifyURL(webd, "tenantmgmt/services/customersoftware");
+		}
 	}
 
 	@Test(alwaysRun = true)

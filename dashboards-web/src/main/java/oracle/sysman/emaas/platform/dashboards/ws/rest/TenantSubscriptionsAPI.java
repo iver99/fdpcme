@@ -27,8 +27,14 @@ import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSec
 import oracle.sysman.emaas.platform.dashboards.core.model.subscription2.AppsInfo;
 import oracle.sysman.emaas.platform.dashboards.core.model.subscription2.TenantSubscriptionInfo;
 import oracle.sysman.emaas.platform.dashboards.core.util.*;
+import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
+import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
+import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil.VersionedLink;
+import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
+import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.subappedition.TenantEditionEntity;
+import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -136,11 +142,11 @@ public class TenantSubscriptionsAPI extends APIBase
 			TenantEditionEntity ne = null;
 			for(AppsInfo appsInfo : tenantSubscriptionInfo.getAppsInfoList()){
 				ne = new TenantEditionEntity();
-				if(SubsriptionAppsUtil.V2_TENANT.equals(appsInfo.getLicVersion())){
-					ne.setApplication(appsInfo.getId());
-					ne.setEdition(pickEdition(appsInfo));
+				if(SubsriptionAppsUtil.V2_TENANT.equals(appsInfo.getLicVersion())) {
+                    ne.setApplication(appsInfo.getId());
+                    ne.setEdition(pickEdition(appsInfo));
                     LOGGER.debug("V2: edition info is {}", appsInfo.getEditions());
-				}
+                }
 				if(SubsriptionAppsUtil.V1_TENANT.equals(appsInfo.getLicVersion())){
 					//if is V1, editions List only have one edition
 					ne.setEdition(appsInfo.getEditions().get(0));

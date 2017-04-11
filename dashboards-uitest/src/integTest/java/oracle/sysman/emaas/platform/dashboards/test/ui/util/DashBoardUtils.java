@@ -6,6 +6,7 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.WelcomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_1150;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_1180;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_190;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
@@ -92,6 +93,16 @@ public class DashBoardUtils
 		webdriver.getLogger().info("click button on the dialog, should navigate to the home page");
 		alert.accept();
 		//webdriver.takeScreenShot();
+	}
+
+        public static boolean isHamburgerMenuEnabled(WebDriver driver)
+	{
+		if (driver.isElementPresent("css=" + DashBoardPageId_1180.HAMBURGERMENU_ICON_CSS)) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 
 	/**
@@ -485,3 +496,4 @@ public class DashBoardUtils
 		return baseUrl;
 	}
 }
+

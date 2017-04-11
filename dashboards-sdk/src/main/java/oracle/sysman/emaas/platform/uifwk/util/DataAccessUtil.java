@@ -10,12 +10,11 @@
 
 package oracle.sysman.emaas.platform.uifwk.util;
 
-import com.sun.jersey.api.client.ClientHandlerException;
-import com.sun.jersey.api.client.UniformInterfaceException;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.StringUtil;
-
 import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
+import oracle.sysman.emaas.platform.uifwk.util.RegistryLookupUtil.VersionedLink;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -54,7 +53,7 @@ public class DataAccessUtil
 			if (!StringUtil.isEmpty(sessionExp)) {
 				rc.setHeader("SESSION_EXP", sessionExp);
 			}
-			String response = rc.get(registrationHref, tenantName);
+			String response = rc.get(registrationHref, tenantName, ((VersionedLink) configurationsLink).getAuthToken());
 			LOGGER.info("Retrieved brandingbar data is: {}", response);
 			LOGGER.info("It takes {}ms to retrieve brandingbar data from Dashboard-API", System.currentTimeMillis() - start);
 			return response;

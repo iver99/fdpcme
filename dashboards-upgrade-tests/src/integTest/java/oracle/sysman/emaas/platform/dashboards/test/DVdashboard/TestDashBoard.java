@@ -182,7 +182,7 @@ public class TestDashBoard extends LoginAndLogout
 		webd.switchToWindow();
 		webd.getLogger().info("Wait for the widget loading....");
 		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		//wait1.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//button[contains(@id,'editButton')]")));
+		wait1.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//button[contains(@id,'save_widget_btn')]")));
 
 	}
 
