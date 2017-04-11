@@ -168,8 +168,8 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                                             self.serviceMenuData[adminMenuId].children = [];
                                         }
                                         self.serviceMenuData[adminMenuId].children.push($.extend(true, {}, serviceItem.serviceAdminMenus));
-                                        self.serviceMenuData[adminMenuId].children[self.serviceMenuData[adminMenuId].children.length].id = 'omc_root_admin_grp_'+serviceItem.appId;
-                                        omcMenus[adminMenuId].children.push(getMenuItem(self.serviceMenuData[adminMenuId].children[self.serviceMenuData[adminMenuId].children.length]));
+                                        self.serviceMenuData[adminMenuId].children[self.serviceMenuData[adminMenuId].children.length-1].id = 'omc_root_admin_grp_'+serviceItem.appId;
+                                        omcMenus[adminMenuId].children.push(getMenuItem(self.serviceMenuData[adminMenuId].children[self.serviceMenuData[adminMenuId].children.length-1]));
                                     }
                                 }
                                 
