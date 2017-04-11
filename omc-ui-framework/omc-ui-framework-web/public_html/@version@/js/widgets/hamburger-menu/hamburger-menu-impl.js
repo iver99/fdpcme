@@ -437,7 +437,8 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 }
                 //otherwise, get all service menus from service registries
                 else {
-                    $.when(loadServiceMenus(), getUserGrants(), getSubscribedApps(), fetchBaseVanityUrls(), getUserRoles()).done(function() {
+                    $.when(checkDashboardAsHomeSettings(), loadServiceMenus(), getUserGrants(), getSubscribedApps(), fetchBaseVanityUrls(), getUserRoles()).done(function() {
+                        fetchGlobalMenuLinks(self.registration);
                         for (var k = 0; k < rootMenuData.length; ++k) {
 //                            rootMenuData[k].externalUrl = globalMenuIdHrefMapping[rootMenuData[k].id] ? globalMenuIdHrefMapping[rootMenuData[k].id] : '#';
                             getGlobalMenuUrls(rootMenuData[k]);
@@ -871,6 +872,15 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     }
                     
                     if (item && !item.children && !item.disabled) {
+                        //Auto close hamburger menu when it's not in pinned status
+                        if($("#omcHamburgerMenu").hasClass("oj-offcanvas-overlay")) {
+                            oj.OffcanvasUtils.close({
+                                "edge": "start",
+                                "displayMode": "overlay",
+                                "selector": "#omcHamburgerMenu",
+                                "autoDismiss": "focusLoss"
+                            });
+                        }
                         if (uifwkControlled) {
                             var linkHref = item.externalUrl; //globalMenuIdHrefMapping[data.id];
                             if(self.hrefMap && self.hrefMap[data.id]){
@@ -928,6 +938,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 }
                 
                 function checkDashboardAsHomeSettings() {
+                    var dfdCheckDashboardAsHomeSettings = $.Deferred();
                     function succCallback(data) {
                         var homeDashboardId = prefUtil.getPreferenceValue(data, prefKeyHomeDashboardId);
                         if (homeDashboardId) {
@@ -937,15 +948,18 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                             omcHomeUrl = null;
                         }
                         isSetAsHomeChecked = true;
+                        dfdCheckDashboardAsHomeSettings.resolve();
                     }
                     function errorCallback(jqXHR, textStatus, errorThrown) {
                         omcHomeUrl = null;
+                        dfdCheckDashboardAsHomeSettings.reject();
                     }
                     var options = {
                         success: succCallback,
                         error: errorCallback
                     };
                     prefUtil.getAllPreferences(options);
+                    return dfdCheckDashboardAsHomeSettings;
                 }
 //                $("#omcMenuNavList").on("ojbeforecurrentitem", function (event, ui) {
 //                    // verify that the component firing the event is a component of interest ,
