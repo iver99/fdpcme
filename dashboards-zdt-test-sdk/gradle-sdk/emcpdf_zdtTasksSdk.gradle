@@ -27,11 +27,11 @@ import com.oracle.emdi.gradle.testinfra.tasks.EMTest
 
 dependencies
 {
-    //testConfig group: 'com.oracle.emaas.emcpdf.testsdk', name: 'dashboards-zdt-test-sdk', version: "${emcpdf_REPO_BID}"
+    	testConfig group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-zdt-test-sdk-integ-tests', version: "${emcpdf_REPO_BID}"
      	testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-web', version: "${emcpdf_REPO_BID}") {transitive = true}
-             testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-core', version: "${emcpdf_REPO_BID}") {transitive = true}
-             testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-entities', version: "${emcpdf_REPO_BID}") {transitive = true}
-             testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-webutils', version: "${emcpdf_REPO_BID}")
+        testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-core', version: "${emcpdf_REPO_BID}") {transitive = true}
+        testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-entities', version: "${emcpdf_REPO_BID}") {transitive = true}
+        testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-webutils', version: "${emcpdf_REPO_BID}")
      	testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardsui-webutils', version: "${emcpdf_REPO_BID}") {transitive = true}
      
 
@@ -39,12 +39,12 @@ dependencies
 
  
 task emcpdf_zdtPlay(type: EMTest) {
-  //include "oracle/sysman/emaas/platform/dashboards/testsdk/DashboardOrderWriteCURD.class"  
-    include "oracle/sysman/emaas/platform/dashboards/test/dashboard/DashboardCRUD.class"
+  include "oracle/sysman/emaas/platform/dashboards/testsdk/DashboardOrderWriteCURD.class"  
+  // include "oracle/sysman/emaas/platform/dashboards/test/dashboard/DashboardCRUD.class"
 }
 task emcpdf_zdtReplay(type: EMTest) {
-  //include "oracle/sysman/emaas/platform/dashboards/testsdk/DashboardOrderWriteCURD.class"
-  include "oracle/sysman/emaas/platform/dashboards/test/dashboard/DashboardCRUD.class"
+  include "oracle/sysman/emaas/platform/dashboards/testsdk/DashboardOrderWriteCURD.class"
+  //include "oracle/sysman/emaas/platform/dashboards/test/dashboard/DashboardCRUD.class"
 }
  
 //task emcpdf_zdtPlaySaveState(type: EMTest)
