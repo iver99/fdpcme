@@ -137,9 +137,10 @@ testTenants["df_omclog"]= [ "OMCLOG" : [ "Standard"] ]
 testTenants["df_secse"]= [ "SECSE" : [ "Standard"] ]
 testTenants["df_secsma"]= [ "SECSMA" : [ "Standard"] ]
 
-task onboardTestTenants(type: OnBoardTenants(testTenants)){
+task onboardTestTenants(dependsOn: onboardTenants(testTenants)){
 
 }
+
 
 //Task added from "emcpdf_qa_test_3n"
 task QATest(type:EMTest,dependsOn:[omcSetup,onboardTestTenants]) {
