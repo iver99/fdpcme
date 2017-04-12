@@ -991,6 +991,8 @@ define(['knockout',
            
             var dashboardExdedOpt = self.dashboard.extendedOptions && JSON.parse(ko.unwrap(self.dashboard.extendedOptions()));
             dashboardExdedOpt && dashboardExdedOpt.timePeriodNotShow ? self.timePeriodsNotToShow = dashboardExdedOpt.timePeriodNotShow :self.timePeriodsNotToShow = [];
+            //whether to enable "Latest" on custom panel
+            var enableLatestOnCustomPanel = ($.inArray(ctxUtil.OMCTimeConstants.QUICK_PICK.LATEST, self.timePeriodsNotToShow) >=0) ? false : true;
             
             if(self.isUnderSet) {
                 self.datetimePickerParams = {
@@ -998,7 +1000,8 @@ define(['knockout',
                     endDateTime: self.initEnd,
                     timePeriod: self.timePeriod,
                     hideMainLabel: true,
-                    timePeriodsNotToShow:self.timePeriodsNotToShow,
+                    timePeriodsSet: ctxUtil.OMCTimeConstants.timePeriodsSet.SHORT_TERM,
+                    enableLatestOnCustomPanel: enableLatestOnCustomPanel,
                     callbackAfterApply: function(start, end, tp) {
                         callbackAfterApply(start, end, tp);   
                     }
@@ -1011,7 +1014,7 @@ define(['knockout',
                     headerViewModel.brandingbarParams.timeSelectorParams.startDateTime(ko.unwrap(self.initStart));
                     headerViewModel.brandingbarParams.timeSelectorParams.endDateTime(ko.unwrap(self.initEnd));
                     headerViewModel.brandingbarParams.timeSelectorParams.timePeriod(ko.unwrap(self.timePeriod));
-                    headerViewModel.brandingbarParams.timeSelectorParams.timePeriodsNotToShow(ko.unwrap(self.timePeriodsNotToShow));
+                    headerViewModel.brandingbarParams.timeSelectorParams.enableLatestOnCustomPanel(enableLatestOnCustomPanel);
                     headerViewModel.brandingbarParams.timeSelectorParams.callbackAfterApply = function(start, end, tp) {
                         callbackAfterApply(start, end, tp);
                     }
