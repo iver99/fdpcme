@@ -81,7 +81,7 @@ public class SubsriptionAppsUtil {
             LOGGER.info("editions is {}",editions);
             //V2 handling
             if (OMC_SERVICE_TYPE.equals(subscriptionApps.getServiceType())) {
-                LOGGER.info("Service Type is []",OMC_SERVICE_TYPE);
+                LOGGER.info("V2 handling, Service Type is []",OMC_SERVICE_TYPE);
                 AppsInfo appsInfo = new AppsInfo(OMC_SERVICE_TYPE, V2_TENANT,editions);
                 appsInfoList.add(appsInfo);
                 appSet.add(OMC_SERVICE_TYPE);
@@ -164,7 +164,7 @@ public class SubsriptionAppsUtil {
                 continue;
             }
             if (OSMACC_SERVICE_TYPE.equals(subscriptionApps.getServiceType())) {
-                LOGGER.info("Service type is {}",OSMACC_SERVICE_TYPE);
+                LOGGER.info("V2 handling Service type is {}",OSMACC_SERVICE_TYPE);
                 appSet.add(OSMACC_SERVICE_TYPE);
                 AppsInfo appsInfo = new AppsInfo(OSMACC_SERVICE_TYPE, V2_TENANT,editions);
                 appsInfoList.add(appsInfo);
@@ -181,14 +181,14 @@ public class SubsriptionAppsUtil {
                     for (EditionComponent e : subscriptionApps.getEditionComponentsList()) {
                         if (e.getEdition() != null) {
                             if (e.getEdition().contains(CONFIGURATION_COMPLIANCE_EDITION)) {
-                                LOGGER.info("Service suite {} is {}",OSMACC_SERVICE_TYPE,CONFIGURATION_COMPLIANCE_EDITION);
+                                LOGGER.info("Service suite {} is {} edition",OSMACC_SERVICE_TYPE,CONFIGURATION_COMPLIANCE_EDITION);
                                 appSet.add(COMPLIANCE_SERVICE_TYPE);
                                 AppsInfo appsInfo1 = new AppsInfo(COMPLIANCE_SERVICE_TYPE, V2_TENANT,editions);
                                 appsInfoList.add(appsInfo1);
                                 continue;
                             }
                             if (e.getEdition().contains(SECURITY_MONITORING_ANALYTICS_EDITION)) {
-                                LOGGER.info("Service suite {} is {}",OSMACC_SERVICE_TYPE,CONFIGURATION_COMPLIANCE_EDITION);
+                                LOGGER.info("Service suite {} is {} edition",OSMACC_SERVICE_TYPE,CONFIGURATION_COMPLIANCE_EDITION);
                                 appSet.add(SECURITYSERVICE_SERVICE_TYPE);
                                 AppsInfo appsInfo1 = new AppsInfo(SECURITYSERVICE_SERVICE_TYPE, V2_TENANT,editions);
                                 appsInfoList.add(appsInfo1);
@@ -197,45 +197,78 @@ public class SubsriptionAppsUtil {
                         }
                     }
                 }
-                LOGGER.info("Service type is {} and subscribed apps is {}", OSMACC_SERVICE_TYPE, appSet);
+                LOGGER.info("Service type is {} and after mapping subscribed apps is {}", OSMACC_SERVICE_TYPE, appSet);
                 appList.addAll(appSet);
                 continue;
             }
             //V3 handling
-            /*if (OMCSE_SERVICE_TYPE.equals(subscriptionApps.getServiceType())) {
-                tenantSubscriptionInfo.setVersion(V3_TENANT);
+            if (OMCSE_SERVICE_TYPE.equals(subscriptionApps.getServiceType())) {
                 appList.add(OMCSE_SERVICE_TYPE);
+                AppsInfo appsInfo = new AppsInfo(OMCSE_SERVICE_TYPE,V3_TENANT,editions);
+                appsInfoList.add(appsInfo);
+
                 appList.add(APM_SERVICE_TYPE);
+                AppsInfo appsInfo1 = new AppsInfo(APM_SERVICE_TYPE,V3_TENANT,editions);
+                appsInfoList.add(appsInfo1);
+
                 appList.add(MONITORING_SERVICE_TYPE);
+                AppsInfo appsInfo2 = new AppsInfo(MONITORING_SERVICE_TYPE,V3_TENANT,editions);
+                appsInfoList.add(appsInfo2);
                 LOGGER.info("Service type is {} and subscribed apps is {}", OMCSE_SERVICE_TYPE, appList);
             }
             if (OMCEE_SERVICE_TYPE.equals(subscriptionApps.getServiceType())) {
-                tenantSubscriptionInfo.setVersion(V3_TENANT);
                 appList.add(OMCEE_SERVICE_TYPE);
+                AppsInfo appsInfo = new AppsInfo(OMCEE_SERVICE_TYPE,V3_TENANT,editions);
+                appsInfoList.add(appsInfo);
+
                 appList.add(APM_SERVICE_TYPE);
+                AppsInfo appsInfo1 = new AppsInfo(APM_SERVICE_TYPE,V3_TENANT,editions);
+                appsInfoList.add(appsInfo1);
+
                 appList.add(MONITORING_SERVICE_TYPE);
+                AppsInfo appsInfo2 = new AppsInfo(MONITORING_SERVICE_TYPE,V3_TENANT,editions);
+                appsInfoList.add(appsInfo2);
+
                 appList.add(ITANALYTICS_SERVICE_TYPE);
+                AppsInfo appsInfo3 = new AppsInfo(ITANALYTICS_SERVICE_TYPE,V3_TENANT,editions);
+                appsInfoList.add(appsInfo3);
+
                 appList.add(ORCHESTRATION_SERVICE_TYPE);
+                AppsInfo appsInfo4 = new AppsInfo(ORCHESTRATION_SERVICE_TYPE, V3_TENANT,editions);
+                appsInfoList.add(appsInfo4);
                 LOGGER.info("Service type is {} and subscribed apps is {}", OMCEE_SERVICE_TYPE, appList);
             }
             if (OMCLOG_SERVICE_TYPE.equals(subscriptionApps.getServiceType())) {
-                tenantSubscriptionInfo.setVersion(V3_TENANT);
                 appList.add(OMCLOG_SERVICE_TYPE);
+                AppsInfo appsInfo = new AppsInfo(OMCLOG_SERVICE_TYPE,V3_TENANT,editions);
+                appsInfoList.add(appsInfo);
+
                 appList.add(LOGANALYTICS_SERVICE_TYPE);
+                AppsInfo appsInfo1 = new AppsInfo(LOGANALYTICS_SERVICE_TYPE, V3_TENANT,editions);
+                appsInfoList.add(appsInfo1);
                 LOGGER.info("Service type is {} and subscribed apps is {}", OMCLOG_SERVICE_TYPE, appList);
             }
             if (SECSE_SERVICE_TYPE.equals(subscriptionApps.getServiceType())) {
-                tenantSubscriptionInfo.setVersion(V3_TENANT);
                 appList.add(SECSE_SERVICE_TYPE);
+                AppsInfo appsInfo = new AppsInfo(SECSE_SERVICE_TYPE,V3_TENANT,editions);
+                appsInfoList.add(appsInfo);
+
                 appList.add(COMPLIANCE_SERVICE_TYPE);
+                AppsInfo appsInfo1 = new AppsInfo(COMPLIANCE_SERVICE_TYPE, V3_TENANT,editions);
+                appsInfoList.add(appsInfo1);
                 LOGGER.info("Service type is {} and subscribed apps is {}", SECSE_SERVICE_TYPE, appList);
             }
             if (SECSMA_SERVICE_TYPE.equals(subscriptionApps.getServiceType())) {
-                tenantSubscriptionInfo.setVersion(V3_TENANT);
                 appList.add(SECSMA_SERVICE_TYPE);
+                AppsInfo appsInfo = new AppsInfo(SECSMA_SERVICE_TYPE,V3_TENANT,editions);
+                appsInfoList.add(appsInfo);
+
                 appList.add(SECURITYSERVICE_SERVICE_TYPE);
+                AppsInfo appsInfo1 = new AppsInfo(SECURITYSERVICE_SERVICE_TYPE, V3_TENANT,editions);
+                appsInfoList.add(appsInfo1);
                 LOGGER.info("Service type is {} and subscribed apps is {}", SECSMA_SERVICE_TYPE, appList);
-            }*/
+            }
+
             //V1 handling
             if (APM_SERVICE_TYPE.equals(subscriptionApps.getServiceType()) || MONITORING_SERVICE_TYPE.equals(subscriptionApps.getServiceType())
                     || ITANALYTICS_SERVICE_TYPE.equals(subscriptionApps.getServiceType()) || SECURITYSERVICE_SERVICE_TYPE.equals(subscriptionApps.getServiceType())
