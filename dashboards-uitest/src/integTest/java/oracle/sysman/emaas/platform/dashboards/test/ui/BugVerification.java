@@ -6,12 +6,14 @@ import oracle.sysman.emaas.platform.dashboards.test.ui.util.PageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_190;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.impl.BrandingBarUtil_1180;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.GlobalContextUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.WelcomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.ITimeSelectorUtil.TimeRange;
 
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -336,4 +338,39 @@ public class BugVerification extends LoginAndLogout
 		webd.getLogger().info("Verify the Explore Data menu is not diplayed in the page");
 		Assert.assertFalse(webd.isDisplayed("id=" + DashBoardPageId.EXPLOREDATABTNID), "Explore Data menu is displayed in dashboard");
         }        
+
+
+	@Test
+	public void testEMCPDF_3660()
+	{
+		//Initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testEMCPDF_3660");
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		//reset all filter options
+		webd.getLogger().info("Reset all filter options");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//create a dashboard set
+		webd.getLogger().info("Create a dashboard set");
+		DashboardHomeUtil.createDashboardSet(webd, "DashboardSet_3660", "test for set custom time range for dashboard in the set");
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		//add a OOB dashboard to the set
+		webd.getLogger().info("Add an OOB dashboard to the set");
+		DashboardBuilderUtil.addNewDashboardToSet(webd, "Databases");
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		//verify the dashboard set is created successfully
+		webd.getLogger().info("Verify the dashboard set is created successfully");
+		DashboardBuilderUtil.verifyDashboardSet(webd, "DashboardSet_3660");
+		DashboardBuilderUtil.verifyDashboardInsideSet(webd, "Databases");
+
+		//set custom time range for time picker
+		webd.getLogger().info("Set the custom time range");
+		Assert.assertNotNull(TimeSelectorUtil.setCustomTime(webd, "04/07/2016 12:00 AM", "04/14/2016 12:30 PM"), "The restun date time is null");
+		Assert.assertEquals(TimeSelectorUtil.getTimeRangeLabel(webd).contains("Custom"), true);
+	}
+
 }
