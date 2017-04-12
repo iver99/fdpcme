@@ -178,7 +178,7 @@ define({
       "DATETIME_PICKER_BUTTONS_REPORTING_TIMEZONE": "Reporting time in UTC{0}{1}:{2}",
       "DATETIME_PICKER_ERROR": "Error!",
       "DATETIME_PICKER_TIME_VALIDATE_ERROR_MSG": "The start date/time is after the end date/time.",
-      "DATETIME_PICKER_TIME_VALIDATE_FUTURE_ERROR_MSG": "You entered a future time.",
+      "DATETIME_PICKER_TIME_VALIDATE_FUTURE_ERROR_MSG": "Date and time must be on or sooner than current date and time.",
       "DATETIME_PICKER_BEYOND_WINDOW_LIMIT_ERROR_MSG": "The selected time range should not exceed ",
       "DATETIME_PICKER_WINDOW_SIZE_WITH_DAYS": "{0} days {1} hours {2} minutes.",
       "DATETIME_PICKER_WINDOW_SIZE_WITH_HOURS": "{0} hours {1} minutes.",
