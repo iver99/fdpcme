@@ -73,6 +73,7 @@ define({
       "DBS_HOME_CREATE_DLG_INVALID_NAME": "You must enter a non empty name and its length should be less than 64 characters.",
       "DBS_HOME_CREATE_DLG_INVALID_DES_SUM": "Description is invalid",
       "DBS_HOME_CREATE_DLG_INVALID_DES": "You must enter a description with less than 256 characters.",
+      "DBS_Home_FAILED_TO_CREATE_DASHBOARD":"Error when creating dashboard.The error is: {0}",
       "DBS_HOME_FILTER_SERVICE_LABEL": "Cloud Services",
       "DBS_HOME_FILTER_SERVICE_LA": "Log Analytics",
       "DBS_HOME_FILTER_SERVICE_APM_ABBR": "APM",
