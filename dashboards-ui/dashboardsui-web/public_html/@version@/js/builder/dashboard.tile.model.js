@@ -20,8 +20,8 @@ define(['knockout',
         'builder/editor/editor.mode',
         'builder/dashboardDataSource/dashboard.datasource',
         'builder/widget/widget.model',
-        'jqueryui',
-        'builder/builder.jet.partition'
+        'jqueryui'
+//        'builder/builder.jet.partition'
 //        'ckeditor'
     ],
 

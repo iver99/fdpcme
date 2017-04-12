@@ -7,7 +7,7 @@ define([
     'idfbcutil',
     'ojs/ojcore',
     'jqueryui',
-    'builder/builder.jet.partition',
+//    'builder/builder.jet.partition',
     'builder/builder.core',
     'builder/right.panel.model',
     'builder/builder.functions',
