@@ -99,8 +99,7 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
 }
 
 //depends on OMCTF-977
-task suiteLicensingTest(type: EMTest, dependsOn:[omcSetup, onboardTestTenants])
-{
+task suiteLicensingTest(type: EMTest, dependsOn:[omcSetup, onboardTestTenants]){
 	include "oracle/sysman/emaas/platform/dashboards/test/ui/TestSuiteLicensing_OMC.class"
 	include "oracle/sysman/emaas/platform/dashboards/test/ui/TestSuiteLicensing_OSMACC.class"
 	include "oracle/sysman/emaas/platform/dashboards/test/ui/TestSuiteLicensing_OMCEE.class"
