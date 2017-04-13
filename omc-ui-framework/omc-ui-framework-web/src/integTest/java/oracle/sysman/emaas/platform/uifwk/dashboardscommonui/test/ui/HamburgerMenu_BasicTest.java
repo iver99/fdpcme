@@ -229,18 +229,6 @@ public class HamburgerMenu_BasicTest extends LoginAndLogout
 	}
 
 	@Test(alwaysRun = true)
-	public void testExpandAPMMenuItem()
-	{
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), "");
-		webd.getLogger().info("start to test in testAPMMenuItem");
-		WaitUtil.waitForPageFullyLoaded(webd);
-
-		// APM MenuItem
-		BrandingBarUtil.expandSubMenu(webd, BrandingBarUtil.ROOT_MENU_APM);
-		Assert.assertEquals(BrandingBarUtil.getCurrentMenuHeader(webd), "APM");
-	}
-
-	@Test(alwaysRun = true)
 	public void testSecurityMenuItem()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), "");

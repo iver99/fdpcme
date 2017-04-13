@@ -31,6 +31,17 @@ public class HamburgerMenu_RegisterServiceMenu extends LoginAndLogout
 	}
 
 	@Test
+	public void verifyRegisterServiceMenu_APM()
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), "?appId=APM");
+		webd.getLogger().info("Start the test case: verifyRegisterServiceMenu_APM");
+
+		CommonUIUtils.verifyPageContent(webd, "Application Performance Monitoring", true);
+
+		verifyRegisterServiceMenu(BrandingBarUtil.ROOT_MENU_APM, "APM Admin");
+	}
+
+	@Test
 	public void verifyRegisterServiceMenu_Compliance()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), "?appId=Compliance");
@@ -71,7 +82,7 @@ public class HamburgerMenu_RegisterServiceMenu extends LoginAndLogout
 
 		CommonUIUtils.verifyPageContent(webd, "Infrastructure Monitoring", true);
 
-		verifyRegisterServiceMenu(BrandingBarUtil.ROOT_MENU_MONITORING, "Infrastructure Monitoring Admin");
+		verifyRegisterServiceMenu(BrandingBarUtil.ROOT_MENU_MONITORING, "Monitoring Admin");
 	}
 
 	@Test

@@ -631,7 +631,7 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 		else {
 			//the branding bar
 			driver.getLogger()
-			.info("Start to visit visual analyzer link from branding bar. Link name: " + visualAnalyzerLinkName);
+					.info("Start to visit visual analyzer link from branding bar. Link name: " + visualAnalyzerLinkName);
 			visitApplicationLink(driver, "va", visualAnalyzerLinkName);
 		}
 		driver.getLogger().info("visitApplicationVisualAnalyzer ended");
@@ -664,8 +664,9 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 			//check the 'My Favorite' options in filter options in Dashboard home page
 			driver.getLogger().info("[visitMyFavorites] start to visit 'My Favorites' link in home page.");
 			clickMenuItem(driver, ROOT_MENU_DASHBOARDS);
-			DashboardHomeUtil.filterOptions(driver, "favorites");
-
+			if (!DashboardHomeUtil.isFilterOptionSelected(driver, "favorites")) {
+				DashboardHomeUtil.filterOptions(driver, "favorites");
+			}
 		}
 		else {
 			//the branding bar

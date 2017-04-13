@@ -49,7 +49,7 @@ public interface IBrandingBarUtil extends IUiTestCommonAPI
 	public static final String ROOT_MENU_DASHBOARDS = "Dashboards";
 	public static final String ROOT_MENU_DATAEXPLORER = "Data Explorer";
 	public static final String ROOT_MENU_APM = "APM";
-	public static final String ROOT_MENU_MONITORING = "Infrastructure Monitoring";
+	public static final String ROOT_MENU_MONITORING = "Monitoring";
 	public static final String ROOT_MENU_LA = "Log Analytics";
 	public static final String ROOT_MENU_ITA = "IT Analytics";
 	public static final String ROOT_MENU_ORCHESTRATION = "Orchestration";
