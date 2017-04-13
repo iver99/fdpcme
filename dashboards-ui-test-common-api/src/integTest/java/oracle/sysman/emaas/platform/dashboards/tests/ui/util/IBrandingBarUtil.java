@@ -64,6 +64,13 @@ public interface IBrandingBarUtil extends IUiTestCommonAPI
 
 	public void clickMenuItem(WebDriver driver, String menuitem);
 
+	/**
+	 * @param driver
+	 * @param menuitem
+	 * @return
+	 */
+	public void expandSubMenu(WebDriver driver, String menuitem);
+
 	public String getCurrentMenuHeader(WebDriver driver);
 
 	public void goBackToParentMenu(WebDriver driver);
