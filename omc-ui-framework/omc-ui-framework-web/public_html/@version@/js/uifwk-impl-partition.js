@@ -45,5 +45,13 @@ define([
 //        registerComponent("df-common-widget-selector", widgetsVM, widgetsTemplate);
 //        registerComponent("time-filter", timefilterVM, timeFilterTemplate);
 //        registerComponent("date-time-picker", timePickerVM, timePickerTemplate);
+        var versionedContextSelectorUtils = window.getSDKVersionFile ?
+            window.getSDKVersionFile('emsaasui/emcta/ta/js/sdk/contextSelector/api/ContextSelectorUtils') : null;
+        var contextSelectorUtil = versionedContextSelectorUtils ? versionedContextSelectorUtils :
+            '/emsaasui/emcta/ta/js/sdk/contextSelector/api/ContextSelectorUtils.js';
+
+        require([contextSelectorUtil], function (EmctaContextSelectorUtil) {
+            EmctaContextSelectorUtil.registerComponents();
+        });
     }
 );
