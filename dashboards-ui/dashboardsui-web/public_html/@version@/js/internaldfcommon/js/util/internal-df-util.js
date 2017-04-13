@@ -121,12 +121,16 @@ define(['knockout',
             self.getSubscribedappsUrl=function(){
                 //change value to 'data/servicemanager.json' for local debugging, otherwise you need to deploy app as ear
                 if (self.isDevMode()){
-                    return self.buildFullUrl(self.getDevData().dfRestApiEndPoint,"subscribedapps");
+                    return self.buildFullUrl(self.getDevData().dfRestApiEndPoint,"subscribedapps2");
                 }else{
-                    return '/sso.static/dashboards.subscribedapps';
+                    return '/sso.static/dashboards.subscribedapps2';
                 }
             };
 
+            self.getSubscribedApps2WithEdition = function(successCallback, errorCallback) {
+                dfu.getSubscribedApps2WithEdition(successCallback, errorCallback);
+            };
+            
             self.getSubscribedAppsWithoutEdition = function(successCallback, errorCallback) {
                 dfu.getSubscribedAppsWithoutEdition(successCallback, errorCallback);
             };
@@ -355,6 +359,16 @@ define(['knockout',
             
             self.getRegistrationUrl=function(){
                 return dfu.getRegistrationUrl();
+            };
+            
+            /**
+             * Check if service type is V1 or not.
+             * 
+             * @param {type} subscribedApps: applications returned from subscribedapps rest api.
+             * @returns {Boolean}
+             */
+            self.isV1ServiceTypes = function(subscribedApps) {
+                return dfu.isV1ServiceTypes(subscribedApps);
             };
 
         }

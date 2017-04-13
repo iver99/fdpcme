@@ -17,8 +17,8 @@ import java.util.List;
 
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter;
+import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.RegistryLookupUtil.VersionedLink;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.subscription.SubscribedApps;
-
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICache;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.exception.ExecutionException;
@@ -28,6 +28,7 @@ import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
 import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -39,9 +40,7 @@ import org.apache.logging.log4j.Logger;
 public class TenantSubscriptionUtil
 {
 	private static final String HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME = "X-USER-IDENTITY-DOMAIN-NAME";
-
 	private static Logger LOGGER = LogManager.getLogger(TenantSubscriptionUtil.class);
-
 	private static Logger itrLogger = LogUtil.getInteractionLogger();
 
 	public static List<String> getTenantSubscribedServices(String tenant, String user)
@@ -83,7 +82,7 @@ public class TenantSubscriptionUtil
 		RestClient rc = new RestClient();
 		rc.setHeader(HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME, tenant);
 		rc.setHeader("X-REMOTE-USER", tenant + "." + user);
-		String subAppResponse = rc.get(subAppHref, tenant);
+		String subAppResponse = rc.get(subAppHref, tenant, ((VersionedLink) subAppLink).getAuthToken());
 		LOGGER.info("Checking tenant (" + tenant + ") subscriptions. Dashboard-API subscribed app response is " + subAppResponse);
 		JsonUtil ju = JsonUtil.buildNormalMapper();
 		try {

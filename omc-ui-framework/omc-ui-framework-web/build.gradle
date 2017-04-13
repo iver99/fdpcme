@@ -10,7 +10,7 @@ apply plugin: 'war'
 apply plugin: 'compass'
 apply from: 'test.gradle'
 
-jsversion = project.ext.getServiceVersion('OMC-UI-Framework')
+def jsversion = project.ext.getServiceVersion('OMC-UI-Framework')
 def versionPathElement = jsversion + "-"+ rootProject.ext.get("appTimeStamp")
 
 // source 'webapp' directory
@@ -47,8 +47,8 @@ dependencies {
     compile(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1'){ transitive = false }
     compile(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1'){ transitive = false }
     compile(group: 'com.font-awesome', name: 'font-awesome', version: '4.3.0', ext: 'zip') {transitive = false }
-    providedCompile project(':dashboards-ui-test-common-api')  { transitive = false }
-    providedCompile project(':omc-ui-framework:omc-ui-framework-webutils')  { transitive = false }
+    providedCompile (project(':dashboards-ui-test-common-api')) //  { transitive = false }
+    providedCompile (project(':omc-ui-framework:omc-ui-framework-webutils')) //  { transitive = false }
     compass (group: 'org.jruby', name: 'jruby-complete', version: '1.7.3')
     jscover (group:'com.github.tntim96', name:'JSCover-all', version:'1.0.19')
 }
@@ -658,7 +658,7 @@ task minifyUIFwkImplPartitionJs(dependsOn: [minifyUIFwkPartitionJs],type: com.er
 	Files.copy(Paths.get(compiledDir+"/"+versionPathElement+"/js/uifwk-impl-partition.js"), Paths.get(compiledDir+"/"+versionPathElement+"/js/uifwk-impl-partition-cached.js"))
 	//Files.copy(Paths.get(compiledDir+"/js/uifwk-partition0.js"), Paths.get(compiledDir+"/"+versionPathElement+"/js/uifwk-impl-partition-cached.js"))
 
-	text = new File(compiledDir+"/js/uifwk-partition0.js").getText()
+	def text = new File(compiledDir+"/js/uifwk-partition0.js").getText()
 	File cachedFile = new File(compiledDir+"/"+versionPathElement+"/js/uifwk-impl-partition-cached.js")
 	cachedFile.append("\n"+text,'UTF-8')
     }
@@ -709,11 +709,30 @@ task copyDevJs(type:Copy, dependsOn: [cleanJs, unpackJETFromArtifactory, unpackJ
 	    }
 	}
 
+        //add setting to testHamburgerMenuMain.js
+	File testHamburgerMenuMainFile = new File(stagingDir+'/@version@/js/testHamburgerMenuMain.js')
+	File newFile3 = new File(stagingDir+'/@version@/js/testHamburgerMenuMain-output.js')
+	newFile3.withPrintWriter { out ->
+	    def linenumber = 1
+	    testHamburgerMenuMainFile.eachLine { line ->
+		if (linenumber == 1){		    
+		    out.println("\nwindow.gradleDevMode=true; \n")
+		    out.print(line)
+		} else {
+		    out.println(line)
+		}
+		linenumber += 1
+	    }
+	}
+
 	testMainFile.renameTo(stagingDir+'/@version@/js/testMain_bak.js')
 	newFile1.renameTo(stagingDir+'/@version@/js/testMain.js')
 	
 	datetimePickerMainFile.renameTo(stagingDir+'/@version@/js/datetimePickerMain_bak.js')
 	newFile2.renameTo(stagingDir+'/@version@/js/datetimePickerMain.js')
+
+        testHamburgerMenuMainFile.renameTo(stagingDir+'/@version@/js/testHamburgerMenuMain_bak.js')
+	newFile3.renameTo(stagingDir+'/@version@/js/testHamburgerMenuMain.js')
 
 	String originalCode = "bundles: (window.DEV_MODE !==null && typeof window.DEV_MODE ===\"object\")"
 	String replacedCode = "bundles: ((window.DEV_MODE !==null && typeof window.DEV_MODE ===\"object\") || (window.gradleDevMode !==null && typeof window.gradleDevMode===\"boolean\"))"
@@ -724,6 +743,11 @@ task copyDevJs(type:Copy, dependsOn: [cleanJs, unpackJETFromArtifactory, unpackJ
         mapFile.write(contents, 'UTF-8')
 
 	mapFile = new File(stagingDir+'/@version@/js/datetimePickerMain.js')
+        contents = mapFile.getText('UTF-8')        
+        contents = contents.replaceAll(Pattern.quote(originalCode), replacedCode)
+        mapFile.write(contents, 'UTF-8')
+
+        mapFile = new File(stagingDir+'/@version@/js/testHamburgerMenuMain.js')
         contents = mapFile.getText('UTF-8')        
         contents = contents.replaceAll(Pattern.quote(originalCode), replacedCode)
         mapFile.write(contents, 'UTF-8')

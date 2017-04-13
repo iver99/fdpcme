@@ -223,9 +223,9 @@ require(['ojs/ojcore',
                 self.showCompliance = ko.observable(false);
                 self.showSecurityAnalytics = ko.observable(false);
                 self.showOrchestration = ko.observable(false);
-
+                
                 self.getServiceUrls = function() {
-                    dfu.getRegistrations(fetchServiceLinks, true, errorCallback);
+                    dfu.getRegistrations(fetchServiceLinks, true, errorCallback);                
                 };
 
                 //get urls of databases and middleware
@@ -237,21 +237,18 @@ require(['ojs/ojcore',
                 };
                 
                 function errorCallback() {
-                    self.showAPM(true);
-                    self.showLA(true);
-                    self.showITA(true);
+                    self.showAPM(false);
+                    self.showLA(false);
+                    self.showITA(false);
                     self.showDashboard(true);
                     self.showDataExplorer(true);
                     self.showLearnMore(true);
                 }
-
+                
                 function fetchServiceLinks(data) {
                     var landingHomeUrls = {};
                     var i;
                     
-                    self.showAPM(true);
-                    self.showLA(true);
-                    self.showITA(true);
                     self.showDashboard(true);
                     self.showDataExplorer(true);
                     self.showLearnMore(true);
@@ -260,6 +257,15 @@ require(['ojs/ojcore',
                         var cloudServices = data.cloudServices;
                         var cloudServicesNum = cloudServices.length;
                         for(i=0; i<cloudServicesNum; i++) {
+                            if(cloudServices[i].name === "APM") {
+                                self.showAPM(true);
+                            }
+                            if(cloudServices[i].name === "LogAnalytics") {
+                                self.showLA(true);
+                            }
+                            if(cloudServices[i].name === "ITAnalytics") {
+                                self.showITA(true);
+                            }
                             if(cloudServices[i].name === "Monitoring") {
                                 self.showInfraMonitoring(true);
                             }
@@ -297,8 +303,20 @@ require(['ojs/ojcore',
                                 self.exploreDataInITA.push({id: 'ITA_Analyze', href: dataExplorers[i].href, name: self.dataExplorer+" - " +dataExplorers[i].name, serviceName: dataExplorers[i].serviceName, version: dataExplorers[i].version});
 			    	landingHomeUrls[self.dataExplorer+" - " +dataExplorers[i].name] = dataExplorers[i].href;
                             }else if (dataExplorers[i].serviceName === "TargetAnalytics") {
-                                self.exploreDataInITA.push({id: 'ITA_Search', href: dataExplorers[i].href, name: self.dataExplorer, serviceName: dataExplorers[i].serviceName, version: dataExplorers[i].version});
-                                landingHomeUrls[self.dataExplorer] = dataExplorers[i].href;
+                                var targetAnalytics = dataExplorers[i];
+                                dfu.getSubscribedApps2WithEdition(
+                                    //check service type. If there is v2/v3 tenant, do not show "Data Explorer" in ITA dropdown
+                                    function(subscribedApps) {
+                                       if(subscribedApps.applications) {
+                                           if(dfu.isV1ServiceTypes(subscribedApps.applications)) {
+                                                self.exploreDataInITA.push({id: 'ITA_Search', href: targetAnalytics.href, name: self.dataExplorer, serviceName: targetAnalytics.serviceName, version: targetAnalytics.version});
+                                                landingHomeUrls[self.dataExplorer] = targetAnalytics.href;
+                                           }
+                                       }
+                                    },
+                                    function() {
+                                        console.error("Failed to get subscribedApps info");
+                                    });
                             }
                             //change name of data explorer in ITA starting with "Data Explorer - "
                         }
@@ -473,12 +491,23 @@ require(['ojs/ojcore',
             }
 
             $(document).ready(function () {
-//                ko.applyBindings(titleViewModel, $("#globalBody")[0]);
-//                ko.applyBindings(headerViewModel, document.getElementById('headerWrapper'));
-                ko.applyBindings(titleViewModel, $("title")[0]);
-                ko.applyBindings(new landingHomeModel(), document.getElementById("globalBody"));
-                $("#loading").hide();
-                $("#globalBody").show();
+                dfu.getSubscribedApps2WithEdition(function(apps) {
+                    if (apps && (!apps.applications || apps.applications.length === 0)) {
+                        oj.Logger.error("Tenant subscribes to no service. Redirect to dashboard error page", true);
+                        location.href = "./error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_NO_SUBS_MSG";
+                    }else {
+                        ko.applyBindings(titleViewModel, $("title")[0]);
+                        ko.applyBindings(new landingHomeModel(), document.getElementById("globalBody"));
+                        $("#loading").hide();
+                        $("#globalBody").show();
+                    }
+                }, function(e) {
+                    console.log(e.responseText);
+                    if (e.responseJSON && e.responseJSON.errorCode == 20002) {
+                        oj.Logger.error("Tenant subscribes to no service. Redirect to dashboard error page", true);
+                        location.href = "./error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_NO_SUBS_MSG";
+                    }
+                });
             });
         }
 );
