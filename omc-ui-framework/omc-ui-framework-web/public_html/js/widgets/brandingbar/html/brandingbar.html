@@ -146,7 +146,7 @@
                }" style="height:29px; margin-bottom:0px"/>
             </div>
             </span>
-            <!-- ko if: showEntityContextSelector() -->
+            <!-- ko if: showEntityContextSelector() && isEntityContextLoaded() -->
             <div id="emcta-ctxtSel" class="emaas-appheader-flexbox-auto emaas-appheader-emcta-ctxtSel animated_transitions" style="flex: auto;" data-bind="component:{name:'emcta-context-selector',
                 params:{id: 'emcta-ctxtSel', entityContextParams: entityContextParams}}">
             </div>

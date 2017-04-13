@@ -97,6 +97,7 @@ END;
 @&EMSAAS_SQL_ROOT/1.17.0/emaas_dashboards_update_cos_entitySel.sql &TENANT_ID
 
 @&EMSAAS_SQL_ROOT/1.18.0/emaas_dashboards_seed_data_cos.sql &TENANT_ID
+@&EMSAAS_SQL_ROOT/1.18.0/emaas_dashboards_seed_data_sec.sql &TENANT_ID
 
 /**
 --IMPORTANT: NO DDL is allowed in tenant onboarding process!!!!
