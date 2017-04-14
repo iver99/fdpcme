@@ -11,6 +11,7 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.WelcomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.ITimeSelectorUtil.TimeRange;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.ITimeSelectorUtil.TimeUnit;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 
 import org.openqa.selenium.By;
@@ -243,7 +244,7 @@ public class TestDashBoard extends LoginAndLogout
 		Assert.assertFalse(currenturl.contains("omcCtx="), "The global context infomation is in URL");
 
 		webd.getLogger().info("Set time selector");
-		TimeSelectorUtil.setTimeRange(webd, TimeRange.Last6Hours);
+		TimeSelectorUtil.setFlexibleRelativeTimeRange(webd, 6, TimeUnit.Hour);
 		currenturl = webd.getWebDriver().getCurrentUrl();
 		Assert.assertFalse(currenturl.contains("omcCtx="), "The global context infomation is in URL");
 	}
