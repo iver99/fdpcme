@@ -1355,11 +1355,7 @@ public class VerifyOOB extends LoginAndLogout
 		//verify the url of opened page
 		DashBoardUtils.verifyURL_WithPara(webd, "emcpdfui/builder.html?dashboardId=37");
 	
-		DashboardBuilderUtil.verifyWidget(webd, "Summary");
-		DashboardBuilderUtil.verifyWidget(webd, "Workflow Submission Alerts");
-		DashboardBuilderUtil.verifyWidget(webd, "Submissions by User");
-		DashboardBuilderUtil.verifyWidget(webd, "Submissions by Type");
-		DashboardBuilderUtil.verifyWidget(webd, "Histogram of Submissions by Average Failed Steps");
+		DashboardBuilderUtil.verifyWidget(webd, "Overview");
 		DashboardBuilderUtil.verifyWidget(webd, "Execution Details");
 
 		webd.getLogger().info("Verification end...");
