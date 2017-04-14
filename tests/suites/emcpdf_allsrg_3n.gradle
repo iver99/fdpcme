@@ -44,7 +44,7 @@ import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
  ***************************************************************************************************/
 
 //Setup gradle to onboard a new tenant
-apply from: 'onboard_tenant.gradle'
+//apply from: 'onboard_tenant.gradle'
 
 def emcpdfCommonAPIVer = getDependentSdkVersion('com.oracle.emaas.emcpdf.testsdk.ui', 'dashboards-ui-test-common-api', '2.+')
 
@@ -72,14 +72,14 @@ testTenants["df_omcee"]= [ "OMCEE" : [ "Standard"] ]
 testTenants["df_omclog"]= [ "OMCLOG" : [ "Standard"] ]
 testTenants["df_secse"]= [ "SECSE" : [ "Standard"] ]
 testTenants["df_secsma"]= [ "SECSMA" : [ "Standard"] ]
+testTenants["emaastesttenant1"]=["Orchestration" : ["Trial"], "Compliance" : ["Trial"], "SecurityAnalytics" : ["Trial"]]
 
 task onboardTestTenants(dependsOn: omcOnboardTenants(testTenants)){
 
 }
 
-
 //Task is for dashboard UI Test
-task e2e (type: EMTest, dependsOn:[omcSetup, onboardTenant] ){
+task e2e (type: EMTest, dependsOn:[omcSetup, onboardTestTenants] ){
 options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
         test('name': 'DashboardUITest') {
             classes([:]) {
@@ -93,23 +93,20 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.VerifyOOB')
             }
         }
+	
+	test('name': 'suiteLicensingTest') {
+	    classes([:]) {
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestSuiteLicensing_OMC')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestSuiteLicensing_OSMACC')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestSuiteLicensing_OMCEE')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestSuiteLicensing_OMCSE')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestSuiteLicensing_OMCLOG')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestSuiteLicensing_SECSE')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestSuiteLicensing_SECSMA')
+	    }	
     }
     useWebdriver = true
     useRestAssured = true
-}
-
-//depends on OMCTF-977
-task suiteLicensingTest(type: EMTest, dependsOn:[omcSetup, onboardTestTenants]){
-	include "oracle/sysman/emaas/platform/dashboards/test/ui/TestSuiteLicensing_OMC.class"
-	include "oracle/sysman/emaas/platform/dashboards/test/ui/TestSuiteLicensing_OSMACC.class"
-	include "oracle/sysman/emaas/platform/dashboards/test/ui/TestSuiteLicensing_OMCEE.class"
-	include "oracle/sysman/emaas/platform/dashboards/test/ui/TestSuiteLicensing_OMCSE.class"
-	include "oracle/sysman/emaas/platform/dashboards/test/ui/TestSuiteLicensing_OMCLOG.class"
-	include "oracle/sysman/emaas/platform/dashboards/test/ui/TestSuiteLicensing_SECSE.class"
-	include "oracle/sysman/emaas/platform/dashboards/test/ui/TestSuiteLicensing_SECSMA.class"
-
-        useWebdriver = true
-	useRestAssured=true
 }
 
 task preProdTests(type: EMTest ){
@@ -136,7 +133,7 @@ environment "OMC_PROXYHOST", "www-proxy.us.oracle.com"
     useRestAssured = true	
 }
 
-task emcpdf_allsrg_3n (dependsOn:[e2e, suiteLicensingTest,omcTeardown]) {
-    omcTeardown.mustRunAfter(e2e,suiteLicensingTest)
+task emcpdf_allsrg_3n (dependsOn:[e2e, omcTeardown]) {
+    omcTeardown.mustRunAfter(e2e)
     apply from: getAbsoluteFilePath(configurations.omctfConfig,"omctf_taskprocessor")
 }

@@ -48,7 +48,7 @@ def emcpsmRegLookupClientVer = getDependentSdkVersion('com.oracle.emaas.emcpsm',
 def emcpdfCommonAPIVer=getDependentSdkVersion('com.oracle.emaas.emcpdf.testsdk.ui', 'dashboards-ui-test-common-api', '2.+')
 def emcpdfDashboardsSdkVer= getDependentSdkVersion('com.oracle.emaas.emcpdf', 'dashboards-sdk', '1.+')
 //Setup gradle to onboard a new tenant
-apply from: 'onboard_tenant.gradle'
+//apply from: 'onboard_tenant.gradle'
 
 //Update the lrgConfig configuration to specify where the test jar is.
 dependencies{
@@ -136,11 +136,12 @@ testTenants["df_omcee"]= [ "OMCEE" : [ "Standard"] ]
 testTenants["df_omclog"]= [ "OMCLOG" : [ "Standard"] ]
 testTenants["df_secse"]= [ "SECSE" : [ "Standard"] ]
 testTenants["df_secsma"]= [ "SECSMA" : [ "Standard"] ]
+testTenants["emaastesttenant1"]=["Orchestration" : ["Trial"], "Compliance" : ["Trial"], "SecurityAnalytics" : ["Trial"]]
+testTenants["emaastesttenantnoita"]=["Orchestration" : ["Trial"], "Compliance" : ["Trial"], "SecurityAnalytics" : ["Trial"]]
 
 task onboardTestTenants(dependsOn: omcOnboardTenants(testTenants)){
 
 }
-
 
 //Task added from "emcpdf_qa_test_3n"
 task QATest(type:EMTest,dependsOn:[omcSetup,onboardTestTenants]) {
@@ -195,7 +196,7 @@ task DEVTest2(type:EMTest,dependsOn:omcSetup){
 }
 
 //Task is for dashboard UI Test
-task e2e (type: EMTest,dependsOn:[omcSetup, onboardNewTenant] ){
+task e2e (type: EMTest,dependsOn:[omcSetup] ){
 options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n','parallel':'none') {
         test('name': 'DashboardUITest', 'preserve-order':'true') {
             classes([:]) {
