@@ -49,7 +49,6 @@ import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionE
 import oracle.sysman.emaas.platform.dashboards.core.DashboardConstants;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardManager;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardsFilter;
-import oracle.sysman.emaas.platform.dashboards.core.DataExportManager;
 import oracle.sysman.emaas.platform.dashboards.core.UserOptionsManager;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
@@ -71,7 +70,6 @@ import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
-import oracle.sysman.emaas.platform.dashboards.importDataEntity.DataRowsEntity;
 import oracle.sysman.emaas.platform.dashboards.webutils.ParallelThreadPool;
 import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
@@ -79,8 +77,6 @@ import oracle.sysman.emaas.platform.dashboards.ws.rest.model.RegistrationEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.model.UserInfoEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.ssfDatautil.SSFDataUtil;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.DashboardAPIUtil;
-import oracle.sysman.emaas.platform.dashboards.ws.rest.util.ExportDataUtil;
-import oracle.sysman.emaas.platform.dashboards.ws.rest.util.ImportDataUtil;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.Binary;
@@ -1038,16 +1034,14 @@ public class DashboardAPI extends APIBase
 				BigInteger id = dbdIds.get(i);
 				Dashboard dbd = dm.getCombinedDashboardById(id, tenantId, userName);
 				List<Dashboard> subDbds = null;
-				List<Tile> allTiles = null;
+				List<Tile> allTiles = new ArrayList<Tile>();
 				if (dbd != null && dbd.getSubDashboards() != null && !dbd.getSubDashboards().isEmpty()) {
 					subDbds = new ArrayList<Dashboard>();
 					for (Dashboard subDbd : dbd.getSubDashboards()) {
 						BigInteger subId = subDbd.getDashboardId();
 						Dashboard completeSubDashboard = dm.getCombinedDashboardById(subId, tenantId, userName);
 						if (completeSubDashboard.getTileList() != null && !completeSubDashboard.getTileList().isEmpty()) {
-							if (allTiles == null) {
-								allTiles = new ArrayList<Tile>();
-							}
+							
 							allTiles.addAll(completeSubDashboard.getTileList());
 						}
 						subDbds.add(completeSubDashboard);
@@ -1057,22 +1051,31 @@ public class DashboardAPI extends APIBase
 				if (subDbds != null) {
 					for (Dashboard d : subDbds) {
 						updateDashboardAllHref(d, tenantIdParam);
-						String dbdJson = getJsonUtil().toJson(d);
+						BigInteger dbdId = d.getDashboardId();
+						ScreenshotData screenshotData = dm.getDashboardBase64ScreenShotById(dbdId, tenantId);
+						String dbdJson = getJsonUtil().toJson(d);						
 						JSONObject dbdJsonObjSub = new JSONObject(dbdJson);
+						dbdJsonObjSub.put("screenShot", screenshotData.getScreenshot());
 						dbdArray.put(dbdJsonObjSub);
 					}
 				}
 				// for original dbd
 				updateDashboardAllHref(dbd, tenantIdParam);
+				if (dbd.getTileList() != null && !dbd.getTileList().isEmpty()) {
+					allTiles.addAll(dbd.getTileList());
+				}
+				BigInteger originalDb = dbd.getDashboardId();
+				ScreenshotData screenshotDataForOriginalDbd = dm.getDashboardBase64ScreenShotById(originalDb, tenantId);
 				String dbdJson = getJsonUtil().toJson(dbd);
 				JSONObject dbdJsonObj = new JSONObject(dbdJson);
+				dbdJsonObj.put("screenShot", screenshotDataForOriginalDbd.getScreenshot());
 				dbdArray.put(dbdJsonObj);
 				
 				JSONObject insideOjb = new JSONObject();
 				insideOjb.put("Dashboard", dbdArray);
 				
 				//Savedsearch data
-				if (allTiles != null) {
+				if (allTiles != null && !allTiles.isEmpty()) {
 					for (Tile tile : allTiles) {
 						String widgetUniqueId = tile.getWidgetUniqueId();
 						widgetIds.add(widgetUniqueId);
@@ -1202,8 +1205,22 @@ public class DashboardAPI extends APIBase
 			if (length > 0) {
 				for (int i = 0; i < length; i ++) {
 					JSONObject jsonObject = jsonArray.getJSONObject(i);
+					if (!jsonObject.has("Dashboard")) {
+						return Response.status(Status.BAD_REQUEST).entity("JsonObject[\"Dashboard\"] not found!").build();
+					}
+					JSONObject ssfIdMapObj = null;
+					if (jsonObject.has("Savedsearch")) {
+						JSONArray ssfArray = jsonObject.getJSONArray("Savedsearch");						
+						if (ssfArray != null && ssfArray.length() > 0) {
+							String ssfResponse = SSFDataUtil.saveSSFData(userTenant, ssfArray.toString(),override);
+							if (ssfResponse.startsWith("{")) {
+								ssfIdMapObj = new JSONObject(ssfResponse);
+								
+							}
+						}
+					}
+					
 					JSONArray dbdArray = jsonObject.getJSONArray("Dashboard");
-					JSONArray ssfArray = jsonObject.getJSONArray("Savedsearch");
 					if (dbdArray != null) {
 						Map<BigInteger, BigInteger> idMap = new HashMap<BigInteger, BigInteger>();
 						Map<String, String> nameMap = new HashMap<String, String>();
@@ -1215,6 +1232,14 @@ public class DashboardAPI extends APIBase
 						    if (d.getType().equals(Dashboard.DASHBOARD_TYPE_SET)) {
 						    	if (d.getSubDashboards() != null) {
 						    		for (Dashboard dashboard : d.getSubDashboards()) {
+						    			if (dashboard.getTileList() != null) {
+						    				for (Tile tile : dashboard.getTileList()) {
+						    					String widgetId = tile.getWidgetUniqueId();
+						    					if (ssfIdMapObj != null && ssfIdMapObj.has(widgetId)) {
+						    						tile.setWidgetUniqueId(ssfIdMapObj.getString(widgetId));
+						    					}
+						    				}
+						    			}
 						    			if (idMap.containsKey(dashboard.getDashboardId())) {
 						    				dashboard.setDashboardId(idMap.get(dashboard.getDashboardId()));
 						    			}
@@ -1229,6 +1254,14 @@ public class DashboardAPI extends APIBase
 							DashboardManager manager = DashboardManager.getInstance();
 							Long tenantId = getTenantId(tenantIdParam);
 							initializeUserContext(tenantIdParam, userTenant);
+							if (d.getTileList() != null) {
+			    				for (Tile tile : d.getTileList()) {
+			    					String widgetId = tile.getWidgetUniqueId();
+			    					if (ssfIdMapObj != null && ssfIdMapObj.has(widgetId)) {
+			    						tile.setWidgetUniqueId(ssfIdMapObj.getString(widgetId));
+			    					}
+			    				}
+			    			}
 							d = manager.saveForImportedDashboard(d, tenantId,override);
 							BigInteger changedId = d.getDashboardId();
 							String changedName = d.getName();
@@ -1237,10 +1270,9 @@ public class DashboardAPI extends APIBase
 							idMap.put(originalId, changedId);
 							nameMap.put(originalName, changedName);
 						  }
-					}			
-					if (ssfArray != null && ssfArray.length() > 0) {
-						SSFDataUtil.saveSSFData(userTenant, ssfArray.toString(),override);
 					}
+					
+					
 				}
 			}
 			

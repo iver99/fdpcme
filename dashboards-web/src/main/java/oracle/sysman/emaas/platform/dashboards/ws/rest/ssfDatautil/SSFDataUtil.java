@@ -51,34 +51,10 @@ public class SSFDataUtil {
 	}
 	
 	public static String saveSSFData(String userTenant, String requestEntity, boolean override) {
-		String queryParam = override?"?override=true":"override=false";
+		String queryParam = override?"?override=true":"?override=false";
 		return accessSSFWebService(userTenant, SAVE_SEARCH_DATA_URI + queryParam,requestEntity);
 	}
-	/*
-	private static String accessSSFWebService(String userTenant, String tenantIdParam, 
-			String uri, Object requestEntity)
-	{
-		String ssfData = "";
-		CloseableHttpClient client = HttpClients.createDefault();
-		Link link = RegistryLookupUtil.getServiceInternalLink(SERVICE_NAME, VERSION, PATH, null);
-		if (link == null || StringUtils.isEmpty(link.getHref())) {
-            LOGGER.warn("Retrieving ssf data for tenant {}: null/empty ssfLink retrieved from service registry.");
-            return null;
-        }
-        LOGGER.info("SSF REST API href is: " + link.getHref());
-        String ssfHref = link.getHref() + "/" + uri;
-        TenantSubscriptionUtil.RestClient rc = new TenantSubscriptionUtil.RestClient();
-        Map<String, Object> headers = new HashMap<String, Object>();
-        headers.put("X-USER-IDENTITY-DOMAIN-NAME", tenantIdParam);
-        headers.put("X-REMOTE-USER", userTenant);
-        
-        String response = rc.put(ssfHref, headers, requestEntity, tenantIdParam);
-        		//.get(ssfHref, tenantIdParam, userTenant);
-        LOGGER.info("Retrieved ssf data is: {}", response);
-        return response;
-       
-	}
-	*/
+
 	private static String accessSSFWebService(String remoteUser,String uri,String data)
 	{
 		String value = "";
