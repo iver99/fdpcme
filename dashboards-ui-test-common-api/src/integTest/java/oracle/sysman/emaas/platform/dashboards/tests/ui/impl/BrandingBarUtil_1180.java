@@ -631,7 +631,7 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 		else {
 			//the branding bar
 			driver.getLogger()
-					.info("Start to visit visual analyzer link from branding bar. Link name: " + visualAnalyzerLinkName);
+			.info("Start to visit visual analyzer link from branding bar. Link name: " + visualAnalyzerLinkName);
 			visitApplicationLink(driver, "va", visualAnalyzerLinkName);
 		}
 		driver.getLogger().info("visitApplicationVisualAnalyzer ended");
@@ -740,6 +740,9 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 		}
 		else if (NAV_LINK_TEXT_ADMIN_AGENT.equals(cloudServiceLinkName)) {
 			menuItemName = ROOT_MENU_ADMIN;
+		}
+		else if (NAV_LINK_TEXT_CS_IM.equals(cloudServiceLinkName)) {
+			menuItemName = ROOT_MENU_MONITORING;
 		}
 		else {
 			menuItemName = cloudServiceLinkName;
