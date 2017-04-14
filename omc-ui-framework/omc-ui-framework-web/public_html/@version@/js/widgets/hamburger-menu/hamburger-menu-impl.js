@@ -208,6 +208,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     {'id': 'omc_root_Compliance', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_COMPLIANCE_LABEL, 'externalUrl': '#'},
                     {'id': 'omc_root_divider1', type: 'divider', 'label': '', 'externalUrl': '#'},
                     {'id': 'omc_root_admin', type: 'menu_group', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_ADMIN_LABEL, 'externalUrl': '#', children: [
+                            {'id': 'omc_root_admin_divider0', type: 'divider', 'label': '', 'externalUrl': '#'},
                             {'id': 'omc_root_admin_alertrules', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ADMIN_ALERTRULES_LABEL, 'externalUrl': '#'},
                             {'id': 'omc_root_admin_agents', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ADMIN_AGENTS_LABEL, 'externalUrl': '#'},
                             {'id': 'omc_root_admin_entitiesconfig', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ADMIN_ENTITIESCONFIG_LABEL, 'externalUrl': '#'},
@@ -474,6 +475,11 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                                     var adminMenuId = findAppItemIndex(self.serviceMenuData,'omc_root_admin');
                                     var adminSubMenuId = findAppItemIndex(self.serviceMenuData[adminMenuId].children, 'omc_root_admin_grp_'+singleServiceData.appId);
                                     if (adminSubMenuId > -1) {
+                                        var adminExternalUrl = singleServiceData.serviceAdminMenus.externalUrl;
+                                        if (adminExternalUrl && adminExternalUrl !== '#') {
+                                            self.serviceMenuData[adminMenuId].children[adminSubMenuId].externalUrl = adminExternalUrl;
+                                            self.serviceMenuData[adminMenuId].children[adminSubMenuId].serviceNameForVanityUrl = singleServiceData.serviceAdminMenus.serviceNameForVanityUrl;
+                                        }
                                         self.serviceMenuData[adminMenuId].children[adminSubMenuId].children = [];
                                                 for(var i = 0; i< singleServiceData.serviceAdminMenus.children.length; ++i){
                                         self.serviceMenuData[adminMenuId].children[adminSubMenuId].children.push($.extend(true, {}, singleServiceData.serviceAdminMenus.children[i]));
@@ -693,7 +699,11 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                             var _tooltipValue = getNlsString(_tooltipKey, nlsObj);
                             menuItem.tooltip = _tooltipValue ? _tooltipValue : _tooltipKey;
                         }
-                        if(menuItem.children){
+                        if(menuItem.children && menuItem.children.length > 0){
+                            //Add a separator on the top of the child menu items
+                            if (menuItem.children[0].id !== omcMenuSeparatorId) {
+                                menuItem.children.unshift({'id': omcMenuSeparatorId});
+                            }
                             for(_idx = 0; _idx < menuItem.children.length; ++_idx){
                                 menuItem.children[_idx] = applyNlsOnMenu(menuItem.children[_idx], nlsObj, appId);
                             }
@@ -701,6 +711,10 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                         return menuItem;
                     } else if (rawMenuObj) {
                         var menuItemList = [];
+                        if (rawMenuObj.length > 0 && rawMenuObj[0].id !== omcMenuSeparatorId) {
+                            //Add a separator on the top of the child menu items
+                            rawMenuObj.unshift({'id': omcMenuSeparatorId});
+                        }
                         for(_idx = 0; _idx < rawMenuObj.length; ++_idx){
                             var menuItem = $.extend(true,{},rawMenuObj[_idx]);
                             menuItemList.push(applyNlsOnMenu(menuItem, nlsObj, appId));
@@ -738,10 +752,10 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     if (item) {
                         if (item.type && item.type !== 'divider') {
                             item = filterAuthorizedMenuItem(item);
-                            if (item && (!item.externalUrl || item.externalUrl === '#') && item.children && item.children.length > 0) {
-                                item.serviceNameForVanityUrl = item.children[0].serviceNameForVanityUrl;
-                                item.externalUrl = item.children[0].externalUrl;
-                            }
+//                            if (item && (!item.externalUrl || item.externalUrl === '#') && item.children && item.children.length > 0) {
+//                                item.serviceNameForVanityUrl = item.children[0].serviceNameForVanityUrl;
+//                                item.externalUrl = item.children[0].externalUrl;
+//                            }
                             //If vanity URL is required, construct the external URL to an vanity URL
                             if (item && item.externalUrl && item.serviceNameForVanityUrl) {
                                 if (self.baseVanityUrls) {
@@ -884,9 +898,9 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     }
                     
                     if (item && /*((item.id.indexOf("omc_root")>-1 && item.id.indexOf("omc_root_admin")<0) ||!item.children) &&*/ !item.disabled) {
-//                        if(item.id.indexOf("omc_root")>-1 && item.id.indexOf("omc_root_admin")<0){
+                        if(item.externalUrl && item.externalUrl !== '#'){
                             self.preventExpandForAPMLabel = true;
-//                        }
+                        }
                         //Auto close hamburger menu when it's not in pinned status
                         if($("#omcHamburgerMenu").hasClass("oj-offcanvas-overlay")) {
                             oj.OffcanvasUtils.close({
@@ -922,7 +936,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                                 });
                             }
                             else {
-                                if (linkHref && linkHref !== '#') {
+                                if (linkHref && linkHref !== '#' && linkHref !== window.location+'#') {
                                     window.location.href = ctxUtil.appendOMCContext(linkHref, true, true, true);
                                     return false;
                                 }
@@ -949,7 +963,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     globalMenuIdHrefMapping['omc_root_Orchestration'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'CosUIService');
                     globalMenuIdHrefMapping['omc_root_SecurityAnalytics'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'SecurityAnalyticsUI');
                     globalMenuIdHrefMapping['omc_root_Compliance'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'ComplianceUIService');
-                    globalMenuIdHrefMapping['omc_root_admin'] = fetchLinkFromRegistrationData(data, 'adminLinks', 'EventUI');
+//                    globalMenuIdHrefMapping['omc_root_admin'] = fetchLinkFromRegistrationData(data, 'adminLinks', 'EventUI');
                     globalMenuIdHrefMapping['omc_root_admin_alertrules'] = fetchLinkFromRegistrationData(data, 'adminLinks', 'EventUI');
                     globalMenuIdHrefMapping['omc_root_admin_agents'] = fetchLinkFromRegistrationData(data, 'adminLinks', 'TenantManagementUI');
                     globalMenuIdHrefMapping['omc_root_admin_entitiesconfig'] = fetchLinkFromRegistrationData(data, 'adminLinks', 'AdminConsoleSaaSUi');
@@ -1037,9 +1051,12 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 });
                 
                 window.addEventListener("contextmenu", function(event){
-                    if (event.button === 2 && $(event.target).is("#omcMenuNavList a") 
-                            && $(event.target)[0].href === window.location+'#') {
-                        event.preventDefault();
+                    if (event.button === 2) {
+                        if (($(event.target).is("#omcMenuNavList a") && $(event.target)[0].href === window.location+'#') ||
+                                ($(event.target).is("#omcMenuNavList span") && $(event.target).parent().is("#omcMenuNavList a") && 
+                                $(event.target).parent()[0].href === window.location+'#')) {
+                            event.preventDefault();
+                        }
                     }
                 }, false);
                 

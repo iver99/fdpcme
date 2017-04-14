@@ -477,3 +477,15 @@ a:hover {
 #omcMenuNavList .emaas-hamburger-menu-root-not-admin>.oj-navigationlist-item>a:first-child{
     margin-left: 10px;
 }
+
+#omcMenuNavList.oj-navigationlist-slider .oj-navigationlist-element:not(.oj-navigationlist-current)>.oj-navigationlist-category-divider:not(.oj-expanded) {
+    display: none; 
+}
+
+#omcMenuNavList.oj-navigationlist-slider .oj-navigationlist-item-element.oj-expanded:not(.oj-navigationlist-current)>.oj-navigationlist-group>.oj-navigationlist-category-divider:not(.oj-expanded) {
+    display:none;
+}
+
+#offcanvasInnerContainer .oj-web-applayout-scrollable {
+    overflow-y:auto;
+}
