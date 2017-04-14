@@ -1036,6 +1036,13 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     }
                 });
                 
+                window.addEventListener("contextmenu", function(event){
+                    if (event.button === 2 && $(event.target).is("#omcMenuNavList a") 
+                            && $(event.target)[0].href === window.location+'#') {
+                        event.preventDefault();
+                    }
+                }, false);
+                
                 window.addEventListener("mousedown", function(event){
                     if (event.button === 2  && self.hrefMap) {
                         if($(event.target).is("#omcMenuNavList li")){
