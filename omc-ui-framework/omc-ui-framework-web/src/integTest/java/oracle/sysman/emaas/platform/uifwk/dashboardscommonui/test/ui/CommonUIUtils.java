@@ -69,9 +69,9 @@ public class CommonUIUtils
 		driver.click(UIControls.SADDWIDGETICON);
 
 		driver.getLogger().info("Verify the Add Widgets window is opened");
-		Assert.assertTrue(driver.isElementPresent(UIControls.SWIDGETWINDOWTITLE));
-		driver.getLogger().info("The window title is:  " + driver.getText(UIControls.SWIDGETWINDOWTITLE));
-		Assert.assertTrue(driver.isTextPresent("Add Widgets", UIControls.SWIDGETWINDOWTITLE));
+		Assert.assertTrue(driver.isDisplayed("css=" + UIControls.SWIDGETWINDOWTITLE_CSS));
+		driver.getLogger().info("The window title is:  " + driver.getText("css=" + UIControls.SWIDGETWINDOWTITLE_CSS));
+		Assert.assertTrue(driver.isTextPresent("Add Widgets", "css=" + UIControls.SWIDGETWINDOWTITLE_CSS));
 		driver.takeScreenShot();
 		driver.getLogger().info("Verify the Add Widgets button is disabled");
 		driver.getLogger().info("The button is:  " + driver.getText(UIControls.SADDWIDGETBTN));
@@ -347,9 +347,9 @@ public class CommonUIUtils
 			driver.click(UIControls.SADDWIDGETICON);
 
 			driver.getLogger().info("Verify the Open Widgets window is opened");
-			Assert.assertTrue(driver.isElementPresent(UIControls.SWIDGETWINDOWTITLE));
-			driver.getLogger().info("The window title is:  " + driver.getText(UIControls.SWIDGETWINDOWTITLE));
-			Assert.assertTrue(driver.isTextPresent("Open", UIControls.SWIDGETWINDOWTITLE));
+			Assert.assertTrue(driver.isDisplayed("css=" + UIControls.SWIDGETWINDOWTITLE_CSS));
+			driver.getLogger().info("The window title is:  " + driver.getText("css=" + UIControls.SWIDGETWINDOWTITLE_CSS));
+			Assert.assertTrue(driver.isTextPresent("Open", "css=" + UIControls.SWIDGETWINDOWTITLE_CSS));
 			driver.takeScreenShot();
 			driver.getLogger().info("Verify the Open button is disabled");
 			driver.getLogger().info("The button is:  " + driver.getText(UIControls.SADDWIDGETBTN));
@@ -367,7 +367,7 @@ public class CommonUIUtils
 			//Assert.assertFalse(driver.isElementPresent(UIControls.sCategorySelect));
 
 			//Open a widget
-			if (!"0".equals(driver.getAttribute(UIControls.SWIDGETDISPLAY + "@childElementCount"))) {
+			if (!"0".equals(driver.getAttribute("css=" + UIControls.SWIDGETDISPLAY + "@childElementCount"))) {
 				driver.getLogger().info("Select a widget and open it in the main page");
 				driver.getLogger().info("Select a widget");
 				driver.waitForElementPresent(UIControls.SWIDGETSELECT);
@@ -465,8 +465,8 @@ public class CommonUIUtils
 		//verify the product name,app name,content of page
 		driver.getLogger().info("Verify the page content");
 		//Oracle logo
-		Assert.assertTrue(driver.isElementPresent(UIControls.SORACLEIMAGE));
-		Assert.assertEquals(driver.getAttribute(UIControls.SORACLEIMAGE + "@alt"), "Oracle");
+		Assert.assertTrue(driver.isElementPresent("css=" + UIControls.SORACLEIMAGE));
+		Assert.assertEquals(driver.getAttribute("css=" + UIControls.SORACLEIMAGE + "@alt"), "Oracle");
 		//Product title
 		Assert.assertTrue(driver.isElementPresent("css=" + UIControls.SPRODUCTTEXT_CSS));
 		String productTitle = "MANAGEMENT CLOUD";

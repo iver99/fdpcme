@@ -9,9 +9,11 @@ import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 
+import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
+import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
-import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil.RestClient;
+import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil.VersionedLink;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
 
@@ -57,6 +59,20 @@ public class SSFDataUtil {
 
 	private static String accessSSFWebService(String remoteUser,String uri,String data)
 	{
+		RestClient rc = new RestClient();
+        Link tenantsLink = RegistryLookupUtil.getServiceInternalLink(SERVICE_NAME, VERSION, PATH, null);
+        String tenantHref = tenantsLink.getHref() + "/" + uri;
+        String tenantName = TenantContext.getCurrentTenant();
+        String savedSearchResponse = null;
+        try {
+			rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME, tenantName);
+        	savedSearchResponse = rc.put(tenantHref, data, tenantName, 
+        	        ((VersionedLink) tenantsLink).getAuthToken());
+        }catch (Exception e) {
+        	LOGGER.error(e);
+        }
+        return savedSearchResponse;
+		/*
 		String value = "";
 		CloseableHttpClient client = HttpClients.createDefault();
 		Link link = RegistryLookupUtil.getServiceInternalLink(SERVICE_NAME, VERSION, PATH, null);
@@ -157,6 +173,6 @@ public class SSFDataUtil {
 			}
 		}
 
-		return buffer.toString();
+		return buffer.toString(); */
 	}
 }

@@ -314,7 +314,7 @@ public class DashboardAPITest
 			{
 				anyDependencyStatus.isDatabaseUp();
 				result = true;
-				mockedDashboardManager.getCombinedDashboardById((BigInteger) any, anyLong, anyString);
+				mockedDashboardManager.getCombinedDashboardById((BigInteger) any, anyLong, anyString, (List<String>)any);
 				result = new CombinedDashboard();
 				Deencapsulation.invoke(dashboardAPI, "updateDashboardAllHref", withAny(new CombinedDashboard()), anyString);
 				result = any;
@@ -558,7 +558,8 @@ public class DashboardAPITest
 	}
 
 	@Test
-	public void testSaveUserOptions(@Mocked final UserOptionsManager mockedUserOptionsManager,@Mocked final DependencyStatus anyDependencyStatus) throws Exception {
+	public void testSaveUserOptions(@Mocked final UserOptionsManager mockedUserOptionsManager,@Mocked final DependencyStatus anyDependencyStatus,
+									@Mocked final UserOptions anyUserOptions) throws Exception {
         new Expectations() {
             {
             	anyDependencyStatus.isDatabaseUp();
@@ -566,7 +567,10 @@ public class DashboardAPITest
                 mockedAPIBase.initializeUserContext(anyString, anyString);
                 result = null;
 
-                mockedUserOptionsManager.saveOrUpdateUserOptions(withAny(new UserOptions()), anyLong);
+				anyUserOptions.validateExtendedOptions();
+				result = true;
+
+                mockedUserOptionsManager.saveOrUpdateUserOptions(anyUserOptions, anyLong);
                 result = any;
             }
         };
@@ -575,7 +579,8 @@ public class DashboardAPITest
 	}
 
 	@Test
-	public void testUpdateUserOptions(@Mocked final UserOptionsManager mockedUserOptionsManager,@Mocked final DependencyStatus anyDependencyStatus) throws Exception {
+	public void testUpdateUserOptions(@Mocked final UserOptionsManager mockedUserOptionsManager,@Mocked final DependencyStatus anyDependencyStatus,
+									  @Mocked final UserOptions anyUserOptions) throws Exception {
         new Expectations() {
             {
             	anyDependencyStatus.isDatabaseUp();
@@ -583,7 +588,10 @@ public class DashboardAPITest
                 mockedAPIBase.initializeUserContext(anyString, anyString);
                 result = null;
 
-				mockedUserOptionsManager.saveOrUpdateUserOptions(withAny(new UserOptions()), anyLong);
+				anyUserOptions.validateExtendedOptions();
+				result = true;
+
+				mockedUserOptionsManager.saveOrUpdateUserOptions(anyUserOptions, anyLong);
 				result = any;
 			}
 		};

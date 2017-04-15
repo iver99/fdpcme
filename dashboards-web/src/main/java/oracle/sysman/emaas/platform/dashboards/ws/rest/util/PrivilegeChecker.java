@@ -15,8 +15,9 @@ import java.util.List;
 
 import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
-import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
+import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil.VersionedLink;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.model.RoleNamesEntity;
+import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -45,17 +46,22 @@ public class PrivilegeChecker
 		List<String> roleNames = null;
 		if (tenantName != null && userName != null) {
 			try {
-				String endPoint = RegistryLookupUtil.getServiceInternalEndpoint(SECURITY_AUTHORIZATION_SERVICENAME,
+				VersionedLink link = RegistryLookupUtil.getServiceInternalEndpoint(SECURITY_AUTHORIZATION_SERVICENAME,
 						SECURITY_AUTHORIZATION_VERSION, tenantName);
-				if (endPoint == null) {
+				if (link == null || link.getHref() == null) {
 					LOGGER.error("Failed to discover SecurityAuthorization service URL for privilege checking.");
 				}
 				else {
 					String tenantDotUser = tenantName + "." + userName;
+					String endPoint = link.getHref();
 					String secAuthRolesApiUrl = endPoint.endsWith("/") ? endPoint + SECURITY_AUTH_ROLE_CHECK_API + tenantDotUser
 							: endPoint + "/" + SECURITY_AUTH_ROLE_CHECK_API + tenantDotUser;
-					TenantSubscriptionUtil.RestClient rc = new TenantSubscriptionUtil.RestClient();
-					String roleCheckResponse = rc.get(secAuthRolesApiUrl, tenantName, userName);
+					RestClient rc = new RestClient();
+					rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME,tenantName);
+					rc.setHeader(RestClient.OAM_REMOTE_USER,tenantDotUser);
+					rc.setType(null);
+					rc.setAccept(null);
+					String roleCheckResponse = rc.get(secAuthRolesApiUrl, tenantName, link.getAuthToken());
 					LOGGER.debug("Checking roles for tenant user (" + tenantDotUser + "). The response is " + roleCheckResponse);
 					JsonUtil ju = JsonUtil.buildNormalMapper();
 					RoleNamesEntity rne = ju.fromJson(roleCheckResponse, RoleNamesEntity.class);
@@ -63,8 +69,7 @@ public class PrivilegeChecker
 						roleNames = rne.getRoleNames();
 					}
 				}
-			}
-			catch (IOException e) {
+			}catch (IOException e) {
 				LOGGER.error(e);
 			}
 		}

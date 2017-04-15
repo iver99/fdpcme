@@ -21,6 +21,8 @@ Rem    miayu   1/26/1015  Created
 WHENEVER SQLERROR EXIT ROLLBACK
 SET FEEDBACK ON
 SET SERVEROUTPUT ON
+SET VERIFY OFF
+SET ECHO OFF
 DEFINE TENANT_ID = '&1'
 DEFINE EMSAAS_SQL_ROOT = '&2'
 
@@ -36,18 +38,8 @@ BEGIN
   WHEN VALUE_ERROR THEN
     RAISE_APPLICATION_ERROR(-21000, ' Please  specify valid internal tenant id');
   END;
-  SELECT COUNT(*)
-  INTO oob_dsb_count
-  FROM EMS_DASHBOARD
-  WHERE DASHBOARD_ID <=1000
-  AND TENANT_ID       ='&TENANT_ID';
-  IF oob_dsb_count    >0 THEN
-    DBMS_OUTPUT.PUT_LINE('OOB dashboards for &TENANT_ID are already present');
-    RAISE_APPLICATION_ERROR(-20000, ' OOB dashboards for &TENANT_ID are already present');
-  END IF; 
 END;
 /
-@&EMSAAS_SQL_ROOT/1.10.0/emaas_create_tables.sql
 
 @&EMSAAS_SQL_ROOT/1.0.0/emaas_dashboards_seed_data.sql &TENANT_ID
 
@@ -81,8 +73,6 @@ END;
 
 @&EMSAAS_SQL_ROOT/1.10.0/emaas_dashboards_seed_data_la.sql &TENANT_ID
 
-@&EMSAAS_SQL_ROOT/1.10.0/emaas_drop_tables.sql
-
 @&EMSAAS_SQL_ROOT/1.11.0/emaas_dashboards_seed_data_ocs.sql &TENANT_ID
 
 @&EMSAAS_SQL_ROOT/1.12.0/emaas_dashboards_seed_data_ta.sql &TENANT_ID
@@ -103,6 +93,16 @@ END;
 @&EMSAAS_SQL_ROOT/1.15.0/emaas_dashboards_update_orchetration_timesel.sql &TENANT_ID
 
 @&EMSAAS_SQL_ROOT/1.17.0/emaas_dashboards_update_uigallery.sql &TENANT_ID
+@&EMSAAS_SQL_ROOT/1.17.0/emaas_dashboards_seed_data_cos.sql &TENANT_ID
+@&EMSAAS_SQL_ROOT/1.17.0/emaas_dashboards_update_cos_entitySel.sql &TENANT_ID
+
+@&EMSAAS_SQL_ROOT/1.18.0/emaas_dashboards_seed_data_cos.sql &TENANT_ID
+@&EMSAAS_SQL_ROOT/1.18.0/emaas_dashboards_seed_data_sec.sql &TENANT_ID
+
+/**
+--IMPORTANT: NO DDL is allowed in tenant onboarding process!!!!
+*/
+
 COMMIT;
 /
 BEGIN

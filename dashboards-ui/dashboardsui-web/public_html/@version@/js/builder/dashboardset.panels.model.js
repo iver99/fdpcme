@@ -75,7 +75,7 @@ define([
                     headerViewModel && headerViewModel.brandingbarParams.showTimeSelector(false);
                     headerViewModel && headerViewModel.brandingbarParams.showEntitySelector(false);
                 }else {
-                    if(dashboardsetToolBarModel.dashboardInst.enableEntityFilter()!=="FALSE" || dashboardsetToolBarModel.dashboardInst.enableTimeRange()!=="FALSE") {    
+                    if(dashboardsetToolBarModel.dashboardInst.enableEntityFilter()==="GC" || dashboardsetToolBarModel.dashboardInst.enableTimeRange()!=="FALSE") {    
                         headerViewModel && headerViewModel.brandingbarParams.showGlobalContextBanner(true);
                         if(dashboardsetToolBarModel.dashboardInst.enableTimeRange()==="FALSE") {
                             headerViewModel && headerViewModel.brandingbarParams.showTimeSelector(false);
@@ -276,7 +276,8 @@ define([
                             if (tile.type() === "TEXT_WIDGET") {
                                 Builder.initializeTextTileAfterLoad(tilesViewModel.editor.mode, $b, tile, tilesViewModel.show, tilesViewModel.editor.tiles.deleteTile, Builder.isContentLengthValid);
                             } else {
-                                //Builder.initializeTileAfterLoad(tilesViewModel.editor.mode, dashboard, tile, tilesViewModel.timeSelectorModel, tilesViewModel.targets, true, dashboardsetToolBarModel.dashboardInst);
+                                console.log('Initialize tile before getting its configuration');
+                                Builder.initializeTileAfterLoad(tilesViewModel.editor.mode, dashboard, tile, tilesViewModel.timeSelectorModel, tilesViewModel.targets, true, dashboardsetToolBarModel.dashboardInst);
                                 Builder.getTileConfigure(tilesViewModel.editor.mode, dashboard, tile, tilesViewModel.timeSelectorModel, tilesViewModel.targets, dashboardsetToolBarModel.dashboardInst);
                             }
                         }

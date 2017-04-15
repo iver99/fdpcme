@@ -549,7 +549,7 @@ define(['knockout',
         Builder.registerFunction(eagerLoadDahshboardSingleTileAtPageLoad, "eagerLoadDahshboardSingleTileAtPageLoad");
 
         function eagerLoadDahshboardTilesAtPageLoad(dfu, ko, normalMode, tabletMode, mode, isUnderSet, timeSelector, targets) {
-          return $.Deferred(function(dtd) {
+          return $.Deferred(function(dtd) {// deferred is needed by async Builder.loadEntityContext
             var self = this;
             var current = new Date();
             var initStart = null;
@@ -562,10 +562,10 @@ define(['knockout',
                     continue;
                 }
                 shouldResolve = false;
-                var dashboard = dds[prop].dashboard;
+                var dashboard = dds[prop].dashboard; // this is the dashboard ko object
 
                 //get time and entity context for widgets when page is loaded
-                Builder.loadDashboardUserOptions(ko.unwrap(dashboard.id), self);
+                Builder.loadDashboardUserOptions(ko.unwrap(dashboard.id), self);// prepare user options data
                 self.dashboardExtendedOptions = dashboard.extendedOptions ? JSON.parse(dashboard.extendedOptions()) : null;
 
                 /****************get time context start *************/
@@ -574,16 +574,17 @@ define(['knockout',
                 initEnd = timeContext.end;
                 timePeriod = timeContext.timePeriod;
 
-                if(ctxUtil.formalizeTimePeriod(timePeriod)) {
+                if(ctxUtil.formalizeTimePeriod(timePeriod)) {// do this: result 'LAST 14 DAYS' => 'LAST_14_DAY'
                     if(ctxUtil.formalizeTimePeriod(timePeriod) !== "CUSTOM") { //get start and end time for relative time period
                         var tmp = ctxUtil.getStartEndTimeFromTimePeriod(ctxUtil.formalizeTimePeriod(timePeriod));
                         if(tmp) {
-                            initStart = tmp.start;
+                            initStart = tmp.start; // we get Date type data here
                             initEnd = tmp.end;
                         }
                     }
                 }
 
+                // for any unexpected input, we use default: last 14 days
                 if(!(initStart instanceof Date && initEnd instanceof Date)) {
                     initStart = new Date(current - 14*24*60*60*1000);
                     initEnd = current;
@@ -596,7 +597,7 @@ define(['knockout',
 
                 /****************get entity context start *****************/
                 $.when(Builder.loadEntityContext(self, dashboard.enableEntityFilter(), isUnderSet)).done(function(entityContext) {
-                    entityContext && targets(entityContext);
+                    entityContext && targets(entityContext);// returned entityContext is a json that will be sent to widgets
 
                     if (dashboard.tiles && dashboard.tiles() &&dashboard.tiles().length > 0){
                         for (var i=0;i<dashboard.tiles().length;i++){
@@ -605,8 +606,8 @@ define(['knockout',
                             Builder.eagerLoadDahshboardSingleTileAtPageLoad(dfu, ko, tile);
                         }
                     }
-                    window._contextPassedToWidgetsAtPageLoad = {timeSelector: timeSelector, targets: targets};
-                    dds[prop].eagerLoaded = true;
+                    window._contextPassedToWidgetsAtPageLoad = {timeSelector: timeSelector, targets: targets}; // automation needs this
+                    dds[prop].eagerLoaded = true; // ensure widget loaded for one time
                     dds[prop].eagerCreated = {normalMode: normalMode, tabletMode: tabletMode, timeSelector: timeSelector, targets: targets};
                     dtd.resolve();
                 });
@@ -795,9 +796,9 @@ define(['knockout',
                         //Set both of respectOMCApplicationContext and respectOMCEntityContext to true
                         ctxUtil.respectOMCApplicationContext(true);
                         ctxUtil.respectOMCEntityContext(true);
-                        entityContext = (omcContext.composite && omcContext.composite.compositeMEID) ? omcContext.composite.compositeMEID : null;
+                        var IsGCEntityContextExisted = ((omcContext.composite && omcContext.composite.compositeMEID) || (omcContext.entity && omcContext.entity.entityMEIDs)) ? true : false;
                         //Use dashboard saved entity context if there's no entity context in URL
-                        if(entityContext === null) {
+                        if(!IsGCEntityContextExisted) {
                             if(model.userTsel && model.userExtendedOptions && !$.isEmptyObject(model.userExtendedOptions.tsel)) {
                                 entityContext = model.userExtendedOptions.tsel.entityContext;
                             }else if(model.dashboardExtendedOptions && !$.isEmptyObject(model.dashboardExtendedOptions.tsel)) {

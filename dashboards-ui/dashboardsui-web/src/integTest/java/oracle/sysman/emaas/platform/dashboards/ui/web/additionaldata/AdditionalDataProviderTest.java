@@ -19,31 +19,59 @@ import org.testng.annotations.Test;
  */
 public class AdditionalDataProviderTest
 {
-	/*@Test(groups = { "s2" })
-	public void testGetAdditionalDataForRequest(@Mocked final HttpServletRequest httpReq,
-			@Mocked final HttpServletResponse response, @Mocked final DashboardDataAccessUtil dashboardDataAccessUtil,
-			@Mocked final DataAccessUtil dataAccessUtil, @Mocked final HtmlBootstrapJsUtil bootstrapUtil)
-	{
-		new Expectations() {
-			{
-				httpReq.getHeader(anyString);
-				result = "tenant.user";
-				httpReq.getParameter(anyString);
-				result = "1";
-				httpReq.getRequestURI();
-				result = AdditionalDataFilter.BUILDER_URI;
-				httpReq.getParameter(anyString);
-				result = "1234567";
-				DashboardDataAccessUtil.getDashboardData(anyString, anyString, anyString, (BigInteger) any);
-				result = "{value: 123abc??$^-[]|(&!~@#%^&*+{}<>\\_,.;`':\"}";
-				//				DataAccessUtil.getRegistrationData(anyString, anyString, anyString, anyString);
-				//				result = "{registration data}";
-				//				DataAccessUtil.getUserTenantInfo(anyString, anyString, anyString, anyString);
-				//				result = "{user tenant data}";
-				HtmlBootstrapJsUtil.getAllBootstrapJS((HttpServletRequest) any);
-				result = "{all bootstrap js codes}";
-			}
-		};
-		AdditionalDataProvider.getAdditionalDataForRequest(httpReq);
-	}*/
+
+    private AdditionalDataProvider additionalDataProvider = new AdditionalDataProvider();
+    @Mocked
+    HttpServletRequest httpServletRequest;
+    @Mocked
+    HtmlBootstrapJsUtil htmlBootstrapJsUtil;
+    @Mocked
+    DashboardDataAccessUtil dashboardDataAccessUtil;
+    @Test(groups = { "s2" })
+    public void testGetAdditionalDataForRequest(){
+        new Expectations(){
+            {
+                httpServletRequest.getHeader(anyString);
+                result = "tenant.admin";
+                httpServletRequest.getRequestURI();
+                result = "/emsaasui/emcpdfui/builder.html";
+                httpServletRequest.getParameter("dashboardId");
+                result = "37";
+                HtmlBootstrapJsUtil.getSDKVersionJS();
+                result = "2.3.0";
+                DashboardDataAccessUtil.getCombinedData(anyString,anyString,anyString, anyString,(BigInteger)any);
+                result = "data";
+            }
+        };
+
+        AdditionalDataProvider.getAdditionalDataForRequest(httpServletRequest);
+    }
+
+    @Test(groups = { "s2" })
+    public void testGetAdditionalDataForRequestParamNull(){
+        new Expectations(){
+            {
+                httpServletRequest.getHeader(anyString);
+                result = "tenant";
+            }
+        };
+
+        AdditionalDataProvider.getAdditionalDataForRequest(httpServletRequest);
+    }
+    @Test(groups = { "s2" })
+    public void testGetAdditionalDataForRequest2ND(){
+        new Expectations(){
+            {
+                httpServletRequest.getHeader(anyString);
+                result = "tenant.admin";
+                httpServletRequest.getRequestURI();
+                result = "!/emsaasui/emcpdfui/builder.html";
+                HtmlBootstrapJsUtil.getAllBootstrapJS(httpServletRequest);
+                result = "bootstrapjs";
+            }
+        };
+
+        AdditionalDataProvider.getAdditionalDataForRequest(httpServletRequest);
+    }
+
 }

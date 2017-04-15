@@ -1,6 +1,26 @@
+    <script id="omc-hamburger-menu-template" type="text/html">
+        <div id="omcHamburgerMenu" style="width:250px;" class="oj-contrast-marker oj-web-applayout-offcanvas oj-offcanvas-start">
+            <div data-bind="component: {
+                name: 'omc-uifwk-hamburger-menu',
+                params: menuParams
+                }">
+            </div>
+        </div>
+    </script>
     <div class="emaas-brandingbar">
         <div class="emaas-appheader">
-            <div id="emaas-appheader-bar" data-testapiversion="1.16.0" class="oj-row emaas-appheader-lite" style="max-width: 1920px;padding-left: 10px">
+            <!-- ko if: hamburgerMenuEnabled -->
+            <!-- hamburger menu button-->
+            <div>
+                <button id="hamburgerButton" class="oj-button-half-chrome emaas-appheader-hamburger-button emaas-appheader-toolbar-button" 
+                    data-bind="ojComponent: {component:'ojButton', display:'icons', chroming: 'half',
+                                label: hamburgerBtnLabel, 
+                                icons: {start: 'fa-icon-font fa-bars'}}, 
+                    click: toggleHamburgerMenu, attr: {title: hamburgerBtnLabel}" role="button" tabindex="0">
+                </button>
+            </div>
+            <!-- /ko -->
+            <div id="emaas-appheader-bar" data-testapiversion="1.18.0" class="oj-row emaas-appheader-lite" style="max-width: 1920px;padding-left: 10px">
 
                 <!-- logo -->  
                 <div class="emaas-appheader-logo" data-bind="attr: {'aria-label': textOracle}">
@@ -126,8 +146,8 @@
                }" style="height:29px; margin-bottom:0px"/>
             </div>
             </span>
-            <!-- ko if: showEntityContextSelector() -->
-            <div id="emcta-ctxtSel" class="animated_transitions" style="flex: auto" data-bind="component:{name:'emcta-context-selector',
+            <!-- ko if: showEntityContextSelector() && isEntityContextLoaded() -->
+            <div id="emcta-ctxtSel" class="emaas-appheader-flexbox-auto emaas-appheader-emcta-ctxtSel animated_transitions" style="flex: auto;" data-bind="component:{name:'emcta-context-selector',
                 params:{id: 'emcta-ctxtSel', entityContextParams: entityContextParams}}">
             </div>
             <!-- /ko -->
@@ -191,12 +211,12 @@
         <div id="ude-topology-div" style="overflow-y:auto; height:auto; display: flex; padding-left: 10px; padding-right: 10px; padding-bottom: 5px;"
              data-bind="visible: isTopologyDisplayed, event: {mouseover: showTopologyMaxIcon, mouseout: hideTopologyMaxIcon}" class="ude-sdk">
             <!-- ko if: topologyHeight() > 201 -->
-            <div id="ude-topology-title" style="display: flex; position: absolute; right: 20px; z-index: 1">
+            <div id="ude-topology-title" style="display: flex; position: absolute; z-index: 1" data-bind="style: {right: maxIconToRight}">
                     <button data-bind="attr: {'id': 'maxMinTopology', title: isMaximized() ? topologyRestoreLabel : topologyMaximizeLabel}, click: maxMinTopologyToggle,
                                     style: {display: 'none'},
                                     ojComponent: {
                                         component: 'ojButton', chroming: 'half',
-                                        icons: {start: isMaximized() ? 'fa-icon-font fa-icon-font-16 emaas-appheader-restore-icon' : 'fa-icon-font fa-icon-font-16 emaas-appheader-maximize-icon'},
+                                        icons: {start: isMaximized() ? 'fa-icon-font icon-font-16 emaas-appheader-restore-icon' : 'fa-icon-font icon-font-16 emaas-appheader-maximize-icon'},
                                         label: ''
                                     }" >
                     </button>

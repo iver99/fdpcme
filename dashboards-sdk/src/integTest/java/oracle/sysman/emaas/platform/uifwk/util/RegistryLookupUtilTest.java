@@ -23,6 +23,7 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceQ
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
+import oracle.sysman.emaas.platform.uifwk.util.RegistryLookupUtil.VersionedLink;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -61,15 +62,18 @@ public class RegistryLookupUtilTest
 						return list;
 					}
 				};
-				Link lkAPM = new Link();
+				VersionedLink lkAPM = new VersionedLink();
 				lkAPM.withHref("http://den00hvb.us.oracle.com:7028/emsaasui/apmUi/index.html");
 				lkAPM.withRel("home");
-				Link lkITA = new Link();
+				lkAPM.setAuthToken("auth");
+				VersionedLink lkITA = new VersionedLink();
 				lkITA.withHref("http://den00hvb.us.oracle.com:7019/emsaasui/emcitas/worksheet/html/displaying/worksheet-list.html");
 				lkITA.withRel("home");
-				Link lkLA = new Link();
+				lkITA.setAuthToken("auth");
+				VersionedLink lkLA = new VersionedLink();
 				lkLA.withHref("http://den00yse.us.oracle.com:7004/emsaasui/emlacore/resources/");
 				lkLA.withRel("loganService");
+				lkLA.setAuthToken("auth");
 				anyInstanceInfo.getLinksWithProtocol(anyString, anyString);
 				returns(Arrays.asList(lkAPM), Arrays.asList(lkITA), Arrays.asList(lkLA));
 			}

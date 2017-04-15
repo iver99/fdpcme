@@ -1,2 +1,23 @@
-include 'dashboards-core', 'dashboards-entities','dashboards-web','dashboards-webutils','dashboards-ee','dashboards-schema','dashboards-ui','dashboards-ui:dashboardsui-ee','dashboards-ui:dashboardsui-web','dashboards-ui:dashboardsui-webutils', 'omc-ui-framework', 'omc-ui-framework:omc-ui-framework-web','omc-ui-framework:omc-ui-framework-ee','omc-ui-framework:omc-ui-framework-webutils', 'dashboards-uitest','dashboards-upgrade-tests','dashboards-ui-test-common-api','dashboards-sdk'
+// alphabetical
+include \
+  'dashboards-core',
+  'dashboards-ee',
+  'dashboards-entities',
+  'dashboards-schema',
+  'dashboards-sdk',
+  'dashboards-ui',
+  'dashboards-ui:dashboardsui-ee',
+  'dashboards-ui:dashboardsui-web',
+  'dashboards-ui:dashboardsui-webutils',
+  'dashboards-uitest',
+  'dashboards-ui-test-common-api',
+  'dashboards-upgrade-tests',
+  'dashboards-web',
+  'dashboards-webutils',
+  'dashboards-zdt-test-sdk',
+  'omc-ui-framework',
+  'omc-ui-framework:omc-ui-framework-ee',
+  'omc-ui-framework:omc-ui-framework-web',
+  'omc-ui-framework:omc-ui-framework-webutils'
+
 

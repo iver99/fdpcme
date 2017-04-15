@@ -7,13 +7,15 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
     'ojs/ojcore',
     'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg',
     'uifwk/@version@/js/util/zdt-util-impl',
+    'uifwk/@version@/js/sdk/menu-util-impl',
     'ojs/ojknockout',
     'ojs/ojtoolbar',
     'ojs/ojmenu',
     'ojs/ojbutton',
-    'ojs/ojdialog'
+    'ojs/ojdialog',
+    'ojs/ojoffcanvas'
 ],
-    function (ko, $, dfumodel, msgUtilModel, contextModel, oj, nls, zdtUtilModel) {
+    function (ko, $, dfumodel, msgUtilModel, contextModel, oj, nls, zdtUtilModel, menuModel) {
         function BrandingBarViewModel(params) {
             var self = this;
             var msgUtil = new msgUtilModel();
@@ -59,6 +61,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 self.showReadOnlyPillRemove = ko.observable(false);
             }
             self.showEntityContextSelector = ko.observable(false);
+            self.isEntityContextLoaded = ko.observable(false);
             if (ko.isObservable(params.showEntitySelector)) {
                 self.showEntitySelector = params.showEntitySelector;
             } else {
@@ -68,9 +71,15 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             //respond to change to entityContextReadOnly
             self.entityContextReadOnly.subscribe(function () {
                 if (!self.entityContextReadOnly()) {
-                    require(['/emsaasui/emcta/ta/js/sdk/contextSelector/api/ContextSelectorUtils.js'], function (EmctaContextSelectorUtil) {
+                    self.showEntityContextSelector(true);
+                    var versionedContextSelectorUtils = window.getSDKVersionFile ?
+                        window.getSDKVersionFile('emsaasui/emcta/ta/js/sdk/contextSelector/api/ContextSelectorUtils') : null;
+                    var contextSelectorUtil = versionedContextSelectorUtils ? versionedContextSelectorUtils :
+                        '/emsaasui/emcta/ta/js/sdk/contextSelector/api/ContextSelectorUtils.js';
+
+                    require([contextSelectorUtil], function (EmctaContextSelectorUtil) {
                         EmctaContextSelectorUtil.registerComponents();
-                        self.showEntityContextSelector(true);
+                        self.isEntityContextLoaded(true);
                     });
                 } else {
                     self.showEntityContextSelector(false);
@@ -115,10 +124,10 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 
             if (!ko.components.isRegistered('emctas-globalbar'))
             {
-                var versionedTemplate = window.getSDKVersionFile ? 
+                var versionedTemplate = window.getSDKVersionFile ?
                     window.getSDKVersionFile('emsaasui/emcta/ta/js/sdk/globalcontextbar/emctas-globalbar.html') : null;
-                var template = versionedTemplate ? versionedTemplate : 
-                        'emsaasui/emcta/ta/js/sdk/globalcontextbar/emctas-globalbar.html';
+                var template = versionedTemplate ? versionedTemplate :
+                    'emsaasui/emcta/ta/js/sdk/globalcontextbar/emctas-globalbar.html';
                 ko.components.register('emctas-globalbar', {
                     viewModel: function () {
                     },
@@ -182,17 +191,16 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             ;
 
             function handleShowHideTopology() {
+                if (self.topologyNeedRefresh && !self.isTopologyDisplayed()) {
+                    //when expanding the topology, do a refresh if needed
+                    console.log("**************topology displayed");
+                    console.log("**************refreshTopologyParams");
+                    refreshTopologyParams();
+                }
                 $("#ude-topology-div").slideToggle("fast", function () {
                     self.isTopologyDisplayed(!self.isTopologyDisplayed());
 
                     if (self.isTopologyDisplayed()) {
-                        //when expanding the topology, do a refresh if needed
-                        console.log("**************topology displayed");
-                        console.log("**************self.topologyNeedRefresh" + self.topologyNeedRefresh);
-                        if (self.topologyNeedRefresh) {
-                            console.log("**************refreshTopologyParams");
-                            refreshTopologyParams();
-                        }
                         var entityMeIds = cxtUtil.getEntityMeIds();
                         if (entityMeIds && entityMeIds.length) {
                             self.highlightedEntities(entityMeIds.concat([CONTEXT_CHANGE, NO_HIGHLIGHT]));
@@ -215,15 +223,15 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 if (!self.isTopologyCompRegistered()) {
                     require(['ojs/ojdiagram'], function () {
                         if (!ko.components.isRegistered('emctas-topology')) {
-                            var versionedTopoViewModel = window.getSDKVersionFile ? 
+                            var versionedTopoViewModel = window.getSDKVersionFile ?
                                 window.getSDKVersionFile('emsaasui/emcta/ta/js/sdk/topology/emcta-topology.js') : null;
-                            var topoViewModel = versionedTopoViewModel ? (versionedTopoViewModel.lastIndexOf('.js') ===  versionedTopoViewModel.length - 3 ? 
-                                                versionedTopoViewModel.substring(0, versionedTopoViewModel.length - 3) : versionedTopoViewModel) : 
-                                    'emsaasui/emcta/ta/js/sdk/topology/emcta-topology';
-                            var versionedTopoTemplate = window.getSDKVersionFile ? 
+                            var topoViewModel = versionedTopoViewModel ? (versionedTopoViewModel.lastIndexOf('.js') === versionedTopoViewModel.length - 3 ?
+                                versionedTopoViewModel.substring(0, versionedTopoViewModel.length - 3) : versionedTopoViewModel) :
+                                'emsaasui/emcta/ta/js/sdk/topology/emcta-topology';
+                            var versionedTopoTemplate = window.getSDKVersionFile ?
                                 window.getSDKVersionFile('emsaasui/emcta/ta/js/sdk/topology/emcta-topology.html') : null;
-                            var topoTemplate = versionedTopoTemplate ? versionedTopoTemplate : 
-                                    'emsaasui/emcta/ta/js/sdk/topology/emcta-topology.html';
+                            var topoTemplate = versionedTopoTemplate ? versionedTopoTemplate :
+                                'emsaasui/emcta/ta/js/sdk/topology/emcta-topology.html';
                             ko.components.register('emctas-topology', {
                                 viewModel: {require: topoViewModel},
                                 template: {require: 'text!' + topoTemplate}
@@ -274,14 +282,27 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 }
             }
 
+
+            self.maxIconToRight = ko.observable("30px");
             self.topologySize = ko.observable();
             self.topologyHeight = ko.observable();
             self.topologySize.subscribe(function (topoHeight) {
-                topoHeight && topoHeight.h && self.topologyHeight(topoHeight.h);
+                var legendHeight = 0;
+                if($("#ude_topology_legend").length > 0) { //Re-set legend height if there is legend.
+                    //TO DO: hard-code legend height for now. Need to get legend height dynamically after UDE support it later.
+                    legendHeight = 300;
+                }
+                topoHeight && topoHeight.h && self.topologyHeight(Math.max(topoHeight.h, legendHeight));
                 if (self.topologyHeight() <= 201) {
                     self.topologyCssHeight(self.topologyHeight());
                 } else {
                     self.topologyCssHeight(201);
+                }
+
+                if ($("#ude_topology_legend").length > 0) {
+                    self.maxIconToRight("180px");
+                } else {
+                    self.maxIconToRight("30px");
                 }
             });
 
@@ -361,6 +382,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             var dfWelcomeUrl = dfu.discoverWelcomeUrl();
             var subscribedApps = null;
             var appIdAPM = "APM";
+            var appIdDBPerfDiag = "DBPerfDiag";
             var appIdITAnalytics = "ITAnalytics";
             var appIdLogAnalytics = "LogAnalytics";
             var appIdDashboard = "Dashboard";
@@ -389,6 +411,13 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 "serviceName": "emcitas-ui-apps",
                 "version": self.SERVICE_VERSION,
                 "helpTopicId": "em_it_gs"
+            };
+            appMap[appIdDBPerfDiag] = {
+                "appId": "DBPerfDiag",
+                "appName": "BRANDING_BAR_APP_NAME_DB_PERF_DIAGNOSTICS",
+                "serviceName": "emcitas-dbcsperf",
+                "version": self.SERVICE_VERSION,
+                "helpTopicId": "em_dbperfdiag_gs"
             };
             appMap[appIdLogAnalytics] = {
                 "appId": "LogAnalytics",
@@ -435,7 +464,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             appMap[appIdSecurityAnalytics] = {
                 "appId": appIdSecurityAnalytics,
                 "appName": "BRANDING_BAR_APP_NAME_SECURITY_ANALYTICS",
-                "serviceDisplayName": "BRANDING_BAR_CLOUD_SERVICE_NAME_SA",
+                "serviceDisplayName": "BRANDING_BAR_APP_NAME_SECURITY_ANALYTICS",
                 "serviceName": "SecurityAnalyticsUI",
                 "version": self.SERVICE_VERSION,
                 "helpTopicId": "em_samcs"
@@ -452,18 +481,19 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 "appId": appIdOcs,
                 "appName": "BRANDING_BAR_APP_NAME_ORCHESTRATION",
                 "serviceDisplayName": "BRANDING_BAR_APP_NAME_ORCHESTRATION",
-                "serviceName": "CosServiceUI",
+                "serviceName": "CosUIService",
                 "version": self.SERVICE_VERSION,
                 "helpTopicId": "em_home_gs"
             };
 
+            var omcHamburgerMenuOptIn = $.isFunction(params.omcHamburgerMenuOptIn) ? params.omcHamburgerMenuOptIn() : params.omcHamburgerMenuOptIn;
             self.appId = $.isFunction(params.appId) ? params.appId() : params.appId;
             self.relNotificationCheck = $.isFunction(params.relNotificationCheck) ? params.relNotificationCheck() : params.relNotificationCheck;
             self.relNotificationShow = $.isFunction(params.relNotificationShow) ? params.relNotificationShow() : params.relNotificationShow;
             self.notificationVisible = ko.observable(false);
             self.notificationDisabled = ko.observable(true);
             self.notificationPageUrl = null;
-            self.navLinksVisible = true;
+            self.navLinksVisible = omcHamburgerMenuOptIn ? false : true;
             self.navLinksImmediateLoading = ko.observable(false);
 
             var isAppIdNotEmpty = self.appId && $.trim(self.appId) !== "";
@@ -635,7 +665,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         break;
                 }
             };
-            
+
             $("#emaasAppheaderGlobalNavMenuId").ojMenu({
                 "beforeOpen": function (event, ui) {
                     self.aboutBoxImmediateLoading(true);
@@ -716,7 +746,131 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 $("#links_menu").slideToggle('normal');
                 item.stopImmediatePropagation();
             };
+            
+            function injectHamburgerMenuComponent() {
+                //Check if hamburger menu has been created or not, if not create it
+                if (!$('#omcHamburgerMenu').length) {
+                    var hamburgerDiv = $($("#omc-hamburger-menu-template").text());
+                    $('#offcanvasInnerContainer').append(hamburgerDiv);
+                    ko.applyBindings(self, hamburgerDiv[0]);
+                }
+            }
+            
+            self.hamburgerMenuEnabled = omcHamburgerMenuOptIn ? true : false;
+            self.isHamburgerMenuRegistered = ko.observable(false);
+            if (omcHamburgerMenuOptIn) {
+                self.hamburgerBtnLabel = nls.BRANDING_BAR_HAMBURGER_BTN_LABEL;
+                self.menuParams = {'appId': self.appId, 'userName': self.userName, 'tenantName': self.tenantName, 'omcCurrentMenuId': params.omcCurrentMenuId};
+                if (!self.isHamburgerMenuRegistered()) {
+                    require(['ojs/ojnavigationlist','ojs/ojjsontreedatasource'], function () {
+                    //Register a Knockout component for hamburger menu
+                        var hamburgerVMPath = "uifwk/js/widgets/hamburger-menu/js/hamburger-menu";
+                        var hamburgerTemplatePath = "uifwk/js/widgets/hamburger-menu/html/hamburger-menu.html";
+                        if (!ko.components.isRegistered('omc-uifwk-hamburger-menu')) {
+                            ko.components.register("omc-uifwk-hamburger-menu", {
+                                viewModel: {require: hamburgerVMPath},
+                                template: {require: 'text!' + hamburgerTemplatePath}
+                            });
+                            self.isHamburgerMenuRegistered(true);
+                        }     
+                        injectHamburgerMenuComponent();
+                    });
+                }
+                else {
+                    self.isHamburgerMenuRegistered(true);
+                    injectHamburgerMenuComponent();
+                }
+                
+                self.xlargeScreen = oj.ResponsiveKnockoutUtils.createMediaQueryObservable('(min-width: 1440px)');
 
+                self.xlargeScreen.subscribe(function(isXlarge){
+                    if(!isXlarge){
+                        if($("#omcHamburgerMenu").hasClass("oj-offcanvas-open")){
+                            oj.OffcanvasUtils.close({
+                                    "edge": "start",
+                                    "displayMode": "push",
+                                    "selector": "#omcHamburgerMenu"
+                                });
+                        }
+                    }else{
+                        if(!$("#omcHamburgerMenu").hasClass("oj-offcanvas-open")){
+                            oj.OffcanvasUtils.toggle({
+                                    "edge": "start",
+                                    "displayMode": "push",
+                                    "selector": "#omcHamburgerMenu",
+                                    "autoDismiss": "none"
+                                });
+                        }else if($("#omcHamburgerMenu").hasClass("oj-offcanvas-overlay")){
+                                oj.OffcanvasUtils.close({
+                                    "edge": "start",
+                                    "displayMode": "overlay",
+                                    "selector": "#omcHamburgerMenu",
+                                    "autoDismiss": "focusLoss"
+                                });
+                                setTimeout(function(){
+                                        oj.OffcanvasUtils.open({
+                                            "edge": "start",
+                                            "displayMode": "push",
+                                            "selector": "#omcHamburgerMenu",
+                                            "autoDismiss": "none"
+                                        });
+                                },500);
+                        }
+                    }
+                });
+
+                self.toggleHamburgerMenu = function() {
+                    return oj.OffcanvasUtils.toggle({
+                            "edge": "start",
+                            "displayMode": self.xlargeScreen() ? "push" : "overlay",
+    //                      "content": "#main-container",
+                            "selector": "#omcHamburgerMenu",
+                            "autoDismiss": self.xlargeScreen() ? "none" : "focusLoss"
+                        });
+                };
+
+                var menuUtil = new menuModel();
+                menuUtil.subscribeServiceMenuLoadedEvent(function(){
+                    $("#omcHamburgerMenu").on("ojopen", function(event, offcanvas) {
+                        if(offcanvas.displayMode === "push")
+                            $("#offcanvasInnerContainer").width(document.body.clientWidth-250);
+                        });
+                    $("#omcHamburgerMenu").on("ojclose", function(event, offcanvas) {
+                        $("#offcanvasInnerContainer").width(document.body.clientWidth);
+                    });
+                    $(window).resize(function() {
+                        if ($("#omcHamburgerMenu").hasClass("oj-offcanvas-open") && !$("#omcHamburgerMenu").hasClass("oj-offcanvas-overlay")) {
+                            $("#offcanvasInnerContainer").width(document.body.clientWidth - 250);
+                        } else {
+                            $("#offcanvasInnerContainer").width(document.body.clientWidth);
+                        }
+                    });
+
+                    if(self.xlargeScreen()){
+                        $((function(){
+                            oj.OffcanvasUtils.open({
+                                    "edge": "start",
+                                    "displayMode": "push",
+                                    "selector": "#omcHamburgerMenu",
+                                    "autoDismiss": "none"
+                                });
+                        })());
+                    }
+                    
+                    //Set current menu item if specified by API call
+                    if (window._uifwk && window._uifwk.currentOmcMenuItemId) {
+                        menuUtil.setCurrentMenuItem(window._uifwk.currentOmcMenuItemId, window._uifwk.underOmcAdmin);
+                    }
+                    else {
+                        //Set current menu item if specified from branding bar params
+                        var selectedMenuId = params.omcCurrentMenuId;
+                        if (selectedMenuId) {
+                            menuUtil.setCurrentMenuItem(selectedMenuId);
+                        }
+                    }
+                });
+            }
+            
             /**
              * Notifications button click handler
              */
@@ -876,19 +1030,19 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             function showMessage(data) {
                 if (data) {
                     var message = {};
-                    self.hasMessages(true);   
+                    self.hasMessages(true);
                     message.id = data.id ? data.id : dfu.getGuid();
                     message.type = data.type;
                     message.summary = data.summary;
                     message.detail = data.detail;
                     message.category = data.category;
                     message.icon = imgBackground;
-                    if (data.type && data.type.toUpperCase() === 'CORRECT') {    
+                    if (data.type && data.type.toUpperCase() === 'CORRECT') {
                         hiddenMessages = [];
                         displayMessages = [];
                         self.messageList(displayMessages);
                         self.hasHiddenMessages(false);
-                        self.hasMessages(false);     
+                        self.hasMessages(false);
                         self.hiddenMessagesExpanded(true);
                         return;
                     }
@@ -1101,7 +1255,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 if (self.isTopologyCompRegistered()) {
                     var refreshTopology = true;
                     var omcContext = cxtUtil.getOMCContext();
-                    var currentCompositeId = cxtUtil.getCompositeMeId();
+                    var currentCompositeId = cxtUtil.getCompositeMeId() || (cxtUtil.getEntities()[0] ? cxtUtil.getEntities()[0]['meId'] : cxtUtil.getEntities()[0]);
                     console.log("************currentCompositeId" + currentCompositeId);
                     if (currentCompositeId) {
                         if (self.topologyInitialized === true && currentCompositeId === omcContext.previousCompositeMeId) {
@@ -1118,6 +1272,12 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                             self.topologyInitialized = true;
                         }
                         self.topologyDisabled(false);
+                    }
+                    else {
+
+
+
+
                     }
 //                    else {
 //                        self.topologyDisabled(true);
@@ -1178,10 +1338,11 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 }
             }
             function refreshOMCContext() {
-                self.cxtCompositeMeId = cxtUtil.getCompositeMeId();
+                //added suppport for single entity
+                self.cxtCompositeMeId = cxtUtil.getCompositeMeId() || (cxtUtil.getEntities()[0] ? cxtUtil.getEntities()[0]['meId'] : cxtUtil.getEntities()[0]);
 //                self.cxtCompositeType = cxtUtil.getCompositeType();
-                self.cxtCompositeDisplayName = cxtUtil.getCompositeDisplayName();
-                self.cxtCompositeName = cxtUtil.getCompositeName();
+                self.cxtCompositeDisplayName = cxtUtil.getCompositeDisplayName() || (cxtUtil.getEntities()[0] ? cxtUtil.getEntities()[0]['displayName'] : cxtUtil.getEntities()[0]);
+                self.cxtCompositeName = cxtUtil.getCompositeName() || (cxtUtil.getEntities()[0] ? cxtUtil.getEntities()[0]['entityName'] : cxtUtil.getEntities()[0]);
                 self.cxtComposite = cxtUtil.getCompositeEntity();
 //                self.cxtStartTime = cxtUtil.getStartTime();
 //                self.cxtEndTime = cxtUtil.getEndTime();
@@ -1194,15 +1355,21 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 //Refresh topology button status
                 if (self.cxtCompositeMeId) {
                     self.topologyDisabled(false);
+
+                    if (!cxtUtil.getCompositeMeId()) {
+                        window.centernodeid_diagram = cxtUtil.getEntities()[0]['meId'];
+                    }
                 }
                 //When no compositeMEID exists, disable topology button
                 else {
                     //Hide topology
+
                     if (self.isTopologyDisplayed() && !self.topologyDisabled()) {
                         self.showTopology();
                     }
 
                     self.topologyDisabled(true);
+
                 }
 
 
@@ -1416,7 +1583,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             var zdtUtil = new zdtUtilModel();
             zdtUtil.detectPlannedDowntime(function () {
             });
-            
+
             ko.bindingHandlers.stopDataBinding = {
                 init: function (elem, valueAccessor) {
                     var value = ko.unwrap(valueAccessor());

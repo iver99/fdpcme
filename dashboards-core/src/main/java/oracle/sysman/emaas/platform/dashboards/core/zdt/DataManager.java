@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.swing.text.DateFormatter;
 
@@ -60,6 +61,9 @@ public class DataManager
 			Query query = em.createNativeQuery(sql);
 			long count = ((Number) query.getSingleResult()).longValue();
 			return count;
+		}catch(NoResultException e){
+			logger.warn("Get all dashboards count did not retrieve any data!");
+			return 0L;
 		}
 		finally {
 			if (em != null) {
@@ -83,6 +87,9 @@ public class DataManager
 			Query query = em.createNativeQuery(sql);
 			long count = ((Number) query.getSingleResult()).longValue();
 			return count;
+		}catch(NoResultException e){
+			logger.warn("Get all favorite count did not retrieve any data!");
+			return 0L;
 		}
 		finally {
 			if (em != null) {
@@ -106,6 +113,9 @@ public class DataManager
 			Query query = em.createNativeQuery(sql);
 			long count = ((Number) query.getSingleResult()).longValue();
 			return count;
+		}catch(NoResultException e){
+			logger.warn("Get all preference count did not retrieve any data!");
+			return 0L;
 		}
 		finally {
 			if (em != null) {
@@ -858,6 +868,7 @@ public class DataManager
 				.setParameter(2, tenantId);
 		long count = ((Number) query.getSingleResult()).longValue();
 		return count > 0;
+
 	}
 
 	private boolean isDashboardTileParamExist(EntityManager entityManager, String tileId, String paramName, Long tenantId) {
@@ -867,8 +878,13 @@ public class DataManager
 				.setParameter(1, tileId)
 				.setParameter(2, paramName)
 				.setParameter(3, tenantId);
-		long count = ((Number) query.getSingleResult()).longValue();
-		return count > 0;
+		try{
+			long count = ((Number) query.getSingleResult()).longValue();
+			return count > 0;
+		}catch(NoResultException e){
+			logger.warn("Is dashboard tile param did not retrieve any data!");
+			return false;
+		}
 	}
 
 
@@ -880,8 +896,13 @@ public class DataManager
 				.setParameter(1, userName)
 				.setParameter(2, tenantId)
 				.setParameter(3, dashboardId);
-		long count = ((Number) query.getSingleResult()).longValue();
-		return count > 0;
+		try{
+			long count = ((Number) query.getSingleResult()).longValue();
+			return count > 0;
+		}catch(NoResultException e){
+			logger.warn("Is dashboard user option exist did not retrieve any data!");
+			return false;
+		}
 	}
 
 	private boolean isDashboardSetExist(EntityManager entityManager, BigInteger dashboardSetId, Long tenantId, BigInteger subDashboardId) {
@@ -891,8 +912,13 @@ public class DataManager
 				.setParameter(1, dashboardSetId)
 				.setParameter(2, tenantId)
 				.setParameter(3, subDashboardId);
-		long count = ((Number) query.getSingleResult()).longValue();
-		return count > 0;
+		try{
+			long count = ((Number) query.getSingleResult()).longValue();
+			return count > 0;
+		}catch(NoResultException e){
+			logger.warn("Is dashboard set exist did not retrieve any data!");
+			return false;
+		}
 	}
 
 	private boolean isPreferenceExist(EntityManager entityManager, String userName, String prefKey, Long tenantId) {
@@ -902,8 +928,13 @@ public class DataManager
 				.setParameter(1, userName)
 				.setParameter(2, prefKey)
 				.setParameter(3, tenantId);
-		long count = ((Number) query.getSingleResult()).longValue();
-		return count > 0;
+		try{
+			long count = ((Number) query.getSingleResult()).longValue();
+			return count > 0;
+		}catch(NoResultException e){
+			logger.warn("Is preference exist did not retrieve any data!");
+			return false;
+		}
 	}
 
 	private String getDashboardLastModifiedDate(EntityManager entityManager,BigInteger dashboardId, Long tenantId) {
@@ -912,7 +943,12 @@ public class DataManager
 		Query query = entityManager.createNativeQuery(sql)
 				.setParameter(1, dashboardId)
 				.setParameter(2, tenantId);
-		return query.getSingleResult().toString();
+		try{
+			return query.getSingleResult().toString();
+		}catch(NoResultException e){
+			logger.warn("getDashboardLastModifiedDate did not retrieve any data!");
+			return null;
+		}
 
 	}
 
@@ -923,7 +959,12 @@ public class DataManager
 				.setParameter(1, tileId)
 				.setParameter(2, dashboardId)
 				.setParameter(3, tenantId);
-		return query.getSingleResult().toString();
+		try{
+			return query.getSingleResult().toString();
+		}catch(NoResultException e){
+			logger.warn("getDashboardTileLastModifiedDate did not retrieve any data!");
+			return null;
+		}
 	}
 
 	private String getDashboardTileParamLastModifiedDate(EntityManager entityManager, String tileId, String paramName, Long tenantId){
@@ -933,7 +974,12 @@ public class DataManager
 				.setParameter(1,tileId)
 				.setParameter(2,paramName)
 				.setParameter(3,tenantId);
-		return query.getSingleResult().toString();
+		try{
+			return query.getSingleResult().toString();
+		}catch(NoResultException e){
+			logger.warn("getDashboardTileLastModifiedDate did not retrieve any data!");
+			return null;
+		}
 	}
 
 
@@ -944,7 +990,12 @@ public class DataManager
 				.setParameter(1, userName)
 				.setParameter(2, tenantId)
 				.setParameter(3, dashboardId);
-		return  query.getSingleResult().toString();
+		try{
+			return  query.getSingleResult().toString();
+		}catch(NoResultException e){
+			logger.warn("getDashboardUserOptionLastModifiedDate did not retrieve any data!");
+			return null;
+		}
 	}
 
 	private String getDashboardSetLastModifiedDate(EntityManager entityManager, BigInteger dashboardSetId, Long tenantId, BigInteger subDashboardId){
@@ -954,7 +1005,12 @@ public class DataManager
 				.setParameter(1,dashboardSetId)
 				.setParameter(2,tenantId)
 				.setParameter(3,subDashboardId);
-		return query.getSingleResult().toString();
+		try{
+			return query.getSingleResult().toString();
+		}catch(NoResultException e){
+			logger.warn("getDashboardSetLastModifiedDate did not retrieve any data!");
+			return null;
+		}
 	}
 
 	private String getPreferenceLastModifiedDate(EntityManager entityManager, String userName, String prefKey, Long tenantId){
@@ -964,7 +1020,12 @@ public class DataManager
 				.setParameter(1,userName)
 				.setParameter(2,prefKey)
 				.setParameter(3,tenantId);
-		return query.getSingleResult().toString();
+		try{
+			return query.getSingleResult().toString();
+		}catch(NoResultException e){
+			logger.warn("getPreferenceLastModifiedDate did not retrieve any data!");
+			return null;
+		}
 	}
 	private boolean isAfter(String thisDate, String comparedDate){
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

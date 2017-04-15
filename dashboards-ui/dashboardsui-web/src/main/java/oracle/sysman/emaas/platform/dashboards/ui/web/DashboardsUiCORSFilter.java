@@ -70,18 +70,6 @@ public class DashboardsUiCORSFilter implements Filter
 					"Origin, X-Requested-With, Content-Type, Accept, Authorization, X-USER-IDENTITY-DOMAIN-NAME, X-REMOTE-USER,X-SSO-CLIENT");
 		}
 
-		//handle Authorization header
-		/*
-		if (LookupManager.getInstance().getAuthorizationToken() != null) {
-			if (!hRes.containsHeader(AUTHORIZATION_HEADER)) {
-				String token = new String(LookupManager.getInstance().getAuthorizationToken());
-				if (token != null) {
-					hRes.addHeader(AUTHORIZATION_HEADER, token);
-				}
-			}
-		}
-		 */
-
 		// handling the OAM info from SSO
 		HttpServletRequest httpReq = (HttpServletRequest) request;
 		String userTenant = httpReq.getHeader(OAM_REMOTE_USER_HEADER);
@@ -176,7 +164,8 @@ public class DashboardsUiCORSFilter implements Filter
 						}
 					}
 				}
-				else if (!StringUtil.isEmpty(hReq.getRequestURI()) && hReq.getRequestURI().toLowerCase().contains("emsaasui/emcpdfui/builder.html")) {
+/*				else if (!StringUtil.isEmpty(hReq.getRequestURI()) && hReq.getRequestURI().toLowerCase().contains("emsaasui/emcpdfui/builder.html")) {
+					long start1 = System.currentTimeMillis();
 					List<String> apps = TenantSubscriptionUtil.getTenantSubscribedServices(opcTenantId, user);
 					if (apps == null || apps.isEmpty()) {
 						LOGGER.error("Tenant (" + opcTenantId
@@ -185,7 +174,9 @@ public class DashboardsUiCORSFilter implements Filter
 								"./error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_NO_SUBS_MSG", hReq));
 						return;
 					}
-				}
+					long end1 = System.currentTimeMillis();
+					LOGGER.info("[Diagnosis] Time for builder page to do subscribed apps checking is {}ms", (end1 - start1));
+				}*/
 			}
 		}
 		catch (Exception t) {

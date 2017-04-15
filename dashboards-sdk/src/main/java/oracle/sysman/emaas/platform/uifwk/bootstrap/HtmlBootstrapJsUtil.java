@@ -102,38 +102,17 @@ public class HtmlBootstrapJsUtil
 			return null;
 		}
 
-		//append uifwk cache data structure
-		sb.append("if(!window._uifwk){window._uifwk={};}if(!window._uifwk.cachedData){window._uifwk.cachedData={};}");
 		//user info
-		LOGGER.debug("Start to get user info.");
-		String userInfo = DataAccessUtil.getUserTenantInfo(tenant, user, referer, sessionExp);
-		if (!StringUtil.isEmpty(userInfo)) {
-			sb.append("window._uifwk.cachedData.userInfo=").append(userInfo).append(";");
-		}
-		else {
-			LOGGER.warn("Retrieved empty user info.");
-		}
-		//registration data
-		LOGGER.debug("Start to get user info.");
-		String registrationData = DataAccessUtil.getRegistrationData(tenant, user, referer, sessionExp);
-		if (!StringUtil.isEmpty(registrationData)) {
-			sb.append("window._uifwk.cachedData.registrations=").append(registrationData).append(";");
-		}
-		else {
-			LOGGER.warn("Retrieved empty registration data.");
-		}
-		//subscribed apps
-		LOGGER.debug("Start to get subscribed services.");
-		String subscribedApps = DataAccessUtil.getTenantSubscribedServices(tenant, user);
-		if (!StringUtil.isEmpty(subscribedApps)) {
-			sb.append("window._uifwk.cachedData.subscribedapps=").append(subscribedApps).append(";");
-		}
-		else {
-			LOGGER.warn("Retrieved empty subscribed services.");
-		}
-
+		LOGGER.debug("Start to get brandingbar data.");
+		String brandingbarData = DataAccessUtil.getBrandingBarData(tenant, user, referer, sessionExp);
+        if (!StringUtil.isEmpty(brandingbarData)) {
+            //append uifwk cache data structure
+            sb.append("if(!window._uifwk){window._uifwk={};}if(!window._uifwk.cachedData){window._uifwk.cachedData={};}");
+            // the returned value from dashboard-api side could be injected into html directly
+            sb.append(brandingbarData);
+        }
 		String injectableJS = sb.toString();
-		LOGGER.debug("getBrandingDataJS(), injectableJS: " + injectableJS);
+		LOGGER.info("getBrandingDataJS(), injectableJS: " + injectableJS);
 		return injectableJS;
 	}
 

@@ -1,7 +1,12 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+import java.text.SimpleDateFormat
+import java.util.Date
+
 apply from:'test.gradle'
 apply plugin: 'java'
 
-
+def dfversion = project.ext.getServiceVersion('DashboardService-API')
+def versionPathElement = dfversion + "-"+ new SimpleDateFormat("yyMMdd.HHmmss").format(new Date())
 
 publishing.publications {
     integTest(MavenPublication) {
@@ -65,5 +70,11 @@ clean{
 eclipse {
     classpath {
         plusConfigurations += configurations.testNG //avoid building error in Eclipse
+    }
+}
+processResources {
+    from('src/main/resources') {
+        include '*.properties', '*.xml'
+        filter(ReplaceTokens, tokens: [version : versionPathElement])
     }
 }

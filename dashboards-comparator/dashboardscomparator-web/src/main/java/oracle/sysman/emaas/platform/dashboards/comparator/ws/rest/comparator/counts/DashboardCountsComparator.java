@@ -13,6 +13,10 @@ package oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.co
 import java.io.IOException;
 import java.util.Map.Entry;
 
+import com.sun.jersey.api.client.ClientHandlerException;
+import com.sun.jersey.api.client.UniformInterfaceException;
+import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.RestClientProxy;
+import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -125,7 +129,8 @@ public class DashboardCountsComparator extends AbstractComparator
 			logger.warn("Get a null or empty link for one single instance!");
 			return null;
 		}
-		String response = new TenantSubscriptionUtil.RestClient().get(lk.getHref(), null);
+
+		String response = RestClientProxy.getRestClient().get(lk.getHref(), null, null);
 		logger.info("Checking dashboard OMC instance counts. Response is " + response);
 		JsonUtil ju = JsonUtil.buildNormalMapper();
 		CountsEntity ze = ju.fromJson(response, CountsEntity.class);

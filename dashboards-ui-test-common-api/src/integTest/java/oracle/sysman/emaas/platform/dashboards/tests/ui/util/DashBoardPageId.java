@@ -77,6 +77,7 @@ public class DashBoardPageId
 	public static final String FILTERITALOCATOR = "//*[@id='itaopt']";
 	public static final String FILTERLALOCATOR = "//*[@id='laopt']";
 	public static final String FILTERORCHESTRATIONLOCATOR = "//*[@id='ocsopt']";
+	public static final String FILTERSECURITYLOCATOR = "//*[@id='secopt']";
 	public static final String FILTERORACLELOCATOR = "//*[@id='oracleopt']";
 	public static final String FILTERSHARELOCATOR = "//*[@id='shareopt']";
 	public static final String FILTERMELOCATOR = "//*[@id='otheropt']";
@@ -477,6 +478,11 @@ public class DashBoardPageId
         public static final String EntSelPillToRemoveByIndex = "(//div[@id=''emaas-appheader-globalcxt'']//a[contains(@id,''_remove'')])[{0}]";
         public static final String EntSelPillLinkToReplaceByIndex = "//div[@id=\"emaas-appheader-globalcxt\"]//pill[{0}]//a[@class=\"pillLink\"]";
         public static final String EntSelEditedPillByText = "//div[@id=\"emaas-appheader-globalcxt\"]//pill//a[@class=\"pillLink\"]//span[contains(text(),\"{0}\")]";
+        public static final String ENTSEL_CLEARALL_BUTTONID = "emcta-ctxtSel_clearAll";
+        public static final String ENTSEL_COMPOSITE_PILL_BYTEXT = "//div[@id=\"emaas-appheader-globalcxt\"]//pill//span[text()=\"Composite: {0}\"]";
+        public static final String ENTSEL_ENTITY_PILL_BYTEXT = "//div[@id=\"emaas-appheader-globalcxt\"]//pill//span[text()=\"{0}\"]";
+        public static final String ENTSEL_PILL_BYCONTAINSTEXT = "//div[@id=\"emaas-appheader-globalcxt\"]//pill//span[contains(text(),\"{0}\")]";
+        public static final String ENTSEL_PILL_CONTAINSTEXT_BYINDEX = "(//div[@id=\"emaas-appheader-globalcxt\"]//pill)[{0}]//span[contains(text(),\"{1}\")]";
 
 	private DashBoardPageId()
 	{
