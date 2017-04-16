@@ -66,6 +66,7 @@ public class SSFDataUtil {
         String savedSearchResponse = null;
         try {
 			rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME, tenantName);
+			rc.setHeader("Content-Type", "application/json");
         	savedSearchResponse = rc.put(tenantHref, data, tenantName, 
         	        ((VersionedLink) tenantsLink).getAuthToken());
         }catch (Exception e) {

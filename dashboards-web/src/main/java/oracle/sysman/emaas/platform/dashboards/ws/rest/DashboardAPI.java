@@ -1299,7 +1299,8 @@ public class DashboardAPI extends APIBase
 	@Path("/import")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response importDashboards(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
-			@HeaderParam(value = "X-REMOTE-USER") String userTenant,@QueryParam("override") boolean override,
+			@HeaderParam(value = "X-REMOTE-USER") String userTenant,@HeaderParam(value = "Referer") String referer,
+			@QueryParam("override") boolean override,
 			JSONArray jsonArray){
 		
 		infoInteractionLogAPIIncomingCall(tenantIdParam, null, "Service call to [PUT] /v1/dashboards/import");
@@ -1310,6 +1311,10 @@ public class DashboardAPI extends APIBase
 			}
 			int length = jsonArray.length();
 			JSONArray outputJson = new JSONArray();
+			logkeyHeaders("importDashboard()", userTenant, tenantIdParam);
+			Long tenantId = getTenantId(tenantIdParam);
+			initializeUserContext(tenantIdParam, userTenant);
+			
 			if (length > 0) {
 				for (int i = 0; i < length; i ++) {
 					JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -1335,7 +1340,7 @@ public class DashboardAPI extends APIBase
 						 for (int j = 0; j < dbdArray.length(); j++) {
 							// in dbd array, dbd is saved in order; Dashboard set will be saved at last
 						    JSONObject dbdObj = dbdArray.getJSONObject(j);
-						    logkeyHeaders("importDashboard()", userTenant, tenantIdParam);
+						    
 						    Dashboard d = getJsonUtil().fromJson(dbdObj.toString(), Dashboard.class);
 						    if (d.getType().equals(Dashboard.DASHBOARD_TYPE_SET)) {
 						    	if (d.getSubDashboards() != null) {
@@ -1360,8 +1365,6 @@ public class DashboardAPI extends APIBase
 						    BigInteger originalId = d.getDashboardId();
 						    String originalName = d.getName();
 							DashboardManager manager = DashboardManager.getInstance();
-							Long tenantId = getTenantId(tenantIdParam);
-							initializeUserContext(tenantIdParam, userTenant);
 							if (d.getTileList() != null) {
 			    				for (Tile tile : d.getTileList()) {
 			    					String widgetId = tile.getWidgetUniqueId();
