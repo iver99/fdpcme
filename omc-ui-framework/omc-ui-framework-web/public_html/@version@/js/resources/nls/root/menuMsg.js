@@ -20,7 +20,7 @@ define({
       //For sample Log Analytics service menus registered dynamically at runtime
       "SAMPLE_LA_LOG_EXPLORER": "Log Explorer",
       "SAMPLE_LA_ALERTS": "Alerts",
-      "SAMPLE_LA_CONFIG_HOME": "Configuratioin Home",
+      "SAMPLE_LA_CONFIG_HOME": "Configuration Home",
       "SAMPLE_LA_LOG_ADMIN": "Log Admin",
       "SAMPLE_LA_ALERT_RULES": "Alert Rules",
       "SAMPLE_LA_LOG_SOURCES": "Log Sources",
