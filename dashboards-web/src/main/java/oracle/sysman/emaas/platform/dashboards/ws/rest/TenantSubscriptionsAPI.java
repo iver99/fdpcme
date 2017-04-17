@@ -28,8 +28,6 @@ import oracle.sysman.emaas.platform.dashboards.core.model.subscription2.AppsInfo
 import oracle.sysman.emaas.platform.dashboards.core.model.subscription2.TenantSubscriptionInfo;
 import oracle.sysman.emaas.platform.dashboards.core.util.*;
 import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
-import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
-import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil.VersionedLink;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
