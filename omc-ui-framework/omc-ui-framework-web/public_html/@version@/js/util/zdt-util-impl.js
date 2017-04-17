@@ -53,13 +53,13 @@ define(['knockout',
              * @param {Function} callback
              * @returns 
              */ 
-            self.detectPlannedDowntime = function(callback) {
+            self.detectPlannedDowntime = function(callback, doNotUseCache) {
                 if (typeof(callback) !== 'function') {
                     oj.Logger.error("Error: Failed to detect OMC's planned downtime. callback should be defined as a function.");
                     return;
                 }
                 
-                if (window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.isPlannedDowntime && 
+                if (!doNotUseCache && window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.isPlannedDowntime && 
                         ($.isFunction(window._uifwk.cachedData.isPlannedDowntime) && window._uifwk.cachedData.isPlannedDowntime()!== undefined)) {
                     callback(window._uifwk.cachedData.isPlannedDowntime());
                 }else{

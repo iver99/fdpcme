@@ -1144,6 +1144,25 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     if (data.category === catPlannedDowntime) {
                         currentPlannedDowntimeMsgId = null;
                     }
+                }else if(data && data.category){
+                    var originDispMsgCnt = displayMessages.length;
+                    hiddenMessages = removeItemByPropertyValue(hiddenMessages, 'category', data.category);
+                    displayMessages = removeItemByPropertyValue(displayMessages, 'category', data.category);
+                    if (originDispMsgCnt > displayMessages.length) {
+                        displayMessageCount--;
+                        if (hiddenMessages.length > 0) {
+                            var newMsg = hiddenMessages[0];
+                            displayMessages.push(newMsg);
+                            hiddenMessages = removeItemByPropertyValue(hiddenMessages, 'category', newMsg.category);
+                            displayMessageCount++;
+                        }
+                    }
+                    if (data.category === catRetryFail) {
+                        currentRetryFailMsgId = null;
+                    }
+                    if (data.category === catPlannedDowntime) {
+                        currentPlannedDowntimeMsgId = null;
+                    }
                 }
 
                 self.messageList(displayMessages);
