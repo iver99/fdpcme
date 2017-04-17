@@ -1033,7 +1033,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     if ($(event.target).is("#omcMenuNavList")) {
                         if(!self.hrefMap)self.hrefMap = [];
                         var href = $("a#"+ui.key)[0].href;
-                        if (href !== '#' && href !== window.location+'#') {
+                        if (href !== '#' && href !== window.location && href !== window.location+'#') {
                             self.hrefMap[ui.key] = href;
                         }
                         $("a#"+ui.key)[0].href = "#";
