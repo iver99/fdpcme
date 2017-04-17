@@ -21,9 +21,9 @@ import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
 import oracle.sysman.emaas.platform.uifwk.ui.webutils.util.LogUtil.InteractionLogDirection;
-import oracle.sysman.emaas.platform.uifwk.ui.webutils.util.RegistryLookupUtil.VersionedLink;
 import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
 
+import oracle.sysman.emaas.platform.uifwk.util.RegistryLookupUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -78,7 +78,7 @@ public class DataFetcher
 			if (!StringUtil.isEmpty(sessionExp)) {
 				rc.setHeader("SESSION_EXP", sessionExp);
 			}
-			String response = rc.get(registrationHref, tenantIdParam, ((VersionedLink) configurationsLink).getAuthToken());
+			String response = rc.get(registrationHref, tenantIdParam, ((RegistryLookupUtil.VersionedLink) configurationsLink).getAuthToken());
 			if(response!=null){
 				cache.put(userTenantKey, response);
 			}

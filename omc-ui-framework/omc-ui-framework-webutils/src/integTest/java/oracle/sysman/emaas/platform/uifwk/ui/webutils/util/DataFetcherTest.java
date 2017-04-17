@@ -12,12 +12,12 @@ package oracle.sysman.emaas.platform.uifwk.ui.webutils.util;
 
 import mockit.Expectations;
 import mockit.Mocked;
-import oracle.sysman.emaas.platform.uifwk.ui.webutils.util.RegistryLookupUtil.VersionedLink;
 
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICache;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.exception.ExecutionException;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
+import oracle.sysman.emaas.platform.uifwk.util.RegistryLookupUtil;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -59,7 +59,7 @@ public class DataFetcherTest
 		new Expectations() {
 			{
 				RegistryLookupUtil.getServiceInternalLink("Dashboard-API", "1.0+", "static/dashboards.configurations", null);
-				result = new VersionedLink();
+				result = new RegistryLookupUtil.VersionedLink();
 				builder.get(String.class);
 				result = "{registrationData}";
 			}
@@ -67,7 +67,7 @@ public class DataFetcherTest
 		registration = DataFetcher.getRegistrationData("tenant", "tenant.user", "referer", "12345678");
 		Assert.assertNull(registration);
 
-		final VersionedLink lk = new VersionedLink();
+		final RegistryLookupUtil.VersionedLink lk = new RegistryLookupUtil.VersionedLink();
 		lk.withHref("http://hostname:7019/emcpdf/api/v1/configurations/registration");
 		new Expectations() {
 			{

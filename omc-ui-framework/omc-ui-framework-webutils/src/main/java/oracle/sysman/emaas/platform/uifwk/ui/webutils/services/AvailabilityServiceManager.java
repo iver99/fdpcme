@@ -16,12 +16,12 @@ import javax.management.InstanceNotFoundException;
 import javax.management.Notification;
 import javax.management.NotificationListener;
 
+import oracle.sysman.emaas.platform.uifwk.util.RegistryLookupUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emaas.platform.uifwk.ui.target.services.GlobalStatus;
-import oracle.sysman.emaas.platform.uifwk.ui.webutils.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.uifwk.ui.webutils.util.StringUtil;
 import oracle.sysman.emaas.platform.uifwk.ui.webutils.wls.lifecycle.ApplicationServiceManager;
 import weblogic.application.ApplicationLifecycleEvent;

@@ -18,6 +18,7 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceQ
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 
+import oracle.sysman.emaas.platform.emcpdf.cache.util.StringUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -39,7 +40,7 @@ public class RegistryLookupUtil
 		LOGGER.debug(
 				"/getServiceInternalLink/ Trying to retrieve service internal link for service: \"{}\", version: \"{}\", rel: \"{}\", prefixMatch: \"{}\", tenant: \"{}\"",
 				serviceName, version, rel, prefixMatch, tenantName);
-		InstanceInfo info = InstanceInfo.Builder.newBuilder().withServiceName(serviceName).withVersion(version).build();
+		InstanceInfo info = getInstanceInfo(serviceName, version);
 		VersionedLink lk = null;
 		try {
 			List<InstanceInfo> result = null;
@@ -90,6 +91,14 @@ public class RegistryLookupUtil
         char[] authToken = LookupManager.getInstance().getAuthorizationAccessToken(instanceInfo);
         return new String(authToken);
     }
+
+	private static InstanceInfo getInstanceInfo(String serviceName, String version) {
+		InstanceInfo.Builder builder = InstanceInfo.Builder.newBuilder().withServiceName(serviceName);
+		if (!StringUtil.isEmpty(version)) {
+			builder = builder.withVersion(version);
+		}
+		return builder.build();
+	}
 	
     public static class VersionedLink extends Link {
         private String authToken;

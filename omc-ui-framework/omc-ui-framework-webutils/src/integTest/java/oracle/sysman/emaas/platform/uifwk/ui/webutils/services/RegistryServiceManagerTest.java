@@ -10,6 +10,7 @@
 
 package oracle.sysman.emaas.platform.uifwk.ui.webutils.services;
 
+import oracle.sysman.emaas.platform.uifwk.util.RegistryLookupUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import java.util.List;
@@ -30,7 +31,6 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceI
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.NonServiceResource;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationClient;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
-import oracle.sysman.emaas.platform.uifwk.ui.webutils.util.RegistryLookupUtil;
 
 /**
  * @author aduan
@@ -79,9 +79,9 @@ public class RegistryServiceManagerTest
 
 	@Test(groups = { "s2" })
 	public void testStartStop(@Mocked final RegistrationManager anyRm, @Mocked final RegistrationClient anyClient,
-			@Mocked final InitialContext anyContext, @Mocked final MBeanServer anyMb, @Mocked final PropertyReader anyReader,
-			@Mocked final RegistryLookupUtil anyLookupUtil, @Mocked final InfoManager anyIm,
-			@Mocked final InstanceInfo anyInstInfo)
+							  @Mocked final InitialContext anyContext, @Mocked final MBeanServer anyMb, @Mocked final PropertyReader anyReader,
+							  @Mocked final RegistryLookupUtil anyLookupUtil, @Mocked final InfoManager anyIm,
+							  @Mocked final InstanceInfo anyInstInfo)
 	{
 		try {
 			final Properties serviceProps = new Properties();
