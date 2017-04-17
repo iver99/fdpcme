@@ -11,8 +11,8 @@
 package oracle.sysman.emaas.platform.dashboards.core.cache;
 
 import java.io.Serializable;
+import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil.VersionedLink;
 
-import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil.VersionedLink;
 
 /**
  * @author guochen

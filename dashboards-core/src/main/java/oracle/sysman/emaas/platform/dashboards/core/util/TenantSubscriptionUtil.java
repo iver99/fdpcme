@@ -35,7 +35,6 @@ import oracle.sysman.emaas.platform.dashboards.core.restclient.AppMappingCollect
 import oracle.sysman.emaas.platform.dashboards.core.restclient.AppMappingEntity;
 import oracle.sysman.emaas.platform.dashboards.core.restclient.DomainEntity;
 import oracle.sysman.emaas.platform.dashboards.core.restclient.DomainsEntity;
-import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil.VersionedLink;
 import oracle.sysman.emaas.platform.dashboards.core.util.lookup.RetryableLookupClient;
 import oracle.sysman.emaas.platform.dashboards.core.util.lookup.RetryableLookupClient.RetryableLookupException;
 import oracle.sysman.emaas.platform.dashboards.core.util.lookup.RetryableLookupClient.RetryableRunner;
@@ -47,6 +46,7 @@ import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
 import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
 
+import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -128,7 +128,7 @@ public class TenantSubscriptionUtil
 
 
         List<String> apps = new RetryableLookupClient<List<String>>().connectAndDoWithRetry("TenantService", "1.0+", "collection/tenants", false, null, new RetryableRunner<List<String>>() {
-            public List<String> runWithLink(VersionedLink lookupLink) throws Exception {
+            public List<String> runWithLink(RegistryLookupUtil.VersionedLink lookupLink) throws Exception {
                 if (lookupLink == null || lookupLink.getHref() == null || "".equals(lookupLink.getHref())) {
                     LOGGER.warn(
                             "Failed to get entity naming service, or its rel (collection/lookups) link is empty. Exists the retrieval of subscribed service for tenant {}",
