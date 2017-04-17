@@ -1,16 +1,20 @@
-package oracle.sysman.emaas.platform.dashboards.core.util;
+/*
+ * Copyright (C) 2017 Oracle
+ * All rights reserved.
+ *
+ * $$File: $$
+ * $$DateTime: $$
+ * $$Author: $$
+ * $$Revision: $$
+ */
+
+package oracle.sysman.emaas.platform.emcpdf.registry;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import mockit.Deencapsulation;
-import mockit.Delegate;
-import mockit.Expectations;
-import mockit.Injectable;
-import mockit.Mock;
-import mockit.MockUp;
-import mockit.Mocked;
+import mockit.*;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo.Builder;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceQuery;
@@ -20,13 +24,18 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupC
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil.VersionedLink;
+
 import oracle.sysman.emaas.platform.emcpdf.registry.model.EndpointEntity;
 import org.apache.logging.log4j.Logger;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+/**
+ * @author aduan
+ */
 public class RegistryLookupUtilTest
 {
+
 	private static final String END_POINT_HTTP = "http://sample.endpoint.com";
 	private static final String END_POINT_HTTPS = "https://sample.endpoint.com";
 
@@ -78,8 +87,8 @@ public class RegistryLookupUtilTest
 
 	@Test(groups = { "s2" })
 	public void testGetServiceExternalEndPointExceptionOccurredS2(@Mocked final Builder anyBuilder,
-			@Mocked final InstanceInfo anyInstanceInfo, @Mocked final LookupManager anyLockupManager,
-			@Mocked final LookupClient anyClient, @Injectable final Logger anyLogger) throws Exception
+																  @Mocked final InstanceInfo anyInstanceInfo, @Mocked final LookupManager anyLockupManager,
+																  @Mocked final LookupClient anyClient, @Injectable final Logger anyLogger) throws Exception
 	{
 		Logger logger = (Logger) Deencapsulation.getField(RegistryLookupUtil.class, "LOGGER");
 		Deencapsulation.setField(RegistryLookupUtil.class, "LOGGER", anyLogger);
@@ -104,7 +113,7 @@ public class RegistryLookupUtilTest
 
 	@Test(groups = { "s2" })
 	public void testGetServiceExternalEndPointS2(@Mocked final Builder anyBuilder, @Mocked final InstanceInfo anyInstanceInfo,
-			@Mocked final LookupManager anyLockupManager, @Mocked final LookupClient anyClient) throws Exception
+												 @Mocked final LookupManager anyLockupManager, @Mocked final LookupClient anyClient) throws Exception
 	{
 		new Expectations() {
 			{
@@ -173,8 +182,8 @@ public class RegistryLookupUtilTest
 
 	@Test(groups = { "s2" })
 	public void testGetServiceExternalLinkNoTenantS2(@Mocked final Builder anyBuilder,
-			@Mocked final InstanceInfo anyInstanceInfo, @Mocked final InstanceQuery anyInstanceQuery,
-			@Mocked final LookupManager anyLockupManager, @Mocked final SanitizedInstanceInfo anySanitizedInfo) throws Exception
+													 @Mocked final InstanceInfo anyInstanceInfo, @Mocked final InstanceQuery anyInstanceQuery,
+													 @Mocked final LookupManager anyLockupManager, @Mocked final SanitizedInstanceInfo anySanitizedInfo) throws Exception
 	{
 		String testHref = "https://den00yse.us.oracle.com:7005/emsaasui/emlacore/html/log-analytics-search.html";
 		String testRel = "search";
@@ -214,7 +223,7 @@ public class RegistryLookupUtilTest
 
 	@Test(groups = { "s2" })
 	public void testGetServiceExternalLinkS2(@Mocked final Builder anyBuilder, @Mocked final InstanceInfo anyInstanceInfo,
-			@Mocked final LookupManager anyLockupManager, @Mocked final SanitizedInstanceInfo anySanitizedInfo) throws Exception
+											 @Mocked final LookupManager anyLockupManager, @Mocked final SanitizedInstanceInfo anySanitizedInfo) throws Exception
 	{
 		String testHref = "https://test1.link.com";
 		final List<Link> links = new ArrayList<Link>();
@@ -249,8 +258,8 @@ public class RegistryLookupUtilTest
 
 	@Test(groups = { "s2" })
 	public void testGetServiceExternalLinkWithRelPrefixS2(@Mocked final Builder anyBuilder,
-			@Mocked final InstanceInfo anyInstanceInfo, @Mocked final LookupManager anyLockupManager,
-			@Mocked final SanitizedInstanceInfo anySanitizedInfo) throws Exception
+														  @Mocked final InstanceInfo anyInstanceInfo, @Mocked final LookupManager anyLockupManager,
+														  @Mocked final SanitizedInstanceInfo anySanitizedInfo) throws Exception
 	{
 		String testHref = "http://den00yse.us.oracle.com:7004/emsaasui/emlacore/resources/";
 		String testRel = "loganService";
@@ -288,8 +297,8 @@ public class RegistryLookupUtilTest
 
 	@Test(groups = { "s2" })
 	public void testGetServiceInternalLink(@Mocked final Builder anyBuilder, @Mocked final InstanceInfo anyInstanceInfo,
-			@Mocked final LookupManager anyLockupManager, @Mocked final LookupClient anyClient,
-			@Mocked final InstanceQuery anyInstanceQuery) throws Exception
+										   @Mocked final LookupManager anyLockupManager, @Mocked final LookupClient anyClient,
+										   @Mocked final InstanceQuery anyInstanceQuery) throws Exception
 	{
 		final String serviceName = "ApmUI";
 		final String version = "0.1";
@@ -334,8 +343,8 @@ public class RegistryLookupUtilTest
 
 	@Test(groups = { "s2" })
 	public void testReplaceWithVanityUrlForEndpointEntityS2(@Mocked final Builder anyBuilder,
-			@Mocked final InstanceInfo anyInstanceInfo, @Mocked final LookupManager anyLockupManager,
-			@Mocked final LookupClient anyClient, @Mocked final InstanceQuery anyInstanceQuery) throws Exception
+															@Mocked final InstanceInfo anyInstanceInfo, @Mocked final LookupManager anyLockupManager,
+															@Mocked final LookupClient anyClient, @Mocked final InstanceQuery anyInstanceQuery) throws Exception
 	{
 		testReplaceWithVanityUrlExpectations(anyBuilder, anyInstanceInfo, anyLockupManager, anyClient, anyInstanceQuery);
 
@@ -347,8 +356,8 @@ public class RegistryLookupUtilTest
 
 	@Test(groups = { "s2" })
 	public void testReplaceWithVanityUrlForLinkS2(@Mocked final Builder anyBuilder, @Mocked final InstanceInfo anyInstanceInfo,
-			@Mocked final LookupManager anyLockupManager, @Mocked final LookupClient anyClient,
-			@Mocked final InstanceQuery anyInstanceQuery) throws Exception
+												  @Mocked final LookupManager anyLockupManager, @Mocked final LookupClient anyClient,
+												  @Mocked final InstanceQuery anyInstanceQuery) throws Exception
 	{
 		testReplaceWithVanityUrlExpectations(anyBuilder, anyInstanceInfo, anyLockupManager, anyClient, anyInstanceQuery);
 
@@ -363,8 +372,8 @@ public class RegistryLookupUtilTest
 
 	@Test(groups = { "s2" })
 	public void testReplaceWithVanityUrlForStringS2(@Mocked final Builder anyBuilder, @Mocked final InstanceInfo anyInstanceInfo,
-			@Mocked final LookupManager anyLockupManager, @Mocked final LookupClient anyClient,
-			@Mocked final InstanceQuery anyInstanceQuery) throws Exception
+													@Mocked final LookupManager anyLockupManager, @Mocked final LookupClient anyClient,
+													@Mocked final InstanceQuery anyInstanceQuery) throws Exception
 	{
 		testReplaceWithVanityUrlExpectations(anyBuilder, anyInstanceInfo, anyLockupManager, anyClient, anyInstanceQuery);
 
@@ -394,8 +403,8 @@ public class RegistryLookupUtilTest
 	}
 
 	private void testReplaceWithVanityUrlExpectations(final Builder anyBuilder, final InstanceInfo anyInstanceInfo,
-			final LookupManager anyLockupManager, final LookupClient anyClient, final InstanceQuery anyInstanceQuery)
-					throws Exception
+													  final LookupManager anyLockupManager, final LookupClient anyClient, final InstanceQuery anyInstanceQuery)
+			throws Exception
 	{
 		new Expectations() {
 			{

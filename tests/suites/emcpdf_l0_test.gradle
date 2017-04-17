@@ -178,7 +178,7 @@ task DEVTest(type:EMTest,dependsOn: DEVTest_ws){
 	include "oracle/sysman/emaas/platform/uifwk/nls/filter/NLSFilterTest.class"
         include "oracle/sysman/emaas/platform/uifwk/bootstrap/HtmlBootstrapJsUtilTest.class"
         include "oracle/sysman/emaas/platform/uifwk/util/DataAccessUtilTest.class"
-        include "oracle/sysman/emaas/platform/uifwk/util/RegistryLookupUtilTest.class"
+//        include "oracle/sysman/emaas/platform/uifwk/util/RegistryLookupUtilTest.class"
 	
 	useRestAssured=true
 	ext.set("testType", "unit")
@@ -221,7 +221,7 @@ task DEVUiFWKTest(type:EMTest,dependsOn: DEVUIWebUtilTest){
 //	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/util/DataFetcherTest.class"
 	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/util/LogUtilTest.class"
 	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/util/StringUtilTest.class"
-	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/util/RegistryLookupUtilTest.class"
+//	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/util/RegistryLookupUtilTest.class"
 	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/util/StringCacheUtilTest.class"
 
 	//***************below are omc-ui-framework-web project test cases***************//
