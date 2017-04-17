@@ -22,6 +22,12 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.SanitizedInstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 
+import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
+import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.DefaultKeyGenerator;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
+import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.StringUtil;
 import oracle.sysman.emaas.platform.emcpdf.registry.model.EndpointEntity;
 import org.apache.logging.log4j.LogManager;
@@ -432,10 +438,26 @@ public class RegistryLookupUtil
 
 	public static Map<String, String> getVanityBaseURLs(String tenantName)
 	{
+        ICacheManager cm = CacheManagers.getInstance().build();
+        LOGGER.debug("/getVanityBaseURLs/ trying to get base vanity URLs for tenant: \"{}\"", tenantName);
+        Tenant cacheTenant = new Tenant(tenantName);
+        Object cacheKey = DefaultKeyGenerator.getInstance().generate(cacheTenant, new Keys(CacheConstants.LOOKUP_CACHE_KEY_VANITY_BASE_URL));
+        Map<String, String> map = null;
+        try {
+            map = (Map<String, String>) cm.getCache(CacheConstants.CACHES_VANITY_BASE_URL_CACHE).get(cacheKey);
+            if (map != null) {
+                LOGGER.debug("Retrieved vanity base url from cache for tenant {}",tenantName);
+                return map;
+            }
+        }
+        catch (Exception e) {
+            LOGGER.error(e);
+        }
+
 		LOGGER.debug("/getVanityBaseURLs/ Trying to retrieve service internal link for tenant: \"{}\"", tenantName);
 		InstanceInfo info = getInstanceInfo("OHS", null);
 		Link lk = null;
-		Map<String, String> map = new HashMap<String, String>();
+		map = new HashMap<String, String>();
 		try {
 			List<InstanceInfo> result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
 			if (result != null && !result.isEmpty()) {
@@ -551,6 +573,7 @@ public class RegistryLookupUtil
 				LOGGER.debug("service name is {}, and url is {}", service, url);
 			}
 		}
+        cm.getCache(CacheConstants.CACHES_VANITY_BASE_URL_CACHE).put(cacheKey, map);
 		return map;
 	}
 
