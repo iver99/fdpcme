@@ -257,7 +257,8 @@ public class RegistryLookupUtil
 					LOGGER.error(
 							"Error: retrieved null instance info with getInstanceForTenant. Details: serviceName={}, version={}, tenantName={}",
 							serviceName, version, tenantName);
-					result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));//FIXME?????
+					//TODO not sure if this is necessary, some RegistryLookupUtil have this line of code, some not.
+					result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
 				}
 				else {
 					result = new ArrayList<InstanceInfo>();
