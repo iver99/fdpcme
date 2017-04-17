@@ -1031,9 +1031,12 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     // verify that the component firing the event is a component of interest ,
                     //  verify whether the event is fired by js
                     if ($(event.target).is("#omcMenuNavList")) {
-                            if(!self.hrefMap)self.hrefMap = [];
-                            self.hrefMap[ui.key] = $("a#"+ui.key)[0].href;
-                            $("a#"+ui.key)[0].href = "#";
+                        if(!self.hrefMap)self.hrefMap = [];
+                        var href = $("a#"+ui.key)[0].href;
+                        if (href !== '#' && href !== window.location+'#') {
+                            self.hrefMap[ui.key] = href;
+                        }
+                        $("a#"+ui.key)[0].href = "#";
                     }
 //                    if(ui.key.indexOf("omc_root") > -1 && ui.key.indexOf("omc_root_admin")<0){
 //                        event.preventDefault();
