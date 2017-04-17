@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import oracle.sysman.emaas.platform.uifwk.util.RegistryLookupUtil;
+import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

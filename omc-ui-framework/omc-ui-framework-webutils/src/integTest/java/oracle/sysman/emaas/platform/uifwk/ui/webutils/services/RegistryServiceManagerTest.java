@@ -10,7 +10,7 @@
 
 package oracle.sysman.emaas.platform.uifwk.ui.webutils.services;
 
-import oracle.sysman.emaas.platform.uifwk.util.RegistryLookupUtil;
+import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import java.util.List;

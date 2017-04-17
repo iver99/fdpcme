@@ -16,7 +16,7 @@ import javax.management.InstanceNotFoundException;
 import javax.management.Notification;
 import javax.management.NotificationListener;
 
-import oracle.sysman.emaas.platform.uifwk.util.RegistryLookupUtil;
+import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

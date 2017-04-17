@@ -26,8 +26,8 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupC
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emaas.platform.uifwk.ui.target.services.GlobalStatus;
 
-import oracle.sysman.emaas.platform.uifwk.util.RegistryLookupUtil;
-import oracle.sysman.emaas.platform.uifwk.util.RegistryLookupUtil.VersionedLink;
+import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
+import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil.VersionedLink;
 import org.testng.Assert;
 import org.testng.AssertJUnit;
 import org.testng.annotations.Test;

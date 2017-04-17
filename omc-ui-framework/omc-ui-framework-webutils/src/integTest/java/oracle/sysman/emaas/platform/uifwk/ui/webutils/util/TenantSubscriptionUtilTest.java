@@ -8,8 +8,8 @@ import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.exception.ExecutionException;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
 
-import oracle.sysman.emaas.platform.uifwk.util.RegistryLookupUtil;
-import oracle.sysman.emaas.platform.uifwk.util.RegistryLookupUtil.VersionedLink;
+import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
+import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil.VersionedLink;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

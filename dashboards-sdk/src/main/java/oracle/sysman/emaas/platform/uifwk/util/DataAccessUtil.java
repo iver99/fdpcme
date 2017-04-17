@@ -13,7 +13,8 @@ package oracle.sysman.emaas.platform.uifwk.util;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.StringUtil;
 import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
-import oracle.sysman.emaas.platform.uifwk.util.RegistryLookupUtil.VersionedLink;
+import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
+import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil.VersionedLink;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
