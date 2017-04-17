@@ -148,6 +148,7 @@ task QATest1(type:EMTest,dependsOn:omcSetup){
 	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/BrandingBar_TestAnalyzerPage.class"
 	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/BrandingBar_TestDashboardPage.class"
 	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/BrandingBar_TestOtherPage.class"
+	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/HamburgerMenu_BasicTest.class"
 	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/HamburgerMenu_CompositeMenu.class"
 	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/HamburgerMenu_RegisterServiceMenu.class"
 	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/HamburgerMenu_ShowCurrentMenu.class"

@@ -898,8 +898,11 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     }
                     
                     if (item && /*((item.id.indexOf("omc_root")>-1 && item.id.indexOf("omc_root_admin")<0) ||!item.children) &&*/ !item.disabled) {
-                        if(item.externalUrl && item.externalUrl !== '#'){
+                        if(item.externalUrl && item.externalUrl !== '#' && item.children && item.children.length > 0){
                             self.preventExpandForAPMLabel = true;
+                        }
+                        else {
+                            self.preventExpandForAPMLabel = false;
                         }
                         //Auto close hamburger menu when it's not in pinned status
                         if($("#omcHamburgerMenu").hasClass("oj-offcanvas-overlay")) {

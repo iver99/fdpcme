@@ -635,7 +635,7 @@
             </div>
 
             <div class="df-right-panel no-print" data-bind="stopDataBinding:isDashboardSet ? isOobDashboardset() : ($b.dashboard.systemDashboard&&$b.dashboard.systemDashboard()),style:{top:isDashboardSet() ?'100px':'91px'},visible:!rightPanelControl.completelyHidden()">
-                <div class="right-panel-toggler no-print fit-size" data-bind="
+                <div class="right-panel-toggler no-print fit-size" style="max-width: 30px;" data-bind="
                         visible:rightPanelControl.showRightPanelToggler,
                         style: {
                                  right: rightPanelControl.showRightPanel() ?

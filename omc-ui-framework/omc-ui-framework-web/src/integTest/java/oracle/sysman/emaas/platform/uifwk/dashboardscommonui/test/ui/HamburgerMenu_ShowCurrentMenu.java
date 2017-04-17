@@ -52,12 +52,17 @@ public class HamburgerMenu_ShowCurrentMenu extends LoginAndLogout
 		Assert.assertTrue(BrandingBarUtil.isMenuItemExisted(webd, "Alert Rules"));
 		Assert.assertTrue(BrandingBarUtil.isMenuItemExisted(webd, "Agents"));
 		Assert.assertTrue(BrandingBarUtil.isMenuItemExisted(webd, "Entities Configuration"));
-		Assert.assertTrue(BrandingBarUtil.isMenuItemExisted(webd, "APM Admin"));
 
-		Assert.assertTrue(BrandingBarUtil.isMenuItemExisted(webd, "Infrastructure Monitoring Admin"));
+		Assert.assertTrue(BrandingBarUtil.isMenuItemExisted(webd, "APM Admin"));
+		Assert.assertTrue(BrandingBarUtil.isMenuItemExisted(webd, "Monitoring Admin"));
 		Assert.assertTrue(BrandingBarUtil.isMenuItemExisted(webd, "Log Admin"));
 		Assert.assertTrue(BrandingBarUtil.isMenuItemExisted(webd, "Security Admin"));
 		Assert.assertTrue(BrandingBarUtil.isMenuItemExisted(webd, "Compliance Admin"));
+
+		webd.getLogger().info("Check the menu enabled");
+		Assert.assertTrue(BrandingBarUtil.isMenuItemEnabled(webd, "Alert Rules"));
+		Assert.assertTrue(BrandingBarUtil.isMenuItemEnabled(webd, "Agents"));
+		Assert.assertTrue(BrandingBarUtil.isMenuItemEnabled(webd, "Entities Configuration"));
 		//check the current header
 		webd.getLogger().info("Check the Menu Header");
 		Assert.assertEquals(BrandingBarUtil.getCurrentMenuHeader(webd), "Administration");

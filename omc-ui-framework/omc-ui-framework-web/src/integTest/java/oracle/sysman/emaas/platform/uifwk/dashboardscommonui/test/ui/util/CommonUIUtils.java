@@ -2,6 +2,7 @@ package oracle.sysman.emaas.platform.uifwk.dashboardscommonui.test.ui.util;
 
 import java.util.Arrays;
 
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_1180;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
@@ -284,6 +285,11 @@ public class CommonUIUtils
 
 	public static void verifyPageContent(WebDriver driver, String sAppName)
 	{
+		verifyPageContent(driver, sAppName, false);
+	}
+
+	public static void verifyPageContent(WebDriver driver, String sAppName, boolean hamburgerEnabled)
+	{
 		//wait for the mockup page loaded
 		driver.getLogger().info("Wait for the mockup page loaded...");
 		WaitUtil.waitForPageFullyLoaded(driver);
@@ -311,7 +317,41 @@ public class CommonUIUtils
 		driver.getLogger().info("The page content is:  " + driver.getText(UIControls.SPAGETEXT));
 		Assert.assertEquals(driver.getText(UIControls.SPAGETEXT), pageTitle);
 		//Buttons
-		Assert.assertTrue(driver.isElementPresent(UIControls.SCOMPASSICON));
+		if (hamburgerEnabled) {
+			Assert.assertTrue(driver.isElementPresent("css=" + DashBoardPageId_1180.HAMBURGERMENU_ICON_CSS));
+		}
+		else {
+			Assert.assertTrue(driver.isElementPresent(UIControls.SCOMPASSICON));
+		}
 		Assert.assertTrue(driver.isElementPresent(UIControls.SADDWIDGETICON));
+	}
+
+	public static void verifyURL(WebDriver webdriver, String url)
+	{
+		String currurl = webdriver.getWebDriver().getCurrentUrl();
+		webdriver.getLogger().info("the origin url = " + currurl);
+		String tmpurl = trimUrlParameters(currurl.substring(currurl.indexOf("emsaasui") + 9));
+		webdriver.getLogger().info("the url without para = " + tmpurl);
+		Assert.assertEquals(tmpurl, url);
+	}
+
+	public static void verifyURL_WithPara(WebDriver webdriver, String url)
+	{
+		webdriver.getLogger().info("the expected relative url = " + url);
+		String currurl = webdriver.getWebDriver().getCurrentUrl();
+		webdriver.getLogger().info("the current url = " + currurl);
+		String tmpurl = currurl.substring(currurl.indexOf("emsaasui") + 9);
+		webdriver.getLogger().info("the relative url to compare = " + tmpurl);
+		Assert.assertTrue(tmpurl.contains(url), tmpurl + " does NOT contain " + url);
+	}
+
+	private static String trimUrlParameters(String url)
+	{
+		String baseUrl = null;
+		if (url != null) {
+			String[] urlComponents = url.split("\\#|\\?");
+			baseUrl = urlComponents[0];
+		}
+		return baseUrl;
 	}
 }
