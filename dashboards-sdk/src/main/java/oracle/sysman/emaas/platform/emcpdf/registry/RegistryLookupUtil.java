@@ -251,6 +251,7 @@ public class RegistryLookupUtil
 					LOGGER.error(
 							"Error: retrieved null instance info with getInstanceForTenant. Details: serviceName={}, version={}, tenantName={}",
 							serviceName, version, tenantName);
+					result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));//FIXME?????
 				}
 				else {
 					result = new ArrayList<InstanceInfo>();
@@ -272,6 +273,12 @@ public class RegistryLookupUtil
 					else {
 						links = internalInstance.getLinksWithProtocol(rel, "https");
 					}
+					if (version == null) {
+						version = internalInstance.getVersion();
+						LOGGER.debug(
+								"Input version is null. Retrieved version from internalInstance for service: \"{}\" is \"{}\", rel: \"{}\", tenant: \"{}\"",
+								serviceName, version, rel, tenantName);
+					}
 
 					SanitizedInstanceInfo sanitizedInstance = RegistryLookupUtil.findSaniInsInfo(tenantName, internalInstance);
 					if (sanitizedInstance != null) {
@@ -282,6 +289,12 @@ public class RegistryLookupUtil
 						else {
 							links = RegistryLookupUtil.getLinksWithProtocol("https", sanitizedInstance.getLinks(rel));
 						}
+						if (version == null) {
+							version = sanitizedInstance.getVersion();
+							LOGGER.debug(
+									"Input version is null. Retrieved version from sanitizedInstance for service: \"{}\" is \"{}\", rel: \"{}\", tenant: \"{}\"",
+									serviceName, version, rel, tenantName);
+						}
 					}
 					if (links != null && !links.isEmpty()) {
 						lk = new VersionedLink(links.get(0), getAuthorizationAccessToken(internalInstance));
@@ -290,6 +303,9 @@ public class RegistryLookupUtil
 				}
 
 				if (lk != null) {
+					LOGGER.debug(
+							"[branch 1] Retrieved link: \"{}\" for service: \"{}\", version: \"{}\", rel: \"{}\", tenant: \"{}\"",
+							lk.getHref(), serviceName, version, rel, tenantName);
 					return lk;
 				}
 
@@ -302,19 +318,28 @@ public class RegistryLookupUtil
 					else {
 						links = internalInstance.getLinksWithProtocol(rel, "http");
 					}
+					if (version == null) {
+						version = internalInstance.getVersion();
+					}
 
 					SanitizedInstanceInfo sanitizedInstance = RegistryLookupUtil.findSaniInsInfo(tenantName, internalInstance);
 					if (sanitizedInstance != null) {
 						if (prefixMatch) {
-							links = RegistryLookupUtil.getLinksWithRelPrefixWithProtocol("https", rel,
+							links = RegistryLookupUtil.getLinksWithRelPrefixWithProtocol("http", rel,
 									sanitizedInstance.getLinks());
 						}
 						else {
-							links = RegistryLookupUtil.getLinksWithProtocol("https", sanitizedInstance.getLinks(rel));
+							links = RegistryLookupUtil.getLinksWithProtocol("http", sanitizedInstance.getLinks(rel));
+						}
+						if (version == null) {
+							version = sanitizedInstance.getVersion();
 						}
 					}
 					if (links != null && !links.isEmpty()) {
 						lk = new VersionedLink(links.get(0), getAuthorizationAccessToken(internalInstance));
+						LOGGER.debug(
+								"[branch 2] Retrieved link: \"{}\" for service: \"{}\", version: \"{}\", rel: \"{}\", tenant: \"{}\"",
+								lk == null ? null : lk.getHref(), serviceName, version, rel, tenantName);
 						return lk;
 					}
 				}
