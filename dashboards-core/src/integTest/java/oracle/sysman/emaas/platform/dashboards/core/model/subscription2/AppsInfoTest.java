@@ -59,6 +59,11 @@ public class AppsInfoTest {
         tenantSubscriptionInfo.setAppsInfoList(null);
         tenantSubscriptionInfo.setSubscriptionAppsList(null);
         tenantSubscriptionInfo.toJson(new TenantSubscriptionInfo());
+        ServiceComponent sc = new ServiceComponent();
+        sc.setComponent(null);
+        sc.setComponent_id(null);
+        sc.getComponent();
+        sc.getComponent_id();
     }
 
 
