@@ -510,7 +510,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.sessionTimeoutMsg = nls.BRANDING_BAR_SESSION_TIMEOUT_MSG;
             self.sessionTimeoutBtnOK = nls.BRANDING_BAR_SESSION_TIMEOUT_DIALOG_BTN_OK;
             self.sessionTimeoutWarnDialogId = 'sessionTimeoutWarnDialog';
-            self.sessionTimeoutWarnIcon = warnMessageIcon;
+            self.sessionTimeoutWarnIcon = imgBackground;
+            self.sessionTimeoutWarnCssStyle = "background:url('" + messageIconSprite + "') no-repeat 0px -46px;height:16px;";
 
             //Fetch and set sso logout url and session expiry time
             dfu.getRegistrations(function (data) {
