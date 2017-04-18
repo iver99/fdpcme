@@ -288,8 +288,11 @@ public class DashboardManager
 			}
 		}
 	}
-	
 	public EmsDashboard getEmsDashboardById(DashboardServiceFacade dsf, BigInteger dashboardId, Long tenantId) throws DashboardNotFoundException,TenantWithoutSubscriptionException {
+		return getEmsDashboardById(dsf, dashboardId, tenantId, null);
+	}
+
+	public EmsDashboard getEmsDashboardById(DashboardServiceFacade dsf, BigInteger dashboardId, Long tenantId, List<String> subscribedApps) throws DashboardNotFoundException,TenantWithoutSubscriptionException {
         if (dashboardId == null || dashboardId.compareTo(BigInteger.ZERO) <= 0) {
 			LOGGER.debug("Dashboard not found for id {} is invalid", dashboardId);
 			throw new DashboardNotFoundException();
@@ -314,7 +317,7 @@ public class DashboardManager
 				throw new DashboardNotFoundException();
 			}
 		}
-		if (!isDashboardAccessbyCurrentTenant(ed)) {
+		if (!isDashboardAccessbyCurrentTenant(ed, subscribedApps)) {
 			LOGGER.debug("Dashboard with id {} is not found for it can't be accessed by current tenant", dashboardId);
 			throw new DashboardNotFoundException();
 		}
@@ -345,6 +348,11 @@ public class DashboardManager
 		}
 	}
 
+	public CombinedDashboard getCombinedDashboardById(BigInteger dashboardId, Long tenantId, String userName)
+			throws DashboardNotFoundException,TenantWithoutSubscriptionException {
+		return getCombinedDashboardById(dashboardId, tenantId, userName, null);
+	}
+
 	/**
 	 * Returns combined dashboard instance by specifying the id
 	 *
@@ -354,16 +362,17 @@ public class DashboardManager
 	 * @throws JSONException 
 	 */
 	public CombinedDashboard getCombinedDashboardById(BigInteger dashboardId,
-			Long tenantId, String userName) throws DashboardNotFoundException,TenantWithoutSubscriptionException {
+			Long tenantId, String userName, List<String> subscribedApps) throws DashboardNotFoundException,TenantWithoutSubscriptionException {
 		EntityManager em = null;
 		try {
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			em = dsf.getEntityManager();
-			EmsDashboard ed = getEmsDashboardById(dsf, dashboardId, tenantId);
+			EmsDashboard ed = getEmsDashboardById(dsf, dashboardId, tenantId, subscribedApps);
 			EmsPreference ep = dsf.getEmsPreference(userName,"Dashboards.homeDashboardId");
 			EmsUserOptions euo = dsf.getEmsUserOptions(userName, dashboardId);
 			List<EmsDashboardTile> edbdtList = ed.getDashboardTileList();
 			CombinedDashboard cdSet = null;
+			BigInteger selectedId = null; // used for selected tab dashbaord ID
 
 			if (Dashboard.DASHBOARD_TYPE_CODE_SET.equals(ed.getType())) {
 				// combine dashboard set
@@ -406,7 +415,6 @@ public class DashboardManager
 					// ahead w/o selected tab then...
 					LOGGER.error(e.getLocalizedMessage(), e);
 				}
-				BigInteger selectedId = null;
 
 				if (selected != null) {
 					try {
@@ -448,7 +456,8 @@ public class DashboardManager
 					ssfIdList.add(edt.getWidgetUniqueId());
 				}
 			}
-			String savedSearchResponse = retrieveSavedSeasrch(dashboardId, ed.getIsSystem() == 1, ssfIdList);
+			// we've ensured that the dashoard id and SSF id list are all for the dashboard OR selected tab dashboard and is correctly set
+			String savedSearchResponse = retrieveSavedSeasrch(selectedId != null ? selectedId : dashboardId, ed.getIsSystem() == 1, ssfIdList);
 
 			// combine single dashboard or selected dashbaord
 			CombinedDashboard cd = CombinedDashboard.valueOf(ed, ep, euo,savedSearchResponse);
@@ -473,13 +482,14 @@ public class DashboardManager
 		ICacheManager cm= CacheManagers.getInstance().build();
 		String cachedData = null;
 		Object cacheKey = null;
+		long start = System.currentTimeMillis();
 		if (dashboardId != null && isOobDashboard) {
 			cacheKey = DefaultKeyGenerator.getInstance().generate(new Tenant("COMMON_TENANT_FOR_OOB_DASHBOARD_CACHE"),
 					new Keys(CacheConstants.LOOKUP_CACHE_KEY_OOB_DASHBOARD_SAVEDSEARCH, dashboardId));
 			try {
 				cachedData = (String) cm.getCache(CacheConstants.CACHES_OOB_DASHBOARD_SAVEDSEARCH_CACHE).get(cacheKey);
 				if (cachedData != null) {
-					LOGGER.debug(
+					LOGGER.info(
 							"retrieved OOB widget data for dashboard {} from cache: {}", dashboardId, cachedData);
 					return cachedData;
 				}
@@ -494,7 +504,7 @@ public class DashboardManager
         String tenantName = TenantContext.getCurrentTenant();
         String savedSearchResponse = null;
         try {
-			rc.setHeader("X-USER-IDENTITY-DOMAIN-NAME", tenantName);
+			rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME, tenantName);
         	savedSearchResponse = rc.put(tenantHref, ssfIdList.toString(), tenantName, 
         	        ((VersionedLink) tenantsLink).getAuthToken());
         }catch (Exception e) {
@@ -503,6 +513,8 @@ public class DashboardManager
 		if (!StringUtil.isEmpty(savedSearchResponse) && dashboardId != null && isOobDashboard) {
 			cm.getCache(CacheConstants.CACHES_OOB_DASHBOARD_SAVEDSEARCH_CACHE).put(cacheKey,savedSearchResponse);
 		}
+		long end = System.currentTimeMillis();
+		LOGGER.info("It takes {}ms to retrieve saved search meta data from Dashboard-API", (end - start));
         return savedSearchResponse;
     }
 
@@ -959,7 +971,12 @@ public class DashboardManager
 			LOGGER.debug(jpqlCount);
 			Query countQuery = em.createNativeQuery(jpqlCount);
 			initializeQueryParams(countQuery, paramList);
-			Long totalResults = ((BigDecimal) countQuery.getSingleResult()).longValue();
+			Long totalResults = 0L;
+			try{
+				totalResults = ((BigDecimal) countQuery.getSingleResult()).longValue();
+			}catch(NoResultException e){
+				LOGGER.warn("get all dashboards count did not retrieve any data!");
+			}
 			LOGGER.debug("Total results is " + totalResults);
 			PaginatedDashboards pd = new PaginatedDashboards(totalResults, firstResult, dbdList == null ? 0 : dbdList.size(),
 				maxResults, dbdList);
@@ -1283,16 +1300,17 @@ public class DashboardManager
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			em = dsf.getEntityManager();
 			EntityTransaction et = em.getTransaction();
-			String jql = "update EmsDashboardTile t set t.title = :widgetName, t.widgetName = :widgetName where t.widgetUniqueId = :widgetId";
+			Date gtwTime = DateUtil.getGatewayTime();
+			String jql = "update EmsDashboardTile t set t.title = :widgetName, t.widgetName = :widgetName, t.lastModificationDate = :lastModificationDate where t.widgetUniqueId = :widgetId";
 			Query query = em.createQuery(jql).setParameter("widgetName", widgetName)
-					.setParameter("widgetId", String.valueOf(widgetId));
+					.setParameter("widgetId", String.valueOf(widgetId)).setParameter("lastModificationDate", gtwTime);
 			if (!et.isActive()) {
 				et.begin();
 			}			
 			int affacted = query.executeUpdate();
 			et.commit();
-			LOGGER.info("Update dashboard tiles name: title for {} tiles have been updated to \"{}\" for specified widget ID {}",
-					affacted, widgetName, widgetId);
+			LOGGER.info("Update dashboard tiles name: title for {} tiles have been updated to \"{}\" for specified widget ID {}, APIGWTime is {}",
+					affacted, widgetName, widgetId, gtwTime);
 			return affacted;
 		}
 		finally {
@@ -1320,16 +1338,17 @@ public class DashboardManager
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			em = dsf.getEntityManager();
 			EntityTransaction et = em.getTransaction();
-			String jql = "update EmsDashboardTile t set t.widgetDeleted = 1 where t.widgetUniqueId = :widgetId";
-			Query query = em.createQuery(jql).setParameter("widgetId", String.valueOf(widgetId));
+			Date gtwTime = DateUtil.getGatewayTime();
+			String jql = "update EmsDashboardTile t set t.widgetDeleted = 1, t.lastModificationDate = :lastModificationDate where t.widgetUniqueId = :widgetId";
+			Query query = em.createQuery(jql).setParameter("widgetId", String.valueOf(widgetId)).setParameter("lastModificationDate", gtwTime);
 			if (!et.isActive()) {
 				et.begin();
 			}
 			int affacted = query.executeUpdate();
 			et.commit();
 			LOGGER.info(
-					"Update dashboard tile 'widgetDeleted': {} tiles have been updated to widgetDeleted=true for specified widget ID {}",
-					affacted, widgetId);
+					"Update dashboard tile 'widgetDeleted': {} tiles have been updated to widgetDeleted=true for specified widget ID {}, APIGWTime is {}",
+					affacted, widgetId, gtwTime);
 			return affacted;
 		}
 		finally {
@@ -1565,12 +1584,17 @@ public class DashboardManager
 
 	private List<DashboardApplicationType> getTenantApplications()
 	{
+		return getTenantApplications(null);
+	}
+
+	private List<DashboardApplicationType> getTenantApplications(List<String> subscribedApps)
+	{
 		String opcTenantId = TenantContext.getCurrentTenant();
 		if (opcTenantId == null || "".equals(opcTenantId)) {
 			LOGGER.warn("When trying to retrieve subscribed application, it's found the tenant context is not set (TenantContext.getCurrentTenant() == null)");
 			return Collections.emptyList();
 		}
-		List<String> appNames = TenantSubscriptionUtil.getTenantSubscribedServices(opcTenantId, new TenantSubscriptionInfo());
+		List<String> appNames =subscribedApps != null ? subscribedApps : TenantSubscriptionUtil.getTenantSubscribedServices(opcTenantId, new TenantSubscriptionInfo());
 		if (appNames == null || appNames.isEmpty()) {
 			return Collections.emptyList();
 		}
@@ -1594,13 +1618,17 @@ public class DashboardManager
 		}
 	}
 
-	private boolean isDashboardAccessbyCurrentTenant(EmsDashboard ed) throws TenantWithoutSubscriptionException
+	private boolean isDashboardAccessbyCurrentTenant(EmsDashboard ed) throws TenantWithoutSubscriptionException {
+		return isDashboardAccessbyCurrentTenant(ed, null);
+	}
+
+	private boolean isDashboardAccessbyCurrentTenant(EmsDashboard ed, List<String> subscribedApps) throws TenantWithoutSubscriptionException
 	{
 		if (ed == null) {
 			LOGGER.debug("null dashboard is not accessed by current tenant");
 			return false;
 		}
-		List<DashboardApplicationType> datList = getTenantApplications();
+		List<DashboardApplicationType> datList = getTenantApplications(subscribedApps);
 		// as dashboards only stores basic servcies data, we need to trasfer (possible) bundle services to basic servcies for comparision
 		datList = DashboardApplicationType.getBasicServiceList(datList);
 		if (datList == null || datList.isEmpty()) { // accessible app list is empty

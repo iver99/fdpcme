@@ -57,8 +57,8 @@ public class PrivilegeChecker
 					String secAuthRolesApiUrl = endPoint.endsWith("/") ? endPoint + SECURITY_AUTH_ROLE_CHECK_API + tenantDotUser
 							: endPoint + "/" + SECURITY_AUTH_ROLE_CHECK_API + tenantDotUser;
 					RestClient rc = new RestClient();
-					rc.setHeader("X-USER-IDENTITY-DOMAIN-NAME",tenantName);
-					rc.setHeader("OAM_REMOTE_USER",tenantDotUser);
+					rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME,tenantName);
+					rc.setHeader(RestClient.OAM_REMOTE_USER,tenantDotUser);
 					rc.setType(null);
 					rc.setAccept(null);
 					String roleCheckResponse = rc.get(secAuthRolesApiUrl, tenantName, link.getAuthToken());

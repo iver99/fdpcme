@@ -16,6 +16,7 @@ import java.util.Map.Entry;
 
 import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.UniformInterfaceException;
+import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.RestClientProxy;
 import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -256,7 +257,7 @@ public class DashboardRowsComparator extends AbstractComparator
 			logger.warn("Get a null or empty link for one single instance!");
 			return null;
 		}
-		String response = new RestClient().get(lk.getHref(), null);
+		String response = RestClientProxy.getRestClient().get(lk.getHref(), null, null);
 		logger.info("Checking dashboard OMC instance table rows. Response is " + response);
 		return retrieveRowsEntityFromJsonForSingleInstance(response);
 	}
@@ -268,7 +269,7 @@ public class DashboardRowsComparator extends AbstractComparator
 			logger.warn("Get a null or empty link for one single instance!");
 			return null;
 		}
-		String response = new RestClient().put(lk.getHref(), instance.getData(), null);
+		String response = RestClientProxy.getRestClient().put(lk.getHref(), instance.getData(), null, null);
 		logger.info("Checking dashboard OMC instance table rows. Response is " + response);
 		return response;
 	}

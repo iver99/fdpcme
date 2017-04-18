@@ -1,11 +1,10 @@
 package oracle.sysman.emaas.platform.dashboards.core.model;
 
 import java.math.BigInteger;
-import java.util.Date;
 
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
-import oracle.sysman.emaas.platform.dashboards.core.util.DateUtil;
+import oracle.sysman.emaas.platform.dashboards.core.util.BigIntegerSerializer;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.core.util.StringEscapeUtil;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
@@ -13,6 +12,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 /**
  * @author jishshi
@@ -22,6 +23,7 @@ public class UserOptions {
     private static final Logger LOGGER = LogManager.getLogger(UserOptions.class);
 
     private String userName;
+    @JsonSerialize(using = BigIntegerSerializer.class)
     private BigInteger dashboardId;
     private Long autoRefreshInterval;
     private String extendedOptions;

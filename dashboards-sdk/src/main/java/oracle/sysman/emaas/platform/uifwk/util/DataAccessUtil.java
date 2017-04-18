@@ -44,15 +44,15 @@ public class DataAccessUtil
 			LOGGER.info("Configurations REST API link from dashboard-api href is: " + configurationsLink.getHref());
 			String registrationHref = configurationsLink.getHref() + "/brandingbardata";
 			RestClient rc = new RestClient();
-			rc.setHeader("X-USER-IDENTITY-DOMAIN-NAME", tenantName);
-			rc.setHeader("X-REMOTE-USER", userTenant);
+			rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME, tenantName);
+			rc.setHeader(RestClient.X_REMOTE_USER, userTenant);
 			//EMCPDF-3448, FEB20: 3 admin link dif found in farm jobs
-			rc.setHeader("OAM_REMOTE_USER", userTenant);
+			rc.setHeader(RestClient.OAM_REMOTE_USER, userTenant);
 			if (!StringUtil.isEmpty(referer)) {
-				rc.setHeader("Referer", referer);
+				rc.setHeader(RestClient.REFERER, referer);
 			}
 			if (!StringUtil.isEmpty(sessionExp)) {
-				rc.setHeader("SESSION_EXP", sessionExp);
+				rc.setHeader(RestClient.SESSION_EXP, sessionExp);
 			}
 			String response = rc.get(registrationHref, tenantName, ((VersionedLink) configurationsLink).getAuthToken());
 			LOGGER.info("Retrieved brandingbar data is: {}", response);

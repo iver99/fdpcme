@@ -120,7 +120,10 @@ dependencies{
     testConfig(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2') { transitive = false }
 }
 
-project.ext.omctf_omcCloudSetup_additionalParam = "-skipagents -skipomr"
+//project.ext.omctf_omcCloudSetup_additionalParam = "-skipagents -skipomr"
+omcCloudSetup {
+    environment "OMR_REPOS_VERSION", "PS3"
+}
 
 //Task added from "emcpdf_qa_test_3n"
 task QATest(type:EMTest,dependsOn:[omcSetup, onboardNewTenant]) {
@@ -189,6 +192,7 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n','parallel':
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet_DashboardRelated_CreatedOutsideSet')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet_DuplicateDashboard')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboard_NegativeCases')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestRightPanel_DashboardFilters')
             }
 	}
 	test('name': 'DashboardUITest_testDashboardSet_SetHome', 'preserve-order':'true'){
