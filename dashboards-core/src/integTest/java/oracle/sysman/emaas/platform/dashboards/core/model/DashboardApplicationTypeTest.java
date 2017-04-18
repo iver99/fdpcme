@@ -94,33 +94,51 @@ public class DashboardApplicationTypeTest
 		Assert.assertTrue(typeList.get(1).equals(DashboardApplicationType.Compliance) || typeList.get(1).equals(DashboardApplicationType.APM));
 		Assert.assertFalse(typeList.get(0).equals(typeList.get(1)));
 
-		List<DashboardApplicationType> list2 = Arrays.asList(DashboardApplicationType.OMCEE, DashboardApplicationType.APM);
+		List<DashboardApplicationType> list2 = Arrays.asList(DashboardApplicationType.OMCEE, DashboardApplicationType.APM, DashboardApplicationType.Monitoring, DashboardApplicationType.ITAnalytics, DashboardApplicationType.Orchestration);
 		typeList = DashboardApplicationType.getBasicServiceList(list2);
-		Assert.assertEquals(typeList, DashboardApplicationType.allBasicService);
+		Assert.assertEquals(4, typeList.size());
+		Assert.assertTrue(typeList.contains(DashboardApplicationType.APM));
+		Assert.assertTrue(typeList.contains(DashboardApplicationType.Monitoring));
+		Assert.assertTrue(typeList.contains(DashboardApplicationType.ITAnalytics));
+		Assert.assertTrue(typeList.contains(DashboardApplicationType.Orchestration));
 		
 		list2 = Arrays.asList(DashboardApplicationType.OMCLOG, DashboardApplicationType.LogAnalytics);
 		typeList = DashboardApplicationType.getBasicServiceList(list2);
-		Assert.assertEquals(typeList, DashboardApplicationType.allBasicService);
+		Assert.assertEquals(1, typeList.size());
+		Assert.assertTrue(typeList.contains(DashboardApplicationType.LogAnalytics));
 		
-		list2 = Arrays.asList(DashboardApplicationType.OMCSE, DashboardApplicationType.ITAnalytics);
+		list2 = Arrays.asList(DashboardApplicationType.OMCSE, DashboardApplicationType.APM, DashboardApplicationType.Monitoring);
 		typeList = DashboardApplicationType.getBasicServiceList(list2);
-		Assert.assertEquals(typeList, DashboardApplicationType.allBasicService);
+		Assert.assertEquals(2, typeList.size());
+		Assert.assertTrue(typeList.contains(DashboardApplicationType.APM));
+		Assert.assertTrue(typeList.contains(DashboardApplicationType.Monitoring));
 		
-		list2 = Arrays.asList(DashboardApplicationType.SECSE);
+		list2 = Arrays.asList(DashboardApplicationType.SECSE, DashboardApplicationType.Compliance);
 		typeList = DashboardApplicationType.getBasicServiceList(list2);
-		Assert.assertEquals(typeList, DashboardApplicationType.allBasicService);
+		Assert.assertEquals(1, typeList.size());
+		Assert.assertTrue(typeList.contains(DashboardApplicationType.Compliance));
 		
-		list2 = Arrays.asList(DashboardApplicationType.SECSMA, DashboardApplicationType.SECSMA);
+		list2 = Arrays.asList(DashboardApplicationType.SECSMA, DashboardApplicationType.SecurityAnalytics);
 		typeList = DashboardApplicationType.getBasicServiceList(list2);
-		Assert.assertEquals(typeList, DashboardApplicationType.allBasicService);
+		Assert.assertEquals(1, typeList.size());
+		Assert.assertTrue(typeList.contains(DashboardApplicationType.SecurityAnalytics));
 
-		list2 = Arrays.asList(DashboardApplicationType.OMC, DashboardApplicationType.OMC);
+		list2 = Arrays.asList(DashboardApplicationType.OMC, DashboardApplicationType.APM, DashboardApplicationType.Monitoring);
 		typeList = DashboardApplicationType.getBasicServiceList(list2);
-		Assert.assertEquals(typeList, DashboardApplicationType.allBasicService);
+		Assert.assertEquals(2, typeList.size());
+		Assert.assertTrue(typeList.contains(DashboardApplicationType.APM));
+		Assert.assertTrue(typeList.contains(DashboardApplicationType.Monitoring));
 
-		list2 = Arrays.asList(DashboardApplicationType.OSMACC, DashboardApplicationType.OSMACC);
+		list2 = Arrays.asList(DashboardApplicationType.OSMACC, DashboardApplicationType.Compliance, DashboardApplicationType.SecurityAnalytics);
 		typeList = DashboardApplicationType.getBasicServiceList(list2);
-		Assert.assertEquals(typeList, DashboardApplicationType.allBasicService);
+		Assert.assertEquals(2, typeList.size());
+		Assert.assertTrue(typeList.contains(DashboardApplicationType.Compliance));
+		Assert.assertTrue(typeList.contains(DashboardApplicationType.SecurityAnalytics));
+
+		list2 = Arrays.asList(DashboardApplicationType.APM);
+		typeList = DashboardApplicationType.getBasicServiceList(list2);
+		Assert.assertEquals(1, typeList.size());
+		Assert.assertTrue(typeList.contains(DashboardApplicationType.APM));
 		
 		typeList = DashboardApplicationType.getBasicServiceList(null);
 		Assert.assertNull(typeList);
