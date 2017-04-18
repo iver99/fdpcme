@@ -30,7 +30,7 @@ public class HamburgerMenu_BasicTest extends LoginAndLogout
 		CommonUIUtils.loadWebDriver(webd);
 	}
 
-	@Test(alwaysRun = true)
+	//@Test(alwaysRun = true)
 	public void testClickAdminMenuItem()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), "");
