@@ -211,6 +211,22 @@ public class TenantSubscriptionUtil {
         return false;
     }
 
+    public static boolean isMonitoringServiceOnly(List<String> services)
+    {
+        if (services == null || services.size() != 1) {
+            return false;
+        }
+        String svc = services.get(0);
+        if (svc == null) {
+            return false;
+        }
+        //TODO update to use ApplicationEditionConverter.ApplicationOPCName once it's updated in tenant sdk
+        if ("Monitoring".equals(svc)) {
+            return true;
+        }
+        return false;
+    }
+
     public static void setTestEnv() {
         synchronized (lock) {
             if (IS_TEST_ENV == null) {

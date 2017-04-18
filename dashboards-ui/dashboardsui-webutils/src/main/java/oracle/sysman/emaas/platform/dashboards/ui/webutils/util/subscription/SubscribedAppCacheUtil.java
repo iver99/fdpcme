@@ -1,7 +1,7 @@
 package oracle.sysman.emaas.platform.dashboards.ui.webutils.util.subscription;
 
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.StringUtil;
-import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.TenantSubscriptionUtil;
+import oracle.sysman.emaas.platform.emcpdf.tenant.TenantSubscriptionUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

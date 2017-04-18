@@ -16,10 +16,11 @@ import mockit.Mock;
 import mockit.MockUp;
 import mockit.Mocked;
 import mockit.Verifications;
-import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil.VersionedLink;
 
+import oracle.sysman.emaas.platform.emcpdf.tenant.TenantSubscriptionUtil;
+import oracle.sysman.emaas.platform.emcpdf.tenant.subscription2.TenantSubscriptionInfo;
 import org.testng.annotations.Test;
 
 public class DashboardsUiCORSFilterTest
@@ -64,7 +65,7 @@ public class DashboardsUiCORSFilterTest
 						homePath, homePath, //4
 						homePath, homePath); //5
 
-				TenantSubscriptionUtil.getTenantSubscribedServices(anyString, anyString);
+				TenantSubscriptionUtil.getTenantSubscribedServices(anyString, (TenantSubscriptionInfo) any);
 				returns(new ArrayList<String>(), //2
 						new ArrayList<String>(), //3
 						serviceList, //4

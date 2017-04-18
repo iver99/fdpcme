@@ -562,55 +562,6 @@ public class TenantSubscriptionUtilTest {
                 .asList(ApplicationEditionConverter.ApplicationOPCName.APM.toString())));
     }
 
-    @Test(groups = {"s2"})
-    public void testRestClientGetNull() {
-        String res = new RestClient().get(null, null, null);
-        Assert.assertNull(res);
-    }
-
-    @Test(groups = {"s2"})
-    public void testRestClientGetNullAuthS2(@Mocked final DefaultClientConfig anyClientConfig, @Mocked final Client anyClient,
-                                            @Mocked final URI anyUri, @Mocked final UriBuilder anyUriBuilder, @Mocked final MediaType anyMediaType,
-                                            @Mocked final com.sun.jersey.api.client.WebResource.Builder anyBuilder, @Mocked final StringUtil anyStringUtil)
-            throws Exception {
-        new NonStrictExpectations() {
-            {
-                new DefaultClientConfig();
-                Client.create(anyClientConfig);
-                StringUtil.isEmpty(anyString);
-                result = false;
-            }
-        };
-        new RestClient().get("http://test.link.com", "emaastesttenant1", null);
-        new Verifications() {
-            {
-                UriBuilder.fromUri(anyString).build();
-                anyClient.resource(anyUri).header(anyString, any);
-                anyBuilder.get(String.class);
-            }
-        };
-    }
-
-    @Test(groups = {"s2"})
-    public void testRestClientGetS2(@Mocked final DefaultClientConfig anyClientConfig, @Mocked final Client anyClient,
-                                    @Mocked final URI anyUri, @Mocked final UriBuilder anyUriBuilder, @Mocked final MediaType anyMediaType,
-                                    @Mocked final com.sun.jersey.api.client.WebResource.Builder anyBuilder) {
-        new NonStrictExpectations() {
-            {
-                new DefaultClientConfig();
-                Client.create(anyClientConfig);
-            }
-        };
-        new RestClient().get("http://test.link.com", "emaastesttenant1", null);
-        new Verifications() {
-            {
-                UriBuilder.fromUri(anyString).build();
-                anyClient.resource(anyUri).header(anyString, any);
-                anyBuilder.get(String.class);
-            }
-        };
-    }
-
     private void cleanCache() {
 
         ICacheManager cm = CacheManagers.getInstance().build();
