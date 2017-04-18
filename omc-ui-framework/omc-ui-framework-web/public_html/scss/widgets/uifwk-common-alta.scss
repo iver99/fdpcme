@@ -67,6 +67,12 @@ a:hover {
   font-size: larger;
 }
 
+.fa-bars:before {
+  content: "\f0c9"; 
+  color: #454545;
+  font-size: larger;
+}
+
 #links_menu{
     background-color: white;
     position: absolute;
@@ -282,6 +288,10 @@ a:hover {
   color: #9e9e9e;
 }
 
+.emaas-appheader-toolbar-button:disabled .fa-bars:before {
+  color: #9e9e9e;
+}
+
 .emaas-appheader-toolbar-button:disabled:hover {
   cursor: default;
 }
@@ -313,6 +323,10 @@ a:hover {
     font-size:xx-large;
 }
 .fa-compass:before {
+    font-size:xx-large;
+}
+
+.fa-bars:before {
     font-size:xx-large;
 }
 
@@ -442,4 +456,9 @@ a:hover {
 
 .emaas-appheader-restore-icon:before {
     content:"\f066";
+}
+
+
+.emaas-appheader-hamburger-button {
+    float: left;
 }

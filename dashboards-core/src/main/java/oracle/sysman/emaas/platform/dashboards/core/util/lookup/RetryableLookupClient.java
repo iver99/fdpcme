@@ -1,27 +1,20 @@
 package oracle.sysman.emaas.platform.dashboards.core.util.lookup;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceQuery;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
-import oracle.sysman.emaas.platform.dashboards.core.cache.CachedLink;
 import oracle.sysman.emaas.platform.dashboards.core.util.LogUtil;
-import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
-import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
-import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
-import oracle.sysman.emaas.platform.emcpdf.cache.tool.DefaultKeyGenerator;
-import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
-import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
-import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
-
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
+import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil.VersionedLink;
+import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 /**
  * Created by guochen on 3/8/17.
@@ -38,7 +31,7 @@ public class RetryableLookupClient<T> {
     }
 
     public static abstract class RetryableRunner<T> {
-        public abstract T runWithLink(Link lk) throws Exception;
+        public abstract T runWithLink(VersionedLink lk) throws Exception;
     }
 
     public T connectAndDoWithRetry(String serviceName, String version, String rel, boolean prefixMatch, String tenantName, RetryableRunner<T> runner) {
@@ -62,7 +55,6 @@ public class RetryableLookupClient<T> {
         Random delayRand = new Random(System.currentTimeMillis());
         while((retry++)<MAX_TOTAL_RETRY /*&& (retry_on_same < MAX_RETRY_ON_SAME_INSTANCE)*/) {
             LOGGER.info("Retry for the {} time", retry);
-            Link link = null;
 
             try {
                 List<InstanceInfo> result = getServiceInstances(serviceName, version, tenantName);
@@ -80,19 +72,18 @@ public class RetryableLookupClient<T> {
                             version = internalInstance.getVersion();
                         }
                         if (links != null && !links.isEmpty()) {
-                            link = links.get(0);
-                            lk = new RegistryLookupUtil.VersionedLink(link, version);
+                            lk = new RegistryLookupUtil.VersionedLink(links.get(0), version, RegistryLookupUtil.getAuthorizationAccessToken(internalInstance));
                             itrLogger.debug("Retrieved link {}", lk == null ? null : lk.getHref());
                             break;
                         }
                     }
                 }
-                if (link == null) {
+                if (lk == null) {
                     LOGGER.warn("Retrieved null link for service {}, version {}, rel {}, prefixMatch {}, tenant {}. Will retry after delay",
                             serviceName, version, rel, prefixMatch, tenantName); // log the exception and go ahead to retry
                 } else {
-                    T rtn = runner.runWithLink(link); // this method may raise RetryableLookupException (for retry case) or other exception that'll stop the retry procedure
-                    LOGGER.info("Successful done the work for link {}, complete the procedure", link.getHref());
+                    T rtn = runner.runWithLink(lk); // this method may raise RetryableLookupException (for retry case) or other exception that'll stop the retry procedure
+                    LOGGER.info("Successful done the work for link {}, complete the procedure", lk.getHref());
                     return rtn;
                 }
             }

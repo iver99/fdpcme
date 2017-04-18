@@ -47,7 +47,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 	private String dbName_duplicateOOB = "";
 	private String dbName_saveConfirmation = "";
 
-	private final String customWidgetName = "Summary";
+	private final String customWidgetName = "Execution Details";
 	private final String OOBName = "Middleware Operations";
 
 	@BeforeClass
@@ -496,7 +496,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 
 		//verify the the Open In Icon is hidden
 		webd.getLogger().info("Start to verify the the Open In Icon is hidden");
-		Assert.assertFalse(DashBoardUtils.verifyOpenInIconExist(webd, customWidgetName, 0),
+		Assert.assertFalse(DashBoardUtils.verifyOpenInIconExist(webd, customWidgetName),
 				"The 'Open In' icon is displayed for the custom widget");
 	}
 

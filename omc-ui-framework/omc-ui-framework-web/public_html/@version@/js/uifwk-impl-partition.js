@@ -4,6 +4,8 @@ define([
 'text!uifwk/js/widgets/aboutbox/html/aboutbox.html',
 'uifwk/@version@/js/widgets/navlinks/navigation-links-impl',
 'text!uifwk/js/widgets/navlinks/html/navigation-links.html',
+'uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl',
+'text!uifwk/js/widgets/hamburger-menu/html/hamburger-menu.html',
 'uifwk/@version@/js/widgets/brandingbar/brandingbar-impl',
 'text!uifwk/js/widgets/brandingbar/html/brandingbar.html',
 'uifwk/@version@/js/widgets/widgetselector/widget-selector-impl',
@@ -26,7 +28,8 @@ define([
 'uifwk/@version@/js/resources/nls/uifwkCommonMsg',
 'uifwk/@version@/js/resources/nls/root/uifwkCommonMsg',
 'uifwk/@version@/js/util/zdt-util-impl',
-'uifwk/@version@/js/sdk/entity-object'
+'uifwk/@version@/js/sdk/entity-object',
+'uifwk/@version@/js/sdk/menu-util-impl'
 ],
     function (ko, aboutVM, aboutTemplate, navVM, navTemplate, brandingVM, brandingTemplate, widgetsVM, widgetsTemplate, timefilterVM, timeFilterTemplate, timePickerVM, timePickerTemplate) {
 //        function registerComponent(kocName, kocViewModel, kocTemplate)
@@ -42,5 +45,13 @@ define([
 //        registerComponent("df-common-widget-selector", widgetsVM, widgetsTemplate);
 //        registerComponent("time-filter", timefilterVM, timeFilterTemplate);
 //        registerComponent("date-time-picker", timePickerVM, timePickerTemplate);
+        var versionedContextSelectorUtils = window.getSDKVersionFile ?
+            window.getSDKVersionFile('emsaasui/emcta/ta/js/sdk/contextSelector/api/ContextSelectorUtils') : null;
+        var contextSelectorUtil = versionedContextSelectorUtils ? versionedContextSelectorUtils :
+            '/emsaasui/emcta/ta/js/sdk/contextSelector/api/ContextSelectorUtils.js';
+
+        require([contextSelectorUtil], function (EmctaContextSelectorUtil) {
+            EmctaContextSelectorUtil.registerComponents();
+        });
     }
 );

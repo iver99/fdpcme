@@ -896,7 +896,7 @@ define(['knockout',
                 window.sessionStorage.removeItem('_uifwk_brandingbar_cache');
                 window.sessionStorage.removeItem('_uifwk_omccontextcache_composite');
                 window.sessionStorage.removeItem('_uifwk_omccontextcache_entity');
-
+                window.sessionStorage.removeItem('_uifwk_servicemenucache');
                 window.sessionStorage.removeItem('_udeCommonSessionCache');
                 for (var attr in window.sessionStorage) {
                     if (attr.indexOf('_udeTopologyCache') === 0) {
@@ -934,6 +934,60 @@ define(['knockout',
                     }
                 }, false);
                 return assetRoot;
+            }
+            
+            self.getSubscribedApps2WithEdition = function(successCallback, errorCallback) {
+                if (window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.subscribedapps2 &&
+                        ($.isFunction(window._uifwk.cachedData.subscribedapps2) ? window._uifwk.cachedData.subscribedapps2() : true)) {
+                    successCallback($.isFunction(window._uifwk.cachedData.subscribedapps2) ? window._uifwk.cachedData.subscribedapps2() :
+                            window._uifwk.cachedData.subscribedapps2);
+                } else {
+                    if (!window._uifwk) {
+                        window._uifwk = {};
+                    }
+                    if (!window._uifwk.cachedData) {
+                        window._uifwk.cachedData = {};
+                    }
+                    if (!window._uifwk.cachedData.isFetchingSubscribedApps2) {
+                        window._uifwk.cachedData.isFetchingSubscribedApps2 = true;
+                        if (!window._uifwk.cachedData.subscribedapps2) {
+                            window._uifwk.cachedData.subscribedapps2 = ko.observable();
+                        }
+
+                        function doneCallback(data, textStatus, jqXHR) {
+                            window._uifwk.cachedData.subscribedapps2(data);
+                            window._uifwk.cachedData.isFetchingSubscribedApps2 = false;
+                            successCallback(data, textStatus, jqXHR);
+                        }
+                        var url = null;
+                        if (self.isDevMode()) {
+                            url = self.buildFullUrl(self.getDevData().dfRestApiEndPoint, "subscribedapps2");
+                        } else {
+                            url = '/sso.static/dashboards.subscribedapps2';
+                        }
+                        ajaxUtil.ajaxWithRetry({type: 'GET', contentType: 'application/json', url: url,
+                            dataType: 'json',
+                            headers: this.getDefaultHeader(),
+                            async: true,
+                            success: function (data, textStatus, jqXHR) {
+                                doneCallback(data, textStatus, jqXHR);
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                console.log('Failed to get subscribed app info!');
+                                window._uifwk.cachedData.isFetchingSubscribedApps2 = false;
+                                if (errorCallback) {
+                                    errorCallback(jqXHR, textStatus, errorThrown);
+                                }
+                            }
+                        });
+                    } else {
+                        window._uifwk.cachedData.subscribedapps2.subscribe(function (data) {
+                            if (data) {
+                                successCallback(data);
+                            }
+                        });
+                    }
+                }
             }
 
             self.getSubscribedAppsWithoutEdition = function(successCallback, errorCallback) {
