@@ -1326,7 +1326,7 @@ public class DashboardAPI extends APIBase
 						JSONArray ssfArray = jsonObject.getJSONArray("Savedsearch");						
 						if (ssfArray != null && ssfArray.length() > 0) {
 							String ssfResponse = SSFDataUtil.saveSSFData(userTenant, ssfArray.toString(),override);
-							if (ssfResponse.startsWith("{")) {
+							if (ssfResponse != null && ssfResponse.startsWith("{")) {
 								ssfIdMapObj = new JSONObject(ssfResponse);
 								
 							}

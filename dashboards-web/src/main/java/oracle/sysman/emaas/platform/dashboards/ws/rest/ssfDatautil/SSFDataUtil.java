@@ -5,23 +5,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.util.HashMap;
-import java.util.Map;
 
-import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
-import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
-import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
-import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
-import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil.VersionedLink;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
+import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
+import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil.VersionedLink;
+import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
+import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -59,21 +54,24 @@ public class SSFDataUtil {
 
 	private static String accessSSFWebService(String remoteUser,String uri,String data)
 	{
-		RestClient rc = new RestClient();
+		
+		/*RestClient rc = new RestClient();
         Link tenantsLink = RegistryLookupUtil.getServiceInternalLink(SERVICE_NAME, VERSION, PATH, null);
         String tenantHref = tenantsLink.getHref() + "/" + uri;
         String tenantName = TenantContext.getCurrentTenant();
         String savedSearchResponse = null;
         try {
+        	LOGGER.info("auth is "+((VersionedLink) tenantsLink).getAuthToken());
 			rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME, tenantName);
-			rc.setHeader("Content-Type", "application/json");
+//			rc.setHeader(RestClient.OAM_REMOTE_USER, value);
         	savedSearchResponse = rc.put(tenantHref, data, tenantName, 
         	        ((VersionedLink) tenantsLink).getAuthToken());
+        	LOGGER.info("response is "+savedSearchResponse);
         }catch (Exception e) {
         	LOGGER.error(e);
         }
         return savedSearchResponse;
-		/*
+		*/
 		String value = "";
 		CloseableHttpClient client = HttpClients.createDefault();
 		Link link = RegistryLookupUtil.getServiceInternalLink(SERVICE_NAME, VERSION, PATH, null);
@@ -174,6 +172,6 @@ public class SSFDataUtil {
 			}
 		}
 
-		return buffer.toString(); */
+		return buffer.toString(); 
 	}
 }
