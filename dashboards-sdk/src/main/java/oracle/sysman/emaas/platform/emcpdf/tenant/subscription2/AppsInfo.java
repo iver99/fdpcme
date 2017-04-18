@@ -1,4 +1,4 @@
-package oracle.sysman.emaas.platform.dashboards.core.model.subscription2;
+package oracle.sysman.emaas.platform.emcpdf.tenant.subscription2;
 
 import java.util.List;
 
@@ -22,7 +22,6 @@ public class AppsInfo {
         this.licVersion = licVersion;
         this.editions = editions;
     }
-
 
 
     public String getId() {

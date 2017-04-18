@@ -1,4 +1,4 @@
-package oracle.sysman.emaas.platform.dashboards.core.model.subscription2;
+package oracle.sysman.emaas.platform.emcpdf.tenant.subscription2;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +45,7 @@ public class SubscriptionApps {
         this.isTrial = isTrial;
     }
 
-    public void addEditionComponent(EditionComponent editionComponent){
+    public void addEditionComponent(EditionComponent editionComponent) {
         editionComponentsList.add(editionComponent);
     }
 

@@ -1,4 +1,4 @@
-package oracle.sysman.emaas.platform.dashboards.core.model.subscription2;
+package oracle.sysman.emaas.platform.emcpdf.tenant.subscription2;
 
 
 /**
@@ -29,6 +29,7 @@ public class ServiceRequestCollection {
     public OrderComponents getOrderComponents() {
         return orderComponents;
     }
+
     public void setOrderComponents(OrderComponents orderComponents) {
         this.orderComponents = orderComponents;
     }

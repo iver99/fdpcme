@@ -12,9 +12,7 @@ import mockit.NonStrictExpectations;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.resourcemgmt.response.Response;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
-import oracle.sysman.emaas.platform.dashboards.core.model.subscription2.TenantSubscriptionInfo;
 import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
-import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil.VersionedLink;
 import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
@@ -23,6 +21,8 @@ import oracle.sysman.emaas.platform.dashboards.ws.rest.subappedition.ServiceEnti
 import oracle.sysman.emaas.platform.dashboards.ws.rest.subappedition.TenantDetailEntity;
 
 import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
+import oracle.sysman.emaas.platform.emcpdf.tenant.TenantSubscriptionUtil;
+import oracle.sysman.emaas.platform.emcpdf.tenant.subscription2.TenantSubscriptionInfo;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;

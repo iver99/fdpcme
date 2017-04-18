@@ -24,16 +24,17 @@ import javax.ws.rs.core.Response;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.TenantWithoutSubscriptionException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
-import oracle.sysman.emaas.platform.dashboards.core.model.subscription2.AppsInfo;
-import oracle.sysman.emaas.platform.dashboards.core.model.subscription2.TenantSubscriptionInfo;
 import oracle.sysman.emaas.platform.dashboards.core.util.*;
 import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
-import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.subappedition.TenantEditionEntity;
 import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
 
+import oracle.sysman.emaas.platform.emcpdf.tenant.SubscriptionAppsUtil;
+import oracle.sysman.emaas.platform.emcpdf.tenant.TenantSubscriptionUtil;
+import oracle.sysman.emaas.platform.emcpdf.tenant.subscription2.AppsInfo;
+import oracle.sysman.emaas.platform.emcpdf.tenant.subscription2.TenantSubscriptionInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -140,18 +141,18 @@ public class TenantSubscriptionsAPI extends APIBase
 			TenantEditionEntity ne = null;
 			for(AppsInfo appsInfo : tenantSubscriptionInfo.getAppsInfoList()){
 				ne = new TenantEditionEntity();
-				if(SubsriptionAppsUtil.V2_TENANT.equals(appsInfo.getLicVersion())) {
+				if(SubscriptionAppsUtil.V2_TENANT.equals(appsInfo.getLicVersion())) {
                     ne.setApplication(appsInfo.getId());
                     ne.setEdition(pickEdition(appsInfo));
                     LOGGER.info("V2: edition info is {}", ne.getEdition());
                 }
-				if(SubsriptionAppsUtil.V1_TENANT.equals(appsInfo.getLicVersion())){
+				if(SubscriptionAppsUtil.V1_TENANT.equals(appsInfo.getLicVersion())){
 					//if is V1, editions List only have one edition
 					ne.setEdition(setNonNullEdition(appsInfo));
 					ne.setApplication(appsInfo.getId());
                     LOGGER.info("V1: edition info is {}", ne.getEdition());
 				}
-                if(SubsriptionAppsUtil.V3_TENANT.equals(appsInfo.getLicVersion())){
+                if(SubscriptionAppsUtil.V3_TENANT.equals(appsInfo.getLicVersion())){
                     //if is V3, editions List only have one edition
 					ne.setEdition(setNonNullEdition(appsInfo));
                     ne.setApplication(appsInfo.getId());
@@ -190,16 +191,16 @@ public class TenantSubscriptionsAPI extends APIBase
 		String result = null;
 		for(String edition : appsInfo.getEditions()){
             //Handle V2 OMC suite
-			if(edition !=null && (edition.contains(SubsriptionAppsUtil.EE_EDITION) || edition.contains(SubsriptionAppsUtil.LOG_EDITION))){
+			if(edition !=null && (edition.contains(SubscriptionAppsUtil.EE_EDITION) || edition.contains(SubscriptionAppsUtil.LOG_EDITION))){
                 LOGGER.debug("1Picking edition...{}", edition);
 				return edition;
 			}
-            if(edition !=null && edition.contains(SubsriptionAppsUtil.SE_EDITION)){
+            if(edition !=null && edition.contains(SubscriptionAppsUtil.SE_EDITION)){
                 result = edition;
             }
             //Handle V2 OSMACC suite
-            if(edition !=null &&(edition.contains(SubsriptionAppsUtil.CONFIGURATION_COMPLIANCE_EDITION))
-                    || edition.contains(SubsriptionAppsUtil.SECURITY_MONITORING_ANALYTICS_EDITION)){
+            if(edition !=null &&(edition.contains(SubscriptionAppsUtil.CONFIGURATION_COMPLIANCE_EDITION))
+                    || edition.contains(SubscriptionAppsUtil.SECURITY_MONITORING_ANALYTICS_EDITION)){
                 LOGGER.debug("2Picking edition...{}", edition);
                 return edition;
             }
