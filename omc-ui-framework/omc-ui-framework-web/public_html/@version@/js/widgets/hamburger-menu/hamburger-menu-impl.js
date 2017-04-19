@@ -1034,7 +1034,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     // verify that the component firing the event is a component of interest ,
                     //  verify whether the event is fired by js
                     if ($(event.target).is("#omcMenuNavList")) {
-                        if(!self.hrefMap)self.hrefMap = [];
+                        if(!self.hrefMap) self.hrefMap = {};
                         var href = $("a#"+ui.key)[0].href;
                         if (href !== '#' && href !== window.location && href !== window.location+'#') {
                             self.hrefMap[ui.key] = href;
@@ -1070,7 +1070,8 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 }, false);
                 
                 window.addEventListener("mousedown", function(event){
-                    if (event.button === 2  && self.hrefMap) {
+                    if (event.button === 2) {
+                        if(!self.hrefMap) self.hrefMap = {};
                         if($(event.target).is("#omcMenuNavList li")){
                             if(self.hrefMap[$(event.target).find("a")[0].id]){
                                 $(event.target).find("a")[0].href = ctxUtil.appendOMCContext(self.hrefMap[$(event.target).find("a")[0].id], true, true, true);
