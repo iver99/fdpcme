@@ -68,6 +68,7 @@ public class DashboardRowsComparator extends AbstractComparator
 			}
 			
 			TableRowsEntity tre1 = retrieveRowsForSingleInstance(client1, tenantId, userTenant);
+			int rowNum1 = countForComparedRows(tre1);
 			if (tre1 == null) {
 				logger.error("Failed to retrieve ZDT table rows entity for instance {}", key1);
 				logger.info("Completed to compare the two DF OMC instances");
@@ -75,13 +76,14 @@ public class DashboardRowsComparator extends AbstractComparator
 			}
 
 			TableRowsEntity tre2 = retrieveRowsForSingleInstance(client2, tenantId, userTenant);
+			int rowNum2 = countForComparedRows(tre2);
 			if (tre2 == null) {
 				logger.error("Failed to retrieve ZDT table rows entity for instance {}", key2);
 				logger.info("Completed to compare the two DF OMC instances");
 				return null;
 			}
-			InstancesComparedData<TableRowsEntity> cd = compareInstancesData(new InstanceData<TableRowsEntity>(key1, client1, tre1),
-					new InstanceData<TableRowsEntity>(key1, client1, tre2));
+			InstancesComparedData<TableRowsEntity> cd = compareInstancesData(new InstanceData<TableRowsEntity>(key1, client1, tre1,rowNum1),
+					new InstanceData<TableRowsEntity>(key1, client1, tre2,rowNum2));
 			logger.info("Completed to compare the two DF OMC instances");
 			return cd;
 		}
@@ -89,6 +91,18 @@ public class DashboardRowsComparator extends AbstractComparator
 			logger.error(e.getLocalizedMessage(), e);
 			return null;
 		}
+	}
+	
+	public int countForComparedRows(TableRowsEntity tableRow) {
+		int count = 0;
+		
+		count = count + (tableRow.getEmsDashboard()==null?0:tableRow.getEmsDashboard().size());
+		count = count + (tableRow.getEmsDashboardSet()==null?0:tableRow.getEmsDashboardSet().size());
+		count = count + (tableRow.getEmsDashboardTile()==null?0:tableRow.getEmsDashboardTile().size());
+		count = count + (tableRow.getEmsDashboardTileParams()==null?0:tableRow.getEmsDashboardTileParams().size());
+		count = count + (tableRow.getEmsDashboardUserOptions()==null?0:tableRow.getEmsDashboardUserOptions().size());
+		count = count + (tableRow.getEmsPreference()==null?0:tableRow.getEmsPreference().size());
+		return count;
 	}
 
 	public void sync(InstancesComparedData<TableRowsEntity> instancesData,String tenantId, String userTenant) throws Exception
@@ -99,10 +113,10 @@ public class DashboardRowsComparator extends AbstractComparator
 		// switch the data for the instances for sync
 		InstanceData<TableRowsEntity> instance1 = new InstanceData<TableRowsEntity>(instancesData.getInstance1().getKey(),
 				instancesData.getInstance1().getClient(),
-				instancesData.getInstance2().getData());
+				instancesData.getInstance2().getData(),0);
 		InstanceData<TableRowsEntity> instance2 = new InstanceData<TableRowsEntity>(instancesData.getInstance2().getKey(),
 				instancesData.getInstance2().getClient(),
-				instancesData.getInstance1().getData());
+				instancesData.getInstance1().getData(),0);
 		InstancesComparedData<TableRowsEntity> syncData = new InstancesComparedData<TableRowsEntity>(instance1, instance2);
 		syncForInstance(syncData.getInstance1(), tenantId, userTenant);
 		syncForInstance(syncData.getInstance2(),  tenantId, userTenant);
@@ -213,8 +227,8 @@ public class DashboardRowsComparator extends AbstractComparator
 			return null;
 		}
 		// prepare the output compared data
-		InstanceData<TableRowsEntity> outData1 = new InstanceData<TableRowsEntity>(insData1.getKey(), insData1.getClient(), new TableRowsEntity());
-		InstanceData<TableRowsEntity> outData2 = new InstanceData<TableRowsEntity>(insData2.getKey(), insData2.getClient(), new TableRowsEntity());
+		InstanceData<TableRowsEntity> outData1 = new InstanceData<TableRowsEntity>(insData1.getKey(), insData1.getClient(), new TableRowsEntity(),insData1.getTotalRowNum());
+		InstanceData<TableRowsEntity> outData2 = new InstanceData<TableRowsEntity>(insData2.getKey(), insData2.getClient(), new TableRowsEntity(),insData2.getTotalRowNum());
 		InstancesComparedData<TableRowsEntity> cd = new InstancesComparedData<TableRowsEntity>(outData1, outData2);
 		compareDashboardRows(insData1.getData().getEmsDashboard(), insData2.getData().getEmsDashboard(), cd);
 		compareDashboardSetRows(insData1.getData().getEmsDashboardSet(), insData2.getData().getEmsDashboardSet(), cd);

@@ -122,8 +122,8 @@ public class DashboardCountsComparator extends AbstractComparator
 			logger.info("All counts from both instances (instance \"{}\" and instance \"{}\") match!", key1,
 					key2);
 		}
-		InstanceData<CountsEntity> instance1 = new InstanceData<CountsEntity>(key1, client1, differentCountsForInstance1);
-		InstanceData<CountsEntity> instance2 = new InstanceData<CountsEntity>(key2, client2, differentCountsForInstance2);
+		InstanceData<CountsEntity> instance1 = new InstanceData<CountsEntity>(key1, client1, differentCountsForInstance1,0);
+		InstanceData<CountsEntity> instance2 = new InstanceData<CountsEntity>(key2, client2, differentCountsForInstance2,0);
 		InstancesComparedData<CountsEntity> cd = new InstancesComparedData<CountsEntity>(instance1, instance2);
 		return cd;
 	}

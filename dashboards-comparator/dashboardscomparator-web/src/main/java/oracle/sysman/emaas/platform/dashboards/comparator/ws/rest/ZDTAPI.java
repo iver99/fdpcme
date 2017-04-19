@@ -10,11 +10,19 @@
 
 package oracle.sysman.emaas.platform.dashboards.comparator.ws.rest;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -31,6 +39,7 @@ import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.row
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.InstanceData;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.InstancesComparedData;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.TableRowsEntity;
+import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.ZDTStatusRowEntity;
 
 /**
  * @author guochen
@@ -157,6 +166,66 @@ public class ZDTAPI
 				new InstanceCounts(result.getInstance2()));
 
 		return Response.status(Status.OK).entity(JsonUtil.buildNormalMapper().toJson(ic)).build();
+	}
+	
+	private Date getCurrentUTCTime()
+	{
+		Calendar cal = Calendar.getInstance(Locale.getDefault());
+		long localNow = System.currentTimeMillis();
+		long offset = cal.getTimeZone().getOffset(localNow);
+		Date utcDate = new Date(localNow - offset);
+		
+		return utcDate;
+	}
+	
+	private String getTimeString(Date date)
+	{
+		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
+		String dateStr = sdf.format(date);
+		return dateStr;
+	}
+	
+	@GET
+	@Path("compare")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response compareRows(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
+            @HeaderParam(value = "X-REMOTE-USER") String userTenant, @QueryParam("type") @DefaultValue("full")  String compareType) {
+		logger.info("incoming call from zdt comparator to do row comparing");
+		String message = "";
+		int status = 200;
+		try {
+			DashboardRowsComparator dcc = new DashboardRowsComparator();
+			InstancesComparedData<TableRowsEntity> result = dcc.compare(tenantIdParam, userTenant);
+			
+			if (result == null) {
+				message = "Errors while comparing the two OMC instances.";
+				status = 500;
+			} else {
+				int comparedDataNum = dcc.countForComparedRows(result.getInstance1().getData()) + dcc.countForComparedRows(result.getInstance2().getData());
+				logger.info("comparedNum=",comparedDataNum);
+				int totalRow = result.getInstance1().getTotalRowNum() + result.getInstance2().getTotalRowNum();
+				logger.info("totalRow=",totalRow);
+				double percentage = comparedDataNum/totalRow;
+				Date currentUtcDate = getCurrentUTCTime();
+				String comparisonDate = getTimeString(currentUtcDate);
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(currentUtcDate);
+				cal.add(Calendar.HOUR_OF_DAY, 6);
+				Date nextScheduleDate = cal.getTime();
+				String nextScheduleDateStr = getTimeString(nextScheduleDate);
+				String type = "full";
+				if (compareType.equals("incremental")) {
+					type = "incremental";
+				}
+				ZDTStatusRowEntity statusRow = new ZDTStatusRowEntity(comparisonDate,type,nextScheduleDateStr,percentage);
+				message = JsonUtil.buildNormalMapper().toJson(statusRow);
+			}
+		} catch (Exception e) {
+			message = "Errors while comparing the two OMC instances, "+ e.getLocalizedMessage();
+			status = 500;
+		}
+		
+		return Response.status(status).entity(message).build();
 	}
 
 	@PUT
