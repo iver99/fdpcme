@@ -374,7 +374,6 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             var confirmMessageIcon = "/emsaasui/uifwk/@version@/images/widgets/stat_confirm_16.png";
             var infoMessageIcon = "/emsaasui/uifwk/@version@/images/widgets/stat_info_16.png";
             var messageIconSprite = "/emsaasui/uifwk/@version@/images/uifwkSprite.png";
-            var imgBackground = "/emsaasui/uifwk/@version@/images/imgbackground.png";
             var hiddenMessages = [];
 
             self.navLinksNeedRefresh = ko.observable(false);
@@ -510,8 +509,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.sessionTimeoutMsg = nls.BRANDING_BAR_SESSION_TIMEOUT_MSG;
             self.sessionTimeoutBtnOK = nls.BRANDING_BAR_SESSION_TIMEOUT_DIALOG_BTN_OK;
             self.sessionTimeoutWarnDialogId = 'sessionTimeoutWarnDialog';
-            self.sessionTimeoutWarnIcon = imgBackground;
-            self.sessionTimeoutWarnCssStyle = "background:url('" + messageIconSprite + "') no-repeat 0px -46px;height:16px;";
+            self.sessionTimeoutWarnCssStyle = "background:url('" + messageIconSprite + "') no-repeat 0px -46px;height:16px; width:16px;";
 
             //Fetch and set sso logout url and session expiry time
             dfu.getRegistrations(function (data) {
@@ -1037,7 +1035,6 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     message.summary = data.summary;
                     message.detail = data.detail;
                     message.category = data.category;
-                    message.icon = imgBackground;
                     if (data.type && data.type.toUpperCase() === 'CORRECT') {
                         hiddenMessages = [];
                         displayMessages = [];
@@ -1049,19 +1046,19 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     }
                     else if (data.type && data.type.toUpperCase() === 'ERROR') {
                         message.iconAltText = self.altTextError;
-                        message.imgCssStyle = "background:url('" + messageIconSprite + "') no-repeat 0px -78px;height:16px;";
+                        message.imgCssStyle = "background:url('" + messageIconSprite + "') no-repeat 0px -78px;height:16px; width:16px;";
                     }
                     else if (data.type && data.type.toUpperCase() === 'WARN') {
                         message.iconAltText = self.altTextWarn;
-                        message.imgCssStyle = "background:url('" + messageIconSprite + "') no-repeat 0px -46px;height:16px;";
+                        message.imgCssStyle = "background:url('" + messageIconSprite + "') no-repeat 0px -46px;height:16px; width:16px;";
                     }
                     else if (data.type && data.type.toUpperCase() === 'CONFIRM') {
                         message.iconAltText = self.altTextConfirm;
-                        message.imgCssStyle = "background:url('" + messageIconSprite + "') no-repeat 0px -30px; height:16px;";
+                        message.imgCssStyle = "background:url('" + messageIconSprite + "') no-repeat 0px -30px; height:16px; width:16px;";
                     }
                     else if (data.type && data.type.toUpperCase() === 'INFO') {
                         message.iconAltText = self.altTextInfo;
-                        message.imgCssStyle = "background:url('" + messageIconSprite + "') no-repeat 0px -62px;height:16px;";
+                        message.imgCssStyle = "background:url('" + messageIconSprite + "') no-repeat 0px -62px;height:16px; width:16px;";
                     }
 
                     if (message.category === catPlannedDowntime) {
