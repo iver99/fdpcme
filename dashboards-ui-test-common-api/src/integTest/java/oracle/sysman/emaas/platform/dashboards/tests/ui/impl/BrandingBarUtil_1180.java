@@ -193,7 +193,21 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 		driver.getLogger().info("isAdminLinkExisted started");
 		//check if hamburger menu icon exist
 		if (isHamburgerMenuEnabled(driver)) {
-			throw new NoSuchElementException("This Method is not supported in Hamburger Menu.");
+			if (NAV_LINK_TEXT_ADMIN_ADMINCONSOLE.equals(adminLinkName)) {
+				expandSubMenu(driver, ROOT_MENU_ADMIN);
+				isExisted = isMenuItemExisted(driver, GLOBAL_ADMIN_MENU_ENTITIES_CFG);
+			}
+			else if (NAV_LINK_TEXT_ADMIN_ALERT.equals(adminLinkName)) {
+				expandSubMenu(driver, ROOT_MENU_ADMIN);
+				isExisted = isMenuItemExisted(driver, GLOBAL_ADMIN_MENU_ALERT_RULES);
+			}
+			else if (NAV_LINK_TEXT_ADMIN_AGENT.equals(adminLinkName)) {
+				expandSubMenu(driver, ROOT_MENU_ADMIN);
+				isExisted = isMenuItemExisted(driver, GLOBAL_ADMIN_MENU_AGENTS);
+			}
+			else {
+				throw new NoSuchElementException("This '" + adminLinkName + "' is not supported in Hamburger Menu.");
+			}
 		}
 		else {
 			//branding bar
@@ -538,14 +552,28 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 		driver.getLogger().info("visitApplicationAdministration started");
 		//check if hamburger menu icon exist
 		if (isHamburgerMenuEnabled(driver)) {
-			throw new NoSuchElementException("This Method is not supported in Hamburger Menu.");
+			if (NAV_LINK_TEXT_ADMIN_ADMINCONSOLE.equals(adminLinkName)) {
+				expandSubMenu(driver, ROOT_MENU_ADMIN);
+				clickMenuItem(driver, GLOBAL_ADMIN_MENU_ENTITIES_CFG);
+			}
+			else if (NAV_LINK_TEXT_ADMIN_ALERT.equals(adminLinkName)) {
+				expandSubMenu(driver, ROOT_MENU_ADMIN);
+				clickMenuItem(driver, GLOBAL_ADMIN_MENU_ALERT_RULES);
+			}
+			else if (NAV_LINK_TEXT_ADMIN_AGENT.equals(adminLinkName)) {
+				expandSubMenu(driver, ROOT_MENU_ADMIN);
+				clickMenuItem(driver, GLOBAL_ADMIN_MENU_AGENTS);
+			}
+			else {
+				throw new NoSuchElementException("This '" + adminLinkName + "' is not supported in Hamburger Menu.");
+			}
 		}
 		else {
 			//the branding bar
 			driver.getLogger().info("Start to visit admin link from branding bar. Link name: " + adminLinkName);
 			visitApplicationLink(driver, "admin", adminLinkName);
 		}
-		driver.getLogger().info("visitApplicationAdministration started");
+		driver.getLogger().info("visitApplicationAdministration ended");
 	}
 
 	@Override
@@ -631,7 +659,7 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 		else {
 			//the branding bar
 			driver.getLogger()
-			.info("Start to visit visual analyzer link from branding bar. Link name: " + visualAnalyzerLinkName);
+					.info("Start to visit visual analyzer link from branding bar. Link name: " + visualAnalyzerLinkName);
 			visitApplicationLink(driver, "va", visualAnalyzerLinkName);
 		}
 		driver.getLogger().info("visitApplicationVisualAnalyzer ended");

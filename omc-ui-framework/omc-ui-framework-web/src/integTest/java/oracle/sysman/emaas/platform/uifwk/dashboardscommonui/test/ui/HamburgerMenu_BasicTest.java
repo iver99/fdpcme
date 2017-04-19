@@ -30,7 +30,7 @@ public class HamburgerMenu_BasicTest extends LoginAndLogout
 		CommonUIUtils.loadWebDriver(webd);
 	}
 
-	@Test(alwaysRun = true)
+	//@Test(alwaysRun = true)
 	public void testClickAdminMenuItem()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), "");
@@ -39,7 +39,11 @@ public class HamburgerMenu_BasicTest extends LoginAndLogout
 
 		BrandingBarUtil.clickMenuItem(webd, BrandingBarUtil.ROOT_MENU_ADMIN);
 		WaitUtil.waitForPageFullyLoaded(webd);
-		CommonUIUtils.verifyURL(webd, "eventUi/rules/html/rules-dashboard.html");
+		Assert.assertEquals(BrandingBarUtil.getCurrentMenuHeader(webd), "Administration");
+		Assert.assertTrue(BrandingBarUtil.isMenuItemEnabled(webd, BrandingBarUtil.GLOBAL_ADMIN_MENU_AGENTS));
+		Assert.assertTrue(BrandingBarUtil.isMenuItemEnabled(webd, BrandingBarUtil.GLOBAL_ADMIN_MENU_ALERT_RULES));
+		Assert.assertTrue(BrandingBarUtil.isMenuItemEnabled(webd, BrandingBarUtil.GLOBAL_ADMIN_MENU_ENTITIES_CFG));
+		//CommonUIUtils.verifyURL(webd, "eventUi/rules/html/rules-dashboard.html");
 	}
 
 	@Test(alwaysRun = true)
