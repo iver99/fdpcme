@@ -145,16 +145,21 @@ public class TenantSubscriptionsAPI extends APIBase
 				if(SubsriptionAppsUtil.V2_TENANT.equals(appsInfo.getLicVersion())) {
                     ne.setApplication(appsInfo.getId());
                     ne.setEdition(pickEdition(appsInfo));
-                    LOGGER.debug("V2: edition info is {}", appsInfo.getEditions());
+                    LOGGER.info("V2: edition info is {}", ne.getEdition());
                 }
 				if(SubsriptionAppsUtil.V1_TENANT.equals(appsInfo.getLicVersion())){
 					//if is V1, editions List only have one edition
-					ne.setEdition(appsInfo.getEditions().get(0));
+					ne.setEdition(setNonNullEdition(appsInfo));
 					ne.setApplication(appsInfo.getId());
-                    LOGGER.debug("V1: edition info is {}", appsInfo.getEditions());
+                    LOGGER.info("V1: edition info is {}", ne.getEdition());
 				}
+                if(SubsriptionAppsUtil.V3_TENANT.equals(appsInfo.getLicVersion())){
+                    //if is V3, editions List only have one edition
+					ne.setEdition(setNonNullEdition(appsInfo));
+                    ne.setApplication(appsInfo.getId());
+                    LOGGER.info("V3: Edition info is {}",ne.getEdition());
+                }
 				LOGGER.info("Application with name {} and edition {} is added.",ne.getApplication(),ne.getEdition());
-				//V3 TODO
 				tenantEditionEntityList.add(ne);
 
             }
@@ -164,6 +169,15 @@ public class TenantSubscriptionsAPI extends APIBase
 		return null;
 	}
 
+	private String setNonNullEdition(AppsInfo appsInfo){
+		if(appsInfo == null || appsInfo.getEditions() == null || appsInfo.getEditions().isEmpty()){
+			LOGGER.info("Application's edition info is null or empty, return empty string...");
+			return "";
+		}
+		LOGGER.info("Choosing first edition info as application's edtion: {}",appsInfo.getEditions().get(0));
+		return appsInfo.getEditions().get(0);
+	}
+
 	/**
 	 * pick the highest edition if have multi editions
 	 * For now ,only V2 will enter this method
@@ -171,7 +185,7 @@ public class TenantSubscriptionsAPI extends APIBase
 	 */
 	private String pickEdition(AppsInfo appsInfo){
 		if(appsInfo == null || appsInfo.getEditions()==null || appsInfo.getEditions().isEmpty()){
-			LOGGER.error("Editions information is null or empty!");
+			LOGGER.error("Picking Editions for v2 tenant, edition info is null or empty!");
 			return null;
 		}
         LOGGER.debug("Editions in pick Edition is {}", appsInfo.getEditions());

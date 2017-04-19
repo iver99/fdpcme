@@ -339,8 +339,7 @@ require(['knockout',
 				},
 				showEntitySelector: ko.observable(false),
 				entityContextParams: {
-				    readOnly: false,
-                                    onlyComposites: true
+				    readOnly: false
 				}
 			    };
 
