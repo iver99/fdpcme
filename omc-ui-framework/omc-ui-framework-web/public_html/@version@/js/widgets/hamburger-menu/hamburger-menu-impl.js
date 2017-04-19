@@ -402,6 +402,9 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                                         serviceItem.serviceAdminMenus = applyNlsOnMenu(serviceItem.serviceAdminMenus, _nls, serviceItem.appId);
                                         self.allServiceData.push(serviceItem);
                                         self.loadedServiceCnt(self.loadedServiceCnt() + 1);
+                                    }, 
+                                    function() {
+                                        self.loadedServiceCnt(self.loadedServiceCnt() + 1);
                                     });
                                 },
                                 error: function (xhr, textStatus, errorThrown) {
