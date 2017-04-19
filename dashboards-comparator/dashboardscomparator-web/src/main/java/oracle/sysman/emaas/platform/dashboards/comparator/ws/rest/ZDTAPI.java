@@ -11,6 +11,7 @@
 package oracle.sysman.emaas.platform.dashboards.comparator.ws.rest;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -202,10 +203,12 @@ public class ZDTAPI
 				status = 500;
 			} else {
 				int comparedDataNum = dcc.countForComparedRows(result.getInstance1().getData()) + dcc.countForComparedRows(result.getInstance2().getData());
-				logger.info("comparedNum=",comparedDataNum);
+				logger.info("comparedNum={}",comparedDataNum);
 				int totalRow = result.getInstance1().getTotalRowNum() + result.getInstance2().getTotalRowNum();
-				logger.info("totalRow=",totalRow);
-				double percentage = comparedDataNum/totalRow;
+				logger.info("totalRow={}",totalRow);
+				double percen = (double)comparedDataNum/(double)totalRow;
+				DecimalFormat df = new DecimalFormat("#.##");
+				double percentage = Double.parseDouble(df.format(percen));
 				Date currentUtcDate = getCurrentUTCTime();
 				String comparisonDate = getTimeString(currentUtcDate);
 				Calendar cal = Calendar.getInstance();
