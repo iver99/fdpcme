@@ -137,7 +137,7 @@ public class TenantSubscriptionUtil
                     return Collections.emptyList();
                 }
 
-                LOGGER.info("Checking tenant (" + tenant + ") subscriptions. The entity naming lookups href is " + lookupLink.getHref());
+                LOGGER.info("Checking tenant (" + tenant + ") subscriptions. The serviceRequest lookups href is " + lookupLink.getHref());
                 String queryHref = lookupLink.getHref() + "/" + tenant + "/serviceRequest";
                 LOGGER.info("query new serviceRequest url is {}",queryHref);
                 RestClient rc = new RestClient();
@@ -167,7 +167,7 @@ public class TenantSubscriptionUtil
                     LOGGER.error(e);
                     throw new RetryableLookupException(e);
                 }
-                LOGGER.debug("Checking tenant ({}) services. URL is {}, query response is {}. It took {}ms", tenant, queryHref, appsResponse, (System.currentTimeMillis() - subappQueryStart));
+                LOGGER.info("Retrieved data for tenant ({}) from serviceRequest API. URL is {}, query response is {}. It took {}ms", tenant, queryHref, appsResponse, (System.currentTimeMillis() - subappQueryStart));
                 JsonUtil ju = JsonUtil.buildNormalMapper();
                 try {
                     List<ServiceRequestCollection> src = ju.fromJsonToList(appsResponse, ServiceRequestCollection.class);
