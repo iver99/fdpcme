@@ -20,6 +20,7 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupM
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
 import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.RestClientProxy;
+import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.AbstractComparator;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.RowEntityComparator.CompareListPair;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.DashboardRowEntity;
@@ -83,7 +84,7 @@ public class DashboardRowsComparator extends AbstractComparator
 				return null;
 			}
 			InstancesComparedData<TableRowsEntity> cd = compareInstancesData(new InstanceData<TableRowsEntity>(key1, client1, tre1,rowNum1),
-					new InstanceData<TableRowsEntity>(key1, client1, tre2,rowNum2));
+					new InstanceData<TableRowsEntity>(key2, client2, tre2,rowNum2));
 			logger.info("Completed to compare the two DF OMC instances");
 			return cd;
 		}
@@ -116,16 +117,18 @@ public class DashboardRowsComparator extends AbstractComparator
 		InstanceData<TableRowsEntity> instance1 = new InstanceData<TableRowsEntity>(instancesData.getInstance1().getKey(),
 				instancesData.getInstance1().getClient(),
 				instancesData.getInstance2().getData(),0);
+		logger.info("1-cloud name is {} data is {}",instancesData.getInstance1().getKey(), instancesData.getInstance2().getData().toString());
 		InstanceData<TableRowsEntity> instance2 = new InstanceData<TableRowsEntity>(instancesData.getInstance2().getKey(),
 				instancesData.getInstance2().getClient(),
 				instancesData.getInstance1().getData(),0);
+		logger.info("2-cloud name is {} data is {}",instancesData.getInstance2().getKey(), instancesData.getInstance1().getData().toString());
+		
 		InstancesComparedData<TableRowsEntity> syncData = new InstancesComparedData<TableRowsEntity>(instance1, instance2);
-		syncForInstance(syncData.getInstance1(), tenantId, userTenant);
-		syncForInstance(syncData.getInstance2(),  tenantId, userTenant);
 		String message1 = syncForInstance(syncData.getInstance1(), tenantId, userTenant);
  		String message2 = syncForInstance(syncData.getInstance2(),  tenantId, userTenant);
  		
- 		return "cloud1: {"+ (message1==null?"":message1) + "}" + "__cloud2: {" + (message2==null?"":message2)+"}";
+ 		return syncData.getInstance1().getKey() + ":{"+ (message1==null?"":message1) + "}" 
+ 		+ "____"+syncData.getInstance1().getKey()+": {" + (message2==null?"":message2)+"}";
 	}
 
 	/**
@@ -293,12 +296,15 @@ public class DashboardRowsComparator extends AbstractComparator
 			logger.warn("Get a null or empty link for one single instance!");
 			return null;
 		}
+		String response = new TenantSubscriptionUtil.RestClient().get(lk.getHref(), tenantId,userTenant);
+		/*
 		RestClient rc = RestClientProxy.getRestClient();
 		rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME, tenantId);
 		rc.setHeader(RestClient.X_REMOTE_USER, userTenant);
 		//char[] authToken = RegistrationManager.getInstance().getAuthorizationToken();
 		char[] authToken = LookupManager.getInstance().getAuthorizationToken();
 		String response = rc.get(lk.getHref(), tenantId, new String(authToken));
+		*/
 		logger.info("Checking dashboard OMC instance table rows. Response is " + response);
 		return retrieveRowsEntityFromJsonForSingleInstance(response);
 	}
@@ -316,11 +322,13 @@ public class DashboardRowsComparator extends AbstractComparator
 		jsonUtil.setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 		String entityStr = jsonUtil.toJson(entity);
 		logger.info("print the put data {} !",entityStr);
-		RestClient rc = RestClientProxy.getRestClient();
+		String response = new TenantSubscriptionUtil.RestClient().put(lk.getHref(), entityStr, tenantId, userTenant);
+		/*RestClient rc = RestClientProxy.getRestClient();
 		rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME,tenantId);
 		rc.setHeader(RestClient.X_REMOTE_USER,userTenant);
 		char[] authToken = LookupManager.getInstance().getAuthorizationToken();
 		String response = rc.put(lk.getHref(), entityStr, tenantId, new String(authToken));
+		*/
 		logger.info("Checking sync reponse. Response is " + response);
 		return response;
 	}

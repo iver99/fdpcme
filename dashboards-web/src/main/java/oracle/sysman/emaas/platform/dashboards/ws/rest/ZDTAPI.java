@@ -135,14 +135,13 @@ public class ZDTAPI extends APIBase
 			TableRowsEntity data = getJsonUtil().fromJson(dataToSync.toString(), TableRowsEntity.class);
 			String response = new TableRowsSynchronizer().sync(em,data);
  			if (response.contains("Errors:")) {
- 				return Response.status(500).entity(response).build();
+ 				return Response.status(Status.INTERNAL_SERVER_ERROR).entity(response).build();
  			}
- 			return Response.status(Status.NO_CONTENT).entity(response).build();
+ 			return Response.ok(response).build();
 		}
 		catch (IOException e) {
 			logger.error(e.getLocalizedMessage(), e);
-			ErrorEntity error = new ErrorEntity(e);
-			return Response.status(500).entity("Errors:" + e.getLocalizedMessage()).build();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Errors:" + e.getLocalizedMessage()).build();
 		} finally {
 			if (em != null) {
 				em.close();

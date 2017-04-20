@@ -345,13 +345,13 @@ public class TenantSubscriptionUtilTest {
         Assert.assertFalse(TenantSubscriptionUtil.isMonitoringServiceOnly(services));
     }
 
-   /* @Test(groups = {"s2"})
+    @Test(groups = {"s2"})
     public void testRestClientGetNull() {
         String res = new RestClient().get(null, null, null);
         org.testng.Assert.assertNull(res);
     }
 
-    @Test(groups = {"s2"})
+   /* @Test(groups = {"s2"})
     public void testRestClientGetNullAuthS2(@Mocked final DefaultClientConfig anyClientConfig, @Mocked final Client anyClient,
                                             @Mocked final RegistrationManager anyRegistrationManager, @Mocked final URI anyUri,
                                             @Mocked final UriBuilder anyUriBuilder, @Mocked final MediaType anyMediaType,
@@ -374,8 +374,8 @@ public class TenantSubscriptionUtilTest {
                 anyBuilder.get(String.class);
             }
         };
-    }*/
-
+    }
+*/
     /*@Test(groups = {"s2"})
     public void testRestClientGetS2(@Mocked final DefaultClientConfig anyClientConfig, @Mocked final Client anyClient,
                                     @Mocked final RegistrationManager anyRegistrationManager, @Mocked final URI anyUri,
