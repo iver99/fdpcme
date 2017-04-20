@@ -116,13 +116,14 @@ public class DashboardsFilter
 			}
 			//handling v2/v3 tenant
 			if(!isV1Tenant && !types.contains(DashboardApplicationType.UDE)){
-				types.contains(DashboardApplicationType.UDE);
-				LOGGER.info("Adding UDE application type for v2/v3 tenant");
+				types.add(DashboardApplicationType.UDE);
+				LOGGER.info("#2 Adding UDE application type for v2/v3 tenant");
 			}
 		}
 		catch (IllegalArgumentException iae) {
 			LOGGER.info("context", iae);
 		}
+        LOGGER.info("Application types are {}", types);
 		return types;
 	}
 

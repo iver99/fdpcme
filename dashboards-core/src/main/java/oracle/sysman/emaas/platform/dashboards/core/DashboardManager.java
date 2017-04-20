@@ -1585,7 +1585,7 @@ public class DashboardManager
 		}
 		//handle v2/v3 tenant
 		if(!isV1Tenant && !apps.contains(DashboardApplicationType.UDE)){
-			LOGGER.info("Adding UDE application type for v2/v3 tenant");
+			LOGGER.info("#1 Adding UDE application type for v2/v3 tenant");
 			apps.add(DashboardApplicationType.UDE);
 		}
 		return apps;
