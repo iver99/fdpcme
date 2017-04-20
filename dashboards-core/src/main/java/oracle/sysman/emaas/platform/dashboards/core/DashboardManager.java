@@ -815,8 +815,9 @@ public class DashboardManager
 			maxResults = pageSize.intValue();
 		}
 		//v1==>true, v2/v3==>false
-		Boolean isV1Tenant = new Boolean(Boolean.FALSE);
-		List<DashboardApplicationType> apps = getTenantApplications(isV1Tenant);
+        TenantVersionModel tenantVersionModel = new TenantVersionModel(Boolean.FALSE);
+		List<DashboardApplicationType> apps = getTenantApplications(tenantVersionModel);
+        LOGGER.info("Tenant version info: Is it V1 tenant? {}",tenantVersionModel.getIsV1Tenant());
 		// avoid impacts from bundle service, we get basic services only
 		apps = DashboardApplicationType.getBasicServiceList(apps);
 		if (apps == null || apps.isEmpty()) {
@@ -885,7 +886,7 @@ public class DashboardManager
 		}
 		sb.append(") or (p.is_system=1 ");
 		if (filter != null) {
-			concatIncludedApplicationTypes(filter, sb, isV1Tenant);
+			concatIncludedApplicationTypes(filter, sb, tenantVersionModel);
 		}
 		sb.append("))");
 
@@ -911,7 +912,7 @@ public class DashboardManager
 		}
 		sb1.append(") or (p.is_system=1 ");
 		if (filter != null) {
-			concatIncludedApplicationTypes(filter, sb1,isV1Tenant);
+			concatIncludedApplicationTypes(filter, sb1,tenantVersionModel);
 		}
 		sb1.append("))");
 		sb1.append(" and (p.share_public=1 or p.owner =?"+ index++ +"  or p.application_type  IN (" + sbApps.toString() + ")))");
@@ -1392,15 +1393,15 @@ public class DashboardManager
 	 * @param filter
 	 * @param sb
 	 */
-	private void concatIncludedApplicationTypes(DashboardsFilter filter, StringBuilder sb, Boolean isV1Tenant)
+	private void concatIncludedApplicationTypes(DashboardsFilter filter, StringBuilder sb, final TenantVersionModel tenantVersionModel)
 	{
-		if (filter.getIncludedApplicationTypes(isV1Tenant) != null && !filter.getIncludedApplicationTypes(isV1Tenant).isEmpty()) {
+		if (filter.getIncludedApplicationTypes(tenantVersionModel) != null && !filter.getIncludedApplicationTypes(tenantVersionModel).isEmpty()) {
 			sb.append(" and (");
-			for (int i = 0; i < filter.getIncludedApplicationTypes(isV1Tenant).size(); i++) {
+			for (int i = 0; i < filter.getIncludedApplicationTypes(tenantVersionModel).size(); i++) {
 				if (i != 0) {
 					sb.append(" or ");
 				}
-				sb.append(" p.application_type = " + filter.getIncludedApplicationTypes(isV1Tenant).get(i).getValue() + " ");
+				sb.append(" p.application_type = " + filter.getIncludedApplicationTypes(tenantVersionModel).get(i).getValue() + " ");
 			}
 			sb.append(")");
 		}
@@ -1565,7 +1566,7 @@ public class DashboardManager
 		}
 	}
 
-	private List<DashboardApplicationType> getTenantApplications(Boolean isV1Tenant)
+	private List<DashboardApplicationType> getTenantApplications(TenantVersionModel tv)
 	{
 		String opcTenantId = TenantContext.getCurrentTenant();
 		if (opcTenantId == null || "".equals(opcTenantId)) {
@@ -1574,7 +1575,7 @@ public class DashboardManager
 		}
 		TenantSubscriptionInfo tenantSubscriptionInfo = new TenantSubscriptionInfo();
 		List<String> appNames = TenantSubscriptionUtil.getTenantSubscribedServices(opcTenantId, tenantSubscriptionInfo);
-		isV1Tenant = checkTenantVersion(tenantSubscriptionInfo);
+		tv = checkTenantVersion(tenantSubscriptionInfo,tv);
 		if (appNames == null || appNames.isEmpty()) {
 			return Collections.emptyList();
 		}
@@ -1584,7 +1585,7 @@ public class DashboardManager
 			apps.add(dat);
 		}
 		//handle v2/v3 tenant
-		if(!isV1Tenant && !apps.contains(DashboardApplicationType.UDE)){
+		if(!tv.getIsV1Tenant() && !apps.contains(DashboardApplicationType.UDE)){
 			LOGGER.info("#1 Adding UDE application type for v2/v3 tenant");
 			apps.add(DashboardApplicationType.UDE);
 		}
@@ -1595,19 +1596,21 @@ public class DashboardManager
 	 * if tenant is v1 , return true, if v2/v3, return false
 	 * @return
 	 */
-	private boolean checkTenantVersion(TenantSubscriptionInfo tenantSubscriptionInfo){
+	private TenantVersionModel checkTenantVersion(TenantSubscriptionInfo tenantSubscriptionInfo, TenantVersionModel tv){
 		if(tenantSubscriptionInfo.getAppsInfoList()!=null && !tenantSubscriptionInfo.getAppsInfoList().isEmpty()){
 			for(AppsInfo appsInfo : tenantSubscriptionInfo.getAppsInfoList()){
 				if(SubsriptionAppsUtil.V2_TENANT.equals(appsInfo.getLicVersion()) ||
 						SubsriptionAppsUtil.V3_TENANT.equals(appsInfo.getLicVersion())){
 					LOGGER.info("Check tenant version is V1/V2 tenant.");
-					return false;
+                    tv.setIsV1Tenant(Boolean.FALSE);
+					return tv;
 				}
 			}
 		}
 		LOGGER.info("Check tenant version is V1 tenant.");
 		//v1
-		return true;
+        tv.setIsV1Tenant(Boolean.TRUE);
+        return tv;
 	}
 
 	private void initializeQueryParams(Query query, List<Object> paramList)
@@ -1628,7 +1631,7 @@ public class DashboardManager
 			LOGGER.debug("null dashboard is not accessed by current tenant");
 			return false;
 		}
-		List<DashboardApplicationType> datList = getTenantApplications(new Boolean(Boolean.FALSE));
+		List<DashboardApplicationType> datList = getTenantApplications(new TenantVersionModel(Boolean.FALSE));
 		// as dashboards only stores basic servcies data, we need to trasfer (possible) bundle services to basic servcies for comparision
 		datList = DashboardApplicationType.getBasicServiceList(datList);
 		if (datList == null || datList.isEmpty()) { // accessible app list is empty

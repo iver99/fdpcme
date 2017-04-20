@@ -19,6 +19,7 @@ import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.core.model.DashboardApplicationType;
 import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
 
+import oracle.sysman.emaas.platform.dashboards.core.util.TenantVersionModel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -104,7 +105,7 @@ public class DashboardsFilter
 		}
 	}
 
-	public List<DashboardApplicationType> getIncludedApplicationTypes(Boolean isV1Tenant)
+	public List<DashboardApplicationType> getIncludedApplicationTypes(final  TenantVersionModel tenantVersionModel)
 	{
 		if (includedApps == null || includedApps.isEmpty()) {
 			return Collections.emptyList();
@@ -115,7 +116,7 @@ public class DashboardsFilter
 				types.add(DashboardApplicationType.fromJsonValue(app));
 			}
 			//handling v2/v3 tenant
-			if(!isV1Tenant && !types.contains(DashboardApplicationType.UDE)){
+			if(!tenantVersionModel.getIsV1Tenant() && !types.contains(DashboardApplicationType.UDE)){
 				types.add(DashboardApplicationType.UDE);
 				LOGGER.info("#2 Adding UDE application type for v2/v3 tenant");
 			}
