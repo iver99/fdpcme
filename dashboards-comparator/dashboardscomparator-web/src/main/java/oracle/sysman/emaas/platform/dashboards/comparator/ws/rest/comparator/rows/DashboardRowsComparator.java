@@ -95,13 +95,15 @@ public class DashboardRowsComparator extends AbstractComparator
 	
 	public int countForComparedRows(TableRowsEntity tableRow) {
 		int count = 0;
+		if (tableRow != null) {
+			count = count + (tableRow.getEmsDashboard()==null?0:tableRow.getEmsDashboard().size());
+			count = count + (tableRow.getEmsDashboardSet()==null?0:tableRow.getEmsDashboardSet().size());
+			count = count + (tableRow.getEmsDashboardTile()==null?0:tableRow.getEmsDashboardTile().size());
+			count = count + (tableRow.getEmsDashboardTileParams()==null?0:tableRow.getEmsDashboardTileParams().size());
+			count = count + (tableRow.getEmsDashboardUserOptions()==null?0:tableRow.getEmsDashboardUserOptions().size());
+			count = count + (tableRow.getEmsPreference()==null?0:tableRow.getEmsPreference().size());
+		}
 		
-		count = count + (tableRow.getEmsDashboard()==null?0:tableRow.getEmsDashboard().size());
-		count = count + (tableRow.getEmsDashboardSet()==null?0:tableRow.getEmsDashboardSet().size());
-		count = count + (tableRow.getEmsDashboardTile()==null?0:tableRow.getEmsDashboardTile().size());
-		count = count + (tableRow.getEmsDashboardTileParams()==null?0:tableRow.getEmsDashboardTileParams().size());
-		count = count + (tableRow.getEmsDashboardUserOptions()==null?0:tableRow.getEmsDashboardUserOptions().size());
-		count = count + (tableRow.getEmsPreference()==null?0:tableRow.getEmsPreference().size());
 		return count;
 	}
 

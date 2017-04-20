@@ -98,21 +98,21 @@ public class DashboardCountsComparator extends AbstractComparator
 		CountsEntity differentCountsForInstance2 = new CountsEntity();
 		boolean allMatch = true;
 		if (ze1.getCountOfDashboards() != ze2.getCountOfDashboards()) {
-			logger.error("Dashboards count does not match. In instance \"{}\", count is {}. In instance \"{}\", count is {}",
+			logger.info("Dashboards count does not match. In instance \"{}\", count is {}. In instance \"{}\", count is {}",
 					key1, ze1.getCountOfDashboards(), key2, ze2.getCountOfDashboards());
 			differentCountsForInstance1.setCountOfDashboards(ze1.getCountOfDashboards());
 			differentCountsForInstance2.setCountOfDashboards(ze2.getCountOfDashboards());
 			allMatch = false;
 		}
 		if (ze1.getCountOfUserOptions() != ze2.getCountOfUserOptions()) {
-			logger.error("Favorites count does not match. In instance \"{}\", count is {}. In instance \"{}\", count is {}",
+			logger.info("Favorites count does not match. In instance \"{}\", count is {}. In instance \"{}\", count is {}",
 					key1, ze1.getCountOfUserOptions(), key2, ze2.getCountOfUserOptions());
 			differentCountsForInstance1.setCountOfUserOptions(ze1.getCountOfUserOptions());
 			differentCountsForInstance2.setCountOfUserOptions(ze2.getCountOfUserOptions());
 			allMatch = false;
 		}
 		if (ze1.getCountOfPreference() != ze2.getCountOfPreference()) {
-			logger.error("Preferences count does not match. In instance \"{}\", count is {}. In instance \"{}\", count is {}",
+			logger.info("Preferences count does not match. In instance \"{}\", count is {}. In instance \"{}\", count is {}",
 					key1, ze1.getCountOfPreference(), key2, ze2.getCountOfPreference());
 			differentCountsForInstance1.setCountOfPreference(ze1.getCountOfPreference());
 			differentCountsForInstance2.setCountOfPreference(ze2.getCountOfPreference());
