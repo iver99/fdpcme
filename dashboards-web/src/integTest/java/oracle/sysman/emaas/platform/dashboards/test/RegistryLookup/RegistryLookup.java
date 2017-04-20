@@ -200,6 +200,30 @@ public class RegistryLookup
 			Assert.fail(e.getLocalizedMessage());
 		}
 	}
+	@Test
+	public void serviceAPI()
+	{
+		try {
+			Response res = RestAssured
+					.given()
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).when()
+							.get("/registry/servicemanager/registry/v1/instances?serviceName=Dashboard-API");
+
+			
+			Assert.assertTrue(res.getStatusCode() == 200);
+			Assert.assertEquals(res.jsonPath().get("items.links.rel[4]").toString(), "serviceapi/dashboards.service");
+			Assert.assertEquals(res.jsonPath().get("items.links.rel[9]").toString(), "serviceapi/dashboards.subscribedapps");
+			Assert.assertEquals(res.jsonPath().get("items.links.rel[12]").toString(), "serviceapi/dashboards.subscribedapps2");
+			Assert.assertEquals(res.jsonPath().get("items.links.rel[15]").toString(), "serviceapi/dashboards.logging");
+		}
+		catch (Exception e) {
+			LOGGER.info("context",e);
+			Assert.fail(e.getLocalizedMessage());
+		}
+	}
 
 	@Test
 	public void lookupLinkInvalidPara()
