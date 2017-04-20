@@ -81,7 +81,7 @@ public class ZDTAPI extends APIBase
 			obj.put(TABLE_DATA_KEY_DASHBOARD_PREFERENCES, tableData);
 		}
 		catch (JSONException e) {
-			logger.error(e.getLocalizedMessage(), e);
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Errors:" + e.getLocalizedMessage()).build();
 		}
 		finally {
 			if (em != null) {
@@ -133,13 +133,16 @@ public class ZDTAPI extends APIBase
 			DashboardServiceFacade dsf = new DashboardServiceFacade();
 			em = dsf.getEntityManager();
 			TableRowsEntity data = getJsonUtil().fromJson(dataToSync.toString(), TableRowsEntity.class);
-			new TableRowsSynchronizer().sync(em,data);
-			return Response.status(Status.NO_CONTENT).build();
+			String response = new TableRowsSynchronizer().sync(em,data);
+ 			if (response.contains("Errors:")) {
+ 				return Response.status(500).entity(response).build();
+ 			}
+ 			return Response.status(Status.NO_CONTENT).entity(response).build();
 		}
 		catch (IOException e) {
 			logger.error(e.getLocalizedMessage(), e);
 			ErrorEntity error = new ErrorEntity(e);
-			return buildErrorResponse(error);
+			return Response.status(500).entity("Errors:" + e.getLocalizedMessage()).build();
 		} finally {
 			if (em != null) {
 				em.close();

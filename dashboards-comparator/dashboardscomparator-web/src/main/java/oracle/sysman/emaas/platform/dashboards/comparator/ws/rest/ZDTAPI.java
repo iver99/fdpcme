@@ -242,8 +242,11 @@ public class ZDTAPI
 		DashboardRowsComparator dcc = new DashboardRowsComparator();
 		InstancesComparedData<TableRowsEntity> result = dcc.compare(tenantIdParam, userTenant);
 		try {
-			dcc.sync(result, tenantIdParam, userTenant);
-			return Response.status(Status.NO_CONTENT).build();
+			String response = dcc.sync(result, tenantIdParam, userTenant);
+ 			if (response.contains("Errors:")) {
+ 				return Response.status(Status.INTERNAL_SERVER_ERROR).entity(response).build();
+ 			}
+ 			return Response.status(Status.NO_CONTENT).entity(response).build();
 		}
 		catch (Exception e) {
 			logger.error(e.getLocalizedMessage(), e);

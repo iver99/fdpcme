@@ -105,10 +105,10 @@ public class DashboardRowsComparator extends AbstractComparator
 		return count;
 	}
 
-	public void sync(InstancesComparedData<TableRowsEntity> instancesData,String tenantId, String userTenant) throws Exception
+	public String sync(InstancesComparedData<TableRowsEntity> instancesData,String tenantId, String userTenant) throws Exception
 	{
 		if (instancesData == null) {
-			return;
+			return "Errors: Failed to retrieve ZDT OMC instances: null retrieved!";
 		}
 		// switch the data for the instances for sync
 		InstanceData<TableRowsEntity> instance1 = new InstanceData<TableRowsEntity>(instancesData.getInstance1().getKey(),
@@ -120,6 +120,12 @@ public class DashboardRowsComparator extends AbstractComparator
 		InstancesComparedData<TableRowsEntity> syncData = new InstancesComparedData<TableRowsEntity>(instance1, instance2);
 		syncForInstance(syncData.getInstance1(), tenantId, userTenant);
 		syncForInstance(syncData.getInstance2(),  tenantId, userTenant);
+		String message1 = syncForInstance(syncData.getInstance1(), tenantId, userTenant);
+ 		String message2 = syncForInstance(syncData.getInstance2(),  tenantId, userTenant);
+ 		if (message1 == null || message2 == null) {
+ 			return "Errors: Get a null or empty link for one single instance!";
+ 		}
+ 		return "cloud1: "+ message1 + "__cloud2: " + "{"+ message2+"}";
 	}
 
 	/**

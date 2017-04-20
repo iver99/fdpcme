@@ -36,10 +36,10 @@ import javax.persistence.EntityTransaction;
 public class TableRowsSynchronizer {
     private static final Logger logger = LogManager.getLogger(TableRowsSynchronizer.class);
 
-    public void sync(EntityManager em, TableRowsEntity data) {
+    public String sync(EntityManager em, TableRowsEntity data) {
         if (data == null) {
             logger.error("Failed to sync for input data is null");
-            return;
+            return "Errors:Failed to sync as input data is null";
         }
         if (syncPreferenceTableRows(em, data.getEmsPreference()) <= 0) logger.debug("nothing was added to EMS_Prefernce!");
         if (syncDashboardTableRows(em,data.getEmsDashboard()) <= 0) logger.debug("nothing was added to EMS_DASHBOARD!");
@@ -52,6 +52,7 @@ public class TableRowsSynchronizer {
         if (syncDashboardTileParamsTableRows(em,data.getEmsDashboardTileParams()) <= 0)
             logger.debug("nothing was added to EMS_DASHBOARD_TILE_PARAMS!");
         em.getTransaction().commit();
+        return "sync for tables is successful";
     }
 
 
