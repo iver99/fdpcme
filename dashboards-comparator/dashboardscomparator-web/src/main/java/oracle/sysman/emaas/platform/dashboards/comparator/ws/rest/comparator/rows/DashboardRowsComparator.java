@@ -124,10 +124,8 @@ public class DashboardRowsComparator extends AbstractComparator
 		syncForInstance(syncData.getInstance2(),  tenantId, userTenant);
 		String message1 = syncForInstance(syncData.getInstance1(), tenantId, userTenant);
  		String message2 = syncForInstance(syncData.getInstance2(),  tenantId, userTenant);
- 		if (message1 == null || message2 == null) {
- 			return "Errors: Get a null or empty link for one single instance!";
- 		}
- 		return "cloud1: "+ message1 + "__cloud2: " + "{"+ message2+"}";
+ 		
+ 		return "cloud1: {"+ (message1==null?"":message1) + "}" + "__cloud2: {" + (message2==null?"":message2)+"}";
 	}
 
 	/**
@@ -310,7 +308,7 @@ public class DashboardRowsComparator extends AbstractComparator
 		Link lk = getSingleInstanceUrl(instance.getClient(), "zdt/sync", "http");
 		if (lk == null) {
 			logger.warn("Get a null or empty link for one single instance!");
-			return null;
+			return "Errors:Get a null or empty link for one single instance!";
 		}
 		logger.info("print the sync data {} !",instance.getData());
 		TableRowsEntity entity = instance.getData();
