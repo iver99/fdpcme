@@ -878,9 +878,9 @@ public class DashboardManager
 		}
 		sb.append(" and ((p.is_system=0 ");
 		if (filter != null) {
-			if (filter.getIncludedWidgetGroupsString() != null && !filter.getIncludedWidgetGroupsString().isEmpty()) {
+			if (filter.getIncludedWidgetGroupsString(tenantVersionModel) != null && !filter.getIncludedWidgetGroupsString(tenantVersionModel).isEmpty()) {
 				sb.append(" and (p.dashboard_id in (select t.dashboard_Id from Ems_Dashboard_Tile t where t.WIDGET_GROUP_NAME in ("
-						+ filter.getIncludedWidgetGroupsString() + " ))) ");
+						+ filter.getIncludedWidgetGroupsString(tenantVersionModel) + " ))) ");
 
 			}
 		}
@@ -905,9 +905,9 @@ public class DashboardManager
 		}
 		sb1.append(" and ( (p.is_system=0 ");
 		if (filter != null) {
-			if (filter.getIncludedWidgetGroupsString() != null && !filter.getIncludedWidgetGroupsString().isEmpty()) {
+			if (filter.getIncludedWidgetGroupsString(tenantVersionModel) != null && !filter.getIncludedWidgetGroupsString(tenantVersionModel).isEmpty()) {
 				sb1.append(" and p.DASHBOARD_ID in (SELECT p2.DASHBOARD_SET_ID FROM EMS_DASHBOARD_SET p2 WHERE p2.SUB_DASHBOARD_ID IN (SELECT t.dashboard_Id FROM Ems_Dashboard_Tile t WHERE t.WIDGET_GROUP_NAME IN ("
-						+ filter.getIncludedWidgetGroupsString()+ ")))");
+						+ filter.getIncludedWidgetGroupsString(tenantVersionModel)+ ")))");
 			}
 		}
 		sb1.append(") or (p.is_system=1 ");

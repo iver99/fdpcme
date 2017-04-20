@@ -375,11 +375,16 @@ public class DashboardsFilter
 		return sb;
 	}
 
-	String getIncludedWidgetGroupsString()
+	String getIncludedWidgetGroupsString(final TenantVersionModel tenantVersionModel)
 	{
 		List<String> ps = getIncludedWidgetGroups();
 		if (ps == null || ps.isEmpty()) {
 			return null;
+		}
+		//handing v2/v3 tenant
+		if(!tenantVersionModel.getIsV1Tenant() && !ps.contains(ITA_WIGDETGROUP)){
+			ps.add(ITA_WIGDETGROUP);
+			LOGGER.info("Adding UDE widget group string for v2/v3 tenant!");
 		}
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < ps.size(); i++) {
@@ -388,6 +393,7 @@ public class DashboardsFilter
 			}
 			sb.append("'" + ps.get(i) + "'");
 		}
+		LOGGER.info("Included widget group String is {}", sb.toString());
 		return sb.toString();
 	}	
 
