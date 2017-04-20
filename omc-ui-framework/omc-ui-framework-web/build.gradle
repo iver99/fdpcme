@@ -675,7 +675,7 @@ task copyDevJs(type:Copy, dependsOn: [cleanJs, unpackJETFromArtifactory, unpackJ
     into stagingDir
     
     doLast {
-        delete 'public_html/@version@/css'
+        //delete 'public_html/@version@/css'
 	
 	//add setting to testMain.js
 	File testMainFile = new File(stagingDir+'/@version@/js/testMain.js')

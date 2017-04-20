@@ -82,16 +82,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                         currentCompositeParentId = parentMenuId;
                         if (menuJson.serviceMenuMsgBundle) {
                             var url = menuJson.serviceMenuMsgBundle;
-                            if (dfu.isDevMode()) {
-                                var dfBaseUrl = dfu.getDevData().dfRestApiEndPoint;
-                                url = dfBaseUrl.substring(0, dfBaseUrl.indexOf('/emcpdf/')) + url;
-                            }
-                            else {
-                                url = url.substring(url.indexOf('/emsaasui/') + 1, url.length - 3);
-                            }
-//                            //testing code
-//                            url = menuJson.serviceMenuMsgBundle.substring(menuJson.serviceMenuMsgBundle.indexOf('/emsaasui/') + 1, menuJson.serviceMenuMsgBundle.length - 3); 
-//                            //testing code
+                            url = url.substring(url.indexOf('/emsaasui/') + 1, url.length - 3);
                             
                             require(['ojL10n!' + url], function (_nls) {
                                 var rootCompositMenuItem = {'id': rootCompositeMenuid, 
@@ -274,17 +265,18 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                         dfu.getRegistrations(function(data){
                             self.registration = data;
                             fetchGlobalMenuLinks(self.registration);
-                            self.serviceLinks = data.serviceMenus;
-//                            //testing code start
-//                            self.serviceLinks = [
-//                                {
-//                                    'appId': 'APM',
-//                                    'serviceName': 'ApmUI',
-//                                    'version': '1.0',
-//                                    'metaDataHref': 'http://localhost:8383/emsaasui/uifwk/@version@/data/serviceMenus.json'
-//                                }
-//                            ];
-//                            //testing code end
+                            if (dfu.isDevMode()) {
+                                self.serviceLinks = [];
+                                if (dfu.getDevData().globalMenuJSON && serviceAppId) {
+                                    self.serviceLinks = [{
+                                        'appId': serviceAppId,
+                                        'metaDataHref': dfu.getDevData().globalMenuJSON
+                                    }];
+                                }
+                            }
+                            else {
+                                self.serviceLinks = data.serviceMenus;
+                            }
                             if (self.serviceLinks && self.serviceLinks.length > 0) {
                                 loadServiceData(dfdLoadServiceMenus, self.serviceLinks);
                             }
@@ -313,9 +305,6 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                                     type: 'get',
                                     headers: header,
                                     success: function (data) {
-//                                        //testing
-//                                        data = 'ADMINISTER_LOG_TYPE,RUN_AWR_VIEWER_APP,USE_TARGET_ANALYTICS,ADMIN_ITA_WAREHOUSE,ADMINISTER_ROLE,RUN_MW_PERF_APP,MANAGE_CREDENTIALS,FULL_ANY_TARGET,RUN_DB_PERF_APP,DELETE_ANY_LOG,VIEW_SOURCE_DETAILS,OVERRIDE_OOTB_RULE_SETTINGS,CREATE_UPLOAD,RUN_DB_RESOURCE_APP,ADMIN_ITA_TARGET,RUN_FLEX_ANALYZER_APP,ASSOCIATE_RULE_TO_TARGET,VIEW_APMAAS_MONITORING_DATA,VIEW_LOG_TYPE_DETAILS,SET_RULE_TO_AUTO_ASSOCIATE,RUN_RESOURCE_ANALYTICS_APP,MANAGE_ALERT_SETUP,MANAGE_APMAAS_AGENT,VIEW_ANY_TARGET,ADMINISTER_SOURCE,SEARCH_LOGS';
-//                                        //testing
                                         self.privilegeList = data;
                                         dfdGetUserGrants.resolve();
                                     },
@@ -366,12 +355,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                             var header = dfu.getDefaultHeader();
 
                             var url = linkItem.metaDataHref;
-                            if (dfu.isDevMode()) {
-                                url = url.replace("https://", "http://").replace("4443", "7019");
-                            }
-                            else {
-                                url = url.substring(url.indexOf('/emsaasui/'));
-                            }
+                            url = url.substring(url.indexOf('/emsaasui/'));
                             dfu.ajaxWithRetry(url, {
                                 type: 'get',
                                 dataType: 'json',
@@ -385,16 +369,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                                         self.loadedServiceCnt(self.loadedServiceCnt() + 1);
                                         return;
                                     }
-                                    if (dfu.isDevMode()) {
-                                        var dfBaseUrl = dfu.getDevData().dfRestApiEndPoint;
-                                        url = dfBaseUrl.substring(0, dfBaseUrl.indexOf('/emcpdf/')) + url;
-                                    }
-                                    else {
-                                        url = url.substring(url.indexOf('/emsaasui/') + 1, url.length - 3);
-                                    }
-//                                    //testing code
-//                                    url = data.serviceMenuMsgBundle.substring(data.serviceMenuMsgBundle.indexOf('/emsaasui/') + 1, data.serviceMenuMsgBundle.length - 3); 
-//                                    //testing code
+                                    url = url.substring(url.indexOf('/emsaasui/') + 1, url.length - 3);
                                     
                                     //Load resource bundle files
                                     require(['ojL10n!' + url], function (_nls) {
@@ -521,6 +496,9 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 //Do privilege check
                 function checkPrivilege(requiredPrivilege) {
                     if (!requiredPrivilege) {
+                        return true;
+                    }
+                    if (dfu.isDevMode() && !dfu.getDevData().userGrants) {
                         return true;
                     }
                     
