@@ -104,7 +104,7 @@ public class DashboardsFilter
 		}
 	}
 
-	public List<DashboardApplicationType> getIncludedApplicationTypes()
+	public List<DashboardApplicationType> getIncludedApplicationTypes(Boolean isV1Tenant)
 	{
 		if (includedApps == null || includedApps.isEmpty()) {
 			return Collections.emptyList();
@@ -113,6 +113,11 @@ public class DashboardsFilter
 		try {
 			for (String app : includedApps) {
 				types.add(DashboardApplicationType.fromJsonValue(app));
+			}
+			//handling v2/v3 tenant
+			if(!isV1Tenant && !types.contains(DashboardApplicationType.UDE)){
+				types.contains(DashboardApplicationType.UDE);
+				LOGGER.info("Adding UDE application type for v2/v3 tenant");
 			}
 		}
 		catch (IllegalArgumentException iae) {

@@ -13,7 +13,9 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
+import oracle.sysman.emaas.platform.dashboards.core.model.subscription2.AppsInfo;
 import oracle.sysman.emaas.platform.dashboards.core.model.subscription2.TenantSubscriptionInfo;
+import oracle.sysman.emaas.platform.dashboards.core.util.*;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.exception.ExecutionException;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
@@ -41,17 +43,6 @@ import oracle.sysman.emaas.platform.dashboards.core.model.PaginatedDashboards;
 import oracle.sysman.emaas.platform.dashboards.core.model.Tile;
 import oracle.sysman.emaas.platform.dashboards.core.model.combined.CombinedDashboard;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
-import oracle.sysman.emaas.platform.dashboards.core.util.AppContext;
-import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
-import oracle.sysman.emaas.platform.dashboards.core.util.DateUtil;
-import oracle.sysman.emaas.platform.dashboards.core.util.IdGenerator;
-import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
-import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
-import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
-import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
-import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
-import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
-import oracle.sysman.emaas.platform.dashboards.core.util.ZDTContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil.VersionedLink;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
@@ -823,8 +814,9 @@ public class DashboardManager
 		if (pageSize != null) {
 			maxResults = pageSize.intValue();
 		}
-
-		List<DashboardApplicationType> apps = getTenantApplications();
+		//v1==>true, v2/v3==>false
+		Boolean isV1Tenant = new Boolean(Boolean.FALSE);
+		List<DashboardApplicationType> apps = getTenantApplications(isV1Tenant);
 		// avoid impacts from bundle service, we get basic services only
 		apps = DashboardApplicationType.getBasicServiceList(apps);
 		if (apps == null || apps.isEmpty()) {
@@ -893,7 +885,7 @@ public class DashboardManager
 		}
 		sb.append(") or (p.is_system=1 ");
 		if (filter != null) {
-			concatIncludedApplicationTypes(filter, sb);
+			concatIncludedApplicationTypes(filter, sb, isV1Tenant);
 		}
 		sb.append("))");
 
@@ -919,7 +911,7 @@ public class DashboardManager
 		}
 		sb1.append(") or (p.is_system=1 ");
 		if (filter != null) {
-			concatIncludedApplicationTypes(filter, sb1);
+			concatIncludedApplicationTypes(filter, sb1,isV1Tenant);
 		}
 		sb1.append("))");
 		sb1.append(" and (p.share_public=1 or p.owner =?"+ index++ +"  or p.application_type  IN (" + sbApps.toString() + ")))");
@@ -1400,15 +1392,15 @@ public class DashboardManager
 	 * @param filter
 	 * @param sb
 	 */
-	private void concatIncludedApplicationTypes(DashboardsFilter filter, StringBuilder sb)
+	private void concatIncludedApplicationTypes(DashboardsFilter filter, StringBuilder sb, Boolean isV1Tenant)
 	{
-		if (filter.getIncludedApplicationTypes() != null && !filter.getIncludedApplicationTypes().isEmpty()) {
+		if (filter.getIncludedApplicationTypes(isV1Tenant) != null && !filter.getIncludedApplicationTypes(isV1Tenant).isEmpty()) {
 			sb.append(" and (");
-			for (int i = 0; i < filter.getIncludedApplicationTypes().size(); i++) {
+			for (int i = 0; i < filter.getIncludedApplicationTypes(isV1Tenant).size(); i++) {
 				if (i != 0) {
 					sb.append(" or ");
 				}
-				sb.append(" p.application_type = " + filter.getIncludedApplicationTypes().get(i).getValue() + " ");
+				sb.append(" p.application_type = " + filter.getIncludedApplicationTypes(isV1Tenant).get(i).getValue() + " ");
 			}
 			sb.append(")");
 		}
@@ -1573,14 +1565,16 @@ public class DashboardManager
 		}
 	}
 
-	private List<DashboardApplicationType> getTenantApplications()
+	private List<DashboardApplicationType> getTenantApplications(Boolean isV1Tenant)
 	{
 		String opcTenantId = TenantContext.getCurrentTenant();
 		if (opcTenantId == null || "".equals(opcTenantId)) {
 			LOGGER.warn("When trying to retrieve subscribed application, it's found the tenant context is not set (TenantContext.getCurrentTenant() == null)");
 			return Collections.emptyList();
 		}
-		List<String> appNames = TenantSubscriptionUtil.getTenantSubscribedServices(opcTenantId, new TenantSubscriptionInfo());
+		TenantSubscriptionInfo tenantSubscriptionInfo = new TenantSubscriptionInfo();
+		List<String> appNames = TenantSubscriptionUtil.getTenantSubscribedServices(opcTenantId, tenantSubscriptionInfo);
+		isV1Tenant = checkTenantVersion(tenantSubscriptionInfo);
 		if (appNames == null || appNames.isEmpty()) {
 			return Collections.emptyList();
 		}
@@ -1589,7 +1583,31 @@ public class DashboardManager
 			DashboardApplicationType dat = DashboardApplicationType.fromJsonValue(appName);
 			apps.add(dat);
 		}
+		//handle v2/v3 tenant
+		if(!isV1Tenant && !apps.contains(DashboardApplicationType.UDE)){
+			LOGGER.info("Adding UDE application type for v2/v3 tenant");
+			apps.add(DashboardApplicationType.UDE);
+		}
 		return apps;
+	}
+
+	/**
+	 * if tenant is v1 , return true, if v2/v3, return false
+	 * @return
+	 */
+	private boolean checkTenantVersion(TenantSubscriptionInfo tenantSubscriptionInfo){
+		if(tenantSubscriptionInfo.getAppsInfoList()!=null && !tenantSubscriptionInfo.getAppsInfoList().isEmpty()){
+			for(AppsInfo appsInfo : tenantSubscriptionInfo.getAppsInfoList()){
+				if(SubsriptionAppsUtil.V2_TENANT.equals(appsInfo.getLicVersion()) ||
+						SubsriptionAppsUtil.V3_TENANT.equals(appsInfo.getLicVersion())){
+					LOGGER.info("Check tenant version is V1/V2 tenant.");
+					return false;
+				}
+			}
+		}
+		LOGGER.info("Check tenant version is V1 tenant.");
+		//v1
+		return true;
 	}
 
 	private void initializeQueryParams(Query query, List<Object> paramList)
@@ -1610,7 +1628,7 @@ public class DashboardManager
 			LOGGER.debug("null dashboard is not accessed by current tenant");
 			return false;
 		}
-		List<DashboardApplicationType> datList = getTenantApplications();
+		List<DashboardApplicationType> datList = getTenantApplications(new Boolean(Boolean.FALSE));
 		// as dashboards only stores basic servcies data, we need to trasfer (possible) bundle services to basic servcies for comparision
 		datList = DashboardApplicationType.getBasicServiceList(datList);
 		if (datList == null || datList.isEmpty()) { // accessible app list is empty
