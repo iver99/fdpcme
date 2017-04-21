@@ -70,7 +70,7 @@ public class TenantSubscriptions_license
 	@Test
 	public void getSubscribedapps_license_OMCEE()
 	{
-		tenantid = "df_omcee";
+		tenantid = CommonTest.getTenantName("df_omcee");
 		try {
 			Response res1 = RestAssured
 					.given()
@@ -91,7 +91,7 @@ public class TenantSubscriptions_license
 		}
 	}
 
-	@Test
+	//@Test
 	public void getSubscribedapps_license_OMCEnterprise()
 	{
 		tenantid = "df_omc_enterprise";
@@ -115,7 +115,7 @@ public class TenantSubscriptions_license
 		}
 	}
 
-	@Test
+	//@Test
 	public void getSubscribedapps_license_OMCLog()
 	{
 		tenantid = "df_omc_log";
@@ -142,7 +142,7 @@ public class TenantSubscriptions_license
 	@Test
 	public void getSubscribedapps_license_OMCLOG_V3()
 	{
-		tenantid = "df_omclog";
+		tenantid = CommonTest.getTenantName("df_omclog");
 		try {
 			Response res1 = RestAssured
 					.given()
@@ -166,7 +166,7 @@ public class TenantSubscriptions_license
 	@Test
 	public void getSubscribedapps_license_OMCSE()
 	{
-		tenantid = "df_omcse";
+		tenantid = CommonTest.getTenantName("df_omcse");
 		try {
 			Response res1 = RestAssured
 					.given()
@@ -187,7 +187,7 @@ public class TenantSubscriptions_license
 		}
 	}
 
-	@Test
+	//@Test
 	public void getSubscribedapps_license_OMCStandard()
 	{
 		tenantid = "df_omc_standard";
@@ -211,7 +211,7 @@ public class TenantSubscriptions_license
 		}
 	}
 
-	@Test
+	//@Test
 	public void getSubscribedapps_license_OSMACCCompliance()
 	{
 		tenantid = "df_osmacc_compliance";
@@ -235,7 +235,7 @@ public class TenantSubscriptions_license
 		}
 	}
 
-	@Test
+	//@Test
 	public void getSubscribedapps_license_OSMACCSecurity()
 	{
 		tenantid = "df_osmacc_security";
@@ -262,7 +262,7 @@ public class TenantSubscriptions_license
 	@Test
 	public void getSubscribedapps_license_SECSE()
 	{
-		tenantid = "df_secse";
+		tenantid = CommonTest.getTenantName("df_secse");
 		try {
 			Response res1 = RestAssured
 					.given()
@@ -286,7 +286,7 @@ public class TenantSubscriptions_license
 	@Test
 	public void getSubscribedapps_license_SECSMA()
 	{
-		tenantid = "df_secsma";
+		tenantid = CommonTest.getTenantName("df_secsma");
 		try {
 			Response res1 = RestAssured
 					.given()

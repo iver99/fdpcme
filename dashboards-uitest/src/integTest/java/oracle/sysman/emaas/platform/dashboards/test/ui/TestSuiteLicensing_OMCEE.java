@@ -18,7 +18,7 @@ import org.testng.annotations.Test;
 
 public class TestSuiteLicensing_OMCEE extends LoginAndLogout
 {
-	private final String tenant_OMC_Enterprise = "df_omcee";
+	private final String tenant_OMC_Enterprise = DashBoardUtils.getTenantName("df_omcee");
 
 	private final String UDEWidget = "Analytics Line";
 	private String dbName_Enterprise = "";
@@ -32,7 +32,7 @@ public class TestSuiteLicensing_OMCEE extends LoginAndLogout
 	}
 
 	@Test(alwaysRun = true)
-	public void testBrandingBar_OMC_Enterprise()
+	public void testBrandingBar_OMCEE()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_OMC_Enterprise);
 		webd.getLogger().info("start to test in Branding Bar--with OMC Enterprise");
@@ -67,7 +67,7 @@ public class TestSuiteLicensing_OMCEE extends LoginAndLogout
 	}
 
 	@Test(alwaysRun = true)
-	public void testBuilderPage_OMC_Enterprise()
+	public void testBuilderPage_OMCEE()
 	{
 		dbName_Enterprise = "Dashboard OMC Enterprise-" + DashBoardUtils.generateTimeStamp();
 		String dsbDesc = "Dashboard for OMC Enterprise";
@@ -94,7 +94,7 @@ public class TestSuiteLicensing_OMCEE extends LoginAndLogout
 	}
 
 	@Test(alwaysRun = true)
-	public void testHomePage_OMC_Enterprise()
+	public void testHomePage_OMCEE()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_OMC_Enterprise);
 		webd.getLogger().info("start to test in Home Page -- with OMC Enterprise");
@@ -120,7 +120,34 @@ public class TestSuiteLicensing_OMCEE extends LoginAndLogout
 	}
 
 	@Test(alwaysRun = true)
-	public void testWelcomepage_OMC_Enterprise()
+	public void testHomePage_OMCEE_OOBCheck()
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_OMC_Enterprise);
+		webd.getLogger().info("start to test OOB in Home Page -- with OMC Enterprise");
+
+		//switch to grid view
+		webd.getLogger().info("Switch to Grid View");
+		DashboardHomeUtil.gridView(webd);
+
+		//verify all the oob display
+		webd.getLogger().info("Verify the OOB dashboards display in home page");
+		DashBoardUtils.apmOobExist();
+		DashBoardUtils.itaOobExist();
+		DashBoardUtils.orchestrationOobExist();
+		DashBoardUtils.laOobNotExist();
+
+		webd.getLogger().info("Switch to List View");
+		DashboardHomeUtil.listView(webd);
+
+		//verify all the oob display
+		DashBoardUtils.apmOobExist();
+		DashBoardUtils.itaOobExist();
+		DashBoardUtils.orchestrationOobExist();
+		DashBoardUtils.laOobNotExist();
+	}
+
+	@Test(alwaysRun = true)
+	public void testWelcomepage_OMCEE()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_OMC_Enterprise);
 		webd.getLogger().info("start to test in test Welcome Page -- OMC Enterprise Edition");

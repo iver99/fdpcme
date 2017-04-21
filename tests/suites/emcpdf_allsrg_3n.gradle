@@ -44,6 +44,7 @@ import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
  ***************************************************************************************************/
 
 def emcpdfCommonAPIVer = getDependentSdkVersion('com.oracle.emaas.emcpdf.testsdk.ui', 'dashboards-ui-test-common-api', '2.+')
+def omctfSetupTestSDKVer = getDependentSdkVersion('com.oracle.omc.omctf.testsdk', 'omctf_omcsetup', '1.+')
 
 //Update the lrgConfig configuration to specify where the test jar is.
 dependencies{
@@ -52,7 +53,8 @@ dependencies{
 	exclude('module':'groovy')
     }
 
-     testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: emcpdfCommonAPIVer)
+    testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: emcpdfCommonAPIVer)
+    testConfig(group: 'com.oracle.omc.omctf.testsdk', name: 'omctf_omcsetup', version: omctfSetupTestSDKVer)
 }
 
 // depends on OMCTF-977

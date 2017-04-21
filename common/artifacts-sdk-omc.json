@@ -43,9 +43,6 @@
 		"version": "1.+",
 		"transitive": false
 	},
-	
-
-
 	"emcs-targetselector": {
 		"method": "artifactFilterSdkVersion",
 		"group": "com.oracle.emaas.emctas.tgtsel",
@@ -54,5 +51,10 @@
 		"ext": "zip",
 		"transitive": false
 	},
-
+	"omctfSetupTestSDK": { 
+		"group": "com.oracle.omc.omctf.testsdk", 
+		"name": "omctf_omcsetup", 
+		"version": "1.+", 
+		"transitive": "true" 
+	}
 }

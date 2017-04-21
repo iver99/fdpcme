@@ -8,16 +8,14 @@ import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 public class DashboardHomeUtil
 {
-	private DashboardHomeUtil() {
-	  }
-
 	public static final String DASHBOARD = IDashboardHomeUtil.DASHBOARD;
+
 	public static final String DASHBOARDSET = IDashboardHomeUtil.DASHBOARDSET;
 	public static final String EXPLOREDATA_MENU_ANALYZE = IDashboardHomeUtil.EXPLOREDATA_MENU_ANALYZE;
 	public static final String EXPLOREDATA_MENU_LOG = IDashboardHomeUtil.EXPLOREDATA_MENU_LOG;
 	public static final String EXPLOREDATA_MENU_SEARCH = IDashboardHomeUtil.EXPLOREDATA_MENU_SEARCH;
-    public static final String EXPLOREDATA_MENU_LOGEXPLORER = IDashboardHomeUtil.EXPLOREDATA_MENU_LOGEXPLORER;
-    public static final String EXPLOREDATA_MENU_DATAEXPLORER = IDashboardHomeUtil.EXPLOREDATA_MENU_DATAEXPLORER;
+	public static final String EXPLOREDATA_MENU_LOGEXPLORER = IDashboardHomeUtil.EXPLOREDATA_MENU_LOGEXPLORER;
+	public static final String EXPLOREDATA_MENU_DATAEXPLORER = IDashboardHomeUtil.EXPLOREDATA_MENU_DATAEXPLORER;
 	public static final String DASHBOARDS_GRID_VIEW = IDashboardHomeUtil.DASHBOARDS_GRID_VIEW;
 	public static final String DASHBOARDS_LIST_VIEW = IDashboardHomeUtil.DASHBOARDS_LIST_VIEW;
 	public static final String DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME_ASC = IDashboardHomeUtil.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME_ASC;
@@ -31,7 +29,7 @@ public class DashboardHomeUtil
 	public static final String DASHBOARD_QUERY_ORDER_BY_OWNER_ASC = IDashboardHomeUtil.DASHBOARD_QUERY_ORDER_BY_OWNER_ASC;
 	public static final String DASHBOARD_QUERY_ORDER_BY_OWNER_DSC = IDashboardHomeUtil.DASHBOARD_QUERY_ORDER_BY_OWNER_DSC;
 
-	public static void closeOverviewPage(WebDriver driver) 
+	public static void closeOverviewPage(WebDriver driver)
 	{
 		IDashboardHomeUtil dhu = new UtilLoader<IDashboardHomeUtil>().loadUtil(driver, IDashboardHomeUtil.class);
 		dhu.closeOverviewPage(driver);
@@ -44,10 +42,9 @@ public class DashboardHomeUtil
 	 * @param name
 	 *            dashboard name
 	 * @param descriptions
-	 *            dashboard description(optional)
-	 * @
+	 *            dashboard description(optional) @
 	 */
-	public static void createDashboard(WebDriver driver, String name, String descriptions) 
+	public static void createDashboard(WebDriver driver, String name, String descriptions)
 	{
 		DashboardHomeUtil.createDashboard(driver, name, descriptions, IDashboardHomeUtil.TYPE_DASHBOARD);
 	}
@@ -61,10 +58,9 @@ public class DashboardHomeUtil
 	 * @param descriptions
 	 *            dashboard description(optional)
 	 * @param type
-	 *            dashboard | dashboardSet
-	 * @
+	 *            dashboard | dashboardSet @
 	 */
-	public static void createDashboard(WebDriver driver, String name, String descriptions, String type) 
+	public static void createDashboard(WebDriver driver, String name, String descriptions, String type)
 	{
 		IDashboardHomeUtil dhu = new UtilLoader<IDashboardHomeUtil>().loadUtil(driver, IDashboardHomeUtil.class);
 		dhu.createDashboard(driver, name, descriptions, type);
@@ -77,10 +73,9 @@ public class DashboardHomeUtil
 	 * @param name
 	 *            dashboard set name
 	 * @param descriptions
-	 *            dashboard set description(optional)
-	 * @
+	 *            dashboard set description(optional) @
 	 */
-	public static void createDashboardSet(WebDriver driver, String name, String descriptions) 
+	public static void createDashboardSet(WebDriver driver, String name, String descriptions)
 	{
 		DashboardHomeUtil.createDashboard(driver, name, descriptions, IDashboardHomeUtil.TYPE_DASHBOARDSET);
 	}
@@ -91,10 +86,9 @@ public class DashboardHomeUtil
 	 * @param dashboardName
 	 *            dashboard name
 	 * @param view
-	 *            dashboards_grid_view | dashboards_list_view
-	 * @
+	 *            dashboards_grid_view | dashboards_list_view @
 	 */
-	public static void deleteDashboard(WebDriver driver, String dashboardName, String view) 
+	public static void deleteDashboard(WebDriver driver, String dashboardName, String view)
 	{
 		IDashboardHomeUtil dhu = new UtilLoader<IDashboardHomeUtil>().loadUtil(driver, IDashboardHomeUtil.class);
 		dhu.deleteDashboard(driver, dashboardName, view);
@@ -105,10 +99,9 @@ public class DashboardHomeUtil
 	 *
 	 * @param driver
 	 * @param filter
-	 *            filter name - apm,la,ita,oracle,share,me,favorites(multiple choice and split with comma)
-	 * @
+	 *            filter name - apm,la,ita,orchestration,oracle,share,me,favorites(multiple choice and split with comma) @
 	 */
-	public static void filterOptions(WebDriver driver, String filter) 
+	public static void filterOptions(WebDriver driver, String filter)
 	{
 		IDashboardHomeUtil dhu = new UtilLoader<IDashboardHomeUtil>().loadUtil(driver, IDashboardHomeUtil.class);
 		dhu.filterOptions(driver, filter);
@@ -118,10 +111,9 @@ public class DashboardHomeUtil
 	 * goto the link in Data Explorer by displayed name
 	 *
 	 * @param option
-	 *            Analyze | Log  | Search
-	 * @
+	 *            Analyze | Log | Search @
 	 */
-	public static void gotoDataExplorer(WebDriver driver, String option) 
+	public static void gotoDataExplorer(WebDriver driver, String option)
 	{
 		IDashboardHomeUtil dhu = new UtilLoader<IDashboardHomeUtil>().loadUtil(driver, IDashboardHomeUtil.class);
 		dhu.gotoDataExplorer(driver, option);
@@ -131,9 +123,9 @@ public class DashboardHomeUtil
 	 * choose grid view
 	 *
 	 * @param driver
-	 * @
+	 *            @
 	 */
-	public static void gridView(WebDriver driver) 
+	public static void gridView(WebDriver driver)
 	{
 		IDashboardHomeUtil dhu = new UtilLoader<IDashboardHomeUtil>().loadUtil(driver, IDashboardHomeUtil.class);
 		dhu.gridView(driver);
@@ -144,10 +136,9 @@ public class DashboardHomeUtil
 	 *
 	 * @param driver
 	 * @param dashboardName
-	 * @return
-	 * @
+	 * @return @
 	 */
-	public static boolean isDashboardExisted(WebDriver driver, String dashboardName) 
+	public static boolean isDashboardExisted(WebDriver driver, String dashboardName)
 	{
 		IDashboardHomeUtil dhu = new UtilLoader<IDashboardHomeUtil>().loadUtil(driver, IDashboardHomeUtil.class);
 		return dhu.isDashboardExisted(driver, dashboardName);
@@ -159,16 +150,15 @@ public class DashboardHomeUtil
 	 * @param driver
 	 * @param filter
 	 *            filer name - apm, la , ita, oracle, share, me favorites(single choice)
-	 * @return
-	 * @
+	 * @return @
 	 */
-	public static boolean isFilterOptionSelected(WebDriver driver, String filter) 
+	public static boolean isFilterOptionSelected(WebDriver driver, String filter)
 	{
 		IDashboardHomeUtil dhu = new UtilLoader<IDashboardHomeUtil>().loadUtil(driver, IDashboardHomeUtil.class);
 		return dhu.isFilterOptionSelected(driver, filter);
 	}
 
-	public static List<String> listDashboardNames(WebDriver driver) 
+	public static List<String> listDashboardNames(WebDriver driver)
 	{
 		IDashboardHomeUtil dhu = new UtilLoader<IDashboardHomeUtil>().loadUtil(driver, IDashboardHomeUtil.class);
 		return dhu.listDashboardNames(driver);
@@ -178,9 +168,9 @@ public class DashboardHomeUtil
 	 * choose the list view
 	 *
 	 * @param driver
-	 * @
+	 *            @
 	 */
-	public static void listView(WebDriver driver) 
+	public static void listView(WebDriver driver)
 	{
 		IDashboardHomeUtil dhu = new UtilLoader<IDashboardHomeUtil>().loadUtil(driver, IDashboardHomeUtil.class);
 		dhu.listView(driver);
@@ -190,9 +180,9 @@ public class DashboardHomeUtil
 	 * reset the filters
 	 *
 	 * @param driver
-	 * @
+	 *            @
 	 */
-	public static void resetFilterOptions(WebDriver driver) 
+	public static void resetFilterOptions(WebDriver driver)
 	{
 		IDashboardHomeUtil dhu = new UtilLoader<IDashboardHomeUtil>().loadUtil(driver, IDashboardHomeUtil.class);
 		dhu.resetFilterOptions(driver);
@@ -203,9 +193,9 @@ public class DashboardHomeUtil
 	 *
 	 * @param driver
 	 * @param searchString
-	 * @
+	 *            @
 	 */
-	public static void search(WebDriver driver, String searchString) 
+	public static void search(WebDriver driver, String searchString)
 	{
 		IDashboardHomeUtil dhu = new UtilLoader<IDashboardHomeUtil>().loadUtil(driver, IDashboardHomeUtil.class);
 		dhu.search(driver, searchString);
@@ -216,9 +206,9 @@ public class DashboardHomeUtil
 	 *
 	 * @param driver
 	 * @param dashboardName
-	 * @
+	 *            @
 	 */
-	public static void selectDashboard(WebDriver driver, String dashboardName) 
+	public static void selectDashboard(WebDriver driver, String dashboardName)
 	{
 		IDashboardHomeUtil dhu = new UtilLoader<IDashboardHomeUtil>().loadUtil(driver, IDashboardHomeUtil.class);
 		dhu.selectDashboard(driver, dashboardName);
@@ -229,9 +219,9 @@ public class DashboardHomeUtil
 	 *
 	 * @param driver
 	 * @param dashboardName
-	 * @
+	 *            @
 	 */
-	public static void selectOOB(WebDriver driver, String dashboardName) 
+	public static void selectOOB(WebDriver driver, String dashboardName)
 	{
 		IDashboardHomeUtil dhu = new UtilLoader<IDashboardHomeUtil>().loadUtil(driver, IDashboardHomeUtil.class);
 		dhu.selectOOB(driver, dashboardName);
@@ -243,10 +233,9 @@ public class DashboardHomeUtil
 	 * @param driver
 	 * @param option
 	 *            sort by - default, access_date_asc, access_date_dsc, name_asc, name_dsc, creation_date_asc, creation_date_dsc,
-	 *            last_modification_date_asc, last_modification_date_dsc, owner_asc, owner_dsc
-	 * @
+	 *            last_modification_date_asc, last_modification_date_dsc, owner_asc, owner_dsc @
 	 */
-	public static void sortBy(WebDriver driver, String option) 
+	public static void sortBy(WebDriver driver, String option)
 	{
 		IDashboardHomeUtil dhu = new UtilLoader<IDashboardHomeUtil>().loadUtil(driver, IDashboardHomeUtil.class);
 		dhu.sortBy(driver, option);
@@ -254,9 +243,9 @@ public class DashboardHomeUtil
 
 	/**
 	 * @param driver
-	 * @
+	 *            @
 	 */
-	public static void sortListViewByCreateBy(WebDriver driver) 
+	public static void sortListViewByCreateBy(WebDriver driver)
 	{
 		IDashboardHomeUtil dhu = new UtilLoader<IDashboardHomeUtil>().loadUtil(driver, IDashboardHomeUtil.class);
 		dhu.sortListViewByCreateBy(driver);
@@ -264,9 +253,9 @@ public class DashboardHomeUtil
 
 	/**
 	 * @param driver
-	 * @
+	 *            @
 	 */
-	public static void sortListViewByLastModified(WebDriver driver) 
+	public static void sortListViewByLastModified(WebDriver driver)
 	{
 		IDashboardHomeUtil dhu = new UtilLoader<IDashboardHomeUtil>().loadUtil(driver, IDashboardHomeUtil.class);
 		dhu.sortListViewByLastModified(driver);
@@ -274,9 +263,9 @@ public class DashboardHomeUtil
 
 	/**
 	 * @param driver
-	 * @
+	 *            @
 	 */
-	public static void sortListViewByName(WebDriver driver) 
+	public static void sortListViewByName(WebDriver driver)
 	{
 		IDashboardHomeUtil dhu = new UtilLoader<IDashboardHomeUtil>().loadUtil(driver, IDashboardHomeUtil.class);
 		dhu.sortListViewByName(driver);
@@ -287,11 +276,15 @@ public class DashboardHomeUtil
 	 *
 	 * @param driver
 	 * @param dashboardName
-	 * @
+	 *            @
 	 */
-	public static void waitForDashboardPresent(WebDriver driver, String dashboardName) 
+	public static void waitForDashboardPresent(WebDriver driver, String dashboardName)
 	{
 		IDashboardHomeUtil dhu = new UtilLoader<IDashboardHomeUtil>().loadUtil(driver, IDashboardHomeUtil.class);
 		dhu.waitForDashboardPresent(driver, dashboardName);
+	}
+
+	private DashboardHomeUtil()
+	{
 	}
 }

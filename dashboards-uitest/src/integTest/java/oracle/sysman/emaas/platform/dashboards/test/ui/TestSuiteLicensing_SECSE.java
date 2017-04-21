@@ -18,7 +18,7 @@ import org.testng.annotations.Test;
 
 public class TestSuiteLicensing_SECSE extends LoginAndLogout
 {
-	private final String tenant_SECSE = "df_secse";
+	private final String tenant_SECSE = DashBoardUtils.getTenantName("df_secse");
 	private final String tenant_username = "emcsadmin";
 	private final String UDEWidget = "Analytics Line";
 
@@ -34,7 +34,7 @@ public class TestSuiteLicensing_SECSE extends LoginAndLogout
 	public void testBrandingBar_SECSE()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_SECSE);
-		webd.getLogger().info("start to test in Branding Bar--with OSMACC Compliance");
+		webd.getLogger().info("start to test in Branding Bar--with Compliance Edition");
 
 		//verify Data Explorer in branding bar
 		webd.getLogger().info("Verify Data Explorer link should be in Branding Bar");
@@ -50,7 +50,7 @@ public class TestSuiteLicensing_SECSE extends LoginAndLogout
 				"'Compliance' should in clould service link");
 
 		webd.getLogger()
-				.info("'APM','Log Analytics','Monitoring', 'IT Analytics', 'Orchestraion' and 'Security' NOT displayed for OSMACC Trail Edition");
+		.info("'APM','Log Analytics','Monitoring', 'IT Analytics', 'Orchestraion' and 'Security' NOT displayed for OSMACC Trail Edition");
 		Assert.assertFalse(BrandingBarUtil.isCloudServiceLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_APM),
 				"'APM' should not in clould service link");
 		Assert.assertFalse(BrandingBarUtil.isCloudServiceLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_ITA),
@@ -93,10 +93,39 @@ public class TestSuiteLicensing_SECSE extends LoginAndLogout
 	}
 
 	@Test(alwaysRun = true)
+	public void testHomePage_SECSE_OOBCheck()
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_SECSE);
+		webd.getLogger().info("start to test OOB in Home Page --with Compliance Edition");
+
+		//switch to grid view
+		webd.getLogger().info("Switch to Grid View");
+		DashboardHomeUtil.gridView(webd);
+
+		//verify all the oob display
+		webd.getLogger().info("Verify the OOB dashboards display in home page");
+		DashBoardUtils.apmOobNotExist();
+		DashBoardUtils.itaOobNotExist_v2v3();
+		DashBoardUtils.orchestrationOobNotExist();
+		DashBoardUtils.laOobNotExist();
+		DashBoardUtils.udeOobExist();
+
+		webd.getLogger().info("Switch to List View");
+		DashboardHomeUtil.listView(webd);
+
+		//verify all the oob display
+		DashBoardUtils.apmOobNotExist();
+		DashBoardUtils.itaOobNotExist_v2v3();
+		DashBoardUtils.orchestrationOobNotExist();
+		DashBoardUtils.laOobNotExist();
+		DashBoardUtils.udeOobExist();
+	}
+
+	@Test(alwaysRun = true)
 	public void testHompage_SECSE()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_SECSE);
-		webd.getLogger().info("start to test in Home Page -- with OSMACC Compliance");
+		webd.getLogger().info("start to test in Home Page --with Compliance Edition");
 
 		//verify Data Explorer in Explore drop down in home page
 		webd.getLogger().info("Verify Data Explorer drop down list item should be in Home page");
@@ -122,7 +151,7 @@ public class TestSuiteLicensing_SECSE extends LoginAndLogout
 	public void testWelcomepage_SECSE()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_SECSE);
-		webd.getLogger().info("start to test in test Welcome Page -- with OSMACC Compliance");
+		webd.getLogger().info("start to test in test Welcome Page --with Compliance Edition");
 		BrandingBarUtil.visitWelcome(webd);
 
 		webd.getLogger().info("Start to verify the service links in welome page...");
@@ -133,7 +162,7 @@ public class TestSuiteLicensing_SECSE extends LoginAndLogout
 		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, "compliance"), "'Compliance' servie should in welcome page");
 
 		webd.getLogger()
-				.info("'APM','Log Analytics','Monitoring', 'IT Analytics', 'Orchestraion' and 'Security' NOT displayed for OSMACC Compliance Edition");
+		.info("'APM','Log Analytics','Monitoring', 'IT Analytics', 'Orchestraion' and 'Security' NOT displayed for OSMACC Compliance Edition");
 		Assert.assertFalse(WelcomeUtil.isServiceExistedInWelcome(webd, "APM"), "'APM' servie should not in welcome page");
 		Assert.assertFalse(WelcomeUtil.isServiceExistedInWelcome(webd, "LA"), "'Log Analytics' servie should not in welcome page");
 		Assert.assertFalse(WelcomeUtil.isServiceExistedInWelcome(webd, "ITA"), "'IT Analytics' servie should not in welcome page");

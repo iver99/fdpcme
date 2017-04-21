@@ -18,7 +18,7 @@ import org.testng.annotations.Test;
 
 public class TestSuiteLicensing_SECSMA extends LoginAndLogout
 {
-	private final String tenant_SECSMA = "df_scecsma";
+	private final String tenant_SECSMA = DashBoardUtils.getTenantName("df_scecsma");
 	private final String tenant_username = "emcsadmin";
 	private final String UDEWidget = "Analytics Line";
 	private String dbName_Security = "";
@@ -33,7 +33,7 @@ public class TestSuiteLicensing_SECSMA extends LoginAndLogout
 	public void testBrandingBar_SECSMA()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_SECSMA);
-		webd.getLogger().info("start to test in Branding Bar--with OSMACC Security");
+		webd.getLogger().info("start to test in Branding Bar--with Security Edition");
 
 		//verify Data Explorer in branding bar
 		webd.getLogger().info("Verify Data Explorer link should be in Branding Bar");
@@ -92,10 +92,39 @@ public class TestSuiteLicensing_SECSMA extends LoginAndLogout
 	}
 
 	@Test(alwaysRun = true)
+	public void testHomePage_SECSMA_OOBCheck()
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_SECSMA);
+		webd.getLogger().info("start to test OOB in Home Page --with Security Edition");
+
+		//switch to grid view
+		webd.getLogger().info("Switch to Grid View");
+		DashboardHomeUtil.gridView(webd);
+
+		//verify all the oob display
+		webd.getLogger().info("Verify the OOB dashboards display in home page");
+		DashBoardUtils.apmOobNotExist();
+		DashBoardUtils.itaOobNotExist_v2v3();
+		DashBoardUtils.orchestrationOobNotExist();
+		DashBoardUtils.laOobNotExist();
+		DashBoardUtils.udeOobExist();
+
+		webd.getLogger().info("Switch to List View");
+		DashboardHomeUtil.listView(webd);
+
+		//verify all the oob display
+		DashBoardUtils.apmOobNotExist();
+		DashBoardUtils.itaOobNotExist_v2v3();
+		DashBoardUtils.orchestrationOobNotExist();
+		DashBoardUtils.laOobNotExist();
+		DashBoardUtils.udeOobExist();
+	}
+
+	@Test(alwaysRun = true)
 	public void testHompage_SECSMA()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_SECSMA);
-		webd.getLogger().info("start to test in Home Page -- with OSMACC Security");
+		webd.getLogger().info("start to test in Home Page --with Security Edition");
 
 		//verify Data Explorer in Explore drop down in home page
 		webd.getLogger().info("Verify Data Explorer drop down list item should be in Home pager");
@@ -121,7 +150,7 @@ public class TestSuiteLicensing_SECSMA extends LoginAndLogout
 	public void testWelcomepage_SECSMA()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_SECSMA);
-		webd.getLogger().info("start to test in test Welcome Page -- with OSMACC Security");
+		webd.getLogger().info("start to test in test Welcome Page --with Security Edition");
 		BrandingBarUtil.visitWelcome(webd);
 
 		webd.getLogger().info("Start to verify the service links in welome page...");

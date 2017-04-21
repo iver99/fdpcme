@@ -70,6 +70,7 @@ public class TestHomePage_BasicTest extends LoginAndLogout
 		DashBoardUtils.apmOobExist();
 		DashBoardUtils.itaOobExist();
 		DashBoardUtils.laOobExist();
+		DashBoardUtils.orchestrationOobExist();
 		DashBoardUtils.outDateOob();
 	}
 
@@ -88,6 +89,7 @@ public class TestHomePage_BasicTest extends LoginAndLogout
 		DashBoardUtils.apmOobExist();
 		DashBoardUtils.itaOobExist();
 		DashBoardUtils.laOobExist();
+		DashBoardUtils.orchestrationOobExist();
 		DashBoardUtils.outDateOob();
 	}
 
@@ -110,6 +112,32 @@ public class TestHomePage_BasicTest extends LoginAndLogout
 		DashBoardUtils.apmOobExist();
 		DashBoardUtils.itaOobNotExist();
 		DashBoardUtils.laOobNotExist();
+		DashBoardUtils.orchestrationOobNotExist();
+
+		//reset cloud services checkbox
+		DashboardHomeUtil.resetFilterOptions(webd);
+	}
+
+	@Test(alwaysRun = true)
+	public void verify_APMOOB_ListView()
+	{
+		//login the dashboard
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in verify_APMOOB_ListView");
+
+		//select Cloud Services as APM
+		webd.getLogger().info("select Cloud Services as APM");
+		DashboardHomeUtil.filterOptions(webd, "apm");
+
+		//click Grid View icon
+		webd.getLogger().info("click List View icon");
+		DashboardHomeUtil.listView(webd);
+
+		//verify APM oob display
+		DashBoardUtils.apmOobExist();
+		DashBoardUtils.itaOobNotExist();
+		DashBoardUtils.laOobNotExist();
+		DashBoardUtils.orchestrationOobNotExist();
 
 		//reset cloud services checkbox
 		DashboardHomeUtil.resetFilterOptions(webd);
@@ -178,6 +206,7 @@ public class TestHomePage_BasicTest extends LoginAndLogout
 		DashBoardUtils.apmOobExist();
 		DashBoardUtils.itaOobExist();
 		DashBoardUtils.laOobExist();
+		DashBoardUtils.orchestrationOobExist();
 		DashBoardUtils.outDateOob();
 
 		//reset cloud services checkbox
@@ -203,6 +232,7 @@ public class TestHomePage_BasicTest extends LoginAndLogout
 		DashBoardUtils.apmOobExist();
 		DashBoardUtils.itaOobExist();
 		DashBoardUtils.laOobExist();
+		DashBoardUtils.orchestrationOobExist();
 		DashBoardUtils.outDateOob();
 
 		//reset cloud services checkbox
@@ -228,6 +258,7 @@ public class TestHomePage_BasicTest extends LoginAndLogout
 		DashBoardUtils.itaOobExist();
 		DashBoardUtils.apmOobNotExist();
 		DashBoardUtils.laOobNotExist();
+		DashBoardUtils.orchestrationOobNotExist();
 		DashBoardUtils.outDateOob();
 
 		//reset cloud services checkbox
@@ -253,6 +284,7 @@ public class TestHomePage_BasicTest extends LoginAndLogout
 		DashBoardUtils.itaOobExist();
 		DashBoardUtils.apmOobNotExist();
 		DashBoardUtils.laOobNotExist();
+		DashBoardUtils.orchestrationOobNotExist();
 		DashBoardUtils.outDateOob();
 
 		//reset cloud services checkbox
@@ -278,6 +310,7 @@ public class TestHomePage_BasicTest extends LoginAndLogout
 		DashBoardUtils.laOobExist();
 		DashBoardUtils.apmOobNotExist();
 		DashBoardUtils.itaOobNotExist();
+		DashBoardUtils.orchestrationOobNotExist();
 		DashBoardUtils.outDateOob();
 
 		//reset cloud services checkbox
@@ -303,7 +336,58 @@ public class TestHomePage_BasicTest extends LoginAndLogout
 		DashBoardUtils.laOobExist();
 		DashBoardUtils.apmOobNotExist();
 		DashBoardUtils.itaOobNotExist();
+		DashBoardUtils.orchestrationOobNotExist();
 		DashBoardUtils.outDateOob();
+
+		//reset cloud services checkbox
+		DashboardHomeUtil.resetFilterOptions(webd);
+	}
+
+	@Test(alwaysRun = true)
+	public void verify_OrchestrationOOB_GridView()
+	{
+		//login the dashboard
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in verify_OrchestrationOOB_GridView");
+
+		//select Cloud Services as APM
+		webd.getLogger().info("select Cloud Services as Orchestration");
+		DashboardHomeUtil.filterOptions(webd, "orchestration");
+
+		//click Grid View icon
+		webd.getLogger().info("click Grid View icon");
+		DashboardHomeUtil.gridView(webd);
+
+		//verify APM oob display
+		DashBoardUtils.apmOobNotExist();
+		DashBoardUtils.itaOobNotExist();
+		DashBoardUtils.laOobNotExist();
+		DashBoardUtils.orchestrationOobExist();
+
+		//reset cloud services checkbox
+		DashboardHomeUtil.resetFilterOptions(webd);
+	}
+
+	@Test(alwaysRun = true)
+	public void verify_OrchestrationOOB_ListView()
+	{
+		//login the dashboard
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in verify_OrchestrationOOB_ListView");
+
+		//select Cloud Services as APM
+		webd.getLogger().info("select Cloud Services as Orchestration");
+		DashboardHomeUtil.filterOptions(webd, "orchestration");
+
+		//click Grid View icon
+		webd.getLogger().info("click List View icon");
+		DashboardHomeUtil.listView(webd);
+
+		//verify APM oob display
+		DashBoardUtils.apmOobNotExist();
+		DashBoardUtils.itaOobNotExist();
+		DashBoardUtils.laOobNotExist();
+		DashBoardUtils.orchestrationOobExist();
 
 		//reset cloud services checkbox
 		DashboardHomeUtil.resetFilterOptions(webd);

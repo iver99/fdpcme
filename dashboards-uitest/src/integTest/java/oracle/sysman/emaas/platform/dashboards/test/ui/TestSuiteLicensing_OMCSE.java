@@ -18,7 +18,7 @@ import org.testng.annotations.Test;
 
 public class TestSuiteLicensing_OMCSE extends LoginAndLogout
 {
-	private final String tenant_OMC_Standard = "df_omcse";
+	private final String tenant_OMC_Standard = DashBoardUtils.getTenantName("df_omcse");
 
 	private final String UDEWidget = "Analytics Line";
 	private String dbName_Standard = "";
@@ -32,7 +32,7 @@ public class TestSuiteLicensing_OMCSE extends LoginAndLogout
 	}
 
 	@Test(alwaysRun = true)
-	public void testBrandingBar_OMC_Standard()
+	public void testBrandingBar_OMCSE()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_OMC_Standard);
 		webd.getLogger().info("start to test in Branding Bar--with OMC Standard");
@@ -53,7 +53,7 @@ public class TestSuiteLicensing_OMCSE extends LoginAndLogout
 				"'Monitoring' should in clould service link");
 
 		webd.getLogger()
-				.info("'Log Analytics','Compliance', 'IT Analytics', 'Orchestraion' and 'Security' NOT displayed for OMC Standard Edition");
+		.info("'Log Analytics','Compliance', 'IT Analytics', 'Orchestraion' and 'Security' NOT displayed for OMC Standard Edition");
 		Assert.assertFalse(BrandingBarUtil.isCloudServiceLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_COMP),
 				"'Compliance' should not in clould service link");
 		Assert.assertFalse(BrandingBarUtil.isCloudServiceLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_SECU),
@@ -67,7 +67,7 @@ public class TestSuiteLicensing_OMCSE extends LoginAndLogout
 	}
 
 	@Test(alwaysRun = true)
-	public void testBuilderPage_OMC_Standard()
+	public void testBuilderPage_OMCSE()
 	{
 		dbName_Standard = "Dashboard OMC Standard-" + DashBoardUtils.generateTimeStamp();
 		String dsbDesc = "Dashboard for OMC Standard";
@@ -94,7 +94,7 @@ public class TestSuiteLicensing_OMCSE extends LoginAndLogout
 	}
 
 	@Test(alwaysRun = true)
-	public void testHomePage_OMC_Standard()
+	public void testHomePage_OMCSE()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_OMC_Standard);
 		webd.getLogger().info("start to test in Home Page -- with OMC Standard");
@@ -121,7 +121,36 @@ public class TestSuiteLicensing_OMCSE extends LoginAndLogout
 	}
 
 	@Test(alwaysRun = true)
-	public void testWelcomepage_OMC_Standard()
+	public void testHomePage_OMCSE_OOBCheck()
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_OMC_Standard);
+		webd.getLogger().info("start to test OOB in Home Page -- with OMC Enterprise");
+
+		//switch to grid view
+		webd.getLogger().info("Switch to Grid View");
+		DashboardHomeUtil.gridView(webd);
+
+		//verify all the oob display
+		webd.getLogger().info("Verify the OOB dashboards display in home page");
+		DashBoardUtils.apmOobExist();
+		DashBoardUtils.udeOobExist();
+		DashBoardUtils.itaOobNotExist_v2v3();
+		DashBoardUtils.orchestrationOobNotExist();
+		DashBoardUtils.laOobNotExist();
+
+		webd.getLogger().info("Switch to List View");
+		DashboardHomeUtil.listView(webd);
+
+		//verify all the oob display
+		DashBoardUtils.apmOobExist();
+		DashBoardUtils.udeOobExist();
+		DashBoardUtils.itaOobNotExist_v2v3();
+		DashBoardUtils.orchestrationOobNotExist();
+		DashBoardUtils.laOobNotExist();
+	}
+
+	@Test(alwaysRun = true)
+	public void testWelcomepage_OMCSE()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_OMC_Standard);
 		webd.getLogger().info("start to test in test Welcome Page -- OMC Standard Edition");
@@ -137,7 +166,7 @@ public class TestSuiteLicensing_OMCSE extends LoginAndLogout
 				"'Monitoring' servie should in welcome page");
 
 		webd.getLogger()
-				.info("'Compliance', 'Log Analytics', 'IT Analytics' , 'Orchestraion'  and 'Security' NOT displayed for OMC Standard Edition");
+		.info("'Compliance', 'Log Analytics', 'IT Analytics' , 'Orchestraion'  and 'Security' NOT displayed for OMC Standard Edition");
 		Assert.assertFalse(WelcomeUtil.isServiceExistedInWelcome(webd, "LA"), "'Log Analytics' servie should not in welcome page");
 		Assert.assertFalse(WelcomeUtil.isServiceExistedInWelcome(webd, "ITA"), "'IT Analytics' servie should not in welcome page");
 		Assert.assertFalse(WelcomeUtil.isServiceExistedInWelcome(webd, "compliance"),
