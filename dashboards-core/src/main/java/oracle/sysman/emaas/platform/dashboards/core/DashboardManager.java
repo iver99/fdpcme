@@ -1588,7 +1588,10 @@ public class DashboardManager
 		if(!tv.getIsV1Tenant() && !apps.contains(DashboardApplicationType.UDE)){
 			LOGGER.info("#1 Adding UDE application type for v2/v3 tenant");
 			apps.add(DashboardApplicationType.UDE);
-		}
+		}else if(tv.getIsV1Tenant() && apps.contains(DashboardApplicationType.ITAnalytics)){
+            apps.add(DashboardApplicationType.UDE);
+            LOGGER.info("#1-2 Adding UDE application type for v1 tenant");
+        }
 		return apps;
 	}
 
