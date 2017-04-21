@@ -1584,6 +1584,7 @@ public class DashboardManager
 			DashboardApplicationType dat = DashboardApplicationType.fromJsonValue(appName);
 			apps.add(dat);
 		}
+        LOGGER.info("Before handling tenant application is {}", apps);
 		//handle v2/v3 tenant
 		if(!tv.getIsV1Tenant() && !apps.contains(DashboardApplicationType.UDE)){
 			LOGGER.info("#1 Adding UDE application type for v2/v3 tenant");
@@ -1592,6 +1593,7 @@ public class DashboardManager
             apps.add(DashboardApplicationType.UDE);
             LOGGER.info("#1-2 Adding UDE application type for v1 tenant");
         }
+        LOGGER.info("Tenant's applications are {}",apps);
 		return apps;
 	}
 
