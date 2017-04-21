@@ -119,6 +119,9 @@ public class DashboardsFilter
 			if(!tenantVersionModel.getIsV1Tenant() && !types.contains(DashboardApplicationType.UDE)){
 				types.add(DashboardApplicationType.UDE);
 				LOGGER.info("#2 Adding UDE application type for v2/v3 tenant");
+			}else if(tenantVersionModel.getIsV1Tenant() && types.contains(DashboardApplicationType.ITAnalytics)){
+				types.add(DashboardApplicationType.UDE);
+				LOGGER.info("#3 Adding UDE application type for v1 tenant");
 			}
 		}
 		catch (IllegalArgumentException iae) {
