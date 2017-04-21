@@ -61,6 +61,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 self.showReadOnlyPillRemove = ko.observable(false);
             }
             self.showEntityContextSelector = ko.observable(false);
+            self.isEntityContextLoaded = ko.observable(false);
             if (ko.isObservable(params.showEntitySelector)) {
                 self.showEntitySelector = params.showEntitySelector;
             } else {
@@ -70,6 +71,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             //respond to change to entityContextReadOnly
             self.entityContextReadOnly.subscribe(function () {
                 if (!self.entityContextReadOnly()) {
+                    self.showEntityContextSelector(true);
                     var versionedContextSelectorUtils = window.getSDKVersionFile ?
                                 window.getSDKVersionFile('emsaasui/emcta/ta/js/sdk/contextSelector/api/ContextSelectorUtils') : null;
                     var contextSelectorUtil = versionedContextSelectorUtils ? versionedContextSelectorUtils :
@@ -77,7 +79,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     
                     require([contextSelectorUtil], function (EmctaContextSelectorUtil) {
                         EmctaContextSelectorUtil.registerComponents();
-                        self.showEntityContextSelector(true);
+                        self.isEntityContextLoaded(true);
                     });
                 } else {
                     self.showEntityContextSelector(false);
@@ -458,7 +460,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             appMap[appIdSecurityAnalytics] = {
                 "appId": appIdSecurityAnalytics,
                 "appName": "BRANDING_BAR_APP_NAME_SECURITY_ANALYTICS",
-                "serviceDisplayName": "BRANDING_BAR_CLOUD_SERVICE_NAME_SA",
+                "serviceDisplayName": "BRANDING_BAR_APP_NAME_SECURITY_ANALYTICS",
                 "serviceName": "SecurityAnalyticsUI",
                 "version": self.SERVICE_VERSION,
                 "helpTopicId": "em_samcs"
@@ -1086,11 +1088,12 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 
                         if (isMsgNeeded === true) {
                             if (displayMessageCount < maxMsgDisplayCnt || self.hiddenMessagesExpanded()) {
-                                displayMessages.push(message);
+                                displayMessages.unshift(message);
                                 displayMessageCount++;
                             }
                             else {
-                                hiddenMessages.push(message);
+                                displayMessages.unshift(message);
+                                hiddenMessages.unshift(displayMessages.pop()); 
                             }
                         }
                     }

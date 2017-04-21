@@ -33,11 +33,12 @@ public class DashboardsFilter
 			Dashboard.DASHBOARD_TYPE_SET, Dashboard.DASHBOARD_TYPE_SINGLEPAGE });
 	private static final List<String> appFilterStrings = Arrays
 			.asList(new String[] { DashboardApplicationType.APM_STRING, DashboardApplicationType.ITA_SRING,
-					DashboardApplicationType.LA_STRING, DashboardApplicationType.ORCHESTRATION_STRING });
+					DashboardApplicationType.LA_STRING, DashboardApplicationType.ORCHESTRATION_STRING,
+					DashboardApplicationType.SECURITY_ANALYTICS_STRING });
 	private static final List<String> ownerFilterStrings = Arrays.asList(new String[] { "Oracle", "Others", "Me", "Share" });
 
 	// reserved strings accepted as input filter string
-	private static final List<String> appFilterStrings_input = Arrays.asList(new String[] { "apm", "ita", "la", "ocs" });
+	private static final List<String> appFilterStrings_input = Arrays.asList(new String[] { "apm", "ita", "la", "ocs" ,"sec"});
 
 	private static final String favoriteFilterString = "Favorites";
 	private static final String showAllDashboardsString = "ShowAll";
@@ -53,6 +54,7 @@ public class DashboardsFilter
 	public static final String ITA_WIGDETGROUP = "Data Explorer";
 	public static final String LA_WIGDETGROUP = "Log Analytics";
 	public static final String OCS_WIGDETGROUP = "Orchestration";
+	public static final String SEC_WIGDETGROUP = "Security Analytics";
 
 	private List<String> includedTypes;
 	private List<String> includedApps;
@@ -358,6 +360,9 @@ public class DashboardsFilter
 			}
 			else if (DashboardApplicationType.ORCHESTRATION_STRING.equals(app)) {
 				sb.add(OCS_WIGDETGROUP);
+			}
+			else if(DashboardApplicationType.SECURITY_ANALYTICS_STRING.equals(app)){
+				sb.add(SEC_WIGDETGROUP);
 			}
 		}
 		return sb;
