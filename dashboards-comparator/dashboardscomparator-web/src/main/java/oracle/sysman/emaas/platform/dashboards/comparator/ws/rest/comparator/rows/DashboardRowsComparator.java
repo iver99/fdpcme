@@ -107,6 +107,18 @@ public class DashboardRowsComparator extends AbstractComparator
 		
 		return count;
 	}
+	
+	private boolean hasSyncData(TableRowsEntity entity) {
+		if (entity != null) {
+			if (entity.getEmsDashboard() != null && !entity.getEmsDashboard().isEmpty()) return true;
+			if (entity.getEmsDashboardSet() != null && !entity.getEmsDashboardSet().isEmpty()) return true;
+			if (entity.getEmsDashboardTile() != null && !entity.getEmsDashboardTile().isEmpty()) return true;
+			if (entity.getEmsDashboardTileParams() != null && !entity.getEmsDashboardTileParams().isEmpty()) return true;
+			if (entity.getEmsDashboardUserOptions() != null && !entity.getEmsDashboardUserOptions().isEmpty()) return true;
+			
+		}
+		return false;
+	}
 
 	public String sync(InstancesComparedData<TableRowsEntity> instancesData,String tenantId, String userTenant) throws Exception
 	{
@@ -124,11 +136,19 @@ public class DashboardRowsComparator extends AbstractComparator
 		logger.info("2-cloud name is {} data is {}",instancesData.getInstance2().getKey(), instancesData.getInstance1().getData().toString());
 		
 		InstancesComparedData<TableRowsEntity> syncData = new InstancesComparedData<TableRowsEntity>(instance1, instance2);
-		String message1 = syncForInstance(syncData.getInstance1(), tenantId, userTenant);
- 		String message2 = syncForInstance(syncData.getInstance2(),  tenantId, userTenant);
- 		
- 		return syncData.getInstance1().getKey() + ":{"+ (message1==null?"":message1) + "}" 
- 		+ "____"+syncData.getInstance1().getKey()+": {" + (message2==null?"":message2)+"}";
+		String message1 = null;
+		String message2 = null;
+		if (hasSyncData(syncData.getInstance1().getData())) {
+			logger.info("instance1 has data {}",syncData.getInstance1().getData().toString());
+			message1 = syncForInstance(syncData.getInstance1(), tenantId, userTenant);
+		}
+		if (hasSyncData(syncData.getInstance2().getData())) {
+			logger.info("instance2 has data {}",syncData.getInstance2().getData().toString());
+			message2 = syncForInstance(syncData.getInstance2(),  tenantId, userTenant);
+		}
+		
+ 		return syncData.getInstance1().getKey() + ":{"+ (message1==null?"sync is successful":message1) + "}" 
+ 		+ "____"+syncData.getInstance2().getKey()+":{" + (message2==null?"sync is successful":message2)+"}";
 	}
 
 	/**
@@ -247,6 +267,8 @@ public class DashboardRowsComparator extends AbstractComparator
 		compareDashboardUserOptionsRows(insData1.getData().getEmsDashboardUserOptions(),
 				insData2.getData().getEmsDashboardUserOptions(), cd);
 		comparePreferenceRows(insData1.getData().getEmsPreference(), insData2.getData().getEmsPreference(), cd);
+		logger.info("cloud1: {} ", insData1.getData().toString());
+		logger.info("cloud2: {} ", insData2.getData().toString());
 		return cd;
 	}
 
@@ -316,6 +338,7 @@ public class DashboardRowsComparator extends AbstractComparator
 			logger.warn("Get a null or empty link for one single instance!");
 			return "Errors:Get a null or empty link for one single instance!";
 		}
+		logger.info("link is {} ",lk.getHref());
 		logger.info("print the sync data {} !",instance.getData());
 		TableRowsEntity entity = instance.getData();
 		JsonUtil jsonUtil = JsonUtil.buildNonNullMapper();

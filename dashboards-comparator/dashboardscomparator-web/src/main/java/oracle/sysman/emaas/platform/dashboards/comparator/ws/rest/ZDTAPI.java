@@ -207,7 +207,7 @@ public class ZDTAPI
 				int totalRow = result.getInstance1().getTotalRowNum() + result.getInstance2().getTotalRowNum();
 				logger.info("totalRow={}",totalRow);
 				double percen = (double)comparedDataNum/(double)totalRow;
-				DecimalFormat df = new DecimalFormat("#.##");
+				DecimalFormat df = new DecimalFormat("#.#########");
 				double percentage = Double.parseDouble(df.format(percen));
 				Date currentUtcDate = getCurrentUTCTime();
 				String comparisonDate = getTimeString(currentUtcDate);
