@@ -68,6 +68,10 @@ public class DashboardRowsComparator extends AbstractComparator
 				}
 			}
 			
+			logger.info("key1={}, client1={}",key1, client1.getServiceUrls().get(0).toString());
+			
+			logger.info("key2={}, client1={}",key2, client2.getServiceUrls().get(0).toString());
+			
 			TableRowsEntity tre1 = retrieveRowsForSingleInstance(client1, tenantId, userTenant);
 			int rowNum1 = countForComparedRows(tre1);
 			if (tre1 == null) {
@@ -115,6 +119,7 @@ public class DashboardRowsComparator extends AbstractComparator
 			if (entity.getEmsDashboardTile() != null && !entity.getEmsDashboardTile().isEmpty()) return true;
 			if (entity.getEmsDashboardTileParams() != null && !entity.getEmsDashboardTileParams().isEmpty()) return true;
 			if (entity.getEmsDashboardUserOptions() != null && !entity.getEmsDashboardUserOptions().isEmpty()) return true;
+			if (entity.getEmsPreference() != null && !entity.getEmsPreference().isEmpty()) return true;
 			
 		}
 		return false;
@@ -129,10 +134,13 @@ public class DashboardRowsComparator extends AbstractComparator
 		InstanceData<TableRowsEntity> instance1 = new InstanceData<TableRowsEntity>(instancesData.getInstance1().getKey(),
 				instancesData.getInstance1().getClient(),
 				instancesData.getInstance2().getData(),0);
+		logger.info("key is {} and data size is {}",instancesData.getInstance1().getKey(),instancesData.getInstance2().getData().getEmsDashboard().size());
 		logger.info("1-cloud name is {} data is {}",instancesData.getInstance1().getKey(), instancesData.getInstance2().getData().toString());
 		InstanceData<TableRowsEntity> instance2 = new InstanceData<TableRowsEntity>(instancesData.getInstance2().getKey(),
 				instancesData.getInstance2().getClient(),
 				instancesData.getInstance1().getData(),0);
+		int size = instancesData.getInstance1().getData().getEmsDashboard() == null?0:instancesData.getInstance1().getData().getEmsDashboard().size();
+		logger.info("key is {} and data size is {}",instancesData.getInstance2().getKey(),size);
 		logger.info("2-cloud name is {} data is {}",instancesData.getInstance2().getKey(), instancesData.getInstance1().getData().toString());
 		
 		InstancesComparedData<TableRowsEntity> syncData = new InstancesComparedData<TableRowsEntity>(instance1, instance2);
@@ -166,6 +174,8 @@ public class DashboardRowsComparator extends AbstractComparator
 		}
 		RowEntityComparator<DashboardRowEntity> rec = new RowEntityComparator<DashboardRowEntity>();
 		CompareListPair<DashboardRowEntity> result = rec.compare(rows1, rows2);
+		logger.info("rows1={}",rows1==null?0:rows1.size());
+		logger.info("rows2={}",rows2==null?0:rows2.size());
 		cd.getInstance1().getData().setEmsDashboard(result.getList1());
 		cd.getInstance2().getData().setEmsDashboard(result.getList2());
 	}

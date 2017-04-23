@@ -228,7 +228,7 @@ public class DataManager
 			entityManager.getTransaction().begin();
 		}		
 		try {
-			List<Object> result = getLastAccessDateForDashboard(entityManager, dashboardId, tenantId, description, owner, deleted);
+			List<Object> result = getLastAccessDateForDashboard(entityManager, dashboardId, tenantId, name,description, owner, deleted);
 			if (result != null && result.size() > 0) {
 				logger.debug("Dashboard with id {} exists", dashboardId);
 				if (isAfter((String) result.get(0),lastModificationDate)) {
@@ -845,17 +845,18 @@ public class DataManager
 		return result;
 	}
 
-	private List<Object> getLastAccessDateForDashboard(EntityManager entityManager, BigInteger dashboardId, Long tenantId, String description, String owner, BigInteger deleted) {
+	private List<Object> getLastAccessDateForDashboard(EntityManager entityManager, BigInteger dashboardId, Long tenantId, String name,String description, String owner, BigInteger deleted) {
 		logger.debug("Calling the Datamanager.gertLastAccessDayForDashboard");
 		String sql = "SELECT to_char(LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') FROM EMS_DASHBOARD WHERE (DASHBOARD_ID=? AND TENANT_ID=?) "
-				+ "or (DESCRIPTION=? and OWNER=? AND TENANT_ID =? AND DELETED=?)";
+				+ "or (NAME=? AND DESCRIPTION=? and OWNER=? AND TENANT_ID =? AND DELETED=?)";
 		Query query = entityManager.createNativeQuery(sql)
 				.setParameter(1, dashboardId)
 				.setParameter(2, tenantId)
-				.setParameter(3, description)
-		.setParameter(4, owner)
-		.setParameter(5, tenantId)
-		.setParameter(6, deleted);
+				.setParameter(3,name)
+				.setParameter(4, description)
+		.setParameter(5, owner)
+		.setParameter(6, tenantId)
+		.setParameter(7, deleted);
 		List<Object> result = query.getResultList();
 		
 		return result;
