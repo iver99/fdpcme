@@ -140,7 +140,7 @@ public class SSFDataUtil {
 		}
 		return value; */
 	}
-
+/*
 	private static String getStrFromInputSteam(InputStream in)
 	{
 		BufferedReader bf = null;
@@ -173,5 +173,5 @@ public class SSFDataUtil {
 		}
 
 		return buffer.toString(); 
-	}
+	} */
 }
