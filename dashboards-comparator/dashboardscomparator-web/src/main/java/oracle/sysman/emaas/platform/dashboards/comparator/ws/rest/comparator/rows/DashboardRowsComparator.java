@@ -135,13 +135,11 @@ public class DashboardRowsComparator extends AbstractComparator
 				instancesData.getInstance1().getClient(),
 				instancesData.getInstance2().getData(),0);
 		logger.info("key is {} and data size is {}",instancesData.getInstance1().getKey(),instancesData.getInstance2().getData().getEmsDashboard().size());
-		logger.info("1-cloud name is {} data is {}",instancesData.getInstance1().getKey(), instancesData.getInstance2().getData().toString());
 		InstanceData<TableRowsEntity> instance2 = new InstanceData<TableRowsEntity>(instancesData.getInstance2().getKey(),
 				instancesData.getInstance2().getClient(),
 				instancesData.getInstance1().getData(),0);
 		int size = instancesData.getInstance1().getData().getEmsDashboard() == null?0:instancesData.getInstance1().getData().getEmsDashboard().size();
 		logger.info("key is {} and data size is {}",instancesData.getInstance2().getKey(),size);
-		logger.info("2-cloud name is {} data is {}",instancesData.getInstance2().getKey(), instancesData.getInstance1().getData().toString());
 		
 		InstancesComparedData<TableRowsEntity> syncData = new InstancesComparedData<TableRowsEntity>(instance1, instance2);
 		String message1 = null;
