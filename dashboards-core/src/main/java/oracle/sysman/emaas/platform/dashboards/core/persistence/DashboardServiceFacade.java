@@ -115,8 +115,12 @@ public class DashboardServiceFacade
 			if (flag++ > 0) {
 				parameters.append(",");
 			}
+			if (name.contains("'")) {
+				name = name.replaceAll("'", "''");
+			}
 			parameters.append("'"+ name + "'");
 		}
+		
 		String sql = "select dashboard_id from ems_dashboard t where t.name in (" + parameters.toString() + ")"
 		+ " and t.tenant_id = " + tenantId +  " and t.deleted = 0";
 		Query query = em.createNativeQuery(sql);

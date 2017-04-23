@@ -55,7 +55,7 @@ public class SSFDataUtil {
 	private static String accessSSFWebService(String remoteUser,String uri,String data)
 	{
 		
-		/*RestClient rc = new RestClient();
+		RestClient rc = new RestClient();
         Link tenantsLink = RegistryLookupUtil.getServiceInternalLink(SERVICE_NAME, VERSION, PATH, null);
         String tenantHref = tenantsLink.getHref() + "/" + uri;
         String tenantName = TenantContext.getCurrentTenant();
@@ -63,7 +63,7 @@ public class SSFDataUtil {
         try {
         	LOGGER.info("auth is "+((VersionedLink) tenantsLink).getAuthToken());
 			rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME, tenantName);
-//			rc.setHeader(RestClient.OAM_REMOTE_USER, value);
+			rc.setHeader(RestClient.OAM_REMOTE_USER, remoteUser);
         	savedSearchResponse = rc.put(tenantHref, data, tenantName, 
         	        ((VersionedLink) tenantsLink).getAuthToken());
         	LOGGER.info("response is "+savedSearchResponse);
@@ -71,7 +71,7 @@ public class SSFDataUtil {
         	LOGGER.error(e);
         }
         return savedSearchResponse;
-		*/
+		/*
 		String value = "";
 		CloseableHttpClient client = HttpClients.createDefault();
 		Link link = RegistryLookupUtil.getServiceInternalLink(SERVICE_NAME, VERSION, PATH, null);
@@ -138,7 +138,7 @@ public class SSFDataUtil {
 				}
 			}
 		}
-		return value;
+		return value; */
 	}
 
 	private static String getStrFromInputSteam(InputStream in)
