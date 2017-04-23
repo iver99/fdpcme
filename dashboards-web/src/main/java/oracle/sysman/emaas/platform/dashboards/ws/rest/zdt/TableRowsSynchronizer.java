@@ -52,7 +52,7 @@ public class TableRowsSynchronizer {
         if (syncDashboardTileParamsTableRows(em,data.getEmsDashboardTileParams()) <= 0)
             logger.debug("nothing was added to EMS_DASHBOARD_TILE_PARAMS!");
         em.getTransaction().commit();
-        return "sync for tables is successful";
+        return "sync is successful";
     }
 
 
