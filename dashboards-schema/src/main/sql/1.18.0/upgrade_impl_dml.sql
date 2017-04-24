@@ -5,5 +5,6 @@ Rem ----------------------------------------------------------------
 
 @&EMSAAS_SQL_ROOT/1.18.0/emaas_dashboards_seed_data_sec.sql -1
 @&EMSAAS_SQL_ROOT/1.18.0/emaas_dashboards_seed_data_cos.sql -1
+@&EMSAAS_SQL_ROOT/1.18.0/emaas_dashboards_ude_application_type.sql -1
 COMMIT;
 
