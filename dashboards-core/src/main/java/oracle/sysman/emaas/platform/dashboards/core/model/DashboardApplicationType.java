@@ -46,6 +46,9 @@ public enum DashboardApplicationType
 	Orchestration(6, false),
 	// Compliance
 	Compliance(7, false),
+	// UDE
+	UDE(8, false),
+
 	// following are bundle services, will be transferred to individual services
 	OMCSE(100, true),
 	OMCEE(101, true),
