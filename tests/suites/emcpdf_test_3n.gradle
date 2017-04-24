@@ -141,7 +141,7 @@ task onboardTestTenants(dependsOn: omcOnboardTenants(testTenants)){
 }
 
 //Task added from "emcpdf_qa_test_3n"
-task QATest(type:EMTest,dependsOn:[omcSetup,onboardTestTenants]) {
+task QATest(type:EMTest,dependsOn:[onboardTestTenants]) {
 	include "oracle/sysman/emaas/platform/dashboards/test/dashboard/*"
 	include "oracle/sysman/emaas/platform/dashboards/test/common/*"
 	include "oracle/sysman/emaas/platform/dashboards/logging/*"
