@@ -1096,11 +1096,12 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 
                         if (isMsgNeeded === true) {
                             if (displayMessageCount < maxMsgDisplayCnt || self.hiddenMessagesExpanded()) {
-                                displayMessages.push(message);
+                                displayMessages.unshift(message);
                                 displayMessageCount++;
                             }
                             else {
-                                hiddenMessages.push(message);
+                                displayMessages.unshift(message);
+                                hiddenMessages.unshift(displayMessages.pop()); 
                             }
                         }
                     }
