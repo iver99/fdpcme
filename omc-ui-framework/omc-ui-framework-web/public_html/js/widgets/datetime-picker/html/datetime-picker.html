@@ -1,5 +1,4 @@
         <div data-testapiversion="1.17.0" data-bind="attr: {id: 'dateTimePicker_' + randomId}" style="display: table">
-            <label for="dropdown" data-bind="attr: {id: 'dropdownLabel_'+randomId}" style="font-weight: bold; font-size: 14px; vertical-align: middle; padding-right: 5px;" data-bind="text: timeRangeMsg, style: {display: hideMainLabel}"></label>
             <span class="oj-select-choice"  style="width: auto; display: inline-block;" data-bind="attr: {id: 'dropDown_'+randomId}, click: panelControl, event: {keypress: function(data, event) {if(isEnterPressed(data, event)) {panelControl();}}}" aria-label="Pick datetime">
                 <img class="info-badge" src="/emsaasui/uifwk/@version@/images/imgbackground.png" style="position:absolute; height:16px;width:16px;vertical-align:top;margin:8px;background: url('/emsaasui/uifwk/@version@/images/uifwkSprite.png') no-repeat 0px -46px;" data-bind="style: {display: badgeTimePeriod()?'inline':'none'},event: {mouseover: badgeMouseOverHandler, mouseout: badgeMouseOutHandler}"/>
                 <div data-bind="ojComponent:{component: 'ojPopup',tail: 'simple'}" class="badge-popup-message" style="display: block;padding:0; max-width: 340px;">
@@ -77,7 +76,6 @@
                 <!--<div class="pickerPanel" data-bind="visible: showRightPanel, attr: {id: 'pickerPanel_'+randomId}">-->
                 <div class="pickerPanel" data-bind="ojComponent: {component: 'ojPopup', chrome: 'none'}, attr: {id: 'pickerPanel_'+randomId}, click: function(data, event) {event.stopPropagation();return true;}, css: pickerPanelCss">
 
-                    <!-- ko if: hideLastRange() !== true -->
                     <div class="lrControlRadios">
                         <span>
                             <input type="radio" name="lrCtrl" value="flexRelTimeCtrl" data-bind="checked: lrCtrlVal">
@@ -159,90 +157,39 @@
                         <!-- /ko -->
                         <hr>
                         
-                        <span style="display: inline-block; padding-top: 5px;">
+                        <span style="display: inline-block; padding-top: 5px; padding-right: 5px;">
                             <span>
                                 <input type="radio" name="lrCtrl" value="timeLevelCtrl" data-bind="checked: lrCtrlVal">
                                 <label data-bind="text: nls.DATETIME_PICKER_RADIO_RANGE"></label>
                             </span>
-<!--                            <select data-bind="ojComponent: {component: 'ojSelect', value: timeLevelOpt, 
-                                rootAttributes: {style: 'max-width: 108px; padding-left: 10px;'},
-                                optionChange: timeLevelOptChanged, disabled: lrCtrlVal()!=='timeLevelCtrl'}">
-                                <option value="minute">Minute</option>
-                                <option value="second">Second</option>
-                                <option value="millisecond">Millisecond</option>
-                            </select>-->
                         </span>
+                        <input data-bind="ojComponent: {component: 'ojInputDate', value: startDateISO, disabled: lrCtrlVal() !== 'timeLevelCtrl',
+                                                datePicker: {daysOutsideMonth: 'hidden'},
+                                                converter: inputDateConverter,
+                                                rootAttributes: {style: 'width: 70px;'}
+                                            },
+                                attr: {id: 'inputStartDate_'+randomId, 'aira-label': startDateLabel}"/>
+                        <input data-bind="ojComponent: {component: 'ojInputTime', value: startTime, disabled: lrCtrlVal() !== 'timeLevelCtrl',
+                                                rootAttributes: {style: 'width: 150px;'}
+                                            },
+                                attr: {id: 'inputStartTime_'+randomId, 'aira-label': startTimeLabel, visible: !hideTimeSelection()}"/>
+                        <span style="font-weight: bold">-</span>
+                        <input data-bind="ojComponent: {component: 'ojInputDate', value: endDateISO, disabled: lrCtrlVal() !== 'timeLevelCtrl',
+                                                datePicker: {daysOutsideMonth: 'hidden'},
+                                                converter: inputDateConverter,
+                                                rootAttributes: {style: 'width: 70px;'}
+                                            },
+                                attr: {id: 'inputEndDate_'+randomId, 'aira-label': endDateLabel}"/>
+                        <input data-bind="ojComponent: {component: 'ojInputTime', value: endTime, disabled: lrCtrlVal() !== 'timeLevelCtrl',
+                                                rootAttributes: {style: 'width: 150px;'}
+                                            },
+                                attr: {id: 'inputEndTime_'+randomId, 'aira-label': endTimeLabel, visible: !hideTimeSelection()}"/>
                     </div>
-                    <!-- /ko -->
 
                     <span style="display: inline-block;" tabindex="0" data-bind="click: timeFilterControl, event: {keypress: function(data, event) {if(isEnterPressed(data, event)) {timeFilterControl();}}}, visible: enableTimeFilter, css: timeFilterIconCss, attr: {'aria-label': timeFilterAlt}">
                         <!--func_gear_16_ena-->
                         <img data-bind="attr: {id: 'timeFilterIcon_'+randomId, alt: timeFilterAlt, title: timeFilterIconTitle}" src="/emsaasui/uifwk/@version@/images/imgbackground.png" style="background: url('/emsaasui/uifwk/@version@/images/uifwkSprite.png') no-repeat 0px -126px;height:16px;width:16px;"/>
                     </span>
-                    
-                    <!--date and time info above picker -->
-                    <div class="pickerTop" data-bind="attr: {style: pickerTopCss}">
-                        <!-- date and time above the canlendar -->
-
-                        <div style="display:inline-block; padding-left: 15px;">
-                            <div class="chosenDate">
-                                <input id="chosen-date-1" data-bind="attr: {id: 'inputStartDate_'+randomId, 'aria-label': startDateLabel}, 
-                                    ojComponent: {component: 'ojInputText', value: startDate, placeholder: 'mm/dd/yyyy',
-                                        rootAttributes:{style : 'width: 70px;'}, 
-                                        optionChange: function(event, data){changeDate(event, data, 1)},
-                                        disabled: lrCtrlVal()!=='timeLevelCtrl'
-                                    },
-                                    click: focusOnStartDate, hasFocus: startDateFocus"/>
-                            </div>
-
-                            <div class="chosenTime" data-bind="attr: {id: 'divStartTime_'+randomId}, click: focusOnStartTime, visible: !hideTimeSelection()">
-                                <input id="chosen-time-1" data-bind="attr:{id: 'inputStartTime_'+randomId, 'aria-label': startTimeLabel},
-                                    ojComponent:{component: 'ojInputTime', value: startTime, converter: getTimeConverter(), timePicker:{timeIncrement: timeIncrement()},
-                                        optionChange: changeStartTime, displayOptions: {'messages': 'none'},
-                                        disabled: lrCtrlVal()!=='timeLevelCtrl'
-                                    }, 
-                                    hasFocus: startTimeFocus
-                                    "/>
-                            </div>
-
-                            <div class="to">
-                                <span style="font-weight: bold">-</span>
-                            </div>
-
-                            <div class="chosenDate">
-                                <input id="chosen-date-2" data-bind="attr: {id: 'inputEndDate_'+randomId, 'aria-label': endDateLabel}, 
-                                    ojComponent: {component: 'ojInputText', value: endDate, placeholder: 'mm/dd/yyyy', 
-                                        rootAttributes: {style : 'width: 70px;'}, 
-                                        optionChange: function(event, data){changeDate(event, data, 2)},
-                                        disabled: lrCtrlVal()!=='timeLevelCtrl'
-                                    },
-                                    click: focusOnEndDate, hasFocus: endDateFocus"/>
-                            </div>
-
-                            <div class="chosenTime" data-bind="attr: {id: 'divEndTime_'+randomId}, click: focusOnEndTime, visible: !hideTimeSelection()">
-                                <input id="chosen-time-2" data-bind="attr:{id: 'inputEndTime_'+randomId, 'aria-label': endTimeLabel}, 
-                                    ojComponent:{component: 'ojInputTime', value: endTime, converter: getTimeConverter(), timePicker:{timeIncrement: timeIncrement()}, 
-                                        optionChange: changeEndTime, displayOptions: {'messages': 'none'},
-                                        disabled: lrCtrlVal()!=='timeLevelCtrl'
-                                    },
-                                    hasFocus: endTimeFocus"/>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <!-- ko if: showCalendar -->
-                    <div style="display: inline-block; padding: 0px 10px;">
-                        <!--date picker -->
-                        <div class="datePicker" data-bind="attr: {id: 'datePicker_'+randomId}, ojComponent:{component: 'ojInputDate', 
-                                                                datePicker:{changeMonth: 'none', changeYear: 'none', daysOutsideMonth: 'hidden', numberOfMonths: 2, stepMonths: 1},
-                                                                value: value, min: minDate, max: maxDate, displayOptions: {'messages':'none', validatorHint: 'none'},
-                                                                optionChange: calendarOptionChanged, disabled: lrCtrlVal()!=='timeLevelCtrl'
-                                                                }, 
-                                                            event: {mouseup: calendarClicked}">
-                        </div>   
-                    </div>
-                    <!-- /ko -->
                     
                     <!-- Apply & Cancel button -->
                     <div class="buttons">
@@ -252,9 +199,6 @@
                         </button>
                         <span style="font-size: 14px; padding-left: 10px;" data-bind="text: timeZone"></span>
                     </div>
-                    <!-- ko if: showErrorMsg -->
-                    <div class="errorMsg" data-bind="text: formatErrorMsg"></div>
-                    <!-- /ko -->
                     <!-- ko if: showTimeValidateErrorMsg -->
                     <div class="errorMsg" data-bind="text: timeValidateErrorMsg"></div>
                     <!-- /ko -->
