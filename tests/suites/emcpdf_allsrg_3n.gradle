@@ -58,27 +58,28 @@ dependencies{
 }
 
 // depends on OMCTF-977
+// onboard v2 & v3 tenants
 def testTenants = [:]
-//testTenants["df_omc_trial"]= [ "OMC" : [ "Trial"]]
-//testTenants["df_omc_standard"]= [ "OMC" : [ "Standard"] ]
-//testTenants["df_omc_ee"]= [ "OMC" : [ "Enterprise"] ]
-//testTenants["df_omc_log"]= [ "OMC" : [ "Log"] ]
-//testTenants["df_osmacc_trial"]= [ "OSMACC" : [ "Trail"] ]
-//testTenants["df_osmacc_compliance"]= [ "OSMACC" : [ "Compliance"] ]
-//testTenants["df_osmacc_security"]= [ "OSMACC" : [ "Security"] ]
+testTenants["df_omc_trial"]= [ "OMC" : [ "Trial"]]
+testTenants["df_omc_standard"]= [ "OMC" : [ "Standard"] ]
+testTenants["df_omc_ee"]= [ "OMC" : [ "Enterprise"] ]
+testTenants["df_omc_log"]= [ "OMC" : [ "Log"] ]
+testTenants["df_osmacc_trial"]= [ "OSMACC" : [ "Trail"] ]
+testTenants["df_osmacc_compliance"]= [ "OSMACC" : [ "Compliance"] ]
+testTenants["df_osmacc_security"]= [ "OSMACC" : [ "Security"] ]
 testTenants["df_omcse"]= [ "OMCSE" : [ "Standard"] ]
 testTenants["df_omcee"]= [ "OMCEE" : [ "Enterprise"] ]
 testTenants["df_omclog"]= [ "OMCLOG" : [ "Standard"] ]
 testTenants["df_secse"]= [ "SECSE" : [ "Standard"] ]
 testTenants["df_secsma"]= [ "SECSMA" : [ "Standard"] ]
-//testTenants["emaastesttenant1"]=["Orchestration" : ["Trial"], "Compliance" : ["Trial"], "SecurityAnalytics" : ["Trial"]]
+
 
 task suiteLicensingTest(type: EMTest, dependsOn:[omcOnboardTenants(testTenants)]){
 options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
 	test('name': 'suiteLicensingTest') {
 	    classes([:]) {
-//		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestSuiteLicensing_OMC')
-//		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestSuiteLicensing_OSMACC')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestSuiteLicensing_OMC')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestSuiteLicensing_OSMACC')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestSuiteLicensing_OMCEE')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestSuiteLicensing_OMCSE')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestSuiteLicensing_OMCLOG')

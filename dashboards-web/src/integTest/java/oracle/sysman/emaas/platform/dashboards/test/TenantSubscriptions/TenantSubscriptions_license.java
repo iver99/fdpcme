@@ -91,7 +91,7 @@ public class TenantSubscriptions_license
 		}
 	}
 
-	//@Test
+	@Test
 	public void getSubscribedapps_license_OMCEnterprise()
 	{
 		tenantid = "df_omc_enterprise";
@@ -115,7 +115,7 @@ public class TenantSubscriptions_license
 		}
 	}
 
-	//@Test
+	@Test
 	public void getSubscribedapps_license_OMCLog()
 	{
 		tenantid = "df_omc_log";
@@ -187,7 +187,7 @@ public class TenantSubscriptions_license
 		}
 	}
 
-	//@Test
+	@Test
 	public void getSubscribedapps_license_OMCStandard()
 	{
 		tenantid = "df_omc_standard";
@@ -211,7 +211,7 @@ public class TenantSubscriptions_license
 		}
 	}
 
-	//@Test
+	@Test
 	public void getSubscribedapps_license_OSMACCCompliance()
 	{
 		tenantid = "df_osmacc_compliance";
@@ -235,7 +235,7 @@ public class TenantSubscriptions_license
 		}
 	}
 
-	//@Test
+	@Test
 	public void getSubscribedapps_license_OSMACCSecurity()
 	{
 		tenantid = "df_osmacc_security";

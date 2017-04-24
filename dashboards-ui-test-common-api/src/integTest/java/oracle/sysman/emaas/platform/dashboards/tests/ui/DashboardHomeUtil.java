@@ -99,7 +99,7 @@ public class DashboardHomeUtil
 	 *
 	 * @param driver
 	 * @param filter
-	 *            filter name - apm,la,ita,orchestration,oracle,share,me,favorites(multiple choice and split with comma) @
+	 *            filter name - apm,la,ita,orchestration,security,oracle,share,me,favorites(multiple choice and split with comma) @
 	 */
 	public static void filterOptions(WebDriver driver, String filter)
 	{
@@ -149,7 +149,7 @@ public class DashboardHomeUtil
 	 *
 	 * @param driver
 	 * @param filter
-	 *            filer name - apm, la , ita, oracle, share, me favorites(single choice)
+	 *            filer name - apm, la , ita, oracle, security, share, me favorites(single choice)
 	 * @return @
 	 */
 	public static boolean isFilterOptionSelected(WebDriver driver, String filter)

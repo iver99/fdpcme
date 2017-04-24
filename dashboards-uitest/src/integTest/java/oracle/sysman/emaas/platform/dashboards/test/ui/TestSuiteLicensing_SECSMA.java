@@ -3,11 +3,8 @@ package oracle.sysman.emaas.platform.dashboards.test.ui;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.DashBoardUtils;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.LoginAndLogout;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.WelcomeUtil;
 
-import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
@@ -35,33 +32,7 @@ public class TestSuiteLicensing_SECSMA extends LoginAndLogout
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_SECSMA);
 		webd.getLogger().info("start to test in Branding Bar--with Security Edition");
 
-		//verify Data Explorer in branding bar
-		webd.getLogger().info("Verify Data Explorer link should be in Branding Bar");
-		Assert.assertTrue(BrandingBarUtil.isVisualAnalyzerLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_DATAEXPLORER),
-				"'Data Explorer' link should be in Branding Bar");
-		webd.getLogger().info("Verify Log Explorer link should NOT be in Branding Bar");
-		Assert.assertFalse(BrandingBarUtil.isVisualAnalyzerLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_LOGEXPLORER),
-				"'Log Explorer' link should not be in Branding Bar");
-
-		//verify cloud service according to Edition
-		webd.getLogger().info("'Security' displayed for OSMACC Security Edition");
-		Assert.assertTrue(BrandingBarUtil.isCloudServiceLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_SECU),
-				"'Security' should in clould service link");
-
-		webd.getLogger()
-		.info("'APM','Log Analytics','Monitoring', 'IT Analytics', 'Orchestraion' and 'Compliance' NOT displayed for OSMACC Trail Edition");
-		Assert.assertFalse(BrandingBarUtil.isCloudServiceLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_APM),
-				"'APM' should not in clould service link");
-		Assert.assertFalse(BrandingBarUtil.isCloudServiceLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_ITA),
-				"'IT Analytics' should not in clould service link");
-		Assert.assertFalse(BrandingBarUtil.isCloudServiceLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_LA),
-				"'Log Analytics' should not in clould service link");
-		Assert.assertFalse(BrandingBarUtil.isCloudServiceLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_OCS),
-				"'Orchestration' should not in clould service link");
-		Assert.assertFalse(BrandingBarUtil.isCloudServiceLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_IM),
-				"'Monitoring' should not in clould service link");
-		Assert.assertFalse(BrandingBarUtil.isCloudServiceLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_COMP),
-				"'Compliance' should not in clould service link");
+		DashBoardUtils.verifyBrandingBarWithTenant(webd, DashBoardUtils.SECSMA);
 	}
 
 	@Test(alwaysRun = true)
@@ -71,24 +42,17 @@ public class TestSuiteLicensing_SECSMA extends LoginAndLogout
 		String dsbDesc = "Dashboard for OSMACC Security";
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_SECSMA);
 		webd.getLogger().info("start to test in Builder Pager--with Security Edition");
-		//create a dashboard
-		webd.getLogger().info("Create a dashboard");
-		DashboardHomeUtil.createDashboard(webd, dbName_Security, dsbDesc);
 
-		//check the ude widget displayed in widget list
-		webd.getLogger().info("Add UDE widget to the dashboard");
-		DashboardBuilderUtil.addWidgetToDashboard(webd, UDEWidget);
-		DashboardBuilderUtil.saveDashboard(webd);
+		DashBoardUtils.verifyBuilderPageWithTenant(webd, dbName_Security, dsbDesc, UDEWidget);
+	}
 
-		//check the 'Open In Data Explore' icon displayed in widget title
-		Assert.assertTrue(DashBoardUtils.verifyOpenInIconExist(webd, UDEWidget),
-				"The 'Open In Data Explorer' icon should display");
+	@Test(alwaysRun = true)
+	public void testHomepage_SECSMA()
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_SECSMA);
+		webd.getLogger().info("start to test in Home Page --with Security Edition");
 
-		//back to the home page then delete the created dashboard
-		webd.getLogger().info("Back to the home page");
-		BrandingBarUtil.visitDashboardHome(webd);
-		webd.getLogger().info("Delete the dashboard:" + dbName_Security);
-		DashboardHomeUtil.deleteDashboard(webd, dbName_Security, DashboardHomeUtil.DASHBOARDS_GRID_VIEW);
+		DashBoardUtils.verifyHomePageWithTenant(webd, DashBoardUtils.SECSMA);
 	}
 
 	@Test(alwaysRun = true)
@@ -103,47 +67,13 @@ public class TestSuiteLicensing_SECSMA extends LoginAndLogout
 
 		//verify all the oob display
 		webd.getLogger().info("Verify the OOB dashboards display in home page");
-		DashBoardUtils.apmOobNotExist();
-		DashBoardUtils.itaOobNotExist_v2v3();
-		DashBoardUtils.orchestrationOobNotExist();
-		DashBoardUtils.laOobNotExist();
-		DashBoardUtils.udeOobExist();
+		DashBoardUtils.verifyOOBInHomeWithTenant(webd, DashBoardUtils.SECSMA);
 
 		webd.getLogger().info("Switch to List View");
 		DashboardHomeUtil.listView(webd);
 
 		//verify all the oob display
-		DashBoardUtils.apmOobNotExist();
-		DashBoardUtils.itaOobNotExist_v2v3();
-		DashBoardUtils.orchestrationOobNotExist();
-		DashBoardUtils.laOobNotExist();
-		DashBoardUtils.udeOobExist();
-	}
-
-	@Test(alwaysRun = true)
-	public void testHompage_SECSMA()
-	{
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_SECSMA);
-		webd.getLogger().info("start to test in Home Page --with Security Edition");
-
-		//verify Data Explorer in Explore drop down in home page
-		webd.getLogger().info("Verify Data Explorer drop down list item should be in Home pager");
-		Assert.assertTrue(DashBoardUtils.isHomePageExploreItemExisted(webd, "Data Explorer"),
-				"'Data Explorer' item should be in drop down list");
-		webd.getLogger().info("Verify Log Explorer drop down list item should not be in Home page");
-		Assert.assertFalse(DashBoardUtils.isHomePageExploreItemExisted(webd, "Log Explorer"),
-				"'Log Explorer' item should not be in drop down list");
-
-		//verify the Service in Filter options
-		webd.getLogger().info(
-				"'APM','Log Analytics', 'IT Analytics' and 'Orchestraion' NOT displayed for OSMACC Security Edition");
-		Assert.assertFalse(DashBoardUtils.isFilterOptionExisted(webd, "la"),
-				"Log Analytics option should not in Cloud Service filter");
-		Assert.assertFalse(DashBoardUtils.isFilterOptionExisted(webd, "ita"),
-				"IT Analytics option should not in Cloud Service filter");
-		Assert.assertFalse(DashBoardUtils.isFilterOptionExisted(webd, "apm"), "APM option should not in Cloud Service filter");
-		Assert.assertFalse(DashBoardUtils.isFilterOptionExisted(webd, "orchestration"),
-				"Orchestration option should not in Cloud Service filter");
+		DashBoardUtils.verifyOOBInHomeWithTenant(webd, DashBoardUtils.SECSMA);
 	}
 
 	@Test(alwaysRun = true)
@@ -153,31 +83,6 @@ public class TestSuiteLicensing_SECSMA extends LoginAndLogout
 		webd.getLogger().info("start to test in test Welcome Page --with Security Edition");
 		BrandingBarUtil.visitWelcome(webd);
 
-		webd.getLogger().info("Start to verify the service links in welome page...");
-		//verify the service links always displayed in welcome page
-		DashBoardUtils.VerifyServiceAlwaysDisplayedInWelcomePage(webd);
-		//verify the service link according to edition
-		webd.getLogger().info("'Security' displayed for OSMACC Security Edition");
-		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, "securityAnalytics"),
-				"'Security' servie should in welcome page");
-
-		webd.getLogger()
-		.info("'APM','Log Analytics','Monitoring', 'IT Analytics', 'Orchestraion' and 'Compliance' NOT displayed for OSMACC Security Edition");
-		Assert.assertFalse(WelcomeUtil.isServiceExistedInWelcome(webd, "compliance"),
-				"'Compliance' servie should not in welcome page");
-		Assert.assertFalse(WelcomeUtil.isServiceExistedInWelcome(webd, "APM"), "'APM' servie should not in welcome page");
-		Assert.assertFalse(WelcomeUtil.isServiceExistedInWelcome(webd, "LA"), "'Log Analytics' servie should not in welcome page");
-		Assert.assertFalse(WelcomeUtil.isServiceExistedInWelcome(webd, "ITA"), "'IT Analytics' servie should not in welcome page");
-		Assert.assertFalse(WelcomeUtil.isServiceExistedInWelcome(webd, "infraMonitoring"),
-				"'Monitoring' servie should not in welcome page");
-		Assert.assertFalse(WelcomeUtil.isServiceExistedInWelcome(webd, "orchestration"),
-				"'Orchestration' servie should not in welcome page");
-
-		webd.getLogger().info("Verify the service links in welome page end.");
-
-		//verify the data explorer item in Explorers
-		webd.getLogger().info("Verify the Data Explorer item in Explorers in welcome page");
-		Assert.assertTrue(DashBoardUtils.isWelcomePageDataExplorerItemExisted(webd, "Data Explorer"),
-				"'Data Explorer' should in Explorers");
+		DashBoardUtils.verifyWelcomePageWithTenant(webd, DashBoardUtils.SECSMA);
 	}
 }
