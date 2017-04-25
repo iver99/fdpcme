@@ -297,6 +297,51 @@ public class TestDashBoard extends LoginAndLogout
 
 	}
 
+	@Test
+	public void testDashboard_GCenabled() 
+	{						
+		//init test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test dashboard GC enabled");
+	
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+	
+		//switch to Grid View
+		webd.getLogger().info("Switch to Grid view");
+		DashboardHomeUtil.gridView(webd);
+		
+        //open the dashboard
+		webd.getLogger().info("Open the dashboard");
+		DashboardHomeUtil.selectDashboard(webd, oracle.sysman.emaas.platform.dashboards.test.DPdashboard.TestDashBoard.dbName_GCenabled);
+	
+		String baseUrl = null;
+		String newUrl1 = null;
+		String newUrl2 = null;
+		String newUrl3 = null;
+		
+		baseUrl = webd.getWebDriver().getCurrentUrl();
+		
+		//Verify time range in dashboard should change
+		newUrl1 = GlobalContextUtil.generateUrlWithGlobalContext(webd, baseUrl, null, "LAST_5_MINUTE", null, null, null);		
+		webd.open(newUrl1);
+				
+		Assert.assertTrue(webd.isDisplayed("//span[text()='Last 5 minutes: ']"), "The time range displayed isn't right");
+		
+		//Verify dashboard when url without omcCtx
+		newUrl2 = newUrl1.split("&")[0];
+		webd.open(newUrl2);
+		
+		Assert.assertTrue(webd.isDisplayed("//*[@id='emcta-ctxtSel_entCount']"), "Entities in GC isn't displayed in dashboard page");
+		
+		//Verify dashboard when url having composite
+		newUrl3 = GlobalContextUtil.generateUrlWithGlobalContext(webd, baseUrl, "8426448730BDF663A9806A69AA2C445B", "LAST_5_MINUTE", null, null, null);
+		webd.open(newUrl3);
+		
+		Assert.assertTrue(webd.isDisplayed("//span[text()='Composite: /SOA1213_base_domain/base_domain/soa_server1/soa-infra_System']"), "The composite isn't displayed in GC bar");
+	} 
+	
 	private String generateTimeStamp()
 	{
 		return String.valueOf(System.currentTimeMillis());
