@@ -34,6 +34,7 @@ public class ParallelThreadPool {
 
     public static  ThreadPoolExecutor  getThreadPool(){
         if(pool != null){
+            LOGGER.info("Thread pool instance is not null, returning...");
             return pool;
         }
         init();
@@ -42,10 +43,16 @@ public class ParallelThreadPool {
 
     public static void close(){
         LOGGER.info("Dashboards-API: Thread pool with size {} is closing!");
-        pool.shutdown();
-        if(!pool.isShutdown()){
-            LOGGER.error("Error occurred when closing thread pool in Dashboard-API!");
+        pool.shutdownNow();
+        if(pool.isTerminated()){
+            LOGGER.error("Not all tasks in thread pool have completed!!! ");
         }
+        if(!pool.isShutdown()){
+            LOGGER.error("Thread pool is not shutdown yet!!!");
+        }
+        if(pool.isTerminated())
+        // set pool to null directly to avoid EMCPDF-3922 issue.
+        pool = null;
     }
 
     public static void init(){
@@ -57,23 +64,23 @@ public class ParallelThreadPool {
         }
         pool = new ThreadPoolExecutor(coreSize,			//Core thread size
                 maxSize,								//max thread size
-                60,											//keep alived time for idle thread
+                60 * 5,											//keep alived time for idle thread
                 TimeUnit.SECONDS,
                 new LinkedBlockingQueue<Runnable>(DEFAULT_QUEUE_SIZE),	 //bounded queue with capacity
                 new CustomThreadFactory(),			//default thread factory
                 new CustomRejectedExecutionHandler()		//Custom Rejected execution handler
                 );
-        //all core thread timeout
+        //core threads can be timedout too
         pool.allowCoreThreadTimeOut(Boolean.TRUE);
         // pre start one thread in pool
         pool.prestartCoreThread();
-        LOGGER.info("Dashboards-API: Thread pool with core size {} and max size {} and queue size {} is initialized!", coreSize, maxSize ,1000);
+        LOGGER.info("Dashboards-API: Thread pool with core size {} and max size {} and queue size {} is initialized!", coreSize, maxSize ,DEFAULT_QUEUE_SIZE);
     }
 
     private static class CustomRejectedExecutionHandler implements RejectedExecutionHandler {
         @Override
         public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
-            LOGGER.error("{}# Queue of thread pool is full! Task {} is rejected from {}",rejectTaskNumber++, r.toString(), executor.toString());
+            LOGGER.error("#{} Queue of thread pool is full! Task {} is rejected from {}",rejectTaskNumber++, r.toString(), executor.toString());
             /*throw new RejectedExecutionException("Task " + r.toString() +
                     " rejected from " +
                     );*/

@@ -273,6 +273,8 @@ public class ConfigurationAPI extends APIBase
             } catch (ExecutionException e) {
                 _LOGGER.error(e.getCause() == null ? e : e.getCause());
             }catch(TimeoutException e){
+				//if timeout, and the task is still running, attempt to stop the task
+				futureSubscribedApps.cancel(true);
                 _LOGGER.error(e);
             }
             //get subscribapps2 data
@@ -287,6 +289,8 @@ public class ConfigurationAPI extends APIBase
             } catch (ExecutionException e) {
                 _LOGGER.error(e.getCause() == null ? e : e.getCause());
             }catch(TimeoutException e){
+				//if timeout, and the task is still running, attempt to stop the task
+				futureSubscribedApps2.cancel(true);
                 _LOGGER.error(e);
             }
             List<String> userRoles = null;
@@ -300,6 +304,8 @@ public class ConfigurationAPI extends APIBase
             } catch (ExecutionException e) {
                 _LOGGER.error(e.getCause() == null ? e : e.getCause());
             }catch(TimeoutException e){
+				//if timeout, and the task is still running, attempt to stop the task
+				futureUserRoles.cancel(true);
                 _LOGGER.error(e);
             }
 

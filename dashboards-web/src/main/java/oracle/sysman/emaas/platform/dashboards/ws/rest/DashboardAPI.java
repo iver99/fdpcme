@@ -596,6 +596,8 @@ public class DashboardAPI extends APIBase
 		} catch (ExecutionException e) {
 			LOGGER.error(e.getCause() == null? e : e.getCause());
 		}catch(TimeoutException e){
+			//if timeout, and the task is still running, attempt to stop the task
+			futureReg.cancel(true);
 			LOGGER.error(e);
 		}
 
@@ -614,6 +616,8 @@ public class DashboardAPI extends APIBase
 		} catch (ExecutionException e) {
 			LOGGER.error(e.getCause() == null? e : e.getCause());
 		}catch(TimeoutException e){
+			//if timeout, and the task is still running, attempt to stop the task
+			futureUserInfo.cancel(true);
 			LOGGER.error(e);
 		}
 
@@ -631,6 +635,8 @@ public class DashboardAPI extends APIBase
 		} catch (ExecutionException e) {
 			LOGGER.error(e.getCause());
 		}catch(TimeoutException e){
+			//if timeout, and the task is still running, attempt to stop the task
+			futureSubscried.cancel(true);
 			LOGGER.error(e);
 		}
 
@@ -648,6 +654,8 @@ public class DashboardAPI extends APIBase
 		} catch (ExecutionException e) {
 			LOGGER.error(e.getCause());
 		}catch(TimeoutException e){
+			//if timeout, and the task is still running, attempt to stop the task
+			futureSubscried2.cancel(true);
 			LOGGER.error(e);
 		}
 
@@ -666,6 +674,8 @@ public class DashboardAPI extends APIBase
 		}catch (InterruptedException e) {
 			LOGGER.error(e);
 		}catch(TimeoutException e){
+			//if timeout, and the task is still running, attempt to stop the task
+			futureDashboard.cancel(true);
 			LOGGER.error(e);
 		}
 
