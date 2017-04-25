@@ -158,7 +158,7 @@
                         <!-- /ko -->
                         <hr>
                         
-                        <span style="display: inline-block; padding-top: 5px; padding-right: 5px;">
+                        <span style="padding-top: 8px; padding-right: 5px;" class="relRadios">
                             <span>
                                 <input type="radio" name="lrCtrl" value="timeLevelCtrl" data-bind="checked: lrCtrlVal">
                                 <label data-bind="text: nls.DATETIME_PICKER_RADIO_RANGE"></label>
@@ -167,22 +167,30 @@
                         <input data-bind="ojComponent: {component: 'ojInputDate', value: startDateISO, disabled: lrCtrlVal() !== 'timeLevelCtrl',
                                                 datePicker: {daysOutsideMonth: 'hidden'},
                                                 converter: inputDateConverter,
-                                                rootAttributes: {style: 'width: 70px;'}
+                                                min: startDateMin, max: endDateISO(),
+                                                validators: [startDateValidator],
+                                                rootAttributes: {style: 'width: 70px;', class: 'relRadios'}
                                             },
                                 attr: {id: 'inputStartDate_'+randomId, 'aira-label': startDateLabel}"/>
-                        <input data-bind="ojComponent: {component: 'ojInputTime', value: startTime, disabled: lrCtrlVal() !== 'timeLevelCtrl',
-                                                rootAttributes: {style: 'width: 150px;'}
+                        <input data-bind="ojComponent: {component: 'ojInputTime', value: startTime, converter: getTimeConverter(), timePicker: {timeIncrement: timeIncrement()},
+                                                disabled: lrCtrlVal() !== 'timeLevelCtrl',
+                                                validators: [startTimeValidator],
+                                                rootAttributes: {style: 'width: 150px;', class: 'relRadios'}
                                             },
                                 attr: {id: 'inputStartTime_'+randomId, 'aira-label': startTimeLabel, visible: !hideTimeSelection()}"/>
-                        <span style="font-weight: bold">-</span>
+                        <span class="relRadios" style="font-weight: bold; padding-top: 8px;">-</span>
                         <input data-bind="ojComponent: {component: 'ojInputDate', value: endDateISO, disabled: lrCtrlVal() !== 'timeLevelCtrl',
                                                 datePicker: {daysOutsideMonth: 'hidden'},
                                                 converter: inputDateConverter,
-                                                rootAttributes: {style: 'width: 70px;'}
+                                                min: endDateMin, max: endDateMax,
+                                                validators: [endDateValidator],
+                                                rootAttributes: {style: 'width: 70px;', class: 'relRadios'}
                                             },
                                 attr: {id: 'inputEndDate_'+randomId, 'aira-label': endDateLabel}"/>
-                        <input data-bind="ojComponent: {component: 'ojInputTime', value: endTime, disabled: lrCtrlVal() !== 'timeLevelCtrl',
-                                                rootAttributes: {style: 'width: 150px;'}
+                        <input data-bind="ojComponent: {component: 'ojInputTime', value: endTime, converter: getTimeConverter(), timePicker: {timeIncrement: timeIncrement()},
+                                                disabled: lrCtrlVal() !== 'timeLevelCtrl',
+                                                validators: [endTimeValidator],
+                                                rootAttributes: {style: 'width: 150px;', class: 'relRadios'}
                                             },
                                 attr: {id: 'inputEndTime_'+randomId, 'aira-label': endTimeLabel, visible: !hideTimeSelection()}"/>
                     </div>
@@ -200,15 +208,6 @@
                         </button>
                         <span style="font-size: 14px; padding-left: 10px;" data-bind="text: timeZone"></span>
                     </div>
-                    <!-- ko if: showTimeValidateErrorMsg -->
-                    <div class="errorMsg" data-bind="text: timeValidateErrorMsg"></div>
-                    <!-- /ko -->
-                    <!-- ko if: showTimeValidateFutureErrorMsg -->
-                    <div class="errorMsg" data-bind="text: timeValidateFutureErrorMsg"></div>
-                    <!-- /ko -->
-                    <!--ko if: showBeyondWindowLimitError-->
-                    <div class="errorMsg" data-bind="text: beyondWindowLimitErrorMsg"></div>
-                    <!-- /ko -->
                     
                     <!-- pop up for time filter-->
                     <div style="display: none; width: 560px; height: 499px; margin: auto; border: 1px solid #f0f0f0; background: #FFFFFF;" data-bind="ojComponent: {component: 'ojPopup', chrome: 'none'}, attr: {id: 'timeFilter_'+randomId}, click: function(data, event) {event.stopPropagation();return true;}">

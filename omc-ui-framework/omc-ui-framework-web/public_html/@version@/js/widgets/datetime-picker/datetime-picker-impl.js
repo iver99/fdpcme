@@ -119,7 +119,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     console.log(params);
                 }
 
-                var start, end;
+                var start, end, curStartDate, curEndDate;
                 var timeDiff, dateTimeDiff;
                 
                 var daysArray = ["1", "2", "3", "4", "5", "6", "7"];
@@ -418,25 +418,10 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     return css;
                 }, self);
 
-                self.timeValidateError = ko.observable(false);
-                self.timeValidateFutureError = ko.observable(false);
-                self.beyondWindowLimitError = ko.observable(false);
                 self.flexRelTimeValError = ko.observable(false);
 
-                self.showTimeValidateErrorMsg = ko.computed(function() {
-                    return self.timeValidateError();
-                }, self);
-                
-                self.showTimeValidateFutureErrorMsg = ko.computed(function() {
-                    return !self.showTimeValidateErrorMsg() && self.timeValidateFutureError();
-                }, self);
-
-                self.showBeyondWindowLimitError = ko.computed(function() {
-                    return !self.showTimeValidateErrorMsg() && !self.showTimeValidateFutureErrorMsg() && self.beyondWindowLimitError();
-                }, self);
-
                 self.applyButtonDisable = ko.computed(function() {
-                    return self.timeValidateError() || self.timeValidateFutureError() || self.beyondWindowLimitError() || self.showTimeFilterError() || self.flexRelTimeValError();
+                    return self.showTimeFilterError() || self.flexRelTimeValError();
                 }, self);
                 
                 self.lrCtrlVal.subscribe(function(value) {
@@ -459,14 +444,10 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     }
                 });
 
-                self.minDate = ko.observable(null);
-                self.maxDate = ko.observable(oj.IntlConverterUtils.dateToLocalIso(new Date()).slice(0, 10));
                 self.timePeriodObject = ko.observable();
                 self.monthObject = ko.observable();
 
                 self.errorMsg = nls.DATETIME_PICKER_ERROR;
-                self.timeValidateErrorMsg = nls.DATETIME_PICKER_TIME_VALIDATE_ERROR_MSG;
-                self.timeValidateFutureErrorMsg = nls.DATETIME_PICKER_TIME_VALIDATE_FUTURE_ERROR_MSG;
                 self.beyondWindowLimitErrorMsg = nls.DATETIME_PICKER_BEYOND_WINDOW_LIMIT_ERROR_MSG;
                 self.felRelTimeValError = nls.DATETIME_PICKER_FLEX_REL_TIME_VALUE_ERROR_MSG;
                 self.applyButton = nls.DATETIME_PICKER_BUTTONS_APPLY_BUTTON;
@@ -889,34 +870,9 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     self.adjustLastX = params.adjustLastX;
                 }
 
-                /**
-                 * restrict date range accroding to current date, customTimeBack, startDateISO and endDateISO
-                 * @param {type} minDate
-                 * @param {type} maxDate
-                 * @returns {undefined}
-                 */
-                self.setMinMaxDate = function(minDate, maxDate) {
-                    var today = new Date(new Date().toDateString());
-                    if(!minDate) {
-                        if(self.customTimeBack) {
-                            minDate = oj.IntlConverterUtils.dateToLocalIso(new Date(today - self.customTimeBack)).slice(0, 10);
-                        }else {
-                            minDate = null;
-                        }
-                    }
-
-                    if(!maxDate) {
-                        maxDate = oj.IntlConverterUtils.dateToLocalIso(today).slice(0, 10);
-                    }
-
-                    self.minDate(minDate);
-                    self.maxDate(maxDate);
-                };
-
                 //the max timestamp of how far the user can pick the date from, expressed as milliseconds
                 if(params.customTimeBack && params.customTimeBack>0) {
                     self.customTimeBack = params.customTimeBack;
-                    self.setMinMaxDate(null, null);
                 }
 
                 if(params.hideTimeSelection && params.hideTimeSelection === true) {
@@ -1020,6 +976,21 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
 
                 self.startDateISO = ko.observable();
                 self.endDateISO = ko.observable();
+                
+                //Limit min and max value for start date and end date
+                self.startDateMin = ko.observable(null);
+                if(self.customTimeBack) {
+                    self.startDateMin = ko.observable(oj.IntlConverterUtils.dateToLocalIso(new Date(new Date() - self.customTimeBack)).slice(0, 10));
+                }
+
+                self.endDateMin = ko.computed(function() {
+                    var _startDate = oj.IntlConverterUtils.isoToLocalDate(self.startDateISO());
+                    var _startDateMin = oj.IntlConverterUtils.isoToLocalDate(self.startDateMin());
+                    var _endDateMin = Math.max(new Date(_startDate), new Date(_startDateMin));
+                    return oj.IntlConverterUtils.dateToLocalIso(new Date(_endDateMin)).slice(0, 10);
+                });
+                self.endDateMax = ko.observable(oj.IntlConverterUtils.dateToLocalIso(new Date()).slice(0, 10));
+                
                 self.startTime = ko.observable("T00:00:00");
                 self.endTime = ko.observable("T00:00:00");
                 self.timePeriod = ko.observable();
@@ -1064,17 +1035,71 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         end: end
                     };
                 };
-
-                self.isCustomBeyondWindowLimit = function() {
-                    var start = self.startDateISO().slice(0, 10) + self.startTime();
-                    var end = self.endDateISO().slice(0, 10) + self.endTime();
-                    timeDiff = new Date(end) - new Date(start);
+                
+                self.isCustomBeyondWindowLimit = function(start, end) {
+                    var timeDiff = new Date(end) - new Date(start);
                     if(timeDiff > self.customWindowLimit) {
-                        self.beyondWindowLimitError(true);
-                    }else{
-                        self.beyondWindowLimitError(false);
+                        return true;
+                    }else {
+                        return false;
+                    }
+                }
+                
+                self.startDateValidator = {
+                    'validate': function(_startDate) {
+                        curStartDate = _startDate;
+                        if(!curEndDate){
+                            curEndDate = self.endDateISO();
+                        }
+                        var _start = _startDate + self.startTime();
+                        var _end = curEndDate + self.endTime();
+                        if(self.isCustomBeyondWindowLimit(_start, _end) === true) {
+                            throw new oj.ValidatorError("", self.beyondWindowLimitErrorMsg);
+                        }else {
+                            return _startDate;
+                        }
                     }
                 };
+                
+                self.endDateValidator = {
+                    'validate': function(_endDate) {
+                        curEndDate = _endDate;
+                        if(!curStartDate){
+                            curStartDate = self.startDateISO();
+                        }
+                        var _start = curStartDate + self.startTime();
+                        var _end = _endDate + self.endTime();
+                        if(self.isCustomBeyondWindowLimit(_start, _end) === true) {
+                            throw new oj.ValidatorError("", self.beyondWindowLimitErrorMsg);
+                        }else {
+                            return _endDate;
+                        }
+                    }
+                };
+                
+                self.startTimeValidator = {
+                    'validate': function(_startTime) {
+                        var _start = curStartDate + _startTime;
+                        var _end = curEndDate + self.endTime();
+                        if(self.isCustomBeyondWindowLimit(_start, _end) === true) {
+                            throw new oj.ValidatorError("", self.beyondWindowLimitErrorMsg);
+                        }else {
+                            return _startTime;
+                        }
+                    }
+                }
+                
+                self.endTimeValidator = {
+                    'validate': function(_endTime) {
+                        var _start = curStartDate + self.startTime();
+                        var _end = curEndDate + _endTime;
+                        if(self.isCustomBeyondWindowLimit(_start, _end) === true) {
+                            throw new oj.ValidatorError("", self.beyondWindowLimitErrorMsg);
+                        }else {
+                            return _endTime;
+                        }
+                    }
+                }
 
                 self.adjustDateMoreFriendly = function(date) {
                     var today = oj.IntlConverterUtils.dateToLocalIso(new Date()).slice(0, 10);
@@ -1641,6 +1666,9 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
 
                     self.startTime(start.slice(10));
                     self.endTime(end.slice(10));
+                    
+                    curStartDate = self.startDateISO();
+                    curEndDate = self.endDateISO();
 
                     self.dateTimeInfo(self.getDateTimeInfo(self.startDateISO(), self.endDateISO(), self.startTime(), self.endTime(), self.timePeriod()));
                     
@@ -1672,10 +1700,6 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     // Do not validate window limit when initialized
                     if(type === 0) {
                         return;
-                    }
-
-                    if(self.customWindowLimit) {
-                        self.isCustomBeyondWindowLimit();
                     }
                 }
 
@@ -1860,7 +1884,6 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         self.setTimePeriodChosen(self.timePeriodCustom);
                         customClick(1);
                     }
-                    timeValidate();
                 };
 
                 self.changeTimeError = function (event, data, whichTime) {
@@ -1907,24 +1930,6 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         self.changeTimeError(event, data, 2);
                     }
                 };
-
-                function timeValidate() {
-                    var start = self.startDateISO().slice(0, 10) + self.startTime();
-                    var end = self.endDateISO().slice(0, 10) + self.endTime();
-                    if(start > end) {
-                        self.timeValidateError(true);
-                    }else {
-                        self.timeValidateError(false);
-                    }
-                    
-                    var endDate = oj.IntlConverterUtils.dateToLocalIso(new Date(self.endDate())).slice(0, 10) + self.endTime();
-                    var current = oj.IntlConverterUtils.dateToLocalIso(new Date());
-                    if(endDate > current) {
-                        self.timeValidateFutureError(true);
-                    }else {
-                        self.timeValidateFutureError(false);
-                    }
-                }
 
                 self.closeAllPopups = function() {
                     // The flag "shouldSetLastDatas" is used to solve popup closing issues in Safari. It is set to true only when popups are to be closed. And at this time, self.setLastDatas should be called.
@@ -2032,10 +2037,8 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         self.tfInstance.daysChecked(self.lastDaysChecked());
                         self.tfInstance.monthsChecked(self.lastMonthsChecked());
                     }
-                    self.setMinMaxDate(null, null);
 
                     if(self.lastTimePeriod() !== self.timePeriodCustom) {
-                        self.beyondWindowLimitError(false);
                         if (self.showLatestOnCustomPanel() && self.lastTimePeriod()===self.timePeriodLatest) {
                             self.lrCtrlVal("latestOnCustom");
                         } else {
@@ -2043,10 +2046,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             self.setTimePeriodToLastX(self.lastTimePeriod(), null, null, 0);
                         }
                     }else{
-                        var lastBeyondWindowLimitError = self.beyondWindowLimitError();
-                        self.init = !lastBeyondWindowLimitError;
                         customClick(1);
-                        self.beyondWindowLimitError(lastBeyondWindowLimitError);
                     }
 
                     self.shouldSetLastDatas = false;
@@ -2218,10 +2218,6 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     }
 
                     if (chosenPeriod !== self.timePeriodCustom) {
-                        //just show window limit error in custom mode
-                        self.beyondWindowLimitError(false);
-                        self.setMinMaxDate(null, null);
-
                         tpId = self.getTimePeriodString(chosenPeriod);
                         tpId =  convertTPIdForQuickPick(tpId, !params.timePeriodsSet);
                         parsedTp = ctxUtil.parseTimePeriodToUnitAndDuration(tpId);
@@ -2306,7 +2302,6 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     self.lastFlexRelTimeVal(self.flexRelTimeVal());
                     self.lastFlexRelTimeOpt([self.flexRelTimeOpt()[0]]);
 
-                    self.setMinMaxDate(null, null);
                     var start, end;
                     
                     if(self.lrCtrlVal() === "flexRelTimeCtrl") {
