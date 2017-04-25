@@ -15,7 +15,7 @@ import org.testng.annotations.Test;
 
 public class TestSuiteLicensing_SECSMA extends LoginAndLogout
 {
-	private final String tenant_SECSMA = DashBoardUtils.getTenantName("df_scecsma");
+	private final String tenant_SECSMA = DashBoardUtils.getTenantName("df_secsma");
 	private final String tenant_username = "emcsadmin";
 	private final String UDEWidget = "Analytics Line";
 	private String dbName_Security = "";
