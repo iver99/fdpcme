@@ -203,6 +203,9 @@
                     <!-- ko if: showTimeValidateErrorMsg -->
                     <div class="errorMsg" data-bind="text: timeValidateErrorMsg"></div>
                     <!-- /ko -->
+                    <!-- ko if: showTimeValidateFutureErrorMsg -->
+                    <div class="errorMsg" data-bind="text: timeValidateFutureErrorMsg"></div>
+                    <!-- /ko -->
                     <!--ko if: showBeyondWindowLimitError-->
                     <div class="errorMsg" data-bind="text: beyondWindowLimitErrorMsg"></div>
                     <!-- /ko -->

@@ -419,20 +419,24 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 }, self);
 
                 self.timeValidateError = ko.observable(false);
+                self.timeValidateFutureError = ko.observable(false);
                 self.beyondWindowLimitError = ko.observable(false);
                 self.flexRelTimeValError = ko.observable(false);
 
                 self.showTimeValidateErrorMsg = ko.computed(function() {
                     return self.timeValidateError();
                 }, self);
+                
+                self.showTimeValidateFutureErrorMsg = ko.computed(function() {
+                    return !self.showTimeValidateErrorMsg() && self.timeValidateFutureError();
+                }, self);
 
                 self.showBeyondWindowLimitError = ko.computed(function() {
-                    return !self.showTimeValidateErrorMsg() && self.beyondWindowLimitError();
+                    return !self.showTimeValidateErrorMsg() && !self.showTimeValidateFutureErrorMsg() && self.beyondWindowLimitError();
                 }, self);
 
                 self.applyButtonDisable = ko.computed(function() {
-                    return self.startDateError() || self.endDateError() || self.startTimeError() || self.endTimeError() ||
-                            self.timeValidateError() || self.beyondWindowLimitError() || self.showTimeFilterError() || self.flexRelTimeValError();
+                    return self.timeValidateError() || self.timeValidateFutureError() || self.beyondWindowLimitError() || self.showTimeFilterError() || self.flexRelTimeValError();
                 }, self);
                 
                 self.lrCtrlVal.subscribe(function(value) {
@@ -462,6 +466,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
 
                 self.errorMsg = nls.DATETIME_PICKER_ERROR;
                 self.timeValidateErrorMsg = nls.DATETIME_PICKER_TIME_VALIDATE_ERROR_MSG;
+                self.timeValidateFutureErrorMsg = nls.DATETIME_PICKER_TIME_VALIDATE_FUTURE_ERROR_MSG;
                 self.beyondWindowLimitErrorMsg = nls.DATETIME_PICKER_BEYOND_WINDOW_LIMIT_ERROR_MSG;
                 self.felRelTimeValError = nls.DATETIME_PICKER_FLEX_REL_TIME_VALUE_ERROR_MSG;
                 self.applyButton = nls.DATETIME_PICKER_BUTTONS_APPLY_BUTTON;
@@ -1910,6 +1915,14 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         self.timeValidateError(true);
                     }else {
                         self.timeValidateError(false);
+                    }
+                    
+                    var endDate = oj.IntlConverterUtils.dateToLocalIso(new Date(self.endDate())).slice(0, 10) + self.endTime();
+                    var current = oj.IntlConverterUtils.dateToLocalIso(new Date());
+                    if(endDate > current) {
+                        self.timeValidateFutureError(true);
+                    }else {
+                        self.timeValidateFutureError(false);
                     }
                 }
 
