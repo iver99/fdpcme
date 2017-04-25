@@ -1,8 +1,6 @@
-package oracle.sysman.emaas.platform.dashboards.core.model.subscription2;
+package oracle.sysman.emaas.platform.emcpdf.tenant.subscription2;
 
 import org.testng.annotations.Test;
-
-import static org.testng.Assert.*;
 
 /**
  * Created by xiadai on 2017/4/7.

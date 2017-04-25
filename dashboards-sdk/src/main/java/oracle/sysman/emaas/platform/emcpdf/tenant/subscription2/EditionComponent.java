@@ -1,4 +1,4 @@
-package oracle.sysman.emaas.platform.dashboards.core.model.subscription2;
+package oracle.sysman.emaas.platform.emcpdf.tenant.subscription2;
 
 /**
  * Created by chehao on 2017/3/30 23:20.

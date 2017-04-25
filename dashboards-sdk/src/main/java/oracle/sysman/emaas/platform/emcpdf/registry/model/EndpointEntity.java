@@ -8,7 +8,7 @@
  * $$Revision: $$
  */
 
-package oracle.sysman.emaas.platform.dashboards.core.util;
+package oracle.sysman.emaas.platform.emcpdf.registry.model;
 
 /**
  * @author miao

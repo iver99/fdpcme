@@ -1,8 +1,7 @@
-package oracle.sysman.emaas.platform.dashboards.core.model.subscription2;
+package oracle.sysman.emaas.platform.emcpdf.tenant.subscription2;
 
 
-
-import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
+import oracle.sysman.emaas.platform.emcpdf.util.JsonUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.annotate.JsonProperty;
@@ -36,20 +35,19 @@ public class TenantSubscriptionInfo {
         this.subscriptionAppsList = subscriptionAppsList;
     }
 
-    public String toJson(TenantSubscriptionInfo obj){
+    public String toJson(TenantSubscriptionInfo obj) {
         JsonUtil jsonUtil = JsonUtil.buildNonNullMapper();
         String result = null;
-        if(obj !=null && obj.getAppsInfoList() !=null && !obj.getAppsInfoList().isEmpty()){
+        if (obj != null && obj.getAppsInfoList() != null && !obj.getAppsInfoList().isEmpty()) {
 
             SubscribedAppsEntity subscribedAppsEntity = new SubscribedAppsEntity(obj.getAppsInfoList());
             result = jsonUtil.toJson(subscribedAppsEntity);
         }
-        LOGGER.info("ToJson is {}",result);
+        LOGGER.info("ToJson is {}", result);
         return result;
     }
 
-    private static class SubscribedAppsEntity<E>
-    {
+    private static class SubscribedAppsEntity<E> {
         private List<E> applications = new ArrayList<>();
 
         public SubscribedAppsEntity(List<E> applications) {
