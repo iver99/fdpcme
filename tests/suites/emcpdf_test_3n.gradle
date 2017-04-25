@@ -122,14 +122,14 @@ dependencies{
 project.ext.omctf_omcCloudSetup_additionalParam = "-skipagents -skipomr"
 
 // depends on OMCTF-977
-def testTenants_v2 = [:]
-testTenants_v2["df_omc_trial"]= [ "OMC" : [ "Trial"]]
-testTenants_v2["df_omc_standard"]= [ "OMC" : [ "Standard"] ]
-testTenants_v2["df_omc_ee"]= [ "OMC" : [ "Enterprise"] ]
-testTenants_v2["df_omc_log"]= [ "OMC" : [ "Log"] ]
-testTenants_v2["df_osmacc_trial"]= [ "OSMACC" : [ "Trail"] ]
-testTenants_v2["df_osmacc_compliance"]= [ "OSMACC" : [ "Compliance"] ]
-testTenants_v2["df_osmacc_security"]= [ "OSMACC" : [ "Security"] ]
+//def testTenants_v2 = [:]
+//testTenants_v2["df_omc_trial"]= [ "OMC" : [ "Trial"]]
+//testTenants_v2["df_omc_standard"]= [ "OMC" : [ "Standard"] ]
+//testTenants_v2["df_omc_ee"]= [ "OMC" : [ "Enterprise"] ]
+//testTenants_v2["df_omc_log"]= [ "OMC" : [ "Log"] ]
+//testTenants_v2["df_osmacc_trial"]= [ "OSMACC" : [ "Trail"] ]
+//testTenants_v2["df_osmacc_compliance"]= [ "OSMACC" : [ "Compliance"] ]
+//testTenants_v2["df_osmacc_security"]= [ "OSMACC" : [ "Security"] ]
 
 def testTenants_v3 = [:]
 testTenants_v3["df_omcse"]= [ "OMCSE" : [ "Standard"] ]
@@ -138,7 +138,7 @@ testTenants_v3["df_omclog"]= [ "OMCLOG" : [ "Standard"] ]
 testTenants_v3["df_secse"]= [ "SECSE" : [ "Standard"] ]
 testTenants_v3["df_secsma"]= [ "SECSMA" : [ "Standard"] ]
 
-task onboardAllTenants(dependsOn:[omcOnboardTenants(testTenants_v2),omcOnboardTenants(testTenants_v3)]){
+task onboardAllTenants(dependsOn:[omcOnboardTenants(testTenants_v3)]){
 }
 
 //Task added from "emcpdf_qa_test_3n"
