@@ -243,22 +243,18 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 	public boolean isCloudServiceLinkExisted(WebDriver driver, String cloudServiceLinkName)
 	{
 		boolean isExisted = false;
+		String HBGMenuItem = "";
 		Validator.notEmptyString("cloudServiceLinkName in [isCloudServiceLinkExisted]", cloudServiceLinkName);
 		driver.getLogger().info("isCloudServiceLinkExisted started");
 		//check if hamburger menu icon exist
 		if (isHamburgerMenuEnabled(driver)) {
-			if (NAV_LINK_TEXT_CS_SECU.equals(cloudServiceLinkName)) {
-				cloudServiceLinkName = ROOT_MENU_SECURITY;
-				driver.getLogger().info("Use NEW menu name: " + cloudServiceLinkName);
-			}
-			else if (NAV_LINK_TEXT_CS_COMP.equals(cloudServiceLinkName)) {
-				cloudServiceLinkName = ROOT_MENU_COMPLIANCE;
-				driver.getLogger().info("Use NEW menu name: " + cloudServiceLinkName);
-			}
-			driver.getLogger().info(
-					"Start to check if cloud service link is existed in hamburger menu. Link name: " + cloudServiceLinkName);
+			HBGMenuItem = cloudServiceLinkToHamburgerMenuItem(driver, cloudServiceLinkName);
+			driver.getLogger().info("Use NEW menu name: " + HBGMenuItem);
 
-			isExisted = isMenuItemExisted(driver, cloudServiceLinkName);
+			driver.getLogger().info(
+					"Start to check if cloud service link is existed in hamburger menu. Link name: " + HBGMenuItem);
+
+			isExisted = isMenuItemEnabled(driver, HBGMenuItem);
 		}
 		else {
 			//branding bar
@@ -659,7 +655,7 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 		else {
 			//the branding bar
 			driver.getLogger()
-					.info("Start to visit visual analyzer link from branding bar. Link name: " + visualAnalyzerLinkName);
+			.info("Start to visit visual analyzer link from branding bar. Link name: " + visualAnalyzerLinkName);
 			visitApplicationLink(driver, "va", visualAnalyzerLinkName);
 		}
 		driver.getLogger().info("visitApplicationVisualAnalyzer ended");
