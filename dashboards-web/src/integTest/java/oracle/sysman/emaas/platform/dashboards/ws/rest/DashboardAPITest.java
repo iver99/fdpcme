@@ -354,45 +354,37 @@ public class DashboardAPITest
 		assertExportDashboard();
 	}
 	
-	/*@Test
+	@Test
 	public void testImportDashboard(@Mocked final DependencyStatus anyDependencyStatus, 
-			@Mocked final JSONArray array,
-			@Mocked final JSONObject obj,
 			@Mocked final SSFDataUtil ssfUtil,
-			@Mocked final Dashboard d,
-			@Mocked final Dashboard subDashboard) throws Exception, TenantWithoutSubscriptionException {		
-		final List<Dashboard> subDbds = new ArrayList<Dashboard>();
-		subDbds.add(new Dashboard());    
+			@Mocked final Dashboard dbd
+			) throws Exception, TenantWithoutSubscriptionException {	
+		Tile tile = new Tile();
+		tile.setWidgetUniqueId("123456");
+		final List<Tile> tiles = new ArrayList<Tile>();
+		tiles.add(tile);
 		new Expectations() {
 			{
 				anyDependencyStatus.isDatabaseUp();
 				result = true;
-				
-				array.length();
-				result = 1;
-				
-				obj.has(anyString);
-				result = true;
-				
-				obj.getJSONArray(anyString);
-				result = new JSONArray();
-				
 				ssfUtil.saveSSFData(anyString, anyString, anyBoolean);
 				result = "{\"1\":\"1234\"}";
 				
+				dbd.getType();
+				result = "SET";
 				
-				//d.getSubDashboards();
-				//result = subDbds;
+				dbd.getTileList();
+				result = tiles;
 				
-				mockedDashboardManager.saveForImportedDashboard(withAny(new Dashboard()), anyLong, anyBoolean);
-				result = d;
+				mockedDashboardManager.saveForImportedDashboard(dbd, anyLong, anyBoolean);
+				result = dbd;
 				
 			}
 		};
 		assertImportDashboardOverride();
 	}
 	
-*/
+
 	@Test
 	public void testQueryCombinedData(@Mocked final DependencyStatus anyDependencyStatus) throws Exception
 	{
@@ -587,6 +579,8 @@ public class DashboardAPITest
 		};
 		assertUpdateDashboard();
 	}
+	
+	
 
 	@Test
 	public void testUpdateDashboardWithCommonSecurityException(@Mocked final JsonUtil mockedJsonUtil) throws Exception
@@ -746,13 +740,8 @@ public class DashboardAPITest
 	private void assertImportDashboardOverride() throws JSONException
 	{
 		Assert.assertNotNull(dashboardAPI.importDashboards("tenant01", "tenant01.emcsadmin", "https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101",true,
-				new JSONArray("[{\"Dashboard\":[{\"name\": \"TestPamelaDBD\",\"type\":\"SET\",\"description\": \"testDBD\"}],\"Savedsearch\":[{ \"name\": \"Top Database Targets with Log Errors_43\",\"description\": \"Top 10 Database targets\"}]}]")));
-	}
+				new JSONArray("[{\"Dashboard\": [{\"name\": \"Import Export Sub Dashboard_2\", \"tiles\": [{ \"type\": \"DEFAULT\",\"row\": 0,\"WIDGET_UNIQUE_ID\": \"3201\"}],\"id\": \"255446032935128268636523999445694642173\"},{\"name\": \"TestPamelaDBD_1\",\"description\": \"testDBD\",\"enableDescription\": \"FALSE\",\"userOptions\": {\"userName\": \"emcsadmin\",\"dashboardId\": \"270540442558749074000543557139546793426\",\"autoRefreshInterval\": 300000},\"type\": \"SET\",\"subDashboards\": [{\"name\": \"Import Export Sub Dashboard_2\",\"tiles\": [{ \"type\": \"DEFAULT\",\"row\": 0,\"WIDGET_UNIQUE_ID\": \"3201\"}],\"id\": \"255446032935128268636523999445694642173\"}]}],\"Savedsearch\": [{\"creationDate\": \"2017-04-14T02:24:14.287Z\",\"lastModificationDate\": \"2017-04-14T02:24:14.287Z\",\"id\": \"271515282512072253341097402942789505632\"}]}]")));
 	
-	private void assertImportDashboardInsert() throws JSONException
-	{
-		Assert.assertNotNull(dashboardAPI.importDashboards("tenant01", "tenant01.emcsadmin", "https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101",false,
-				new JSONArray("[{\"Dashboard\":[{\"name\": \"TestPamelaDBD\",\"description\": \"testDBD\"}],\"Savedsearch\":[{ \"name\": \"Top Database Targets with Log Errors_43\",\"description\": \"Top 10 Database targets\"}]}]")));
 	}
 
 	private void assertQueryCombinedDashboardById()

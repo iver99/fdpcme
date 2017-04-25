@@ -37,11 +37,11 @@ public class SSFDataUtil {
 	private static final String GET_SEARCH_DATA_URI = "all";
 	private static final String SAVE_SEARCH_DATA_URI = "import";
 	private final static Logger LOGGER = LogManager.getLogger(SSFDataUtil.class);
-	
+	/*
 	private static final String USER_IDENTITY_DOMAIN_NAME = "X-USER-IDENTITY-DOMAIN-NAME";
 	private static final String REMOTE_USER = "X-REMOTE-USER";
 	private static final String AUTHORIZATION = "Authorization";
-	
+	*/
 	
 	public static String getSSFData(String userTenant, String requestEntity) {
 		return accessSSFWebService(userTenant,GET_SEARCH_DATA_URI,requestEntity);

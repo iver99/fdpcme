@@ -422,6 +422,37 @@ public class DashboardManagerTest_S2 extends BaseTest
 		dm.deleteDashboard(dbd.getDashboardId(), true, tenantId1);
 		dm.deleteDashboard(dbd2.getDashboardId(), true, tenantId1);
 	}
+	
+	@Test(groups = { "s2" })
+	public void testSaveDashboardForImportS2() throws DashboardException, InterruptedException
+	{
+		loadMockBeforeMethod();
+		Dashboard dbd = new Dashboard();
+		dbd.setName("dashboard in testSaveDashboardForImportS2()" + System.currentTimeMillis());
+		dbd.setType(Dashboard.DASHBOARD_TYPE_NORMAL);
+		Tile t1 = createTileForDashboard(dbd);
+		createParameterForTile(t1);
+
+		DashboardManager dm = DashboardManager.getInstance();
+		Long tenantId1 = 1234L;
+		dm.saveNewDashboard(dbd, tenantId1);
+		//		dbd = dm.getDashboardById(10253L, tenantId1);
+		Assert.assertNotNull(dbd.getDashboardId());
+		dm.updateDashboard(dbd, tenantId1);
+
+		// create a dashboard with dashboard id specified
+		Dashboard dbd2 = new Dashboard();
+		dbd2.setName("dashboard in testCreateSimpleDashboard()" + System.currentTimeMillis());
+		dbd2.setType(Dashboard.DASHBOARD_TYPE_NORMAL);
+		dbd2.setDashboardId(BigInteger.valueOf(Long.MAX_VALUE)); // specify id not existing in database
+		dm.saveNewDashboard(dbd2, tenantId1);
+		Dashboard queried = dm.getDashboardById(dbd2.getDashboardId(), tenantId1);
+		Assert.assertEquals(dbd2.getName(), queried.getName());
+
+		// post test
+		dm.deleteDashboard(dbd.getDashboardId(), true, tenantId1);
+		dm.deleteDashboard(dbd2.getDashboardId(), true, tenantId1);
+	}
 
 	@Test(groups = { "s2" })
 	public void testCreateUpdateDashboardS2() throws DashboardException, InterruptedException
