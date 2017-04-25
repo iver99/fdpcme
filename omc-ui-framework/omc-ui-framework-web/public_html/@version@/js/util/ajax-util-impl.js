@@ -139,11 +139,6 @@ define([
 //                        removeMessage(messageId);
                         ajaxCallDfd.resolve(data, textStatus, jqXHR);
                     })
-                    .success(function(){
-                        if(this.url.indexOf("/omcstatus") > -1){
-                            messageUtil.removeMessageByCategory("omc_planned_downtime");
-                        }
-                    })
                     .fail(function (jqXHR, textStatus, errorThrown) {
                         //Do retry
                         if (jqXHR.status === 408 || jqXHR.status === 503 || (jqXHR.status === 0 && textStatus !== 'abort')) {
