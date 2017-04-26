@@ -25,14 +25,14 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                 window._uifwk.respectOMCEntityContext = true;
                 window._uifwk.respectOMCTimeContext = true;
             }
-            
+
             self.OMCEventSourceConstants = {
                 GLOBAL_TIME_SELECTOR: 'OMC_UIFWK_TIME_SELECTOR',
                 GLOBAL_ENTITY_SELECTOR: 'OMC_UIFWK_ENTITY_SELECTOR',
                 GLOBAL_APPLICATION_SELECTOR: 'OMC_UIFWK_APPLICATION_SELECTOR',
                 GLOBAL_TOPOLOGY: 'OMC_UIFWK_TOPOLOGY'
             };
-            
+
             self.OMCEventContextNameConstants = {
                 ALL: "All",
                 START_TIME: "startTime",
@@ -748,19 +748,19 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                             start = new Date(end.getFullYear(), end.getMonth(), end.getDate() - 7 * num, end.getHours(), end.getMinutes(), end.getSeconds(), end.getMilliseconds());
                             break;
                         case self.OMCTimeConstants.TIME_UNIT.MONTH:
-                            var startMonthLastDate = new Date(end.getFullYear(), end.getMonth() - num+1,0).getDate();
-                            if (startMonthLastDate>=end.getDate()){
+                            var startMonthLastDate = new Date(end.getFullYear(), end.getMonth() - num + 1, 0).getDate();
+                            if (startMonthLastDate >= end.getDate()) {
                                 start = new Date(end.getFullYear(), end.getMonth() - num, end.getDate(), end.getHours(), end.getMinutes(), end.getSeconds(), end.getMilliseconds());
-                            }else{
+                            } else {
                                 start = new Date(end.getFullYear(), end.getMonth() - num, startMonthLastDate, end.getHours(), end.getMinutes(), end.getSeconds(), end.getMilliseconds());
                             }
-                             break;
+                            break;
                         case self.OMCTimeConstants.TIME_UNIT.YEAR:
-                            var startMonthLastDate = new Date(end.getFullYear() -num, end.getMonth()+1,0).getDate();
-                            if (startMonthLastDate>=end.getDate()){
+                            var startMonthLastDate = new Date(end.getFullYear() - num, end.getMonth() + 1, 0).getDate();
+                            if (startMonthLastDate >= end.getDate()) {
                                 start = new Date(end.getFullYear() - num, end.getMonth(), end.getDate(), end.getHours(), end.getMinutes(), end.getSeconds(), end.getMilliseconds());
-                            }else{
-                                start = new Date(end.getFullYear() - num, end.getMonth(), startMonthLastDate, end.getHours(), end.getMinutes(), end.getSeconds(), end.getMilliseconds()); 
+                            } else {
+                                start = new Date(end.getFullYear() - num, end.getMonth(), startMonthLastDate, end.getHours(), end.getMinutes(), end.getSeconds(), end.getMilliseconds());
                             }
                             break;
                         default:
@@ -863,7 +863,13 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
             self.setCompositeMeId = function (compositeMEID, source) {
                 if (compositeMEID !== self.getCompositeMeId()) {
                     var omcContext = self.getOMCContext();
-                    omcContext.previousCompositeMeId = self.getCompositeMeId();
+                    if (compositeMEID) {
+                        compositeMEID = decodeURIComponent(compositeMEID);
+                    }
+                    if (compositeMEID !== self.getCompositeMeId()) {
+                        omcContext.previousCompositeMeId = self.getCompositeMeId();
+                    }
+
                     storeContext(omcContext);
 
                     //Set composite meId will reset composite type/name, 
@@ -1285,7 +1291,7 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                     return entities;
                 }
             };
-            
+
             /**
              * set topologyParams in omcContext
              * @param {type} topologyParams
@@ -1607,7 +1613,7 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                 entitiesFetched = [];
                 var entityMeIds = self.getEntityMeIds();
                 var meIdIndex = null;
-                if(!$.isArray(entityMeIds)) {
+                if (!$.isArray(entityMeIds)) {
                     return;
                 }
                 if (data && data['rows']) {
@@ -1619,7 +1625,7 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                         entity['entityName'] = dataRows[i][2];
                         entity['entityType'] = dataRows[i][4];
                         entity['meClass'] = dataRows[i][5];
-                        
+
                         meIdIndex = entityMeIds.indexOf(entity['meId']);
                         (meIdIndex > -1) && (entitiesFetched[meIdIndex] = entity);
                     }
