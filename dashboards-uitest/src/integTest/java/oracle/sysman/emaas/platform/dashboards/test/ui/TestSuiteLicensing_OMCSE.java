@@ -87,4 +87,99 @@ public class TestSuiteLicensing_OMCSE extends LoginAndLogout
 
 		DashBoardUtils.verifyWelcomePageWithTenant(webd, DashBoardUtils.OMCSE);
 	}
+	
+	@Test(alwaysRun = true)
+	public void verifyAPM_GridView_OMCSE()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_OMC_Standard);
+		webd.getLogger().info("Start to test in verifyAPM_GridView");
+
+		//click on Grid View
+		webd.getLogger().info("Click on Grid View icon");
+		DashboardHomeUtil.gridView(webd);
+
+		//open APM
+		webd.getLogger().info("Open the OOB dashboard");
+		DashboardHomeUtil.selectDashboard(webd, "Application Performance Monitoring");
+
+		verifyAPM_OMCSE();
+	}
+
+	@Test(alwaysRun = true)
+	public void verifyAPM_ListView_OMCSE()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_OMC_Standard);
+		webd.getLogger().info("Start to test in verifyAPM_ListView");
+
+		//click on List View
+		webd.getLogger().info("Click on List View icon");
+		DashboardHomeUtil.listView(webd);
+
+		//open APM
+		webd.getLogger().info("Open the OOB dashboard");
+		DashboardHomeUtil.selectDashboard(webd, "Application Performance Monitoring");
+
+		verifyAPM_OMCSE();
+	}
+
+	@Test(alwaysRun = true)
+	public void verifyAPM_withFilter_GridView_OMCSE()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_OMC_Standard);
+		webd.getLogger().info("start to test in verifyAPM_withFilter_GridView");
+
+		//click Filter-APM
+		webd.getLogger().info("Click Cloud Services - APM");
+		DashboardHomeUtil.filterOptions(webd, "apm");
+
+		//click on Grid View
+		webd.getLogger().info("Click on Grid View icon");
+		DashboardHomeUtil.gridView(webd);
+
+		//open APM
+		webd.getLogger().info("Open the OOB dashboard");
+		DashboardHomeUtil.selectDashboard(webd, "Application Performance Monitoring");
+
+		//verify APM
+		verifyAPM_OMCSE();
+	}
+
+	@Test(alwaysRun = true)
+	public void verifyAPM_withFilter_ListView_OMCSE()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_OMC_Standard);
+		webd.getLogger().info("start to test in verifyAPM_withFilter_ListView");
+
+		//click Filter-APM
+		webd.getLogger().info("Click Cloud Services - APM");
+		DashboardHomeUtil.filterOptions(webd, "apm");
+
+		//click on List View
+		webd.getLogger().info("Click on List View icon");
+		DashboardHomeUtil.listView(webd);
+
+		//open APM
+		webd.getLogger().info("Open the OOB dashboard");
+		DashboardHomeUtil.selectDashboard(webd, "Application Performance Monitoring");
+
+		//verify APM
+		verifyAPM_OMCSE();
+	}
+	private void verifyAPM_OMCSE()
+	{
+		webd.getLogger().info("Start to verify the OOB Dashboard");
+		//verify the current url
+		webd.getLogger().info("Verify the current url");
+
+		//verify the url of opened page
+		DashBoardUtils.verifyURL(webd, "apmUi/index.html");
+		//verify the APM open correctly
+		//TODO
+
+		webd.getLogger().info("Verification end...");
+	}
 }
