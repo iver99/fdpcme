@@ -144,7 +144,7 @@ task DEVUiTest(type:EMTest,dependsOn:omcSetup){
 	ext.set("testType", "unit")
 }
 
-task QATest1(type:EMTest,dependsOn:omcSetup){ 
+task QATest1(type:EMTest,dependsOn:omcSetup){
 	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/TestAnalyzerPage.class"
 	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/TestDashboardPage.class"
 	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/TestOtherPage.class"
@@ -162,12 +162,13 @@ task DEVTest(type:EMTest,dependsOn:omcSetup){
 	include "oracle/sysman/emaas/platform/dashboards/core/DashboardManagerTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/model/*"
 	include "oracle/sysman/emaas/platform/dashboards/core/wls/management/*"
+    include "oracle/sysman/emaas/platform/dashboards/ws/rest/OOBDashboardTest.class"
 	useRestAssured=true
 	ext.set("testType", "unit")
 }
 
 //Task is added from "emcpdf_uifwk_dev_test_3n"
-task DEVTest2(type:EMTest,dependsOn:omcSetup){ 
+task DEVTest2(type:EMTest,dependsOn:omcSetup){
 	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/util/StringUtilTest.class"
 	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/wls/management/AppLoggingManageMXBeanTest.class"	
 	useRestAssured=true
@@ -182,8 +183,8 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n','parallel':
                 'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashBoard_SimpleCRUD')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashBoard_OtherFeatures')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.BugVerification')
-		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet_SimpleCRUD')	
-		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet_OtherFeatures')	
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet_SimpleCRUD')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet_OtherFeatures')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet_DashboardRelated_CreatedInsideSet')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet_DashboardRelated_CreatedOutsideSet')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet_DuplicateDashboard')
