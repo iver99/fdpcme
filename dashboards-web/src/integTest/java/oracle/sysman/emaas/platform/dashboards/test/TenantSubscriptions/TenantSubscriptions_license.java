@@ -58,7 +58,7 @@ public class TenantSubscriptions_license
 			Assert.assertTrue(res1.getStatusCode() == 200);
 			Assert.assertNotNull(res1.jsonPath().get("applications.id[0]"));
 			Assert.assertNotNull(res1.jsonPath().get("applications.licVersion[0]"));
-			Assert.assertNotNull(res1.jsonPath().get("applications.edition[0]"));
+			Assert.assertNotNull(res1.jsonPath().get("applications.editions[0]"));
 
 		}
 		catch (Exception e) {
@@ -82,7 +82,7 @@ public class TenantSubscriptions_license
 			Assert.assertTrue(res1.getStatusCode() == 200);
 			Assert.assertNotNull(res1.jsonPath().get("applications.id[0]"));
 			Assert.assertNotNull(res1.jsonPath().get("applications.licVersion[0]"));
-			Assert.assertNotNull(res1.jsonPath().get("applications.edition[0]"));
+			Assert.assertNotNull(res1.jsonPath().get("applications.editions[0]"));
 
 		}
 		catch (Exception e) {
@@ -92,52 +92,52 @@ public class TenantSubscriptions_license
 	}
 
 	//@Test
-	public void getSubscribedapps_license_OMCEnterprise()
-	{
-		tenantid = "df_omc_enterprise";
-		try {
-			Response res1 = RestAssured
-					.given()
-					.contentType(ContentType.JSON)
-					.log()
-					.everything()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).when().get("/subscribedapps2");
-			Assert.assertTrue(res1.getStatusCode() == 200);
-			Assert.assertNotNull(res1.jsonPath().get("applications.id[0]"));
-			Assert.assertNotNull(res1.jsonPath().get("applications.licVersion[0]"));
-			Assert.assertNotNull(res1.jsonPath().get("applications.edition[0]"));
-
-		}
-		catch (Exception e) {
-			LOGGER.info("context", e);
-			Assert.fail(e.getLocalizedMessage());
-		}
-	}
+	//	public void getSubscribedapps_license_OMCEnterprise()
+	//	{
+	//		tenantid = "df_omc_enterprise";
+	//		try {
+	//			Response res1 = RestAssured
+	//					.given()
+	//					.contentType(ContentType.JSON)
+	//					.log()
+	//					.everything()
+	//					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+	//							"Authorization", authToken).when().get("/subscribedapps2");
+	//			Assert.assertTrue(res1.getStatusCode() == 200);
+	//			Assert.assertNotNull(res1.jsonPath().get("applications.id[0]"));
+	//			Assert.assertNotNull(res1.jsonPath().get("applications.licVersion[0]"));
+	//			Assert.assertNotNull(res1.jsonPath().get("applications.editions[0]"));
+	//
+	//		}
+	//		catch (Exception e) {
+	//			LOGGER.info("context", e);
+	//			Assert.fail(e.getLocalizedMessage());
+	//		}
+	//	}
 
 	//@Test
-	public void getSubscribedapps_license_OMCLog()
-	{
-		tenantid = "df_omc_log";
-		try {
-			Response res1 = RestAssured
-					.given()
-					.contentType(ContentType.JSON)
-					.log()
-					.everything()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).when().get("/subscribedapps2");
-			Assert.assertTrue(res1.getStatusCode() == 200);
-			Assert.assertNotNull(res1.jsonPath().get("applications.id[0]"));
-			Assert.assertNotNull(res1.jsonPath().get("applications.licVersion[0]"));
-			Assert.assertNotNull(res1.jsonPath().get("applications.edition[0]"));
-
-		}
-		catch (Exception e) {
-			LOGGER.info("context", e);
-			Assert.fail(e.getLocalizedMessage());
-		}
-	}
+	//	public void getSubscribedapps_license_OMCLog()
+	//	{
+	//		tenantid = "df_omc_log";
+	//		try {
+	//			Response res1 = RestAssured
+	//					.given()
+	//					.contentType(ContentType.JSON)
+	//					.log()
+	//					.everything()
+	//					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+	//							"Authorization", authToken).when().get("/subscribedapps2");
+	//			Assert.assertTrue(res1.getStatusCode() == 200);
+	//			Assert.assertNotNull(res1.jsonPath().get("applications.id[0]"));
+	//			Assert.assertNotNull(res1.jsonPath().get("applications.licVersion[0]"));
+	//			Assert.assertNotNull(res1.jsonPath().get("applications.editions[0]"));
+	//
+	//		}
+	//		catch (Exception e) {
+	//			LOGGER.info("context", e);
+	//			Assert.fail(e.getLocalizedMessage());
+	//		}
+	//	}
 
 	@Test
 	public void getSubscribedapps_license_OMCLOG_V3()
@@ -154,7 +154,7 @@ public class TenantSubscriptions_license
 			Assert.assertTrue(res1.getStatusCode() == 200);
 			Assert.assertNotNull(res1.jsonPath().get("applications.id[0]"));
 			Assert.assertNotNull(res1.jsonPath().get("applications.licVersion[0]"));
-			Assert.assertNotNull(res1.jsonPath().get("applications.edition[0]"));
+			Assert.assertNotNull(res1.jsonPath().get("applications.editions[0]"));
 
 		}
 		catch (Exception e) {
@@ -178,7 +178,7 @@ public class TenantSubscriptions_license
 			Assert.assertTrue(res1.getStatusCode() == 200);
 			Assert.assertNotNull(res1.jsonPath().get("applications.id[0]"));
 			Assert.assertNotNull(res1.jsonPath().get("applications.licVersion[0]"));
-			Assert.assertNotNull(res1.jsonPath().get("applications.edition[0]"));
+			Assert.assertNotNull(res1.jsonPath().get("applications.editions[0]"));
 
 		}
 		catch (Exception e) {
@@ -188,76 +188,76 @@ public class TenantSubscriptions_license
 	}
 
 	//@Test
-	public void getSubscribedapps_license_OMCStandard()
-	{
-		tenantid = "df_omc_standard";
-		try {
-			Response res1 = RestAssured
-					.given()
-					.contentType(ContentType.JSON)
-					.log()
-					.everything()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).when().get("/subscribedapps2");
-			Assert.assertTrue(res1.getStatusCode() == 200);
-			Assert.assertNotNull(res1.jsonPath().get("applications.id[0]"));
-			Assert.assertNotNull(res1.jsonPath().get("applications.licVersion[0]"));
-			Assert.assertNotNull(res1.jsonPath().get("applications.edition[0]"));
-
-		}
-		catch (Exception e) {
-			LOGGER.info("context", e);
-			Assert.fail(e.getLocalizedMessage());
-		}
-	}
-
-	//@Test
-	public void getSubscribedapps_license_OSMACCCompliance()
-	{
-		tenantid = "df_osmacc_compliance";
-		try {
-			Response res1 = RestAssured
-					.given()
-					.contentType(ContentType.JSON)
-					.log()
-					.everything()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).when().get("/subscribedapps2");
-			Assert.assertTrue(res1.getStatusCode() == 200);
-			Assert.assertNotNull(res1.jsonPath().get("applications.id[0]"));
-			Assert.assertNotNull(res1.jsonPath().get("applications.licVersion[0]"));
-			Assert.assertNotNull(res1.jsonPath().get("applications.edition[0]"));
-
-		}
-		catch (Exception e) {
-			LOGGER.info("context", e);
-			Assert.fail(e.getLocalizedMessage());
-		}
-	}
+	//	public void getSubscribedapps_license_OMCStandard()
+	//	{
+	//		tenantid = "df_omc_standard";
+	//		try {
+	//			Response res1 = RestAssured
+	//					.given()
+	//					.contentType(ContentType.JSON)
+	//					.log()
+	//					.everything()
+	//					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+	//							"Authorization", authToken).when().get("/subscribedapps2");
+	//			Assert.assertTrue(res1.getStatusCode() == 200);
+	//			Assert.assertNotNull(res1.jsonPath().get("applications.id[0]"));
+	//			Assert.assertNotNull(res1.jsonPath().get("applications.licVersion[0]"));
+	//			Assert.assertNotNull(res1.jsonPath().get("applications.editions[0]"));
+	//
+	//		}
+	//		catch (Exception e) {
+	//			LOGGER.info("context", e);
+	//			Assert.fail(e.getLocalizedMessage());
+	//		}
+	//	}
 
 	//@Test
-	public void getSubscribedapps_license_OSMACCSecurity()
-	{
-		tenantid = "df_osmacc_security";
-		try {
-			Response res1 = RestAssured
-					.given()
-					.contentType(ContentType.JSON)
-					.log()
-					.everything()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).when().get("/subscribedapps2");
-			Assert.assertTrue(res1.getStatusCode() == 200);
-			Assert.assertNotNull(res1.jsonPath().get("applications.id[0]"));
-			Assert.assertNotNull(res1.jsonPath().get("applications.licVersion[0]"));
-			Assert.assertNotNull(res1.jsonPath().get("applications.edition[0]"));
+	//	public void getSubscribedapps_license_OSMACCCompliance()
+	//	{
+	//		tenantid = "df_osmacc_compliance";
+	//		try {
+	//			Response res1 = RestAssured
+	//					.given()
+	//					.contentType(ContentType.JSON)
+	//					.log()
+	//					.everything()
+	//					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+	//							"Authorization", authToken).when().get("/subscribedapps2");
+	//			Assert.assertTrue(res1.getStatusCode() == 200);
+	//			Assert.assertNotNull(res1.jsonPath().get("applications.id[0]"));
+	//			Assert.assertNotNull(res1.jsonPath().get("applications.licVersion[0]"));
+	//			Assert.assertNotNull(res1.jsonPath().get("applications.editions[0]"));
+	//
+	//		}
+	//		catch (Exception e) {
+	//			LOGGER.info("context", e);
+	//			Assert.fail(e.getLocalizedMessage());
+	//		}
+	//	}
 
-		}
-		catch (Exception e) {
-			LOGGER.info("context", e);
-			Assert.fail(e.getLocalizedMessage());
-		}
-	}
+	//@Test
+	//	public void getSubscribedapps_license_OSMACCSecurity()
+	//	{
+	//		tenantid = "df_osmacc_security";
+	//		try {
+	//			Response res1 = RestAssured
+	//					.given()
+	//					.contentType(ContentType.JSON)
+	//					.log()
+	//					.everything()
+	//					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+	//							"Authorization", authToken).when().get("/subscribedapps2");
+	//			Assert.assertTrue(res1.getStatusCode() == 200);
+	//			Assert.assertNotNull(res1.jsonPath().get("applications.id[0]"));
+	//			Assert.assertNotNull(res1.jsonPath().get("applications.licVersion[0]"));
+	//			Assert.assertNotNull(res1.jsonPath().get("applications.editions[0]"));
+	//
+	//		}
+	//		catch (Exception e) {
+	//			LOGGER.info("context", e);
+	//			Assert.fail(e.getLocalizedMessage());
+	//		}
+	//	}
 
 	@Test
 	public void getSubscribedapps_license_SECSE()
@@ -274,7 +274,7 @@ public class TenantSubscriptions_license
 			Assert.assertTrue(res1.getStatusCode() == 200);
 			Assert.assertNotNull(res1.jsonPath().get("applications.id[0]"));
 			Assert.assertNotNull(res1.jsonPath().get("applications.licVersion[0]"));
-			Assert.assertNotNull(res1.jsonPath().get("applications.edition[0]"));
+			Assert.assertNotNull(res1.jsonPath().get("applications.editions[0]"));
 
 		}
 		catch (Exception e) {
@@ -298,7 +298,7 @@ public class TenantSubscriptions_license
 			Assert.assertTrue(res1.getStatusCode() == 200);
 			Assert.assertNotNull(res1.jsonPath().get("applications.id[0]"));
 			Assert.assertNotNull(res1.jsonPath().get("applications.licVersion[0]"));
-			Assert.assertNotNull(res1.jsonPath().get("applications.edition[0]"));
+			Assert.assertNotNull(res1.jsonPath().get("applications.editions[0]"));
 
 		}
 		catch (Exception e) {
@@ -326,6 +326,5 @@ public class TenantSubscriptions_license
 			LOGGER.info("context", e);
 			Assert.fail(e.getLocalizedMessage());
 		}
-
 	}
 }
