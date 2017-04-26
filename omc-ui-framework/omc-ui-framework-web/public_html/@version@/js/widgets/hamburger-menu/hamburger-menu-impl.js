@@ -222,11 +222,11 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     rootCompositeMenuid
                 ];
 
-                self.privilegeList = [];
+                self.privilegeList = null;
                 self.subscribedApps = [];
                 self.serviceMenuData = [];
                 self.baseVanityUrls = null;
-                self.userRoles = [];
+                self.userRoles = null;
                 self.dataSource = ko.observable();
                 var omcMenus = [];
                 var globalMenuIdHrefMapping = null;
@@ -234,12 +234,18 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 //Get role names for current user
                 function getUserRoles() {
                     var dfdGetUserRoles = $.Deferred();
-                    userTenantUtil.getUserRoles(function(data) {
-                        if (data) {
-                            self.userRoles = data;
-                        }
+                    if (!self.userRoles) {
+                        userTenantUtil.getUserRoles(function(data) {
+                            if (data) {
+                                self.userRoles = data;
+                            }
+                            dfdGetUserRoles.resolve();
+                        }, true);
+                    }
+                    else {
                         dfdGetUserRoles.resolve();
-                    }, true);
+                    }
+                    
                     return dfdGetUserRoles;
                 }
                 
@@ -292,28 +298,15 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 //Get all privileges that have been granted to current user
                 function getUserGrants() {
                     var dfdGetUserGrants = $.Deferred();
-                    if (!self.privilegeList || self.privilegeList.length < 1) {
-                        if (dfu.isDevMode()) {
-                            var userGrants = dfu.getDevData().userGrants;
-                            self.privilegeList = userGrants;
+                    if (!self.privilegeList) {
+                        function userGrantsCallback(data) {
+                            self.privilegeList = data;
                             dfdGetUserGrants.resolve();
                         }
-                        else {
-                            var url = '/sso.static/getUserGrants?granteeUser=' + tenantName + '.' + userName;
-                            var header = dfu.getDefaultHeader();
-                            dfu.ajaxWithRetry(url, {
-                                    type: 'get',
-                                    headers: header,
-                                    success: function (data) {
-                                        self.privilegeList = data;
-                                        dfdGetUserGrants.resolve();
-                                    },
-                                    error: function (xhr, textStatus, errorThrown) {
-                                        dfdGetUserGrants.reject();
-                                        oj.Logger.error("Failed to get UserGrants due to error: " + textStatus);
-                                    }
-                                });
-                        }
+                        userTenantUtil.getUserGrants(userGrantsCallback);
+                    }
+                    else {
+                        dfdGetUserGrants.resolve();
                     }
                     return dfdGetUserGrants;
                 }
@@ -332,6 +325,9 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                             }
                         }
                         dfu.getSubscribedApps2WithEdition(subscribedAppsCallback);
+                    }
+                    else {
+                        dfdGetSubscribedApps.resolve();
                     }
                     return dfdGetSubscribedApps;
                 }
@@ -389,6 +385,9 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                                 }
                             });
                         });
+                    }
+                    else {
+                        dfd.resolve();
                     }
                 }
                 
@@ -503,7 +502,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     }
                     
                     //Determine check mode to see it's role check or privilege check
-                    var userPrivRoleList = [];
+                    var userPrivRoleList = null;
                     if (requiredPrivilege.checkMode && requiredPrivilege.checkMode.toUpperCase() === 'ROLE') {
                         userPrivRoleList = self.userRoles;
                     }
@@ -511,6 +510,9 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                         userPrivRoleList = self.privilegeList;
                     }
                     var checkList = requiredPrivilege.checkList;
+                    if (!userPrivRoleList && checkList && checkList.length > 0) {
+                        return false;
+                    }
                     if (Array.isArray(checkList)) {
                         for (var _idx = 0; _idx < checkList.length; ++_idx) {
                             if (userPrivRoleList.indexOf(checkList[_idx]) < 0) {
