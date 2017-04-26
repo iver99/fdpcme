@@ -46,6 +46,9 @@ public enum DashboardApplicationType
 	Orchestration(6, false),
 	// Compliance
 	Compliance(7, false),
+	// UDE
+	UDE(8, false),
+
 	// following are bundle services, will be transferred to individual services
 	OMCSE(100, true),
 	OMCEE(101, true),
@@ -71,7 +74,7 @@ public enum DashboardApplicationType
 	public static final String OSMACC_STRING = "OSMACC";
 
 	private static final Logger LOGGER = LogManager.getLogger(DashboardApplicationType.class);
-	public static final List<DashboardApplicationType> allBasicService = Arrays.asList(APM, ITAnalytics, LogAnalytics, Monitoring, SecurityAnalytics, Orchestration, Compliance);
+//	public static final List<DashboardApplicationType> allBasicService = Arrays.asList(APM, ITAnalytics, LogAnalytics, Monitoring, SecurityAnalytics, Orchestration, Compliance);
 
 	@JsonCreator
 	public static DashboardApplicationType fromJsonValue(String value)
@@ -199,13 +202,11 @@ public enum DashboardApplicationType
 		}
 		Set<DashboardApplicationType> basicServicesSet = new HashSet<DashboardApplicationType>();
 		for (DashboardApplicationType service: services) {
-			if (service.isBundleService) {
-				LOGGER.info("When retrieving basic app type, we get a bundle service {}, so return all basic services then", service.getJsonValue());
-				return DashboardApplicationType.allBasicService;
+			if (!service.isBundleService) {
+				basicServicesSet.add(service);
 			}
-			basicServicesSet.add(service);
 		}
-		LOGGER.info("Getting basic services: {}", basicServicesSet);
+		LOGGER.info("Getting basic services: {}. Origianl service type list is {}", basicServicesSet, services);
 		return new ArrayList<DashboardApplicationType>(basicServicesSet);
 	}
 }

@@ -19,7 +19,8 @@ var DashboardsFilter = function(filter, sApplications ,options)
         {label: getNlsString('DBS_HOME_FILTER_SERVICE_APM_ABBR'), value: 'apm', id:'apmopt', appType:'APM', visible: false},
         {label: getNlsString('DBS_HOME_FILTER_SERVICE_ITA'), value: 'ita', id:'itaopt', appType:'ITAnalytics', visible: false},
         {label: getNlsString('DBS_HOME_FILTER_SERVICE_LA'), value: 'la', id:'laopt', appType:'LogAnalytics', visible: false},
-        {label: getNlsString('DBS_HOME_FILTER_SERVICE_OCS'), value: 'ocs', id:'ocsopt', appType:'Orchestration', visible: false}
+        {label: getNlsString('DBS_HOME_FILTER_SERVICE_OCS'), value: 'ocs', id:'ocsopt', appType:'Orchestration', visible: false},
+        {label: getNlsString('DBS_HOME_FILTER_SERVICE_SEC'), value: 'sec', id:'secopt', appType:'SecurityAnalytics', visible: false}
     ];
     self.serviceFilter = ko.observableArray();
     self.showServiceFilter = ko.observable(false);
@@ -163,7 +164,7 @@ DashboardsFilter.prototype._setFilterItem = function(attrFind, attrFindValue, at
 {
     var self = this;
     $.each(self.serviceFilterItems, function( i, _item ) {
-        if (_item[attrFind] && _item[attrFind] === attrFindValue)
+        if (_item[attrFind] && _item[attrFind] === attrFindValue.id)
         {
             _item[attrSet] = attrSetValue;
         }
