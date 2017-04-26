@@ -1,10 +1,8 @@
-package oracle.sysman.emaas.platform.dashboards.core.restclient;
+package oracle.sysman.emaas.platform.emcpdf.tenant.model;
 
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
-
-import static org.testng.Assert.*;
 
 @Test(groups = {"s1"})
 public class DomainsEntityTest {

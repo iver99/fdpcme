@@ -1,10 +1,8 @@
-package oracle.sysman.emaas.platform.dashboards.core.restclient;
+package oracle.sysman.emaas.platform.emcpdf.tenant.model;
 
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
-
-import static org.testng.Assert.*;
 
 /**
  * Created by xiadai on 2016/11/1.
