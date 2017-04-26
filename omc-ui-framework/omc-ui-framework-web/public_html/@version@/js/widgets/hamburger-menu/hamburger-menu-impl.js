@@ -149,18 +149,29 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                                     var adminMenuId = findAppItemIndex(self.serviceMenuData,'omc_root_admin');
                                     var adminSubMenuId = findAppItemIndex(self.serviceMenuData[adminMenuId].children, 'omc_root_admin_grp_'+serviceItem.appId);
                                     if (adminSubMenuId > -1) {
-                                        self.serviceMenuData[adminMenuId].children[adminSubMenuId].children = serviceItem.serviceAdminMenus.children;
-                                        omcMenus[adminMenuId].children[adminSubMenuId].attr['disabled'] = false;
                                         var serviceAdminItem = getMenuItem(serviceItem.serviceAdminMenus);
-                                        //Update parent admin menu's external url
-                                        if (serviceAdminItem.attr.externalUrl && serviceAdminItem.attr.externalUrl !== '#') {
+                                        if (serviceItem.serviceAdminMenus.children) {
+                                            self.serviceMenuData[adminMenuId].children[adminSubMenuId].children = serviceItem.serviceAdminMenus.children;
+                                            omcMenus[adminMenuId].children[adminSubMenuId].attr['disabled'] = false;
+                                            //Update parent admin menu's external url
+                                            if (serviceAdminItem.attr.externalUrl && serviceAdminItem.attr.externalUrl !== '#') {
+                                                self.serviceMenuData[adminMenuId].children[adminSubMenuId].externalUrl = serviceAdminItem.attr.externalUrl;
+                                                self.serviceMenuData[adminMenuId].children[adminSubMenuId].disabled = false;
+                                                omcMenus[adminMenuId].children[adminSubMenuId].attr.externalUrl = serviceAdminItem.attr.externalUrl;
+                                                omcMenus[adminMenuId].children[adminSubMenuId].attr.serviceNameForVanityUrl = serviceAdminItem.attr.serviceNameForVanityUrl;
+                                            }
+                                            omcMenus[adminMenuId].children[adminSubMenuId].children = serviceAdminItem.children;
+                                        }
+                                        else {
+                                            delete self.serviceMenuData[adminMenuId].children[adminSubMenuId]['children'];
+                                            omcMenus[adminMenuId].children[adminSubMenuId].attr['disabled'] = true;
+                                            //Update parent admin menu's external url
                                             self.serviceMenuData[adminMenuId].children[adminSubMenuId].externalUrl = serviceAdminItem.attr.externalUrl;
-                                            self.serviceMenuData[adminMenuId].children[adminSubMenuId].disabled = false;
+                                            self.serviceMenuData[adminMenuId].children[adminSubMenuId].disabled = true;
                                             omcMenus[adminMenuId].children[adminSubMenuId].attr.externalUrl = serviceAdminItem.attr.externalUrl;
                                             omcMenus[adminMenuId].children[adminSubMenuId].attr.serviceNameForVanityUrl = serviceAdminItem.attr.serviceNameForVanityUrl;
+                                            delete omcMenus[adminMenuId].children[adminSubMenuId]['children'];
                                         }
-                                        
-                                        omcMenus[adminMenuId].children[adminSubMenuId].children = serviceAdminItem.children;
                                     }
                                     else {
                                         if (!self.serviceMenuData[adminMenuId].children) {
@@ -457,6 +468,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                                             self.serviceMenuData[adminMenuId].children[adminSubMenuId].externalUrl = adminExternalUrl;
                                             self.serviceMenuData[adminMenuId].children[adminSubMenuId].serviceNameForVanityUrl = singleServiceData.serviceAdminMenus.serviceNameForVanityUrl;
                                         }
+                                        self.serviceMenuData[adminMenuId].children[adminSubMenuId].requiredPrivileges = singleServiceData.serviceAdminMenus.requiredPrivileges;
                                         self.serviceMenuData[adminMenuId].children[adminSubMenuId].children = [];
                                                 for(var i = 0; i< singleServiceData.serviceAdminMenus.children.length; ++i){
                                         self.serviceMenuData[adminMenuId].children[adminSubMenuId].children.push($.extend(true, {}, singleServiceData.serviceAdminMenus.children[i]));
