@@ -180,6 +180,7 @@ task DEVTest(type:EMTest,dependsOn: DEVTest_ws){
 	include "oracle/sysman/emaas/platform/emcpdf/rc/*.class"
 	include "oracle/sysman/emaas/platform/emcpdf/registry/*.class"
 	include "oracle/sysman/emaas/platform/emcpdf/tenant/subscription2/*.class"
+	include "oracle/sysman/emaas/platform/emcpdf/tenant/model/*.class"
 	include "oracle/sysman/emaas/platform/uifwk/nls/filter/NLSFilterTest.class"
         include "oracle/sysman/emaas/platform/uifwk/bootstrap/HtmlBootstrapJsUtilTest.class"
         include "oracle/sysman/emaas/platform/uifwk/util/DataAccessUtilTest.class"
