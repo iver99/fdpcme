@@ -454,7 +454,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
 
                 self.errorMsg = nls.DATETIME_PICKER_ERROR;
                 self.beyondWindowLimitErrorMsg = nls.DATETIME_PICKER_BEYOND_WINDOW_LIMIT_ERROR_MSG;
-                self.felRelTimeValError = nls.DATETIME_PICKER_FLEX_REL_TIME_VALUE_ERROR_MSG;
+                self.flexRelTimeValErrorMsg = nls.DATETIME_PICKER_FLEX_REL_TIME_VALUE_ERROR_MSG;
                 self.applyButton = nls.DATETIME_PICKER_BUTTONS_APPLY_BUTTON;
                 self.cancelButton = nls.DATETIME_PICKER_BUTTONS_CANCEL_BUTTON;
                 self.timeZone = ko.observable(null);
@@ -1066,7 +1066,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         }
                         var _start = _startDate + self.startTime();
                         var _end = curEndDate + self.endTime();
-                        if(self.isCustomBeyondWindowLimit(_start, _end) === true) {
+                        if(self.customWindowLimit && self.isCustomBeyondWindowLimit(_start, _end) === true) {
                             self.startDateError(true);
                             throw new oj.ValidatorError("", self.beyondWindowLimitErrorMsg);
                         }else {
@@ -1084,7 +1084,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         }
                         var _start = curStartDate + self.startTime();
                         var _end = _endDate + self.endTime();
-                        if(self.isCustomBeyondWindowLimit(_start, _end) === true) {
+                        if(self.customWindowLimit && self.isCustomBeyondWindowLimit(_start, _end) === true) {
                             self.endDateError(true);
                             throw new oj.ValidatorError("", self.beyondWindowLimitErrorMsg);
                         }else {
@@ -1102,7 +1102,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             self.startTimeError(true);
                             throw new oj.ValidatorError("", nls.DATETIME_PICKER_TIME_VALIDATE_ERROR_MSG);
                         }
-                        if(self.isCustomBeyondWindowLimit(_start, _end) === true) {
+                        if(self.customWindowLimit && self.isCustomBeyondWindowLimit(_start, _end) === true) {
                             self.startTimeError(true);
                             throw new oj.ValidatorError("", self.beyondWindowLimitErrorMsg);
                         }else {
@@ -1120,7 +1120,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             self.endTimeError(true);
                             throw new oj.ValidatorError("", nls.DATETIME_PICKER_TIME_VALIDATE_ERROR_MSG);
                         }
-                        if(self.isCustomBeyondWindowLimit(_start, _end) === true) {
+                        if(self.customWindowLimit && self.isCustomBeyondWindowLimit(_start, _end) === true) {
                             self.endTimeError(true);
                             throw new oj.ValidatorError("", self.beyondWindowLimitErrorMsg);
                         }else {
@@ -1780,7 +1780,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                        if(value >= 1 && $.isNumeric(value) && (parseInt(value) === value) && value.toString().length<4) {
                            return true;
                        }else {
-                           throw new Error(self.felRelTimeValError);
+                           throw new Error(self.flexRelTimeValErrorMsg);
                        }
                     }
                 };
@@ -2344,6 +2344,9 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             self.timePeriod(self.timePeriodLast7days);
                         }else if (self.timePeriodsNlsObject[flexRelTimePeriodId] && $.inArray(self.timePeriodsNlsObject[flexRelTimePeriodId], self.getParam(self.timePeriodsNotToShow)) === -1) {
                             self.timePeriod(self.timePeriodsNlsObject[flexRelTimePeriodId]);
+                        }else {
+                            self.setTimePeriodChosen(self.timePeriodCustom);
+                            self.timePeriod(self.timePeriodCustom);
                         }
 
                         self.lastTimePeriod(self.timePeriod());
