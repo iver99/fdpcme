@@ -1024,10 +1024,10 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
 
                 if(params.hideRangeLabel && params.hideRangeLabel === true) {
                     self.hideRangeLabel = "none";
-                    self.pickerTopCss = "text-align: center; padding-bottom: 10px;";
+                    self.pickerTopCss = "text-align: center; padding-bottom: 5px;";
                 }else {
                     self.hideRangeLabel = "inline-block";
-                    self.pickerTopCss = "text-align: left; padding-bottom: 10px;";
+                    self.pickerTopCss = "text-align: left; padding-bottom: 5px;";
                 }
 
                 if(params.hideTimeSelection && params.hideTimeSelection === true) {
