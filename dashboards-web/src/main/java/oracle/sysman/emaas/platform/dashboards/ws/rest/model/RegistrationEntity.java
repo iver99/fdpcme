@@ -116,7 +116,7 @@ public class RegistrationEntity implements Serializable
 	public static final String ORCHESTRATION_OPC_APPNAME = "Orchestration";
 	public static final String ORCHESTRATION_SERVICENAME = "CosUIService";
 	public static final String ORCHESTRATION_VERSION = "1.0+";
-	public static final String ORCHESTRATION_URL = "/emsaasui/emcpdfui/home.html?filter=ocs";
+	public static final String ORCHESTRATION_URL = "/emsaasui/emcpdfui/builder.html?dashboardId=37";//"/emsaasui/emcpdfui/home.html?filter=ocs";
 	// Compliance service
 	public static final String COMPLIANCE_OPC_APPNAME = "Compliance";
 	public static final String COMPLIANCE_SERVICENAME = "ComplianceUIService";
