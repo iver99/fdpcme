@@ -83,9 +83,11 @@
                         </span>
                         <input data-bind="ojComponent: {component: 'ojInputNumber', value: flexRelTimeVal,
                                 validators: [numberValidator],
-                                rootAttributes: {style: 'min-width: 54px; max-width:88px;padding-left: 10px; padding-right: 10px; display: inline-block; vertical-align: top;'},
+                                rootAttributes: {id: 'lastNumber_' + randomId,
+                                    style: 'min-width: 54px; max-width:88px;padding-left: 10px; padding-right: 10px; display: inline-block; vertical-align: top;'},
                                 displayOptions: {'validatorHint': 'none'},
-                                optionChange: flexRelTimeValChanged, disabled: lrCtrlVal()!=='flexRelTimeCtrl'},
+                                optionChange: flexRelTimeValChanged, disabled: lrCtrlVal()!=='flexRelTimeCtrl'
+                                },
                                 attr: {id: 'flexRelTimeVal_' + randomId}"/>
                         <select data-bind="ojComponent: {component: 'ojSelect', value: flexRelTimeOpt,
                             rootAttributes: {style: 'max-width: 98px; min-width:7em; display: inline-block; vertical-align: top;', id: 'flexRelTimeOpt_' + randomId}, 
@@ -168,14 +170,15 @@
                                                 datePicker: {daysOutsideMonth: 'hidden'},
                                                 converter: inputDateConverter,
                                                 min: startDateMin, max: endDateISO(),
-                                                validators: [startDateValidator],
-                                                rootAttributes: {style: 'width: 70px;', class: 'relRadios'}
+                                                optionChange: startDateChanged,
+                                                displayOptions: {'validatorHint': 'none'},
+                                                rootAttributes: {style: 'width: 70px;', class: 'relRadios', id: 'startDate_'+randomId}
                                             },
                                 attr: {id: 'inputStartDate_'+randomId, 'aira-label': startDateLabel}"/>
                         <input data-bind="ojComponent: {component: 'ojInputTime', value: startTime, converter: getTimeConverter(), timePicker: {timeIncrement: timeIncrement()},
                                                 disabled: lrCtrlVal() !== 'timeLevelCtrl',
-                                                validators: [startTimeValidator],
-                                                rootAttributes: {style: 'width: 150px;', class: 'relRadios'}
+                                                optionChange: startTimeChanged,
+                                                rootAttributes: {style: 'width: 150px;', class: 'relRadios', id: 'startTime_'+randomId}
                                             },
                                 attr: {id: 'inputStartTime_'+randomId, 'aira-label': startTimeLabel, visible: !hideTimeSelection()}"/>
                         <span class="relRadios" style="font-weight: bold; padding-top: 8px;">-</span>
@@ -183,14 +186,15 @@
                                                 datePicker: {daysOutsideMonth: 'hidden'},
                                                 converter: inputDateConverter,
                                                 min: endDateMin, max: endDateMax,
-                                                validators: [endDateValidator],
-                                                rootAttributes: {style: 'width: 70px;', class: 'relRadios'}
+                                                optionChange: endDateChanged,
+                                                displayOptions: {'validatorHint': 'none'},
+                                                rootAttributes: {style: 'width: 70px;', class: 'relRadios', id: 'endDate_'+randomId}
                                             },
                                 attr: {id: 'inputEndDate_'+randomId, 'aira-label': endDateLabel}"/>
                         <input data-bind="ojComponent: {component: 'ojInputTime', value: endTime, converter: getTimeConverter(), timePicker: {timeIncrement: timeIncrement()},
                                                 disabled: lrCtrlVal() !== 'timeLevelCtrl',
-                                                validators: [endTimeValidator],
-                                                rootAttributes: {style: 'width: 150px;', class: 'relRadios'}
+                                                optionChange: endTimeChanged,
+                                                rootAttributes: {style: 'width: 150px;', class: 'relRadios', id: 'enTime_'+randomId}
                                             },
                                 attr: {id: 'inputEndTime_'+randomId, 'aira-label': endTimeLabel, visible: !hideTimeSelection()}"/>
                     </div>

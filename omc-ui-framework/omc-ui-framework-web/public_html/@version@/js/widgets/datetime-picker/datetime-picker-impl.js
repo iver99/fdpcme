@@ -93,6 +93,28 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 }
                 return quickPickId;
             }
+            
+            /**
+             * Build jet html for error message 
+             * 
+             * @param {type} summary
+             * @param {type} detail
+             * @returns {String}
+             */
+            function buildErrorMsgHtml(summary, detail) {
+                    return '<div class="oj-messaging-inline-container omc-time-picker">\n\
+                        <div class="oj-message oj-message-error">\n\
+                            <span class="oj-component-icon oj-message-status-icon oj-message-error-icon" title="Error" role="img">\n\
+                            </span>\n\
+                            <span class="oj-message-content">\n\
+                                <div class="oj-message-summary">' + summary +'</div>\n\
+                                <div class="oj-message-detail">\n\
+                                    <span>' + detail + '</span>\n\
+                                </div>\n\
+                            </span>\n\
+                        </div>\n\
+                    </div>';
+                }
 
             /**
              *
@@ -143,6 +165,8 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 /**
                 *    Make input of timeperiod backward compatible for old time period format.
                 *    The result is "LAST_X_UNIT"
+                *    
+                *    @param {type} timePeriod
                 */
                 function formalizeTimePeriod(timePeriod) {
                     return ctxUtil.formalizeTimePeriod(timePeriod);
@@ -418,11 +442,115 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     return css;
                 }, self);
 
-                self.startDateError = ko.observable(false);
-                self.endDateError = ko.observable(false);
-                self.startTimeError = ko.observable(false);
-                self.endTimeError = ko.observable(false);
+                self.startDateError = ko.observable(0);
+                self.endDateError = ko.observable(0);
+                self.startTimeError = ko.observable(0);
+                self.endTimeError = ko.observable(0);
                 self.flexRelTimeValError = ko.observable(false);
+                
+                var timeInputErrorObj = {
+                    "startDate": self.startDateError,
+                    "endDate": self.endDateError,
+                    "startTime": self.startTimeError,
+                    "endTime": self.endTimeError
+                };
+                /**
+                 * 1. Set given input box to error box and set error message
+                 * 2. Remove error border and error message from other input boxes
+                 * 3. When "inputId" is set to null, clear error border and message from all input boxes
+                 * 
+                 * @param {type} inputId
+                 * @param {type} msgDetail
+                 * @returns {undefined}
+                 */
+                function setTimeInputError(inputId, msgDetail) {
+                    var eleId = "#" + inputId + "_" + self.randomId;
+                    if($(eleId) && !$(eleId).hasClass("oj-invalid")) {
+                        $(eleId).addClass('oj-invalid'); //Use jet class to set red border
+                        //add error message for date/time input box
+                        $(eleId + " .oj-inputdatetime-input-container").after(buildErrorMsgHtml(self.errorMsg, msgDetail));
+                    }
+                    for(var i in timeInputErrorObj) {
+                       if(i !== inputId) {
+                           timeInputErrorObj[i](0);
+                           //remove error message of corrsponding date/time input box
+                           $("#" + i + "_" + self.randomId + " .oj-messaging-inline-container.omc-time-picker").remove();
+                       }
+                    }
+                    
+                }
+                
+                /**
+                 * Remove error border and error messages from given input box
+                 * 
+                 * @param {type} inputId
+                 * @returns {undefined}
+                 */
+                function removeTimeInputError(inputId) {
+                    var eleId = "#" + inputId + "_" + self.randomId;
+                    if($(eleId) && $(eleId).hasClass("oj-invalid")) {
+                        $(eleId).removeClass("oj-invalid");
+                        $(eleId + " .oj-messaging-inline-container.omc-time-picker").remove();
+                    }
+                }
+
+                /**
+                 * 0: No error
+                 * 1: Start is later than end error
+                 * 2: Selected time range exceed "customWindowLimit" Error
+                 */
+                self.startDateError.subscribe(function(value) {
+                    if(value === 0) {
+                        removeTimeInputError("startDate");
+                    }else if(value === 1) {
+                        setTimeInputError("startDate", nls.DATETIME_PICKER_TIME_VALIDATE_ERROR_MSG);
+                    }else if(value === 2) {
+                        setTimeInputError("startDate", self.beyondWindowLimitErrorMsg);
+                    }
+                });
+                
+                self.endDateError.subscribe(function(value) {
+                    if(value === 0) {
+                        removeTimeInputError("endDate");
+                    }else if(value === 1) {
+                        setTimeInputError("endDate", nls.DATETIME_PICKER_TIME_VALIDATE_ERROR_MSG);
+                    }else if(value === 2) {
+                        setTimeInputError("endDate", self.beyondWindowLimitErrorMsg);
+                    }
+                });
+                
+                self.startTimeError.subscribe(function(value) {
+                    if(value === 0) {
+                        removeTimeInputError("startTime");
+                    }else if(value === 1) {
+                        setTimeInputError("startTime", nls.DATETIME_PICKER_TIME_VALIDATE_ERROR_MSG);
+                    }else if(value === 2) {
+                        setTimeInputError("startTime", self.beyondWindowLimitErrorMsg);
+                    }
+                });
+                
+                self.endTimeError.subscribe(function(value) {
+                    if(value === 0) {
+                        removeTimeInputError("endTime");
+                    }else if(value === 1) {
+                        setTimeInputError("endTime", nls.DATETIME_PICKER_TIME_VALIDATE_ERROR_MSG);
+                    }else if(value === 2) {
+                        setTimeInputError("endTime", self.beyondWindowLimitErrorMsg);
+                    }
+                });
+                
+                self.flexRelTimeValError.subscribe(function(value) {
+                    var eleId = "#lastNumber_" + self.randomId;
+                    if(value === true) {
+                        if($(eleId) && !$(eleId).hasClass("oj-invalid")) {
+                            $(eleId).addClass("oj-invalid");
+                            $(eleId + " .oj-inputnumber-wrapper").after(buildErrorMsgHtml(self.errorMsg, self.beyondWindowLimitErrorMsg));
+                        }
+                    }else {
+                        $(eleId).removeClass("oj-invalid");
+                        $(eleId + " .oj-messaging-inline-container.omc-time-picker").remove();
+                    }
+                });
 
                 self.applyButtonDisable = ko.computed(function() {
                     return self.startDateError() || self.endDateError() || self.startTimeError() || self.endTimeError() ||
@@ -1049,7 +1177,12 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     }
                 }
                 
-                self.isCustomBeyondWindowLimit = function(start, end) {
+                self.isCustomBeyondWindowLimit = function() {
+                    if(!self.customWindowLimit) {
+                        return false;
+                    }
+                    var start = self.startDateISO() + self.startTime();
+                    var end = self.endDateISO() + self.endTime();
                     var timeDiff = new Date(end) - new Date(start);
                     if(timeDiff > self.customWindowLimit) {
                         return true;
@@ -1058,78 +1191,65 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     }
                 }
                 
-                self.startDateValidator = {
-                    'validate': function(_startDate) {
-                        curStartDate = _startDate;
-                        if(!curEndDate){
-                            curEndDate = self.endDateISO();
-                        }
-                        var _start = _startDate + self.startTime();
-                        var _end = curEndDate + self.endTime();
-                        if(self.customWindowLimit && self.isCustomBeyondWindowLimit(_start, _end) === true) {
-                            self.startDateError(true);
-                            throw new oj.ValidatorError("", self.beyondWindowLimitErrorMsg);
-                        }else {
-                            self.startDateError(false);
-                            return _startDate;
-                        }
-                    }
-                };
-                
-                self.endDateValidator = {
-                    'validate': function(_endDate) {
-                        curEndDate = _endDate;
-                        if(!curStartDate){
-                            curStartDate = self.startDateISO();
-                        }
-                        var _start = curStartDate + self.startTime();
-                        var _end = _endDate + self.endTime();
-                        if(self.customWindowLimit && self.isCustomBeyondWindowLimit(_start, _end) === true) {
-                            self.endDateError(true);
-                            throw new oj.ValidatorError("", self.beyondWindowLimitErrorMsg);
-                        }else {
-                            self.endDateError(false);
-                            return _endDate;
-                        }
-                    }
-                };
-                
-                self.startTimeValidator = {
-                    'validate': function(_startTime) {
-                        var _start = curStartDate + _startTime;
-                        var _end = curEndDate + self.endTime();
-                        if(self.isStartLaterThanEnd(_start, _end) === true) {
-                            self.startTimeError(true);
-                            throw new oj.ValidatorError("", nls.DATETIME_PICKER_TIME_VALIDATE_ERROR_MSG);
-                        }
-                        if(self.customWindowLimit && self.isCustomBeyondWindowLimit(_start, _end) === true) {
-                            self.startTimeError(true);
-                            throw new oj.ValidatorError("", self.beyondWindowLimitErrorMsg);
-                        }else {
-                            self.startTimeError(false);
-                            return _startTime;
-                        }
+                self.isStartLaterThanEnd = function() {
+                    var start = self.startDateISO() + self.startTime();
+                    var end = self.endDateISO() + self.endTime();
+                    if(new Date(start) > new Date(end)) {
+                        return true;
+                    }else {
+                        return false;
                     }
                 }
                 
-                self.endTimeValidator = {
-                    'validate': function(_endTime) {
-                        var _start = curStartDate + self.startTime();
-                        var _end = curEndDate + _endTime;
-                        if(self.isStartLaterThanEnd(_start, _end) === true) {
-                            self.endTimeError(true);
-                            throw new oj.ValidatorError("", nls.DATETIME_PICKER_TIME_VALIDATE_ERROR_MSG);
-                        }
-                        if(self.customWindowLimit && self.isCustomBeyondWindowLimit(_start, _end) === true) {
-                            self.endTimeError(true);
-                            throw new oj.ValidatorError("", self.beyondWindowLimitErrorMsg);
-                        }else {
-                            self.endTimeError(false);
-                            return _endTime;
-                        }
+                self.startDateChanged = function(event, data) {
+                    if(data.option !== "value") {
+                        return;
+                    }
+                    if(self.isStartLaterThanEnd() === true) {
+                        self.startDateError(1);
+                    }else if(self.isCustomBeyondWindowLimit() === true) {
+                        self.startDateError(2);
+                    }else {
+                        setTimeInputError(null);
                     }
                 }
-
+                self.endDateChanged = function(event, data) {
+                    if(data.option !== "value") {
+                        return;
+                    }
+                    if(self.isStartLaterThanEnd() === true) {
+                        self.endDateError(1);
+                    }else if(self.isCustomBeyondWindowLimit() === true) {
+                        self.endDateError(2);
+                    }else {
+                        setTimeInputError(null);
+                    }
+                }
+                self.startTimeChanged = function(event, data) {
+                    if(data.option !== "value") {
+                        return;
+                    }
+                    if(self.isStartLaterThanEnd() === true) {
+                        self.startTimeError(1);
+                    }else if(self.isCustomBeyondWindowLimit() === true) {
+                        self.startTimeError(2);
+                    }else {
+                        setTimeInputError(null);
+                    }
+                }
+                self.endTimeChanged = function(event, data) {
+                    if(data.option !== "value") {
+                        return;
+                    }
+                    if(self.isStartLaterThanEnd() === true) {
+                        self.endTimeError(1);
+                    }else if(self.isCustomBeyondWindowLimit() === true) {
+                        self.endTimeError(2);
+                    }else {
+                        setTimeInputError(null);
+                    }
+                }
+                
                 self.adjustDateMoreFriendly = function(date) {
                     var today = oj.IntlConverterUtils.dateToLocalIso(new Date()).slice(0, 10);
                     var yesterday = oj.IntlConverterUtils.dateToLocalIso(new Date(new Date()-24*60*60*1000)).slice(0, 10);
@@ -1772,6 +1892,12 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     
                     self.startTime(start.slice(10));
                     self.endTime(end.slice(10));
+                    
+                    if(self.isCustomBeyondWindowLimit() === true) {
+                        self.flexRelTimeValError(true);
+                    }else {
+                        self.flexRelTimeValError(false);
+                    }
                 }
                 
                 self.numberValidator = {
