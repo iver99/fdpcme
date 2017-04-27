@@ -1,6 +1,9 @@
 package oracle.sysman.emaas.platform.emcpdf.rc;
 
 import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientHandlerException;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import mockit.Mocked;
 import mockit.NonStrictExpectations;
@@ -20,6 +23,8 @@ import org.testng.annotations.Test;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by chehao on 2017/4/18 11:05.
@@ -68,7 +73,9 @@ public class RestClientTest {
                 Client.create(anyClientConfig);
             }
         };
-        new RestClient().get("http://test.link.com", "emaastesttenant1", null);
+        RestClient rc = new RestClient();
+        rc.setHeader("TestHeader","header1");
+        rc.get("http://test.link.com", "emaastesttenant1", null);
         new Verifications() {
             {
                 UriBuilder.fromUri(anyString).build();
@@ -78,22 +85,114 @@ public class RestClientTest {
         };
     }
 
-    private void cleanCache() {
-
-        ICacheManager cm = CacheManagers.getInstance().build();
-        Tenant cacheTenant = new Tenant("emaastesttenant1");
-        cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE).evict(DefaultKeyGenerator.getInstance().generate(cacheTenant, new Keys(CacheConstants.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS)));
-        cm.getCache(CacheConstants.CACHES_DOMAINS_DATA_CACHE).evict(DefaultKeyGenerator.getInstance().generate(cacheTenant, new Keys(ENTITY_NAMING_DOMAINS_URL)));
-        cm.getCache(CacheConstants.CACHES_DOMAINS_DATA_CACHE).evict(DefaultKeyGenerator.getInstance().generate(cacheTenant, new Keys(TENANT_LOOKUP_URL)));
+    @Test(groups = {"s2"})
+    public void testRestClientGetException1(@Mocked final DefaultClientConfig anyClientConfig, @Mocked final Client anyClient,
+                                            @Mocked final URI anyUri, @Mocked final UriBuilder anyUriBuilder, @Mocked final MediaType anyMediaType,
+                                            @Mocked final com.sun.jersey.api.client.WebResource.Builder anyBuilder, @Mocked final ClientResponse anyClientResponse) {
+        // test UniformInterfaceException
+        new NonStrictExpectations() {
+            {
+                new DefaultClientConfig();
+                Client.create(anyClientConfig);
+                anyBuilder.get(String.class);
+                result = new UniformInterfaceException(anyClientResponse);
+            }
+        };
+        RestClient rc = new RestClient("logger.name");
+        rc.setHeader("TestHeader","header1");
+        rc.get("http://test.link.com", "emaastesttenant1", null);
+        new Verifications() {
+            {
+                UriBuilder.fromUri(anyString).build();
+                anyClient.resource(anyUri).header(anyString, any);
+                anyBuilder.get(String.class);
+            }
+        };
+        // test ClientHandlerException
+        new NonStrictExpectations() {
+            {
+                new DefaultClientConfig();
+                Client.create(anyClientConfig);
+                anyBuilder.get(String.class);
+                result = new ClientHandlerException();
+            }
+        };
+        rc = new RestClient("logger.name");
+        rc.setHeader("TestHeader","header1");
+        rc.get("http://test.link.com", "emaastesttenant1", null);
+        // test Exception
+        new NonStrictExpectations() {
+            {
+                new DefaultClientConfig();
+                Client.create(anyClientConfig);
+                anyBuilder.get(String.class);
+                result = new Exception();
+            }
+        };
+        rc = new RestClient("logger.name");
+        rc.setHeader("TestHeader","header1");
+        rc.get("http://test.link.com", "emaastesttenant1", null);
     }
 
-    @AfterMethod(groups = {"s2"})
-    public void afterMethod() {
-        cleanCache();
+    @Test(groups = {"s2"})
+    public void testRestClientPut(@Mocked final DefaultClientConfig anyClientConfig, @Mocked final Client anyClient,
+                                  @Mocked final URI anyUri, @Mocked final UriBuilder anyUriBuilder, @Mocked final MediaType anyMediaType,
+                                  @Mocked final com.sun.jersey.api.client.WebResource.Builder anyBuilder) {
+        new NonStrictExpectations() {
+            {
+                new DefaultClientConfig();
+                Client.create(anyClientConfig);
+            }
+        };
+        RestClient rc = new RestClient();
+        List<String> list = new ArrayList<>();
+        list.add("test1");
+        rc.setHeader("TestHeader", "header1");
+        try{
+            rc.put("http://test.link.com",list.toString(), "emaastesttenant1", null);
+        }catch(NullPointerException e){
+            e.printStackTrace();
+        }
     }
 
-    @BeforeMethod(groups = {"s2"})
-    public void beforeMethod() throws Exception {
-        cleanCache();
+    @Test(groups = {"s2"})
+    public void testRestClientPOST(@Mocked final DefaultClientConfig anyClientConfig, @Mocked final Client anyClient,
+                                  @Mocked final URI anyUri, @Mocked final UriBuilder anyUriBuilder, @Mocked final MediaType anyMediaType,
+                                  @Mocked final com.sun.jersey.api.client.WebResource.Builder anyBuilder,@Mocked final ClientResponse anyClientResponse) {
+        new NonStrictExpectations() {
+            {
+                new DefaultClientConfig();
+                Client.create(anyClientConfig);
+            }
+        };
+        RestClient rc = new RestClient();
+        List<String> list = new ArrayList<>();
+        list.add("test1");
+        rc.setHeader("TestHeader", "header1");
+        rc.post("http://test.link.com",list.toString(), "emaastesttenant1", null);
+        // test UniformInterfaceException
+        new NonStrictExpectations() {
+            {
+                new DefaultClientConfig();
+                Client.create(anyClientConfig);
+                anyBuilder.post((Class)any, any);
+                result = new UniformInterfaceException(anyClientResponse);
+            }
+        };
+        rc = new RestClient();
+        rc.post("http://test.link.com",list.toString(), "emaastesttenant1", null);
+
+        // test ClientHandlerException
+        new NonStrictExpectations() {
+            {
+                new DefaultClientConfig();
+                Client.create(anyClientConfig);
+                anyBuilder.post((Class)any, any);
+                result = new ClientHandlerException();
+            }
+        };
+        rc = new RestClient();
+        rc.post("http://test.link.com",list.toString(), "emaastesttenant1", null);
+
     }
 }
