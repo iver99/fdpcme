@@ -105,27 +105,27 @@ public class TenantSubscriptions
 		}
 	}
 
-	@Test
-	public void getSubscribedapps_license_OMCStandard()
-	{
-		tenantid = "df_omc_standard";
-		try {
-			Response res1 = RestAssured
-					.given()
-					.contentType(ContentType.JSON)
-					.log()
-					.everything()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).when().get("/subscribedapps2");
-			Assert.assertTrue(res1.getStatusCode() == 200);
-			Assert.assertNotNull(res1.jsonPath().get("applications"));
-
-		}
-		catch (Exception e) {
-			LOGGER.info("context", e);
-			Assert.fail(e.getLocalizedMessage());
-		}
-	}
+	//@Test
+	//	public void getSubscribedapps_license_OMCStandard()
+	//	{
+	//		tenantid = "df_omc_standard";
+	//		try {
+	//			Response res1 = RestAssured
+	//					.given()
+	//					.contentType(ContentType.JSON)
+	//					.log()
+	//					.everything()
+	//					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+	//							"Authorization", authToken).when().get("/subscribedapps2");
+	//			Assert.assertTrue(res1.getStatusCode() == 200);
+	//			Assert.assertNotNull(res1.jsonPath().get("applications"));
+	//
+	//		}
+	//		catch (Exception e) {
+	//			LOGGER.info("context", e);
+	//			Assert.fail(e.getLocalizedMessage());
+	//		}
+	//	}
 
 	@Test
 	public void getSubscribedappsWrongTenant()
