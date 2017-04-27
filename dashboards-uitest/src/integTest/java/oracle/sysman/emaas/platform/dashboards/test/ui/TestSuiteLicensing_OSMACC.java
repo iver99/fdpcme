@@ -15,9 +15,9 @@ import org.testng.annotations.Test;
 
 public class TestSuiteLicensing_OSMACC extends LoginAndLogout
 {
-	private final String tenant_OSMACC_Trail = "df_osmacc_trial";
-	private final String tenant_OSMACC_Compliance = "df_osmacc_compliance";
-	private final String tenant_OSMACC_Security = "df_osmacc_security";
+	private final String tenant_OSMACC_Trail = DashBoardUtils.getTenantName("df_osmacc_trial");
+	private final String tenant_OSMACC_Compliance = DashBoardUtils.getTenantName("df_osmacc_compliance");
+	private final String tenant_OSMACC_Security = DashBoardUtils.getTenantName("df_osmacc_security");
 	private final String tenant_username = "emcsadmin";
 	private final String UDEWidget = "Analytics Line";
 	private String dbName_Trail = "";

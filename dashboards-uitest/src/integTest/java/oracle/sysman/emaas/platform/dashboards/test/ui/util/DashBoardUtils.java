@@ -122,29 +122,18 @@ public class DashBoardUtils
 		switch (filteroption) {
 			case "ita":
 				isExisted = driver.getElement(DashBoardPageId.FILTERITALOCATOR).isDisplayed();
-				//				if (driver.isElementPresent(DashBoardPageId.FILTERITALOCATOR)) {
-				//					isExisted = driver.isDisplayed(DashBoardPageId.FILTERITALOCATOR);
-				//				}
 				break;
 			case "la":
-				if (driver.isElementPresent(DashBoardPageId.FILTERLALOCATOR)) {
-					isExisted = driver.isDisplayed(DashBoardPageId.FILTERLALOCATOR);
-				}
+				isExisted = driver.getElement(DashBoardPageId.FILTERLALOCATOR).isDisplayed();
 				break;
 			case "apm":
-				if (driver.isElementPresent(DashBoardPageId.FILTERAPMLOCATOR)) {
-					isExisted = driver.isDisplayed(DashBoardPageId.FILTERAPMLOCATOR);
-				}
+				isExisted = driver.getElement(DashBoardPageId.FILTERAPMLOCATOR).isDisplayed();
 				break;
 			case "orchestration":
-				if (driver.isElementPresent(DashBoardPageId.FILTERORCHESTRATIONLOCATOR)) {
-					isExisted = driver.isDisplayed(DashBoardPageId.FILTERORCHESTRATIONLOCATOR);
-				}
+				isExisted = driver.getElement(DashBoardPageId.FILTERORCHESTRATIONLOCATOR).isDisplayed();
 				break;
 			case "security":
-				if (driver.isElementPresent(DashBoardPageId.FILTERSECURITYLOCATOR)) {
-					isExisted = driver.isDisplayed(DashBoardPageId.FILTERSECURITYLOCATOR);
-				}
+				isExisted = driver.getElement(DashBoardPageId.FILTERSECURITYLOCATOR).isDisplayed();
 				break;
 			default:
 				throw new IllegalArgumentException("Unkonw filter option: " + filteroption);
