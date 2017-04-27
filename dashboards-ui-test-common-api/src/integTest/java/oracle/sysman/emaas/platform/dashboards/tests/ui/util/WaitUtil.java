@@ -20,7 +20,9 @@ public class WaitUtil
 
 	public static void waitForPageFullyLoaded(final oracle.sysman.qatool.uifwk.webdriver.WebDriver webd)
 	{
-		webd.waitForServer();
+//		webd.waitForServer();
+		webd.getLogger().info("remove waitforserver explicite call");
+		
 	}
 
 }
