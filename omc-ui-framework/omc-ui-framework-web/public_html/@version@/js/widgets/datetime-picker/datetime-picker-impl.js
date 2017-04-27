@@ -2881,14 +2881,19 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     if ($(event.target).hasClass("oj-datepicker-prev-icon") || $(event.target).hasClass("oj-datepicker-next-icon") ||
                             $(event.target).hasClass("oj-datepicker-title") || $(event.target).hasClass("oj-datepicker-header") ||
                             $(event.target).hasClass("oj-datepicker-group") || $(event.target).hasClass("oj-datepicker-other-month") ||
-                            $(event.target).hasClass("oj-disabled")) {
+                            $(event.target).hasClass("oj-disabled") || $(event.target).hasClass("oj-datepicker-content")) {
                         self.random1(new Date().getTime());
                     } else {
                         var ele = $(event.target);
                         var year = parseInt(ele.parent().attr("data-year"));
                         var month = parseInt(ele.parent().attr("data-month"));
                         var day = parseInt(ele.text());
-
+                        
+                        if(isNaN(year) || isNaN(month) || isNaN(day)){
+                            self.random1(new Date().getTime());
+                            return;
+                        }
+                        
                         self.value(oj.IntlConverterUtils.dateToLocalIso(new Date(year, month, day)));
                         self.random(new Date().getTime());
                         self.setTimePeriodChosen(self.timePeriodCustom);
