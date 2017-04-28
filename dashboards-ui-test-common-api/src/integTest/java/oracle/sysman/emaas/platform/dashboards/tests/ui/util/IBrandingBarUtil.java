@@ -49,7 +49,7 @@ public interface IBrandingBarUtil extends IUiTestCommonAPI
 	public static final String ROOT_MENU_DASHBOARDS = "Dashboards";
 	public static final String ROOT_MENU_DATAEXPLORER = "Data Explorer";
 	public static final String ROOT_MENU_APM = "APM";
-	public static final String ROOT_MENU_MONITORING = "Infrastructure Monitoring";
+	public static final String ROOT_MENU_MONITORING = "Monitoring";
 	public static final String ROOT_MENU_LA = "Log Analytics";
 	public static final String ROOT_MENU_ITA = "IT Analytics";
 	public static final String ROOT_MENU_ORCHESTRATION = "Orchestration";
@@ -63,6 +63,13 @@ public interface IBrandingBarUtil extends IUiTestCommonAPI
 	public void clickHierarchicalMenu(WebDriver driver, String menuitem);
 
 	public void clickMenuItem(WebDriver driver, String menuitem);
+
+	/**
+	 * @param driver
+	 * @param menuitem
+	 * @return
+	 */
+	public void expandSubMenu(WebDriver driver, String menuitem);
 
 	public String getCurrentMenuHeader(WebDriver driver);
 

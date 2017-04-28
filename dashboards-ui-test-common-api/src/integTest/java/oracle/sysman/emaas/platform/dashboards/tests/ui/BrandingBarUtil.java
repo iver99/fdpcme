@@ -70,6 +70,12 @@ public class BrandingBarUtil
 		bu.clickMenuItem(driver, menuitem);
 	}
 
+	public static void expandSubMenu(WebDriver driver, String menuitem)
+	{
+		IBrandingBarUtil bu = new UtilLoader<IBrandingBarUtil>().loadUtil(driver, IBrandingBarUtil.class);
+		bu.expandSubMenu(driver, menuitem);
+	}
+
 	public static String getCurrentMenuHeader(WebDriver driver)
 	{
 		IBrandingBarUtil bu = new UtilLoader<IBrandingBarUtil>().loadUtil(driver, IBrandingBarUtil.class);

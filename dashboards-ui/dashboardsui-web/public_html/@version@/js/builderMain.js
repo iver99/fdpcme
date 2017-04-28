@@ -206,6 +206,7 @@ require(['knockout',
     'knockout.mapping',
     'uifwk/js/util/df-util',
     'uifwk/js/util/logging-util',
+    'uifwk/js/sdk/menu-util',
     'ojs/ojcore',
     'builder/builder.functions',
     'builder/builder.jet.partition',
@@ -256,6 +257,7 @@ require(['knockout',
 
                 require(['uifwk/js/util/df-util',
                     'uifwk/js/util/logging-util',
+                    'uifwk/js/sdk/menu-util',
                     'dashboards/dashboardhome-impl',
                     'jqueryui',
                     'common.uifwk',
@@ -265,9 +267,33 @@ require(['knockout',
                     'builder/dashboardset.panels.model',
                     'builder/dashboardDataSource/dashboard.datasource'
                 ],
-                    function(dfumodel, _emJETCustomLogger, dashboardhome_impl) // this callback gets executed when all required modules are loaded
+                    function(dfumodel, _emJETCustomLogger, menuModel, dashboardhome_impl) // this callback gets executed when all required modules are loaded
                     {
                         var logger = new _emJETCustomLogger();
+                        var menuUtil = new menuModel();
+                        menuUtil.subscribeServiceMenuLoadedEvent(function(){
+                            var $b;
+                            $("#omcMenuNavList").addClass("df-computed-content-width");
+                            var $visibleHeaderBar = $(".dashboard-content:visible .head-bar-container");
+                            var $visibleRightDrawer = $(".dbd-left-panel:visible");
+                            if ($visibleHeaderBar.length > 0 && ko.dataFor($visibleHeaderBar[0])) {
+                                $b = ko.dataFor($visibleHeaderBar[0]).$b;
+                                $b && $b.triggerBuilderResizeEvent('hamburger menu show/hide status changed');
+                            }else if ($visibleRightDrawer.length > 0 && ko.dataFor($visibleRightDrawer[0])) {
+                                $b = ko.dataFor($visibleRightDrawer[0]).$b;
+                                $b && $b.triggerBuilderResizeEvent('hamburger menu show/hide status changed');
+                            }
+                            $("#omcHamburgerMenu").on("ojopen", function(event, offcanvas) {
+                                setTimeout(function(){
+                                    $b && $b.triggerBuilderResizeEvent('hamburger menu show/hide status changed');
+                                }, 100);
+                            });
+                            $("#omcHamburgerMenu").on("ojclose", function (event, offcanvas) {
+                                setTimeout(function(){
+                                    $b && $b.triggerBuilderResizeEvent('hamburger menu show/hide status changed');
+                                }, 100);
+                            });
+                        });
                         var logReceiver = dfu.getLogUrl();
                         //require(['emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils'], function(TargetSelectorUtils) {
                         //TargetSelectorUtils.registerComponents();
@@ -328,7 +354,9 @@ require(['knockout',
 				appId: self.appId,
 				isAdmin:true,
 				showGlobalContextBanner: ko.observable(false),
-				showTimeSelector: ko.observable(false),
+                                omcHamburgerMenuOptIn: true,
+                                omcCurrentMenuId: menuUtil.OMCMenuConstants.GLOBAL_DASHBOARDS,
+                                showTimeSelector: ko.observable(false),
 				timeSelectorParams: {
 				    startDateTime: ko.observable(null),
 				    endDateTime: ko.observable(null),
