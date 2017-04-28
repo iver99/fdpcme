@@ -1588,14 +1588,19 @@ public class DashboardManager
 
 	private List<DashboardApplicationType> getTenantApplications(TenantVersionModel tv)
 	{
+		return getTenantApplications(null,tv);
+	}
+
+	private List<DashboardApplicationType> getTenantApplications(List<String> subscribedApps,  TenantVersionModel tv)
+	{
 		String opcTenantId = TenantContext.getCurrentTenant();
 		if (opcTenantId == null || "".equals(opcTenantId)) {
 			LOGGER.warn("When trying to retrieve subscribed application, it's found the tenant context is not set (TenantContext.getCurrentTenant() == null)");
 			return Collections.emptyList();
 		}
 		TenantSubscriptionInfo tenantSubscriptionInfo = new TenantSubscriptionInfo();
-		List<String> appNames = TenantSubscriptionUtil.getTenantSubscribedServices(opcTenantId, tenantSubscriptionInfo);
-		tv = checkTenantVersion(tenantSubscriptionInfo,tv);
+		List<String> appNames =subscribedApps != null ? subscribedApps : TenantSubscriptionUtil.getTenantSubscribedServices(opcTenantId, tenantSubscriptionInfo);
+		tv = checkTenantVersion(subscribedApps, tenantSubscriptionInfo,tv);
 		if (appNames == null || appNames.isEmpty()) {
 			return Collections.emptyList();
 		}
@@ -1621,12 +1626,28 @@ public class DashboardManager
 	 * if tenant is v1 , return true, if v2/v3, return false
 	 * @return
 	 */
-	private TenantVersionModel checkTenantVersion(TenantSubscriptionInfo tenantSubscriptionInfo, TenantVersionModel tv){
+	private TenantVersionModel checkTenantVersion(List<String> subscribedApps, TenantSubscriptionInfo tenantSubscriptionInfo, TenantVersionModel tv){
+		//check subscribedapps first
+		if(subscribedApps !=null && !subscribedApps.isEmpty()){
+			LOGGER.info("Checking subscribedapps list...{}",subscribedApps);
+			for(String s: subscribedApps){
+				if(SubsriptionAppsUtil.OMC_SERVICE_TYPE.equals(s) ||
+						SubsriptionAppsUtil.OSMACC_SERVICE_TYPE.equals(s) || SubsriptionAppsUtil.OMCSE_SERVICE_TYPE.equals(s) ||
+						SubsriptionAppsUtil.OMCEE_SERVICE_TYPE.equals(s) || SubsriptionAppsUtil.OMCLOG_SERVICE_TYPE.equals(s) ||
+						SubsriptionAppsUtil.SECSE_SERVICE_TYPE.equals(s) || SubsriptionAppsUtil.SECSMA_SERVICE_TYPE.equals(s)){
+					LOGGER.info("#1 Check tenant version is V2/V3 tenant.");
+					tv.setIsV1Tenant(Boolean.FALSE);
+					return tv;
+				}
+			}
+
+		}
+		//if subscribedApps is null check tenantSubscriptionInfo
 		if(tenantSubscriptionInfo.getAppsInfoList()!=null && !tenantSubscriptionInfo.getAppsInfoList().isEmpty()){
 			for(AppsInfo appsInfo : tenantSubscriptionInfo.getAppsInfoList()){
 				if(SubsriptionAppsUtil.V2_TENANT.equals(appsInfo.getLicVersion()) ||
 						SubsriptionAppsUtil.V3_TENANT.equals(appsInfo.getLicVersion())){
-					LOGGER.info("Check tenant version is V1/V2 tenant.");
+					LOGGER.info("#2 Check tenant version is V2/V3 tenant.");
                     tv.setIsV1Tenant(Boolean.FALSE);
 					return tv;
 				}
@@ -1660,7 +1681,7 @@ public class DashboardManager
 			LOGGER.debug("null dashboard is not accessed by current tenant");
 			return false;
 		}
-		List<DashboardApplicationType> datList = getTenantApplications(new TenantVersionModel(Boolean.FALSE));
+		List<DashboardApplicationType> datList = getTenantApplications(subscribedApps, new TenantVersionModel(Boolean.FALSE));
 		// as dashboards only stores basic servcies data, we need to trasfer (possible) bundle services to basic servcies for comparision
 		datList = DashboardApplicationType.getBasicServiceList(datList);
 		if (datList == null || datList.isEmpty()) { // accessible app list is empty
