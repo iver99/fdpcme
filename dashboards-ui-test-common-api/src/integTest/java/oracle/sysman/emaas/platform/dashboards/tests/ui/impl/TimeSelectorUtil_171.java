@@ -781,6 +781,14 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 
 		if (webd.getAttribute("css=" + TimeSelectorUIControls.sApplyBtn + "@disabled") != null) {
 			//throw new Exception("the Apply Button is disabled, can't be clicked");
+			
+			try {
+			throw new Exception(webd.getText(TimeSelectorUIControls.sErrorMsg));
+		}
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		}
 		else {
 			webd.click("css=" + TimeSelectorUIControls.sApplyBtn);
