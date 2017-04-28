@@ -111,6 +111,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 var omcContext = ctxUtil.getOMCContext();
                 var eventSourceTimeSelector = ctxUtil.OMCEventSourceConstants.GLOBAL_TIME_SELECTOR;
                 self.badgeTimePeriod = ko.observable();
+                self.badgeMsgTitle = ko.observable();
                 console.log("Initialize date time picker! The params are: ");
                 if(ko.mapping && ko.mapping.toJS) {
                     console.log(ko.mapping.toJS(params));
@@ -442,6 +443,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 self.startTimeError = ko.observable(false);
                 self.endTimeError = ko.observable(false);
                 self.timeValidateError = ko.observable(false);
+                self.timeValidateFutureError = ko.observable(false);
                 self.beyondWindowLimitError = ko.observable(false);
                 self.flexRelTimeValError = ko.observable(false);
 
@@ -452,14 +454,18 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 self.showTimeValidateErrorMsg = ko.computed(function() {
                     return !self.showErrorMsg() && self.timeValidateError();
                 }, self);
+                
+                self.showTimeValidateFutureErrorMsg = ko.computed(function() {
+                    return !self.showErrorMsg() && !self.showTimeValidateErrorMsg() && self.timeValidateFutureError();
+                }, self);
 
                 self.showBeyondWindowLimitError = ko.computed(function() {
-                    return !self.showErrorMsg() && !self.showTimeValidateErrorMsg() && self.beyondWindowLimitError();
+                    return !self.showErrorMsg() && !self.showTimeValidateErrorMsg() && !self.showTimeValidateFutureErrorMsg() && self.beyondWindowLimitError();
                 }, self);
 
                 self.applyButtonDisable = ko.computed(function() {
                     return self.startDateError() || self.endDateError() || self.startTimeError() || self.endTimeError() ||
-                            self.timeValidateError() || self.beyondWindowLimitError() || self.showTimeFilterError() || self.flexRelTimeValError();
+                            self.timeValidateError() || self.timeValidateFutureError() || self.beyondWindowLimitError() || self.showTimeFilterError() || self.flexRelTimeValError();
                 }, self);
                 
                 self.lrCtrlVal.subscribe(function(value) {
@@ -563,6 +569,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 self.errorMsg = nls.DATETIME_PICKER_ERROR;
                 self.formatErrorMsg = nls.DATETIME_PICKER_FORMAT_ERROR_MSG;
                 self.timeValidateErrorMsg = nls.DATETIME_PICKER_TIME_VALIDATE_ERROR_MSG;
+                self.timeValidateFutureErrorMsg = nls.DATETIME_PICKER_TIME_VALIDATE_FUTURE_ERROR_MSG;
                 self.beyondWindowLimitErrorMsg = nls.DATETIME_PICKER_BEYOND_WINDOW_LIMIT_ERROR_MSG;
                 self.felRelTimeValError = nls.DATETIME_PICKER_FLEX_REL_TIME_VALUE_ERROR_MSG;
                 self.timeRangeMsg = nls.DATETIME_PICKER_TIME_RANGE;
@@ -1088,6 +1095,8 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         self.badgeTimePeriod(defaultTP);
                     }
                 }
+                
+                self.badgeMsgTitle(msgUtil.formatMessage(nls.DATETIME_PICKER_BADGE_MESSAGE_TITLE, self.timePeriodsNlsObject[self.badgeTimePeriod()]));
 
                 if(!ko.components.isRegistered("time-filter")) {
                     ko.components.register("time-filter", {
@@ -2240,6 +2249,14 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         self.timeValidateError(true);
                     }else {
                         self.timeValidateError(false);
+                    }
+                    
+                    var endDate = oj.IntlConverterUtils.dateToLocalIso(new Date(self.endDate())).slice(0, 10) + self.endTime();
+                    var current = oj.IntlConverterUtils.dateToLocalIso(new Date());
+                    if(endDate > current) {
+                        self.timeValidateFutureError(true);
+                    }else {
+                        self.timeValidateFutureError(false);
                     }
                 }
 
