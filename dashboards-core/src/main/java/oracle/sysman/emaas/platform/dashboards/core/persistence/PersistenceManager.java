@@ -16,6 +16,7 @@ import org.apache.logging.log4j.Logger;
 
 public class PersistenceManager
 {
+    public static final String CURRENT_TENANT_ID = "curTenantId";
     /** 
      * mapping to QAToolUtil
      * Picking up db env when running test cases
@@ -88,7 +89,7 @@ public class PersistenceManager
 			initialize();
 		}		
 		EntityManager em = emf.createEntityManager();
-		em.setProperty("tenant.id", tenantId);
+		em.setProperty(CURRENT_TENANT_ID, tenantId);
 		try {
 			SessionInfoUtil.setModuleAndAction(em, MODULE_NAME, ACTION_NAME);
 		} catch (SQLException e) {

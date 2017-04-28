@@ -122,7 +122,7 @@ public class JsonUtil
 		if (StringUtil.isEmpty(jsonString)) {
 			return null;
 		}
-		jsonString = URLDecoder.decode(jsonString, "UTF-8");
+		//jsonString = URLDecoder.decode(jsonString, "UTF-8");
 		return (T) mapper.readValue(jsonString, javaType);
 	}
 

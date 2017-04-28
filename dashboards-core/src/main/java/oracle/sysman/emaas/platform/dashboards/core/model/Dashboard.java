@@ -254,16 +254,14 @@ public class Dashboard
 			to.setEnableTimeRange(null);
 			to.setIsSystem(DataFormatUtils.integer2Boolean(from.getIsSystem()));
 			if (loadSubDashboards) {
-				List<EmsSubDashboard> emsSubDashboards = from
-						.getSubDashboardList();
+				List<EmsSubDashboard> emsSubDashboards = from.getSubDashboardList();
 				if (emsSubDashboards != null) {
 					List<BigInteger> subDashboardIds = new ArrayList<BigInteger>();
 					getSubDashboardIds(emsSubDashboards, subDashboardIds);
 					Long tenantId = from.getTenantId();
 					EntityManager em = null;
 					try {
-						DashboardServiceFacade dsf = new DashboardServiceFacade(
-								tenantId);
+						DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 						List<EmsDashboard> subEmsDashboards = dsf.getEmsDashboardByIds(subDashboardIds, tenantId);
 						List<Dashboard> subDashboardList = new ArrayList<Dashboard>();
 						getSubDashboardsFromEmsSubDashboards(subEmsDashboards,
@@ -534,6 +532,7 @@ public class Dashboard
 		Integer isShowInHome=DataFormatUtils.boolean2Integer(showInHome);
 		Integer dashboardType = DataFormatUtils.dashboardTypeString2Integer(type);
 		Integer appType = appicationType == null ? null : appicationType.getValue();
+		//TODO Integer appType = applicationType;
 		String htmlEcodedName = StringEscapeUtils.escapeHtml4(name);
 		String htmlEcodedDesc = description == null ? null : StringEscapeUtils.escapeHtml4(description);
 

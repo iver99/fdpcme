@@ -39,6 +39,7 @@ public class DashboardsApplication extends Application
 		hs.add(WidgetNotificationAPI.class);
 		hs.add(CacheAPI.class);
 		hs.add(TenantSubscriptionsAPIv2.class);
+		hs.add(MetadataRefreshAPI.class);
 		return hs;
 	}
 }

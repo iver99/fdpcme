@@ -21,17 +21,16 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.eclipse.persistence.annotations.Multitenant;
-import org.eclipse.persistence.annotations.MultitenantType;
-import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
-
 
 @Entity
-@NamedQueries({ @NamedQuery(name = "EmsDashboardTile.findAll", query = "select o from EmsDashboardTile o") })
+@NamedQueries({ 
+    @NamedQuery(name = "EmsDashboardTile.findAll", query = "select o from EmsDashboardTile o"),
+    @NamedQuery(name = "EmsDashboardTile.deleteByDashboardIds", query = "delete from EmsDashboardTile o where o.deleted = 0 and o.dashboard.dashboardId in :ids")
+})
 @Table(name = "EMS_DASHBOARD_TILE")
 //@SequenceGenerator(name = "EmsDashboardTile_Id_Seq_Gen", sequenceName = "EMS_DASHBOARD_TILE_SEQ", allocationSize = 1)
-@Multitenant(MultitenantType.SINGLE_TABLE)
-@TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant.id", length = 32, primaryKey = true)
+//@Multitenant(MultitenantType.SINGLE_TABLE)
+//@TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant.id", length = 32, primaryKey = true)
 public class EmsDashboardTile extends EmBaseEntity implements Serializable
 {
 	private static final long serialVersionUID = 6307069723661684517L;

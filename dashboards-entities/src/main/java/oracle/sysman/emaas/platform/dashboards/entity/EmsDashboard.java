@@ -19,18 +19,18 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
-import org.eclipse.persistence.annotations.Multitenant;
-import org.eclipse.persistence.annotations.MultitenantType;
-import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
-
 @Entity
-@NamedQueries({ @NamedQuery(name = "EmsDashboard.findAll", query = "select o from EmsDashboard o where o.deleted=0"),
-		@NamedQuery(name = "EmsDashboard.queryBySubDashboardID", query = "select a from EmsDashboard a ,EmsSubDashboard b "
-				+ "where a.dashboardId = b.dashboardSetId and b.subDashboardId = :p") })
+@NamedQueries({
+        @NamedQuery(name = "EmsDashboard.findAll", query = "select o from EmsDashboard o where o.deleted=0"),
+        @NamedQuery(name = "EmsDashboard.queryBySubDashboardID", query = "select a from EmsDashboard a ,EmsSubDashboard b "
+                + "where a.dashboardId = b.dashboardSetId and b.subDashboardId = :p"),
+        @NamedQuery(name = "EmsDashboard.findByAppType", query = "select o.dashboardId from EmsDashboard o where o.deleted = 0 and o.isSystem = 1 and o.applicationType = :appType"),
+        @NamedQuery(name = "EmsDashboard.deleteByDashboardIds", query = "delete from EmsDashboard o where o.deleted = 0 and o.dashboardId in :ids")
+})
 @Table(name = "EMS_DASHBOARD")
 //@SequenceGenerator(name = "EmsDashboard_Id_Seq_Gen", sequenceName = "EMS_DASHBOARD_SEQ", allocationSize = 1)
-@Multitenant(MultitenantType.SINGLE_TABLE)
-@TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant.id", length = 32, primaryKey = true)
+//@Multitenant(MultitenantType.SINGLE_TABLE)
+//@TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant.id", length = 32, primaryKey = true)
 public class EmsDashboard extends EmBaseEntity implements Serializable
 {
 	private static final long serialVersionUID = 1219062974568988740L;
@@ -73,8 +73,8 @@ public class EmsDashboard extends EmBaseEntity implements Serializable
 	@Basic(fetch = FetchType.EAGER)
 	@Column(name = "SCREEN_SHOT", columnDefinition = "CLOB NULL")
 	private String screenShot;
-	@Column(name = "TENANT_ID", nullable = false, length = 32, insertable = false, updatable = false)
-	private Long tenantId;
+//	@Column(name = "TENANT_ID", nullable = false, length = 32, insertable = false, updatable = false)
+//	private Long tenantId;
 	@Column(nullable = false)
 	private Integer type;
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "dashboard", orphanRemoval = true)
@@ -231,11 +231,6 @@ public class EmsDashboard extends EmBaseEntity implements Serializable
 		return subDashboardList;
 	}
 
-	public Long getTenantId()
-	{
-		return tenantId;
-	}
-
 	public Integer getType()
 	{
 		return type;
@@ -355,11 +350,6 @@ public class EmsDashboard extends EmBaseEntity implements Serializable
 	public void setSubDashboardList(List<EmsSubDashboard> subDashboardList)
 	{
 		this.subDashboardList = subDashboardList;
-	}
-
-	public void setTenantId(Long tenantId)
-	{
-		this.tenantId = tenantId;
 	}
 
 	public void setType(Integer type)

@@ -16,13 +16,14 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
-
 @Entity
-@NamedQueries({ @NamedQuery(name = "EmsDashboardTileParams.findAll", query = "select o from EmsDashboardTileParams o") })
+@NamedQueries({ 
+    @NamedQuery(name = "EmsDashboardTileParams.findAll", query = "select o from EmsDashboardTileParams o"),
+    @NamedQuery(name = "EmsDashboardTileParams.deleteByDashboardIds", query = "delete from EmsDashboardTileParams o where o.deleted = 0 and o.dashboardTile.dashboard.dashboardId in :ids")
+})
 @Table(name = "EMS_DASHBOARD_TILE_PARAMS")
 @IdClass(EmsDashboardTileParamsPK.class)
-@TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant.id", length = 32, primaryKey = true)
+//@TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant.id", length = 32, primaryKey = true)
 public class EmsDashboardTileParams extends EmBaseEntity implements Serializable
 {
 	private static final long serialVersionUID = 4988046039963971713L;
@@ -47,7 +48,7 @@ public class EmsDashboardTileParams extends EmBaseEntity implements Serializable
 	@ManyToOne
 	@Id
 	@JoinColumns(value = { @JoinColumn(name = "TILE_ID", referencedColumnName = "TILE_ID"),
-			@JoinColumn(name = "TENANT_ID", referencedColumnName = "TENANT_ID") })
+			@JoinColumn(name = "TENANT_ID", referencedColumnName = "TENANT_ID", insertable = false, updatable = false) })
 	private EmsDashboardTile dashboardTile;
 
 	public EmsDashboardTileParams()

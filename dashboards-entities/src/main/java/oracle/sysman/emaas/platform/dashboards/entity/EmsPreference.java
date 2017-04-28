@@ -10,21 +10,18 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
-import org.eclipse.persistence.annotations.AdditionalCriteria;
-import org.eclipse.persistence.annotations.Multitenant;
-import org.eclipse.persistence.annotations.MultitenantType;
-import org.eclipse.persistence.annotations.QueryRedirectors;
-import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
-
 import oracle.sysman.emaas.platform.dashboards.entity.customizer.EmsPreferenceRedirector;
+
+import org.eclipse.persistence.annotations.AdditionalCriteria;
+import org.eclipse.persistence.annotations.QueryRedirectors;
 
 @Entity
 @NamedQueries({ @NamedQuery(name = "EmsPreference.findAll", query = "select o from EmsPreference o where o.userName = :username"),
 		@NamedQuery(name = "EmsPreference.removeAll", query = "delete from EmsPreference o where o.userName = :username") })
 @Table(name = "EMS_PREFERENCE")
 @IdClass(EmsPreferencePK.class)
-@Multitenant(MultitenantType.SINGLE_TABLE)
-@TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant.id", length = 32, primaryKey = true)
+//@Multitenant(MultitenantType.SINGLE_TABLE)
+//@TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant.id", length = 32, primaryKey = true)
 @AdditionalCriteria("this.deleted = '0'")
 @QueryRedirectors(insert = EmsPreferenceRedirector.class, delete = EmsPreferenceRedirector.class)
 public class EmsPreference extends EmBaseEntity implements Serializable

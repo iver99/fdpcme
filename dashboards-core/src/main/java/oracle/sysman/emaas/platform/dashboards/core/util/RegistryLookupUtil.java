@@ -106,6 +106,8 @@ public class RegistryLookupUtil
 	public static final String SECURITY_ANALYTICS_SERVICE = "SecurityAnalyticsUI";
 	public static final String COMPLIANCE_SERVICE = "ComplianceUIService";
 	public static final String ORCHESTRATION_SERVICE = "CosUIService";
+	
+	public static final String DEFAULT_VERSION = "1.0+";
 
 	public static List<Link> getLinksWithRelPrefix(String relPrefix, SanitizedInstanceInfo instance)
 	{
@@ -241,7 +243,7 @@ public class RegistryLookupUtil
 	}
 
 	public static VersionedLink getServiceInternalLink(String serviceName, String version, String rel, boolean prefixMatch,
-			String tenantName, Boolean useCache)
+			String tenantName)
 	{
 	    LOGGER.debug(
                 "/getServiceInternalLink/ Trying to retrieve service internal link for service: \"{}\", version: \"{}\", rel: \"{}\", prefixMatch: \"{}\", tenant: \"{}\"",
@@ -297,9 +299,34 @@ public class RegistryLookupUtil
 		}
 	}
 
-	public static Link getServiceInternalLink(String serviceName, String version, String rel, String tenantName)
+    /**
+     * get internal link for <b>non-tenant</b> request by 
+     * {@link oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil.DEFAULT_VERSION}
+     * @param serviceName
+     * @param rel
+     * @return
+     */
+    public static VersionedLink getServiceInternalLink(String serviceName, String rel)
+    {
+        return RegistryLookupUtil.getServiceInternalLink(serviceName, rel, null);
+    }
+    
+    /**
+     * get internal link for <b>tenantName</b> by 
+     * {@link oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil.DEFAULT_VERSION}
+     * @param serviceName
+     * @param rel
+     * @param tenantName
+     * @return
+     */
+    public static VersionedLink getServiceInternalLink(String serviceName, String rel, String tenantName)
+    {
+        return RegistryLookupUtil.getServiceInternalLink(serviceName, DEFAULT_VERSION, rel, tenantName);
+    }
+    
+	public static VersionedLink getServiceInternalLink(String serviceName, String version, String rel, String tenantName)
 	{
-		return RegistryLookupUtil.getServiceInternalLink(serviceName, version, rel, false, tenantName, true);
+		return RegistryLookupUtil.getServiceInternalLink(serviceName, version, rel, false, tenantName);
 	}
 
 	@SuppressWarnings("unchecked")

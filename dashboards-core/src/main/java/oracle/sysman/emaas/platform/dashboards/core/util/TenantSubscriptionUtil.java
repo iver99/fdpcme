@@ -11,35 +11,27 @@
 package oracle.sysman.emaas.platform.dashboards.core.util;
 
 import java.io.IOException;
-import java.util.*;
 import java.net.SocketTimeoutException;
-
-import com.sun.jersey.api.client.ClientHandlerException;
-import com.sun.jersey.api.client.UniformInterfaceException;
-import oracle.sysman.emaas.platform.dashboards.core.model.subscription2.*;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
-import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter;
-import oracle.sysman.emaas.platform.dashboards.core.util.lookup.RetryableLookupClient;
-import oracle.sysman.emaas.platform.dashboards.core.util.lookup.RetryableLookupClient.RetryableLookupException;
-import oracle.sysman.emaas.platform.dashboards.core.util.lookup.RetryableLookupClient.RetryableRunner;
-
-import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
-import oracle.sysman.emaas.platform.emcpdf.cache.exception.CacheInconsistencyException;
-import java.net.SocketTimeoutException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter;
-import oracle.sysman.emaas.platform.dashboards.core.restclient.AppMappingCollection;
-import oracle.sysman.emaas.platform.dashboards.core.restclient.AppMappingEntity;
-import oracle.sysman.emaas.platform.dashboards.core.restclient.DomainEntity;
-import oracle.sysman.emaas.platform.dashboards.core.restclient.DomainsEntity;
+import oracle.sysman.emaas.platform.dashboards.core.model.subscription2.AppsInfo;
+import oracle.sysman.emaas.platform.dashboards.core.model.subscription2.Component;
+import oracle.sysman.emaas.platform.dashboards.core.model.subscription2.ComponentParameter;
+import oracle.sysman.emaas.platform.dashboards.core.model.subscription2.EditionComponent;
+import oracle.sysman.emaas.platform.dashboards.core.model.subscription2.OrderComponents;
+import oracle.sysman.emaas.platform.dashboards.core.model.subscription2.ServiceRequestCollection;
+import oracle.sysman.emaas.platform.dashboards.core.model.subscription2.SubscriptionApps;
+import oracle.sysman.emaas.platform.dashboards.core.model.subscription2.TenantSubscriptionInfo;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil.VersionedLink;
 import oracle.sysman.emaas.platform.dashboards.core.util.lookup.RetryableLookupClient;
 import oracle.sysman.emaas.platform.dashboards.core.util.lookup.RetryableLookupClient.RetryableLookupException;
 import oracle.sysman.emaas.platform.dashboards.core.util.lookup.RetryableLookupClient.RetryableRunner;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
+import oracle.sysman.emaas.platform.emcpdf.cache.exception.CacheInconsistencyException;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.DefaultKeyGenerator;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;

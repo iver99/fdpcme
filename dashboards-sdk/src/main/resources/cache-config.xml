@@ -106,5 +106,17 @@
         <capacity>1000</capacity>
         <expiry>60</expiry>
     </cache-group>
+    
+    <cache-group>
+        <name>oobDashboardCache</name>
+        <capacity>30</capacity>
+        <expiry>0</expiry>
+    </cache-group>
+    
+    <cache-group>
+        <name>oobSavedSearchCache</name>
+        <capacity>30</capacity>
+        <expiry>0</expiry>
+    </cache-group>
 
 </root>

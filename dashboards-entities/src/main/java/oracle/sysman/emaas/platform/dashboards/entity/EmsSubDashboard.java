@@ -14,10 +14,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
-import org.eclipse.persistence.annotations.Multitenant;
-import org.eclipse.persistence.annotations.MultitenantType;
-import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
-
 
 /**
  * @author jishshi
@@ -30,11 +26,13 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 		@NamedQuery(name = "EmsSubDashboard.removeByDashboardSetID", query = "delete from EmsSubDashboard o where o.dashboardSetId = :p"),
 		@NamedQuery(name = "EmsSubDashboard.removeUnshared", query = ""
 				+ "delete from EmsSubDashboard b where b.dashboardSetId in (" + "select a.dashboardId from EmsDashboard a "
-				+ "where a.dashboardId = b.dashboardSetId " + "and b.subDashboardId = :p1 " + "and a.owner != :p2" + ")"), })
+				+ "where a.dashboardId = b.dashboardSetId " + "and b.subDashboardId = :p1 " + "and a.owner != :p2" + ")"),
+		@NamedQuery(name = "EmsSubDashboard.deleteByDashboardIds", query = "delete from EmsSubDashboard o where o.deleted = 0 and o.dashboardSetId in :ids")
+})
 @Table(name = "EMS_DASHBOARD_SET")
 @IdClass(EmsDashboardSetPK.class)
-@Multitenant(MultitenantType.SINGLE_TABLE)
-@TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant.id", length = 32, primaryKey = true)
+//@Multitenant(MultitenantType.SINGLE_TABLE)
+//@TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant.id", length = 32, primaryKey = true)
 public class EmsSubDashboard extends EmBaseEntity implements Serializable
 {
 

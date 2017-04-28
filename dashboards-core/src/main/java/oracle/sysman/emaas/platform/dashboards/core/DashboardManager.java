@@ -31,6 +31,7 @@ import org.apache.logging.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.DashboardSameNameException;
@@ -48,7 +49,6 @@ import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsPreference;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 
 public class DashboardManager
 {
@@ -69,6 +69,7 @@ public class DashboardManager
 
 	public static final String SCREENSHOT_BASE64_PNG_PREFIX = "data:image/png;base64,";
 	public static final String SCREENSHOT_BASE64_JPG_PREFIX = "data:image/jpeg;base64,";
+	public static final Long NON_TENANT_ID = -1L;
 
 	/**
 	 * Returns the singleton instance for dashboard manager
@@ -130,6 +131,12 @@ public class DashboardManager
 				em.close();
 			}
 		}
+	}
+	
+	public void deleteDashboardByAppType(Integer applicationType, Long tenantId) {
+        DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+        List<BigInteger> ids = dsf.getDashboardIdsByAppType(applicationType);
+        dsf.cleanDashboardsPermanentById(ids);
 	}
 
 	/**
@@ -851,9 +858,9 @@ public class DashboardManager
 		StringBuilder sbApps = new StringBuilder();
 		//this if branch is useless
 		if (apps.isEmpty()) {
-			sb.append(" and p.deleted = 0 and p.tenant_Id = ?" + index++ + " and (p.share_public = 1 or p.owner = ?" + index++
-					+ ") ");
+			sb.append(" and p.deleted = 0 and (p.tenant_Id = ?" + index++ + " or p.tenant_Id = ?" + index++ + ") and (p.share_public = 1 or p.owner = ?" + index++ + ") ");
 			paramList.add(tenantId);
+			paramList.add(NON_TENANT_ID);
 			paramList.add(currentUser);
 		}
 		else {
@@ -864,9 +871,9 @@ public class DashboardManager
 				}
 				sbApps.append(String.valueOf(app.getValue()));
 			}
-
-			sb.append(" and p.deleted = 0 and p.tenant_Id = ?" + index++ + " and ((p.type<>2 and (p.share_public = 1 or p.owner = ?"+index+++" or p.application_type in (" + sbApps.toString() + "))" );
+			sb.append(" and p.deleted = 0 and (p.tenant_Id = ?" + index++ + " or p.tenant_Id = ?" + index++ + ") and ((p.type<>2 and (p.share_public = 1 or p.owner = ?"+index+++" or p.application_type in (" + sbApps.toString() + "))" );
 			paramList.add(tenantId);
+			paramList.add(NON_TENANT_ID);
 			paramList.add(currentUser);
 		}
 
@@ -1097,7 +1104,9 @@ public class DashboardManager
 					List<Tile> tiles = dbd.getTileList();
 					for (int i = 0; i < tiles.size(); i++) {
 						Tile tile = tiles.get(i);
-						tile.setTileId(IdGenerator.getTileId(ZDTContext.getRequestId(), i));
+						if(tile.getTileId() == null) {
+						    tile.setTileId(IdGenerator.getTileId(ZDTContext.getRequestId(), i));
+						}
 						if (tile.getCreationDate() == null) {
 							tile.setCreationDate(created);
 						}
@@ -1107,20 +1116,23 @@ public class DashboardManager
 						if(tile.getWidgetDeleted()==null) {
 							tile.setWidgetDeleted(Boolean.FALSE);
 						}
-						tile.setLastModificationDate(created);
+						if(tile.getLastModificationDate() == null) {
+						    tile.setLastModificationDate(created);
+						}
 					}
 				}
 			}
 
 			EmsDashboard ed = dbd.getPersistenceEntity(null);
 			ed.setCreationDate(dbd.getCreationDate());
-			ed.setOwner(currentUser);
+			ed.setOwner(dbd.getOwner());
 			//EMCPDF-2288,if this dashboard is duplicated from other dashboard,copy its screenshot to new dashboard
 			if(dbd.getDupDashboardId()!=null){
 				LOGGER.debug("Duplicating screenshot from dashoard {} to new Dashboard..",dbd.getDupDashboardId());
 				BigInteger dupId=dbd.getDupDashboardId();
 				EmsDashboard emsd=dsf.getEmsDashboardById(dupId);
 				ed.setScreenShot(emsd.getScreenShot());
+				ed.setOwner(currentUser);
 			}
 			String dbdName = (dbd.getName() !=null? dbd.getName().replace("&amp;", "&"):dbd.getName());
 			ed.setName(dbdName);
@@ -1375,6 +1387,10 @@ public class DashboardManager
 		}
 		//em = dsf.getEntityManager();
 		String currentUser = UserContext.getCurrentUser();
+		// TODO Shall we still save the last access date if it wan't accessed by a user?
+		if(NON_TENANT_ID.equals(tenantId) || currentUser == null) {
+		    return;
+		}
 		EmsUserOptions edla = dsf.getEmsUserOptions(currentUser, dashboardId);
 		if (edla == null) {
 			edla = new EmsUserOptions();

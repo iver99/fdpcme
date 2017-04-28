@@ -14,22 +14,20 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.eclipse.persistence.annotations.AdditionalCriteria;
-import org.eclipse.persistence.annotations.Multitenant;
-import org.eclipse.persistence.annotations.MultitenantType;
-import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
-
 /**
  * @author jishshi
  * @since 2/1/2016
  */
 
 @Entity
-@NamedQueries({ @NamedQuery(name = "EmsUserOptions.removeAll", query = "delete from EmsUserOptions o where o.dashboardId = :dashboardId") })
+@NamedQueries({ 
+    @NamedQuery(name = "EmsUserOptions.removeAll", query = "delete from EmsUserOptions o where o.dashboardId = :dashboardId"),
+    @NamedQuery(name = "EmsUserOptions.deleteByUserDashboardIds", query = "delete from EmsUserOptions o where o.deleted = 0 and o.userName = :userName and o.dashboardId in :ids")
+})
 @Table(name = "EMS_DASHBOARD_USER_OPTIONS")
 @IdClass(EmsUserOptionsPK.class)
-@Multitenant(MultitenantType.SINGLE_TABLE)
-@TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant.id", length = 32, primaryKey = true)
+//@Multitenant(MultitenantType.SINGLE_TABLE)
+//@TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant.id", length = 32, primaryKey = true)
 public class EmsUserOptions extends EmBaseEntity implements Serializable
 {
 	private static final long serialVersionUID = 8723513639667559582L;

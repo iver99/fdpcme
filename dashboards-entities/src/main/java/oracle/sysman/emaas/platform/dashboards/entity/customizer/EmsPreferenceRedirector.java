@@ -64,7 +64,7 @@ public class EmsPreferenceRedirector implements QueryRedirector
 
 			UnitOfWork uow = session.acquireUnitOfWork();
 			String delSql = "DELETE FROM EMS_PREFERENCE WHERE USER_NAME='" + pre.getUserName() + "' AND PREF_KEY='"
-					+ pre.getPrefKey() + "' AND TENANT_ID=" + session.getActiveSession().getProperty("tenant.id")
+					+ pre.getPrefKey() + "' AND TENANT_ID=" + session.getActiveSession().getProperty("curTenantId")
 					+ " AND DELETED=1";
 			uow.executeNonSelectingCall(new SQLCall(delSql));
 			uow.commit();

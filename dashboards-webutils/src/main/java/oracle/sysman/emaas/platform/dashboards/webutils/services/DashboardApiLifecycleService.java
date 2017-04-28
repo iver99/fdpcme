@@ -10,7 +10,6 @@
 
 package oracle.sysman.emaas.platform.dashboards.webutils.services;
 
-import oracle.sysman.emaas.platform.dashboards.webutils.timer.ThreadPoolStatusNotification;
 import oracle.sysman.emaas.platform.dashboards.webutils.wls.lifecycle.AbstractApplicationLifecycleService;
 
 public class DashboardApiLifecycleService extends AbstractApplicationLifecycleService
@@ -24,5 +23,6 @@ public class DashboardApiLifecycleService extends AbstractApplicationLifecycleSe
 		addApplicationServiceManager(new AvailabilityServiceManager(rsm));
 		addApplicationServiceManager(new EMTargetInitializer());
 		addApplicationServiceManager(new ThreadPoolManager());
+		addApplicationServiceManager(new MetadataManager());
 	}
 }

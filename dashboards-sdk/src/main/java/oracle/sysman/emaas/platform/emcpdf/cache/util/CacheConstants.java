@@ -38,6 +38,10 @@ public class CacheConstants {
 	public static final String LOOKUP_CACHE_KEY_OOB_DASHBOARD_SAVEDSEARCH = "oobDashboardSavedSearch";
 	public static final String LOOKUP_CACHE_KEY_SERVICE_MENU = "serviceMenus";
     public static final String LOOKUP_CACHE_KEY_TENANT_SUBSCRIPTION_INFO = "tenantSubscriptionInfo";
+    
+    // Load OOB metadata at runtime
+    public static final String CACHES_OOB_DASHBOARD_CACHE = "oobDashboardCache";
+    public static final String CACHES_OOB_SAVEDSEARCH_CACHE = "oobSavedSearchCache";
 
 	//below are cache status related message
 	public static final String NO_NEED_TO_CHANGE_CACHE_STATUS = "No need to change cache status.";
