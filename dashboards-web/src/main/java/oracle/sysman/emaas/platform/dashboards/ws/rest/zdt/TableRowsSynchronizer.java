@@ -63,6 +63,9 @@ public class TableRowsSynchronizer {
         }
         int result = 0;
         for (DashboardSetRowEntity dashboardSetRowEntity : rows) {
+        	if (dashboardSetRowEntity.getLastModificationDate() == null) {
+        		dashboardSetRowEntity.setLastModificationDate(dashboardSetRowEntity.getCreationDate());
+        	}
             result += DataManager.getInstance().syncDashboardSet(em,new BigInteger(dashboardSetRowEntity.getDashboardSetId()), dashboardSetRowEntity.getTenantId(),
             		new BigInteger(dashboardSetRowEntity.getSubDashboardId()), dashboardSetRowEntity.getPosition(), dashboardSetRowEntity.getCreationDate(), dashboardSetRowEntity.getLastModificationDate(), new BigInteger(dashboardSetRowEntity.getDeleted()));
         	
@@ -77,6 +80,9 @@ public class TableRowsSynchronizer {
         }
         int result = 0;
         for (DashboardRowEntity dashboardRowEntity : dashboardRows) {
+        	if (dashboardRowEntity.getLastModificationDate() == null) {
+        		dashboardRowEntity.setLastModificationDate(dashboardRowEntity.getCreationDate());
+        	}
             result += DataManager.getInstance().syncDashboardTableRow(em,new BigInteger(dashboardRowEntity.getDashboardId()), dashboardRowEntity.getName(), dashboardRowEntity.getType(), dashboardRowEntity.getDescription()
                     , dashboardRowEntity.getCreationDate(), dashboardRowEntity.getLastModificationDate(), dashboardRowEntity.getLastModifiedBy(), dashboardRowEntity.getOwner()
                     , dashboardRowEntity.getIsSystem(), dashboardRowEntity.getApplicationType(), dashboardRowEntity.getEnableTimeRange(), dashboardRowEntity.getScreenShot()
@@ -94,6 +100,9 @@ public class TableRowsSynchronizer {
         }
         int result = 0;
         for (DashboardTileParamsRowEntity dashboardTileParamsRowEntity : rows) {
+        	if (dashboardTileParamsRowEntity.getLastModificationDate() == null) {
+        		dashboardTileParamsRowEntity.setLastModificationDate(dashboardTileParamsRowEntity.getCreationDate());
+        	}
             result += DataManager.getInstance().syncDashboardTileParam(em,dashboardTileParamsRowEntity.getTileId(), dashboardTileParamsRowEntity.getParamName()
                     , dashboardTileParamsRowEntity.getTenantId(), dashboardTileParamsRowEntity.getIsSystem(), dashboardTileParamsRowEntity.getParamType()
                     , dashboardTileParamsRowEntity.getParamValueStr(), dashboardTileParamsRowEntity.getParamValueNum(), dashboardTileParamsRowEntity.getParamValueTimestamp()
@@ -109,6 +118,9 @@ public class TableRowsSynchronizer {
         }
         int result = 0;
         for (DashboardTileRowEntity dashboardTileRowEntity : rows) {
+        	if (dashboardTileRowEntity.getLastModificationDate() == null) {
+        		dashboardTileRowEntity.setLastModificationDate(dashboardTileRowEntity.getCreationDate());
+        	}
             result += DataManager.getInstance().syncDashboardTile(em,dashboardTileRowEntity.getTileId(), new BigInteger(dashboardTileRowEntity.getDashboardId()), dashboardTileRowEntity.getCreationDate()
                     , dashboardTileRowEntity.getLastModificationDate(), dashboardTileRowEntity.getLastModifiedBy(), dashboardTileRowEntity.getOwner(), dashboardTileRowEntity.getTitle()
                     , dashboardTileRowEntity.getHeight(), dashboardTileRowEntity.getWidth(), dashboardTileRowEntity.getIsMaximized(), dashboardTileRowEntity.getPosition()
@@ -129,6 +141,9 @@ public class TableRowsSynchronizer {
         }
         int result = 0;
         for (DashboardUserOptionsRowEntity dashboardUserOptionsRowEntity : rows) {
+        	if (dashboardUserOptionsRowEntity.getLastModificationDate() == null) {
+        		dashboardUserOptionsRowEntity.setLastModificationDate(dashboardUserOptionsRowEntity.getCreationDate());
+        	}
             result += DataManager.getInstance().syncDashboardUserOption(em,dashboardUserOptionsRowEntity.getUserName(), dashboardUserOptionsRowEntity.getTenantId()
                     , new BigInteger(dashboardUserOptionsRowEntity.getDashboardId()), dashboardUserOptionsRowEntity.getAutoRefreshInterval(), dashboardUserOptionsRowEntity.getAccessDate()
                     , dashboardUserOptionsRowEntity.getIsFavorite(), dashboardUserOptionsRowEntity.getExtendedOptions(), dashboardUserOptionsRowEntity.getCreationDate(), dashboardUserOptionsRowEntity.getLastModificationDate(),dashboardUserOptionsRowEntity.getDeleted());
@@ -143,6 +158,9 @@ public class TableRowsSynchronizer {
         }
         int result = 0;
         for (PreferenceRowEntity preferenceRowEntity : rows) {
+        	if (preferenceRowEntity.getLastModificationDate() == null) {
+        		preferenceRowEntity.setLastModificationDate(preferenceRowEntity.getCreationDate());
+        	}
             result += DataManager.getInstance().syncPreferences(em,preferenceRowEntity.getUserName(), preferenceRowEntity.getPrefKey(), preferenceRowEntity.getPrefValue()
                     , preferenceRowEntity.getTenantId(), preferenceRowEntity.getCreationDate(), preferenceRowEntity.getLastModificationDate(), new Integer(preferenceRowEntity.getDeleted()));
         }
