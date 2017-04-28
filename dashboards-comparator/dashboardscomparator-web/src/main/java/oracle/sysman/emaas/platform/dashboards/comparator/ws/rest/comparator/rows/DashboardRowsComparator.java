@@ -18,6 +18,8 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
+import oracle.sysman.emaas.platform.dashboards.comparator.exception.ZDTErrorConstants;
+import oracle.sysman.emaas.platform.dashboards.comparator.exception.ZDTException;
 import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.RestClientProxy;
 import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.TenantSubscriptionUtil;
@@ -43,14 +45,14 @@ public class DashboardRowsComparator extends AbstractComparator
 {
 	private static final Logger logger = LogManager.getLogger(DashboardRowsComparator.class);
 
-	public InstancesComparedData<TableRowsEntity> compare(String tenantId, String userTenant)
+	public InstancesComparedData<TableRowsEntity> compare(String tenantId, String userTenant) throws ZDTException
 	{
 		try {
 			logger.info("Starts to compare the two DF OMC instances: table by table and row by row");
 			HashMap<String, LookupClient> instances = getOMCInstances();
 			if (instances == null) {
 				logger.error("Failed to retrieve ZDT OMC instances: null retrieved");
-				return null;
+				throw new ZDTException(ZDTErrorConstants.NULL_RETRIEVED_ERROR_CODE,ZDTErrorConstants.NULL_RETRIEVED_ERROR_MESSAGE);
 			}
 			
 			String key1 = null;
@@ -303,14 +305,15 @@ public class DashboardRowsComparator extends AbstractComparator
 	 * @param response
 	 * @return
 	 * @throws IOException
+	 * @throws ZDTException 
 	 */
-	private TableRowsEntity retrieveRowsEntityFromJsonForSingleInstance(String response) throws IOException
+	private TableRowsEntity retrieveRowsEntityFromJsonForSingleInstance(String response) throws IOException, ZDTException
 	{
 		JsonUtil ju = JsonUtil.buildNormalMapper();
 		TableRowsEntity tre = ju.fromJson(response, TableRowsEntity.class);
 		if (tre == null) {
 			logger.warn("Checking dashboard OMC instance table rows: null/empty entity retrieved.");
-			return null;
+			throw new ZDTException(ZDTErrorConstants.NULL_TABLE_ROWS_ERROR_CODE, ZDTErrorConstants.NULL_TABLE_ROWS_ERROR_MESSAGE);
 		}
 		return tre;
 	}
@@ -319,12 +322,12 @@ public class DashboardRowsComparator extends AbstractComparator
 	 * @throws Exception
 	 * @throws IOException
 	 */
-	private TableRowsEntity retrieveRowsForSingleInstance(LookupClient lc, String tenantId, String userTenant) throws Exception, IOException
+	private TableRowsEntity retrieveRowsForSingleInstance(LookupClient lc, String tenantId, String userTenant) throws Exception, IOException, ZDTException
 	{
 		Link lk = getSingleInstanceUrl(lc, "zdt/tablerows", "http");
 		if (lk == null) {
 			logger.warn("Get a null or empty link for one single instance!");
-			return null;
+			throw new ZDTException(ZDTErrorConstants.NULL_LINK_ERROR_CODE, ZDTErrorConstants.NULL_LINK_ERROR_MESSAGE);
 		}
 		String response = new TenantSubscriptionUtil.RestClient().get(lk.getHref(), tenantId,userTenant);
 		/*

@@ -33,6 +33,8 @@ import org.apache.logging.log4j.Logger;
 
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.tenant.TenantIdProcessor;
+import oracle.sysman.emaas.platform.dashboards.comparator.exception.ErrorEntity;
+import oracle.sysman.emaas.platform.dashboards.comparator.exception.ZDTException;
 import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.counts.CountsEntity;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.counts.DashboardCountsComparator;
@@ -169,7 +171,7 @@ public class ZDTAPI
 		return Response.status(Status.OK).entity(JsonUtil.buildNormalMapper().toJson(ic)).build();
 	}
 	
-	private Date getCurrentUTCTime()
+	public Date getCurrentUTCTime()
 	{
 		Calendar cal = Calendar.getInstance(Locale.getDefault());
 		long localNow = System.currentTimeMillis();
@@ -179,7 +181,7 @@ public class ZDTAPI
 		return utcDate;
 	}
 	
-	private String getTimeString(Date date)
+	public String getTimeString(Date date)
 	{
 		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
 		String dateStr = sdf.format(date);
@@ -198,10 +200,7 @@ public class ZDTAPI
 			DashboardRowsComparator dcc = new DashboardRowsComparator();
 			InstancesComparedData<TableRowsEntity> result = dcc.compare(tenantIdParam, userTenant);
 			
-			if (result == null) {
-				message = "Errors while comparing the two OMC instances.";
-				status = 500;
-			} else {
+			if (result != null) {
 				int comparedDataNum = dcc.countForComparedRows(result.getInstance1().getData()) + dcc.countForComparedRows(result.getInstance2().getData());
 				logger.info("comparedNum={}",comparedDataNum);
 				int totalRow = result.getInstance1().getTotalRowNum() + result.getInstance2().getTotalRowNum();
@@ -223,9 +222,11 @@ public class ZDTAPI
 				ZDTStatusRowEntity statusRow = new ZDTStatusRowEntity(comparisonDate,type,nextScheduleDateStr,percentage);
 				message = JsonUtil.buildNormalMapper().toJson(statusRow);
 			}
-		} catch (Exception e) {
-			message = "Errors while comparing the two OMC instances, "+ e.getLocalizedMessage();
-			status = 500;
+		} catch(ZDTException zdtE) {
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(zdtE))).build();
+		}
+		catch (Exception e) {
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(e))).build();
 		}
 		
 		return Response.status(status).entity(message).build();
@@ -240,17 +241,16 @@ public class ZDTAPI
 		logger.info("There is an incoming call from ZDT comparator API to sync");
 		// this comparator invokes the 2 instances REST APIs and retrieves the different table rows for the 2 instances, and update the 2 instances accordingly
 		DashboardRowsComparator dcc = new DashboardRowsComparator();
-		InstancesComparedData<TableRowsEntity> result = dcc.compare(tenantIdParam, userTenant);
+		InstancesComparedData<TableRowsEntity> result = null;
 		try {
-			String response = dcc.sync(result, tenantIdParam, userTenant);
- 			if (response.contains("Errors:")) {
- 				return Response.status(Status.INTERNAL_SERVER_ERROR).entity(response).build();
- 			}
+			result = dcc.compare(tenantIdParam, userTenant);
+			String response = dcc.sync(result, tenantIdParam, userTenant);		
  			return Response.status(Status.NO_CONTENT).entity(response).build();
-		}
-		catch (Exception e) {
-			logger.error(e.getLocalizedMessage(), e);
-			return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Failed to sync data for the 2 instances").build();
+		} catch (ZDTException e) {
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(e))).build();
+		} catch (Exception e1) {
+			logger.error(e1.getLocalizedMessage(), e1);
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(e1))).build();
 		}
 	}
 	

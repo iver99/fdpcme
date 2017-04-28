@@ -195,6 +195,7 @@ public class DataManager
 		return list;
 	}
 
+
 	public int syncDashboardTableRow(EntityManager entityManager,BigInteger dashboardId, String name, Long type, String description, String creationDate, String lastModificationDate, String lastModifiedBy, String owner,
 									 Integer isSystem, Integer applicationType, Integer enableTimeRange, String screenShot, BigInteger deleted, Long tenantId, Integer enableRefresh, Integer sharePublic,
 									 Integer enableEntityFilter, Integer enableDescription, String extendedOptions, Integer showInHome) {
