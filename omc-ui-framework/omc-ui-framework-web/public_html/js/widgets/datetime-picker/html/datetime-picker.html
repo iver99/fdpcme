@@ -217,7 +217,7 @@
                     </div>
                     
                     <!-- pop up for time filter-->
-                    <div style="display: none; width: 560px; height: 499px; margin: auto; border: 1px solid #f0f0f0; background: #FFFFFF;" data-bind="ojComponent: {component: 'ojPopup', chrome: 'none'}, attr: {id: 'timeFilter_'+randomId}, click: function(data, event) {event.stopPropagation();return true;}">
+                    <div style="display: none; width: 560px; height: auto; margin: auto; border: 1px solid #f0f0f0; background: #FFFFFF;" data-bind="ojComponent: {component: 'ojPopup', chrome: 'none'}, attr: {id: 'timeFilter_'+randomId}, click: function(data, event) {event.stopPropagation();return true;}">
                         <!-- ko if: enableTimeFilter -->
                         <div style="padding-top: 15px;" data-bind="component: {name: 'time-filter', params: tfParams}"></div>
                         <!-- /ko -->
