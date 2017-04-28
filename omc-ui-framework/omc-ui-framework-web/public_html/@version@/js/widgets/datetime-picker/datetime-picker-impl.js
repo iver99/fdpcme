@@ -1328,62 +1328,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 };
                 
                 self.getFlexTimePeriod = function(num, opt) {
-                    var optLabel;
-                    switch(opt) {
-                        case ctxUtil.OMCTimeConstants.TIME_UNIT.SECOND:
-                            if(num === 1) {
-                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_SECOND;
-                            }else {
-                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_SECONDS;
-                            }                            
-                            break;
-                        case ctxUtil.OMCTimeConstants.TIME_UNIT.MINUTE:
-                            if(num === 1) {
-                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_MINUTE;
-                            }else {
-                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_MINUTES;
-                            }                            
-                            break;
-                        case ctxUtil.OMCTimeConstants.TIME_UNIT.HOUR:
-                            if(num === 1) {
-                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_HOUR;
-                            }else {
-                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_HOURS;
-                            }                            
-                            break;
-                        case ctxUtil.OMCTimeConstants.TIME_UNIT.DAY:
-                            if(num === 1) {
-                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_DAY;
-                            }else {
-                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_DAYS;
-                            }                            
-                            break;
-                        case ctxUtil.OMCTimeConstants.TIME_UNIT.WEEK:
-                            if(num === 1) {
-                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_WEEK;
-                            }else {
-                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_WEEKS;
-                            }                            
-                            break;
-                        case ctxUtil.OMCTimeConstants.TIME_UNIT.MONTH:
-                            if(num === 1) {
-                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_MONTH;
-                            }else {
-                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_MONTHS;
-                            }                            
-                            break;
-                        case ctxUtil.OMCTimeConstants.TIME_UNIT.YEAR:
-                            if(num === 1) {
-                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_YEAR;
-                            }else {
-                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_YEARS;
-                            }                            
-                            break;
-                        default:
-                            throw new Error("error in getting flexible relative time period: flexible relative time option-" + opt + " is invalid.");
-                    }
-                    
-                    return nls.DATETIME_PICKER_FLEX_REL_TIME_LAST + " " + num + " " + optLabel;
+                    return ctxUtil.getFlexTimePeriod(num, opt);
                 }
 
                 /**
@@ -2782,16 +2727,16 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                 console.log("start: "+new Date(start));
                                 console.log("end: "+new Date(end));
                                 if(flexRelTimePeriodId) {
-                                    console.log("time period: "+flexRelTimePeriodId);
+                                    console.log("time period: " + flexRelTimePeriodId);
                                 }else {
-                                    console.log("time period: "+informalizeTimePeriod(timePeriod));
+                                    console.log("time period: " + timePeriod);
                                 }
                                 console.log("time filter: "+JSON.stringify(self.timeFilter()));
                                 console.log("flexible relative time value: "+flexRelTimeVal+", option: "+flexRelTimeOpt);
                                 if(flexRelTimePeriodId) {
                                     self.callbackAfterApply(newDateWithMilliseconds(start), newDateWithMilliseconds(end), flexRelTimePeriodId, self.timeFilter(), flexRelTimeVal, flexRelTimeOpt);
                                 }else {
-                                    self.callbackAfterApply(newDateWithMilliseconds(start), newDateWithMilliseconds(end), informalizeTimePeriod(timePeriod), self.timeFilter(), flexRelTimeVal, flexRelTimeOpt);
+                                    self.callbackAfterApply(newDateWithMilliseconds(start), newDateWithMilliseconds(end), timePeriod, self.timeFilter(), flexRelTimeVal, flexRelTimeOpt);
                                 }
                             },
                             error: function () {
