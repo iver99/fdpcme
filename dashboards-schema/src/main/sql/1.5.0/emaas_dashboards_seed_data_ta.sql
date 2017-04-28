@@ -5,7 +5,7 @@ Rem Copyright (c) 2013, 2014, 2015 Oracle and/or its affiliates.
 Rem All rights reserved.
 Rem
 Rem    NAME
-Rem      emaas_dashboards_seed_data.sql 
+Rem      emaas_dashboards_seed_data_ta.sql
 Rem
 Rem    DESCRIPTION
 Rem      Dashboard Framework seed data sql file.
@@ -20,6 +20,7 @@ Rem
 DEFINE TENANT_ID = '&1'
 SET FEEDBACK ON
 SET SERVEROUTPUT ON
+
 
 DECLARE
   V_COUNT number;
