@@ -74,26 +74,13 @@
     /*font-weight: normal !important;*/
 }
 
-.leftDrawerChosen {
-    background-color:  #ebeced; //#E4F0FA; /*#ffffff !important;*/
-    /*font-weight: bold !important;*/
-    /*border-left: 3px solid #0572ce;*/
+.drawerChosen {
+    background-color:  #ebeced;
 }
 
-.leftDrawerHover {
+.drawerHover {
     background-color: #ebeced; //#F0F0F0;
     /*border-left: 3px solid #85bbe7;*/
-}
-
-.rightDrawerChosen {
-    background-color:  #ebeced; //#E4F0FA; /*#ffffff !important;*/
-    /*font-weight: bold !important;*/
-    /*border-right: 3px solid #0572ce;*/
-}
-
-.rightDrawerHover {
-    background-color: #ebeced; //#F0F0F0;
-    /*border-right: 3px solid #85bbe7;*/
 }
 
 .drawerNotToShow {
@@ -130,7 +117,7 @@
 
 .lrControlRadios {
     padding-left: 15px;
-    padding-bottom:5px;
+    padding-bottom: 10px;
     display: inline-block;
     width: 93%;
 }
@@ -144,7 +131,7 @@
 }
 
 .buttons {
-    margin: -10px 10px 10px;
+    margin: 10px;
     bottom: 20px;
     vertical-align: bottom;
 }

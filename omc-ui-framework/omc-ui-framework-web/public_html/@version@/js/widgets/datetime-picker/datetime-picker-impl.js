@@ -260,161 +260,12 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 self.timePeriodsNlsObject[quickPicks.LATEST] = self.timePeriodLatest;
                 self.timePeriodsNlsObject[quickPicks.CUSTOM] = self.timePeriodCustom;
 
-                self.last15minsNotToShow = ko.observable(false);
-                self.last30minsNotToShow = ko.observable(false);
-                self.last60minsNotToShow = ko.observable(false);
-                self.last2hoursNotToShow = ko.observable(false);
-                self.last4hoursNotToShow = ko.observable(false);
-                self.last6hoursNotToShow = ko.observable(false);
-                self.last8hoursNotToShow = ko.observable(true);
-                self.last24hoursNotToShow = ko.observable(true);
-                self.last1dayNotToShow = ko.observable(false);
-                self.last7daysNotToShow = ko.observable(false);
-                self.last14daysNotToShow = ko.observable(false);
-                self.last30daysNotToShow = ko.observable(false);
-                self.last90daysNotToShow = ko.observable(false);
-                self.last12monthsNotToShow = ko.observable(true);
-                self.last1yearNotToShow = ko.observable(false);
-                self.todayNotToShow = ko.observable(false);
-                self.latestNotToShow = ko.observable(false);
-
-                self.last15minsChosen = ko.observable(false);
-                self.last30minsChosen = ko.observable(false);
-                self.last60minsChosen = ko.observable(false);
-                self.last2hoursChosen = ko.observable(false);
-                self.last4hoursChosen = ko.observable(false);
-                self.last6hoursChosen = ko.observable(false);
-                self.last8hoursChosen = ko.observable(false);
-                self.last24hoursChosen = ko.observable(false);
-                self.last1dayChosen = ko.observable(false);
-                self.last7daysChosen = ko.observable(false);
-                self.last14daysChosen = ko.observable(false);
-                self.last30daysChosen = ko.observable(false);
-                self.last90daysChosen = ko.observable(false);
-                self.last12monthsChosen = ko.observable(false);
-                self.last1yearChosen = ko.observable(false);
-                self.todayChosen = ko.observable(false);
-                self.latestChosen = ko.observable(false);
-                self.recentChosen = ko.observable(false);
-                self.customChosen = ko.observable(false);
-
                 //initialize class assuming that dtpicker is on the left of page
                 self.drawerChosen = ko.observable("leftDrawerChosen");
                 self.timeFilterIconCss = ko.observable("float-right");
                 self.pickerPanelCss = ko.observable("picker-panel-padding-right");
 
                 self.hideTimeSelection = ko.observable(false);
-
-                self.last15minsCss = ko.computed(function() {
-                    var css = "drawer";
-                    css += self.last15minsNotToShow() ? " drawerNotToShow": "";
-                    css += self.last15minsChosen() ? (" "+self.drawerChosen()) : "";
-                    return css;
-                }, self);
-                self.last30minsCss = ko.computed(function() {
-                    var css = "drawer";
-                    css += self.last30minsNotToShow() ? " drawerNotToShow": "";
-                    css += self.last30minsChosen() ? (" "+self.drawerChosen()) : " drawerNotChosen";
-                    return css;
-                }, self);
-                self.last60minsCss = ko.computed(function() {
-                    var css = "drawer";
-                    css += self.last60minsNotToShow() ? " drawerNotToShow": "";
-                    css += self.last60minsChosen() ? (" "+self.drawerChosen()) : " drawerNotChosen";
-                    return css;
-                }, self);
-                self.last2hoursCss = ko.computed(function() {
-                    var css = "drawer";
-                    css += self.last2hoursNotToShow() ? " drawerNotToShow": "";
-                    css += self.last2hoursChosen() ? (" "+self.drawerChosen()) : " drawerNotChosen";
-                    return css;
-                }, self);
-                self.last4hoursCss = ko.computed(function() {
-                    var css = "drawer";
-                    css += self.last4hoursNotToShow() ? " drawerNotToShow": "";
-                    css += self.last4hoursChosen() ? (" "+self.drawerChosen()) : " drawerNotChosen";
-                    return css;
-                }, self);
-                self.last6hoursCss = ko.computed(function() {
-                    var css = "drawer";
-                    css += self.last6hoursNotToShow() ? " drawerNotToShow": "";
-                    css += self.last6hoursChosen() ? (" "+self.drawerChosen()) : " drawerNotChosen";
-                    return css;
-                }, self);
-                self.last8hoursCss = ko.computed(function() {
-                    var css = "drawer";
-                    css += self.last8hoursNotToShow() ? " drawerNotToShow": "";
-                    css += self.last8hoursChosen() ? (" "+self.drawerChosen()) : " drawerNotChosen";
-                    return css;
-                }, self);
-                self.last24hoursCss = ko.computed(function() {
-                    var css = "drawer";
-                    css += self.last24hoursNotToShow() ? " drawerNotToShow": "";
-                    css += self.last24hoursChosen() ? (" "+self.drawerChosen()) : " drawerNotChosen";
-                    return css;
-                }, self);
-                self.last1dayCss = ko.computed(function() {
-                    var css = "drawer";
-                    css  += self.last1dayNotToShow() ? " drawerNotToShow": "";
-                    css += self.last1dayChosen() ? (" "+self.drawerChosen()) : " drawerNotChosen";
-                    return css;
-                }, self);
-                self.last7daysCss = ko.computed(function() {
-                    var css = "drawer";
-                    css += self.last7daysNotToShow() ? " drawerNotToShow": "";
-                    css += self.last7daysChosen() ? (" "+self.drawerChosen()) : " drawerNotChosen";
-                    return css;
-                }, self);
-                self.last14daysCss = ko.computed(function() {
-                    var css = "drawer";
-                    css += self.last14daysNotToShow() ? " drawerNotToShow": "";
-                    css += self.last14daysChosen() ? (" "+self.drawerChosen()) : " drawerNotChosen";
-                    return css;
-                }, self);
-                self.last30daysCss = ko.computed(function() {
-                    var css = "drawer";
-                    css += self.last30daysNotToShow() ? " drawerNotToShow": "";
-                    css += self.last30daysChosen() ? (" "+self.drawerChosen()) : " drawerNotChosen";
-                    return css;
-                }, self);
-                self.last90daysCss = ko.computed(function() {
-                    var css = "drawer";
-                    css += self.last90daysNotToShow() ? " drawerNotToShow": "";
-                    css += self.last90daysChosen() ? (" "+self.drawerChosen()) : " drawerNotChosen";
-                    return css;
-                }, self);
-                self.last12monthsCss = ko.computed(function() {
-                    var css = "drawer";
-                    css += self.last12monthsNotToShow() ? " drawerNotToShow": "";
-                    css += self.last12monthsChosen() ? (" "+self.drawerChosen()) : " drawerNotChosen";
-                    return css;
-                }, self);
-                self.last1yearCss = ko.computed(function() {
-                    var css = "drawer";
-                    css += self.last1yearNotToShow() ? " drawerNotToShow": "";
-                    css += self.last1yearChosen() ? (" "+self.drawerChosen()) : " drawerNotChosen";
-                    return css;
-                }, self);
-                self.latestCss = ko.computed(function() {
-                    var css = "drawer";
-                    css += self.latestNotToShow() ? " drawerNotToShow" : "";
-                    css += self.latestChosen() ? (" "+self.drawerChosen()) : " drawerNotChosen";
-                    return css;
-                }, self);
-                self.recentCss = ko.computed(function() {
-                    var css = "drawer";
-                    if(self.recentList().length>0) {
-                        css += self.recentChosen() ? (" "+self.drawerChosen()) : " drawerNotChosen";
-                    }else {
-                        css += " drawerNotToShow";
-                    }
-                    return css;
-                }, self);
-                self.customCss = ko.computed(function() {
-                    var css = "drawer";
-                    css += self.customChosen() ? (" "+self.drawerChosen()) : " drawerNotChosen";
-                    return css;
-                }, self);
 
                 self.startDateError = ko.observable(0);
                 self.endDateError = ko.observable(0);
@@ -596,8 +447,6 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 };
 
                 self.setDtpickerPositionToLeft = function() {
-                    self.drawerChosen("leftDrawerChosen");
-                    self.drawerHover = "leftDrawerHover";
                     self.timeFilterIconCss("float-right");
                     self.pickerPanelCss("picker-panel-padding-right");
                     //the position of panel popup relative to dropdown button
@@ -607,8 +456,6 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 };
 
                 self.setDtpickerPositionToRight = function() {
-                    self.drawerChosen("rightDrawerChosen");
-                    self.drawerHover = "rightDrawerHover";
                     self.timeFilterIconCss("float-left");
                     self.pickerPanelCss("picker-panel-padding-left");
                     //the position of panel popup relative to dropdown button
@@ -617,166 +464,58 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     self.timeFilterPosition = {"my": "end center", "at": "start center", "collision": "none"};
                 };
 
-                self.setAllTimePeriodsNotChosen = function() {
-                    self.last15minsChosen(false);
-                    self.last30minsChosen(false);
-                    self.last60minsChosen(false);
-                    self.last2hoursChosen(false);
-                    self.last4hoursChosen(false);
-                    self.last6hoursChosen(false);
-                    self.last8hoursChosen(false);
-                    self.last24hoursChosen(false);
-                    self.last1dayChosen(false);
-                    self.last7daysChosen(false);
-                    self.last14daysChosen(false);
-                    self.last30daysChosen(false);
-                    self.last90daysChosen(false);
-                    self.last12monthsChosen(false);
-                    self.last1yearChosen(false);
-                    self.todayChosen(false);
-                    self.latestChosen(false);
-                    self.recentChosen(false);
-                    self.customChosen(false);
-                };
-
-
                 self.setTimePeriodChosen = function(timePeriodId) {
-                    self.setAllTimePeriodsNotChosen();
-                    switch(timePeriodId) {
-                        case quickPicks.LAST_15_MINUTE:
-                            self.last15minsChosen(true);
-                            break;
-                        case quickPicks.LAST_30_MINUTE:
-                            self.last30minsChosen(true);
-                            break;
-                        case quickPicks.LAST_60_MINUTE:
-                            self.last60minsChosen(true);
-                            break;
-                        case quickPicks.LAST_2_HOUR:
-                            self.last2hoursChosen(true);
-                            break;
-                        case quickPicks.LAST_4_HOUR:
-                            self.last4hoursChosen(true);
-                            break;
-                        case quickPicks.LAST_6_HOUR:
-                            self.last6hoursChosen(true);
-                            break;
-                        case quickPicks.LAST_8_HOUR:
-                            self.last8hoursChosen(true);
-                            break;
-                        case quickPicks.LAST_24_HOUR:
-                            self.last24hoursChosen(true);
-                            break;
-                        case quickPicks.LAST_1_DAY:
-                            self.last1dayChosen(true);
-                            break;
-                        case quickPicks.LAST_7_DAY:
-                            self.last7daysChosen(true);
-                            break;
-                         case quickPicks.LAST_14_DAY:
-                            self.last14daysChosen(true);
-                            break;
-                        case quickPicks.LAST_30_DAY:
-                            self.last30daysChosen(true);
-                            break;
-                        case quickPicks.LAST_90_DAY:
-                            self.last90daysChosen(true);
-                            break;
-                        case quickPicks.LAST_12_MONTH:
-                            self.last12monthsChosen(true);
-                            break;
-                        case quickPicks.LAST_1_YEAR:
-                            self.last1yearChosen(true);
-                            break;
-                        case quickPicks.LATEST:
-                            self.latestChosen(true);
-                            break;
-                        case quickPicks.CUSTOM:
-                            self.customChosen(true);
-                            break;
-                        default:
-                            break;
-                    }
+                    $(self.panelId + " a").each(function() {
+                        var tpEle = $(this);
+                        if(tpEle.attr("data-tp-id") !== timePeriodId) {
+                            if(tpEle.hasClass("drawerChosen")) {
+                                tpEle.removeClass("drawerChosen");
+                            }
+                        }else {
+                            if(!tpEle.hasClass("drawerChosen")) {
+                                tpEle.addClass("drawerChosen");
+                            }
+                        }
+                    });
                 };
 
-                self.setAllTimePeriodsToShow = function() {
-                    self.last15minsNotToShow(false);
-                    self.last30minsNotToShow(false);
-                    self.last60minsNotToShow(false);
-                    self.last2hoursNotToShow(false);
-                    self.last4hoursNotToShow(false);
-                    self.last6hoursNotToShow(false);
-                    self.last8hoursNotToShow(false);
-                    self.last24hoursNotToShow(false);
-                    self.last1dayNotToShow(false);
-                    self.last7daysNotToShow(false);
-                    self.last14daysNotToShow(false);
-                    self.last30daysNotToShow(false);
-                    self.last90daysNotToShow(false);
-                    self.last12monthsNotToShow(false);
-                    self.last1yearNotToShow(false);
-                    self.todayNotToShow(false);
-                    self.latestNotToShow(false);
+                self.setTimePeriodsNotToShow = function(timePeriodsId) {
+                    //hide "LAST_8_HOUR", "LAST_24_HOUR", "LAST_12_MONTH" if it is not long/short term
                     if(!params.timePeriodsSet) {
-                        self.last8hoursNotToShow(true);
-                        self.last24hoursNotToShow(true);
-                        self.last12monthsNotToShow(true);
+                        timePeriodsId.push("LAST_8_HOUR");
+                        timePeriodsId.push("LAST_24_HOUR");
+                        timePeriodsId.push("LAST_12_MONTH");
                     }
-                };
-
-                self.setTimePeriodNotToShow = function(timePeriodId) {
-                    switch(timePeriodId) {
-                        case quickPicks.LAST_15_MINUTE:
-                            self.last15minsNotToShow(true);
-                            break;
-                        case quickPicks.LAST_30_MINUTE:
-                            self.last30minsNotToShow(true);
-                            break;
-                        case quickPicks.LAST_60_MINUTE:
-                            self.last60minsNotToShow(true);
-                            break;
-                        case quickPicks.LAST_2_HOUR:
-                            self.last2hoursNotToShow(true);
-                            break;
-                        case quickPicks.LAST_4_HOUR:
-                            self.last4hoursNotToShow(true);
-                            break;
-                        case quickPicks.LAST_6_HOUR:
-                            self.last6hoursNotToShow(true);
-                            break;
-                        case quickPicks.LAST_8_HOUR:
-                            self.last8hoursNotToShow(true);
-                            break;
-                        case quickPicks.LAST_24_HOUR:
-                            self.last24hoursNotToShow(true);
-                            break;
-                        case quickPicks.LAST_1_DAY:
-                            self.last1dayNotToShow(true);
-                            break;
-                        case quickPicks.LAST_7_DAY:
-                            self.last7daysNotToShow(true);
-                            break;
-                        case quickPicks.LAST_14_DAY:
-                            self.last14daysNotToShow(true);
-                            break;
-                        case quickPicks.LAST_30_DAY:
-                            self.last30daysNotToShow(true);
-                            break;
-                        case quickPicks.LAST_90_DAY:
-                            self.last90daysNotToShow(true);
-                            break;
-                        case quickPicks.LAST_12_MONTH:
-                            self.last12monthsNotToShow(true);
-                            break;
-                        case quickPicks.LAST_1_YEAR:
-                            self.last1yearNotToShow(true);
-                            break;
-                        case quickPicks.LATEST:
-                            self.latestNotToShow(true);
-                        default:
-                            break;
+                    if(params.hideTimeSelection && params.hideTimeSelection === true && !params.timePeriodsSet) {
+                        timePeriodsId.push(quickPicks.LAST_15_MINUTE);
+                        timePeriodsId.push(quickPicks.LAST_30_MINUTE);
+                        timePeriodsId.push(quickPicks.LAST_60_MINUTE);
+                        timePeriodsId.push(quickPicks.LAST_2_HOUR);
+                        timePeriodsId.push(quickPicks.LAST_4_HOUR);
+                        timePeriodsId.push(quickPicks.LAST_6_HOUR);
                     }
-                };
+                    $(self.panelId + " a").each(function() {
+                        var tpEle = $(this);
+                        var tpId = tpEle.attr("data-tp-id");
+                        if($.inArray(tpId, timePeriodsId) >= 0) {
+                            if(!tpEle.hasClass("drawerNotToShow")) {
+                                tpEle.addClass("drawerNotToShow");
+                            }
+                        }else {
+                            if(tpId === "RECENT") {
+                                if(self.recentList().length > 0) {
+                                    tpEle.removeClass("drawerNotToShow");
+                                }else {
+                                    tpEle.addClass("drawerNotToShow");
+                                }
+                            }else {
+                                if(tpEle.hasClass("drawerNotToShow")) {
+                                    tpEle.removeClass("drawerNotToShow");
+                                }
+                            }
+                        }
+                    });
+                }
 
                 self.getParam = function(param) {
                     var p = ko.isObservable(param) ? param() : param;
@@ -785,7 +524,6 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
 
                 if(params.timePeriodsSet){
                     if(params.timePeriodsSet === self.timePeriodSetShortTerm){
-                        self.setAllTimePeriodsToShow();
                         params.timePeriodsNotToShow = [quickPicks.LAST_2_HOUR,
                                                     quickPicks.LAST_4_HOUR,
                                                     quickPicks.LAST_6_HOUR,
@@ -796,7 +534,6 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                                     quickPicks.LAST_1_YEAR,
                                                     quickPicks.LATEST];
                     }else if(params.timePeriodsSet === self.timePeriodSetLongTerm){
-                        self.setAllTimePeriodsToShow();
                         params.timePeriodsNotToShow = [quickPicks.LAST_15_MINUTE,
                                                     quickPicks.LAST_30_MINUTE,
                                                     quickPicks.LAST_60_MINUTE,
@@ -867,19 +604,16 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         for(var i=0; i<l; i++) {
                             var tpId = formalizeTimePeriod(params.timePeriodsNotToShow[i]);
                             self.timePeriodsNotToShow.push(tpId);
-                            self.setTimePeriodNotToShow(tpId);
                         }
                     }else if(ko.isObservable(params.timePeriodsNotToShow)) {
                         self.timePeriodsNotToShow = ko.computed(function() {
                             var tmp = [];
                             var i, j;
                             var tpId;
-                            self.setAllTimePeriodsToShow();
                             var l = params.timePeriodsNotToShow().length;
                             for(i=0; i<l; i++) {
                                 tpId = formalizeTimePeriod(params.timePeriodsNotToShow()[i]);
                                 tmp.push(tpId);
-                                self.setTimePeriodNotToShow(tpId);
                                 //remove time periods from "Recently Used" list
                                 self.recentList.remove(function(data) {return data.timePeriod === tpId});
                             }
@@ -975,14 +709,6 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 }
 
                 if(params.hideTimeSelection && params.hideTimeSelection === true) {
-                    if(!params.timePeriodsSet) {
-                        self.last15minsNotToShow(true);
-                        self.last30minsNotToShow(true);
-                        self.last60minsNotToShow(true);
-                        self.last2hoursNotToShow(true);
-                        self.last4hoursNotToShow(true);
-                        self.last6hoursNotToShow(true);
-                    }
                     self.hideTimeSelection(true);
                 }
 
@@ -1437,15 +1163,14 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     var sdt, edt, range, tp, tpId, parsedTp;
 
                     if(self.isTimePeriodPreset) {
-                        if(self.getParam(self.timePeriodPreset)) {
-                            tpId = self.getParam(self.timePeriodPreset);
+                        tpId = self.getParam(self.timePeriodPreset);
+                        if(self.getParam(self.timePeriodPreset) && self.timePeriodsNlsObject[ko.unwrap(self.timePeriodPreset)]) {
                             if(tpId === quickPicks.LATEST) {
                                 start = curDate;
                                 end = curDate;
                                 if (self.showLatestOnCustomPanel()) {
                                     self.lrCtrlVal("latestOnCustom");
                                 } else {
-                                    self.setTimePeriodChosen(tpId);
                                     self.setTimePeriodToLastX(tpId, start, end, 1);
                                 }
                             }else if(tpId === quickPicks.CUSTOM) {
@@ -1473,7 +1198,6 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                 }
                                 
                                 if($.inArray(tpId, tpNotToShow) === -1) {
-                                    self.setTimePeriodChosen(tpId);
                                     range = self.setTimePeriodToLastX(tpId, start, end, 1);
                                 }else {
                                     customClick(0);
@@ -1495,7 +1219,6 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             if(!params.timePeriodsSet && tpId === "LAST_1_WEEK") {
                                 tpId = quickPicks.Last_7_DAY;
                                 if($.inArray(tpId, tpNotToShow) === -1) {
-                                    self.setTimePeriodChosen(tpId);
                                     range = self.setTimePeriodToLastX(tpId, start, end, 1);
                                 }else {
                                     customClick(0);
@@ -1503,7 +1226,6 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             }else if(!params.timePeriodsSet && tpId === "LAST_1_HOUR") {
                                 tpId = quickPicks.LAST_60_MINUTE;
                                 if($.inArray(tpId, tpNotToShow) === -1) {
-                                    self.setTimePeriodChosen(tpId);
                                     range = self.setTimePeriodToLastX(tpId, start, end, 1);
                                 }else {
                                     customClick(0);
@@ -1529,7 +1251,6 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                 dateTimeDiff = end - start;
                                 tpId = in_array(dateTimeDiff, self.timePeriodObject());
                                 if (tpId && $.inArray(tpId, tpNotToShow)<0) {
-                                    self.setTimePeriodChosen(tpId);
                                     range = self.setTimePeriodToLastX(tpId, start, end, 0);
                                     start = range.start;
                                     end = range.end;
@@ -1540,7 +1261,6 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             }
                         } else if (!isValidDateInput(self.getParam(self.startDateTime)) && isValidDateInput(self.getParam(self.endDateTime))) {
                             if($.inArray(quickPicks.LAST_15_MINUTE, tpNotToShow)<0) {
-                                self.setTimePeriodChosen(quickPicks.LAST_15_MINUTE);
                                 range = self.setTimePeriodToLastX(quickPicks.LAST_15_MINUTE, start, end, 0);
                                 start = range.start;
                                 end = range.end;
@@ -1565,7 +1285,6 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                     if (self.showLatestOnCustomPanel()) {
                                         self.lrCtrlVal("latestOnCustom");
                                     } else {
-                                        self.setTimePeriodChosen(tpId);
                                         self.setTimePeriodToLastX(tpId, start, end, 1);
                                     }
                                 }else {
@@ -1581,7 +1300,6 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                     }
 
                                     if($.inArray(tpId, tpNotToShow) === -1) {
-                                        self.setTimePeriodChosen(tpId);
                                         range = self.setTimePeriodToLastX(tpId, start, end, 1);
                                     }else {
                                         customClick(0);
@@ -1604,7 +1322,6 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                 if(!params.timePeriodsSet && tpId === "LAST_1_WEEK") {
                                     tpId = quickPicks.LAST_7_DAY;
                                     if($.inArray(tpId, tpNotToShow) === -1) {
-                                        self.setTimePeriodChosen(tpId);
                                         range = self.setTimePeriodToLastX(tpId, start, end, 1);
                                     }else {
                                         customClick(0);
@@ -1612,7 +1329,6 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                 }else if(!params.timePeriodsSet && tpId === "LAST_1_HOUR") {
                                     tpId = quickPicks.LAST_60_MINUTE;
                                     if($.inArray(tpId, tpNotToShow) === -1) {
-                                        self.setTimePeriodChosen(tpId);
                                         range = self.setTimePeriodToLastX(tpId, start, end, 1);
                                     }else {
                                         customClick(0);
@@ -1638,7 +1354,6 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                 dateTimeDiff = end - start;
                                 tpId = in_array(dateTimeDiff, self.timePeriodObject());
                                 if (tpId && $.inArray(tpId, tpNotToShow)<0) {
-                                    self.setTimePeriodChosen(tpId);
                                     range = self.setTimePeriodToLastX(tpId, start, end, 0);
                                     start = range.start;
                                     end = range.end;
@@ -1657,7 +1372,6 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                     if (self.showLatestOnCustomPanel()) {
                                         self.lrCtrlVal("latestOnCustom");
                                     } else {
-                                        self.setTimePeriodChosen(tpId);
                                         self.setTimePeriodToLastX(tpId, start, end, 1);
                                     }
                                 }else {
@@ -1675,7 +1389,6 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                     }
 
                                     if($.inArray(tpId, tpNotToShow) === -1) {
-                                        self.setTimePeriodChosen(tpId);
                                         range = self.setTimePeriodToLastX(tpId, start, end, 1);
                                     }else {
                                         customClick(0);
@@ -1701,7 +1414,6 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                 if(!params.timePeriodsSet && tpId === "LAST_1_WEEK") {
                                     tpId = quickPicks.LAST_7_DAY;
                                     if($.inArray(tpId, tpNotToShow) === -1) {
-                                        self.setTimePeriodChosen(tpId);
                                         range = self.setTimePeriodToLastX(tpId, start, end, 1);
                                     }else {
                                         customClick(0);
@@ -1709,7 +1421,6 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                 }else if(!params.timePeriodsSet && tpId === "LAST_1_HOUR") {
                                     tpId = quickPicks.LAST_60_MINUTE;
                                     if($.inArray(tpId, tpNotToShow) === -1) {
-                                        self.setTimePeriodChosen(tpId);
                                         range = self.setTimePeriodToLastX(tpId, start, end, 1);
                                     }else {
                                         customClick(0);
@@ -1723,7 +1434,6 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             }else {
                                 //users input nothing
                                 if($.inArray(quickPicks.LAST_15_MINUTE, tpNotToShow)<0) {
-                                    self.setTimePeriodChosen(quickPicks.LAST_15_MINUTE);
                                     range = self.setTimePeriodToLastX(quickPicks.LAST_15_MINUTE, start, end, 0);
                                     start = range.start;
                                     end = range.end;
@@ -1736,7 +1446,6 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
 
                     if (start.getTime() > end.getTime()) {
                         if($.inArray(quickPicks.LAST_15_MINUTE, tpNotToShow)<0) {
-                            self.setTimePeriodChosen(quickPicks.LAST_15_MINUTE);
                             range = self.setTimePeriodToLastX(quickPicks.LAST_15_MINUTE, start, end, 0);
                             start = range.start;
                             end = range.end;
@@ -1785,7 +1494,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     self.timePeriod(quickPicks.CUSTOM);
                     self.selectByDrawer(false);
 
-                    self.customChosen(true);
+                    self.setTimePeriodChosen(quickPicks.CUSTOM);
 
                     // Do not validate window limit when initialized
                     if(type === 0) {
@@ -2006,8 +1715,10 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         //Close overflowed label popup and badge info popup
                         $("#overflowedLabelInfo_"+self.randomId).ojPopup('close');
                         $('.badge-popup-message').ojPopup("close");
-
-                        self.recentChosen(false);
+                        
+                        //Set style of self.timePeriod() to be chosen
+                        self.setTimePeriodsNotToShow(ko.unwrap(self.timePeriodsNotToShow));
+                        self.setTimePeriodChosen(self.timePeriod());
                         self.showRightPanel(false);
 
                         $(self.panelId).ojPopup('open', self.wrapperId + ' #dropDown_' + self.randomId, self.panelPosition);
@@ -2087,14 +1798,14 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 };
 
                 self.hoverOnDrawer = function(data, event) {
-                    if(!$(event.target).hasClass(self.drawerChosen())) {
-                        $(event.target).addClass(self.drawerHover);
+                    if(!$(event.target).hasClass("drawerChosen")) {
+                        $(event.target).addClass("drawerHover");
                     }
-                };
-
+                }
+                
                 self.hoverOutDrawer = function(data, event) {
-                    $(event.target).removeClass(self.drawerHover);
-                };
+                    $(event.target).removeClass("drawerHover");
+                }
                 
                 self.chooseByRecent = function(data, event) {
                     event.stopPropagation();
@@ -2191,8 +1902,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     
                     if(chosenPeriodId === "RECENT") {
                         if(self.recentList().length>0) {
-                            self.setAllTimePeriodsNotChosen();
-                            self.recentChosen(true);
+                            self.setTimePeriodChosen("RECENT");
                             $("#recentPanel_"+self.randomId).ojPopup("open", "#drawer14_"+self.randomId, {"my": "start top", "at": "end top"});
                         }
                         return;
@@ -2856,4 +2566,3 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
             }
             return dateTimePickerViewModel;
         });
-        
