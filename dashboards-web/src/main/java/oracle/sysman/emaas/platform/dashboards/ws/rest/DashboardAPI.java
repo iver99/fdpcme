@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
-import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -67,12 +66,10 @@ import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.webutils.ParallelThreadPool;
 import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
-import oracle.sysman.emaas.platform.dashboards.webutils.metadata.MetadataStorer;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.model.RegistrationEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.model.UserInfoEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.DashboardAPIUtil;
-import oracle.sysman.emaas.platform.emcpdf.cache.api.ICache;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.Binary;
@@ -1046,47 +1043,6 @@ public class DashboardAPI extends APIBase
 			clearUserContext();
 		}
 	}
-	
-	/**
-	 * get all OOB Dashboards
-	 * @param tenantIdParam
-	 * @param userTenant
-	 * @param referer
-	 * @param serviceName
-	 * @param dashboardId
-	 * @return
-	 */
-    @SuppressWarnings("unchecked")
-    @GET
-    @Path("oob")
-    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response getAllOobDashboards(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
-            @HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer) {
-        ICacheManager cm = CacheManagers.getInstance().build();
-        ICache<Object, Map<BigInteger, Dashboard>> cache = cm.getCache(CacheConstants.CACHES_OOB_DASHBOARD_CACHE);
-        //TODO provide all oob dashboards once
-        return Response.ok().build();
-    }
-    
-    @SuppressWarnings("unchecked")
-    @GET
-    @Path("oob/{applicationType}/{id: [1-9][0-9]*}")
-    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response getOobDashboardById(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
-            @HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
-            @PathParam("applicationType") Integer applicationType, @PathParam("id") BigInteger dashboardId) {
-        ICacheManager cm = CacheManagers.getInstance().build();
-        ICache<Object, Map<BigInteger, Dashboard>> cache = cm.getCache(CacheConstants.CACHES_OOB_DASHBOARD_CACHE);
-        try {
-            // get one service's all OOB dashboards
-            Map<BigInteger, Dashboard> oobMap = cache.get(MetadataStorer.getCacheKey(applicationType));
-            return Response.ok(getJsonUtil().toJson(oobMap.get(dashboardId))).build();
-        }
-        catch (oracle.sysman.emaas.platform.emcpdf.cache.exception.ExecutionException e) {
-            LOGGER.error("Error in getOobDashboardById: " + e.getLocalizedMessage(), e);
-            return buildErrorResponse(new ErrorEntity(e));
-        }
-    }
 
 	private void logkeyHeaders(String api, String x_remote_user, String domain_name)
 	{
