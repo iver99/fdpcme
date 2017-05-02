@@ -19,6 +19,7 @@ import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.core.model.DashboardApplicationType;
 import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
 
+import oracle.sysman.emaas.platform.dashboards.core.util.TenantVersionModel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -104,7 +105,7 @@ public class DashboardsFilter
 		}
 	}
 
-	public List<DashboardApplicationType> getIncludedApplicationTypes()
+	public List<DashboardApplicationType> getIncludedApplicationTypes(final  TenantVersionModel tenantVersionModel)
 	{
 		if (includedApps == null || includedApps.isEmpty()) {
 			return Collections.emptyList();
@@ -114,10 +115,19 @@ public class DashboardsFilter
 			for (String app : includedApps) {
 				types.add(DashboardApplicationType.fromJsonValue(app));
 			}
+			//handling v2/v3 tenant
+			if(!tenantVersionModel.getIsV1Tenant() && !types.contains(DashboardApplicationType.UDE)){
+				types.add(DashboardApplicationType.UDE);
+				LOGGER.info("#2 Adding UDE application type for v2/v3 tenant");
+			}else if(tenantVersionModel.getIsV1Tenant() && types.contains(DashboardApplicationType.ITAnalytics)){
+				types.add(DashboardApplicationType.UDE);
+				LOGGER.info("#3 Adding UDE application type for v1 tenant");
+			}
 		}
 		catch (IllegalArgumentException iae) {
 			LOGGER.info("context", iae);
 		}
+        LOGGER.info("Application types are {}", types);
 		return types;
 	}
 
@@ -368,11 +378,16 @@ public class DashboardsFilter
 		return sb;
 	}
 
-	String getIncludedWidgetGroupsString()
+	String getIncludedWidgetGroupsString(final TenantVersionModel tenantVersionModel)
 	{
 		List<String> ps = getIncludedWidgetGroups();
 		if (ps == null || ps.isEmpty()) {
 			return null;
+		}
+		//handing v2/v3 tenant
+		if(!tenantVersionModel.getIsV1Tenant() && !ps.contains(ITA_WIGDETGROUP)){
+			ps.add(ITA_WIGDETGROUP);
+			LOGGER.info("Adding UDE widget group string for v2/v3 tenant!");
 		}
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < ps.size(); i++) {
@@ -381,6 +396,7 @@ public class DashboardsFilter
 			}
 			sb.append("'" + ps.get(i) + "'");
 		}
+		LOGGER.info("Included widget group String is {}", sb.toString());
 		return sb.toString();
 	}	
 
