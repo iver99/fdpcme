@@ -341,8 +341,10 @@ public class BugVerification extends LoginAndLogout
 
 
 	@Test
-	public void testEMCPDF_3660()
+	public void testEMCPDF_3660() throws Exception
 	{
+		int newdsb_idx = 1;
+ 		int OOB_idx = 2;
 		//Initialize the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testEMCPDF_3660");
@@ -395,14 +397,14 @@ public class BugVerification extends LoginAndLogout
 		webd.getLogger().info("Select the added OOB databaase dashboard in set");
 		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Databases");
 		WaitUtil.waitForPageFullyLoaded(webd);
-		Assert.assertNotNull(TimeSelectorUtil.setCustomTime(webd, "04/07/2016 12:00 AM", "04/14/2016 12:30 PM"), "The return date time is null");
+		Assert.assertNotNull(TimeSelectorUtil.setCustomTime(webd, OOB_idx, "04/07/2016 12:00 AM", "04/14/2016 12:30 PM"), "The return date time is null");
 		Assert.assertEquals(TimeSelectorUtil.getTimeRangeLabel(webd).contains("Custom"), true);
 
 		//set & verify custom time range for new added dashboard
 		webd.getLogger().info("Select the new created dashboard in set");
 		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Dashboard_3660");
 		WaitUtil.waitForPageFullyLoaded(webd);
-		Assert.assertNotNull(TimeSelectorUtil.setCustomTime(webd, "05/08/2016 12:00 AM", "05/15/2016 13:30 PM"), "The return date time is null");
+		Assert.assertNotNull(TimeSelectorUtil.setCustomTime(webd, newdsb_idx, "05/08/2016 12:00 AM", "05/15/2016 13:30 PM"), "The return date time is null");
 		Assert.assertEquals(TimeSelectorUtil.getTimeRangeLabel(webd).contains("Custom"), true);
 
 	}
