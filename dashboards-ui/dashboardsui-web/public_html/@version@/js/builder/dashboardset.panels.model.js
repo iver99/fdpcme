@@ -130,75 +130,84 @@ define([
             };
 
             self.includingDashboard = function (guid) {
-                var $includingEl = $($("#dashboard-include-template").text());
-                $("#dashboards-tabs-contents").append($includingEl);
-                $includingEl.attr("id", "dashboard-" + guid);
+                require(['dashboards/dashboardhome-impl'], function(dashboardhome_impl) {
+                    if (!ko.components.isRegistered('df-oracle-dashboard-list')) {
+                        ko.components.register("df-oracle-dashboard-list",{
+                            viewModel:dashboardhome_impl,
+                            template:{require:'text!/emsaasui/emcpdfui/@version@/html/dashboardhome.html'}
+                        });
+                    }
+
+                    var $includingEl = $($("#dashboard-include-template").text());
+                    $("#dashboards-tabs-contents").append($includingEl);
+                    $includingEl.attr("id", "dashboard-" + guid);
 
 
-                function init() {
-                    var dashboardsViewModle = new model.ViewModel(null, "dashboard-" + guid , ['Me','Oracle','NORMAL','Share','ShowAll'], dashboardsetToolBarModel.reorderedDbsSetItems, true);
+                    function init() {
+                        var dashboardsViewModle = new model.ViewModel(null, "dashboard-" + guid , ['Me','Oracle','NORMAL','Share','ShowAll'], dashboardsetToolBarModel.reorderedDbsSetItems, true);
 
-                    dashboardsViewModle.showExploreDataBtn(false);
+                        dashboardsViewModle.showExploreDataBtn(false);
 
-                    dashboardsViewModle.handleDashboardClicked = function(event, data) {
-                        if(event){
-                            event.preventDefault();
-                        }
-                        var hasDuplicatedDashboard = false;
-                        var isCreator=dashboardsetToolBarModel.dashboardsetConfig.isCreator();
-                        var dataId;
-                        var dataName;
-                            if(typeof(data.dashboard)!=='undefined'){
-                               dataId= data.dashboard.id;
-                               dataName=data.dashboard.name;
-                            }else{
-                               dataId= data.id;
-                               dataName=data.name;
+                        dashboardsViewModle.handleDashboardClicked = function(event, data) {
+                            if(event){
+                                event.preventDefault();
                             }
-                            
-                            if (!isCreator) {
-                                dfu.showMessage({
-                                    type: 'warn',
-                                    summary: oj.Translations.getTranslatedString("DBS_BUILDER_DASHBOARD_CANNOT_SELECT_DASHBOARD"),
-                                    detail: '',
-                                    removeDelayTime: 5000});
-                            }
-                            
-                        dashboardsetToolBarModel.dashboardsetItems.forEach(function(dashboardItem) {
-                            if (dashboardItem.dashboardId === dataId) {
-                                hasDuplicatedDashboard = true;
+                            var hasDuplicatedDashboard = false;
+                            var isCreator=dashboardsetToolBarModel.dashboardsetConfig.isCreator();
+                            var dataId;
+                            var dataName;
+                                if(typeof(data.dashboard)!=='undefined'){
+                                   dataId= data.dashboard.id;
+                                   dataName=data.dashboard.name;
+                                }else{
+                                   dataId= data.id;
+                                   dataName=data.name;
+                                }
+
+                                if (!isCreator) {
                                     dfu.showMessage({
                                         type: 'warn',
-                                        summary: oj.Translations.getTranslatedString("DBS_BUILDER_DASHBOARD_SET_DUPLICATED_DASHBOARD", dataName),
+                                        summary: oj.Translations.getTranslatedString("DBS_BUILDER_DASHBOARD_CANNOT_SELECT_DASHBOARD"),
                                         detail: '',
                                         removeDelayTime: 5000});
                                 }
-                        });
-                        
-                        if (!hasDuplicatedDashboard && isCreator) {
-                            dashboardsetToolBarModel.pickDashboard(selectedDashboardInst().guid, {
-                                id: ko.observable(dataId),
-                                name: ko.observable(dataName)
+
+                            dashboardsetToolBarModel.dashboardsetItems.forEach(function(dashboardItem) {
+                                if (dashboardItem.dashboardId === dataId) {
+                                    hasDuplicatedDashboard = true;
+                                        dfu.showMessage({
+                                            type: 'warn',
+                                            summary: oj.Translations.getTranslatedString("DBS_BUILDER_DASHBOARD_SET_DUPLICATED_DASHBOARD", dataName),
+                                            detail: '',
+                                            removeDelayTime: 5000});
+                                    }
                             });
-                        }
+
+                            if (!hasDuplicatedDashboard && isCreator) {
+                                dashboardsetToolBarModel.pickDashboard(selectedDashboardInst().guid, {
+                                    id: ko.observable(dataId),
+                                    name: ko.observable(dataName)
+                                });
+                            }
+                        };
+
+                        dashboardsViewModle.afterConfirmDashboardCreate = function(_model, _resp, _options) {
+                            var __data = {dashboard: {id : _model.get("id"), name: _model.get("name")}};
+                            dashboardsViewModle.handleDashboardClicked(null, __data);
+                            $('#dashboardTab-'+__data.dashboard.id).find('.tabs-name').text(__data.dashboard.name);
+                        };
+                        ko.applyBindings(dashboardsViewModle, $includingEl[0]);
                     };
 
-                    dashboardsViewModle.afterConfirmDashboardCreate = function(_model, _resp, _options) {
-                        var __data = {dashboard: {id : _model.get("id"), name: _model.get("name")}};
-                        dashboardsViewModle.handleDashboardClicked(null, __data);
-                        $('#dashboardTab-'+__data.dashboard.id).find('.tabs-name').text(__data.dashboard.name);
+                    var dashboardInst = {
+                        type: "new",
+                        guid:guid
                     };
-                    ko.applyBindings(dashboardsViewModle, $includingEl[0]);
-                };
+                    dashboardInstMap[guid] = dashboardInst;
+                    self.selectedDashboardInst(dashboardInst);
 
-                var dashboardInst = {
-                    type: "new",
-                    guid:guid
-                };
-                dashboardInstMap[guid] = dashboardInst;
-                self.selectedDashboardInst(dashboardInst);
-
-                init();
+                    init();
+                });
             };
 
             self.loadDashboard = function (dashboardsetToolBarModel) {
