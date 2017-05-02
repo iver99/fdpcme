@@ -30,6 +30,7 @@ import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.StringUtil;
 import oracle.sysman.emaas.platform.emcpdf.registry.model.EndpointEntity;
+import oracle.sysman.emaas.platform.uifwk.util.LogUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -39,7 +40,7 @@ import org.apache.logging.log4j.Logger;
 public class RegistryLookupUtil
 {
 	private static final Logger LOGGER = LogManager.getLogger(RegistryLookupUtil.class);
-
+	private static Logger itrLogger = LogUtil.getInteractionLogger();
 	// keep the following the same with service name
 	public static final String APM_SERVICE = "ApmUI";
 
@@ -72,14 +73,14 @@ public class RegistryLookupUtil
 				"/getServiceExternalEndPoint/ Trying to retrieve service external end point for service: \"{}\", version: \"{}\", tenant: \"{}\"",
 				serviceName, version, tenantName);
 		InstanceInfo queryInfo = getInstanceInfo(serviceName, version);
-//		LogUtil.setInteractionLogThreadContext(tenantName, "Retristry lookup client", LogUtil.InteractionLogDirection.OUT);
-//		itrLogger.debug("Retrieved instance {}", queryInfo);
+		LogUtil.setInteractionLogThreadContext(tenantName, "Retristry lookup client", LogUtil.InteractionLogDirection.OUT);
+		itrLogger.debug("Retrieved instance {}", queryInfo);
 		SanitizedInstanceInfo sanitizedInstance;
 		InstanceInfo internalInstance = null;
 		try {
 			if (!StringUtil.isEmpty(tenantName)) {
 				internalInstance = LookupManager.getInstance().getLookupClient().getInstanceForTenant(queryInfo, tenantName);
-//				itrLogger.debug("Retrieved instance {} by using getInstanceForTenant for tenant {}", internalInstance, tenantName);
+				itrLogger.debug("Retrieved instance {} by using getInstanceForTenant for tenant {}", internalInstance, tenantName);
 				if (internalInstance == null) {
 					LOGGER.error(
 							"Error: retrieved null instance info with getInstanceForTenant. Details: serviceName={}, version={}, tenantName={}",
@@ -88,10 +89,10 @@ public class RegistryLookupUtil
 			}
 			else {
 				internalInstance = LookupManager.getInstance().getLookupClient().getInstance(queryInfo);
-//				itrLogger.debug("Retrieved internal instance {} by using LookupClient.getInstance");
+				itrLogger.debug("Retrieved internal instance {} by using LookupClient.getInstance");
 			}
 			sanitizedInstance = LookupManager.getInstance().getLookupClient().getSanitizedInstanceInfo(internalInstance);
-//			itrLogger.debug("Retrieved sanitized instance {} by using LookupClient.getSanitizedInstanceInfo");
+			itrLogger.debug("Retrieved sanitized instance {} by using LookupClient.getSanitizedInstanceInfo");
 			if (sanitizedInstance == null) {
 				return RegistryLookupUtil.getInternalEndPoint(internalInstance);
 				//				return "https://slc07hcn.us.oracle.com:4443/microservice/c8c62151-e90d-489a-83f8-99c741ace530/";
@@ -138,7 +139,7 @@ public class RegistryLookupUtil
 			List<InstanceInfo> result = null;
 			if (!StringUtil.isEmpty(tenantName)) {
 				InstanceInfo ins = LookupManager.getInstance().getLookupClient().getInstanceForTenant(info, tenantName);
-//				itrLogger.debug("Retrieved instance {} by using getInstanceForTenant for tenant {}", ins, tenantName);
+				itrLogger.debug("Retrieved instance {} by using getInstanceForTenant for tenant {}", ins, tenantName);
 				if (ins == null) {
 					LOGGER.error(
 							"Error: retrieved null instance info with getInstanceForTenant. Details: serviceName={}, version={}, tenantName={}",
