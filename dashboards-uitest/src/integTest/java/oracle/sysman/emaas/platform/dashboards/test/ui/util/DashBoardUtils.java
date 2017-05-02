@@ -156,6 +156,9 @@ public class DashBoardUtils
 				break;
 			default:
 				throw new IllegalArgumentException("Unkonw filter option: " + filteroption);
+		}
+		return isExisted;
+	}
 
 	public static boolean isHamburgerMenuEnabled(WebDriver driver)
 	{
