@@ -94,14 +94,44 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 				isExisted = true;
 				nav.click();
 				WaitUtil.waitForPageFullyLoaded(driver);
-				driver.takeScreenShot();
-				driver.savePageToFile();
 				driver.getLogger().info("clickMenuItem has click on the given menu item: " + menuitem);
 				break;
 			}
 		}
 		if (!isExisted) {
 			throw new NoSuchElementException("clickMenuItem: the menuitem '" + menuitem + "' is not found");
+		}
+	}
+
+	@Override
+	public void expandSubMenu(WebDriver driver, String menuitem)
+	{
+		boolean isExisted = false;
+		Validator.notEmptyString("menuitem in [expandSubMenu]", menuitem);
+
+		driver.waitForElementPresent("css=" + DashBoardPageId_1180.HAMBURGERMENU_CONTAINER_CSS);
+		if (!isHamburgerMenuDisplayed(driver)) {
+			driver.getLogger().info("Not displayed hamburger menu, need to show it");
+			clickHamburgerMenuIcon(driver);
+		}
+
+		List<WebElement> webd_menuitem = driver.getWebDriver().findElements(
+				By.cssSelector(DashBoardPageId_1180.HAMBURGERMENU_MENUITEM_LABEL_CSS));
+		if (webd_menuitem == null || webd_menuitem.isEmpty()) {
+			throw new NoSuchElementException("clickMenuItem: the menuitem element is not found");
+		}
+		for (WebElement nav : webd_menuitem) {
+			if (nav.getText().trim().equals(menuitem) && nav.isDisplayed() && nav.isEnabled()) {
+				isExisted = true;
+				driver.getLogger().info("Find the expand sub menu icon of the " + menuitem);
+				WebElement expandSubMenuIcon = nav.findElement(By.xpath("../..")).findElement(
+						By.cssSelector(DashBoardPageId_1180.HAMBURGERMENU_EXPAND_SUBMENU_ICON_CSS));
+				expandSubMenuIcon.click();
+				break;
+			}
+		}
+		if (!isExisted) {
+			throw new NoSuchElementException("expandSubMenu: the menuitem '" + menuitem + "' is not found");
 		}
 	}
 
@@ -113,7 +143,7 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 			driver.takeScreenShot();
 			driver.savePageToFile();
 		}
-		return driver.getText("css=" + DashBoardPageId_1180.HAMBURGERMENU_TOOLBAR_CSS);
+		return driver.getText("css=" + DashBoardPageId_1180.HAMBURGERMENU_CURRENTHEADER_CSS);
 	}
 
 	@Override
@@ -163,7 +193,21 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 		driver.getLogger().info("isAdminLinkExisted started");
 		//check if hamburger menu icon exist
 		if (isHamburgerMenuEnabled(driver)) {
-			throw new NoSuchElementException("This Method is not supported in Hamburger Menu.");
+			if (NAV_LINK_TEXT_ADMIN_ADMINCONSOLE.equals(adminLinkName)) {
+				expandSubMenu(driver, ROOT_MENU_ADMIN);
+				isExisted = isMenuItemExisted(driver, GLOBAL_ADMIN_MENU_ENTITIES_CFG);
+			}
+			else if (NAV_LINK_TEXT_ADMIN_ALERT.equals(adminLinkName)) {
+				expandSubMenu(driver, ROOT_MENU_ADMIN);
+				isExisted = isMenuItemExisted(driver, GLOBAL_ADMIN_MENU_ALERT_RULES);
+			}
+			else if (NAV_LINK_TEXT_ADMIN_AGENT.equals(adminLinkName)) {
+				expandSubMenu(driver, ROOT_MENU_ADMIN);
+				isExisted = isMenuItemExisted(driver, GLOBAL_ADMIN_MENU_AGENTS);
+			}
+			else {
+				throw new NoSuchElementException("This '" + adminLinkName + "' is not supported in Hamburger Menu.");
+			}
 		}
 		else {
 			//branding bar
@@ -182,7 +226,7 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 		driver.getLogger().info("isAlertsLinkExisted(WebDriver) started");
 		//check if hamburger menu icon exist
 		if (isHamburgerMenuEnabled(driver)) {
-			driver.getLogger().info("Start to check if 'Home' menu is existed in hamburger menu.");
+			driver.getLogger().info("Start to check if 'Alert' menu is existed in hamburger menu.");
 			isExisted = isMenuItemExisted(driver, ROOT_MENU_ALERTS);
 		}
 		else {
@@ -251,7 +295,13 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 		driver.getLogger().info("isHomeLinkExisted started");
 		//check if hamburger menu icon exist
 		if (isHamburgerMenuEnabled(driver)) {
-			throw new NoSuchElementException("This Method is not supported in Hamburger Menu.");
+			if (NAV_LINK_TEXT_HOME_ALERTS.equals(homeLinkName) || "Home".equals(homeLinkName)) {
+				isExisted = isMenuItemExisted(driver, homeLinkName);
+			}
+			else {
+				driver.getLogger().info("'" + homeLinkName + "' can not be found in hamburger menu");
+				throw new NoSuchElementException("The '" + homeLinkName + "' not supported in Hamburger Menu.");
+			}
 		}
 		else {
 			//branding bar
@@ -502,14 +552,28 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 		driver.getLogger().info("visitApplicationAdministration started");
 		//check if hamburger menu icon exist
 		if (isHamburgerMenuEnabled(driver)) {
-			throw new NoSuchElementException("This Method is not supported in Hamburger Menu.");
+			if (NAV_LINK_TEXT_ADMIN_ADMINCONSOLE.equals(adminLinkName)) {
+				expandSubMenu(driver, ROOT_MENU_ADMIN);
+				clickMenuItem(driver, GLOBAL_ADMIN_MENU_ENTITIES_CFG);
+			}
+			else if (NAV_LINK_TEXT_ADMIN_ALERT.equals(adminLinkName)) {
+				expandSubMenu(driver, ROOT_MENU_ADMIN);
+				clickMenuItem(driver, GLOBAL_ADMIN_MENU_ALERT_RULES);
+			}
+			else if (NAV_LINK_TEXT_ADMIN_AGENT.equals(adminLinkName)) {
+				expandSubMenu(driver, ROOT_MENU_ADMIN);
+				clickMenuItem(driver, GLOBAL_ADMIN_MENU_AGENTS);
+			}
+			else {
+				throw new NoSuchElementException("This '" + adminLinkName + "' is not supported in Hamburger Menu.");
+			}
 		}
 		else {
 			//the branding bar
 			driver.getLogger().info("Start to visit admin link from branding bar. Link name: " + adminLinkName);
 			visitApplicationLink(driver, "admin", adminLinkName);
 		}
-		driver.getLogger().info("visitApplicationAdministration started");
+		driver.getLogger().info("visitApplicationAdministration ended");
 	}
 
 	@Override
@@ -521,14 +585,13 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 		//check if hamburger menu icon exist
 		if (isHamburgerMenuEnabled(driver)) {
 			HBGMenuItem = cloudServiceLinkToHamburgerMenuItem(driver, cloudServiceLinkName);
-
 			driver.getLogger().info("Start to visit cloud service link from hambuger menu. Link name: " + HBGMenuItem);
-			clickMenuItem(driver, HBGMenuItem);
-			if (NAV_LINK_TEXT_CS_APM.equals(cloudServiceLinkName)) {
-				clickMenuItem(driver, "Home");
-			}
 			if (NAV_LINK_TEXT_ADMIN_AGENT.equals(cloudServiceLinkName)) {
+				expandSubMenu(driver, ROOT_MENU_ADMIN);
 				clickMenuItem(driver, GLOBAL_ADMIN_MENU_AGENTS);
+			}
+			else {
+				clickMenuItem(driver, HBGMenuItem);
 			}
 		}
 		else {
@@ -545,9 +608,19 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 		driver.getLogger().info("visitApplicationHome started");
 		//check if hamburger menu icon exist
 		if (isHamburgerMenuEnabled(driver)) {
-			//click the menu "Home" in hamburger menu
-			driver.getLogger().info("'" + homeLinkName + "' can not be found in hamburger menu");
-			throw new NoSuchElementException("This Method is not supported in Hamburger Menu.");
+			if (NAV_LINK_TEXT_HOME_ALERTS.equals(homeLinkName)) {
+				clickMenuItem(driver, ROOT_MENU_ALERTS);
+			}
+			else if ("Home".equals(homeLinkName)) {
+				clickMenuItem(driver, ROOT_MENU_HOME);
+			}
+			else if ("Welcome".equals(homeLinkName)) {
+				visitWelcome(driver);
+			}
+			else {
+				driver.getLogger().info("'" + homeLinkName + "' can not be found in hamburger menu");
+				throw new NoSuchElementException("The '" + homeLinkName + "' not supported in Hamburger Menu.");
+			}
 		}
 		else {
 			//the branding bar
@@ -619,8 +692,9 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 			//check the 'My Favorite' options in filter options in Dashboard home page
 			driver.getLogger().info("[visitMyFavorites] start to visit 'My Favorites' link in home page.");
 			clickMenuItem(driver, ROOT_MENU_DASHBOARDS);
-			DashboardHomeUtil.filterOptions(driver, "favorites");
-
+			if (!DashboardHomeUtil.isFilterOptionSelected(driver, "favorites")) {
+				DashboardHomeUtil.filterOptions(driver, "favorites");
+			}
 		}
 		else {
 			//the branding bar
@@ -663,20 +737,18 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 				driver.savePageToFile();
 			}
 			WaitUtil.waitForPageFullyLoaded(driver);
-			driver.takeScreenShot();
-			driver.savePageToFile();
 		}
 		else {
 			//branding bar
 			driver.getLogger().info("[visitWelcome] start to visit 'Welcome' link from branding bar.");
 			visitApplicationLink(driver, DashBoardPageId.BRANDINGBARWELCOMELINKID);
 		}
-
 		driver.getLogger().info("visitWelcome ended");
 	}
 
 	private void clickHamburgerMenuIcon(WebDriver driver)
 	{
+		driver.getLogger().info("Click Hamburger Menu Icon");
 		driver.click("css=" + DashBoardPageId_1180.HAMBURGERMENU_ICON_CSS);
 		driver.takeScreenShot();
 		driver.savePageToFile();
@@ -696,6 +768,9 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 		}
 		else if (NAV_LINK_TEXT_ADMIN_AGENT.equals(cloudServiceLinkName)) {
 			menuItemName = ROOT_MENU_ADMIN;
+		}
+		else if (NAV_LINK_TEXT_CS_IM.equals(cloudServiceLinkName)) {
+			menuItemName = ROOT_MENU_MONITORING;
 		}
 		else {
 			menuItemName = cloudServiceLinkName;

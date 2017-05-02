@@ -148,9 +148,13 @@ task DEVUiTest(type:EMTest,dependsOn:omcSetup){
 }
 
 task QATest1(type:EMTest,dependsOn:omcSetup){ 
-	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/TestAnalyzerPage.class"
-	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/TestDashboardPage.class"
-	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/TestOtherPage.class"
+	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/BrandingBar_TestAnalyzerPage.class"
+	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/BrandingBar_TestDashboardPage.class"
+	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/BrandingBar_TestOtherPage.class"
+	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/HamburgerMenu_BasicTest.class"
+	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/HamburgerMenu_CompositeMenu.class"
+	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/HamburgerMenu_RegisterServiceMenu.class"
+	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/HamburgerMenu_ShowCurrentMenu.class"
 	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_FixDate.class"
 	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_FlexibleDate.class"
 	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_RecentUseOption.class"
@@ -165,12 +169,13 @@ task DEVTest(type:EMTest,dependsOn:omcSetup){
 	include "oracle/sysman/emaas/platform/dashboards/core/DashboardManagerTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/model/*"
 	include "oracle/sysman/emaas/platform/dashboards/core/wls/management/*"
+    include "oracle/sysman/emaas/platform/dashboards/ws/rest/OOBDashboardTest.class"
 	useRestAssured=true
 	ext.set("testType", "unit")
 }
 
 //Task is added from "emcpdf_uifwk_dev_test_3n"
-task DEVTest2(type:EMTest,dependsOn:omcSetup){ 
+task DEVTest2(type:EMTest,dependsOn:omcSetup){
 	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/util/StringUtilTest.class"
 	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/wls/management/AppLoggingManageMXBeanTest.class"	
 	useRestAssured=true
@@ -185,13 +190,14 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n','parallel':
                 'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashBoard_SimpleCRUD')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashBoard_OtherFeatures')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.BugVerification')
-		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet_SimpleCRUD')	
-		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet_OtherFeatures')	
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet_SimpleCRUD')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet_OtherFeatures')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet_DashboardRelated_CreatedInsideSet')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet_DashboardRelated_CreatedOutsideSet')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet_DuplicateDashboard')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboard_NegativeCases')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestRightPanel_DashboardFilters')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboard')
             }
 	}
 	test('name': 'DashboardUITest_testDashboardSet_SetHome', 'preserve-order':'true'){

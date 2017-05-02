@@ -15,23 +15,21 @@
         <script type="text/javascript">
             ////ADDITIONALDATA////
         </script>
+        
         <!-- RequireJS bootstrap file -->
         <script data-main="@version@/js/welcomeMain" src="libs/@version@/js/oraclejet/js/libs/require/require.js"></script>
 
     </head>
     <body>
         <div class="loadingIndicator" id="loading">Loading</div>
-        <div id="globalBody" style="display:none;">
-            <!-- branding bar -->
-            <header id="headerWrapper" role="banner">
-                <div data-bind="component: {
-                        name: 'df-oracle-branding-bar',
-                        params: brandingbarParams
-                    }">
-                </div>
-            </header>
-
-            <div id="mainContent" role="main">
+        <div id="globalBody" style="display:none;" class="oj-web-applayout-offcanvas-wrapper oj-offcanvas-outer-wrapper">
+            <div id="offcanvasInnerContainer" class="oj-offcanvas-inner-wrapper">
+                <div id="mainContent" role="main" class="oj-web-applayout-scrollable oj-web-applayout-page">
+                <!-- ko component: {
+                    name: "df-oracle-branding-bar",
+                    params: brandingbarParams
+                } -->
+                <!-- /ko -->
                 <h1 class="welcome-slogan" data-bind="text: welcomeSlogan"></h1>
                 <div class="landing-home-box-wrapper">
                     <ul class="box-list-ul">
@@ -241,6 +239,7 @@
                         <!-- /ko -->
                     </ul>
                 </div>
+            </div>
             </div>
         </div>
     </body>

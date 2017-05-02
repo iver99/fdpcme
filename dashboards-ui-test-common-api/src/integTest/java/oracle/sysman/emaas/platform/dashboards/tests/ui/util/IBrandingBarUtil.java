@@ -29,7 +29,7 @@ public interface IBrandingBarUtil extends IUiTestCommonAPI
 	public static final String NAV_LINK_TEXT_CS_LA = "Log Analytics";
 	public static final String NAV_LINK_TEXT_CS_IM = "Infrastructure Monitoring";
 	public static final String NAV_LINK_TEXT_CS_OCS = "Orchestration";
-	public static final String NAV_LINK_TEXT_CS_SECU = "Security";
+	public static final String NAV_LINK_TEXT_CS_SECU = "Security Monitoring and Analytics";
 	public static final String NAV_LINK_TEXT_CS_COMP = "Configuration and Compliance";
 	//Visual Analyzers, new name is Explorers
 	public static final String NAV_LINK_TEXT_VA_ITA = "Analyze";
@@ -49,7 +49,7 @@ public interface IBrandingBarUtil extends IUiTestCommonAPI
 	public static final String ROOT_MENU_DASHBOARDS = "Dashboards";
 	public static final String ROOT_MENU_DATAEXPLORER = "Data Explorer";
 	public static final String ROOT_MENU_APM = "APM";
-	public static final String ROOT_MENU_MONITORING = "Infrastructure Monitoring";
+	public static final String ROOT_MENU_MONITORING = "Monitoring";
 	public static final String ROOT_MENU_LA = "Log Analytics";
 	public static final String ROOT_MENU_ITA = "IT Analytics";
 	public static final String ROOT_MENU_ORCHESTRATION = "Orchestration";
@@ -63,6 +63,13 @@ public interface IBrandingBarUtil extends IUiTestCommonAPI
 	public void clickHierarchicalMenu(WebDriver driver, String menuitem);
 
 	public void clickMenuItem(WebDriver driver, String menuitem);
+
+	/**
+	 * @param driver
+	 * @param menuitem
+	 * @return
+	 */
+	public void expandSubMenu(WebDriver driver, String menuitem);
 
 	public String getCurrentMenuHeader(WebDriver driver);
 

@@ -2,7 +2,7 @@
 
 <!-- Dashboards home -->
 
-<html data-testapiversion="1.15.0" lang="en-US">
+<html data-testapiversion="1.17.0" lang="en-US">
     <head>
         <title data-bind="text:homeTitle"></title>
         
@@ -17,25 +17,28 @@
         <script type="text/javascript">
             ////ADDITIONALDATA////
         </script>
+        
         <!-- RequireJS bootstrap file -->
         <script data-main="@version@/js/homeMain" src="libs/@version@/js/oraclejet/js/libs/require/require.js"></script>
     </head>
     <body>
         <div class="loadingIndicator" id="loading" data-bind="text:getNlsString('DBS_HOME_LOADING')"></div>
-        <div id="globalBody" style="display: none"> 
-            <!-- Header section which contains the Global Branding, Global Navigation, and Application Navigation code.
-                Template is located in /templates/demoAppHeaderTemplate.html
-            -->
-            <header id="headerWrapper" role="banner">
-                <div data-bind="component: {
-                        name: 'df-oracle-branding-bar',
-                        params: brandingbarParams
-                    }">
-                </div>
-            </header>
-
+        <div id="globalBody" style="display: none" class="oj-web-applayout-offcanvas-wrapper oj-offcanvas-outer-wrapper"> 
+            <div id="offcanvasInnerContainer" class="oj-offcanvas-inner-wrapper">
             <!-- main content -->
-            <div id="mainContent" style="display: none;" role="main">
+            <div id="mainContent" style="display: none;" role="main" class="oj-web-applayout-scrollable oj-web-applayout-page">
+                <!-- Header section which contains the Global Branding, Global Navigation, and Application Navigation code.
+                    Template is located in /templates/demoAppHeaderTemplate.html
+                -->
+                <!-- ko stopBinding -->
+                <header id="headerWrapper" role="banner">
+                    <div data-bind="component: {
+                            name: 'df-oracle-branding-bar',
+                            params: brandingbarParams
+                        }">
+                    </div>
+                </header>
+                <!-- /ko -->
                         <div class="main-content-area main-content-area-sm main-content-area-md main-content-area-lg main-content-area-xsl main-content-area-xl">
                             <div id="dhometab" class="dbs-tab-container">
                                 <div class="oj-row oj-cols-nopad" style="max-width: none;">
@@ -174,7 +177,7 @@
                     </div>
                     </div>
                     <!-- welcome dialog end -->
-
+                </div>
             </div>            
         </div>
     </body>

@@ -122,7 +122,8 @@ function(ko, $, dfu, dfumodel, _emJETCustomLogger, oj, cxtModel)
             tenantName: self.tenantName,
             appId: self.appId,
             isAdmin: false,
-            showGlobalContextBanner: false
+            showGlobalContextBanner: false,
+            omcHamburgerMenuOptIn: true
         };
         }
         function checkParams(msgKey, serviceid, serviceName) {
