@@ -271,7 +271,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 self.endDateError = ko.observable(0);
                 self.startTimeError = ko.observable(0);
                 self.endTimeError = ko.observable(0);
-                self.flexRelTimeValError = ko.observable(false);
+                self.flexRelTimeValError = ko.observable(0);
                 
                 var timeInputErrorObj = {
                     "startDate": self.startDateError,
@@ -366,14 +366,18 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 
                 self.flexRelTimeValError.subscribe(function(value) {
                     var eleId = "#lastNumber_" + self.randomId;
-                    if(value === true) {
+                    if(value === 0) {
+                        $(eleId).removeClass("oj-invalid");
+                        $(eleId + " .oj-messaging-inline-container.omc-time-picker").remove();
+                    }else if(value === 1) {
+                        //show Jet's own validation error message
+                    }
+                    if(value === 2) {
+                        //show custom error message of "beyond window limit"
                         if($(eleId) && !$(eleId).hasClass("oj-invalid")) {
                             $(eleId).addClass("oj-invalid");
                             $(eleId + " .oj-inputnumber-wrapper").after(buildErrorMsgHtml(self.errorMsg, self.beyondWindowLimitErrorMsg));
                         }
-                    }else {
-                        $(eleId).removeClass("oj-invalid");
-                        $(eleId + " .oj-messaging-inline-container.omc-time-picker").remove();
                     }
                 });
 
@@ -482,9 +486,9 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 self.setTimePeriodsNotToShow = function(timePeriodsId) {
                     //hide "LAST_8_HOUR", "LAST_24_HOUR", "LAST_12_MONTH" if it is not long/short term
                     if(!params.timePeriodsSet) {
-                        timePeriodsId.push("LAST_8_HOUR");
-                        timePeriodsId.push("LAST_24_HOUR");
-                        timePeriodsId.push("LAST_12_MONTH");
+                        timePeriodsId.push(quickPicks.LAST_8_HOUR);
+                        timePeriodsId.push(quickPicks.LAST_24_HOUR);
+                        timePeriodsId.push(quickPicks.LAST_12_MONTH);
                     }
                     if(params.hideTimeSelection && params.hideTimeSelection === true && !params.timePeriodsSet) {
                         timePeriodsId.push(quickPicks.LAST_15_MINUTE);
@@ -886,7 +890,19 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 };
                 
                 self.startDateChanged = function(event, data) {
-                    if(data.option !== "value") {
+                    if(data.option !== "value" && data.option !== "disabled") {
+                        return;
+                    }
+                    if(data.option === "disabled") {
+                        if(data.value === true) {
+                            //remove error message
+                            self.startDateError(0);
+                            return;
+                        }else {
+                            self.flexRelTimeValError(0);
+                        }
+                    }
+                    if(self.lrCtrlVal() !== "timeLevelCtrl") {
                         return;
                     }
                     if(self.isStartLaterThanEnd() === true) {
@@ -901,6 +917,9 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     if(data.option !== "value") {
                         return;
                     }
+                    if(self.lrCtrlVal() !== "timeLevelCtrl") {
+                        return;
+                    }
                     if(self.isStartLaterThanEnd() === true) {
                         self.endDateError(1);
                     }else if(self.isCustomBeyondWindowLimit() === true) {
@@ -913,6 +932,9 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     if(data.option !== "value") {
                         return;
                     }
+                    if(self.lrCtrlVal() !== "timeLevelCtrl") {
+                        return;
+                    }
                     if(self.isStartLaterThanEnd() === true) {
                         self.startTimeError(1);
                     }else if(self.isCustomBeyondWindowLimit() === true) {
@@ -923,6 +945,9 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 };
                 self.endTimeChanged = function(event, data) {
                     if(data.option !== "value") {
+                        return;
+                    }
+                    if(self.lrCtrlVal() !== "timeLevelCtrl") {
                         return;
                     }
                     if(self.isStartLaterThanEnd() === true) {
@@ -1544,10 +1569,10 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     self.startTime(start.slice(10));
                     self.endTime(end.slice(10));
                     
-                    if(self.isCustomBeyondWindowLimit() === true) {
-                        self.flexRelTimeValError(true);
+                    if(self.showRightPanel() === true && self.isCustomBeyondWindowLimit() === true) {
+                        self.flexRelTimeValError(2);
                     }else {
-                        self.flexRelTimeValError(false);
+                        self.flexRelTimeValError(0);
                     }
                 };
                 
@@ -1564,13 +1589,27 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                      
                 self.flexRelTimeValChanged = function(event, data) {
                     if(data.option === "messagesShown" && isArray(data.value) && data.value.length>0) {
-                        self.flexRelTimeValError(true);
-                    }else {
-                        self.flexRelTimeValError(false);
+                        self.flexRelTimeValError(1);
+                    }else{
+                        self.flexRelTimeValError(0);
                     }
-                    if(self.init || data.option !== "value") {
+                    if(self.init || (data.option !== "value" && data.option !== "disabled")) {
                         return;
                     }
+                    
+                    if(data.option === "disabled") {
+                        if(data.value === true) {
+                            self.flexRelTimeValError(0);
+                            return;
+                        }else {
+                            self.startDateError(0);                    
+                            if(self.showRightPanel() === true && self.isCustomBeyondWindowLimit() === true) {
+                                self.flexRelTimeValError(2);
+                            }
+                            return;
+                        }
+                    }
+                    
                     var num = data.value;
                     var opt = self.flexRelTimeOpt()[0];
                     
