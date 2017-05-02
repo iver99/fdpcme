@@ -776,14 +776,14 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 	protected void clickApplyButton(WebDriver webd)
 	{
 		//click Apply button
-		webd.getLogger().info("Click Apply button");
+		
 		webd.isElementPresent("css=" + TimeSelectorUIControls.sApplyBtn);
 
 		if (webd.getAttribute("css=" + TimeSelectorUIControls.sApplyBtn + "@disabled") != null) {
 			//throw new Exception("the Apply Button is disabled, can't be clicked");
 			
 			try {
-			throw new Exception(webd.getText(TimeSelectorUIControls.sErrorMsg));
+			throw new Exception("the Apply Button is disabled, can't be clicked"+webd.getText(TimeSelectorUIControls.sErrorMsg));
 		}
 		catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -791,6 +791,7 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 		}
 		}
 		else {
+			webd.getLogger().info("Click Apply button");
 			webd.click("css=" + TimeSelectorUIControls.sApplyBtn);
 			WaitUtil.waitForPageFullyLoaded(webd);
 			webd.takeScreenShot();
