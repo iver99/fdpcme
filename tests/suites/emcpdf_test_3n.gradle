@@ -163,6 +163,9 @@ task DEVUiTest(type:EMTest,dependsOn:omcSetup){
 	ext.set("testType", "unit")
 }
 
+//Setup gradle to onboard a new tenant
+apply from: 'onboard_tenant.gradle'
+
 task QATest1(type:EMTest,dependsOn:omcSetup){ 
 	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/BrandingBar_TestAnalyzerPage.class"
 	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/BrandingBar_TestDashboardPage.class"
@@ -197,9 +200,6 @@ task DEVTest2(type:EMTest,dependsOn:omcSetup){
 	useRestAssured=true
 	ext.set("testType", "unit")
 }
-
-//Setup gradle to onboard a new tenant
-apply from: 'onboard_tenant.gradle'
 
 //Task is for dashboard UI Test
 task e2e (type: EMTest,dependsOn:[omcSetup, onboardTenant] ){
