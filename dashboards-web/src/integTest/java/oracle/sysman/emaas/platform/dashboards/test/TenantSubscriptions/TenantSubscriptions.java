@@ -1,9 +1,9 @@
 package oracle.sysman.emaas.platform.dashboards.test.TenantSubscriptions;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import oracle.sysman.emaas.platform.dashboards.test.common.CommonTest;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -76,13 +76,56 @@ public class TenantSubscriptions
 			Assert.assertTrue(res3.getStatusCode() == 200);
 			Assert.assertNotNull(res3.jsonPath().get("applications.application[0]"));
 			Assert.assertNotNull(res3.jsonPath().get("applications.edition[0]"));
-			
+
 		}
 		catch (Exception e) {
-			LOGGER.info("context",e);
+			LOGGER.info("context", e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 	}
+
+	@Test
+	public void getSubscribedapps_license()
+	{
+		try {
+			Response res1 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).when().get("/subscribedapps2");
+			Assert.assertTrue(res1.getStatusCode() == 200);
+			Assert.assertNotNull(res1.jsonPath().get("applications"));
+
+		}
+		catch (Exception e) {
+			LOGGER.info("context", e);
+			Assert.fail(e.getLocalizedMessage());
+		}
+	}
+
+	//@Test
+	//	public void getSubscribedapps_license_OMCStandard()
+	//	{
+	//		tenantid = "df_omc_standard";
+	//		try {
+	//			Response res1 = RestAssured
+	//					.given()
+	//					.contentType(ContentType.JSON)
+	//					.log()
+	//					.everything()
+	//					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+	//							"Authorization", authToken).when().get("/subscribedapps2");
+	//			Assert.assertTrue(res1.getStatusCode() == 200);
+	//			Assert.assertNotNull(res1.jsonPath().get("applications"));
+	//
+	//		}
+	//		catch (Exception e) {
+	//			LOGGER.info("context", e);
+	//			Assert.fail(e.getLocalizedMessage());
+	//		}
+	//	}
 
 	@Test
 	public void getSubscribedappsWrongTenant()
@@ -108,7 +151,7 @@ public class TenantSubscriptions
 			Assert.assertTrue(res2.getStatusCode() == 404);
 			Assert.assertEquals(res2.jsonPath().get("errorCode"), 20002);
 			Assert.assertEquals(res2.jsonPath().get("errorMessage"), "Specified tenant does not subscribe to any service");
-			
+
 			Response res3 = RestAssured
 					.given()
 					.contentType(ContentType.JSON)
@@ -119,10 +162,10 @@ public class TenantSubscriptions
 			Assert.assertTrue(res3.getStatusCode() == 404);
 			Assert.assertEquals(res3.jsonPath().get("errorCode"), 20002);
 			Assert.assertEquals(res3.jsonPath().get("errorMessage"), "Specified tenant does not subscribe to any service");
-			
+
 		}
 		catch (Exception e) {
-			LOGGER.info("context",e);
+			LOGGER.info("context", e);
 			Assert.fail(e.getLocalizedMessage());
 		}
 
