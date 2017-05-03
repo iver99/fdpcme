@@ -221,57 +221,7 @@ public class TestSuiteLicensing_OMCSE extends LoginAndLogout
 		//verify Enterprise Health
 		verifyEnterpriseHealth();
 	}
-
-	@Test(alwaysRun = true)
-	public void verifyEnterpriseHealth_WithFilter_GridView_OMCSE()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_OMC_Standard);
-		webd.getLogger().info("Start the test in verifyEnterpriseHealth_WithFilter_GridView");
-
-		//click Filter-Application PerfAnalytics
-		webd.getLogger().info("Click Cloud Services - IT Analytics");
-		DashboardHomeUtil.filterOptions(webd, "ita");
-
-		//click on Grid View
-		webd.getLogger().info("Click on Grid View icon");
-		DashboardHomeUtil.gridView(webd);
-
-		//Open the OOB dashboard---Enterprise Health
-		webd.getLogger().info("Open the OOB dashboard---Enterprise Health");
-		DashboardHomeUtil.selectDashboard(webd, "Enterprise Health");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 		
-		//verify Enterprise Health
-		verifyEnterpriseHealth();
-	}
-
-	@Test(alwaysRun = true)
-	public void verifyEnterpriseHealth_WithFilter_ListView_OMCSE()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_OMC_Standard);
-		webd.getLogger().info("Start the test in verifyEnterpriseHealth_WithFilter_ListView");
-
-		//click Filter-Application PerfAnalytics
-		webd.getLogger().info("Click Cloud Services - IT Analytics");
-		DashboardHomeUtil.filterOptions(webd, "ita");
-
-		//click on List View
-		webd.getLogger().info("Click on List View icon");
-		DashboardHomeUtil.listView(webd);
-
-		//Open the OOB dashboard---Enterprise Health
-		webd.getLogger().info("Open the OOB dashboard---Enterprise Health");
-		DashboardHomeUtil.selectDashboard(webd, "Enterprise Health");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-	
-		//verify Enterprise Health
-		verifyEnterpriseHealth();
-	}
-
 	@Test(alwaysRun = true)
 	public void verifyExadataHealth_GridView_OMCSE()
 	{
@@ -314,56 +264,7 @@ public class TestSuiteLicensing_OMCSE extends LoginAndLogout
 		//verify Exadata Health
 		verifyExadataHealth();
 	}
-
-	@Test(alwaysRun = true)
-	public void verifyExadataHealth_WithFilter_GridView_OMCSE()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_OMC_Standard);
-		webd.getLogger().info("Start the test in verifyExadataHealth_WithFilter_GridView");
-
-		//click Filter-Application PerfAnalytics
-		webd.getLogger().info("Click Cloud Services - IT Analytics");
-		DashboardHomeUtil.filterOptions(webd, "ita");
-
-		//click on Grid View
-		webd.getLogger().info("Click on Grid View icon");
-		DashboardHomeUtil.gridView(webd);
-
-		//Open the OOB dashboard---Exadata Health
-		webd.getLogger().info("Open the OOB dashboard---Exadata Health");
-		DashboardHomeUtil.selectDashboard(webd, "Exadata Health");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
-		//verify Exadata Health
-		verifyExadataHealth();
-	}
-
-	@Test(alwaysRun = true)
-	public void verifyExadataHealth_WithFilter_ListView_OMCSE()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_OMC_Standard);
-		webd.getLogger().info("Start the test in verifyExadataHealth_WithFilter_ListView");
-
-		//click Filter-Application PerfAnalytics
-		webd.getLogger().info("Click Cloud Services - IT Analytics");
-		DashboardHomeUtil.filterOptions(webd, "ita");
-
-		//click on List View
-		webd.getLogger().info("Click on List View icon");
-		DashboardHomeUtil.listView(webd);
-
-		//Open the OOB dashboard---Exadata Health
-		webd.getLogger().info("Open the OOB dashboard---Exadata Health");
-		DashboardHomeUtil.selectDashboard(webd, "Exadata Health");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
-		//verify Exadata Health
-		verifyExadataHealth();
-	}
+	
 	@Test(alwaysRun = true)
 	public void verifyUIGallery_GridView_OMCSE()
 	{
@@ -406,56 +307,7 @@ public class TestSuiteLicensing_OMCSE extends LoginAndLogout
 		//verify UI Gallery
 		verifyUIGallery();
 	}
-
-	@Test(alwaysRun = true)
-	public void verifyUIGallery_WithFilter_GridView_OMCSE()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_OMC_Standard);
-		webd.getLogger().info("Start the test in verifyUIGallery_WithFilter_GridView");
-
-		//click Filter-Application PerfAnalytics
-		webd.getLogger().info("Click Cloud Services - IT Analytics");
-		DashboardHomeUtil.filterOptions(webd, "ita");
-
-		//click on Grid View
-		webd.getLogger().info("Click on Grid View icon");
-		DashboardHomeUtil.gridView(webd);
-
-		//Open the OOB dashboard---UI Gallery
-		webd.getLogger().info("Open the OOB dashboard---UI Gallery");
-		DashboardHomeUtil.selectDashboard(webd, "UI Gallery");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
-		//verify UI Gallery
-		verifyUIGallery();
-	}
-
-	@Test(alwaysRun = true)
-	public void verifyUIGallery_WithFilter_ListView_OMCSE()
-	{
-		//initTest
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_OMC_Standard);
-		webd.getLogger().info("Start the test in verifyUIGallery_WithFilter_ListView");
-
-		//click Filter-Application PerfAnalytics
-		webd.getLogger().info("Click Cloud Services - IT Analytics");
-		DashboardHomeUtil.filterOptions(webd, "ita");
-
-		//click on List View
-		webd.getLogger().info("Click on List View icon");
-		DashboardHomeUtil.listView(webd);
-
-		//Open the OOB dashboard---UI Gallery
-		webd.getLogger().info("Open the OOB dashboard---UI Gallery");
-		DashboardHomeUtil.selectDashboard(webd, "UI Gallery");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
-		//verify UI Gallery
-		verifyUIGallery();
-	}
+	
 	private void verifyEnterpriseHealth()
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
