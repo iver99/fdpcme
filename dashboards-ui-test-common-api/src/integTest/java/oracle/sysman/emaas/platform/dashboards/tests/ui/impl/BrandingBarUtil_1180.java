@@ -214,7 +214,7 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 			driver.getLogger().info(
 					"Start to check if cloud service link is existed in hamburger menu. Link name: " + cloudServiceLinkName);
 
-			isExisted = isMenuItemExisted(driver, cloudServiceLinkName);
+			isExisted = isMenuItemEnabled(driver, cloudServiceLinkName);
 		}
 		else {
 			//branding bar
@@ -586,7 +586,7 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 		else {
 			//the branding bar
 			driver.getLogger()
-					.info("Start to visit visual analyzer link from branding bar. Link name: " + visualAnalyzerLinkName);
+			.info("Start to visit visual analyzer link from branding bar. Link name: " + visualAnalyzerLinkName);
 			visitApplicationLink(driver, "va", visualAnalyzerLinkName);
 		}
 		driver.getLogger().info("visitApplicationVisualAnalyzer ended");

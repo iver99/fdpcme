@@ -43,10 +43,8 @@ import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
  *                   END OF TEST-INFRA-BLOCK
  ***************************************************************************************************/
 
-//Setup gradle to onboard a new tenant
-apply from: 'onboard_tenant.gradle'
-
 def emcpdfCommonAPIVer = getDependentSdkVersion('com.oracle.emaas.emcpdf.testsdk.ui', 'dashboards-ui-test-common-api', '2.+')
+def omctfSetupTestSDKVer = getDependentSdkVersion('com.oracle.omc.omctf.testsdk', 'omctf_omcsetup', '1.+')
 
 //Update the lrgConfig configuration to specify where the test jar is.
 dependencies{
@@ -55,23 +53,51 @@ dependencies{
 	exclude('module':'groovy')
     }
 
-     testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: emcpdfCommonAPIVer)
+    testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: emcpdfCommonAPIVer)
+    testConfig(group: 'com.oracle.omc.omctf.testsdk', name: 'omctf_omcsetup', version: omctfSetupTestSDKVer)
 }
 
-/** depends on OMCTF-977
-def testTenants = [:]
-testTenants["mytenant1"]= [ "OMC" : [ "Trial"]]
-testTenants["mytenant2"]= [ "OMC" : [ "Standard"] ]
-testTenants["mytenant3"]= [ "OMC" : [ "Enterprise"] ]
-testTenants["mytenant4"]= [ "OMC" : [ "Log"] ]
-testTenants["mytenant5"]= [ "OSMACC" : [ "Trail"] ]
-testTenants["mytenant6"]= [ "OSMACC" : [ "Compliance"] ]
-testTenants["mytenant7"]= [ "OSMACC" : [ "Security"] ]
+// depends on OMCTF-977
+// onboard v2 & v3 tenants
+//def testTenants_v2 = [:]
+//testTenants_v2["df_omc_trial"]= [ "OMC" : [ "Trial"]]
+//testTenants_v2["df_omc_standard"]= [ "OMC" : [ "Standard"] ]
+//testTenants_v2["df_omc_ee"]= [ "OMC" : [ "Enterprise"] ]
+//testTenants_v2["df_omc_log"]= [ "OMC" : [ "Log"] ]
+//testTenants_v2["df_osmacc_trial"]= [ "OSMACC" : [ "Trail"] ]
+//testTenants_v2["df_osmacc_compliance"]= [ "OSMACC" : [ "Compliance"] ]
+//testTenants_v2["df_osmacc_security"]= [ "OSMACC" : [ "Security"] ]
 
-task onboardTestTenants(type: OnBoardTenants(testTenants)){
+def testTenants_v3 = [:]
+testTenants_v3["df_omcse"]= [ "OMCSE" : [ "Standard"] ]
+testTenants_v3["df_omcee"]= [ "OMCEE" : [ "Enterprise"] ]
+testTenants_v3["df_omclog"]= [ "OMCLOG" : [ "Standard"] ]
+testTenants_v3["df_secse"]= [ "SECSE" : [ "Standard"] ]
+testTenants_v3["df_secsma"]= [ "SECSMA" : [ "Standard"] ]
 
+task onboardAllTenants(dependsOn:[omcOnboardTenants(testTenants_v3)]){
 }
-*/
+
+task suiteLicensingTest(type: EMTest, dependsOn:[onboardAllTenants]){
+options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
+	test('name': 'suiteLicensingTest') {
+	    classes([:]) {
+//		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestSuiteLicensing_OMC')
+//		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestSuiteLicensing_OSMACC')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestSuiteLicensing_OMCEE')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestSuiteLicensing_OMCSE')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestSuiteLicensing_OMCLOG')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestSuiteLicensing_SECSE')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestSuiteLicensing_SECSMA')
+	    }	
+	}
+    }
+    useWebdriver = true
+    useRestAssured = true
+}
+
+//Setup gradle to onboard a new tenant
+apply from: 'onboard_tenant.gradle'
 
 //Task is for dashboard UI Test
 task e2e (type: EMTest, dependsOn:[omcSetup, onboardTenant] ){
@@ -87,21 +113,11 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.VerifyWidget')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.VerifyOOB')
             }
-        }
+        }	
     }
     useWebdriver = true
     useRestAssured = true
 }
-
-/** depends on OMCTF-977
-task suiteLicensingTest(type: EMTest, dependsOn:[omcSetup, onboardTestTenants])
-{
-	include "oracle/sysman/emaas/platform/dashboards/test/ui/TestSuiteLicensing_OMC.class"
-	include "oracle/sysman/emaas/platform/dashboards/test/ui/TestSuiteLicensing_OSMACC.class"
-        useWebdriver = true
-	useRestAssured=true
-}
-*/
 
 task preProdTests(type: EMTest ){
 options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
@@ -127,7 +143,8 @@ environment "OMC_PROXYHOST", "www-proxy.us.oracle.com"
     useRestAssured = true	
 }
 
-task emcpdf_allsrg_3n (dependsOn:[e2e, omcTeardown]) {
-    omcTeardown.mustRunAfter(e2e)
+suiteLicensingTest.mustRunAfter([omcSetup])
+task emcpdf_allsrg_3n (dependsOn:[suiteLicensingTest, e2e, omcTeardown]) {
+    omcTeardown.mustRunAfter(suiteLicensingTest,e2e)
     apply from: getAbsoluteFilePath(configurations.omctfConfig,"omctf_taskprocessor")
 }
