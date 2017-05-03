@@ -45,15 +45,12 @@ public class ParallelThreadPool {
         LOGGER.info("Dashboards-API: Thread pool with size {} is closing!");
         pool.shutdownNow();
         if(!pool.isTerminated() || !pool.isShutdown()){
-            // set pool to null directly to avoid EMCPDF-3922 issue.
-            pool = null;
             LOGGER.error("Not all tasks in thread pool have completed or executor is not shutdown yet!!! ");
-            throw new RuntimeException("Not all tasks in thread pool have completed or executor is not shutdown yet!!!");
         }else{
             LOGGER.info("All tasks in thread pool have completed and executor is shutdown successfully...");
-            // set pool to null directly to avoid EMCPDF-3922 issue.
-            pool = null;
         }
+        // set pool to null directly to avoid EMCPDF-3922 issue.
+        pool = null;
     }
 
     public static void init(){
