@@ -263,7 +263,6 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 //initialize class assuming that dtpicker is on the left of page
                 self.drawerChosen = ko.observable("leftDrawerChosen");
                 self.timeFilterIconCss = ko.observable("float-right");
-                self.pickerPanelCss = ko.observable("picker-panel-padding-right");
 
                 self.hideTimeSelection = ko.observable(false);
 
@@ -452,7 +451,6 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
 
                 self.setDtpickerPositionToLeft = function() {
                     self.timeFilterIconCss("float-right");
-                    self.pickerPanelCss("picker-panel-padding-right");
                     //the position of panel popup relative to dropdown button
                     self.panelPosition = {"my": "start top+16", "at": "start  bottom", "collision": "none", "of": "#dropDown_"+self.randomId};
                     self.pickerPanelPosition = {"my": "start top", "at": "end top", "collision": "none", "of": "#drawers_"+self.randomId};
@@ -461,7 +459,6 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
 
                 self.setDtpickerPositionToRight = function() {
                     self.timeFilterIconCss("float-left");
-                    self.pickerPanelCss("picker-panel-padding-left");
                     //the position of panel popup relative to dropdown button
                     self.panelPosition = {"my": "end top+16", "at": "end  bottom", "collision": "none", "of": "#dropDown_"+self.randomId};
                     self.pickerPanelPosition = {"my": "end top", "at": "start top", "collision": "none", "of": "#drawers_"+self.randomId};
