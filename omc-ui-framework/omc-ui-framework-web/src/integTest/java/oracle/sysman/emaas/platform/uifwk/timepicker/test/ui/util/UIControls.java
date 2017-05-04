@@ -35,6 +35,12 @@ public class UIControls
 	public static final String SFILTERINFO = "//*[@id='filterInfo']";
 	public static final String SFILTERINFO_COMPACT = "//*[@id='filterInfoInCompact']";
 
+	public static final String SSTARTTEXT_MILLIONSEC1 = "//*[@id='start1']";
+	public static final String SENDTEXT_MILLIONSEC1 = "//*[@id='end1']";
+
+	public static final String SSTARTTEXT_MILLIONSEC2 = "//*[@id='start2']";
+	public static final String SENDTEXT_MILLIONSEC2 = "//*[@id='end2']";
+
 	public static final String TIMERANGEBTN_CSS = ".oj-select-choice[id^='dropDown']";
 	public static final String RECENTUSE_CSS = "a[data-bind*=timePeriodRecent]";
 	public static final String RECENTUSECONTEXT_CSS = "[id^=\"recentPanel_\"] .oj-popup-content";

@@ -170,6 +170,7 @@ task QATest1(type:EMTest,dependsOn:omcSetup){
 	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_FixDate.class"
 	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_FlexibleDate.class"
 	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_RecentUseOption.class"
+	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_MillionSeconds.class"
         useWebdriver = true
 	useRestAssured=true
 }
