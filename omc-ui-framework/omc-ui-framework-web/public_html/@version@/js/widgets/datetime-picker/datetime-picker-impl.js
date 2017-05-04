@@ -490,6 +490,9 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 };
 
                 self.setTimePeriodsNotToShow = function(timePeriodsId) {
+                    if(!timePeriodsId) {
+                        return;
+                    }
                     //hide "LAST_8_HOUR", "LAST_24_HOUR", "LAST_12_MONTH" if it is not long/short term
                     if(!params.timePeriodsSet) {
                         timePeriodsId.push(quickPicks.LAST_8_HOUR);
