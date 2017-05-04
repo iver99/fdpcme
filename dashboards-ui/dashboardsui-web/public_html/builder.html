@@ -241,6 +241,7 @@
                                           <!-- ko if: !$root.dashboard.systemDashboard() || !linkedDashboard || linkedDashboard() === '#'-->
                                             <h2 class="dbd-tile-title" data-bind="text:hideTitle() === 'true' ? '': title, attr: {'data-tile-title': title}"></h2>
                                           <!-- /ko -->
+                                            <!-- ko if: $root.initTileKoRightBtnsResizeHdls -->
                                           <div class="dbd-pull-right" style="display: flex">
                                               <div class="dbd-btn-editor">                 
                                                   <button class="oj-button-half-chrome dbd-data-explore" tabindex="0"
@@ -391,6 +392,7 @@
                                                     </ul>
                                                 </div>
                                             </div>
+                                            <!-- /ko -->
                                         </div>
                                         <div class="dbd-tile-element" data-bind="css: loadEangerLoadedTile($element)">
                                             <!-- ko stopBinding: true -->
@@ -404,12 +406,14 @@
                                             <span class="oj-fwk-icon-arrow-s-end oj-component-icon"></span>
                                         </div>
                                         <!--/ko-->
-                                        <div data-bind="css:{'cursor-resize-ew dbd-resize-handler dbd-resize-handler-left':($root.dashboard.systemDashboard()===false) && !(($root.dashboard.sharePublic()===true)&&($root.dashboard.owner()!==$root.loginUser())) &&($root.isMobileDevice !== 'true')}"></div>
-                                        <div data-bind="css:{'cursor-resize-ew dbd-resize-handler dbd-resize-handler-right':($root.dashboard.systemDashboard()===false) && !(($root.dashboard.sharePublic()===true)&&($root.dashboard.owner()!==$root.loginUser())) &&($root.isMobileDevice !== 'true')}"></div>
-                                        <div data-bind="css:{'cursor-resize-ns dbd-resize-handler dbd-resize-handler-bottom':($root.dashboard.systemDashboard()===false) && !(($root.dashboard.sharePublic()===true)&&($root.dashboard.owner()!==$root.loginUser())) &&($root.isMobileDevice !== 'true')}"></div>
-                                        <div data-bind="css:{'cursor-resize-right-bottom dbd-resize-handler dbd-resize-handler-right-bottom':($root.dashboard.systemDashboard()===false) && !(($root.dashboard.sharePublic()===true)&&($root.dashboard.owner()!==$root.loginUser())) &&($root.isMobileDevice !== 'true')}">
-                                            <span data-bind="css:{'oj-fwk-icon-arrow-s-end oj-component-icon':($root.dashboard.systemDashboard()===false) && !(($root.dashboard.sharePublic()===true)&&($root.dashboard.owner()!==$root.loginUser())) &&($root.isMobileDevice !== 'true')}"></span>
-                                        </div>
+                                        <!-- ko if: $root.initTileKoRightBtnsResizeHdls -->
+                                            <div data-bind="css:{'cursor-resize-ew dbd-resize-handler dbd-resize-handler-left':($root.dashboard.systemDashboard()===false) && !(($root.dashboard.sharePublic()===true)&&($root.dashboard.owner()!==$root.loginUser())) &&($root.isMobileDevice !== 'true')}"></div>
+                                            <div data-bind="css:{'cursor-resize-ew dbd-resize-handler dbd-resize-handler-right':($root.dashboard.systemDashboard()===false) && !(($root.dashboard.sharePublic()===true)&&($root.dashboard.owner()!==$root.loginUser())) &&($root.isMobileDevice !== 'true')}"></div>
+                                            <div data-bind="css:{'cursor-resize-ns dbd-resize-handler dbd-resize-handler-bottom':($root.dashboard.systemDashboard()===false) && !(($root.dashboard.sharePublic()===true)&&($root.dashboard.owner()!==$root.loginUser())) &&($root.isMobileDevice !== 'true')}"></div>
+                                            <div data-bind="css:{'cursor-resize-right-bottom dbd-resize-handler dbd-resize-handler-right-bottom':($root.dashboard.systemDashboard()===false) && !(($root.dashboard.sharePublic()===true)&&($root.dashboard.owner()!==$root.loginUser())) &&($root.isMobileDevice !== 'true')}">
+                                                <span data-bind="css:{'oj-fwk-icon-arrow-s-end oj-component-icon':($root.dashboard.systemDashboard()===false) && !(($root.dashboard.sharePublic()===true)&&($root.dashboard.owner()!==$root.loginUser())) &&($root.isMobileDevice !== 'true')}"></span>
+                                            </div>
+                                        <!-- /ko -->
                                         <!-- <div class="dbd-tile-link-wrapper" data-bind="css: linkText()? '': 'dbd-tile-link-empty'">
                                             <a class="dbd-tile-link" data-bind="text: linkText, attr: {href: linkUrl, target: '_blank'}, css: linkText()? '': 'dbd-tile-link-empty'"></a>                                           
                                             <div class="dbd-tile-link-btns">
