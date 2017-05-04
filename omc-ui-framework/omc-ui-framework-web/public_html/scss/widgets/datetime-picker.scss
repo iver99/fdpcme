@@ -100,7 +100,8 @@
 
 .pickerPanel {
     width: 565px; //660px;
-    height: 279px;
+    min-height: 279px;
+    height: auto;
     /*float: right;*/
     /*padding-left: 10px;*/
     margin-top: -1px;
@@ -120,10 +121,16 @@
 }
 
 .buttons {
-    margin: 10px;
-    bottom: 20px;
-    vertical-align: bottom;
+    position: absolute;
+    bottom: 5px;
+    left: 10px;
 }
+
+.buttons.apply-disabled {
+    position: relative;
+    padding: 5px 0px 0px;
+}
+
 .errorMsg {
     margin: 10px;
     font-size: 14px;

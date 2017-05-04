@@ -381,9 +381,18 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 });
 
                 self.applyButtonDisable = ko.computed(function() {
-                    return self.startDateError() || self.endDateError() || self.startTimeError() || self.endTimeError() ||
+                    var applyButtonDisable = self.startDateError() || self.endDateError() || self.startTimeError() || self.endTimeError() ||
                             self.showTimeFilterError() || self.flexRelTimeValError();
+                    return applyButtonDisable;
                 }, self);
+                
+                self.applyButtonDisable.subscribe(function(value) {
+                    if(value > 0) {
+                        $(self.pickerPanelId + " .buttons").addClass("apply-disabled");
+                    }else {
+                        $(self.pickerPanelId + " .buttons").removeClass("apply-disabled");
+                    }
+                });
                 
                 self.lrCtrlVal.subscribe(function(value) {
                     if(value === "flexRelTimeCtrl") {
@@ -887,6 +896,10 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 };
                 
                 self.startDateChanged = function(event, data) {
+                    if(data.option === "messagesShown" && isArray(data.value) && data.value.length>0) {
+                        self.startDateError(3); //Jet's own error message
+                        return;
+                    }
                     if(data.option !== "value" && data.option !== "disabled") {
                         return;
                     }
@@ -897,6 +910,9 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             return;
                         }else {
                             self.flexRelTimeValError(0);
+                            //set flexRelTimeVal to its previous value doesn't work, so set it like below to make sure the value is changed
+                            self.flexRelTimeVal(self.flexRelTimeVal() + 1);
+                            self.flexRelTimeVal(self.flexRelTimeVal() - 1);
                         }
                     }
                     if(self.lrCtrlVal() !== "timeLevelCtrl") {
@@ -911,6 +927,10 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     }
                 };
                 self.endDateChanged = function(event, data) {
+                    if(data.option === "messagesShown" && isArray(data.value) && data.value.length>0) {
+                        self.endDateError(3); //Jet's own error message
+                        return;
+                    }
                     if(data.option !== "value") {
                         return;
                     }
@@ -926,6 +946,10 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     }
                 };
                 self.startTimeChanged = function(event, data) {
+                    if(data.option === "messagesShown") {
+                        self.startTimeError(3); //Jet's own error message
+                        return;
+                    }
                     if(data.option !== "value") {
                         return;
                     }
@@ -941,6 +965,10 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     }
                 };
                 self.endTimeChanged = function(event, data) {
+                    if(data.option === "messagesShown") {
+                        self.endTimeError(3); //Jet's own error message
+                        return;
+                    }
                     if(data.option !== "value") {
                         return;
                     }
@@ -1485,6 +1513,25 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                        }
                     }
                 };
+                
+                /**
+                 * Recover start and end date in input box to avoid error message shown
+                 * It is used in 2 places:
+                 * 1. switch radio from "Range" to "Last"
+                 * 2. close panel and reopen it
+                 * @returns {undefined}
+                 */
+                self.recoverDates = function() {
+                    var date = oj.IntlConverterUtils.dateToLocalIso(new Date());
+                    var origStartDate = self.startDateISO();
+                    var origEndDate = self.endDateISO();
+                    
+                    self.startDateISO(date);
+                    self.endDateISO(date);
+                    
+                    self.startDateISO(origStartDate);
+                    self.endDateISO(origEndDate);
+                }
                      
                 self.flexRelTimeValChanged = function(event, data) {
                     if(data.option === "messagesShown" && isArray(data.value) && data.value.length>0) {
@@ -1501,7 +1548,12 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             self.flexRelTimeValError(0);
                             return;
                         }else {
-                            self.startDateError(0);                    
+                            //recover date and time inputs
+                            self.startDateError(0);
+                            self.endDateError(0);
+                            self.startTimeError(0);
+                            self.endTimeError(0);
+                            self.recoverDates();
                             if(self.showRightPanel() === true && self.isCustomBeyondWindowLimit() === true) {
                                 self.flexRelTimeValError(2);
                             }
@@ -1707,13 +1759,17 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         self.shouldSetLastDatas = false;
                         return;
                     }
-                    self.startDateISO(self.lastStartDateISO());
-                    self.endDateISO(self.lastEndDateISO());
+                    
+                    self.recoverDates();
+//                    self.startDateISO(self.lastStartDateISO());
+//                    self.endDateISO(self.lastEndDateISO());
                     self.startTime(self.lastStartTime());
                     self.endTime(self.lastEndTime());
                     self.timePeriod(self.lastTimePeriod());
                     self.lrCtrlVal(self.lastLrCtrlVal());
-                    self.flexRelTimeVal(self.lastFlexRelTimeVal());
+                    var lastflexRelTimeVal = self.lastFlexRelTimeVal();
+                    self.flexRelTimeVal(lastflexRelTimeVal - 1);
+                    self.flexRelTimeVal(lastflexRelTimeVal);
                     self.flexRelTimeOpt([self.lastFlexRelTimeOpt()[0]]);
                     if(self.enableTimeFilter()) {
                         self.tfInstance.timeFilterValue(self.lastTimeFilterValue());
