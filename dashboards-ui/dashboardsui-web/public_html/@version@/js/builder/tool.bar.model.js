@@ -40,6 +40,7 @@ define(['knockout',
             var zdtUtil = new zdtUtilModel();
             self.zdtStatus = ko.observable(false);
             self.notZdtStatus = ko.observable(true);
+            self.renderDashboardOptsMenu = ko.observable(false);
             zdtUtil.detectPlannedDowntime(function (isUnderPlannedDowntime) {
 //                 self.zdtStatus(true);
 //                 self.notZdtStatus(false);

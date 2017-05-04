@@ -29,6 +29,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.entitiesList = ko.observableArray();
             self.timeCxtText = ko.observable();
 
+            self.renderEmaasAppheaderGlobalNavMenu = ko.observable(false);
 
             self.userName = $.isFunction(params.userName) ? params.userName() : params.userName;
             self.tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
