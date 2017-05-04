@@ -139,17 +139,17 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 		webd.sendKeys("css=" + TimeSelectorUIControls.sEndTimeInput, endTime);
 		webd.takeScreenShot();
 
-		if (webd.isDisplayed(TimeSelectorUIControls.sErrorMsg)) {
-			try {
-				throw new Exception(webd.getText(TimeSelectorUIControls.sErrorMsg));
-			}
-			catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return null;
-		}
-		else {
+//		if (webd.isDisplayed(TimeSelectorUIControls.sErrorMsg)) {
+//			try {
+//				throw new Exception(webd.getText(TimeSelectorUIControls.sErrorMsg));
+//			}
+//			catch (Exception e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//			return null;
+//		}
+//		else {
 			try {
 				clickApplyButton(webd);
 			}
@@ -160,7 +160,7 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 			String returnTimeRange = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn))
 					.get(index - 1).getText();
 			return dateConvert(webd, returnTimeRange, TimeRange.Custom, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
-		}
+//		}
 
 	}
 
@@ -223,17 +223,17 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 		webd.click("css=" + TimeSelectorUIControls.sEndDateInput);
 		webd.takeScreenShot();
 
-		if (webd.isDisplayed(TimeSelectorUIControls.sErrorMsg)) {
-			try {
-				throw new Exception(webd.getText(TimeSelectorUIControls.sErrorMsg));
-			}
-			catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return null;
-		}
-		else {
+//		if (webd.isDisplayed(TimeSelectorUIControls.sErrorMsg)) {
+//			try {
+//				throw new Exception(webd.getText(TimeSelectorUIControls.sErrorMsg));
+//			}
+//			catch (Exception e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//			return null;
+//		}
+//		else {
 			try {
 				clickApplyButton(webd);
 			}
@@ -244,7 +244,7 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 			String returnTimeRange = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn))
 					.get(index - 1).getText();
 			return dateConvert(webd, returnTimeRange, TimeRange.Custom, "MM/dd/yyyy", "MMM d, yyyy");
-		}
+//		}
 	}
 
 	@Override
