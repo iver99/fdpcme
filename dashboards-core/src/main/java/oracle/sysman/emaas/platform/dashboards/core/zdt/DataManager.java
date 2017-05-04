@@ -236,16 +236,15 @@ public class DataManager
 		    	if (creationD == null) {
 		    		return 0;
 		    	}
-		    	String lastModifiedD = null;
 		    	Object lastModifiedObj = dateMap.get("LAST_MODIFICATION_DATE");
-		    	if (lastModifiedObj == null) {
-		    		lastModifiedD = creationD;
+		    	boolean check = false;
+		    	if (lastModifiedObj == null || lastModificationDate == null) {
+		    		check = isAfter(creationD,creationDate);
 		    	} else {
-		    		lastModifiedD = (String)lastModifiedObj;
+		    		check = isAfter((String)lastModifiedObj, lastModificationDate);		    		
 		    	}
 				
-				logger.debug("Dashboard with id {} exists", dashboardId);
-				if (isAfter(lastModifiedD,lastModificationDate)) {
+				if (check) {
 					logger.debug("This lastModificationDate is earlier, there is no need to update");
 					return 0;
 				}
@@ -340,14 +339,15 @@ public class DataManager
 		    	if (creationD == null) {
 		    		return 0;
 		    	}
-		    	String lastModifiedD = null;
 		    	Object lastModifiedObj = dateMap.get("LAST_MODIFICATION_DATE");
-		    	if (lastModifiedObj == null) {
-		    		lastModifiedD = creationD;
+		    	boolean check = false;
+		    	if (lastModifiedObj == null || lastModificationDate == null) {
+		    		check = isAfter(creationD,creationDate);
 		    	} else {
-		    		lastModifiedD = (String)lastModifiedObj;
+		    		check = isAfter((String)lastModifiedObj, lastModificationDate);		    		
 		    	}
-				if (isAfter(lastModifiedD,lastModificationDate)) {
+				
+				if (check) {
 					logger.debug("This lastModificationDate is earlier, there is no need to update");
 					return 0;
 				}
@@ -406,14 +406,15 @@ public class DataManager
 		    	if (creationD == null) {
 		    		return 0;
 		    	}
-		    	String lastModifiedD = null;
 		    	Object lastModifiedObj = dateMap.get("LAST_MODIFICATION_DATE");
-		    	if (lastModifiedObj == null) {
-		    		lastModifiedD = creationD;
+		    	boolean check = false;
+		    	if (lastModifiedObj == null || lastModificationDate == null) {
+		    		check = isAfter(creationD,creationDate);
 		    	} else {
-		    		lastModifiedD = (String)lastModifiedObj;
+		    		check = isAfter((String)lastModifiedObj, lastModificationDate);		    		
 		    	}
-				if (isAfter(lastModifiedD, lastModificationDate)) {
+				
+				if (check) {
 					logger.debug("The lastModificationDate is earlier, no need to update");
 					return 0;
 				}
@@ -460,14 +461,15 @@ public class DataManager
 		    	if (creationD == null) {
 		    		return 0;
 		    	}
-		    	String lastModifiedD = null;
 		    	Object lastModifiedObj = dateMap.get("LAST_MODIFICATION_DATE");
-		    	if (lastModifiedObj == null) {
-		    		lastModifiedD = creationD;
+		    	boolean check = false;
+		    	if (lastModifiedObj == null || lastModificationDate == null) {
+		    		check = isAfter(creationD,creationDate);
 		    	} else {
-		    		lastModifiedD = (String)lastModifiedObj;
+		    		check = isAfter((String)lastModifiedObj, lastModificationDate);		    		
 		    	}
-				if (isAfter(lastModifiedD, lastModificationDate)) {
+				
+				if (check) {
 					logger.debug("The lastModificationDate is earlier, no need to update");
 					return 0;
 				}
@@ -516,14 +518,15 @@ public class DataManager
 		    	if (creationD == null) {
 		    		return 0;
 		    	}
-		    	String lastModifiedD = null;
 		    	Object lastModifiedObj = dateMap.get("LAST_MODIFICATION_DATE");
-		    	if (lastModifiedObj == null) {
-		    		lastModifiedD = creationD;
+		    	boolean check = false;
+		    	if (lastModifiedObj == null || lastModificationDate == null) {
+		    		check = isAfter(creationD,creationDate);
 		    	} else {
-		    		lastModifiedD = (String)lastModifiedObj;
+		    		check = isAfter((String)lastModifiedObj, lastModificationDate);		    		
 		    	}
-				if (isAfter(lastModifiedD, lastModificationDate)) {
+				
+				if (check) {
 					logger.debug("The lastModification is earlier, no need to update");
 					return 0;
 				}
@@ -569,14 +572,15 @@ public class DataManager
 		    	if (creationD == null) {
 		    		return 0;
 		    	}
-		    	String lastModifiedD = null;
 		    	Object lastModifiedObj = dateMap.get("LAST_MODIFICATION_DATE");
-		    	if (lastModifiedObj == null) {
-		    		lastModifiedD = creationD;
+		    	boolean check = false;
+		    	if (lastModifiedObj == null || lastModificationDate == null) {
+		    		check = isAfter(creationD,creationDate);
 		    	} else {
-		    		lastModifiedD = (String)lastModifiedObj;
+		    		check = isAfter((String)lastModifiedObj, lastModificationDate);		    		
 		    	}
-				if (isAfter(lastModifiedD, lastModificationDate)) {
+				
+				if (check) {
 					logger.debug("The lastModificationDate is earlier, no need to update");
 					return 0;
 				}
@@ -920,7 +924,7 @@ public class DataManager
 
 	private List<Map<String, Object>> getLastAccessDateForDashboard(EntityManager entityManager, BigInteger dashboardId, Long tenantId, String name,String description, String owner, BigInteger deleted) {
 		logger.debug("Calling the Datamanager.gertLastAccessDayForDashboard");
-		String sql = "SELECT to_char(CREATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3'),to_char(LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') FROM EMS_DASHBOARD WHERE (DASHBOARD_ID=? AND TENANT_ID=?) "
+		String sql = "SELECT to_char(CREATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as CREATION_DATE,to_char(LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as LAST_MODIFICATION_DATE FROM EMS_DASHBOARD WHERE (DASHBOARD_ID=? AND TENANT_ID=?) "
 				+ "or (NAME=? AND DESCRIPTION=? and OWNER=? AND TENANT_ID =? AND DELETED=?)";
 		Query query = entityManager.createNativeQuery(sql)
 				.setParameter(1, dashboardId)
@@ -938,7 +942,7 @@ public class DataManager
 
 	private List<Map<String, Object>> getLastAccessDateForDashboardTile(EntityManager entityManager, String tileId, Long tenantId) {
 		logger.debug("Calling Datamanager.getLastAccessDateForDashboardTile");
-		String sql = "SELECT to_char(CREATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3'),to_char(LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') FROM EMS_DASHBOARD_TILE WHERE TILE_ID=? AND TENANT_ID=?";
+		String sql = "SELECT to_char(CREATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as CREATION_DATE,to_char(LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as LAST_MODIFICATION_DATE FROM EMS_DASHBOARD_TILE WHERE TILE_ID=? AND TENANT_ID=?";
 		Query query = entityManager.createNativeQuery(sql)
 				.setParameter(1, tileId)
 				.setParameter(2, tenantId);
@@ -950,7 +954,7 @@ public class DataManager
 
 	private List<Map<String, Object>> getLastAccessDateForDashboardTileParam(EntityManager entityManager, String tileId, String paramName, Long tenantId) {
 		logger.debug("Calling DataManager.getLastAccessDateForDashboardTileParam");
-		String sql = "SELECT to_char(CREATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3'),to_char(LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') FROM EMS_DASHBOARD_TILE_PARAMS WHERE TILE_ID=? AND PARAM_NAME=? AND TENANT_ID=?";
+		String sql = "SELECT to_char(CREATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as CREATION_DATE,to_char(LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as LAST_MODIFICATION_DATE FROM EMS_DASHBOARD_TILE_PARAMS WHERE TILE_ID=? AND PARAM_NAME=? AND TENANT_ID=?";
 		Query query = entityManager.createNativeQuery(sql)
 				.setParameter(1, tileId)
 				.setParameter(2, paramName)
@@ -965,7 +969,7 @@ public class DataManager
 
 	private List<Map<String, Object>> getLastAccessDateForDashboardUserOption(EntityManager entityManager, String userName, Long tenantId, BigInteger dashboardId) {
 		logger.debug("Calling DataManager.getLastAccessDateForDashboardUserOption");
-		String sql = "SELECT to_char(CREATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3'),to_char(LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') FROM EMS_DASHBOARD_USER_OPTIONS WHERE USER_NAME=? AND TENANT_ID=? AND DASHBOARD_ID=?";
+		String sql = "SELECT to_char(CREATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as CREATION_DATE,to_char(LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as LAST_MODIFICATION_DATE FROM EMS_DASHBOARD_USER_OPTIONS WHERE USER_NAME=? AND TENANT_ID=? AND DASHBOARD_ID=?";
 		Query query = entityManager.createNativeQuery(sql)
 				.setParameter(1, userName)
 				.setParameter(2, tenantId)
@@ -978,7 +982,7 @@ public class DataManager
 
 	private List<Map<String, Object>> getLastAccessDateForDashboardSet(EntityManager entityManager, BigInteger dashboardSetId, Long tenantId, BigInteger subDashboardId) {
 		logger.debug("Calling DataManager.getLastAccessDateForDashboardSet");
-		String sql = "SELECT to_char(CREATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3'),to_char(LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') FROM EMS_DASHBOARD_SET WHERE DASHBOARD_SET_ID=? AND TENANT_ID=? AND SUB_DASHBOARD_ID=?";
+		String sql = "SELECT to_char(CREATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as CREATION_DATE,to_char(LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as LAST_MODIFICATION_DATE FROM EMS_DASHBOARD_SET WHERE DASHBOARD_SET_ID=? AND TENANT_ID=? AND SUB_DASHBOARD_ID=?";
 		Query query = entityManager.createNativeQuery(sql)
 				.setParameter(1, dashboardSetId)
 				.setParameter(2, tenantId)
@@ -991,7 +995,7 @@ public class DataManager
 
 	private List<Map<String, Object>> getLastAccessDateForPreference(EntityManager entityManager, String userName, String prefKey, Long tenantId) {
 		logger.debug("Calling DataManager.getLastAccessDateForPreference");
-		String sql = "SELECT to_char(CREATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3'),to_char(LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') FROM EMS_PREFERENCE WHERE USER_NAME=? AND PREF_KEY=? AND TENANT_ID=?";
+		String sql = "SELECT to_char(CREATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as CREATION_DATE,to_char(LAST_MODIFICATION_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as LAST_MODIFICATION_DATE FROM EMS_PREFERENCE WHERE USER_NAME=? AND PREF_KEY=? AND TENANT_ID=?";
 		Query query = entityManager.createNativeQuery(sql)
 				.setParameter(1, userName)
 				.setParameter(2, prefKey)
