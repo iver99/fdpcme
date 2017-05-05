@@ -8,7 +8,7 @@
  * $$Revision: $$
  */
 
-package oracle.sysman.emaas.platform.uifwk.dashboardscommonui.test.ui;
+package oracle.sysman.emaas.platform.uifwk.dashboardscommonui.test.ui.util;
 
 /**
  * @author shangwan
@@ -32,6 +32,7 @@ public class UIControls
 	//Begin: Button
 	public static final String SADDWIDGETBTN = "//*[@id='widget-selector-okbtn']";
 	public static final String SCLOSEWIDGET = "/html/body/div[1]/div[2]/div/div[1]/div";
+	public static final String SGENERATEMENUBTN = ".oj-button[title='_name_']";
 	//End: Button
 
 	//Begin: Icon

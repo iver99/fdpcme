@@ -22,13 +22,12 @@ public class TestBrandingBar_BasicTest extends LoginAndLogout
 		DashBoardUtils.loadWebDriver(webd);
 	}
 
-	//@Test(alwaysRun = true)
+	@Test(alwaysRun = true)
 	public void testAdminConsoleLink()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testAdminConsoleLink");
 		WaitUtil.waitForPageFullyLoaded(webd);
-
 		// Administration link for Administration Console UI
 		BrandingBarUtil.visitApplicationAdministration(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_ADMINCONSOLE);
 		WaitUtil.waitForPageFullyLoaded(webd);
@@ -37,12 +36,20 @@ public class TestBrandingBar_BasicTest extends LoginAndLogout
 		DashBoardUtils.verifyURL(webd, "admin-console/ac/adminConsole.html");
 	}
 
-	@Test(alwaysRun = true)
+	//@Test(alwaysRun = true)
 	public void testAdminLink()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testAdminLink");
 		WaitUtil.waitForPageFullyLoaded(webd);
+		if (!DashBoardUtils.isHamburgerMenuEnabled(webd)) {
+
+		}
+		else {
+			BrandingBarUtil.clickMenuItem(webd, BrandingBarUtil.ROOT_MENU_ADMIN);
+			WaitUtil.waitForPageFullyLoaded(webd);
+			DashBoardUtils.verifyURL(webd, "eventUi/rules/html/rules-dashboard.html");
+		}
 	}
 
 	@Test(alwaysRun = true)
@@ -58,6 +65,36 @@ public class TestBrandingBar_BasicTest extends LoginAndLogout
 
 		//verify the url of opened page
 		DashBoardUtils.verifyURL(webd, "tenantmgmt/services/customersoftware");
+	}
+
+	@Test(alwaysRun = true)
+	public void testAlertRules()
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testAlertRules");
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		// alert rules link
+		BrandingBarUtil.visitApplicationAdministration(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_ALERT);
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		//verify the url of opened page
+		DashBoardUtils.verifyURL(webd, "eventUi/rules/html/rules-dashboard.html");
+	}
+
+	@Test(alwaysRun = true)
+	public void testAlerts()
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testAlerts");
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		// Alets link
+		BrandingBarUtil.visitApplicationHome(webd, BrandingBarUtil.NAV_LINK_TEXT_HOME_ALERTS);
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		//verify the url of opened page
+		DashBoardUtils.verifyURL(webd, "eventUi/console/html/event-dashboard.html");
 	}
 
 	@Test(alwaysRun = true)

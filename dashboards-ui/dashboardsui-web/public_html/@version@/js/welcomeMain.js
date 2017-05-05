@@ -93,14 +93,16 @@ require(['ojs/ojcore',
     'uifwk/js/util/df-util',
     'uifwk/js/util/logging-util',
     'uifwk/js/sdk/context-util',
+    'uifwk/js/sdk/menu-util',
     'ojs/ojknockout',
     'ojs/ojselectcombobox',
     'common.uifwk'
 ],
-        function (oj, ko, $, dfu, dfumodel, _emJETCustomLogger, cxtModel) // this callback gets executed when all required modules are loaded
+        function (oj, ko, $, dfu, dfumodel, _emJETCustomLogger, cxtModel, menuModel) // this callback gets executed when all required modules are loaded
         {
             var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
             var cxtUtil = new cxtModel();
+            var menuUtil = new menuModel();
             var logger = new _emJETCustomLogger();
             var logReceiver = dfu.getLogUrl();
 
@@ -136,7 +138,8 @@ require(['ojs/ojcore',
                     appId: self.appId,
                     isAdmin: true,
                     showGlobalContextBanner: false,
-                    omcHamburgerMenuOptIn: false
+                    omcHamburgerMenuOptIn: true,
+                    omcCurrentMenuId: menuUtil.OMCMenuConstants.GLOBAL_HOME
                 };
             }
 
