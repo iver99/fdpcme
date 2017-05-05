@@ -63,9 +63,9 @@ public class DashBoardUtils
 
 	public static void closeOverviewPage()
 	{
-		driver.getLogger().info("before clicking overview button");
-		driver.click(PageId.OVERVIEWCLOSEID);
-		driver.getLogger().info("after clicking overview button");
+//		driver.getLogger().info("before clicking overview button");
+//		driver.click(PageId.OVERVIEWCLOSEID);
+//		driver.getLogger().info("after clicking overview button");
 	}
 
 	public static void deleteDashboard(WebDriver webdriver, String DashboardName)
