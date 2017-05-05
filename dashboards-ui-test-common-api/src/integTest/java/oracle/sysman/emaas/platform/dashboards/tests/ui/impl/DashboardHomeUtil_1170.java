@@ -18,6 +18,8 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
+import org.openqa.selenium.WebElement;
+
 public class DashboardHomeUtil_1170 extends DashboardHomeUtil_1150
 {
 	/* (non-Javadoc)
@@ -93,5 +95,50 @@ public class DashboardHomeUtil_1170 extends DashboardHomeUtil_1150
 			return super.isFilterOptionSelected(driver, filter);
 		}
 
+	}
+
+	@Override
+	public void resetFilterOptions(WebDriver driver)
+	{
+
+		driver.getLogger().info("[DashboardHomeUtil] call resetFilterOptions");
+		driver.waitForElementPresent(DashBoardPageId.FILTERAPMLOCATOR);
+		WebElement el = driver.getElement(DashBoardPageId.FILTERAPMLOCATOR);
+		if (el.isSelected()) {
+			el.click();
+		}
+		el = driver.getElement(DashBoardPageId.FILTERLALOCATOR);
+		if (el.isSelected()) {
+			el.click();
+		}
+		el = driver.getElement(DashBoardPageId.FILTERITALOCATOR);
+		if (el.isSelected()) {
+			el.click();
+		}
+		el = driver.getElement(DashBoardPageId.FILTERORCHESTRATIONLOCATOR);
+		if (el.isSelected()) {
+			el.click();
+		}
+		el = driver.getElement(DashBoardPageId.FILTERSECURITYLOCATOR);
+		if (el.isSelected()) {
+			el.click();
+		}
+		el = driver.getElement(DashBoardPageId.FILTERORACLELOCATOR);
+		if (el.isSelected()) {
+			el.click();
+		}
+		el = driver.getElement(DashBoardPageId.FILTERSHARELOCATOR);
+		if (el.isSelected()) {
+			el.click();
+		}
+		el = driver.getElement(DashBoardPageId.FILTERMELOCATOR);
+		if (el.isSelected()) {
+			el.click();
+		}
+		el = driver.getElement(DashBoardPageId.FILTERFAVORITELOCATOR);
+		if (el.isSelected()) {
+			el.click();
+		}
+		WaitUtil.waitForPageFullyLoaded(driver);
 	}
 }
