@@ -31,6 +31,9 @@ public class GlobalContextUtil_1130 extends GlobalContextUtil_Version implements
 {
 	public static final String GLBCTXTID = "emaas-appheader-globalcxt";
 	public static final String GLBCTXTFILTERPILL = "globalBar_pillWrapper";
+	public static final String GLBCTX_TOPBTN = "topologyButtonWrapper";
+	public static final String GLBCTX_CTXSEL = "emcta-ctxtSel_conveyorBelt";
+	public static final String GLBCTX_CTXSEL_TEXT = "Start typing entity name(s)..."; 
 	public static final String GLBCTXTBUTTON = "buttonShowTopology";
 	public static final String DSBNAME = "DASHBOARD_GLOBALTESTING";
 	public static final String DSBSETNAME = "DASHBOARDSET_GLOBALTESTING";
