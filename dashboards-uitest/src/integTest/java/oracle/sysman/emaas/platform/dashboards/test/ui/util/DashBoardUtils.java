@@ -8,6 +8,7 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.WelcomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_1150;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_1180;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_190;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
@@ -52,13 +53,23 @@ public class DashBoardUtils
 
 	public static void clickDashboardLinkInBrandingBar(WebDriver webdriver)
 	{
-		webdriver.getLogger().info("Click Compass icon to display menu of branding bar");
-		webdriver.getWebDriver().findElement(By.xpath(PageId.COMPASSICON)).click();
-		WebDriverWait wait = new WebDriverWait(webdriver.getWebDriver(), 900L);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(PageId.DASHBOARDLINK)));
-		webdriver.takeScreenShot();
-		webdriver.getLogger().info("Click Dashboard link to back to dashboard home page");
-		webdriver.getWebDriver().findElement(By.xpath(PageId.DASHBOARDLINK)).click();
+		if (DashBoardUtils.isHamburgerMenuEnabled(webdriver)) {
+			if (!BrandingBarUtil.isHamburgerMenuDisplayed(webdriver)) {
+				BrandingBarUtil.toggleHamburgerMenu(webdriver);
+			}
+			webdriver.getLogger().info("Click Dashboards menu item to back to dashboard home page");
+			webdriver.getWebDriver().findElement(By.cssSelector("#omc_root_dashboards>span")).click();
+		}
+		else {
+			webdriver.getLogger().info("Click Compass icon to display menu of branding bar");
+			webdriver.getWebDriver().findElement(By.xpath(PageId.COMPASSICON)).click();
+			WebDriverWait wait = new WebDriverWait(webdriver.getWebDriver(), 900L);
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(PageId.DASHBOARDLINK)));
+			webdriver.takeScreenShot();
+			webdriver.getLogger().info("Click Dashboard link to back to dashboard home page");
+			webdriver.getWebDriver().findElement(By.xpath(PageId.DASHBOARDLINK)).click();
+		}
+
 	}
 
 	public static void closeOverviewPage()
@@ -70,19 +81,26 @@ public class DashBoardUtils
 
 	public static void deleteDashboard(WebDriver webdriver, String DashboardName)
 	{
-		DashboardHomeUtil.search(webdriver, DashboardName);
-		String searchresult = webdriver.getElement("css=" + PageId.DASHBOARDDISPLAYPANELCSS).getAttribute("childElementCount");
-		int dbnumber = Integer.parseInt(searchresult);
-		for (int i = 0; i < dbnumber; i++) {
-			if (DashboardHomeUtil.isDashboardExisted(webdriver, DashboardName)) {
-				webdriver.getLogger().info("Start to delete the dashboard: " + DashboardName);
-				DashboardHomeUtil.deleteDashboard(webdriver, DashboardName, DashboardHomeUtil.DASHBOARDS_GRID_VIEW);
+		try {
+			Validator.notEmptyString("DashboardName", DashboardName);
+			DashboardHomeUtil.search(webdriver, DashboardName);
+			String searchresult = webdriver.getElement("css=" + PageId.DASHBOARDDISPLAYPANELCSS)
+					.getAttribute("childElementCount");
+			int dbnumber = Integer.parseInt(searchresult);
+			for (int i = 0; i < dbnumber; i++) {
+				if (DashboardHomeUtil.isDashboardExisted(webdriver, DashboardName)) {
+					webdriver.getLogger().info("Start to delete the dashboard: " + DashboardName);
+					DashboardHomeUtil.deleteDashboard(webdriver, DashboardName, DashboardHomeUtil.DASHBOARDS_GRID_VIEW);
+				}
 			}
+			webdriver.getLogger().info("Verify the dashboard: " + DashboardName + " has been deleted");
+			Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(webdriver, DashboardName), "Delete dashboard "
+					+ DashboardName + " failed!");
+			webdriver.getLogger().info("Delete the dashboard: " + DashboardName + " finished");
 		}
-		webdriver.getLogger().info("Verify the dashboard: " + DashboardName + " has been deleted");
-		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(webdriver, DashboardName), "Delete dashboard " + DashboardName
-				+ " failed!");
-		webdriver.getLogger().info("Delete the dashboard: " + DashboardName + " finished");
+		catch (IllegalArgumentException ex) {
+			webdriver.getLogger().info(ex.getLocalizedMessage());
+		}
 	}
 
 	public static String generateTimeStamp()
@@ -103,9 +121,10 @@ public class DashBoardUtils
 		//Accepting alert.
 		webdriver.getLogger().info("foucus on the alert");
 		alert = webdriver.getWebDriver().switchTo().alert();
-
+		//webdriver.takeScreenShot();
 		webdriver.getLogger().info("click button on the dialog, should navigate to the home page");
 		alert.accept();
+		//webdriver.takeScreenShot();
 	}
 
 	/**
@@ -137,9 +156,18 @@ public class DashBoardUtils
 				break;
 			default:
 				throw new IllegalArgumentException("Unkonw filter option: " + filteroption);
-
 		}
 		return isExisted;
+	}
+
+	public static boolean isHamburgerMenuEnabled(WebDriver driver)
+	{
+		if (driver.isElementPresent("css=" + DashBoardPageId_1180.HAMBURGERMENU_ICON_CSS)) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 
 	public static boolean isHomePageExploreItemExisted(WebDriver driver, String listItem)
