@@ -41,6 +41,12 @@ define(['knockout',
             self.zdtStatus = ko.observable(false);
             self.notZdtStatus = ko.observable(true);
             self.renderDashboardOptsMenu = ko.observable(false);
+            self.dashboardOptsMenuId = ko.observable('#dashboard-opts-menu-fake');
+            self.renderDashboardOptsMenu.subscribe(function(val){
+                if(val){
+                    self.dashboardOptsMenuId('#dashboardOptsMenu'+self.toolBarGuid);
+                }
+            });
             zdtUtil.detectPlannedDowntime(function (isUnderPlannedDowntime) {
 //                 self.zdtStatus(true);
 //                 self.notZdtStatus(false);

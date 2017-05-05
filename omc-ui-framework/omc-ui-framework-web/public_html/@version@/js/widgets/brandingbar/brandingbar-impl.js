@@ -30,6 +30,12 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.timeCxtText = ko.observable();
 
             self.renderEmaasAppheaderGlobalNavMenu = ko.observable(false);
+            self.emaasAppheaderGlobalNavMenuId = ko.observable('#emaasAppheaderGlobalNavMenuId-fake');
+            self.renderEmaasAppheaderGlobalNavMenu.subscribe(function(val){
+                if(val){
+                    self.emaasAppheaderGlobalNavMenuId('#emaasAppheaderGlobalNavMenuId');
+                }
+            });
 
             self.userName = $.isFunction(params.userName) ? params.userName() : params.userName;
             self.tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
