@@ -3,17 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-define(['jquery', 'jqueryui', 'knockout', 'uifwk/@version@/js/util/ajax-util-impl'],
+define(['jquery', 'knockout', 'uifwk/@version@/js/util/ajax-util-impl'],
        /*
         * @param {Object} oj
         * @param {jQuery} $
         */
-function($, jqui, ko, ajaxUtilModel)
+function($, ko, ajaxUtilModel)
 {
-    var ajaxUtil = new ajaxUtilModel();
-
-(function ()
-{ // make sure register is running
+function TypeaheadSearchViewModel()
+{
+var ajaxUtil = new ajaxUtilModel();
 
 ko.bindingHandlers.typeAheadSearch = {
     init: function(element, valueAccessor) {
@@ -316,11 +315,8 @@ $.widget( "dbs.typeAheadSearch", {
 			.removeAttr( "autocomplete" );
 	}
 });
-
-
-
-}()); // end make sure register is running
-
+}
+    return TypeaheadSearchViewModel;
 });
 
 
