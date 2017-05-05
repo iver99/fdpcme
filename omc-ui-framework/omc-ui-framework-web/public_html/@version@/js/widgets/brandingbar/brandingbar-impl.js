@@ -511,6 +511,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.sessionTimeoutBtnOK = nls.BRANDING_BAR_SESSION_TIMEOUT_DIALOG_BTN_OK;
             self.sessionTimeoutWarnDialogId = 'sessionTimeoutWarnDialog';
             self.sessionTimeoutWarnIcon = warnMessageIcon;
+            self.renderSessionTimeoutDialog = ko.observable(false);
 
             //Fetch and set sso logout url and session expiry time
             dfu.getRegistrations(function (data) {
@@ -995,6 +996,10 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         console.log("****************call refreshOMCContext");
                         refreshOMCContext();
                     }
+                }
+                else if (data && data.tag && data.tag === 'EMAAS_OMC_SESSION_TIME_OUT') {
+                    self.renderSessionTimeoutDialog(true);
+                    dfu.showSessionTimeoutWarningDialog(self.sessionTimeoutWarnDialogId);
                 }
             }
 
