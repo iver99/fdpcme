@@ -12,7 +12,6 @@ package oracle.sysman.emaas.platform.dashboards.tests.ui.impl;
 
 import java.util.List;
 
-import oracle.sysman.emaas.platform.dashboards.tests.ui.WelcomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.IWelcomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
@@ -77,7 +76,7 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 
 		driver.waitForElementPresent("id=oj-select-choice-" + DashBoardPageId.WELCOME_DATAEXP_SELECTID);
 		driver.click("id=oj-select-choice-" + DashBoardPageId.WELCOME_DATAEXP_SELECTID);
-		driver.takeScreenShot();
+
 		switch (selection) {
 			case DATA_EXPLORERS_LOG:
 				eleXpath = getOptionXpath(driver, DashBoardPageId.WELCOME_DATAEXP_SELECTID, DashBoardPageId.WELCOME_DATAEXP_LOG);
@@ -110,12 +109,12 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 				LEARN_MORE_SERVICE_OFFERINGS);
 
 		WaitUtil.waitForPageFullyLoaded(driver);
-		
+
 		boolean isExisted = false;
 		String itemId = getLearnMoreItemId(itemName);
 		String nameExpected = getExpectedText(itemName);
-		
-		if(driver.isDisplayed("id="+itemId) && driver.isTextPresent(nameExpected, "id="+itemId)) {
+
+		if (driver.isDisplayed("id=" + itemId) && driver.isTextPresent(nameExpected, "id=" + itemId)) {
 			isExisted = true;
 		}
 		driver.getLogger().info("Check of learn more item: " + itemName + " existence is finished! Result: " + isExisted);
@@ -131,10 +130,11 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 		driver.getLogger().info("Start to check if service: " + serviceName + " is existed in welcome page...");
 
 		Validator.fromValidValues("serviceName", serviceName, SERVICE_NAME_APM, SERVICE_NAME_LA, SERVICE_NAME_ITA,
-				SERVICE_NAME_INFRA_MONITORING, SERVICE_NAME_COMPLIANCE, SERVICE_NAME_SECURITY_ANALYTICS, SERVICE_NAME_ORCHESTRATION, SERVICE_NAME_DASHBOARDS, SERVICE_NAME_DATA_EXPLORERS);
+				SERVICE_NAME_INFRA_MONITORING, SERVICE_NAME_COMPLIANCE, SERVICE_NAME_SECURITY_ANALYTICS,
+				SERVICE_NAME_ORCHESTRATION, SERVICE_NAME_DASHBOARDS, SERVICE_NAME_DATA_EXPLORERS);
 
 		WaitUtil.waitForPageFullyLoaded(driver);
-		
+
 		boolean isExisted = false;
 		String serviceWrapperId = getServiceWrapperId(serviceName);
 		String xpath = "//*[@id='"
@@ -142,8 +142,8 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 				+ "']/div[@class='service-box-wrapper']/div[@class='landing-home-box-content']/div[@class='landing-home-box-content-head']";
 
 		String nameExpected = getExpectedText(serviceName);
-		
-		if(driver.isDisplayed(xpath) && driver.isTextPresent(nameExpected, xpath)) {
+
+		if (driver.isDisplayed(xpath) && driver.isTextPresent(nameExpected, xpath)) {
 			isExisted = true;
 		}
 		driver.getLogger().info(
@@ -159,9 +159,7 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 	{
 		driver.getLogger().info("Visiting 'Learn More-How to get started' from Welcome Page...");
 		WaitUtil.waitForPageFullyLoaded(driver);
-		driver.waitForElementPresent("id=" + DashBoardPageId.WELCOME_LEARNMORE_GETSTARTED);
 		driver.click("id=" + DashBoardPageId.WELCOME_LEARNMORE_GETSTARTED);
-		driver.takeScreenShot();
 	}
 
 	/* (non-Javadoc)
@@ -172,9 +170,8 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 	{
 		driver.getLogger().info("Visiting 'Learn More-Service Offerings' from Welcome Page...");
 		WaitUtil.waitForPageFullyLoaded(driver);
-		driver.waitForElementPresent("id=" + DashBoardPageId.WELCOME_LEARNMORE_SERVICEOFFERING);
 		driver.click("id=" + DashBoardPageId.WELCOME_LEARNMORE_SERVICEOFFERING);
-		driver.takeScreenShot();
+
 	}
 
 	/* (non-Javadoc)
@@ -185,7 +182,6 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 	{
 		driver.getLogger().info("Visiting 'Learn More-Videos' from Welcome Page...");
 		WaitUtil.waitForPageFullyLoaded(driver);
-		driver.waitForElementPresent("id=" + DashBoardPageId.WELCOME_LEARNMORE_VIDEOS);
 		driver.click("id=" + DashBoardPageId.WELCOME_LEARNMORE_VIDEOS);
 		driver.takeScreenShot();
 	}
@@ -198,8 +194,6 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 	{
 		driver.getLogger().info("Visit APM from Welcome Page...");
 		WaitUtil.waitForPageFullyLoaded(driver);
-
-		driver.waitForElementPresent("id=" + DashBoardPageId.WELCOME_APMLINKCSS);
 		driver.click("id=" + DashBoardPageId.WELCOME_APMLINKCSS);
 		driver.takeScreenShot();
 	}
@@ -222,10 +216,17 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 	{
 		driver.getLogger().info("Visit Dashboards from Welcome Page...");
 		WaitUtil.waitForPageFullyLoaded(driver);
-
-		driver.waitForElementPresent("id=" + DashBoardPageId.WELCOME_DASHBOARDSLINKID);
 		driver.click("id=" + DashBoardPageId.WELCOME_DASHBOARDSLINKID);
 		driver.takeScreenShot();
+	}
+
+	/* (non-Javadoc)
+	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IWelcomeUtil#visitInfraMonitoring(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
+	 */
+	@Override
+	public void visitInfraMonitoring(WebDriver driver)
+	{
+		driver.getLogger().warning("Visit Infrastructure Monitoring from Welcome Page is not supported in 1.7.1");
 	}
 
 	/* (non-Javadoc)
@@ -243,15 +244,13 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 		WaitUtil.waitForPageFullyLoaded(driver);
 
 		if (ITA_DEFAULT.equals(selection)) {
-			driver.waitForElementPresent("id=" + DashBoardPageId.WELCOME_ITALINKID);
+
 			driver.click("id=" + DashBoardPageId.WELCOME_ITALINKID);
-			driver.takeScreenShot();
+
 		}
 		else {
 			String eleXpath = null;
-			driver.waitForElementPresent("id=oj-select-choice-" + DashBoardPageId.WELCOME_ITA_SELECTID);
 			driver.click("id=oj-select-choice-" + DashBoardPageId.WELCOME_ITA_SELECTID);
-			driver.takeScreenShot();
 			switch (selection) {
 				case ITA_PERFORMANCE_ANALYTICS_DATABASE:
 					eleXpath = getOptionXpath(driver, DashBoardPageId.WELCOME_ITA_SELECTID,
@@ -292,9 +291,8 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 		driver.getLogger().info("Visiting LA from Welcome Page...");
 		WaitUtil.waitForPageFullyLoaded(driver);
 
-		driver.waitForElementPresent("id=" + DashBoardPageId.WELCOME_LALINKCSS);
 		driver.click("id=" + DashBoardPageId.WELCOME_LALINKCSS);
-		driver.takeScreenShot();
+
 	}
 
 	/* (non-Javadoc)
@@ -317,67 +315,6 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 
 	}
 
-	/* (non-Javadoc)
-	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IWelcomeUtil#visitInfraMonitoring(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
-	 */
-	@Override
-	public void visitInfraMonitoring(WebDriver driver)
-	{
-		driver.getLogger().warning("Visit Infrastructure Monitoring from Welcome Page is not supported in 1.7.1");
-	}
-	/**
-	 * Get text of each service or item shown in welcome page.
-	 * 
-	 * @param serviceName
-	 * 		APM | LA | ITA | infraMonitoring | compliance | securityAnalytics | orchestration |dashboards | dataExplorers | getStarted | videos | serviceOfferings
-	 * @return
-	 */
-	protected String getExpectedText(String serviceName)
-	{
-		String expectedName = null;
-		switch (serviceName) {
-			case SERVICE_NAME_APM:
-				expectedName = "Application Performance Monitoring";
-				break;
-			case SERVICE_NAME_LA:
-				expectedName = "Log Analytics";
-				break;
-			case SERVICE_NAME_ITA:
-				expectedName = "IT Analytics";
-				break;
-			case SERVICE_NAME_INFRA_MONITORING:
-				expectedName = "Infrastructure Monitoring";
-				break;
-			case SERVICE_NAME_COMPLIANCE:
-				expectedName = "Compliance";
-				break;
-			case SERVICE_NAME_SECURITY_ANALYTICS:
-				expectedName = "Security Monitoring and Analytics";
-				break;
-            case SERVICE_NAME_ORCHESTRATION:
-				expectedName = "Orchestration";
-				break;
-			case SERVICE_NAME_DASHBOARDS:
-				expectedName = "Dashboards";
-				break;
-			case SERVICE_NAME_DATA_EXPLORERS:
-				expectedName = SERVICE_NAME_DATA_EXPLORERS_EXPECTEDNAME;
-				break;
-			case LEARN_MORE_GET_STARTED:
-				expectedName = "How to get started";
-				break;
-			case LEARN_MORE_VIDEOS:
-				expectedName = "Videos";
-				break;
-			case LEARN_MORE_SERVICE_OFFERINGS:
-				expectedName = "Service Offerings";
-				break;
-			default:
-				break;
-		}
-		return expectedName;
-	}
-	
 	/**
 	 * Get id of items in Learn More
 	 *
@@ -405,10 +342,84 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 	}
 
 	/**
-	 * Get wrapper id of each service
-	 * 
+	 * Get text of each service or item shown in welcome page.
+	 *
 	 * @param serviceName
-	 * 		APM | LA | ITA | infraMonitoring | compliance | securityAnalytics | orchestration | dashboards | dataExplorers
+	 *            APM | LA | ITA | infraMonitoring | compliance | securityAnalytics | orchestration |dashboards | dataExplorers |
+	 *            getStarted | videos | serviceOfferings
+	 * @return
+	 */
+	protected String getExpectedText(String serviceName)
+	{
+		String expectedName = null;
+		switch (serviceName) {
+			case SERVICE_NAME_APM:
+				expectedName = "Application Performance Monitoring";
+				break;
+			case SERVICE_NAME_LA:
+				expectedName = "Log Analytics";
+				break;
+			case SERVICE_NAME_ITA:
+				expectedName = "IT Analytics";
+				break;
+			case SERVICE_NAME_INFRA_MONITORING:
+				expectedName = "Infrastructure Monitoring";
+				break;
+			case SERVICE_NAME_COMPLIANCE:
+				expectedName = "Compliance";
+				break;
+			case SERVICE_NAME_SECURITY_ANALYTICS:
+				expectedName = "Security Monitoring and Analytics";
+				break;
+			case SERVICE_NAME_ORCHESTRATION:
+				expectedName = "Orchestration";
+				break;
+			case SERVICE_NAME_DASHBOARDS:
+				expectedName = "Dashboards";
+				break;
+			case SERVICE_NAME_DATA_EXPLORERS:
+				expectedName = SERVICE_NAME_DATA_EXPLORERS_EXPECTEDNAME;
+				break;
+			case LEARN_MORE_GET_STARTED:
+				expectedName = "How to get started";
+				break;
+			case LEARN_MORE_VIDEOS:
+				expectedName = "Videos";
+				break;
+			case LEARN_MORE_SERVICE_OFFERINGS:
+				expectedName = "Service Offerings";
+				break;
+			default:
+				break;
+		}
+		return expectedName;
+	}
+
+	/**
+	 * Get jet's option xpath according to "select" id and "option" id
+	 *
+	 * @param driver
+	 * @param selectId
+	 * @param optionId
+	 * @return @
+	 */
+	protected String getOptionXpath(WebDriver driver, String selectId, String optionId)
+	{
+		String optionXpath;
+		WebElement li = driver.getWebDriver().findElement(By.id(optionId));
+		List<WebElement> list = driver.getWebDriver().findElements(By.xpath("//select[@id='" + selectId + "']/option"));
+		//get the index of option in select dropdown
+		int index = list.indexOf(li);
+		//get option's xpath generated by jet
+		optionXpath = "//ul[@id='oj-listbox-results-" + selectId + "']/li[" + (index + 1) + "]/div";
+		return optionXpath;
+	}
+
+	/**
+	 * Get wrapper id of each service
+	 *
+	 * @param serviceName
+	 *            APM | LA | ITA | infraMonitoring | compliance | securityAnalytics | orchestration | dashboards | dataExplorers
 	 * @return
 	 */
 	protected String getServiceWrapperId(String serviceName)
@@ -433,7 +444,7 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 			case SERVICE_NAME_SECURITY_ANALYTICS:
 				serviceWrapperId = DashBoardPageId.WELCOME_SECURITYANALYTICSID;
 				break;
-            case SERVICE_NAME_ORCHESTRATION:
+			case SERVICE_NAME_ORCHESTRATION:
 				serviceWrapperId = DashBoardPageId.WELCOME_ORCHESTRATIONID;
 				break;
 			case SERVICE_NAME_DASHBOARDS:
@@ -446,26 +457,6 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 				break;
 		}
 		return serviceWrapperId;
-	}
-
-	/**
-	 * Get jet's option xpath according to "select" id and "option" id
-	 *
-	 * @param driver
-	 * @param selectId
-	 * @param optionId
-	 * @return @
-	 */
-	protected String getOptionXpath(WebDriver driver, String selectId, String optionId)
-	{
-		String optionXpath;
-		WebElement li = driver.getWebDriver().findElement(By.id(optionId));
-		List<WebElement> list = driver.getWebDriver().findElements(By.xpath("//select[@id='" + selectId + "']/option"));
-		//get the index of option in select dropdown
-		int index = list.indexOf(li);
-		//get option's xpath generated by jet
-		optionXpath = "//ul[@id='oj-listbox-results-" + selectId + "']/li[" + (index + 1) + "]/div";
-		return optionXpath;
 	}
 
 }

@@ -38,47 +38,47 @@ public class DashboardHomeUtil_1170 extends DashboardHomeUtil_1150
 		if (trimedFs.contains("apm")) {
 			driver.waitForElementPresent(DashBoardPageId.FILTERAPMLOCATOR);
 			driver.click(DashBoardPageId.FILTERAPMLOCATOR);
-			WaitUtil.waitForPageFullyLoaded(driver);
+
 		}
 		if (trimedFs.contains("la")) {
 			driver.waitForElementPresent(DashBoardPageId.FILTERLALOCATOR);
 			driver.click(DashBoardPageId.FILTERLALOCATOR);
-			WaitUtil.waitForPageFullyLoaded(driver);
+
 		}
 		if (trimedFs.contains("ita")) {
 			driver.waitForElementPresent(DashBoardPageId.FILTERITALOCATOR);
 			driver.click(DashBoardPageId.FILTERITALOCATOR);
-			WaitUtil.waitForPageFullyLoaded(driver);
+
 		}
 		if (trimedFs.contains("orchestration")) {
 			driver.waitForElementPresent(DashBoardPageId.FILTERORCHESTRATIONLOCATOR);
 			driver.click(DashBoardPageId.FILTERORCHESTRATIONLOCATOR);
-			WaitUtil.waitForPageFullyLoaded(driver);
+
 		}
 		if (trimedFs.contains("security")) {
 			driver.waitForElementPresent(DashBoardPageId.FILTERSECURITYLOCATOR);
 			driver.click(DashBoardPageId.FILTERSECURITYLOCATOR);
-			WaitUtil.waitForPageFullyLoaded(driver);
+
 		}
 		if (trimedFs.contains("oracle")) {
 			driver.waitForElementPresent(DashBoardPageId.FILTERORACLELOCATOR);
 			driver.click(DashBoardPageId.FILTERORACLELOCATOR);
-			WaitUtil.waitForPageFullyLoaded(driver);
+
 		}
 		if (trimedFs.contains("share")) {
 			driver.waitForElementPresent(DashBoardPageId.FILTERSHARELOCATOR);
 			driver.click(DashBoardPageId.FILTERSHARELOCATOR);
-			WaitUtil.waitForPageFullyLoaded(driver);
+
 		}
 		if (trimedFs.contains("me")) {
 			driver.waitForElementPresent(DashBoardPageId.FILTERMELOCATOR);
 			driver.click(DashBoardPageId.FILTERMELOCATOR);
-			WaitUtil.waitForPageFullyLoaded(driver);
+
 		}
 		if (trimedFs.contains("favorites")) {
 			driver.waitForElementPresent(DashBoardPageId.FILTERFAVORITELOCATOR);
 			driver.click(DashBoardPageId.FILTERFAVORITELOCATOR);
-			WaitUtil.waitForPageFullyLoaded(driver);
+
 		}
 
 	}

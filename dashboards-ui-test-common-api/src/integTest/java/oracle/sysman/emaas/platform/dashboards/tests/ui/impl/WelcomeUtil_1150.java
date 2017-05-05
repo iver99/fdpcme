@@ -28,7 +28,6 @@ public class WelcomeUtil_1150 extends WelcomeUtil_175
 
 		driver.waitForElementPresent("id=oj-select-choice-" + DashBoardPageId.WELCOME_DATAEXP_SELECTID);
 		driver.click("id=oj-select-choice-" + DashBoardPageId.WELCOME_DATAEXP_SELECTID);
-		driver.takeScreenShot();
 		switch (selection) {
 			case DATA_EXPLORERS_LOG:
 				eleXpath = getOptionXpath(driver, DashBoardPageId.WELCOME_DATAEXP_SELECTID, DashBoardPageId.WELCOME_DATAEXP_LOG);
