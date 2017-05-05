@@ -166,6 +166,43 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 	}
 
 	@Override
+	public boolean hasSubMenu(WebDriver driver, String menuitem)
+	{
+		boolean isExisted = false;
+		Validator.notEmptyString("menuitem in [hasSubMenu]", menuitem);
+
+		driver.waitForElementPresent("css=" + DashBoardPageId_1180.HAMBURGERMENU_CONTAINER_CSS);
+		if (!isHamburgerMenuDisplayed(driver)) {
+			driver.getLogger().info("Not displayed hamburger menu, need to show it");
+			clickHamburgerMenuIcon(driver);
+		}
+
+		List<WebElement> webd_menuitem = driver.getWebDriver().findElements(
+				By.cssSelector(DashBoardPageId_1180.HAMBURGERMENU_MENUITEM_LABEL_CSS));
+		if (webd_menuitem == null || webd_menuitem.isEmpty()) {
+			throw new NoSuchElementException("clickMenuItem: the menuitem element is not found");
+		}
+		for (WebElement nav : webd_menuitem) {
+			if (nav.getText().trim().equals(menuitem) && nav.isDisplayed() && isElementEnabled(driver, nav)) {
+				driver.getLogger().info("Start to find the expand sub menu icon of the " + menuitem);
+				try {
+					nav.findElement(By.xpath("../..")).findElement(
+							By.cssSelector(DashBoardPageId_1180.HAMBURGERMENU_EXPAND_SUBMENU_ICON_CSS));
+					isExisted = true;
+					driver.getLogger().info("'" + menuitem + "' has sub menu icon");
+					return isExisted;
+				}
+				catch (NoSuchElementException ex) {
+					driver.getLogger().info("'" + menuitem + "' doesn't have sub menu icon");
+					return isExisted;
+				}
+			}
+		}
+		driver.getLogger().info("'" + menuitem + "' not existed or disabled");
+		return isExisted;
+	}
+
+	@Override
 	public boolean isAdmin(WebDriver driver)
 	{
 		boolean isDisplayed = false;
@@ -429,7 +466,17 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 		if (isHamburgerMenuEnabled(driver)) {
 			driver.getLogger().info(
 					"Start to check if visual analyzer link is existed in hamburger menu. Link name: " + visualAnalyzerLinkName);
-			isExisted = isMenuItemExisted(driver, visualAnalyzerLinkName);
+			if ("Log Explorer".equals(visualAnalyzerLinkName)) {
+				if (hasSubMenu(driver, ROOT_MENU_LA)) {
+					expandSubMenu(driver, ROOT_MENU_LA);
+				}
+				else {
+					visualAnalyzerLinkName = ROOT_MENU_LA;
+					driver.getLogger().info(
+							"Log Explorer submenu is not yet provided by Log Analytics, use menu: " + ROOT_MENU_LA);
+				}
+			}
+			isExisted = isMenuItemEnabled(driver, visualAnalyzerLinkName);
 		}
 		else {
 			//branding bar
@@ -655,7 +702,7 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 		else {
 			//the branding bar
 			driver.getLogger()
-					.info("Start to visit visual analyzer link from branding bar. Link name: " + visualAnalyzerLinkName);
+			.info("Start to visit visual analyzer link from branding bar. Link name: " + visualAnalyzerLinkName);
 			visitApplicationLink(driver, "va", visualAnalyzerLinkName);
 		}
 		driver.getLogger().info("visitApplicationVisualAnalyzer ended");
