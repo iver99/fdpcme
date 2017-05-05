@@ -76,6 +76,15 @@ public interface IBrandingBarUtil extends IUiTestCommonAPI
 	public void goBackToParentMenu(WebDriver driver);
 
 	/**
+	 * Check if the menuitem if has sub-menu
+	 * 
+	 * @param driver
+	 * @param menuitem
+	 * @return
+	 */
+	public boolean hasSubMenu(WebDriver driver, String menuitem);
+
+	/**
 	 * Check whether admin field exist
 	 *
 	 * @param driver

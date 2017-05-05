@@ -88,6 +88,12 @@ public class BrandingBarUtil
 		bu.goBackToParentMenu(driver);
 	}
 
+	public static boolean hasSubMenu(WebDriver driver, String menuitem)
+	{
+		IBrandingBarUtil bu = new UtilLoader<IBrandingBarUtil>().loadUtil(driver, IBrandingBarUtil.class);
+		return bu.hasSubMenu(driver, menuitem);
+	}
+
 	/**
 	 * Check whether admin field exist
 	 *
