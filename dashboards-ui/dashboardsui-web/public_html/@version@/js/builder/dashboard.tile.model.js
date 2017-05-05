@@ -35,6 +35,7 @@ define(['knockout',
             var widgetAreaWidth = 0;
             var widgetAreaContainer = null;
             var ctxUtil = new contextModel();
+            var omcTimeConstants = ctxUtil.OMCTimeConstants;
             var omcContext = ctxUtil.getOMCContext();
 
             var dragStartRow = null;
@@ -953,7 +954,7 @@ define(['knockout',
                 var current = new Date();
 
                 if(ctxUtil.formalizeTimePeriod(timePeriod)) {
-                    if(ctxUtil.formalizeTimePeriod(timePeriod) !== "CUSTOM") { //get start and end time for relative time period
+                    if(ctxUtil.formalizeTimePeriod(timePeriod) !== omcTimeConstants.QUICK_PICK.CUSTOM) { //get start and end time for relative time period
                         var tmp = ctxUtil.getStartEndTimeFromTimePeriod(ctxUtil.formalizeTimePeriod(timePeriod));
                         if(tmp) {
                             initStart = tmp.start;
@@ -1025,7 +1026,7 @@ define(['knockout',
                 self.timeSelectorModel.viewStart(start);
                 self.timeSelectorModel.viewEnd(end);
                 self.timeSelectorModel.viewTimePeriod(tp);
-                if (tp === "Custom") {
+                if (tp === omcTimeConstants.QUICK_PICK.CUSTOM) {
                     self.initStart(start);
                     self.initEnd(end);
                     self.timePeriod(tp);
