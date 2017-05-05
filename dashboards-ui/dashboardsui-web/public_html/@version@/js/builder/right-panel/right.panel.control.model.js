@@ -92,6 +92,7 @@ function (ko, $, oj, dfu, mbu, uiutil) {
                     setTileHightlighted(self.lastHighlightWigetIndex);
                 }
             }
+            $b.triggerBuilderResizeEvent('show right panel');
         };
 
         self.toggleLeftPanel = function () {

@@ -49,6 +49,9 @@ define(['knockout',
                         elem.height(height - _topHeight - h);
                     }
                     if(elem.hasClass("dbd-left-panel")||elem.hasClass("right-panel-toggler")){
+                        if(v_siblings && 0 === v_siblings.length){
+                            elem.height(height - _topHeight);
+                        }
                         if(ko.dataFor($('.df-right-panel')[0]).isDashboardSet()){
                             elem.css("top",_topHeight-99);
                         }else{
