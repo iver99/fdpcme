@@ -10,8 +10,6 @@
 
 package oracle.sysman.emaas.platform.dashboards.test.common;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -26,15 +24,16 @@ import java.util.List;
 import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
 import oracle.sysman.qatool.uifwk.utils.Utils;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.config.LogConfig;
+import com.oracle.omc.omctf.testsdk.context.TenantResolver;
 
 public class CommonTest
 {
-	private static final Logger LOGGER = LogManager.getLogger(CommonTest.class);
-
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	private static class SchemaDeploymentUrls
 	{
@@ -77,6 +76,8 @@ public class CommonTest
 
 	}
 
+	private static final Logger LOGGER = LogManager.getLogger(CommonTest.class);
+
 	private static final String DOMAIN = "www.";
 	private static final String DSB_DEPLOY_URL = "/instances?servicename=Dashboard-API";
 	private static final String AUTHORIZATION = "Authorization";
@@ -114,7 +115,7 @@ public class CommonTest
 			}
 		}
 		catch (Exception e) {
-			LOGGER.info("context",e);
+			LOGGER.info("context", e);
 			//	LOGGER.error("an error occureed while getting schema name", e);
 			return Collections.emptyList();
 		}
@@ -122,7 +123,6 @@ public class CommonTest
 		urls.addAll(urlSet);
 		return urls;
 	}
-
 
 	public static String getDomainName(String url) throws URISyntaxException
 	{
@@ -136,6 +136,11 @@ public class CommonTest
 		URI uri = new URI(url);
 		int port = uri.getPort();
 		return port;
+	}
+
+	public static String getTenantName(String lookupName)
+	{
+		return TenantResolver.getDefault().getTenantName(lookupName);
 	}
 
 	private static String getServiceManagerUrl()
@@ -185,7 +190,7 @@ public class CommonTest
 			RestAssured.config = RestAssured.config().logConfig(LogConfig.logConfig().enablePrettyPrinting(false));
 		}
 		catch (Exception e) {
-			LOGGER.info("context",e);
+			LOGGER.info("context", e);
 		}
 
 	}
@@ -198,7 +203,7 @@ public class CommonTest
 	public String getData(String url)
 	{
 
-		if (url == null || ("").equals(url.trim())) {
+		if (url == null || "".equals(url.trim())) {
 			return null;
 		}
 
@@ -218,7 +223,7 @@ public class CommonTest
 			}
 		}
 		catch (IOException e) {
-			LOGGER.info("context",e);
+			LOGGER.info("context", e);
 		}
 		finally {
 			try {
@@ -231,7 +236,7 @@ public class CommonTest
 			}
 			catch (IOException ioEx) {
 				//ignore
-				LOGGER.info("context",ioEx);
+				LOGGER.info("context", ioEx);
 			}
 		}
 		return response.toString();

@@ -5,6 +5,7 @@ import oracle.sysman.emaas.platform.dashboards.test.ui.util.LoginAndLogout;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
@@ -119,7 +120,10 @@ public class TestBrandingBar_BasicTest extends LoginAndLogout
 		webd.getLogger().info("start to test in testComplianceLink");
 		WaitUtil.waitForPageFullyLoaded(webd);
 
-		// Monitoring link
+		//check if Compliance link is available
+		Assert.assertTrue(BrandingBarUtil.isCloudServiceLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_COMP));
+
+		// Compliance link
 		BrandingBarUtil.visitApplicationCloudService(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_COMP);
 		WaitUtil.waitForPageFullyLoaded(webd);
 
@@ -163,6 +167,9 @@ public class TestBrandingBar_BasicTest extends LoginAndLogout
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in InfrastructureMonitoringLink");
 		WaitUtil.waitForPageFullyLoaded(webd);
+
+		//check if Monitoring link is available
+		Assert.assertTrue(BrandingBarUtil.isCloudServiceLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_IM));
 
 		// Monitoring link
 		BrandingBarUtil.visitApplicationCloudService(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_IM);
@@ -224,7 +231,10 @@ public class TestBrandingBar_BasicTest extends LoginAndLogout
 		webd.getLogger().info("start to test in testOrchestrationLink");
 		WaitUtil.waitForPageFullyLoaded(webd);
 
-		// Monitoring link
+		//check if Orchestration link is available
+		Assert.assertTrue(BrandingBarUtil.isCloudServiceLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_OCS));
+
+		// Orchestration link
 		BrandingBarUtil.visitApplicationCloudService(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_OCS);
 		WaitUtil.waitForPageFullyLoaded(webd);
 
@@ -254,7 +264,10 @@ public class TestBrandingBar_BasicTest extends LoginAndLogout
 		webd.getLogger().info("start to test in testSecurityLink");
 		WaitUtil.waitForPageFullyLoaded(webd);
 
-		// Monitoring link
+		//check if Security link is available
+		Assert.assertTrue(BrandingBarUtil.isCloudServiceLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_SECU));
+
+		// Security link
 		BrandingBarUtil.visitApplicationCloudService(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_SECU);
 		WaitUtil.waitForPageFullyLoaded(webd);
 
