@@ -445,8 +445,8 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     var eleOffset = $(self.wrapperId).offset(); //get element position(top & left) relative to the document
                     var bodyWidth = $("body").width();
                     var leftDrawerWidth = $(self.panelId).width() ? $(self.panelId).width() : 104;
-                    var calendarPanelWidth = $(self.pickerPanelId).width() ? $(self.pickerPanelId).width() : 562;
-                    var tfPanelWidth = $(self.timeFilterId).width() ? $(self.timeFilterId).width() : 562;
+                    var calendarPanelWidth = $(self.pickerPanelId).width() ? $(self.pickerPanelId).width() : 567;
+                    var tfPanelWidth = $(self.timeFilterId).width() ? $(self.timeFilterId).width() : 567;
                     var panelWidth = leftDrawerWidth + calendarPanelWidth;
                     if(params.enableTimeFilter && params.enableTimeFilter === true) {
                         panelWidth += tfPanelWidth;
@@ -919,6 +919,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         }
                     }
                     if(self.lrCtrlVal() !== "timeLevelCtrl") {
+                        self.startDateError(0);
                         return;
                     }
                     if(self.isStartLaterThanEnd() === true) {
@@ -1493,11 +1494,13 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     var start = timeRange.start;
                     var end = timeRange.end;
                     
-                    self.startDateISO(start.slice(0, 10));
-                    self.endDateISO(end.slice(0, 10));
-                    
-                    self.startTime(start.slice(10));
-                    self.endTime(end.slice(10));
+                    if(self.lrCtrlVal() !== "timeLevelCtrl") {
+                        self.startDateISO(start.slice(0, 10));
+                        self.endDateISO(end.slice(0, 10));
+
+                        self.startTime(start.slice(10));
+                        self.endTime(end.slice(10));
+                    }
                     
                     if(self.showRightPanel() === true && self.isCustomBeyondWindowLimit() === true) {
                         self.flexRelTimeValError(2);
@@ -1526,8 +1529,8 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                  */
                 self.recoverDates = function() {
                     var date = oj.IntlConverterUtils.dateToLocalIso(new Date());
-                    var origStartDate = self.startDateISO();
-                    var origEndDate = self.endDateISO();
+                    var origStartDate = self.lastStartDateISO() ? self.lastStartDateISO() : self.startDateISO();
+                    var origEndDate = self.lastEndDateISO() ? self.lastEndDateISO() : self.endDateISO();
                     
                     self.startDateISO(date);
                     self.endDateISO(date);
@@ -1543,6 +1546,10 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         self.flexRelTimeValError(0);
                     }
                     if(self.init || (data.option !== "value" && data.option !== "disabled")) {
+                        return;
+                    }
+                    
+                    if(data.option === "value" && data.previousValue === data.value) {
                         return;
                     }
                     
