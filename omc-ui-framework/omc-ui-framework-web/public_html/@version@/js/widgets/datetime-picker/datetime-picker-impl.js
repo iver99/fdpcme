@@ -154,21 +154,6 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     return ctxUtil.formalizeTimePeriod(timePeriod);
                 }
                 
-                function informalizeTimePeriod(timePeriod) {
-                if(!timePeriod) {
-                    return null;
-                }
-                
-                var tp = timePeriod.toLowerCase();
-                tp = (tp.slice(0, 1)).toUpperCase() + tp.slice(1);
-                var arr = tp.split("_");
-                if(parseInt(arr[1]) >1) {
-                    arr[2] = arr[2] + "s";
-                }
-                tp = arr.join(" ");
-                return tp;
-            }
-                
                 /**
                  * Check if a time period is a valid time period with format "LAST_X_UNIT"
                  * @param {type} timePeriod
@@ -2107,7 +2092,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                 if(flexRelTimePeriodId) {
                                     self.callbackAfterApply(newDateWithMilliseconds(start), newDateWithMilliseconds(end), flexRelTimePeriodId, self.timeFilter(), flexRelTimeVal, flexRelTimeOpt);
                                 }else {
-                                    self.callbackAfterApply(newDateWithMilliseconds(start), newDateWithMilliseconds(end), informalizeTimePeriod(timePeriod), self.timeFilter(), flexRelTimeVal, flexRelTimeOpt);
+                                    self.callbackAfterApply(newDateWithMilliseconds(start), newDateWithMilliseconds(end), timePeriod, self.timeFilter(), flexRelTimeVal, flexRelTimeOpt);
                                 }
                             },
                             error: function () {
