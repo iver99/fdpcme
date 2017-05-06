@@ -10,12 +10,12 @@
         <style type="text/css">
             div.dbd-error-area {
               position: absolute; 
-              top: 38.2%;
+              /*top: 38.2%;*/
               width:100%;
               text-align:center;
             }
             .dbd-error-area .dbd-error-inner {
-              margin: 0 10rem;
+              margin: 10rem 10rem 0 10rem;
               padding-bottom: 2rem;
               border: 1px solid #d6dfe6;
               background: #e8f2fb;
@@ -32,22 +32,23 @@
         <script type="text/javascript">
             ////ADDITIONALDATA////
         </script>
+        
         <script data-main="@version@/js/error" src="libs/@version@/js/oraclejet/js/libs/require/require.js"></script>
     </head>
     <body>
-        <div id="global-body" style="display: none">
-            <!-- Header section which contains the Global Branding, Global Navigation, and Application Navigation code.
+        <div id="global-body" style="display: none" class="oj-web-applayout-offcanvas-wrapper oj-offcanvas-outer-wrapper">
+            <div id="offcanvasInnerContainer" class="oj-offcanvas-inner-wrapper">
+            <div class="dbd-error-area oj-web-applayout-scrollable oj-web-applayout-page" role="main">
+                <!-- Header section which contains the Global Branding, Global Navigation, and Application Navigation code.
                 Template is located in /templates/demoAppHeaderTemplate.html
-            -->
-            <header id="headerWrapper" >
-                <div data-bind="component: {
-                        name: 'df-oracle-branding-bar',
-                        params: brandingbarParams
-                    }">
-                </div>
-            </header>
-            
-            <div class="dbd-error-area" >
+                -->
+                <header id="headerWrapper" >
+                    <div data-bind="component: {
+                            name: 'df-oracle-branding-bar',
+                            params: brandingbarParams
+                        }">
+                    </div>
+                </header>
                 <div class="dbd-error-inner" id="errorMain">
                     <img src="@version@/images/alert.png" data-bind="attr: {alt: errorPageMessage}">
                     <h4 class="dbd-error-msg" data-bind="text: errorPageMessage"></h4>
@@ -67,6 +68,7 @@
                     </div>
                 </div>
             </div>
+        </div>
         </div>
     </body>
 </html>

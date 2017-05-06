@@ -5,6 +5,7 @@ import oracle.sysman.emaas.platform.dashboards.test.ui.util.LoginAndLogout;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
@@ -22,13 +23,12 @@ public class TestBrandingBar_BasicTest extends LoginAndLogout
 		DashBoardUtils.loadWebDriver(webd);
 	}
 
-	//@Test(alwaysRun = true)
+	@Test(alwaysRun = true)
 	public void testAdminConsoleLink()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testAdminConsoleLink");
 		WaitUtil.waitForPageFullyLoaded(webd);
-
 		// Administration link for Administration Console UI
 		BrandingBarUtil.visitApplicationAdministration(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_ADMINCONSOLE);
 		WaitUtil.waitForPageFullyLoaded(webd);
@@ -37,12 +37,20 @@ public class TestBrandingBar_BasicTest extends LoginAndLogout
 		DashBoardUtils.verifyURL(webd, "admin-console/ac/adminConsole.html");
 	}
 
-	@Test(alwaysRun = true)
+	//@Test(alwaysRun = true)
 	public void testAdminLink()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testAdminLink");
 		WaitUtil.waitForPageFullyLoaded(webd);
+		if (!DashBoardUtils.isHamburgerMenuEnabled(webd)) {
+
+		}
+		else {
+			BrandingBarUtil.clickMenuItem(webd, BrandingBarUtil.ROOT_MENU_ADMIN);
+			WaitUtil.waitForPageFullyLoaded(webd);
+			DashBoardUtils.verifyURL(webd, "eventUi/rules/html/rules-dashboard.html");
+		}
 	}
 
 	@Test(alwaysRun = true)
@@ -58,6 +66,36 @@ public class TestBrandingBar_BasicTest extends LoginAndLogout
 
 		//verify the url of opened page
 		DashBoardUtils.verifyURL(webd, "tenantmgmt/services/customersoftware");
+	}
+
+	@Test(alwaysRun = true)
+	public void testAlertRules()
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testAlertRules");
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		// alert rules link
+		BrandingBarUtil.visitApplicationAdministration(webd, BrandingBarUtil.NAV_LINK_TEXT_ADMIN_ALERT);
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		//verify the url of opened page
+		DashBoardUtils.verifyURL(webd, "eventUi/rules/html/rules-dashboard.html");
+	}
+
+	@Test(alwaysRun = true)
+	public void testAlerts()
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testAlerts");
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		// Alets link
+		BrandingBarUtil.visitApplicationHome(webd, BrandingBarUtil.NAV_LINK_TEXT_HOME_ALERTS);
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		//verify the url of opened page
+		DashBoardUtils.verifyURL(webd, "eventUi/console/html/event-dashboard.html");
 	}
 
 	@Test(alwaysRun = true)
@@ -82,7 +120,10 @@ public class TestBrandingBar_BasicTest extends LoginAndLogout
 		webd.getLogger().info("start to test in testComplianceLink");
 		WaitUtil.waitForPageFullyLoaded(webd);
 
-		// Monitoring link
+		//check if Compliance link is available
+		Assert.assertTrue(BrandingBarUtil.isCloudServiceLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_COMP));
+
+		// Compliance link
 		BrandingBarUtil.visitApplicationCloudService(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_COMP);
 		WaitUtil.waitForPageFullyLoaded(webd);
 
@@ -126,6 +167,9 @@ public class TestBrandingBar_BasicTest extends LoginAndLogout
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in InfrastructureMonitoringLink");
 		WaitUtil.waitForPageFullyLoaded(webd);
+
+		//check if Monitoring link is available
+		Assert.assertTrue(BrandingBarUtil.isCloudServiceLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_IM));
 
 		// Monitoring link
 		BrandingBarUtil.visitApplicationCloudService(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_IM);
@@ -187,7 +231,10 @@ public class TestBrandingBar_BasicTest extends LoginAndLogout
 		webd.getLogger().info("start to test in testOrchestrationLink");
 		WaitUtil.waitForPageFullyLoaded(webd);
 
-		// Monitoring link
+		//check if Orchestration link is available
+		Assert.assertTrue(BrandingBarUtil.isCloudServiceLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_OCS));
+
+		// Orchestration link
 		BrandingBarUtil.visitApplicationCloudService(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_OCS);
 		WaitUtil.waitForPageFullyLoaded(webd);
 
@@ -217,7 +264,10 @@ public class TestBrandingBar_BasicTest extends LoginAndLogout
 		webd.getLogger().info("start to test in testSecurityLink");
 		WaitUtil.waitForPageFullyLoaded(webd);
 
-		// Monitoring link
+		//check if Security link is available
+		Assert.assertTrue(BrandingBarUtil.isCloudServiceLinkExisted(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_SECU));
+
+		// Security link
 		BrandingBarUtil.visitApplicationCloudService(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_SECU);
 		WaitUtil.waitForPageFullyLoaded(webd);
 
