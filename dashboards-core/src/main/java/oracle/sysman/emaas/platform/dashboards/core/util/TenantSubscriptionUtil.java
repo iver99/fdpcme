@@ -10,48 +10,31 @@
 
 package oracle.sysman.emaas.platform.dashboards.core.util;
 
-import java.io.IOException;
-import java.util.*;
-import java.net.SocketTimeoutException;
-
 import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.UniformInterfaceException;
+import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter;
 import oracle.sysman.emaas.platform.dashboards.core.model.subscription2.*;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
-import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter;
-import oracle.sysman.emaas.platform.dashboards.core.util.lookup.RetryableLookupClient;
-import oracle.sysman.emaas.platform.dashboards.core.util.lookup.RetryableLookupClient.RetryableLookupException;
-import oracle.sysman.emaas.platform.dashboards.core.util.lookup.RetryableLookupClient.RetryableRunner;
-
-import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
-import oracle.sysman.emaas.platform.emcpdf.cache.exception.CacheInconsistencyException;
-import java.net.SocketTimeoutException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter;
-import oracle.sysman.emaas.platform.dashboards.core.restclient.AppMappingCollection;
-import oracle.sysman.emaas.platform.dashboards.core.restclient.AppMappingEntity;
-import oracle.sysman.emaas.platform.dashboards.core.restclient.DomainEntity;
-import oracle.sysman.emaas.platform.dashboards.core.restclient.DomainsEntity;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil.VersionedLink;
 import oracle.sysman.emaas.platform.dashboards.core.util.lookup.RetryableLookupClient;
 import oracle.sysman.emaas.platform.dashboards.core.util.lookup.RetryableLookupClient.RetryableLookupException;
 import oracle.sysman.emaas.platform.dashboards.core.util.lookup.RetryableLookupClient.RetryableRunner;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
+import oracle.sysman.emaas.platform.emcpdf.cache.exception.ExecutionException;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.DefaultKeyGenerator;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
 import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.sun.jersey.api.client.ClientHandlerException;
-import com.sun.jersey.api.client.UniformInterfaceException;
+import java.io.IOException;
+import java.net.SocketTimeoutException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author guobaochen
@@ -103,22 +86,24 @@ public class TenantSubscriptionUtil
         final Object cacheKey = DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS));
         CachedTenantSubcriptionInfo cachedTenantSubcriptionInfo = null;
         List<String> cachedApps;
-		try {
+        try {
+            LOGGER.info("Trying to retrieve tenant subscription info from cache....");
             cachedTenantSubcriptionInfo = (CachedTenantSubcriptionInfo) cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE).get(cacheKey);
+        } catch (ExecutionException e) {
+            LOGGER.error("Error occurred when using cache...");
+        }
+        if(cachedTenantSubcriptionInfo!=null){
             cachedApps = cachedTenantSubcriptionInfo.getSubscribedAppsList();
-            TenantSubscriptionInfo tenantSubscriptionInfo1 =cachedTenantSubcriptionInfo.getTenantSubscriptionInfo();
-            LOGGER.info("retrieved tenantSubscriptionInfo for tenant {} from cache,data is {}",tenant,tenantSubscriptionInfo1);
-            LOGGER.info("retrieved subscribed apps for tenant {} from cache,data is {}",tenant,cachedApps);
-            if(cachedApps !=null ){
+            TenantSubscriptionInfo tenantSubscriptionInfo1 = cachedTenantSubcriptionInfo.getTenantSubscriptionInfo();
+            LOGGER.info("retrieved tenantSubscriptionInfo for tenant {} from cache,data is {}", tenant, tenantSubscriptionInfo1);
+            LOGGER.info("retrieved subscribed apps for tenant {} from cache,data is {}", tenant, cachedApps);
+            if (cachedApps != null) {
                 copyTenantSubscriptionInfo(tenantSubscriptionInfo1, tenantSubscriptionInfo);
                 return cachedApps;
             }
-        }catch (Exception e) {
-            LOGGER.error("context", e);
-            return Collections.emptyList();
         }
 
-        LOGGER.info("Retrieving subscribed apps from /serviceRequest for tenant {}",tenant);
+        LOGGER.info("Trying to retrieve subscription info from /serviceRequest for tenant {}",tenant);
         List<String> apps = new RetryableLookupClient<List<String>>().connectAndDoWithRetry("TenantService", "1.0+", "collection/tenants", false, null, new RetryableRunner<List<String>>() {
             public List<String> runWithLink(VersionedLink lookupLink) throws Exception {
                 if (lookupLink == null || lookupLink.getHref() == null || "".equals(lookupLink.getHref())) {

@@ -380,7 +380,6 @@ public class TenantSubscriptionUtilTest
                 result = links;
 
 				anyClient.getWithException(anyString, anyString, anyString);
-                anyClient.getWithException(anyString, anyString, anyString);
 				returns("");
 			}
 		};
@@ -436,6 +435,8 @@ public class TenantSubscriptionUtilTest
                 result = insList;
                 anyInstanceInfo.getLinksWithProtocol(anyString, anyString);
                 result = links;
+				anyClient.getWithException(anyString, anyString, anyString);
+				result = null;
 			}
 		};
 		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1", new TenantSubscriptionInfo());
@@ -646,7 +647,7 @@ public class TenantSubscriptionUtilTest
 			}
 		};
 	}
-	
+
 	private void cleanCache(){
 
 		ICacheManager cm= CacheManagers.getInstance().build();
@@ -655,8 +656,8 @@ public class TenantSubscriptionUtilTest
 		cm.getCache(CacheConstants.CACHES_DOMAINS_DATA_CACHE).evict(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(ENTITY_NAMING_DOMAINS_URL)));
 		cm.getCache(CacheConstants.CACHES_DOMAINS_DATA_CACHE).evict(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(TENANT_LOOKUP_URL)));
 	}
-	
-	@AfterMethod(groups = { "s2" })
+
+	/*@AfterMethod(groups = { "s2" })
 	public void afterMethod()
 	{
 		cleanCache();
@@ -666,5 +667,5 @@ public class TenantSubscriptionUtilTest
 	public void beforeMethod() throws Exception
 	{
 		cleanCache();
-	}
+	}*/
 }
