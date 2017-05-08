@@ -20,13 +20,7 @@ public class DashBoardUtils
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Application Performance Monitoring"));
 	}
 
-	public static void closeOverviewPage() 
-	{
-
-		driver.getLogger().info("before clicking overview button");
-		driver.click(PageId.OVERVIEWCLOSEID);
-		driver.getLogger().info("after clicking overview button");
-	}
+	
 
 	public static void itaOobGridView() 
 	{
@@ -63,13 +57,13 @@ public class DashBoardUtils
 	{
 		driver = webDriver;
 
-		if (driver.isDisplayed(PageId.OVERVIEWCLOSEID)) {
-			DashBoardUtils.closeOverviewPage();
-		}
-
-		Assert.assertFalse(driver.isDisplayed(PageId.OVERVIEWCLOSEID));
-
-		driver.takeScreenShot();
+//		if (driver.isDisplayed(PageId.OVERVIEWCLOSEID)) {
+//			DashBoardUtils.closeOverviewPage();
+//		}
+//
+//		Assert.assertFalse(driver.isDisplayed(PageId.OVERVIEWCLOSEID));
+//
+//		driver.takeScreenShot();
 	}
 
 	public static void loadWebDriverOnly(WebDriver webDriver) 

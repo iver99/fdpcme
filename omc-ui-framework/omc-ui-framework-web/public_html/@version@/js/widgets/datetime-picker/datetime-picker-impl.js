@@ -1035,62 +1035,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 };
                 
                 self.getFlexTimePeriodLabel = function(num, opt) {
-                    var optLabel;
-                    switch(opt) {
-                        case timeUnits.SECOND:
-                            if(num === 1) {
-                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_SECOND;
-                            }else {
-                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_SECONDS;
-                            }                            
-                            break;
-                        case timeUnits.MINUTE:
-                            if(num === 1) {
-                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_MINUTE;
-                            }else {
-                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_MINUTES;
-                            }                            
-                            break;
-                        case timeUnits.HOUR:
-                            if(num === 1) {
-                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_HOUR;
-                            }else {
-                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_HOURS;
-                            }                            
-                            break;
-                        case timeUnits.DAY:
-                            if(num === 1) {
-                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_DAY;
-                            }else {
-                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_DAYS;
-                            }                            
-                            break;
-                        case timeUnits.WEEK:
-                            if(num === 1) {
-                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_WEEK;
-                            }else {
-                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_WEEKS;
-                            }                            
-                            break;
-                        case timeUnits.MONTH:
-                            if(num === 1) {
-                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_MONTH;
-                            }else {
-                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_MONTHS;
-                            }                            
-                            break;
-                        case timeUnits.YEAR:
-                            if(num === 1) {
-                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_YEAR;
-                            }else {
-                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_YEARS;
-                            }                            
-                            break;
-                        default:
-                            throw new Error("error in getting flexible relative time period: flexible relative time option-" + opt + " is invalid.");
-                    }
-                    
-                    return nls.DATETIME_PICKER_FLEX_REL_TIME_LAST + " " + num + " " + optLabel;
+                    return ctxUtil.getFlexTimePeriod(num, opt);
                 };
 
                 /**

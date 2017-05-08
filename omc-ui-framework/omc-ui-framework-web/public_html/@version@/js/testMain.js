@@ -97,16 +97,19 @@ require(['knockout',
     'uifwk/js/util/message-util',
     'uifwk/js/util/df-util',
     'uifwk/@version@/js/sdk/context-util-impl',
+    'uifwk/js/sdk/menu-util',
     'uifwk/js/util/preference-util',
     'ojs/ojknockout',
     'ojs/ojbutton',
     'ojs/ojtoolbar',
     'ojs/ojdialog'
 ],
-        function(ko, $, oj, _emJETCustomLogger, userTenantUtilModel, msgUtilModel, dfumodel, contextModel) // this callback gets executed when all required modules are loaded
+        function(ko, $, oj, _emJETCustomLogger, userTenantUtilModel, msgUtilModel, dfumodel, contextModel, menuModel) // this callback gets executed when all required modules are loaded
         {
             var ctxUtil = new contextModel();
             var omcContext = ctxUtil.getOMCContext();
+            var menuUtil = new menuModel();
+            menuUtil.setupCustomKOStopBinding();
             var appId = getUrlParam("appId");
             appId = appId !== null && appId !== "" ? appId : "Dashboard";
             var isAdmin = getUrlParam("isAdmin");
@@ -175,6 +178,7 @@ require(['knockout',
                     entities: entities,
                     showGlobalContextBanner: true,
                     showTimeSelector: ko.observable(true)
+//                    ,omcHamburgerMenuOptIn: true
                 };
             }
 
