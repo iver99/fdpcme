@@ -101,32 +101,24 @@ public class TenantSubscriptionUtil
 		final ICacheManager cm= CacheManagers.getInstance().build();
 		final Tenant cacheTenant = new Tenant(tenant);
         final Object cacheKey = DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS));
-        final Object tenantSubscriptionInfocacheKey = DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_TENANT_SUBSCRIPTION_INFO));
+        CachedTenantSubcriptionInfo cachedTenantSubcriptionInfo = null;
         List<String> cachedApps;
 		try {
-			cachedApps = (List<String>) cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE).get(cacheKey);
-            TenantSubscriptionInfo tenantSubscriptionInfo1 =(TenantSubscriptionInfo)cm.getCache(CacheConstants.CACHES_TENANT_SUBSCRIPTION_INFO_CACHE).get(tenantSubscriptionInfocacheKey);
-		    if(cachedApps ==null || tenantSubscriptionInfo1 ==null){
-                LOGGER.info("Did not retrieve tenantSubscriptionInfo or subcribedapps data in cache for tenant {}",tenant);
-                //Evict these 2 cache entries to make sure the cache consistent.
-                cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE).evict(cacheKey);
-                cm.getCache(CacheConstants.CACHES_TENANT_SUBSCRIPTION_INFO_CACHE).evict(tenantSubscriptionInfocacheKey);
-                throw new CacheInconsistencyException();
-            }
+            cachedTenantSubcriptionInfo = (CachedTenantSubcriptionInfo) cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE).get(cacheKey);
+            cachedApps = cachedTenantSubcriptionInfo.getSubscribedAppsList();
+            TenantSubscriptionInfo tenantSubscriptionInfo1 =cachedTenantSubcriptionInfo.getTenantSubscriptionInfo();
             LOGGER.info("retrieved tenantSubscriptionInfo for tenant {} from cache,data is {}",tenant,tenantSubscriptionInfo1);
-            copyTenantSubscriptionInfo(tenantSubscriptionInfo1, tenantSubscriptionInfo);
-            LOGGER.info(
-                    "retrieved subscribed apps for tenant {} from cache,data is {}",tenant,cachedApps);
-            return cachedApps;
-        }catch(CacheInconsistencyException e){
-            LOGGER.warn("Inconsistency Exception found of Subscribapps cache group and TenantsubcriptionInfo cache group, will not use data from cache!");
-
+            LOGGER.info("retrieved subscribed apps for tenant {} from cache,data is {}",tenant,cachedApps);
+            if(cachedApps !=null ){
+                copyTenantSubscriptionInfo(tenantSubscriptionInfo1, tenantSubscriptionInfo);
+                return cachedApps;
+            }
         }catch (Exception e) {
             LOGGER.error("context", e);
             return Collections.emptyList();
         }
 
-
+        LOGGER.info("Retrieving subscribed apps from /serviceRequest for tenant {}",tenant);
         List<String> apps = new RetryableLookupClient<List<String>>().connectAndDoWithRetry("TenantService", "1.0+", "collection/tenants", false, null, new RetryableRunner<List<String>>() {
             public List<String> runWithLink(VersionedLink lookupLink) throws Exception {
                 if (lookupLink == null || lookupLink.getHref() == null || "".equals(lookupLink.getHref())) {
@@ -208,10 +200,8 @@ public class TenantSubscriptionUtil
                         LOGGER.error("After Mapping action,Empty subscription list found!");
                         return Collections.emptyList();
                     }
-                    LOGGER.info("Put subscribe apps into cache,{}", subscribeAppsList);
-                    cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE).put(cacheKey,subscribeAppsList);
-                    LOGGER.info("Put tenantSubscriptionInfo into cache,{}", tenantSubscriptionInfo);
-                    cm.getCache(CacheConstants.CACHES_TENANT_SUBSCRIPTION_INFO_CACHE).put(tenantSubscriptionInfocacheKey,tenantSubscriptionInfo);
+                    LOGGER.info("Put subscribe apps into cache,{},{}", subscribeAppsList, tenantSubscriptionInfo);
+                    cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE).put(cacheKey,new CachedTenantSubcriptionInfo(subscribeAppsList, tenantSubscriptionInfo));
                     return subscribeAppsList;
 
                 }
@@ -258,6 +248,7 @@ public class TenantSubscriptionUtil
             LOGGER.error("Cannot copy value into or from null object!");
             return;
         }
+        LOGGER.info("Copying TenantSubscriptionInfo data...");
         List<AppsInfo> toAppsInfoList  = new ArrayList<AppsInfo>();
         toAppsInfoList.addAll(from.getAppsInfoList());
         to.setAppsInfoList(toAppsInfoList);
