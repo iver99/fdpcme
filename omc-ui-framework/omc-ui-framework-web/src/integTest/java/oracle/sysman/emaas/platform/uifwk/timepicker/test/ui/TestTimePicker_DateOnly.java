@@ -46,7 +46,7 @@ public class TestTimePicker_DateOnly extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("verify the time range is set correctly");
-		CommonUIUtils.verifyResult(webd, returnDate, TimeRange.Custom, UIControls.SSTARTTEXT_DATEONLY1,
+		CommonUIUtils.verifyResult(webd, 1, returnDate, TimeRange.Custom, UIControls.SSTARTTEXT_DATEONLY1,
 				UIControls.SENDTEXT_DATEONLY1, true, false);
 
 		webd.shutdownBrowser(true);
@@ -123,8 +123,8 @@ public class TestTimePicker_DateOnly extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("verify the time range is set correctly");
-		CommonUIUtils.verifyResult_FlexibleDate(webd, returnDate, UIControls.SSTARTTEXT_DATEONLY1, UIControls.SENDTEXT_DATEONLY1,
-				true, false);
+		CommonUIUtils.verifyResult_FlexibleDate(webd, 1, returnDate, UIControls.SSTARTTEXT_DATEONLY1,
+				UIControls.SENDTEXT_DATEONLY1, true, false);
 
 		webd.shutdownBrowser(true);
 	}
@@ -275,8 +275,8 @@ public class TestTimePicker_DateOnly extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("verify the time range is set correctly");
-		CommonUIUtils.verifyResult_FlexibleDate(webd, returnDate, UIControls.SSTARTTEXT_DATEONLY1, UIControls.SENDTEXT_DATEONLY1,
-				true, false);
+		CommonUIUtils.verifyResult_FlexibleDate(webd, 1, returnDate, UIControls.SSTARTTEXT_DATEONLY1,
+				UIControls.SENDTEXT_DATEONLY1, true, false);
 
 		webd.shutdownBrowser(true);
 	}
@@ -313,8 +313,8 @@ public class TestTimePicker_DateOnly extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("verify the time range is set correctly");
-		CommonUIUtils.verifyResult_FlexibleDate(webd, returnDate, UIControls.SSTARTTEXT_DATEONLY1, UIControls.SENDTEXT_DATEONLY1,
-				true, false);
+		CommonUIUtils.verifyResult_FlexibleDate(webd, 1, returnDate, UIControls.SSTARTTEXT_DATEONLY1,
+				UIControls.SENDTEXT_DATEONLY1, true, false);
 
 		webd.shutdownBrowser(true);
 	}
@@ -388,7 +388,7 @@ public class TestTimePicker_DateOnly extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("verify the time range is set correctly");
-		CommonUIUtils.verifyResult(webd, returnDate, TimeRange.Last12Months, UIControls.SSTARTTEXT_DATEONLY1,
+		CommonUIUtils.verifyResult(webd, 1, returnDate, TimeRange.Last12Months, UIControls.SSTARTTEXT_DATEONLY1,
 				UIControls.SENDTEXT_DATEONLY1, true, false);
 
 		webd.shutdownBrowser(true);
@@ -460,7 +460,7 @@ public class TestTimePicker_DateOnly extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("verify the time range is set correctly");
-		CommonUIUtils.verifyResult(webd, returnDate, TimeRange.Last24Hours, UIControls.SSTARTTEXT_DATEONLY1,
+		CommonUIUtils.verifyResult(webd, 1, returnDate, TimeRange.Last24Hours, UIControls.SSTARTTEXT_DATEONLY1,
 				UIControls.SENDTEXT_DATEONLY1, true, false);
 
 		webd.shutdownBrowser(true);
@@ -496,7 +496,7 @@ public class TestTimePicker_DateOnly extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("verify the time range is set correctly");
-		CommonUIUtils.verifyResult(webd, returnDate, TimeRange.Last30Days, UIControls.SSTARTTEXT_DATEONLY1,
+		CommonUIUtils.verifyResult(webd, 1, returnDate, TimeRange.Last30Days, UIControls.SSTARTTEXT_DATEONLY1,
 				UIControls.SENDTEXT_DATEONLY1, true, false);
 
 		webd.shutdownBrowser(true);
@@ -568,7 +568,7 @@ public class TestTimePicker_DateOnly extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("verify the time range is set correctly");
-		CommonUIUtils.verifyResult(webd, returnDate, TimeRange.Last90Days, UIControls.SSTARTTEXT_DATEONLY1,
+		CommonUIUtils.verifyResult(webd, 1, returnDate, TimeRange.Last90Days, UIControls.SSTARTTEXT_DATEONLY1,
 				UIControls.SENDTEXT_DATEONLY1, true, false);
 
 		webd.shutdownBrowser(true);
