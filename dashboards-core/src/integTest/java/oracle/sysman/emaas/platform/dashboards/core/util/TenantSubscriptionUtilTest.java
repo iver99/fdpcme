@@ -435,8 +435,6 @@ public class TenantSubscriptionUtilTest
                 result = insList;
                 anyInstanceInfo.getLinksWithProtocol(anyString, anyString);
                 result = links;
-				anyClient.getWithException(anyString, anyString, anyString);
-				result = null;
 			}
 		};
 		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1", new TenantSubscriptionInfo());
