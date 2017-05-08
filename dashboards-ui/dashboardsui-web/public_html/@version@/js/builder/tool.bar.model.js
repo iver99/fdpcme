@@ -47,6 +47,22 @@ define(['knockout',
                     self.dashboardOptsMenuId('#dashboardOptsMenu'+self.toolBarGuid);
                 }
             });
+            var dashboardOptsMenuInitialized = false;
+            self.onDashboardOptsMenuClicked = function(){
+                if(dashboardOptsMenuInitialized){
+                    return;
+                }
+                $b.triggerEvent($b.EVENT_DASHBOARD_OPTION_MENU_RENDERED);
+                dashboardOptsMenuInitialized = true;
+            };
+            
+            self.onDashboardOptsMenuKeyPressed = function(e, d) {
+                if (d.keyCode === 13) {
+                    self.onDashboardOptsMenuClicked();
+                }
+                return true;
+            };
+            
             zdtUtil.detectPlannedDowntime(function (isUnderPlannedDowntime) {
 //                 self.zdtStatus(true);
 //                 self.notZdtStatus(false);
