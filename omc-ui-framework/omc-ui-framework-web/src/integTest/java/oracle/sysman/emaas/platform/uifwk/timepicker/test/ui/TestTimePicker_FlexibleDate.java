@@ -11,21 +11,13 @@
 package oracle.sysman.emaas.platform.uifwk.timepicker.test.ui;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.TimeZone;
 
 import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.ITimeSelectorUtil.TimeUnit;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.emaas.platform.uifwk.timepicker.test.ui.util.CommonUIUtils;
 import oracle.sysman.emaas.platform.uifwk.timepicker.test.ui.util.LoginAndLogout;
 import oracle.sysman.emaas.platform.uifwk.timepicker.test.ui.util.UIControls;
-import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
-import org.openqa.selenium.By;
-import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
@@ -34,175 +26,6 @@ import org.testng.annotations.Test;
 
 public class TestTimePicker_FlexibleDate extends LoginAndLogout
 {
-	private static void verifyResult(WebDriver driver, int index, String returnDate, String StartLabelLocator,
-			String EndLabelLocator, boolean DateOnly) throws ParseException
-	{
-
-		WaitUtil.waitForPageFullyLoaded(driver);
-
-		String strTimePickerText = driver.getWebDriver().findElements(By.cssSelector(UIControls.TIMERANGEBTN_CSS)).get(index - 1)
-				.getText();
-
-		driver.getLogger().info("TimePickerLabel: " + strTimePickerText);
-		Assert.assertEquals(strTimePickerText, TimeSelectorUtil.getTimeRangeLabel(driver, index));
-
-		String timeRange = "";
-
-		if (!strTimePickerText.equals("") && strTimePickerText != null) {
-			String[] tmpArray = strTimePickerText.split(":");
-			timeRange = tmpArray[0];
-		}
-
-		driver.getLogger().info("timerange: " + timeRange);
-		driver.getLogger().info("returnDate: " + returnDate);
-
-		String str_Range = "";
-		String str_TimeInterval = "";
-		String str_TimeUnit = "";
-
-		if (timeRange.startsWith("Last")) {
-			str_Range = timeRange.substring(5);
-			driver.getLogger().info("Range:  " + str_Range);
-			if (Character.isDigit(str_Range.charAt(0))) {
-				String[] str_Temp = str_Range.split(" ");
-				str_TimeInterval = str_Temp[0];
-				str_TimeUnit = str_Temp[1];
-			}
-			else {
-				str_TimeInterval = "1";
-				str_TimeUnit = str_Range;
-			}
-		}
-
-		String sTmpStartDateTime = driver.getText(StartLabelLocator);
-		String sTmpEndDateTime = driver.getText(EndLabelLocator);
-
-		SimpleDateFormat fmt = null;
-
-		if (DateOnly) {
-			fmt = new SimpleDateFormat("MMM d, yyyy");
-		}
-		else {
-
-			fmt = new SimpleDateFormat("MMM d, yyyy h:mm a");
-		}
-
-		Date dTmpStart = new Date();
-		Date dTmpEnd = new Date();
-
-		String tmpReturnDate = "";
-
-		if (!"Latest".equals(timeRange)) {
-			tmpReturnDate = returnDate.substring(timeRange.length() + 1);
-			driver.getLogger().info("timerange: " + timeRange);
-			driver.getLogger().info("returnDate: " + tmpReturnDate);
-
-			String[] tmpDate = tmpReturnDate.split("-");
-
-			String tmpStartDate = tmpDate[0].trim();
-			String tmpEndDate = tmpDate[1].trim();
-
-			Assert.assertEquals(tmpStartDate, sTmpStartDateTime);
-			Assert.assertEquals(tmpEndDate, sTmpEndDateTime);
-		}
-
-		driver.getLogger().info("Verify the result in label");
-
-		dTmpStart = fmt.parse(sTmpStartDateTime);
-		dTmpEnd = fmt.parse(sTmpEndDateTime);
-
-		TimeZone tz = TimeZone.getDefault();
-
-		int starttz = tz.getOffset(dTmpStart.getTime());
-		int endtz = tz.getOffset(dTmpEnd.getTime());
-
-		driver.getLogger().info("sStartText: " + sTmpStartDateTime);
-		driver.getLogger().info("sEndText: " + sTmpEndDateTime);
-
-		long lTimeRange = dTmpEnd.getTime() - dTmpStart.getTime() + (endtz - starttz);
-
-		driver.getLogger().info(Long.toString(lTimeRange));
-
-		Calendar calStart = Calendar.getInstance();
-		calStart.setTime(dTmpStart);
-
-		Calendar calEnd = Calendar.getInstance();
-		calEnd.setTime(dTmpEnd);
-
-		int i = Integer.parseInt(str_TimeInterval);
-
-		//verify the time range is expected
-		switch (str_TimeUnit) {
-			case "second":
-				Assert.assertEquals(lTimeRange / 1000, 1);
-				break;
-			case "seconds":
-				Assert.assertEquals(lTimeRange / 1000, i);
-				break;
-			case "minute":
-				Assert.assertEquals(lTimeRange / (60 * 1000), 1);
-				break;
-			case "minutes":
-				Assert.assertEquals(lTimeRange / (60 * 1000), i);
-				break;
-			case "hour":
-				Assert.assertEquals(lTimeRange / (60 * 60 * 1000), 1);
-				break;
-			case "hours":
-				Assert.assertEquals(lTimeRange / (60 * 60 * 1000), i);
-				break;
-			case "day":
-				Assert.assertEquals(lTimeRange / (24 * 60 * 60 * 1000), 1);
-				break;
-			case "days":
-				Assert.assertEquals(lTimeRange / (24 * 60 * 60 * 1000), i);
-				break;
-			case "week":
-				Assert.assertEquals(lTimeRange / (24 * 60 * 60 * 1000 * 7), 1);
-				break;
-			case "weeks":
-				Assert.assertEquals(lTimeRange / (24 * 60 * 60 * 1000 * 7), i);
-				break;
-			case "month":
-				Assert.assertEquals(calEnd.get(Calendar.YEAR) * 12 + calEnd.get(Calendar.MONTH) - calStart.get(Calendar.YEAR)
-						* 12 - calStart.get(Calendar.MONTH), 1);
-				//below assertion not always true
-				//e.g. Last 1 Month, Now is March 31, 2017, the start time is Feb 28, 2017 (there is no 31 in Feb, 2017)
-				//TODO calculate correct start date separately and compare
-				//Assert.assertEquals(calStart.get(Calendar.DAY_OF_MONTH), calEnd.get(Calendar.DAY_OF_MONTH));
-				break;
-			case "months":
-				Assert.assertEquals(calEnd.get(Calendar.YEAR) * 12 + calEnd.get(Calendar.MONTH) - calStart.get(Calendar.YEAR)
-						* 12 - calStart.get(Calendar.MONTH), i);
-				//below assertion not always true
-				//e.g. Last 11 Months, Now is March 31, 2017, the start time is Feb 29, 2016 (there is no 31 in Feb, 2016)
-				//TODO calculate correct start date separately and compare
-				//Assert.assertEquals(calStart.get(Calendar.DAY_OF_MONTH), calEnd.get(Calendar.DAY_OF_MONTH));
-				break;
-			case "year":
-				Assert.assertEquals(calStart.get(Calendar.YEAR) + 1, calEnd.get(Calendar.YEAR));
-				Assert.assertEquals(calStart.get(Calendar.MONTH), calEnd.get(Calendar.MONTH));
-				//below assertion not always true
-				//e.g. Last 1 Year, Now is Feb 29, 2016, the start time is Feb 28, 2015 (there is no 29 in Feb, 2015)
-				//TODO calculate correct start date separately and compare
-				//Assert.assertEquals(calStart.get(Calendar.DAY_OF_MONTH), calEnd.get(Calendar.DAY_OF_MONTH));
-				break;
-			case "years":
-				Assert.assertEquals(calStart.get(Calendar.YEAR) + i, calEnd.get(Calendar.YEAR));
-				Assert.assertEquals(calStart.get(Calendar.MONTH), calEnd.get(Calendar.MONTH));
-				//below assertion not always true
-				//e.g. Last 2 Years, Now is Feb 29, 2016, the start time is Feb 28, 2014 (there is no 29 in Feb, 2014)
-				//TODO calculate correct start date separately and compare
-				//Assert.assertEquals(calStart.get(Calendar.DAY_OF_MONTH), calEnd.get(Calendar.DAY_OF_MONTH));
-				break;
-			default:
-				break;
-		}
-
-		driver.getLogger().info("Verify Result Pass!");
-
-	}
-
 	public void initTest(String testName)
 	{
 		login(this.getClass().getName() + "." + testName, "datetimePickerIndex.html");
@@ -222,8 +45,8 @@ public class TestTimePicker_FlexibleDate extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("verify the time range is set correctly");
-		TestTimePicker_FlexibleDate.verifyResult(webd, 2, returnDate, UIControls.SSTARTTEXT_COMPACT, UIControls.SENDTEXT_COMPACT,
-				false);
+		CommonUIUtils.verifyResult_FlexibleDate(webd, 2, returnDate, UIControls.SSTARTTEXT_COMPACT, UIControls.SENDTEXT_COMPACT,
+				false, false);
 
 		webd.shutdownBrowser(true);
 	}
@@ -241,8 +64,8 @@ public class TestTimePicker_FlexibleDate extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("verify the time range is set correctly");
-		TestTimePicker_FlexibleDate.verifyResult(webd, 2, returnDate, UIControls.SSTARTTEXT_COMPACT, UIControls.SENDTEXT_COMPACT,
-				false);
+		CommonUIUtils.verifyResult_FlexibleDate(webd, 2, returnDate, UIControls.SSTARTTEXT_COMPACT, UIControls.SENDTEXT_COMPACT,
+				false, false);
 
 		webd.shutdownBrowser(true);
 	}
@@ -260,8 +83,8 @@ public class TestTimePicker_FlexibleDate extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("verify the time range is set correctly");
-		TestTimePicker_FlexibleDate.verifyResult(webd, 2, returnDate, UIControls.SSTARTTEXT_COMPACT, UIControls.SENDTEXT_COMPACT,
-				false);
+		CommonUIUtils.verifyResult_FlexibleDate(webd, 2, returnDate, UIControls.SSTARTTEXT_COMPACT, UIControls.SENDTEXT_COMPACT,
+				false, false);
 
 		webd.shutdownBrowser(true);
 	}
@@ -279,8 +102,8 @@ public class TestTimePicker_FlexibleDate extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("verify the time range is set correctly");
-		TestTimePicker_FlexibleDate.verifyResult(webd, 2, returnDate, UIControls.SSTARTTEXT_COMPACT, UIControls.SENDTEXT_COMPACT,
-				false);
+		CommonUIUtils.verifyResult_FlexibleDate(webd, 2, returnDate, UIControls.SSTARTTEXT_COMPACT, UIControls.SENDTEXT_COMPACT,
+				false, false);
 
 		webd.shutdownBrowser(true);
 	}
@@ -298,8 +121,8 @@ public class TestTimePicker_FlexibleDate extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("verify the time range is set correctly");
-		TestTimePicker_FlexibleDate.verifyResult(webd, 2, returnDate, UIControls.SSTARTTEXT_COMPACT, UIControls.SENDTEXT_COMPACT,
-				false);
+		CommonUIUtils.verifyResult_FlexibleDate(webd, 2, returnDate, UIControls.SSTARTTEXT_COMPACT, UIControls.SENDTEXT_COMPACT,
+				false, false);
 
 		webd.shutdownBrowser(true);
 	}
@@ -317,8 +140,8 @@ public class TestTimePicker_FlexibleDate extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("verify the time range is set correctly");
-		TestTimePicker_FlexibleDate.verifyResult(webd, 2, returnDate, UIControls.SSTARTTEXT_COMPACT, UIControls.SENDTEXT_COMPACT,
-				false);
+		CommonUIUtils.verifyResult_FlexibleDate(webd, 2, returnDate, UIControls.SSTARTTEXT_COMPACT, UIControls.SENDTEXT_COMPACT,
+				false, false);
 
 		webd.shutdownBrowser(true);
 	}
@@ -336,8 +159,8 @@ public class TestTimePicker_FlexibleDate extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("verify the time range is set correctly");
-		TestTimePicker_FlexibleDate.verifyResult(webd, 2, returnDate, UIControls.SSTARTTEXT_COMPACT, UIControls.SENDTEXT_COMPACT,
-				false);
+		CommonUIUtils.verifyResult_FlexibleDate(webd, 2, returnDate, UIControls.SSTARTTEXT_COMPACT, UIControls.SENDTEXT_COMPACT,
+				false, false);
 
 		webd.shutdownBrowser(true);
 	}
@@ -355,8 +178,8 @@ public class TestTimePicker_FlexibleDate extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("verify the time range is set correctly");
-		TestTimePicker_FlexibleDate.verifyResult(webd, 2, returnDate, UIControls.SSTARTTEXT_COMPACT, UIControls.SENDTEXT_COMPACT,
-				false);
+		CommonUIUtils.verifyResult_FlexibleDate(webd, 2, returnDate, UIControls.SSTARTTEXT_COMPACT, UIControls.SENDTEXT_COMPACT,
+				false, false);
 
 		webd.shutdownBrowser(true);
 	}
@@ -374,8 +197,8 @@ public class TestTimePicker_FlexibleDate extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("verify the time range is set correctly");
-		TestTimePicker_FlexibleDate.verifyResult(webd, 2, returnDate, UIControls.SSTARTTEXT_COMPACT, UIControls.SENDTEXT_COMPACT,
-				false);
+		CommonUIUtils.verifyResult_FlexibleDate(webd, 2, returnDate, UIControls.SSTARTTEXT_COMPACT, UIControls.SENDTEXT_COMPACT,
+				false, false);
 
 		webd.shutdownBrowser(true);
 	}
@@ -393,8 +216,8 @@ public class TestTimePicker_FlexibleDate extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("verify the time range is set correctly");
-		TestTimePicker_FlexibleDate.verifyResult(webd, 2, returnDate, UIControls.SSTARTTEXT_COMPACT, UIControls.SENDTEXT_COMPACT,
-				false);
+		CommonUIUtils.verifyResult_FlexibleDate(webd, 2, returnDate, UIControls.SSTARTTEXT_COMPACT, UIControls.SENDTEXT_COMPACT,
+				false, false);
 
 		webd.shutdownBrowser(true);
 	}
@@ -412,8 +235,8 @@ public class TestTimePicker_FlexibleDate extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("verify the time range is set correctly");
-		TestTimePicker_FlexibleDate.verifyResult(webd, 2, returnDate, UIControls.SSTARTTEXT_COMPACT, UIControls.SENDTEXT_COMPACT,
-				false);
+		CommonUIUtils.verifyResult_FlexibleDate(webd, 2, returnDate, UIControls.SSTARTTEXT_COMPACT, UIControls.SENDTEXT_COMPACT,
+				false, false);
 
 		webd.shutdownBrowser(true);
 	}
@@ -431,8 +254,8 @@ public class TestTimePicker_FlexibleDate extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("verify the time range is set correctly");
-		TestTimePicker_FlexibleDate.verifyResult(webd, 2, returnDate, UIControls.SSTARTTEXT_COMPACT, UIControls.SENDTEXT_COMPACT,
-				false);
+		CommonUIUtils.verifyResult_FlexibleDate(webd, 2, returnDate, UIControls.SSTARTTEXT_COMPACT, UIControls.SENDTEXT_COMPACT,
+				false, false);
 
 		webd.shutdownBrowser(true);
 	}
@@ -450,8 +273,8 @@ public class TestTimePicker_FlexibleDate extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("verify the time range is set correctly");
-		TestTimePicker_FlexibleDate.verifyResult(webd, 2, returnDate, UIControls.SSTARTTEXT_COMPACT, UIControls.SENDTEXT_COMPACT,
-				false);
+		CommonUIUtils.verifyResult_FlexibleDate(webd, 2, returnDate, UIControls.SSTARTTEXT_COMPACT, UIControls.SENDTEXT_COMPACT,
+				false, false);
 
 		webd.shutdownBrowser(true);
 	}
@@ -469,8 +292,8 @@ public class TestTimePicker_FlexibleDate extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("verify the time range is set correctly");
-		TestTimePicker_FlexibleDate.verifyResult(webd, 2, returnDate, UIControls.SSTARTTEXT_COMPACT, UIControls.SENDTEXT_COMPACT,
-				false);
+		CommonUIUtils.verifyResult_FlexibleDate(webd, 2, returnDate, UIControls.SSTARTTEXT_COMPACT, UIControls.SENDTEXT_COMPACT,
+				false, false);
 
 		webd.shutdownBrowser(true);
 	}
@@ -488,8 +311,8 @@ public class TestTimePicker_FlexibleDate extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("verify the time range is set correctly");
-		TestTimePicker_FlexibleDate.verifyResult(webd, 3, returnDate, UIControls.SSTARTTEXT_DATEONLY,
-				UIControls.SENDTEXT_DATEONLY, true);
+		CommonUIUtils.verifyResult_FlexibleDate(webd, 3, returnDate, UIControls.SSTARTTEXT_DATEONLY,
+				UIControls.SENDTEXT_DATEONLY, true, false);
 
 		webd.shutdownBrowser(true);
 	}
@@ -507,8 +330,8 @@ public class TestTimePicker_FlexibleDate extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("verify the time range is set correctly");
-		TestTimePicker_FlexibleDate.verifyResult(webd, 3, returnDate, UIControls.SSTARTTEXT_DATEONLY,
-				UIControls.SENDTEXT_DATEONLY, true);
+		CommonUIUtils.verifyResult_FlexibleDate(webd, 3, returnDate, UIControls.SSTARTTEXT_DATEONLY,
+				UIControls.SENDTEXT_DATEONLY, true, false);
 
 		webd.shutdownBrowser(true);
 	}
@@ -526,8 +349,8 @@ public class TestTimePicker_FlexibleDate extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("verify the time range is set correctly");
-		TestTimePicker_FlexibleDate.verifyResult(webd, 3, returnDate, UIControls.SSTARTTEXT_DATEONLY,
-				UIControls.SENDTEXT_DATEONLY, true);
+		CommonUIUtils.verifyResult_FlexibleDate(webd, 3, returnDate, UIControls.SSTARTTEXT_DATEONLY,
+				UIControls.SENDTEXT_DATEONLY, true, false);
 
 		webd.shutdownBrowser(true);
 	}
@@ -545,8 +368,8 @@ public class TestTimePicker_FlexibleDate extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("verify the time range is set correctly");
-		TestTimePicker_FlexibleDate.verifyResult(webd, 3, returnDate, UIControls.SSTARTTEXT_DATEONLY,
-				UIControls.SENDTEXT_DATEONLY, true);
+		CommonUIUtils.verifyResult_FlexibleDate(webd, 3, returnDate, UIControls.SSTARTTEXT_DATEONLY,
+				UIControls.SENDTEXT_DATEONLY, true, false);
 
 		webd.shutdownBrowser(true);
 	}
@@ -564,8 +387,8 @@ public class TestTimePicker_FlexibleDate extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("verify the time range is set correctly");
-		TestTimePicker_FlexibleDate.verifyResult(webd, 3, returnDate, UIControls.SSTARTTEXT_DATEONLY,
-				UIControls.SENDTEXT_DATEONLY, true);
+		CommonUIUtils.verifyResult_FlexibleDate(webd, 3, returnDate, UIControls.SSTARTTEXT_DATEONLY,
+				UIControls.SENDTEXT_DATEONLY, true, false);
 
 		webd.shutdownBrowser(true);
 	}
@@ -583,8 +406,8 @@ public class TestTimePicker_FlexibleDate extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("verify the time range is set correctly");
-		TestTimePicker_FlexibleDate.verifyResult(webd, 3, returnDate, UIControls.SSTARTTEXT_DATEONLY,
-				UIControls.SENDTEXT_DATEONLY, true);
+		CommonUIUtils.verifyResult_FlexibleDate(webd, 3, returnDate, UIControls.SSTARTTEXT_DATEONLY,
+				UIControls.SENDTEXT_DATEONLY, true, false);
 
 		webd.shutdownBrowser(true);
 	}
@@ -602,8 +425,8 @@ public class TestTimePicker_FlexibleDate extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("verify the time range is set correctly");
-		TestTimePicker_FlexibleDate.verifyResult(webd, 3, returnDate, UIControls.SSTARTTEXT_DATEONLY,
-				UIControls.SENDTEXT_DATEONLY, true);
+		CommonUIUtils.verifyResult_FlexibleDate(webd, 3, returnDate, UIControls.SSTARTTEXT_DATEONLY,
+				UIControls.SENDTEXT_DATEONLY, true, false);
 
 		webd.shutdownBrowser(true);
 	}
@@ -621,8 +444,8 @@ public class TestTimePicker_FlexibleDate extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("verify the time range is set correctly");
-		TestTimePicker_FlexibleDate.verifyResult(webd, 3, returnDate, UIControls.SSTARTTEXT_DATEONLY,
-				UIControls.SENDTEXT_DATEONLY, true);
+		CommonUIUtils.verifyResult_FlexibleDate(webd, 3, returnDate, UIControls.SSTARTTEXT_DATEONLY,
+				UIControls.SENDTEXT_DATEONLY, true, false);
 
 		webd.shutdownBrowser(true);
 	}
@@ -640,7 +463,7 @@ public class TestTimePicker_FlexibleDate extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("verify the time range is set correctly");
-		TestTimePicker_FlexibleDate.verifyResult(webd, 1, returnDate, UIControls.SSTARTTEXT, UIControls.SENDTEXT, false);
+		CommonUIUtils.verifyResult_FlexibleDate(webd, 1, returnDate, UIControls.SSTARTTEXT, UIControls.SENDTEXT, false, false);
 
 		webd.shutdownBrowser(true);
 	}
@@ -658,7 +481,7 @@ public class TestTimePicker_FlexibleDate extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("verify the time range is set correctly");
-		TestTimePicker_FlexibleDate.verifyResult(webd, 1, returnDate, UIControls.SSTARTTEXT, UIControls.SENDTEXT, false);
+		CommonUIUtils.verifyResult_FlexibleDate(webd, 1, returnDate, UIControls.SSTARTTEXT, UIControls.SENDTEXT, false, false);
 
 		webd.shutdownBrowser(true);
 	}
@@ -676,7 +499,7 @@ public class TestTimePicker_FlexibleDate extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("verify the time range is set correctly");
-		TestTimePicker_FlexibleDate.verifyResult(webd, 1, returnDate, UIControls.SSTARTTEXT, UIControls.SENDTEXT, false);
+		CommonUIUtils.verifyResult_FlexibleDate(webd, 1, returnDate, UIControls.SSTARTTEXT, UIControls.SENDTEXT, false, false);
 
 		webd.shutdownBrowser(true);
 	}
@@ -694,7 +517,7 @@ public class TestTimePicker_FlexibleDate extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("verify the time range is set correctly");
-		TestTimePicker_FlexibleDate.verifyResult(webd, 1, returnDate, UIControls.SSTARTTEXT, UIControls.SENDTEXT, false);
+		CommonUIUtils.verifyResult_FlexibleDate(webd, 1, returnDate, UIControls.SSTARTTEXT, UIControls.SENDTEXT, false, false);
 
 		webd.shutdownBrowser(true);
 	}
@@ -712,7 +535,7 @@ public class TestTimePicker_FlexibleDate extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("verify the time range is set correctly");
-		TestTimePicker_FlexibleDate.verifyResult(webd, 1, returnDate, UIControls.SSTARTTEXT, UIControls.SENDTEXT, false);
+		CommonUIUtils.verifyResult_FlexibleDate(webd, 1, returnDate, UIControls.SSTARTTEXT, UIControls.SENDTEXT, false, false);
 
 		webd.shutdownBrowser(true);
 	}
@@ -730,7 +553,7 @@ public class TestTimePicker_FlexibleDate extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("verify the time range is set correctly");
-		TestTimePicker_FlexibleDate.verifyResult(webd, 1, returnDate, UIControls.SSTARTTEXT, UIControls.SENDTEXT, false);
+		CommonUIUtils.verifyResult_FlexibleDate(webd, 1, returnDate, UIControls.SSTARTTEXT, UIControls.SENDTEXT, false, false);
 
 		webd.shutdownBrowser(true);
 	}
@@ -748,7 +571,7 @@ public class TestTimePicker_FlexibleDate extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("verify the time range is set correctly");
-		TestTimePicker_FlexibleDate.verifyResult(webd, 1, returnDate, UIControls.SSTARTTEXT, UIControls.SENDTEXT, false);
+		CommonUIUtils.verifyResult_FlexibleDate(webd, 1, returnDate, UIControls.SSTARTTEXT, UIControls.SENDTEXT, false, false);
 
 		webd.shutdownBrowser(true);
 	}
@@ -766,7 +589,7 @@ public class TestTimePicker_FlexibleDate extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("verify the time range is set correctly");
-		TestTimePicker_FlexibleDate.verifyResult(webd, 1, returnDate, UIControls.SSTARTTEXT, UIControls.SENDTEXT, false);
+		CommonUIUtils.verifyResult_FlexibleDate(webd, 1, returnDate, UIControls.SSTARTTEXT, UIControls.SENDTEXT, false, false);
 
 		webd.shutdownBrowser(true);
 	}
@@ -784,7 +607,7 @@ public class TestTimePicker_FlexibleDate extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("verify the time range is set correctly");
-		TestTimePicker_FlexibleDate.verifyResult(webd, 1, returnDate, UIControls.SSTARTTEXT, UIControls.SENDTEXT, false);
+		CommonUIUtils.verifyResult_FlexibleDate(webd, 1, returnDate, UIControls.SSTARTTEXT, UIControls.SENDTEXT, false, false);
 
 		webd.shutdownBrowser(true);
 	}
@@ -802,7 +625,7 @@ public class TestTimePicker_FlexibleDate extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("verify the time range is set correctly");
-		TestTimePicker_FlexibleDate.verifyResult(webd, 1, returnDate, UIControls.SSTARTTEXT, UIControls.SENDTEXT, false);
+		CommonUIUtils.verifyResult_FlexibleDate(webd, 1, returnDate, UIControls.SSTARTTEXT, UIControls.SENDTEXT, false, false);
 
 		webd.shutdownBrowser(true);
 	}
@@ -820,7 +643,7 @@ public class TestTimePicker_FlexibleDate extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("verify the time range is set correctly");
-		TestTimePicker_FlexibleDate.verifyResult(webd, 1, returnDate, UIControls.SSTARTTEXT, UIControls.SENDTEXT, false);
+		CommonUIUtils.verifyResult_FlexibleDate(webd, 1, returnDate, UIControls.SSTARTTEXT, UIControls.SENDTEXT, false, false);
 
 		webd.shutdownBrowser(true);
 	}
@@ -838,7 +661,7 @@ public class TestTimePicker_FlexibleDate extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("verify the time range is set correctly");
-		TestTimePicker_FlexibleDate.verifyResult(webd, 1, returnDate, UIControls.SSTARTTEXT, UIControls.SENDTEXT, false);
+		CommonUIUtils.verifyResult_FlexibleDate(webd, 1, returnDate, UIControls.SSTARTTEXT, UIControls.SENDTEXT, false, false);
 
 		webd.shutdownBrowser(true);
 	}
