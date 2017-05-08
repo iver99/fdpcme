@@ -42,13 +42,13 @@ public class MetadataRetriever
     private static final Map<String, String> WIDGET_GROUP_MAP = new HashMap<String, String>();
     // TODO fix the correct service name in SM
     private static final String SERVICENAME_APM = "ApmDataServer";
-    private static final String SERVICENAME_ITA = "TargetAnalytics";//"SavedSearch";
+    private static final String SERVICENAME_ITA = "ITA"; //??
     private static final String SERVICENAME_LA = "LogAnalyticsProcessor";
     private static final String SERVICENAME_MONITORING = "Monitoring";
     private static final String SERVICENAME_SECURITY_ANALYTICS = "SecurityAnalytics";
     private static final String SERVICENAME_ORCHESTRATION = "CosFacadeService";
     private static final String SERVICENAME_COMPLIANCE = "Compliance";
-    private static final String SERVICENAME_UDE = "UDE";
+    private static final String SERVICENAME_UDE = "TargetAnalytics";
     private static final String INVISIBLE_WIDGET_GROUP = "Invisible Widget Group";
     private static final Logger LOGGER = LogManager.getLogger(MetadataRetriever.class);
     private static final String ORACLE = "Oracle";
@@ -74,7 +74,7 @@ public class MetadataRetriever
         WIDGET_GROUP_MAP.put(SERVICENAME_SECURITY_ANALYTICS, "Security Analytics");
         WIDGET_GROUP_MAP.put(SERVICENAME_ORCHESTRATION, "Orchestration");
         //WIDGET_GROUP_MAP.put(SERVICENAME_COMPLIANCE, "");
-        //WIDGET_GROUP_MAP.put(SERVICENAME_UDE, "");
+        WIDGET_GROUP_MAP.put(SERVICENAME_UDE, "Data Explorer");
     }
     
     /**

@@ -33,8 +33,9 @@ import weblogic.application.ApplicationLifecycleEvent;
 public class MetadataManager implements ApplicationServiceManager
 {
     private static final Logger LOGGER = LogManager.getLogger(MetadataManager.class);
+    //TODO fetch all services by rel name
     private static final List<String> oobProvider = 
-            Arrays.asList("TargetAnalytics", "LogAnalyticsProcessor", "ApmDataServer", "CosFacadeService", "SavedSearch");
+            Arrays.asList("TargetAnalytics", "LogAnalyticsProcessor", "ApmDataServer", "CosFacadeService");
     /* (non-Javadoc)
      * @see oracle.sysman.emaas.platform.dashboards.webutils.wls.lifecycle.ApplicationServiceManager#getName()
      */
@@ -52,8 +53,8 @@ public class MetadataManager implements ApplicationServiceManager
     public void postStart(ApplicationLifecycleEvent evt) throws Exception
     {
         LOGGER.info("Entry: MetadataManager.postStart");
-        // Load OOB Dashboard from other services
         for(String serviceName : oobProvider) {
+            // Load OOB Dashboard from other services
             List<Dashboard> oobList = new ArrayList<Dashboard>();
             
             MetadataRetriever oobRetriever = new MetadataRetriever();
@@ -69,9 +70,8 @@ public class MetadataManager implements ApplicationServiceManager
             } catch (DashboardException e) {
                 LOGGER.error("Error when storing OOB into database for " + serviceName + " : " + e.getLocalizedMessage());
             }
-        }
-        // Load resource bundle for OOB metadata from other services
-        for(String serviceName : oobProvider) {
+            
+            // Load resource bundle for OOB metadata from other services
             // TODO api.refreshNLS(serviceName);
         }
     }
