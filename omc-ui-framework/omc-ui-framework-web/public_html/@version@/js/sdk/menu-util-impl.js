@@ -164,6 +164,9 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
                     }
                     window._uifwk.compositeMenuCollapseCallback = collapseCallback;
                 }
+                window._uifwk.compositeMenuParentId = parentMenuId;
+                window._uifwk.compositeMenuName = objMenuName;
+                window._uifwk.compositeMenuJson = menuJson;
                 fireCompositeMenuDisplayEvent(parentMenuId, objMenuName, menuJson);
             };
             

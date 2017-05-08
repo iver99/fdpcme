@@ -25,15 +25,16 @@ role value for that section to represent the appropriate content type.
         <!-- This is the main css file for the default Alta theme -->
         <link rel="stylesheet" href="libs/@version@/js/oraclejet/css/libs/oj/v2.0.2/alta/oj-alta-min.css" type="text/css"/>
         <link rel="stylesheet" href="@version@/css/test-alta.css" type="text/css"/>
-        
+
         <!-- RequireJS bootstrap file -->
-        <script data-main="@version@/js/testMain" src="libs/@version@/js/oraclejet/js/libs/require/require.js"></script>
+        <script data-main="@version@/js/testHamburgerMenuMain" src="libs/@version@/js/oraclejet/js/libs/require/require.js"></script>
 
     </head>
     <body>
         <div class="loadingIndicator" id="loading">Loading</div>
-        <div id="globalBody" style="display: none">
-            <div id="main-container">
+        <div id="globalBody" style="display: none" class="oj-web-applayout-offcanvas-wrapper oj-offcanvas-outer-wrapper">
+            <div id="offcanvasInnerContainer" class="oj-offcanvas-inner-wrapper">
+            <div id="main-container" class="oj-web-applayout-scrollable oj-web-applayout-page">
                 <!-- ko stopBinding -->
                 <header id="headerWrapper" role="banner">
                     <div data-bind="component: {
@@ -65,7 +66,23 @@ role value for that section to represent the appropriate content type.
                         }">
                     </div>
                 </div>
-                
+                <div style="padding-left: 30px;" >
+                    <button id="add-widget-button0" class="oj-button oj-default oj-button-half-chrome"
+                            data-bind="click: showCompositeMenu, ojComponent: {
+                                  component:'ojButton', label: 'Show Composite'
+                      }, attr: {title: 'Show Composite'}">
+                    </button>
+                    <button id="add-widget-button1" class="oj-button oj-default oj-button-half-chrome"
+                            data-bind="click: setCurrentMenuItem, ojComponent: {
+                                  component:'ojButton', label: 'Set Current Menu'
+                      }, attr: {title: 'Set Current Menu'}">
+                    </button>
+                    <button id="add-widget-button2" class="oj-button oj-default oj-button-half-chrome"
+                            data-bind="click: registerServiceMenus, ojComponent: {
+                                  component:'ojButton', label: 'Register Service Menu'
+                      }, attr: {title: 'Register Service Menu'}">
+                    </button>
+                </div>
                 <div id="widgets-container" class="oj-col" data-bind="style: {padding: widgetsContainerPadding}">
                     <!-- ko foreach: widgetList -->
                     <div class="sample-widget-box">
@@ -78,6 +95,7 @@ role value for that section to represent the appropriate content type.
                     </div>
                     <!-- /ko -->
                 </div>
+            </div>
             </div>
         </div>
     </body>
