@@ -106,6 +106,7 @@
             </div>
             <!-- /ko -->
         </div>  
+        <!-- ko if: renderSessionTimeoutDialog -->
         <div style="display:none;" 
             data-bind="ojComponent:{component: 'ojDialog', 
                 initialVisibility: 'hide', title: sessionTimeoutWarnDialogTitle, resizeBehavior: 'none', cancelBehavior: 'none',
@@ -124,6 +125,7 @@
                 </button>
             </div>  
         </div>
+        <!-- /ko -->
         <!-- ko if: showGlobalContextBanner() !== false -->
         <div id="emaas-appheader-globalcxt" class="emaas-appheader-global-context">
             
