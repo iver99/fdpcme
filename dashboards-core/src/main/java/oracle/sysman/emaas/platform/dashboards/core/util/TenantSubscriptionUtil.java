@@ -97,7 +97,7 @@ public class TenantSubscriptionUtil
             TenantSubscriptionInfo tenantSubscriptionInfo1 = cachedTenantSubcriptionInfo.getTenantSubscriptionInfo();
             LOGGER.info("retrieved tenantSubscriptionInfo for tenant {} from cache,data is {}", tenant, tenantSubscriptionInfo1);
             LOGGER.info("retrieved subscribed apps for tenant {} from cache,data is {}", tenant, cachedApps);
-            if (cachedApps != null) {
+            if (cachedApps != null && tenantSubscriptionInfo1!=null) {
                 copyTenantSubscriptionInfo(tenantSubscriptionInfo1, tenantSubscriptionInfo);
                 return cachedApps;
             }
