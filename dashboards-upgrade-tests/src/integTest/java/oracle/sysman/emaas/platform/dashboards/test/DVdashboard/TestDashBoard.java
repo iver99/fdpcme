@@ -334,7 +334,10 @@ public class TestDashBoard extends LoginAndLogout
 		//Verify dashboard when url without omcCtx
 		newUrl2 = newUrl1.split("&")[0];
 		webd.open(newUrl2);
-				
+			
+		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
+		wait1.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//span[text()='Start typing entity name(s)...']")));
+	
 		Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(webd), "Global Context bar isn't displayed in dashboard page");
 		
 		//Verify dashboard when url having composite
