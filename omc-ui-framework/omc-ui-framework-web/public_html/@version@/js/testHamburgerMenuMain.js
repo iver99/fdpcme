@@ -177,8 +177,8 @@ require(['knockout',
                     isAdmin: isAdmin,
                     entities: entities,
                     showGlobalContextBanner: true,
-                    showTimeSelector: ko.observable(true)
-//                    ,omcHamburgerMenuOptIn: true
+                    showTimeSelector: ko.observable(true),
+                    omcHamburgerMenuOptIn: true
                 };
             }
 
@@ -270,6 +270,118 @@ require(['knockout',
 
                 self.openWidgetSelectorDialog = function() {
                     $('#'+widgetSelectorDialogId).ojDialog('open');
+                };
+                
+                function menuSelectionHandler(data) {
+                    alert('Menu selection event received. Selected menu: ' + JSON.stringify(data));
+                }
+                menuUtil.subscribeMenuSelectionEvent(menuSelectionHandler);
+                
+                self.registerServiceMenus = function() {
+                    var menus = {
+                        "serviceMenuMsgBundle": "/emsaasui/uifwk/@version@/js/resources/nls/menuMsg.js",
+                        "serviceMenus": 
+                            [
+                                {
+                                    "id": "omc_sample_m1", 
+                                    "labelKey": "SAMPLE_SERVICE_MENU_1", 
+                                    "externalUrl": "/emsaasui/apmUi/index.html"
+                                },
+                                {
+                                    "id": "omc_sample_m2", 
+                                    "labelKey": "SAMPLE_SERVICE_MENU_2", 
+                                    "externalUrl": "/emsaasui/eventUi/console/html/event-dashboard.html",
+                                    "selfHandleMenuSelection": false
+                                },
+                                {
+                                    "id": "omc_service_menu_separator"
+                                },
+                                {
+                                    "id": "omc_sample_m4", 
+                                    "labelKey": "SAMPLE_SERVICE_MENU_3", 
+                                    "externalUrl": "/emsaasui/emlacore/html/log-analytics-search.html",
+                                    "serviceNameForVanityUrl": "LogAnalyticsUI",
+                                    "selfHandleMenuSelection": "false",
+                                    "requiredPrivileges": {
+                                        "checkMode": "privilege",
+                                        "checkList": ["SEARCH_LOGS","VIEW_ANY_TARGET"]
+                                    }
+                                }
+                            ],
+                        "serviceAdminMenus":
+                            {
+                                "id": "omc_sample_admin", 
+                                "labelKey": "SAMPLE_SERVICE_ADMIN_MENU_GRP", 
+                                "externalUrl": "#", 
+                                "requiredPrivileges": {
+                                    "checkMode": "role",
+                                    "checkList": ["APM Administrator"]
+                                },
+                                "children": 
+                                    [
+                                        {
+                                            "id": "omc_sample_admin_m1",
+                                            "labelKey": "SAMPLE_SERVICE_ADMIN_MENU_1", 
+                                            "externalUrl": "/emsaasui/eventUi/rules/html/rules-dashboard.html",
+                                            "requiredPrivileges": {
+                                                "checkMode": "privilege",
+                                                "checkList": ["MANAGE_ALERT_SETUP"]
+                                            },
+                                            "selfHandleMenuSelection": "false"
+                                        }
+                                    ]
+                            }
+                    };
+                    menuUtil.registerServiceMenus(menus);
+                };
+                self.setCurrentMenuItem = function() {
+                    menuUtil.setCurrentMenuItem(menuUtil.OMCMenuConstants['GLOBAL_ADMIN_ALERTRULES']);
+                };
+                
+                function compositeMenuCallback() {
+                    menuUtil.setCurrentMenuItem('omc_apm_app');
+                }
+                
+                self.showCompositeMenu = function() {
+                    var compositeMenus = {
+                        "serviceMenuMsgBundle": "/emsaasui/uifwk/@version@/js/resources/nls/menuMsg.js",
+                        "serviceCompositeMenus":
+                            [
+                                {
+                                    "id": "omc_composite_m1",
+                                    "labelKey": "SAMPLE_COMPOSITE_MENU1", 
+                                    "tooltipKey": "SAMPLE_COMPOSITE_MENU1", 
+                                    "externalUrl": "#"
+                                },
+                                {
+                                    "id": "omc_composite_m2",
+                                    "labelKey": "SAMPLE_COMPOSITE_MENU2", 
+                                    "tooltipKey": "SAMPLE_COMPOSITE_MENU2", 
+                                    "externalUrl": "#"
+                                },
+                                {
+                                    "id": "omc_composite_m3",
+                                    "labelKey": "SAMPLE_COMPOSITE_MENU3", 
+                                    "tooltipKey": "SAMPLE_COMPOSITE_MENU3", 
+                                    "externalUrl": "#"
+                                },
+                                {
+                                    "id": "omc_service_menu_separator"
+                                },
+                                {
+                                    "id": "omc_composite_m5",
+                                    "labelKey": "SAMPLE_COMPOSITE_MENU4", 
+                                    "tooltipKey": "SAMPLE_COMPOSITE_MENU4", 
+                                    "externalUrl": "/emsaasui/emlacore/html/log-analytics-search.html",
+                                    "serviceNameForVanityUrl": "LogAnalyticsUI",
+                                    "selfHandleMenuSelection": "false",
+                                    "requiredPrivileges": {
+                                        "checkMode": "privilege",
+                                        "checkList": ["SEARCH_LOGS","VIEW_ANY_TARGET"]
+                                    }
+                                }
+                            ]};
+                    menuUtil.showCompositeObjectMenu('omc_root_applications', 'Test Application Name', compositeMenus, compositeMenuCallback);
                 };
             }
 

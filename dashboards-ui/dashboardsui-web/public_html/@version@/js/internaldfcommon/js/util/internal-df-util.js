@@ -368,17 +368,7 @@ define(['knockout',
              * @returns {Boolean}
              */
             self.isV1ServiceTypes = function(subscribedApps) {
-                var len = subscribedApps.length;
-                var nonV1ServiceTypes = ["OMC", "OSMACC", "OMCSE", "OMCEE", "OMCLOG", "SECSE", "SECSMA"];
-                var isV1ServiceTypes = true;
-                for(var i=0; i<len; i++) {
-                    var app = subscribedApps[i];
-                    if($.inArray(app["id"], nonV1ServiceTypes) >=0) {
-                        isV1ServiceTypes = false;
-                        return isV1ServiceTypes;
-                    }
-                }
-                return isV1ServiceTypes;
+                return dfu.isV1ServiceTypes(subscribedApps);
             };
 
         }
