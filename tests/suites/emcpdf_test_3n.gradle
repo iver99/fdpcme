@@ -163,10 +163,17 @@ task DEVUiTest(type:EMTest,dependsOn:omcSetup){
 	ext.set("testType", "unit")
 }
 
-task QATest1(type:EMTest,dependsOn:omcSetup){
-	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/TestAnalyzerPage.class"
-	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/TestDashboardPage.class"
-	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/TestOtherPage.class"
+//Setup gradle to onboard a new tenant
+apply from: 'onboard_tenant.gradle'
+
+task QATest1(type:EMTest,dependsOn:[omcSetup, onboardTenant]){ 
+	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/BrandingBar_TestAnalyzerPage.class"
+	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/BrandingBar_TestDashboardPage.class"
+	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/BrandingBar_TestOtherPage.class"
+	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/HamburgerMenu_BasicTest.class"
+	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/HamburgerMenu_CompositeMenu.class"
+	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/HamburgerMenu_RegisterServiceMenu.class"
+	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/HamburgerMenu_ShowCurrentMenu.class"
 	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_FixDate.class"
 	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_FlexibleDate.class"
 	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_RecentUseOption.class"
@@ -194,11 +201,8 @@ task DEVTest2(type:EMTest,dependsOn:omcSetup){
 	ext.set("testType", "unit")
 }
 
-//Setup gradle to onboard a new tenant
-apply from: 'onboard_tenant.gradle'
-
 //Task is for dashboard UI Test
-task e2e (type: EMTest,dependsOn:[omcSetup, onboardTenant] ){
+task e2e (type: EMTest,dependsOn:omcSetup ){
 options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n','parallel':'none') {
         test('name': 'DashboardUITest', 'preserve-order':'true') {
             classes([:]) {
@@ -229,7 +233,9 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n','parallel':
 }
 
 QATest.mustRunAfter([omcSetup])
+
 task emcpdf_test_3n (dependsOn:[QATest,DEVUiTest,QATest1,DEVTest,DEVTest2,e2e, omcTeardown]) {
+    e2e.mustRunAfter([QATest1])
     omcTeardown.mustRunAfter([QATest,DEVUiTest,QATest1,DEVTest,DEVTest2,e2e])
 
     apply from: getAbsoluteFilePath(configurations.omctfConfig,"omctf_taskprocessor")
