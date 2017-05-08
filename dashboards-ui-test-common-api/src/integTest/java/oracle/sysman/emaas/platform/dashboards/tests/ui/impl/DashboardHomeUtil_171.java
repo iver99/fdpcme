@@ -421,10 +421,10 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 		Validator.notEmptyString("dashboardName", dashboardName);
 		String indicator = driver.isElementPresent(DashBoardPageId.OOBDASHBOARDNAMELOCATORLISTVIEW) ? DashBoardPageId.OOBDASHBOARDNAMELOCATOR
 				.replace("_name_", dashboardName) : DashBoardPageId.OOBDASHBOARD_LIST_LINK.replace("_name_", dashboardName);
-				if (!driver.isElementPresent(indicator)) {
-					throw new NoSuchElementException("Dashboard not exists. Name: " + dashboardName);
-				}
-				driver.click(indicator);
+		if (!driver.isElementPresent(indicator)) {
+			throw new NoSuchElementException("Dashboard not exists. Name: " + dashboardName);
+		}
+		driver.click(indicator);
 	}
 
 	/* (non-Javadoc)
@@ -621,7 +621,7 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 				WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 				//				wait.until(ExpectedConditions.invisibilityOfElementLocated(By
 				//						.cssSelector(DashBoardPageId.DASHBOARD_HOME_DELETE_DIALOG)));
-				driver.waitForElementVisible("css=" + DashBoardPageId.DASHBOARD_HOME_DELETE_DIALOG);
+				driver.waitForElementNotVisible("css=" + DashBoardPageId.DASHBOARD_HOME_DELETE_DIALOG);
 				break;
 			}
 		}

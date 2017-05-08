@@ -6,7 +6,7 @@ version = "2.0.0-" + sdkPubTimestamp
 
 project.ext.intgRun = hasProperty('IFARM_RUN') && IFARM_RUN != '' ? IFARM_RUN : 0
 project.ext.buildBranch = hasProperty('BUILD_BRANCH') && BUILD_BRANCH != '' ? BUILD_BRANCH : 'master'
-project.ext.forcePublishSdk = hasProperty('FORCE_PUBLISH_SDK') && FORCE_PUBLISH_SDK != '' ? FORCE_PUBLISH_SDK : 0
+
 sourceSets {
 	integTest {
         java.srcDir 'src/integTest/java'
@@ -51,9 +51,9 @@ publishing.publications {
 }
 
 artifactoryPublish {
-    if ( forcePublishSdk == "1" || (intgRun == "1" && buildBranch == "master")) {
+  
 	publications ('integTest')
-    }
+ 
 }
 
 
