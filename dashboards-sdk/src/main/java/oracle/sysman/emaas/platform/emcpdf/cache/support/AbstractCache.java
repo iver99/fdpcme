@@ -35,7 +35,7 @@ public abstract class AbstractCache implements ICache {
 
     @Override
     public Object get(Object key, CacheLoader factory) throws ExecutionException {
-        LOGGER.info("AbstractCache.get is called for key {} and CacheLoader {}!", key, factory);
+        LOGGER.debug("AbstractCache.get is called for key {} and CacheLoader {}!", key, factory);
         checkNotNull(key);
         CachedItem value = lookup(key);
         Object valueFromFactory = null;
