@@ -1,26 +1,11 @@
 package oracle.sysman.emaas.platform.dashboards.ws.rest.ssfDatautil;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil.VersionedLink;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.http.HttpEntity;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -60,7 +45,7 @@ public class SSFDataUtil {
         String tenantName = TenantContext.getCurrentTenant();
         String savedSearchResponse = null;
         try {
-        	LOGGER.info("auth is "+((VersionedLink) ssfLink).getAuthToken());
+        	//LOGGER.info("auth is "+((VersionedLink) ssfLink).getAuthToken());
 			rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME, tenantName);
 			rc.setHeader(RestClient.OAM_REMOTE_USER, remoteUser);
         	savedSearchResponse = rc.put(tenantHref, data, tenantName, 
