@@ -89,18 +89,19 @@ public class TenantSubscriptionUtil
         try {
             LOGGER.info("Trying to retrieve tenant subscription info from cache....");
             cachedTenantSubcriptionInfo = (CachedTenantSubcriptionInfo) cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE).get(cacheKey);
+
+            if (cachedTenantSubcriptionInfo != null) {
+                cachedApps = cachedTenantSubcriptionInfo.getSubscribedAppsList();
+                TenantSubscriptionInfo tenantSubscriptionInfo1 = cachedTenantSubcriptionInfo.getTenantSubscriptionInfo();
+                LOGGER.info("retrieved tenantSubscriptionInfo for tenant {} from cache,data is {}", tenant, tenantSubscriptionInfo1);
+                LOGGER.info("retrieved subscribed apps for tenant {} from cache,data is {}", tenant, cachedApps);
+                if (cachedApps != null && tenantSubscriptionInfo1 != null) {
+                    copyTenantSubscriptionInfo(tenantSubscriptionInfo1, tenantSubscriptionInfo);
+                    return cachedApps;
+                }
+            }
         } catch (ExecutionException e) {
             LOGGER.error("Error occurred when using cache...");
-        }
-        if(cachedTenantSubcriptionInfo!=null){
-            cachedApps = cachedTenantSubcriptionInfo.getSubscribedAppsList();
-            TenantSubscriptionInfo tenantSubscriptionInfo1 = cachedTenantSubcriptionInfo.getTenantSubscriptionInfo();
-            LOGGER.info("retrieved tenantSubscriptionInfo for tenant {} from cache,data is {}", tenant, tenantSubscriptionInfo1);
-            LOGGER.info("retrieved subscribed apps for tenant {} from cache,data is {}", tenant, cachedApps);
-            if (cachedApps != null && tenantSubscriptionInfo1!=null) {
-                copyTenantSubscriptionInfo(tenantSubscriptionInfo1, tenantSubscriptionInfo);
-                return cachedApps;
-            }
         }
 
         LOGGER.info("Trying to retrieve subscription info from /serviceRequest for tenant {}",tenant);

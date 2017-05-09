@@ -655,7 +655,7 @@ public class TenantSubscriptionUtilTest
 		cm.getCache(CacheConstants.CACHES_DOMAINS_DATA_CACHE).evict(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(TENANT_LOOKUP_URL)));
 	}
 
-	/*@AfterMethod(groups = { "s2" })
+	@AfterMethod(groups = { "s2" })
 	public void afterMethod()
 	{
 		cleanCache();
@@ -665,5 +665,5 @@ public class TenantSubscriptionUtilTest
 	public void beforeMethod() throws Exception
 	{
 		cleanCache();
-	}*/
+	}
 }
