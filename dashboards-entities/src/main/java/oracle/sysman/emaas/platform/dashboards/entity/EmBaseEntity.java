@@ -15,7 +15,7 @@ import org.eclipse.persistence.annotations.AdditionalCriteria;
  */
 @MappedSuperclass
 //@Multitenant(value = MultitenantType.SINGLE_TABLE, includeCriteria = false)
-@AdditionalCriteria("this.tenantId = :curTenantId or this.tenantId = -1")
+@AdditionalCriteria("this.tenantId = :curTenantId or this.tenantId = -11")
 public class EmBaseEntity {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "CREATION_DATE")
