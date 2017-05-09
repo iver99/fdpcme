@@ -120,16 +120,17 @@
     display: inline-block;
 }
 
+// Always show "Apply" button at the bottom of panel per Juan's comments. It's fine if sometimes error messages cover the button.
 .buttons {
     position: absolute;
     bottom: 5px;
     left: 10px;
 }
 
-.buttons.apply-disabled {
+/*.buttons.apply-disabled {
     position: relative;
     padding: 5px 0px 0px;
-}
+}*/
 
 .errorMsg {
     margin: 10px;
@@ -350,12 +351,13 @@ div[id^='pickerPanel'] .oj-listbox-drop{
 
 div[id^='pickerPanel'] .oj-messaging-inline-container{
     .oj-message-error {
-        width: 430px;
-        height: 36px;
+        width: 350px;
+        height: 50px;
         padding: 5px;
         word-wrap: break-word;
         word-break: normal;
-        overflow: auto;
+        overflow-y: auto;
+        overflow-x: hidden;
     }
     .oj-message-summary {
         font-size: 12px;
@@ -363,4 +365,13 @@ div[id^='pickerPanel'] .oj-messaging-inline-container{
     .oj-message-detail {
         font-size: 12px;
     }
+}
+
+//Error message for end date and time are too long to exceed the panel. Make them float to right.
+div[id^='endTime'] .oj-messaging-inline-container {
+    float: right;
+}
+
+div[id^='endDate'] .oj-messaging-inline-container {
+    float: right;
 }

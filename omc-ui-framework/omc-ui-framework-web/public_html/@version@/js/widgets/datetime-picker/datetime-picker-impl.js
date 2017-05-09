@@ -386,13 +386,13 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     return applyButtonDisable;
                 }, self);
                 
-                self.applyButtonDisable.subscribe(function(value) {
-                    if(value > 0) {
-                        $(self.pickerPanelId + " .buttons").addClass("apply-disabled");
-                    }else {
-                        $(self.pickerPanelId + " .buttons").removeClass("apply-disabled");
-                    }
-                });
+//                self.applyButtonDisable.subscribe(function(value) {
+//                    if(value > 0) {
+//                        $(self.pickerPanelId + " .buttons").addClass("apply-disabled");
+//                    }else {
+//                        $(self.pickerPanelId + " .buttons").removeClass("apply-disabled");
+//                    }
+//                });
                 
                 self.lrCtrlVal.subscribe(function(value) {
                     if(value === "flexRelTimeCtrl") {
