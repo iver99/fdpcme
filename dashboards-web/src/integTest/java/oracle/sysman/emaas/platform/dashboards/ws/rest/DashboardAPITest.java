@@ -331,7 +331,7 @@ public class DashboardAPITest
 				mockedDashboardManager.getDashboardIdsByNames((List<String>)any, anyLong);
 				result = dbdIds;
 				
-				mockedDashboardManager.getCombinedDashboardById((BigInteger) any, anyLong, anyString);
+				mockedDashboardManager.getDashboardById((BigInteger) any, anyLong);
       			result = combinedDashboard;
 				
       			combinedDashboard.getSubDashboards();

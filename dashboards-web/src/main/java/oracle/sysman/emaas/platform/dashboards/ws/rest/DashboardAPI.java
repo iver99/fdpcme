@@ -1116,7 +1116,8 @@ public class DashboardAPI extends APIBase
 				try {
 					dbdNames.add(array.getString(i));
 				} catch (JSONException e) {
-					LOGGER.error("Can not handle the input JSONArray for {}", e.getLocalizedMessage());
+					LOGGER.error(e);
+					return Response.status(Status.BAD_REQUEST).build();
 				}
 			}
 		} else {
@@ -1133,21 +1134,20 @@ public class DashboardAPI extends APIBase
 			logkeyHeaders("export()", userTenant, tenantIdParam);
 			Long tenantId = getTenantId(tenantIdParam);
 			initializeUserContext(tenantIdParam, userTenant);
-			String userName = UserContext.getCurrentUser();
 			List<BigInteger> dbdIds = dm.getDashboardIdsByNames(dbdNames, tenantId);
 			List<String> widgetIds = new ArrayList<String>();
 			JSONArray finalArray = new JSONArray();
 			for (int i = 0; i < dbdIds.size(); i++) {
 				JSONArray dbdArray = new JSONArray();
 				BigInteger id = dbdIds.get(i);
-				Dashboard dbd = dm.getCombinedDashboardById(id, tenantId, userName);
+				Dashboard dbd = dm.getDashboardById(id, tenantId);
 				List<Dashboard> subDbds = null;
 				List<Tile> allTiles = new ArrayList<Tile>();
 				if (dbd != null && dbd.getSubDashboards() != null && !dbd.getSubDashboards().isEmpty()) {
 					subDbds = new ArrayList<Dashboard>();
 					for (Dashboard subDbd : dbd.getSubDashboards()) {
 						BigInteger subId = subDbd.getDashboardId();
-						Dashboard completeSubDashboard = dm.getCombinedDashboardById(subId, tenantId, userName);
+						Dashboard completeSubDashboard = dm.getDashboardById(subId, tenantId);
 						if (completeSubDashboard.getTileList() != null && !completeSubDashboard.getTileList().isEmpty()) {
 							
 							allTiles.addAll(completeSubDashboard.getTileList());
@@ -1201,6 +1201,8 @@ public class DashboardAPI extends APIBase
 					String ssfDataResponse = SSFDataUtil.getSSFData(userTenant, requestEntity.toString());
 					if (ssfDataResponse != null && ssfDataResponse.startsWith("[")) {
 						ssfObject = new JSONArray(ssfDataResponse);
+					} else {
+						return Response.status(Status.BAD_REQUEST).entity("Could not get ssf data by widget unique ids").build();
 					}
 					
 				}
@@ -1306,8 +1308,11 @@ public class DashboardAPI extends APIBase
 		infoInteractionLogAPIIncomingCall(tenantIdParam, null, "Service call to [PUT] /v1/dashboards/import");
 		try {
 			if (!DependencyStatus.getInstance().isDatabaseUp())  {
-				LOGGER.error("Error to call [POST] /v1/dashboards: database is down");
+				LOGGER.error("Error to call [PUT] /v1/dashboards: database is down");
 				throw new DatabaseDependencyUnavailableException();
+			}
+			if (jsonArray == null) {
+				return Response.status(Status.BAD_REQUEST).entity("Could not import any dashboard as the input data is null").build();
 			}
 			int length = jsonArray.length();
 			JSONArray outputJson = new JSONArray();

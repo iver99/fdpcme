@@ -1090,7 +1090,7 @@ public class DashboardManager
 	}
 	
 	private String generateNewName(DashboardServiceFacade dsf,Long tenantId,String name) {
-		String existingName = dsf.getDashboardName(name, tenantId);
+		String existingName = dsf.getDashboardNameWithMaxSuffixNumber(name, tenantId);
 		String finalString  = null;
 		if (existingName != null) {
 			Pattern pattern = Pattern.compile("\\d+$");

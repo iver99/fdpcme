@@ -134,7 +134,7 @@ public class DashboardServiceFacade
 		return ids;
 	}
 	
-	public String getDashboardName(String name, Long tenantId) {
+	public String getDashboardNameWithMaxSuffixNumber(String name, Long tenantId) {
 		if (name.contains("'")) {
 			name  = name.replaceAll("'", "''");
 		}
