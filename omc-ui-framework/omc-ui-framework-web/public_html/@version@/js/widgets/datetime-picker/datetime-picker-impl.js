@@ -1896,6 +1896,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             customClick(1);
                         }
                     }else {
+                        self.setTimePeriodChosen(chosenPeriodId);
                         self.showRightPanel(true);
                         //set modality to "modeless" in case it is set as "modal" in launchTimePickerCucstom function
                         $("#pickerPanel_"+self.randomId).ojPopup("option", "modality", "modeless");
