@@ -370,6 +370,10 @@ public class RegistryServiceManager implements ApplicationServiceManager
 			if (applicationUrlHttps != null) {
 				links.add(new Link().withRel("static/dashboards.service").withHref(applicationUrlHttps + NAV_STATIC_DASHBOARDS));
 			}
+			//introduce serviceapi
+			if (applicationUrlHttps != null) {
+				links.add(new Link().withRel("serviceapi/dashboards.service").withHref(applicationUrlHttps + NAV_STATIC_DASHBOARDS));
+			}
 			if (applicationUrlHttp != null) {
 				links.add(new Link().withRel("static/dashboards.preferences")
 						.withHref(applicationUrlHttp + NAV_STATIC_PREFERENCE));
@@ -386,6 +390,11 @@ public class RegistryServiceManager implements ApplicationServiceManager
 				links.add(new Link().withRel("static/dashboards.subscribedapps").withHref(
 						applicationUrlHttps + NAV_STATIC_SUBSCRIBEDAPPS));
 			}
+			//introduce serviceapi
+			if (applicationUrlHttps != null) {
+				links.add(new Link().withRel("serviceapi/dashboards.subscribedapps").withHref(
+						applicationUrlHttps + NAV_STATIC_SUBSCRIBEDAPPS));
+			}
 			if (applicationUrlHttp != null) {
 				links.add(new Link().withRel("static/dashboards.subscribedapps2").withHref(
 						applicationUrlHttp + NAV_STATIC_SUBSCRIBEDAPPS_V2));
@@ -394,11 +403,20 @@ public class RegistryServiceManager implements ApplicationServiceManager
 				links.add(new Link().withRel("static/dashboards.subscribedapps2").withHref(
 						applicationUrlHttps + NAV_STATIC_SUBSCRIBEDAPPS_V2));
 			}
+			//introduce serviceapi
+			if (applicationUrlHttps != null) {
+				links.add(new Link().withRel("serviceapi/dashboards.subscribedapps2").withHref(
+						applicationUrlHttps + NAV_STATIC_SUBSCRIBEDAPPS_V2));
+			}
 			if (applicationUrlHttp != null) {
 				links.add(new Link().withRel("static/dashboards.logging").withHref(applicationUrlHttp + NAV_STATIC_LOGGING));
 			}
 			if (applicationUrlHttps != null) {
 				links.add(new Link().withRel("static/dashboards.logging").withHref(applicationUrlHttps + NAV_STATIC_LOGGING));
+			}
+			//introduce serviceapi
+			if (applicationUrlHttps != null) {
+				links.add(new Link().withRel("serviceapi/dashboards.logging").withHref(applicationUrlHttps + NAV_STATIC_LOGGING));
 			}
 			if (applicationUrlHttp != null) {
 				links.add(new Link().withRel("static/dashboards.registry").withHref(applicationUrlHttp + NAV_STATIC_REGISTRY));
