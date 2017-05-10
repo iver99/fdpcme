@@ -675,7 +675,7 @@ task copyDevJs(type:Copy, dependsOn: [cleanJs, unpackJETFromArtifactory, unpackJ
     into stagingDir
     
     doLast {
-        delete 'public_html/@version@/css'
+        //delete 'public_html/@version@/css'
 	
 	//add setting to testMain.js
 	File testMainFile = new File(stagingDir+'/@version@/js/testMain.js')
@@ -770,6 +770,25 @@ task combineAppJsDebug(dependsOn: [copyStagedDevJs, prepareRequireJsConfig], typ
     source = javascript.source.staticjs.js.files   //point to your source files
     requirejs.buildprofile = file(buildDir.absolutePath+"/uifwk.build.js")
     outputs.upToDateWhen { false }           //requireJs task does not know how to accurately determine if it is UP-TO-DATE so this line says the task is never up to date.
+
+    doLast {
+        //Inject contents of uifwk-load.js into uifwk-partition.js 
+        File uifwkLoadJsFile = new File(compiledDir+'/@version@/js/uifwk-load.js')
+        String uifwkLoadJsContents = uifwkLoadJsFile.getText('UTF-8')
+        File uifwkPartitionJsFile = new File(compiledDir + '/js/uifwk-partition.js') 
+        String uifwkPartitionJsContents = uifwkPartitionJsFile.getText('UTF-8')
+        File uifwkPartitionJsFile0 = new File(compiledDir + '/js/uifwk-partition0.js') 
+        uifwkPartitionJsFile0.write(uifwkPartitionJsContents, 'UTF-8')  
+        uifwkPartitionJsContents =  uifwkLoadJsContents + uifwkPartitionJsContents
+        uifwkPartitionJsFile.write(uifwkPartitionJsContents, 'UTF-8')
+
+	//create cached.js file
+	Files.copy(Paths.get(compiledDir+"/@version@/js/uifwk-impl-partition.js"), Paths.get(compiledDir+"/@version@/js/uifwk-impl-partition-cached.js"))
+
+	def text = new File(compiledDir+"/js/uifwk-partition0.js").getText()
+	File cachedFile = new File(compiledDir+"/@version@/js/uifwk-impl-partition-cached.js")
+	cachedFile.append("\n"+text,'UTF-8')
+    }
 }
 
 test {

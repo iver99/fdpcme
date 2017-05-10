@@ -329,6 +329,13 @@ define(['knockout',
             self.showMessage = function(messageObj) {
                 return msgUtil.showMessage(messageObj);
             };
+            
+            /**
+             * Remove message by id
+             */
+            self.removeMessage = function(messageId) {
+                return msgUtil.removeMessage(messageId);
+            };
 
             /**
              * Discover logout url for current logged in user
