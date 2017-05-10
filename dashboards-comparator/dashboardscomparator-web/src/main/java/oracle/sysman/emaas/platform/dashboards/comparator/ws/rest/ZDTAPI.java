@@ -34,6 +34,7 @@ import org.apache.logging.log4j.Logger;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.tenant.TenantIdProcessor;
 import oracle.sysman.emaas.platform.dashboards.comparator.exception.ErrorEntity;
+import oracle.sysman.emaas.platform.dashboards.comparator.exception.ZDTErrorConstants;
 import oracle.sysman.emaas.platform.dashboards.comparator.exception.ZDTException;
 import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.counts.CountsEntity;
@@ -221,6 +222,8 @@ public class ZDTAPI
 				}
 				ZDTStatusRowEntity statusRow = new ZDTStatusRowEntity(comparisonDate,type,nextScheduleDateStr,percentage);
 				message = JsonUtil.buildNormalMapper().toJson(statusRow);
+			} else {
+				Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(ZDTErrorConstants.NULL_LINK_ERROR_CODE, ZDTErrorConstants.NULL_LINK_ERROR_MESSAGE))).build();
 			}
 		} catch(ZDTException zdtE) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(zdtE))).build();
