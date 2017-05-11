@@ -47,8 +47,7 @@ def emcpsmRegClientVer = getDependentSdkVersion('com.oracle.emaas.emcpsm', 'regi
 def emcpsmRegLookupClientVer = getDependentSdkVersion('com.oracle.emaas.emcpsm', 'registry-lookup-client', '1.+')
 def emcpdfCommonAPIVer=getDependentSdkVersion('com.oracle.emaas.emcpdf.testsdk.ui', 'dashboards-ui-test-common-api', '2.+')
 def emcpdfDashboardsSdkVer= getDependentSdkVersion('com.oracle.emaas.emcpdf', 'dashboards-sdk', '1.+')
-//Setup gradle to onboard a new tenant
-apply from: 'onboard_tenant.gradle'
+def omctfSetupTestSDKVer = getDependentSdkVersion('com.oracle.omc.omctf.testsdk', 'omctf_omcsetup', '1.+')
 
 //Update the lrgConfig configuration to specify where the test jar is.
 dependencies{
@@ -75,9 +74,9 @@ dependencies{
       	exclude('module':'groovy')
     }
 
+    testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: emcpdfCommonAPIVer)
 
-     testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: emcpdfCommonAPIVer)
-
+    testConfig(group: 'com.oracle.omc.omctf.testsdk', name: 'omctf_omcsetup', version: omctfSetupTestSDKVer)
 
     testConfig(group: 'com.oracle.emaas.emcpdf', name: 'dashboards-sdk', version: emcpdfDashboardsSdkVer)
 
@@ -122,8 +121,28 @@ dependencies{
 
 project.ext.omctf_omcCloudSetup_additionalParam = "-skipagents -skipomr"
 
+// depends on OMCTF-977
+//def testTenants_v2 = [:]
+//testTenants_v2["df_omc_trial"]= [ "OMC" : [ "Trial"]]
+//testTenants_v2["df_omc_standard"]= [ "OMC" : [ "Standard"] ]
+//testTenants_v2["df_omc_ee"]= [ "OMC" : [ "Enterprise"] ]
+//testTenants_v2["df_omc_log"]= [ "OMC" : [ "Log"] ]
+//testTenants_v2["df_osmacc_trial"]= [ "OSMACC" : [ "Trail"] ]
+//testTenants_v2["df_osmacc_compliance"]= [ "OSMACC" : [ "Compliance"] ]
+//testTenants_v2["df_osmacc_security"]= [ "OSMACC" : [ "Security"] ]
+
+def testTenants_v3 = [:]
+testTenants_v3["df_omcse"]= [ "OMCSE" : [ "Standard"] ]
+testTenants_v3["df_omcee"]= [ "OMCEE" : [ "Enterprise"] ]
+testTenants_v3["df_omclog"]= [ "OMCLOG" : [ "Standard"] ]
+testTenants_v3["df_secse"]= [ "SECSE" : [ "Standard"] ]
+testTenants_v3["df_secsma"]= [ "SECSMA" : [ "Standard"] ]
+
+task onboardAllTenants(dependsOn:[omcOnboardTenants(testTenants_v3)]){
+}
+
 //Task added from "emcpdf_qa_test_3n"
-task QATest(type:EMTest,dependsOn:[omcSetup, onboardNewTenant]) {
+task QATest(type:EMTest,dependsOn:[onboardAllTenants]) {
 	include "oracle/sysman/emaas/platform/dashboards/test/dashboard/*"
 	include "oracle/sysman/emaas/platform/dashboards/test/common/*"
 	include "oracle/sysman/emaas/platform/dashboards/logging/*"
@@ -144,7 +163,10 @@ task DEVUiTest(type:EMTest,dependsOn:omcSetup){
 	ext.set("testType", "unit")
 }
 
-task QATest1(type:EMTest,dependsOn:omcSetup){ 
+//Setup gradle to onboard a new tenant
+apply from: 'onboard_tenant.gradle'
+
+task QATest1(type:EMTest,dependsOn:[omcSetup, onboardTenant]){ 
 	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/BrandingBar_TestAnalyzerPage.class"
 	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/BrandingBar_TestDashboardPage.class"
 	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/BrandingBar_TestOtherPage.class"
@@ -180,7 +202,7 @@ task DEVTest2(type:EMTest,dependsOn:omcSetup){
 }
 
 //Task is for dashboard UI Test
-task e2e (type: EMTest,dependsOn:[omcSetup, onboardNewTenant] ){
+task e2e (type: EMTest,dependsOn:omcSetup ){
 options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n','parallel':'none') {
         test('name': 'DashboardUITest', 'preserve-order':'true') {
             classes([:]) {
@@ -211,7 +233,10 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n','parallel':
     useRestAssured = true
 }
 
+QATest.mustRunAfter([omcSetup])
+
 task emcpdf_test_3n (dependsOn:[QATest,DEVUiTest,QATest1,DEVTest,DEVTest2,e2e, omcTeardown]) {
+    e2e.mustRunAfter([QATest1])
     omcTeardown.mustRunAfter([QATest,DEVUiTest,QATest1,DEVTest,DEVTest2,e2e])
 
     apply from: getAbsoluteFilePath(configurations.omctfConfig,"omctf_taskprocessor")

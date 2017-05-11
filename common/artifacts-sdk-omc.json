@@ -19,14 +19,14 @@
 		"method": "artifactFilterSdkVersion",
 		"group": "com.oracle.emaas.emcpsm",
 		"name": "registry-client",
-		"version": "1.+",
+		"version": "${getDependentSdkVersion('com.oracle.emaas.emcpsm', 'registry-client', '1.+')}",
 		"transitive": false
 	},
 	"registry-lookup-client": {
 		"method": "artifactFilterSdkVersion",
 		"group": "com.oracle.emaas.emcpsm",
 		"name": "registry-lookup-client",
-		"version": "1.+",
+		"version": "${getDependentSdkVersion('com.oracle.emaas.emcpsm', 'registry-lookup-client', '1.+')}",
 		"transitive": false
 	},
 	"emaas-platform-tenant-sdk": {
@@ -43,9 +43,6 @@
 		"version": "1.+",
 		"transitive": false
 	},
-	
-
-
 	"emcs-targetselector": {
 		"method": "artifactFilterSdkVersion",
 		"group": "com.oracle.emaas.emctas.tgtsel",
@@ -54,5 +51,10 @@
 		"ext": "zip",
 		"transitive": false
 	},
-
+	"omctfSetupTestSDK": { 
+		"group": "com.oracle.omc.omctf.testsdk", 
+		"name": "omctf_omcsetup", 
+		"version": "1.+", 
+		"transitive": "true" 
+	}
 }
