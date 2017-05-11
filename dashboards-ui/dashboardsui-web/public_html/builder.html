@@ -29,7 +29,8 @@
                 </div>
             </header>
 
-            <div id="dbd-set-tabs" data-bind="stopDataBinding: !isDashboardSet(), visible: isDashboardSet" class="no-print">
+            <!-- ko if: isDashboardSet -->
+            <div id="dbd-set-tabs" data-bind="stopDataBinding: !isDashboardSet()" class="no-print">
                 <div id="dbd-tabs-container" data-bind="ojComponent:{component: 'ojTabs',truncation:'none',removable:disableRemove,reorderable:dashboardsetConfig.isCreator}">
                     <div id="dbd-set-name" class="oj-tabs-facet">
                             <span data-bind="text:dashboardsetName()"></span>
@@ -44,18 +45,21 @@
                     <ul class="dbd-tabs-nav">
                     </ul>
 
-                    <div class="oj-tabs-facet demo-tabs-facet-flex" data-bind="visible:enableAdd">
+                    <!-- ko if: enableAdd -->
+                    <div class="oj-tabs-facet demo-tabs-facet-flex">
                          <span id="add-nav" data-bind="click:addNewDashboard,attr: {title: getNlsString('DBSSET_BUILDER_ADD_DASHBOARD_TOSET')">
                              <i class="fa-icon-font fa-icon-font-14 dbd-icon-add"></i>
                          </span>
                     </div>
+                    <!--/ko-->
                 </div>
 
                 <ul id="dbd-set-option" style="display:none"
                     data-bind="ojComponent: {component: 'ojMenu',select:$root.dashboardsetConfigMenu, beforeOpen: $root.dbdSetOptionBeforeOpen}">
                     <!-- ko if: canLazyInitSetOptionMenu() -->
                     <!--ko foreach:dashboardsetMenu-->
-                    <li data-bind="attr:{'id':id},visible: visibility">
+                    <!-- ko if: visibility -->
+                    <li data-bind="attr:{'id':id}">
                         <a href="#" data-bind="attr:{'dashboardset-option':name}">
                             <span class="fa-icon-font fa-icon-font-14 oj-menu-item-icon oj-fwk-icon" data-bind="css:icon"></span>
                             <span data-bind="text:label"></span>
@@ -73,6 +77,7 @@
                         </ul>
                         <!--/ko-->
                     </li>
+                    <!--/ko-->
                     <!--ko if:endOfGroup-->
                       <li class="oj-menu-divider"></li>
                     <!--/ko-->
@@ -121,7 +126,7 @@
                             </div>
                      </div>
             </div>
-
+            <!-- /ko -->
             <!-- /ko -->
             <div id="dashboards-tabs-contents">
 
@@ -129,7 +134,8 @@
 
             <script id="dashboard-content-template" type="text/html">
             <div class="dashboard-content page-break" style="visibility: hidden">
-            <div class="oj-col oj-sm-12 oj-toolbars oj-toolbar-bottom-border oj-btton-half-chrome head-bar-container fit-size-vertical-sibling" style="padding-left:10px;" data-bind="visible:!$data.isUnderSet">
+            <!-- ko ifnot: $data.isUnderSet -->
+            <div class="oj-col oj-sm-12 oj-toolbars oj-toolbar-bottom-border oj-btton-half-chrome head-bar-container fit-size-vertical-sibling" style="padding-left:10px;">
                 <div class="builder-toolbar oj-component oj-component-initnode" aria-label="Builder toolbar" >
                     <div class="builder-toolbar-left dbd-pull-left single-dbd-description">
                         <div class="builder-dbd-name">
@@ -165,13 +171,15 @@
                     </div>
                 </div>
             </div>
+            <!-- /ko -->
             <div class="oj-col stretch-height builder-main dashboard-content-main" role="main">
                 <div class="tiles-col-container oj-col oj-sm-12 oj-md-12 oj-lg-12 oj-xl-12 stretch-height fit-size">
                     <div class="oj-row fit-size-vertical-sibling df-computed-content-width"
                          style="max-width: none; padding-left: 10px;padding-top: 5px; padding-bottom: 3px; margin-left: 0" >                          
                         <div class="df-toolbar">
                             <!-- ko with:toolbarModel -->
-                            <div class="builder-dbd-description" data-bind="visible: dashboardDescriptionEnabled()==='TRUE'">
+                            <!-- ko if: dashboardDescriptionEnabled()==='TRUE' -->
+                            <div class="builder-dbd-description">
                                 <div class="builder-dbd-description-display-area dbd-display-area" data-bind="css: {'dbd-edit-disabled': editDisabled()}">
                                                <div data-bind="text: dashboardDescription()?dashboardDescription:getNlsString('DBS_BUILDER_WIDGET_NO_DESCRIPTION'), 
                                                      css:{'font-style-italic':!dashboardDescription()},
@@ -179,17 +187,20 @@
                                                class="dbd-display-area-text single-dbd-description" style="display:block; white-space: pre;"></div>          
                                 </div>
                             </div>  
+                            <!-- /ko -->
                             <button class='dashboardOptsBtn dashboard-screenshot oj-button oj-default oj-button-half-chrome no-print' id ="dashboardOptsBtn"
-                                    data-bind="visible: true, ojComponent: { component: 'ojButton', chroming: 'half', icons: {start:'fa-icon-font fa-icon-font-16 dbd-toolbar-icon-option'},
+                                    data-bind="ojComponent: { component: 'ojButton', chroming: 'half', icons: {start:'fa-icon-font fa-icon-font-16 dbd-toolbar-icon-option'},
                                     menu: '#dashboardOptsMenu'+toolBarGuid},
                                     attr: {title: getNlsString('DBS_BUILDER_BTN_OPTIONS'),id:'dashboardOptsBtn_'+[].toString.apply(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1)))}">
                             </button>
+                            <!-- ko if: editDisabled() !== true && $root.isMobileDevice !== 'true' && notZdtStatus -->
                             <button class="dashboardSaveBtn dashboardOptsBtn oj-button oj-default oj-button-half-chrome no-print" id ="dashboardSaveBtn"
                                     data-bind="click: handleDashboardSave, ojComponent: {
                                         component:'ojButton', chroming: 'half', disabled: disableSave,
                                         icons: {start: 'fa-icon-font fa-icon-font-16 dbd-toolbar-icon-save'}
-                                        }, attr: {title: getNlsString('DBS_BUILDER_BTN_SAVE_DASHBOARD'),id:'dashboardSaveBtn_'+[].toString.apply(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1)))}, visible: editDisabled() !== true && $root.isMobileDevice !== 'true' && notZdtStatus">
+                                        }, attr: {title: getNlsString('DBS_BUILDER_BTN_SAVE_DASHBOARD'),id:'dashboardSaveBtn_'+[].toString.apply(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1)))}">
                             </button>
+                            <!-- /ko -->
 
                             <ul class="no-print dropdown-menu" data-bind="ojComponent: {component: 'ojMenu',select: optionMenuItemSelect, beforeOpen: $data.dashboardOptsMenuBeforeOpen},attr:{id:'dashboardOptsMenu'+toolBarGuid}" style="display: none;">
                                 <!-- ko if: renderDashboardOptsMenu -->
@@ -228,7 +239,9 @@
                             <!--add-widget-tooltip-->
                             <img src="@version@/images/imgbackground.png" style="background: url('@version@/images/dfSprite.png') no-repeat 0px -1064px;height:220px;"  width="240px" height="240px" margin-bottom="30px" data-bind="attr:{alt:oj.Translations.getTranslatedString('Add content to dashboard')}"/>
                             <p style="font-size: 24px; font-weight: bold;" data-bind="text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_TITLE')"></p>
-                            <p style="font-size: 16px;" data-bind="visible:($root.dashboard.systemDashboard()===false) && !(($root.dashboard.sharePublic()===true)&&($root.dashboard.owner()!==$root.loginUser())),text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_TEXT_LINE1')"></p>                            
+                            <!-- ko if:($root.dashboard.systemDashboard()===false) && !(($root.dashboard.sharePublic()===true)&&($root.dashboard.owner()!==$root.loginUser())) -->
+                            <p style="font-size: 16px;" data-bind="text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_TEXT_LINE1')"></p>                            
+                            <!-- /ko -->
                         </div>
                         <!-- /ko -->
                         <div style="padding-left: 5px;">
@@ -249,9 +262,9 @@
                                             <!-- ko if: $root.initTileKoRightBtnsResizeHdls -->
                                           <div class="dbd-pull-right" style="display: flex">
                                               <div class="dbd-btn-editor">                 
+                                                  <!-- ko if: $root.isMobileDevice !== 'true' && isOpenInExplorerShown -->
                                                   <button class="oj-button-half-chrome dbd-data-explore" tabindex="0"
                                                           data-bind="
-                                                             visible: $root.isMobileDevice !== 'true' && isOpenInExplorerShown,                                                        
                                                              attr:{'id': 'editButton' + clientGuid,title:$data.WIDGET_GROUP_NAME() === getNlsString('SERVICE_NAME_LogAnalytics') ? getNlsString('DBS_BUILDER_MSG_AUTO_OPEN_IN_LOG_EXPLORER'):getNlsString('DBS_BUILDER_MSG_AUTO_OPEN_IN_DATA_EXPLORER')},
                                                              click:$root.openInDataExplorer,
                                                              ojComponent: {
@@ -259,6 +272,7 @@
                                                                 icons: {start:'fa-icon-font fa-icon-font-16 dbd-title-edit'},    
                                                                 label: ''
                                                         }"></button>
+                                                  <!-- /ko -->
                                               </div>
                                               <div class="dbd-btn-maxminToggle">
                                                   <button class="oj-button-half-chrome dbd-tile-maxmin" tabindex="0"
@@ -272,14 +286,15 @@
                                                         }"></button>
                                               </div>
                                                 <div class="dbd-btn-group" data-bind="stopDataBinding: $root.dashboard.systemDashboard && $root.dashboard.systemDashboard()==true">
+                                                    <!-- ko if: ($root.dashboard.systemDashboard()===false)&& !(($root.dashboard.sharePublic ===true)&&($root.dashboard.owner()!==$root.loginUser())) &&($root.isMobileDevice !== 'true')&&($root.toolbarModel.notZdtStatus) -->
                                                     <button class="oj-button-half-chrome dbd-tile-action" tabindex="0"
                                                             data-bind="attr: {'id': 'actionButton' + clientGuid, title: getNlsString('DBS_BUILDER_TILE_ACTIONS')},
-                                                                       visible: ($root.dashboard.systemDashboard()===false)&& !(($root.dashboard.sharePublic ===true)&&($root.dashboard.owner()!==$root.loginUser())) &&($root.isMobileDevice !== 'true')&&($root.toolbarModel.notZdtStatus),
                                                                        ojComponent: {component: 'ojButton', 
                                                                                      label: '', chroming: 'half',
                                                                                      icons: {start:'fa-icon-font fa-icon-font-16 dbd-tile-icon-option'},
                                                                                      menu: '#tileMenu' + clientGuid}">
                                                     </button>
+                                                    <!-- /ko -->
                                                     <!--to be continued: detect if tile can be edited, broaden...-->
                                                     <ul style="display:none"
                                                         data-bind="attr: {'id': 'tileMenu' + clientGuid, title: getNlsString('DBS_BUILDER_TILE_ACTIONS')}, 
@@ -304,7 +319,8 @@
                                                             <ul>
                                                         -->
                                                         <li data-option="divider"></li>
-                                                                <li data-option="wider" data-bind="visible: editDisabled() !== true, css: { 'oj-disabled': (!widerEnabled() || !maximizeEnabled() || editDisabled())}">
+                                                                <!-- ko if: editDisabled() !== true -->
+                                                                <li data-option="wider" data-bind="css: { 'oj-disabled': (!widerEnabled() || !maximizeEnabled() || editDisabled())}">
                                                                     <a href="#">
                                                                         <span class="oj-menu-item-icon demo-icon-font">
                                                                             <!--func_window_wider_16_ena-->
@@ -313,7 +329,9 @@
                                                                         <span data-bind="text: getNlsString('DBS_BUILDER_TILE_WIDER')"></span>
                                                                     </a>
                                                                 </li>
-                                                                <li data-option="narrower" data-bind="visible: editDisabled() !== true, css: { 'oj-disabled': !narrowerEnabled() || !maximizeEnabled() || editDisabled()}">
+                                                                <!-- /ko -->
+                                                                <!-- ko if: editDisabled() !== true -->
+                                                                <li data-option="narrower" data-bind="css: { 'oj-disabled': !narrowerEnabled() || !maximizeEnabled() || editDisabled()}">
                                                                     <a href="#">
                                                                         <span class="oj-menu-item-icon demo-icon-font">
                                                                             <!--func_window_narrower_16_ena-->
@@ -322,7 +340,9 @@
                                                                         <span data-bind="text: getNlsString('DBS_BUILDER_TILE_NARROWER')"></span>
                                                                     </a>
                                                                 </li>
-                                                                <li data-option="taller" data-bind="visible: editDisabled() !== true, css: {'oj-disabled': !maximizeEnabled() || editDisabled()}">
+                                                                <!-- /ko -->
+                                                                <!-- ko if: editDisabled() !== true -->
+                                                                <li data-option="taller" data-bind="css: {'oj-disabled': !maximizeEnabled() || editDisabled()}">
                                                                     <a href="#">
                                                                         <span class="oj-menu-item-icon demo-icon-font">
                                                                             <!--func_window_taller_16_ena-->
@@ -331,7 +351,9 @@
                                                                         <span data-bind="text: getNlsString('DBS_BUILDER_TILE_TALLER')"></span>
                                                                     </a>
                                                                 </li>
-                                                                <li data-option="shorter" data-bind="visible: editDisabled() !== true, css: {'oj-disabled': !shorterEnabled() || !maximizeEnabled() || editDisabled()}">
+                                                                <!-- /ko -->
+                                                                <!-- ko if: editDisabled() !== true -->
+                                                                <li data-option="shorter" data-bind="css: {'oj-disabled': !shorterEnabled() || !maximizeEnabled() || editDisabled()}">
                                                                     <a href="#">
                                                                         <span class="oj-menu-item-icon demo-icon-font">
                                                                             <!--func_window_shorter_16_ena-->
@@ -340,12 +362,14 @@
                                                                         <span data-bind="text: getNlsString('DBS_BUILDER_TILE_SHORTER')"></span>
                                                                     </a>
                                                                 </li>
+                                                                <!-- /ko -->
                                                             <!--
                                                             </ul>
                                                         </li>
                                                         -->
                                                         <li data-option="divider"></li>
-                                                                <li data-option="up" data-bind="visible: editDisabled() !== true, css: { 'oj-disabled': (!upEnabled() || !maximizeEnabled() || editDisabled())}">
+                                                                <!-- ko if: editDisabled() !== true -->
+                                                                <li data-option="up" data-bind="css: { 'oj-disabled': (!upEnabled() || !maximizeEnabled() || editDisabled())}">
                                                                     <a href="#">
                                                                         <span class="oj-menu-item-icon demo-icon-font">
                                                                             <!--func_window_up_16_ena-->
@@ -354,7 +378,9 @@
                                                                         <span data-bind="text: getNlsString('DBS_BUILDER_TILE_UP')"></span>
                                                                     </a>
                                                                 </li>
-                                                                <li data-option="down" data-bind="visible: editDisabled() !== true, css: { 'oj-disabled': !maximizeEnabled() || editDisabled()}">
+                                                                <!-- /ko -->
+                                                                <!-- ko if: editDisabled() !== true -->
+                                                                <li data-option="down" data-bind="css: { 'oj-disabled': !maximizeEnabled() || editDisabled()}">
                                                                     <a href="#">
                                                                         <span class="oj-menu-item-icon demo-icon-font">
                                                                             <!--func_window_down_16_ena-->
@@ -363,7 +389,9 @@
                                                                         <span data-bind="text: getNlsString('DBS_BUILDER_TILE_DOWN')"></span>
                                                                     </a>
                                                                 </li>
-                                                                <li data-option="left" data-bind="visible: editDisabled() !== true, css: {'oj-disabled': !leftEnabled() || !maximizeEnabled() || editDisabled()}">
+                                                                <!-- /ko -->
+                                                                <!-- ko if: editDisabled() !== true -->
+                                                                <li data-option="left" data-bind="css: {'oj-disabled': !leftEnabled() || !maximizeEnabled() || editDisabled()}">
                                                                     <a href="#">
                                                                         <span class="oj-menu-item-icon demo-icon-font">
                                                                             <!--func_window_left_16_ena-->
@@ -372,7 +400,9 @@
                                                                         <span data-bind="text: getNlsString('DBS_BUILDER_TILE_LEFT')"></span>
                                                                     </a>
                                                                 </li>
-                                                                <li data-option="right" data-bind="visible: editDisabled() !== true, css: {'oj-disabled': !rightEnabled() || !maximizeEnabled() || editDisabled()}">
+                                                                <!-- /ko -->
+                                                                <!-- ko if: editDisabled() !== true -->
+                                                                <li data-option="right" data-bind="css: {'oj-disabled': !rightEnabled() || !maximizeEnabled() || editDisabled()}">
                                                                     <a href="#">
                                                                         <span class="oj-menu-item-icon demo-icon-font">
                                                                             <!--func_window_right_16_ena-->
@@ -381,12 +411,14 @@
                                                                         <span data-bind="text: getNlsString('DBS_BUILDER_TILE_RIGHT')"></span>
                                                                     </a>
                                                                 </li>
+                                                                <!-- /ko -->
                                                             <!--
                                                             </ul>
                                                         </li>
                                                         -->
                                                         <li></li>
-                                                        <li data-option="remove" data-bind="visible: editDisabled() !== true, css: { 'oj-disabled': editDisabled()}">
+                                                        <!-- ko if: editDisabled() !== true -->
+                                                        <li data-option="remove" data-bind="css: { 'oj-disabled': editDisabled()}">
                                                             <a href="#">
                                                                 <span class="oj-menu-item-icon demo-icon-font">
                                                                     <i class="fa-icon-font fa-icon-font-16 dbd-icon-remove"></i>
@@ -394,6 +426,7 @@
                                                                 <span data-bind="text: getNlsString('DBS_BUILDER_TILE_REMOVE')"></span>
                                                             </a>
                                                         </li>
+                                                        <!-- /ko -->
                                                     </ul>
                                                 </div>
                                             </div>
@@ -487,7 +520,8 @@
 
             <script type="text/html" id="dsbOptsMenuItemTemplate">
                 <!-- ko if: !disabled -->
-                <li data-bind="css: {'oj-disabled': disabled}, visible: showOnMobile && showInZdt,attr:{'data-singledb-option':name}">
+                <!-- ko if: showOnMobile && showInZdt -->
+                <li data-bind="css: {'oj-disabled': disabled}, attr:{'data-singledb-option':name}">
                         <a data-bind="attr:{'id':id, 'title': title}, href: url, click: onclick">
                             <span class="oj-menu-item-icon oj-fwk-icon dbd-toolbar-fa-icon" data-bind="css: icon"></span>
                             <span data-bind="text: label"></span>
@@ -496,6 +530,7 @@
                         <ul data-bind="template: {name: 'dsbOptsMenuItemTemplate', foreach: subItems}"></ul>
                         <!-- /ko -->
                     </li>
+                <!-- /ko -->
                     <!-- ko if: endOfGroup  -->
                         <li></li>
                     <!-- /ko -->
@@ -643,14 +678,16 @@
                 <!--/ko-->            
             </div>
 
-            <div class="df-right-panel no-print" data-bind="stopDataBinding:isDashboardSet ? isOobDashboardset() : ($b.dashboard.systemDashboard&&$b.dashboard.systemDashboard()),style:{top:isDashboardSet() ?'100px':'91px'},visible:!rightPanelControl.completelyHidden()">
+            <!-- ko ifnot: rightPanelControl.completelyHidden -->
+            <div class="df-right-panel no-print" data-bind="stopDataBinding:isDashboardSet ? isOobDashboardset() : ($b.dashboard.systemDashboard&&$b.dashboard.systemDashboard()),style:{top:isDashboardSet() ?'100px':'91px'}">
+                <!-- ko if: rightPanelControl.showRightPanelToggler -->
                 <div class="right-panel-toggler no-print fit-size" style="max-width: 30px;" data-bind="
-                        visible:rightPanelControl.showRightPanelToggler,
                         style: {
                                  right: rightPanelControl.showRightPanel() ?
                                 (323 + rightPanelControl.scrollbarWidth) + 'px' :
                                 rightPanelControl.scrollbarWidth+ 3 + 'px'
                         }">
+                    <!-- ko ifnot: rightPanelControl.dashboardEditDisabled -->
                     <button type="checkbox" class="toggle-right-panel-btn drawer-icon-btn rightpanel-wrench" style="display: block;" id="rightpanel-wrench"
                             data-bind="attr:{id:'rightpanel-wrench_'+[].toString.apply(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1)))},ojComponent: {
                                     component:'ojButton',
@@ -659,11 +696,12 @@
                                     label:getNlsString('DBS_BUILDER_LEFT_PANEL_BUILD_TITLE')
                             },
                             click: rightPanelControl.toggleRightPanel,
-                            visible:!rightPanelControl.dashboardEditDisabled(),
                             css:{
                                'df-selected':rightPanelControl.rightPanelIcon()=='wrench'
                             }"/>
                     </button>
+                    <!-- /ko -->
+                    <!-- ko if: !rightPanelControl.dashboardEditDisabled() || isDashboardSet() -->
                     <button type="checkbox" class="toggle-right-panel-btn drawer-icon-btn oj-buttonset-first rightpanel-pencil" style="display: block;" id="rightpanel-pencil"
                             data-bind="attr:{id:'rightpanel-pencil_'+[].toString.apply(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1)))},ojComponent: {
                                     component:'ojButton',
@@ -671,7 +709,6 @@
                                     icons: {start:'oj-button-icon fa-icon-font fa-icon-font-18 fa-pencil-df'},
                                     label: getNlsString('DBS_BUILDER_LEFT_PANEL_EDIT_SETTINGS_TITLE')
                                 },
-                                visible:!rightPanelControl.dashboardEditDisabled() || isDashboardSet(),
                                 click: rightPanelControl.toggleRightPanel,
                                 style:{
                                     borderTop:rightPanelControl.dashboardEditDisabled() ? '1px solid #e4e8ea' : '0'
@@ -680,6 +717,7 @@
                                     'df-selected': rightPanelControl.rightPanelIcon()=='pencil'
                                 }"/>
                     </button>
+                    <!-- /ko -->
                     <!-- EMCPDF-1513:Help Tab on right drawer disabled -->
                     <button class="right-panel-help-btn drawer-icon-btn" id="rightpanel-help" style="display: none;" data-bind="ojComponent: {
                                             component:'ojButton',
@@ -688,15 +726,16 @@
                                             label: getNlsString('DBS_BUILDER_LEFT_PANEL_BTN_HELP_LABEL')},attr:{id:'rightpanel-help_'+[].toString.apply(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1)))}">
 
                     </button>
-            </div>
+                </div>
+                <!-- /ko -->
 
                 <div class="dbd-left-panel no-print fit-size"
                         data-bind="stopDataBinding: isDashboardSet ? isOobDashboardset() : ($b.dashboard.systemDashboard&&$b.dashboard.systemDashboard()),css: {'dbd-left-panel-show' : rightPanelControl.showRightPanel(), 'dbd-left-panel-hide' : !rightPanelControl.showRightPanel()},
                                    style: {right: rightPanelControl.scrollbarWidth + 'px'}">
                     <!-- ko if: rightPanelControl.initializeRightPanel() === true -->
                     <div class="dbd-right-panel-contents">
-                        <!-- ko if: $data.isDashboardSet -->
-                        <div class="dbd-right-panel-editdashboardset" data-bind="visible:rightPanelControl.rightPanelIcon()=='pencil'&&$data.rightPanelControl.editPanelContent()=='editset'">
+                        <!-- ko if: $data.isDashboardSet() && rightPanelControl.rightPanelIcon()=='pencil' && $data.rightPanelControl.editPanelContent()=='editset' -->
+                        <div class="dbd-right-panel-editdashboardset">
                             <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title fit-size-vertical-sibling" >
                                 <a class="oj-fwk-icon-caret-start oj-fwk-icon back-to-edit-settings" data-bind="click: rightPanelControl.switchEditPanelContent"style="color:#0572ce;margin-left: -5px;"></a>
                                 <span data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_EDIT_DSBSET_TITLE')"></span>
@@ -795,8 +834,8 @@
                         </div>
                         <!-- /ko -->
 
-                        <!-- ko if: $data.editDashboardDialogModel -->
-                        <div class="dbd-right-panel-editdashboard" data-bind="visible:rightPanelControl.rightPanelIcon()=='pencil' && $data.rightPanelControl.editPanelContent()=='edit'">
+                        <!-- ko if: $data.editDashboardDialogModel() && rightPanelControl.rightPanelIcon()=='pencil' && $data.rightPanelControl.editPanelContent()=='edit' -->
+                        <div class="dbd-right-panel-editdashboard">
                             <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title fit-size-vertical-sibling" >
                                 <a class="oj-fwk-icon-caret-start oj-fwk-icon back-to-edit-settings" data-bind="click: rightPanelControl.switchEditPanelContent"style="color:#0572ce"></a>
                                 <span data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_EDIT_DSB_TITLE')"></span>
@@ -950,22 +989,28 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="oj-flex" data-bind="visible: rightPanelEdit.dashboardSharing() === 'shared'">
+                                            <!-- ko if:rightPanelEdit.dashboardSharing() === 'shared' -->
+                                            <div class="oj-flex">
                                                 <div class="oj-flex-item" style="margin-left: 25px;">
                                                     <div class="share-default-settings" style="margin-top: 5px;">
                                                         <div data-bind="text: getNlsString('DBS_BUILDER_DSB_DEFAULT_REFRESH')"></div>
                                                         <div id="defaultAutoRefresh" class="share-default-value" data-bind="text: rightPanelFilter.defaultAutoRefreshValueText"></div>
                                                     </div>
-                                                    <div class="share-default-settings" data-bind="visible: dashboard.enableEntityFilter()==='TRUE' || dashboard.enableEntityFilter()==='GC' ">
+                                                    <!-- ko if: dashboard.enableEntityFilter()==='TRUE' || dashboard.enableEntityFilter()==='GC' -->
+                                                    <div class="share-default-settings">
                                                         <div data-bind="text: getNlsString('DSB_BUILDER_EDIT_DEFAULT_ENTITY_LABEL')"></div>
                                                         <div id="defaultEntityValue" class="share-default-value" data-bind="text: rightPanelFilter.defaultEntityValueText"></div>
                                                     </div>
-                                                    <div class="share-default-settings" data-bind="visible: dashboard.enableTimeRange()==='TRUE' || dashboard.enableTimeRange()==='GC' ">
+                                                    <!-- /ko -->
+                                                    <!-- ko if: dashboard.enableTimeRange()==='TRUE' || dashboard.enableTimeRange()==='GC' -->
+                                                    <div class="share-default-settings">
                                                         <div data-bind="text: getNlsString('DSB_BUILDER_EDIT_DEFAULT_TIME_RANGE_LABEL')"></div>
                                                         <div id="defaultTimeRangeValue" class="share-default-value" data-bind="text: rightPanelFilter.defaultTimeRangeValueText"></div>
                                                     </div>
+                                                    <!-- /ko -->
                                                 </div>
                                             </div>
+                                            <!-- /ko -->
 <!--                                            <div class="oj-flex" style="display: none">
                                                 <div class="oj-flex-item">
                                                     <label class="oj-label enableShareAutoRefresh" style="margin: 10px 0 0 0;" data-bind="css: {'dbd-right-panel-collapsible-disabled': dashboardSharing() === 'notShared'}" data-bind="text: getNlsString('DBS_BUILDER_DSB_DEFAULT_REFRESH')"></label>
@@ -995,7 +1040,8 @@
                             </div>
                         </div>
                         <!-- /ko -->
-                        <div id="dbd-right-panel-editsettings"  class="dbd-right-panel-editsettings"  data-bind="visible:rightPanelControl.rightPanelIcon()=='pencil'&&$data.rightPanelControl.editPanelContent()=='settings'">
+                        <!-- ko if: rightPanelControl.rightPanelIcon()=='pencil'&&$data.rightPanelControl.editPanelContent()=='settings' -->
+                        <div id="dbd-right-panel-editsettings"  class="dbd-right-panel-editsettings">
                             <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title" data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_EDIT_SETTINGS_TITLE')"></div>
                             <div id="dbd-edit-settings-container" class="dbd-edit-settings-container">
                                 <!-- ko if:isDashboardSet -->
@@ -1024,7 +1070,9 @@
                                 <!--/ko-->
                             </div>
                         </div>
-                        <div class="dbd-right-panel-wrench" data-bind="visible:rightPanelControl.rightPanelIcon()=='wrench'">
+                        <!--/ko-->
+                        <!-- ko if: rightPanelControl.rightPanelIcon()=='wrench' -->
+                        <div class="dbd-right-panel-wrench">
                             <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title fit-size-vertical-sibling" data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_BUILD_TITLE')"></div>
                             <div class="dbd-right-panel-build-container" style="padding:0">
                                 <div class="dbd-left-panel-header fit-size-vertical-sibling">
@@ -1040,10 +1088,12 @@
                                         ojComponent: {component: 'ojButton',chroming: 'half', label: getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_BTN_LABEL'), display: 'icons',
                                         icons: {start:'left-panel-dbd-search-icon'}}" style="float:right">
                                             </button>
-                                            <button class="oj-button-half-chrome" id="clear-widget-search-input" data-bind="attr:{id:'clear-widget-search-input_'+[].toString.apply(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1)))},click: rightPanelWidget.clearWidgetSearchInputClicked, visible: rightPanelWidget.clearRightPanelSearch,
+                                            <!-- ko if: rightPanelWidget.clearRightPanelSearch -->
+                                            <button class="oj-button-half-chrome" id="clear-widget-search-input" data-bind="attr:{id:'clear-widget-search-input_'+[].toString.apply(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1)))},click: rightPanelWidget.clearWidgetSearchInputClicked,
                                                     ojComponent: {component: 'ojButton', chroming: 'half', label: getNlsString('DBS_HOME_CLEAN_BTN_LABEL'), display: 'icons',
                                                     icons: {start:'dbs-clear-icon'}, rootAttributes: {'style': 'width: 31px;'}}" style="float:right;margin-bottom:0">
                                             </button>
+                                            <!-- /ko -->
                                         </div>
                                     </div>
                                 </div>
@@ -1094,10 +1144,12 @@
                                 -->
                             </div>
                         </div>
+                        <!--/ko-->
                     </div>
                     <!-- /ko -->
                 </div> 
             </div>
+            <!-- /ko -->
             </div>
             </div>
         </div>
