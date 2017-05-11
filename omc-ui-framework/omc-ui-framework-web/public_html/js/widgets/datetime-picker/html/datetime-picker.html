@@ -59,6 +59,7 @@
                     <a href="#" data-tp-id="LAST_12_MONTH" class="drawer" data-bind="attr: {id: 'drawer18_'+randomId}, text: timePeriodLast12months"></a>
                     <a href="#" data-tp-id="LAST_1_YEAR" class="drawer" data-bind="attr: {id: 'drawer12_'+randomId}, text: timePeriodLast1year"></a>
                     <a href="#" data-tp-id="LATEST" class="drawer" data-bind="attr: {id: 'drawer10_'+randomId}, text: timePeriodLatest"></a>
+                    <hr style="margin: 0px;">
                     <a href="#" data-tp-id="RECENT" class="drawer" data-bind="attr: {id: 'drawer14_'+randomId}, text: timePeriodRecent"></a>
                     <a href="#" data-tp-id="CUSTOM" class="drawer" data-bind="attr: {id: 'drawer9_'+randomId}, text: timePeriodCustom"></a>
                 </div>
@@ -67,7 +68,7 @@
                 <!-- popup for recently used time ranges -->
                 <div style="background-color: #fcfdfe; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px;" data-bind="ojComponent: {component: 'ojPopup'}, attr: {id: 'recentPanel_'+randomId}">
                     <div data-bind="foreach: recentList()">
-                        <div style="padding: 5px;" data-bind="html: $parent.getRecentDateTimeInfo($data), event: {mouseover: $parent.hoverOnDrawer, mouseout: $parent.hoverOutDrawer}, click: $parent.chooseByRecent"></div>
+                        <div class="recent-list" style="padding: 5px;" data-bind="html: $parent.getRecentDateTimeInfo($data), event: {mouseover: $parent.hoverOnDrawer, mouseout: $parent.hoverOutDrawer}, click: $parent.chooseByRecent"></div>
                     </div>
                 </div>
 
@@ -86,7 +87,7 @@
                             <input type="radio" name="lrCtrl" value="flexRelTimeCtrl" data-bind="checked: lrCtrlVal">
                             <label data-bind="text: nls.DATETIME_PICKER_FLEX_REL_TIME_LAST"></label>
                         </span>
-                        <input data-bind="ojComponent: {component: 'ojInputNumber', value: flexRelTimeVal,
+                        <input data-bind="ojComponent: {component: 'ojInputNumber', value: flexRelTimeVal, min: 1, max: 999,
                                 validators: [numberValidator],
                                 rootAttributes: {id: 'lastNumber_' + randomId,
                                     style: 'min-width: 54px; max-width:88px;padding-left: 10px; padding-right: 10px; display: inline-block; vertical-align: top;'},

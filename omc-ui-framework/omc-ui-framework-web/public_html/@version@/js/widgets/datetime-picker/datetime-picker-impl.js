@@ -1457,7 +1457,8 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 self.numberValidator = {
                     'validate': function(value) {
                         //TO DO: Need to confirm with Juan what is the biggest number allowed
-                       if(value >= 1 && $.isNumeric(value) && (parseInt(value) === value) && value.toString().length<4) {
+//                       if(value >= 1 && $.isNumeric(value) && (parseInt(value) === value) && value.toString().length<4) {
+                    if($.isNumeric(value) && (parseInt(value) === value)) { //Number will be limited by min&max attr of ojInputNumber. So only valid if it is an int number.
                            return true;
                        }else {
                            throw new Error(self.flexRelTimeValErrorMsg);
@@ -1747,12 +1748,18 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 };
 
                 self.hoverOnDrawer = function(data, event) {
+                    if(!$(event.target).attr("data-tp-id") && !$(event.target).hasClass("recent-list")) { //mouse over on horizonal separator line
+                        return;
+                    }
                     if(!$(event.target).hasClass("drawerChosen")) {
                         $(event.target).addClass("drawerHover");
                     }
                 }
                 
                 self.hoverOutDrawer = function(data, event) {
+                    if(!$(event.target).attr("data-tp-id") && !$(event.target).hasClass("recent-list")) { //mouse over on horizonal separator line
+                        return;
+                    }
                     $(event.target).removeClass("drawerHover");
                 }
                 
@@ -1847,6 +1854,10 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         chosenPeriodId = event.extended;
                     } else {
                         chosenPeriodId = $(event.target).attr("data-tp-id");
+                    }
+                    
+                    if(!chosenPeriodId) { //click on horizonal separator line
+                        return;
                     }
                     
                     if(chosenPeriodId === "RECENT") {
