@@ -276,7 +276,7 @@ public class BugVerification extends LoginAndLogout
 		webd.click(PageId.MENUBTNID);
 		webd.click(PageId.SIGNOUTID);
 
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		login(this.getClass().getName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testEMPCDF_812");
 
 		//check ita box
@@ -303,7 +303,7 @@ public class BugVerification extends LoginAndLogout
 		webd.getLogger().info("current url = " + url);
 
 		webd.getWebDriver().navigate()
-		.to(url.substring(0, url.indexOf("emsaasui")) + "emsaasui/emcpdfui/error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_MSG");
+				.to(url.substring(0, url.indexOf("emsaasui")) + "emsaasui/emcpdfui/error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_MSG");
 		webd.waitForElementPresent("css=" + PageId.ERRORPAGESINGOUTBTNCSS);
 		webd.takeScreenShot();
 
