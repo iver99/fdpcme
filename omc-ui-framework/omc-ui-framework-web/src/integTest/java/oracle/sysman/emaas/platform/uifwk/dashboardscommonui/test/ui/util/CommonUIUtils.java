@@ -1,23 +1,9 @@
-/*
- * Copyright (C) 2015 Oracle
- * All rights reserved.
- *
- * $$File: $$
- * $$DateTime: $$
- * $$Author: $$
- * $$Revision: $$
- */
+package oracle.sysman.emaas.platform.uifwk.dashboardscommonui.test.ui.util;
 
-package oracle.sysman.emaas.platform.uifwk.dashboardscommonui.test.ui;
+import java.util.Arrays;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
-
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_1180;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
-import oracle.sysman.emsaas.login.LoginUtils;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 import org.apache.logging.log4j.LogManager;
@@ -37,24 +23,7 @@ import com.jayway.restassured.response.Response;
 public class CommonUIUtils
 {
 	private static final Logger LOGGER = LogManager.getLogger(CommonUIUtils.class);
-	static String sTenantId = CommonUIUtils.getEmaasPropertyValue("TENANT_ID");
-	static String sOhsUrl = CommonUIUtils.getEmaasPropertyValue("OHS_URL");
-	static String sRegistryUrl = CommonUIUtils.getEmaasPropertyValue("OHS_REGISTRY_URL");
-	static String sSsoUserName = CommonUIUtils.getEmaasPropertyValue("SSO_USERNAME");
-	static String sSsoPassword = CommonUIUtils.getEmaasPropertyValue("SSO_PASSWORD");
-	static String sAuthToken = CommonUIUtils.getEmaasPropertyValue("SAAS_AUTH_TOKEN");
-	static String sAPIUrl = CommonUIUtils.getEmaasPropertyValue("DASHBOARD_API_ENDPOINT");
-
-	static String sRolesUrl = CommonUIUtils.getEmaasPropertyValue("TARGETMODEL_SERVICE_SHARD_ENDPOINT");
-
-	static String sCommonUiUrlSuffix = CommonUIUtils.getEmaasPropertyValue("COMMON_UI_URL_SUFFIX");
-
-	static String sAppName = "";
-
-	static Boolean isAPMAdmin = false;
-	static Boolean isITAAdmin = false;
-	static Boolean isLAAdmin = false;
-	static Boolean isDSAdmin = false;
+	private static WebDriver driver;
 
 	public static void addWidget(WebDriver driver)
 	{
@@ -104,150 +73,49 @@ public class CommonUIUtils
 	public static void commonUITestLog(String sDesc)
 	{
 		//String sStr = "*** Dashboards Common UI TestLog ***:  " + sDesc;
+		LOGGER.info(sDesc);
 	}
 
-	public static String getAppName(String sTenant, String sUser)
+	public static String getAppName()
 	{
-
-		sAppName = ""; //With fix to EMCPDF-1220, the application name in Dashboard pages will be blank
-		CommonUIUtils.commonUITestLog("The App Name is:" + sAppName);
-		return sAppName;
-
+		String sTenant = oracle.sysman.emsaas.login.utils.Utils.getProperty("TENANT_ID");
+		String sUser = oracle.sysman.emsaas.login.utils.Utils.getProperty("SSO_USERNAME");
+		return CommonUIUtils.getAppName(sTenant, sUser);
 	}
 
-	public static String getEmaasPropertyValue(String sProperty)
+	public static String getAppName(String Tenant, String User)
 	{
+		String AppName = ""; //With fix to EMCPDF-1220, the application name in Dashboard pages will be blank
+		CommonUIUtils.commonUITestLog("The App Name is:" + AppName);
+		return AppName;
+	}
 
-		File emaasPropertiesFile = new File(System.getenv("T_WORK") + "/emaas.properties.log");
+	public static boolean[] getRoles()
+	{
+		String sTenant = oracle.sysman.emsaas.login.utils.Utils.getProperty("TENANT_ID");
+		String sUser = oracle.sysman.emsaas.login.utils.Utils.getProperty("SSO_USERNAME");
+		return CommonUIUtils.getRoles(sTenant, sUser);
+	}
 
-		Properties emaasProp = new Properties();
-
-		String sPropertyValue = "";
-
-		InputStream input = null;
-
-		try {
-			input = new FileInputStream(emaasPropertiesFile);
-
-			emaasProp.load(input);
-
-			CommonUIUtils.commonUITestLog("Get the " + sProperty + " property value.");
-
-			if ("TENANT_ID".equals(sProperty)) {
-				CommonUIUtils.commonUITestLog("Get the TENANT_ID property value.");
-				sPropertyValue = emaasProp.getProperty("TENANT_ID");
-				if (sPropertyValue == null) {
-					CommonUIUtils.commonUITestLog("The TENANT_ID property value is null ... set it to a different value.");
-					sPropertyValue = "emaastesttenant1";
-				}
-			}
-			else if ("OHS_REGISTRY_URL".equals(sProperty)) {
-				sPropertyValue = emaasProp.getProperty("OHS_REGISTRY_URL");
-				if (sPropertyValue == null) {
-					CommonUIUtils.commonUITestLog("The OHS_REGISTRY_URL property value is null ... set it to a different value.");
-					sOhsUrl = CommonUIUtils.getEmaasPropertyValue("OHS_URL");
-					if (sOhsUrl == null) {
-						sPropertyValue = null;
-					}
-					else {
-						CommonUIUtils.commonUITestLog("The OHS_URL property is '" + sOhsUrl + "'.");
-						sPropertyValue = sOhsUrl + "/registry";
-					}
-				}
-			}
-			else if ("SSO_USERNAME".equals(sProperty)) {
-				sPropertyValue = emaasProp.getProperty("SSO_USERNAME");
-				if (sPropertyValue == null) {
-					CommonUIUtils
-					.commonUITestLog("The SSO_USERNAME property value is null ... set it to a different value -- 'emcsadmin'.");
-					sPropertyValue = "emcsadmin";
-				}
-			}
-			else if ("SSO_PASSWORD".equals(sProperty)) {
-				//	below password is being using in tests/dev mode only
-				sPropertyValue = emaasProp.getProperty("SSO_PASSWORD");
-				if (sPropertyValue == null) {
-					CommonUIUtils
-					.commonUITestLog("The SSO_PASSWORD property value is null ... set it to a different value -- 'Welcome1!'.");
-					//	below hard coded password is being using in tests/dev mode only
-					sPropertyValue = "Welcome1!";
-				}
-			}
-			else if ("COMMON_UI_URL_SUFFIX".equals(sProperty)) {
-				sPropertyValue = emaasProp.getProperty("COMMON_UI_URL_SUFFIX");
-				if (sPropertyValue == null) {
-					CommonUIUtils
-					.commonUITestLog("The COMMON_UI_URL_SUFFIX property value is null ... set it to a different value -- '/emsaasui/uifwk/test.html'.");
-					sPropertyValue = "/emsaasui/uifwk/test.html";
-				}
-			}
-			else if ("SAAS_AUTH_TOKEN".equals(sProperty)) {
-				sPropertyValue = emaasProp.getProperty("SAAS_AUTH_TOKEN");
-				if (sPropertyValue == null) {
-					CommonUIUtils
-					.commonUITestLog("The DASHBOARD_API_ENDPOINT property value is null ... set it to a different value -- 'welcome1'.");
-					sPropertyValue = "Basic d2VibG9naWM6d2VsY29tZTE=";
-
-				}
-				else if ("DASHBOARD_API_ENDPOINT".equals(sProperty)) {
-					sPropertyValue = emaasProp.getProperty("DASHBOARD_API_ENDPOINT");
-					if (sPropertyValue == null) {
-						CommonUIUtils
-						.commonUITestLog("The SAAS_AUTH_TOKEN property value is null ... set it to a different value .");
-						sPropertyValue = sOhsUrl + "/emcpdf/api/v1/";
-					}
-				}
-			}
-			else if ("TARGETMODEL_SERVICE_SHARD_ENDPOINT".equals(sProperty)) {
-				sPropertyValue = emaasProp.getProperty("TARGETMODEL_SERVICE_SHARD_ENDPOINT");
-				if (sPropertyValue == null) {
-					CommonUIUtils
+	public static boolean[] getRoles(String sTenant, String sUser)
+	{
+		boolean[] roles = new boolean[4];
+		Arrays.fill(roles, false);
+		String sAuthToken = oracle.sysman.emsaas.login.utils.Utils.getProperty("SAAS_AUTH_TOKEN");
+		String sRolesUrl = oracle.sysman.emsaas.login.utils.Utils.getProperty("TARGETMODEL_SERVICE_SHARD_ENDPOINT");
+		if (sRolesUrl == null) {
+			CommonUIUtils
 					.commonUITestLog("The TARGETMODEL_SERVICE_SHARD_ENDPOINT property value is null ... set it to a different value.");
-					sRolesUrl = CommonUIUtils.getEmaasPropertyValue("EMCS_NODE2_HOSTNAME");
-					if (sRolesUrl == null) {
-						sPropertyValue = null;
-					}
-					else {
-						CommonUIUtils.commonUITestLog("The TARGETMODEL_SERVICE_SHARD_ENDPOINT property is '" + sRolesUrl + "'.");
-
-						sPropertyValue = "http://" + sRolesUrl + ":7004/tm-mgmt/api/v1.1";
-					}
-				}
+			sRolesUrl = oracle.sysman.emsaas.login.utils.Utils.getProperty("EMCS_NODE2_HOSTNAME");
+			if (sRolesUrl == null) {
+				sRolesUrl = null;
 			}
 			else {
-				sPropertyValue = emaasProp.getProperty(sProperty);
-			}
+				CommonUIUtils.commonUITestLog("The TARGETMODEL_SERVICE_SHARD_ENDPOINT property is '" + sRolesUrl + "'.");
 
-		}
-		catch (IOException ex) {
-			LOGGER.info("context", ex);
-			ex.printStackTrace();
-		}
-		finally {
-			if (input != null) {
-				try {
-					input.close();
-				}
-				catch (IOException e) {
-					LOGGER.info("context", e);
-					e.printStackTrace();
-				}
+				sRolesUrl = "http://" + sRolesUrl + ":7004/tm-mgmt/api/v1.1";
 			}
 		}
-
-		if (sPropertyValue == null) {
-			CommonUIUtils.commonUITestLog("WARNING:  The property value for " + sProperty + " is null.");
-		}
-		else {
-			CommonUIUtils.commonUITestLog("The property value for " + sProperty + " is '" + sPropertyValue + "'.");
-		}
-
-		return sPropertyValue;
-
-	}
-
-	public static void getRoles(String sTenant, String sUser)
-	{
 		CommonUIUtils.commonUITestLog("The Roles URL is:" + sRolesUrl);
 
 		//String sTempRolsUrl = sRolesUrl.substring(0, sRolesUrl.length() - 16);
@@ -264,73 +132,30 @@ public class CommonUIUtils
 		CommonUIUtils.commonUITestLog("The statu code is:" + res1.getStatusCode() + ", The response content is "
 				+ res1.jsonPath().get("roleNames"));
 		String s_rolename = res1.jsonPath().getString("roleNames");
-		//CommonUIUtils.commonUITestLog("The response content is:" + s_rolename);
+
 		String[] ls_rolename = s_rolename.split(",");
 		for (int i = 0; i < ls_rolename.length; i++) {
 			CommonUIUtils.commonUITestLog(i + " : " + ls_rolename[i]);
 			if (ls_rolename[i].contains("APM Administrator")) {
-				isAPMAdmin = true;
+				roles[0] = true;
 			}
 			else if (ls_rolename[i].contains("IT Analytics Administrator")) {
-				isITAAdmin = true;
+				roles[1] = true;
 			}
 			else if (ls_rolename[i].contains("Log Analytics Administrator")) {
-				isLAAdmin = true;
+				roles[2] = true;
 			}
 		}
-		if (isAPMAdmin || isITAAdmin || isLAAdmin) {
-			isDSAdmin = true;
+		if (roles[0] || roles[1] || roles[2]) {
+			roles[3] = true;
 		}
+
+		return roles;
 	}
 
-	public static Boolean loginCommonUI(WebDriver driver, String sTenant, String sUser, String sPassword)
+	public static void loadWebDriver(WebDriver webDriver)
 	{
-
-		String sCommonUiUrl = "";
-
-		if (sOhsUrl == null) {
-			driver.getLogger().info("sUrl is null ... return false from loginCommonUI().");
-			return false;
-		}
-		else {
-			sCommonUiUrl = sOhsUrl + sCommonUiUrlSuffix;
-			driver.getLogger().info("sCommonUiUrl is " + sCommonUiUrl);
-		}
-
-		driver.getLogger().info("Supply credentials and doLogin()");
-		LoginUtils.doLogin(driver, sUser, sPassword, sTenant, sCommonUiUrl);
-
-		return true;
-
-	}
-
-	public static Boolean loginCommonUI(WebDriver driver, String parameters, String sTenant, String sUser, String sPassword)
-	{
-
-		String sCommonUiUrl = "";
-
-		if (sOhsUrl == null) {
-			driver.getLogger().info("sUrl is null ... return false from loginCommonUI().");
-			return false;
-		}
-		else {
-			sCommonUiUrl = sOhsUrl + sCommonUiUrlSuffix + parameters;
-			driver.getLogger().info("sCommonUiUrl is " + sCommonUiUrl);
-		}
-
-		driver.getLogger().info("Supply credentials and doLogin()");
-		LoginUtils.doLogin(driver, sUser, sPassword, sTenant, sCommonUiUrl);
-
-		return true;
-
-	}
-
-	public static void logoutCommonUI(WebDriver driver)
-	{
-		if (driver != null) {
-			LoginUtils.doLogout(driver);
-			driver.shutdownBrowser(true);
-		}
+		driver = webDriver;
 	}
 
 	public static void openWidget(WebDriver driver, boolean isEnabled)
@@ -397,6 +222,8 @@ public class CommonUIUtils
 
 	public static void verifyMenu(WebDriver driver, boolean isAdmin)
 	{
+		driver.takeScreenShot();
+		driver.savePageToFile();
 		//verify the menus
 		driver.getLogger().info("Verify the Links menu displayed");
 		driver.getLogger().info("The Link menu is:  " + driver.getAttribute(UIControls.SLINKSMENU + "@style"));
@@ -451,16 +278,21 @@ public class CommonUIUtils
 	{
 		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), 900L);
 		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath(UIControls.SLINKSMENU)));
+		driver.takeScreenShot();
+		driver.savePageToFile();
 		Assert.assertEquals(driver.getAttribute(UIControls.SLINKSMENU + "@style"), "display: none;");
-
 	}
 
 	public static void verifyPageContent(WebDriver driver, String sAppName)
 	{
+		verifyPageContent(driver, sAppName, false);
+	}
+
+	public static void verifyPageContent(WebDriver driver, String sAppName, boolean hamburgerEnabled)
+	{
 		//wait for the mockup page loaded
 		driver.getLogger().info("Wait for the mockup page loaded...");
 		WaitUtil.waitForPageFullyLoaded(driver);
-		driver.takeScreenShot();
 
 		//verify the product name,app name,content of page
 		driver.getLogger().info("Verify the page content");
@@ -485,7 +317,41 @@ public class CommonUIUtils
 		driver.getLogger().info("The page content is:  " + driver.getText(UIControls.SPAGETEXT));
 		Assert.assertEquals(driver.getText(UIControls.SPAGETEXT), pageTitle);
 		//Buttons
-		Assert.assertTrue(driver.isElementPresent(UIControls.SCOMPASSICON));
+		if (hamburgerEnabled) {
+			Assert.assertTrue(driver.isElementPresent("css=" + DashBoardPageId_1180.HAMBURGERMENU_ICON_CSS));
+		}
+		else {
+			Assert.assertTrue(driver.isElementPresent(UIControls.SCOMPASSICON));
+		}
 		Assert.assertTrue(driver.isElementPresent(UIControls.SADDWIDGETICON));
+	}
+
+	public static void verifyURL(WebDriver webdriver, String url)
+	{
+		String currurl = webdriver.getWebDriver().getCurrentUrl();
+		webdriver.getLogger().info("the origin url = " + currurl);
+		String tmpurl = trimUrlParameters(currurl.substring(currurl.indexOf("emsaasui") + 9));
+		webdriver.getLogger().info("the url without para = " + tmpurl);
+		Assert.assertEquals(tmpurl, url);
+	}
+
+	public static void verifyURL_WithPara(WebDriver webdriver, String url)
+	{
+		webdriver.getLogger().info("the expected relative url = " + url);
+		String currurl = webdriver.getWebDriver().getCurrentUrl();
+		webdriver.getLogger().info("the current url = " + currurl);
+		String tmpurl = currurl.substring(currurl.indexOf("emsaasui") + 9);
+		webdriver.getLogger().info("the relative url to compare = " + tmpurl);
+		Assert.assertTrue(tmpurl.contains(url), tmpurl + " does NOT contain " + url);
+	}
+
+	private static String trimUrlParameters(String url)
+	{
+		String baseUrl = null;
+		if (url != null) {
+			String[] urlComponents = url.split("\\#|\\?");
+			baseUrl = urlComponents[0];
+		}
+		return baseUrl;
 	}
 }

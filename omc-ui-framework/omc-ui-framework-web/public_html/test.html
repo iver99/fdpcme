@@ -33,15 +33,16 @@ role value for that section to represent the appropriate content type.
     <body>
 <!--        <div class="loadingIndicator" id="loading">Loading</div>-->
         <div id="globalBody" style="display: none">
-            <header id="headerWrapper" role="banner">
-                <div data-bind="component: {
-                        name: 'df-oracle-branding-bar',
-                        params: brandingbarParams
-                    }">
-                </div>
-            </header>
-            
             <div id="main-container">
+                <!-- ko stopBinding -->
+                <header id="headerWrapper" role="banner">
+                    <div data-bind="component: {
+                            name: 'df-oracle-branding-bar',
+                            params: brandingbarParams
+                        }">
+                    </div>
+                </header>
+                <!-- /ko -->
                 <div id="head-bar-container" class="oj-col oj-sm-12 oj-toolbars oj-toolbar-bottom-border oj-btton-half-chrome" style="padding-left: 30px;">
                     <div id="index-toolbar" aria-label="Index page toolbar" 
                            data-bind="ojComponent: {component:'ojToolbar'}" 

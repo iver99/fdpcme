@@ -138,17 +138,17 @@ public class TimeSelectorUtil_1130 extends TimeSelectorUtil_175
 		webd.sendKeys("css=" + TimeSelectorUIControls.sEndTimeInput, endTime);
 		webd.takeScreenShot();
 
-		if (webd.isDisplayed(TimeSelectorUIControls.sErrorMsg)) {
-			try {
-				throw new Exception(webd.getText(TimeSelectorUIControls.sErrorMsg));
-			}
-			catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return null;
-		}
-		else {
+//		if (webd.isDisplayed(TimeSelectorUIControls.sErrorMsg)) {
+//			try {
+//				throw new Exception(webd.getText(TimeSelectorUIControls.sErrorMsg));
+//			}
+//			catch (Exception e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//			return null;
+//		}
+//		else {
 			try {
 				clickApplyButton(webd);
 			}
@@ -159,7 +159,7 @@ public class TimeSelectorUtil_1130 extends TimeSelectorUtil_175
 			String returnTimeRange = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn))
 					.get(index - 1).getText();
 			return dateConvert(webd, returnTimeRange, TimeRange.Custom, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
-		}
+//		}
 
 	}
 

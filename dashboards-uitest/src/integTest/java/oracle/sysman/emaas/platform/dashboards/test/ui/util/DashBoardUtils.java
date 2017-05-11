@@ -2,10 +2,13 @@ package oracle.sysman.emaas.platform.dashboards.test.ui.util;
 
 import java.util.List;
 
+import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.WelcomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_1150;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_1180;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_190;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
@@ -20,9 +23,18 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
+import com.oracle.omc.omctf.testsdk.context.TenantResolver;
+
 public class DashBoardUtils
 {
 	private static WebDriver driver;
+	public static final String OMCEE = "OMCEE";
+	public static final String OMCLOG = "OMCLOG";
+	public static final String OMCSE = "OMCSE";
+	public static final String SECSE = "SECSE";
+	public static final String SECSMA = "SECSMA";
+	public static final String OMCTrail = "OMCTrail";
+	public static final String OSMACCTrail = "OSMACCTrail";
 
 	public static void apmOobExist()
 	{
@@ -41,43 +53,64 @@ public class DashBoardUtils
 
 	public static void clickDashboardLinkInBrandingBar(WebDriver webdriver)
 	{
-		webdriver.getLogger().info("Click Compass icon to display menu of branding bar");
-		webdriver.getWebDriver().findElement(By.xpath(PageId.COMPASSICON)).click();
-		WebDriverWait wait = new WebDriverWait(webdriver.getWebDriver(), 900L);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(PageId.DASHBOARDLINK)));
-		webdriver.takeScreenShot();
-		webdriver.getLogger().info("Click Dashboard link to back to dashboard home page");
-		webdriver.getWebDriver().findElement(By.xpath(PageId.DASHBOARDLINK)).click();
-		//	webdriver.takeScreenShot();
+		if (DashBoardUtils.isHamburgerMenuEnabled(webdriver)) {
+			if (!BrandingBarUtil.isHamburgerMenuDisplayed(webdriver)) {
+				BrandingBarUtil.toggleHamburgerMenu(webdriver);
+			}
+			webdriver.getLogger().info("Click Dashboards menu item to back to dashboard home page");
+			webdriver.getWebDriver().findElement(By.cssSelector("#omc_root_dashboards>span")).click();
+		}
+		else {
+			webdriver.getLogger().info("Click Compass icon to display menu of branding bar");
+			webdriver.getWebDriver().findElement(By.xpath(PageId.COMPASSICON)).click();
+			WebDriverWait wait = new WebDriverWait(webdriver.getWebDriver(), 900L);
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(PageId.DASHBOARDLINK)));
+			webdriver.takeScreenShot();
+			webdriver.getLogger().info("Click Dashboard link to back to dashboard home page");
+			webdriver.getWebDriver().findElement(By.xpath(PageId.DASHBOARDLINK)).click();
+		}
+
 	}
 
 	public static void closeOverviewPage()
 	{
-		driver.getLogger().info("before clicking overview button");
-		driver.click(PageId.OVERVIEWCLOSEID);
-		driver.getLogger().info("after clicking overview button");
+//		driver.getLogger().info("before clicking overview button");
+//		driver.click(PageId.OVERVIEWCLOSEID);
+//		driver.getLogger().info("after clicking overview button");
 	}
 
 	public static void deleteDashboard(WebDriver webdriver, String DashboardName)
 	{
-		DashboardHomeUtil.search(webdriver, DashboardName);
-		String searchresult = webdriver.getElement("css=" + PageId.DASHBOARDDISPLAYPANELCSS).getAttribute("childElementCount");
-		int dbnumber = Integer.parseInt(searchresult);
-		for (int i = 0; i < dbnumber; i++) {
-			if (DashboardHomeUtil.isDashboardExisted(webdriver, DashboardName)) {
-				webdriver.getLogger().info("Start to delete the dashboard: " + DashboardName);
-				DashboardHomeUtil.deleteDashboard(webdriver, DashboardName, DashboardHomeUtil.DASHBOARDS_GRID_VIEW);
+		try {
+			Validator.notEmptyString("DashboardName", DashboardName);
+			DashboardHomeUtil.search(webdriver, DashboardName);
+			String searchresult = webdriver.getElement("css=" + PageId.DASHBOARDDISPLAYPANELCSS)
+					.getAttribute("childElementCount");
+			int dbnumber = Integer.parseInt(searchresult);
+			for (int i = 0; i < dbnumber; i++) {
+				if (DashboardHomeUtil.isDashboardExisted(webdriver, DashboardName)) {
+					webdriver.getLogger().info("Start to delete the dashboard: " + DashboardName);
+					DashboardHomeUtil.deleteDashboard(webdriver, DashboardName, DashboardHomeUtil.DASHBOARDS_GRID_VIEW);
+				}
 			}
+			webdriver.getLogger().info("Verify the dashboard: " + DashboardName + " has been deleted");
+			Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(webdriver, DashboardName), "Delete dashboard "
+					+ DashboardName + " failed!");
+			webdriver.getLogger().info("Delete the dashboard: " + DashboardName + " finished");
 		}
-		webdriver.getLogger().info("Verify the dashboard: " + DashboardName + " has been deleted");
-		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(webdriver, DashboardName), "Delete dashboard " + DashboardName
-				+ " failed!");
-		webdriver.getLogger().info("Delete the dashboard: " + DashboardName + " finished");
+		catch (IllegalArgumentException ex) {
+			webdriver.getLogger().info(ex.getLocalizedMessage());
+		}
 	}
 
 	public static String generateTimeStamp()
 	{
 		return String.valueOf(System.currentTimeMillis());
+	}
+
+	public static String getTenantName(String lookupName)
+	{
+		return TenantResolver.getDefault().getTenantName(lookupName);
 	}
 
 	public static void handleAlert(WebDriver webdriver)
@@ -97,7 +130,7 @@ public class DashBoardUtils
 	/**
 	 * @param driver
 	 * @param filteroption
-	 *            option value - la, ita, apm, orchestration
+	 *            option value - la, ita, apm, orchestration, security
 	 * @return
 	 */
 	public static boolean isFilterOptionExisted(WebDriver driver, String filteroption)
@@ -105,30 +138,36 @@ public class DashBoardUtils
 		boolean isExisted = false;
 		driver.getLogger().info("isFilterOptionExisted filter: " + filteroption);
 		Validator.notEmptyString("filter", filteroption);
-		if ("apm".equals(filteroption)) {
-			if (driver.isElementPresent(DashBoardPageId.FILTERAPMLOCATOR)) {
-				isExisted = driver.isDisplayed(DashBoardPageId.FILTERAPMLOCATOR);
-			}
-		}
-		else if ("la".equals(filteroption)) {
-			if (driver.isElementPresent(DashBoardPageId.FILTERLALOCATOR)) {
-				isExisted = driver.isDisplayed(DashBoardPageId.FILTERLALOCATOR);
-			}
-		}
-		else if ("ita".equals(filteroption)) {
-			if (driver.isElementPresent(DashBoardPageId.FILTERITALOCATOR)) {
-				isExisted = driver.isDisplayed(DashBoardPageId.FILTERITALOCATOR);
-			}
-		}
-		else if ("orchestration".equals(filteroption)) {
-			if (driver.isElementPresent(DashBoardPageId.FILTERORCHESTRATIONLOCATOR)) {
-				isExisted = driver.isDisplayed(DashBoardPageId.FILTERORCHESTRATIONLOCATOR);
-			}
-		}
-		else {
-			throw new IllegalArgumentException("Unkonw filter option: " + filteroption);
+		switch (filteroption) {
+			case "ita":
+				isExisted = driver.getElement(DashBoardPageId.FILTERITALOCATOR).isDisplayed();
+				break;
+			case "la":
+				isExisted = driver.getElement(DashBoardPageId.FILTERLALOCATOR).isDisplayed();
+				break;
+			case "apm":
+				isExisted = driver.getElement(DashBoardPageId.FILTERAPMLOCATOR).isDisplayed();
+				break;
+			case "orchestration":
+				isExisted = driver.getElement(DashBoardPageId.FILTERORCHESTRATIONLOCATOR).isDisplayed();
+				break;
+			case "security":
+				isExisted = driver.getElement(DashBoardPageId.FILTERSECURITYLOCATOR).isDisplayed();
+				break;
+			default:
+				throw new IllegalArgumentException("Unkonw filter option: " + filteroption);
 		}
 		return isExisted;
+	}
+
+	public static boolean isHamburgerMenuEnabled(WebDriver driver)
+	{
+		if (driver.isElementPresent("css=" + DashBoardPageId_1180.HAMBURGERMENU_ICON_CSS)) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 
 	public static boolean isHomePageExploreItemExisted(WebDriver driver, String listItem)
@@ -252,6 +291,29 @@ public class DashBoardUtils
 
 	}
 
+	public static void itaOobNotExist_v2v3()
+	{
+		driver.getLogger().info("Verify below IT Analytics OOB dashboard Set and Dashboards don't exist...");
+
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Application Performance Analytics"));
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Availability Analytics"));
+
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Performance Analytics Application Server"));
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Performance Analytics: Database"));
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Resource Analytics: Database"));
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Resource Analytics: Host"));
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Resource Analytics: Middleware"));
+
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Categorical"));
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Others"));
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Overview"));
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Performance"));
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Timeseries"));
+
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Entities"));
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Summary"));
+	}
+
 	public static void laOobExist()
 	{
 		driver.getLogger().info("Wait for dashboards loading...");
@@ -297,8 +359,24 @@ public class DashBoardUtils
 		DashBoardUtils.apmOobNotExist();
 		DashBoardUtils.itaOobNotExist();
 		DashBoardUtils.laOobNotExist();
+		DashBoardUtils.orchestrationOobNotExist();
+		DashBoardUtils.securityOobNotExist();
 		DashBoardUtils.outDateOob();
+	}
 
+	public static void orchestrationOobExist()
+	{
+		driver.getLogger().info("Wait for dashboards loading...");
+		DashboardHomeUtil.waitForDashboardPresent(driver, "Orchestration Workflows");
+
+		driver.getLogger().info("Verify below Orchestration OOB dashboard exist...");
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Orchestration Workflows"));
+	}
+
+	public static void orchestrationOobNotExist()
+	{
+		driver.getLogger().info("Verify below Orchestration OOB don't exist...");
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Orchestration Workflows"));
 	}
 
 	public static void outDateOob()
@@ -315,6 +393,36 @@ public class DashBoardUtils
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Database Health Summary"));
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Host Health Summary"));
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "WebLogic Health Summary"));
+	}
+
+	public static void securityOobExist()
+	{
+		driver.getLogger().info("Wait for dashboards loading...");
+		DashboardHomeUtil.waitForDashboardPresent(driver, "DNS");
+
+		driver.getLogger().info("Verify below Security OOB dashboards exist...");
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "DNS"));
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Firewall"));
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Oracle Database Security"));
+	}
+
+	public static void securityOobNotExist()
+	{
+		driver.getLogger().info("Verify below Security OOB dashboards do not exist...");
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "DNS"));
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Firewall"));
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Oracle Database Security"));
+	}
+
+	public static void udeOobExist()
+	{
+		driver.getLogger().info("Wait for dashboards loading...");
+		DashboardHomeUtil.waitForDashboardPresent(driver, "Exadata Health");
+
+		driver.getLogger().info("Verify below UDE OOB dashboard Set exist...");
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Exadata Health"));
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Enterprise Health"));
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "UI Gallery"));
 	}
 
 	public static boolean verfiyShareOptionDisabled()
@@ -345,6 +453,203 @@ public class DashBoardUtils
 			driver.getLogger().info("Have the option enabled");
 			return false;
 		}
+	}
+
+	public static void verifyBrandingBarWithTenant(WebDriver webdriver, String tenantType)
+	{
+		Validator.notEmptyString("TenantType", tenantType);
+
+		//verify Data Explorer in branding bar
+		webdriver.getLogger().info("Verify Data Explorer link should be in Branding Bar");
+		Assert.assertTrue(BrandingBarUtil.isVisualAnalyzerLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_DATAEXPLORER),
+				"'Data Explorer' link should be in Branding Bar");
+
+		//verify Log Explorer in branding bar
+		if (OMCLOG.equals(tenantType) || OMCTrail.equals(tenantType)) {
+			webdriver.getLogger().info("Verify Log Explorer link should be in Branding Bar");
+			Assert.assertTrue(BrandingBarUtil.isVisualAnalyzerLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_LOGEXPLORER),
+					"'Log Explorer' link should be in Branding Bar");
+		}
+		else {
+			webdriver.getLogger().info("Verify Log Explorer link should NOT be in Branding Bar");
+			Assert.assertFalse(BrandingBarUtil.isVisualAnalyzerLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_LOGEXPLORER),
+					"'Log Explorer' link should not be in Branding Bar");
+		}
+
+		//verify cloud service according to Edition
+		switch (tenantType) {
+			case OMCEE:
+				webdriver.getLogger().info(
+						"'APM', 'Monitoring', 'IT Analytics' and 'Orchestraion' displayed for OMC Enterprise Edition");
+				Assert.assertTrue(BrandingBarUtil.isCloudServiceLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_CS_APM),
+						"'APM' should in clould service link");
+				Assert.assertTrue(BrandingBarUtil.isCloudServiceLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_CS_ITA),
+						"'IT Analytics' should in clould service link");
+				Assert.assertTrue(BrandingBarUtil.isCloudServiceLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_CS_OCS),
+						"'Orchestration' should in clould service link");
+				Assert.assertTrue(BrandingBarUtil.isCloudServiceLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_CS_IM),
+						"'Monitoring' should in clould service link");
+
+				webdriver.getLogger()
+				.info("'Compliance','Log Analytics' and 'Security' NOT displayed for OMC Enterprise Edition");
+				Assert.assertFalse(BrandingBarUtil.isCloudServiceLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_CS_LA),
+						"'Log Analytics' should not in clould service link");
+				Assert.assertFalse(BrandingBarUtil.isCloudServiceLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_CS_COMP),
+						"'Compliance' should not in clould service link");
+				Assert.assertFalse(BrandingBarUtil.isCloudServiceLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_CS_SECU),
+						"'Security' should not in clould service link");
+				break;
+			case OMCSE:
+				webdriver.getLogger().info("'APM' and 'Monitoring' displayed for OMC Standard Edition");
+				Assert.assertTrue(BrandingBarUtil.isCloudServiceLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_CS_APM),
+						"'APM' should in clould service link");
+				Assert.assertTrue(BrandingBarUtil.isCloudServiceLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_CS_IM),
+						"'Monitoring' should in clould service link");
+
+				webdriver
+				.getLogger()
+						.info("'Log Analytics','Compliance', 'IT Analytics', 'Orchestraion' and 'Security' NOT displayed for OMC Standard Edition");
+				Assert.assertFalse(BrandingBarUtil.isCloudServiceLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_CS_COMP),
+						"'Compliance' should not in clould service link");
+				Assert.assertFalse(BrandingBarUtil.isCloudServiceLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_CS_SECU),
+						"'Security' should not in clould service link");
+				Assert.assertFalse(BrandingBarUtil.isCloudServiceLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_CS_ITA),
+						"'IT Analytics' should not in clould service link");
+				Assert.assertFalse(BrandingBarUtil.isCloudServiceLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_CS_LA),
+						"'Log Analytics' should not in clould service link");
+				Assert.assertFalse(BrandingBarUtil.isCloudServiceLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_CS_OCS),
+						"'Orchestration' should not in clould service link");
+				break;
+			case OMCLOG:
+				webdriver.getLogger().info("'Log Analytics' displayed for OMC Log Edition");
+				Assert.assertTrue(BrandingBarUtil.isCloudServiceLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_CS_LA),
+						"'Log Analytics' should in clould service link");
+
+				webdriver
+				.getLogger()
+						.info("'APM','Compliance','Monitoring', 'IT Analytics', 'Orchestraion' and 'Security' NOT displayed for OMC Log Edition");
+				Assert.assertFalse(BrandingBarUtil.isCloudServiceLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_CS_APM),
+						"'APM' should in clould service link");
+				Assert.assertFalse(BrandingBarUtil.isCloudServiceLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_CS_ITA),
+						"'IT Analytics' should in clould service link");
+				Assert.assertFalse(BrandingBarUtil.isCloudServiceLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_CS_OCS),
+						"'Orchestration' should in clould service link");
+				Assert.assertFalse(BrandingBarUtil.isCloudServiceLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_CS_IM),
+						"'Monitoring' should in clould service link");
+				Assert.assertFalse(BrandingBarUtil.isCloudServiceLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_CS_COMP),
+						"'Compliance' should not in clould service link");
+				Assert.assertFalse(BrandingBarUtil.isCloudServiceLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_CS_SECU),
+						"'Security' should not in clould service link");
+				break;
+			case SECSE:
+				//verify cloud service according to Edition
+				webdriver.getLogger().info("'Compliance' displayed for OSMACC Compliance Edition");
+				Assert.assertTrue(BrandingBarUtil.isCloudServiceLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_CS_COMP),
+						"'Compliance' should in clould service link");
+
+				webdriver
+				.getLogger()
+				.info("'APM','Log Analytics','Monitoring', 'IT Analytics', 'Orchestraion' and 'Security' NOT displayed for OSMACC Trail Edition");
+				Assert.assertFalse(BrandingBarUtil.isCloudServiceLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_CS_APM),
+						"'APM' should not in clould service link");
+				Assert.assertFalse(BrandingBarUtil.isCloudServiceLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_CS_ITA),
+						"'IT Analytics' should not in clould service link");
+				Assert.assertFalse(BrandingBarUtil.isCloudServiceLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_CS_LA),
+						"'Log Analytics' should not in clould service link");
+				Assert.assertFalse(BrandingBarUtil.isCloudServiceLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_CS_OCS),
+						"'Orchestration' should not in clould service link");
+				Assert.assertFalse(BrandingBarUtil.isCloudServiceLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_CS_IM),
+						"'Monitoring' should not in clould service link");
+				Assert.assertFalse(BrandingBarUtil.isCloudServiceLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_CS_SECU),
+						"'Security' should not in clould service link");
+				break;
+			case SECSMA:
+				webdriver.getLogger().info("'Security' displayed for OSMACC Security Edition");
+				Assert.assertTrue(BrandingBarUtil.isCloudServiceLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_CS_SECU),
+						"'Security' should in clould service link");
+
+				webdriver
+				.getLogger()
+				.info("'APM','Log Analytics','Monitoring', 'IT Analytics', 'Orchestraion' and 'Compliance' NOT displayed for OSMACC Trail Edition");
+				Assert.assertFalse(BrandingBarUtil.isCloudServiceLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_CS_APM),
+						"'APM' should not in clould service link");
+				Assert.assertFalse(BrandingBarUtil.isCloudServiceLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_CS_ITA),
+						"'IT Analytics' should not in clould service link");
+				Assert.assertFalse(BrandingBarUtil.isCloudServiceLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_CS_LA),
+						"'Log Analytics' should not in clould service link");
+				Assert.assertFalse(BrandingBarUtil.isCloudServiceLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_CS_OCS),
+						"'Orchestration' should not in clould service link");
+				Assert.assertFalse(BrandingBarUtil.isCloudServiceLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_CS_IM),
+						"'Monitoring' should not in clould service link");
+				Assert.assertFalse(BrandingBarUtil.isCloudServiceLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_CS_COMP),
+						"'Compliance' should not in clould service link");
+				break;
+			case OMCTrail:
+				webdriver.getLogger().info(
+						"'APM','Log Analytics','Monitoring', 'IT Analytics' and 'Orchestraion' displayed for OMC Trail Edition");
+				Assert.assertTrue(BrandingBarUtil.isCloudServiceLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_CS_APM),
+						"'APM' should in clould service link");
+				Assert.assertTrue(BrandingBarUtil.isCloudServiceLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_CS_ITA),
+						"'IT Analytics' should in clould service link");
+				Assert.assertTrue(BrandingBarUtil.isCloudServiceLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_CS_LA),
+						"'Log Analytics' should in clould service link");
+				Assert.assertTrue(BrandingBarUtil.isCloudServiceLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_CS_OCS),
+						"'Orchestration' should in clould service link");
+				Assert.assertTrue(BrandingBarUtil.isCloudServiceLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_CS_IM),
+						"'Monitoring' should in clould service link");
+
+				webdriver.getLogger().info("'Compliance' and 'Security' NOT displayed for OMC Trail Edition");
+				Assert.assertFalse(BrandingBarUtil.isCloudServiceLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_CS_COMP),
+						"'Compliance' should not in clould service link");
+				Assert.assertFalse(BrandingBarUtil.isCloudServiceLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_CS_SECU),
+						"'Security' should not in clould service link");
+				break;
+			case OSMACCTrail:
+				webdriver.getLogger().info("'Compliance' and 'Security' displayed for OSMACC Trail Edition");
+				Assert.assertTrue(BrandingBarUtil.isCloudServiceLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_CS_COMP),
+						"'Compliance' should in clould service link");
+				Assert.assertTrue(BrandingBarUtil.isCloudServiceLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_CS_SECU),
+						"'Security' should in clould service link");
+
+				webdriver
+						.getLogger()
+						.info("'APM','Log Analytics','Monitoring', 'IT Analytics' and 'Orchestraion' NOT displayed for OSMACC Trail Edition");
+				Assert.assertFalse(BrandingBarUtil.isCloudServiceLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_CS_APM),
+						"'APM' should not in clould service link");
+				Assert.assertFalse(BrandingBarUtil.isCloudServiceLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_CS_ITA),
+						"'IT Analytics' should not in clould service link");
+				Assert.assertFalse(BrandingBarUtil.isCloudServiceLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_CS_LA),
+						"'Log Analytics' should not in clould service link");
+				Assert.assertFalse(BrandingBarUtil.isCloudServiceLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_CS_OCS),
+						"'Orchestration' should not in clould service link");
+				Assert.assertFalse(BrandingBarUtil.isCloudServiceLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_CS_IM),
+						"'Monitoring' should not in clould service link");
+				break;
+			default:
+				webdriver.getLogger().info("The tenantType is: " + tenantType);
+		}
+	}
+
+	public static void verifyBuilderPageWithTenant(WebDriver webdriver, String dbName, String dbDesc, String WidgetName)
+	{
+		//create a dashboard
+		webdriver.getLogger().info("Create a dashboard");
+		DashboardHomeUtil.createDashboard(webdriver, dbName, dbDesc);
+
+		//check the ude widget displayed in widget list
+		webdriver.getLogger().info("Add UDE widget to the dashboard");
+		DashboardBuilderUtil.addWidgetToDashboard(webdriver, WidgetName);
+		DashboardBuilderUtil.saveDashboard(webdriver);
+
+		//check the 'Open In Data Explore' icon displayed in widget title
+		Assert.assertTrue(DashBoardUtils.verifyOpenInIconExist(webdriver, WidgetName),
+				"The 'Open In Data Explorer' icon should display");
+
+		//back to the home page then delete the created dashboard
+		webdriver.getLogger().info("Back to the home page");
+		BrandingBarUtil.visitDashboardHome(webdriver);
+		webdriver.getLogger().info("Delete the dashboard:" + dbName);
+		DashboardHomeUtil.deleteDashboard(webdriver, dbName, DashboardHomeUtil.DASHBOARDS_GRID_VIEW);
 	}
 
 	public static boolean verifyDashboardInfoInHomePage(WebDriver driver, String Name, String Description, String view)
@@ -378,6 +683,207 @@ public class DashBoardUtils
 			}
 		}
 		return false;
+	}
+
+	public static void verifyHomePageWithTenant(WebDriver webdriver, String tenantType)
+	{
+		Validator.notEmptyString("TenantType", tenantType);
+
+		//verify Data Explorer in Explore drop down in home page
+		webdriver.getLogger().info("Verify Data Explorer drop down list item should be in Home page");
+		Assert.assertTrue(DashBoardUtils.isHomePageExploreItemExisted(webdriver, "Data Explorer"),
+				"'Data Explorer' item should be in drop down list");
+
+		//verify Log Explorer in branding bar
+		if (OMCLOG.equals(tenantType) || OMCTrail.equals(tenantType)) {
+			webdriver.getLogger().info("Verify Log Explorer drop down list item should not be in Home page");
+			Assert.assertTrue(DashBoardUtils.isHomePageExploreItemExisted(webdriver, "Log Explorer"),
+					"'Log Explorer' item should be in drop down list");
+		}
+		else {
+			webdriver.getLogger().info("Verify Log Explorer drop down list item should not be in Home page");
+			Assert.assertFalse(DashBoardUtils.isHomePageExploreItemExisted(webdriver, "Log Explorer"),
+					"'Log Explorer' item should not be in drop down list");
+		}
+
+		//verify the Service in Filter options
+		switch (tenantType) {
+			case OMCEE:
+				webdriver.getLogger().info("'APM', 'IT Analytics' and 'Orchestraion' displayed for OMC Enterprise Edition");
+				Assert.assertTrue(DashBoardUtils.isFilterOptionExisted(webdriver, "ita"),
+						"IT Analytics option should in Cloud Service filter");
+				Assert.assertTrue(DashBoardUtils.isFilterOptionExisted(webdriver, "apm"),
+						"APM option should in Cloud Service filter");
+				Assert.assertTrue(DashBoardUtils.isFilterOptionExisted(webdriver, "orchestration"),
+						"Orchestration option should in Cloud Service filter");
+
+				webdriver.getLogger().info("'Log Analytics' and 'Security' not displayed for OMC Enterprise Edition");
+				Assert.assertFalse(DashBoardUtils.isFilterOptionExisted(webdriver, "la"),
+						"Log Analytics option should not in Cloud Service filter");
+				Assert.assertFalse(DashBoardUtils.isFilterOptionExisted(webdriver, "security"),
+						"Security Analytics option should not in Cloud Service filter");
+				break;
+			case OMCSE:
+				webdriver.getLogger().info("'APM' displayed for OMC Standard Edition");
+				Assert.assertTrue(DashBoardUtils.isFilterOptionExisted(webdriver, "apm"),
+						"APM option should in Cloud Service filter");
+
+				webdriver.getLogger().info(
+						"'Log Analytics', 'IT Analytics', 'Security' and 'Orchestraion' NOT displayed for OMC Standard Edition");
+				Assert.assertFalse(DashBoardUtils.isFilterOptionExisted(webdriver, "la"),
+						"Log Analytics option should not in Cloud Service filter");
+				Assert.assertFalse(DashBoardUtils.isFilterOptionExisted(webdriver, "ita"),
+						"IT Analytics option should not in Cloud Service filter");
+				Assert.assertFalse(DashBoardUtils.isFilterOptionExisted(webdriver, "orchestration"),
+						"Orchestration option should not in Cloud Service filter");
+				Assert.assertFalse(DashBoardUtils.isFilterOptionExisted(webdriver, "security"),
+						"Security Analytics option should not in Cloud Service filter");
+				break;
+			case OMCLOG:
+				webdriver.getLogger().info("'Log Analytics' displayed for OMC Enterprise Edition");
+				Assert.assertTrue(DashBoardUtils.isFilterOptionExisted(webdriver, "la"),
+						"Log Analytics option should in Cloud Service filter");
+
+				webdriver.getLogger().info(
+						"'APM', 'IT Analytics', 'Security' and 'Orchestraion' not displayed for OMC Enterprise Edition");
+				Assert.assertFalse(DashBoardUtils.isFilterOptionExisted(webdriver, "ita"),
+						"IT Analytics option should not in Cloud Service filter");
+				Assert.assertFalse(DashBoardUtils.isFilterOptionExisted(webdriver, "apm"),
+						"APM option should not in Cloud Service filter");
+				Assert.assertFalse(DashBoardUtils.isFilterOptionExisted(webdriver, "orchestration"),
+						"Orchestration option should not in Cloud Service filter");
+				Assert.assertFalse(DashBoardUtils.isFilterOptionExisted(webdriver, "security"),
+						"Security Analytics option should not in Cloud Service filter");
+				break;
+			case SECSE:
+				webdriver
+						.getLogger()
+						.info("'APM','Log Analytics', 'IT Analytics', 'Orchestraion' and 'Security' NOT displayed for OSMACC Compliance Edition");
+				Assert.assertFalse(DashBoardUtils.isFilterOptionExisted(webdriver, "la"),
+						"Log Analytics option should not in Cloud Service filter");
+				Assert.assertFalse(DashBoardUtils.isFilterOptionExisted(webdriver, "ita"),
+						"IT Analytics option should not in Cloud Service filter");
+				Assert.assertFalse(DashBoardUtils.isFilterOptionExisted(webdriver, "apm"),
+						"APM option should not in Cloud Service filter");
+				Assert.assertFalse(DashBoardUtils.isFilterOptionExisted(webdriver, "orchestration"),
+						"Orchestration option should not in Cloud Service filter");
+				Assert.assertFalse(DashBoardUtils.isFilterOptionExisted(webdriver, "security"),
+						"Security Analytics option should not in Cloud Service filter");
+				break;
+			case SECSMA:
+				webdriver.getLogger().info("'Security' displayed for OSMACC Compliance Edition");
+				Assert.assertTrue(DashBoardUtils.isFilterOptionExisted(webdriver, "security"),
+						"Security Analytics option should in Cloud Service filter");
+
+				webdriver.getLogger().info(
+						"'APM','Log Analytics', 'IT Analytics' and 'Orchestraion' NOT displayed for OSMACC Security Edition");
+				Assert.assertFalse(DashBoardUtils.isFilterOptionExisted(webdriver, "la"),
+						"Log Analytics option should not in Cloud Service filter");
+				Assert.assertFalse(DashBoardUtils.isFilterOptionExisted(webdriver, "ita"),
+						"IT Analytics option should not in Cloud Service filter");
+				Assert.assertFalse(DashBoardUtils.isFilterOptionExisted(webdriver, "apm"),
+						"APM option should not in Cloud Service filter");
+				Assert.assertFalse(DashBoardUtils.isFilterOptionExisted(webdriver, "orchestration"),
+						"Orchestration option should not in Cloud Service filter");
+				break;
+			case OMCTrail:
+				webdriver.getLogger().info(
+						"'APM','Log Analytics', 'IT Analytics' and 'Orchestraion' displayed for OMC Trail Edition");
+				Assert.assertTrue(DashBoardUtils.isFilterOptionExisted(webdriver, "la"),
+						"Log Analytics option should in Cloud Service filter");
+				Assert.assertTrue(DashBoardUtils.isFilterOptionExisted(webdriver, "ita"),
+						"IT Analytics option should in Cloud Service filter");
+				Assert.assertTrue(DashBoardUtils.isFilterOptionExisted(webdriver, "apm"),
+						"APM option should in Cloud Service filter");
+				Assert.assertTrue(DashBoardUtils.isFilterOptionExisted(webdriver, "orchestration"),
+						"Orchestration option should in Cloud Service filter");
+
+				webdriver.getLogger().info("'Security' NOT displayed for OSMACC Compliance Edition");
+				Assert.assertFalse(DashBoardUtils.isFilterOptionExisted(webdriver, "security"),
+						"Security Analytics option should not in Cloud Service filter");
+				break;
+			case OSMACCTrail:
+				webdriver.getLogger().info(
+						"'APM','Log Analytics', 'IT Analytics' and 'Orchestraion' NOT displayed for OSMACC Trail Edition");
+				Assert.assertFalse(DashBoardUtils.isFilterOptionExisted(webdriver, "la"),
+						"Log Analytics option should not in Cloud Service filter");
+				Assert.assertFalse(DashBoardUtils.isFilterOptionExisted(webdriver, "ita"),
+						"IT Analytics option should not in Cloud Service filter");
+				Assert.assertFalse(DashBoardUtils.isFilterOptionExisted(webdriver, "apm"),
+						"APM option should not in Cloud Service filter");
+				Assert.assertFalse(DashBoardUtils.isFilterOptionExisted(webdriver, "orchestration"),
+						"Orchestration option should not in Cloud Service filter");
+
+				webdriver.getLogger().info("'Security' displayed for OSMACC Compliance Edition");
+				Assert.assertTrue(DashBoardUtils.isFilterOptionExisted(webdriver, "security"),
+						"Security Analytics option should in Cloud Service filter");
+				break;
+			default:
+				webdriver.getLogger().info("The tenantType is: " + tenantType);
+		}
+	}
+
+	public static void verifyOOBInHomeWithTenant(WebDriver webdriver, String tenantType)
+	{
+		Validator.notEmptyString("TenantType", tenantType);
+
+		switch (tenantType) {
+			case OMCEE:
+				DashBoardUtils.apmOobExist();
+				DashBoardUtils.itaOobExist();
+				DashBoardUtils.orchestrationOobExist();
+				DashBoardUtils.laOobNotExist();
+				DashBoardUtils.securityOobNotExist();
+				break;
+			case OMCSE:
+				DashBoardUtils.apmOobExist();
+				DashBoardUtils.udeOobExist();
+				DashBoardUtils.itaOobNotExist_v2v3();
+				DashBoardUtils.orchestrationOobNotExist();
+				DashBoardUtils.laOobNotExist();
+				DashBoardUtils.securityOobNotExist();
+				break;
+			case OMCLOG:
+				DashBoardUtils.apmOobNotExist();
+				DashBoardUtils.itaOobNotExist_v2v3();
+				DashBoardUtils.orchestrationOobNotExist();
+				DashBoardUtils.laOobExist();
+				DashBoardUtils.securityOobNotExist();
+				break;
+			case SECSE:
+				DashBoardUtils.securityOobNotExist();
+				DashBoardUtils.apmOobNotExist();
+				DashBoardUtils.itaOobNotExist_v2v3();
+				DashBoardUtils.orchestrationOobNotExist();
+				DashBoardUtils.laOobNotExist();
+				DashBoardUtils.udeOobExist();
+				break;
+			case SECSMA:
+				DashBoardUtils.apmOobNotExist();
+				DashBoardUtils.itaOobNotExist_v2v3();
+				DashBoardUtils.orchestrationOobNotExist();
+				DashBoardUtils.laOobNotExist();
+				DashBoardUtils.udeOobExist();
+				DashBoardUtils.securityOobExist();
+				break;
+			case OMCTrail:
+				DashBoardUtils.apmOobExist();
+				DashBoardUtils.itaOobExist();
+				DashBoardUtils.orchestrationOobExist();
+				DashBoardUtils.laOobExist();
+				DashBoardUtils.securityOobNotExist();
+				break;
+			case OSMACCTrail:
+				DashBoardUtils.apmOobNotExist();
+				DashBoardUtils.itaOobNotExist_v2v3();
+				DashBoardUtils.orchestrationOobNotExist();
+				DashBoardUtils.laOobNotExist();
+				DashBoardUtils.udeOobExist();
+				DashBoardUtils.securityOobExist();
+				break;
+			default:
+				webdriver.getLogger().info("The tenantType is: " + tenantType);
+		}
 	}
 
 	public static boolean verifyOpenInIconExist(WebDriver driver, String widgetName)
@@ -431,7 +937,7 @@ public class DashBoardUtils
 		//check if the Open In icon displayed or not
 	}
 
-	public static void VerifyServiceAlwaysDisplayedInWelcomePage(WebDriver webdriver)
+	public static void verifyServiceAlwaysDisplayedInWelcomePage(WebDriver webdriver)
 	{
 		webdriver.getLogger().info("'Dashboards','Explorers' and 'Learn More' always disaplyed...");
 		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webdriver, "dashboards"));
@@ -472,6 +978,223 @@ public class DashBoardUtils
 		webdriver.getLogger().info("the relative url to compare = " + tmpurl);
 
 		Assert.assertTrue(tmpurl.contains(url), tmpurl + " does NOT contain " + url);
+	}
+
+	public static void verifyWelcomePageWithTenant(WebDriver webdriver, String tenantType)
+	{
+		Validator.notEmptyString("TenantType", tenantType);
+
+		webdriver.getLogger().info("Start to verify the service links in welome page...");
+		//verify the service links always displayed in welcome page
+		DashBoardUtils.verifyServiceAlwaysDisplayedInWelcomePage(webdriver);
+
+		switch (tenantType) {
+			case OMCEE:
+				//verify the service link according to edition
+				webdriver.getLogger().info(
+						"'APM','Monitoring', 'IT Analytics' and 'Orchestraion' displayed for OMC Enterprise Edition");
+				Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webdriver, "APM"), "'APM' servie should in welcome page");
+				Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webdriver, "ITA"),
+						"'IT Analytics' servie should in welcome page");
+				Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webdriver, "infraMonitoring"),
+						"'Monitoring' servie should in welcome page");
+				Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webdriver, "orchestration"),
+						"'Orchestration' servie should in welcome page");
+
+				webdriver.getLogger().info(
+						"'Log Analytics', 'Compliance' and 'Security' NOT displayed for OMC Enterprise Edition");
+				Assert.assertFalse(WelcomeUtil.isServiceExistedInWelcome(webdriver, "LA"),
+						"'Log Analytics' servie should not in welcome page");
+				Assert.assertFalse(WelcomeUtil.isServiceExistedInWelcome(webdriver, "compliance"),
+						"'Compliance' servie should not in welcome page");
+				Assert.assertFalse(WelcomeUtil.isServiceExistedInWelcome(webdriver, "securityAnalytics"),
+						"'Security' servie should not in welcome page");
+
+				webdriver.getLogger().info("Verify the service links in welome page end.");
+
+				//verify the data explorer item in ITA
+				webdriver.getLogger().info("Verify the Data Explorer item in ITA in welcome page");
+				Assert.assertFalse(DashBoardUtils.isWelcomePageITADataExplorerItemExisted(webdriver, "Data Explorer"),
+						"'Data Explorer' should not in ITA");
+
+				//verify the data explorer item in Explorers
+				webdriver.getLogger().info("Verify the Data Explorer item in Explorers in welcome page");
+				Assert.assertTrue(DashBoardUtils.isWelcomePageDataExplorerItemExisted(webdriver, "Data Explorer"),
+						"'Data Explorer' should in Explorers");
+				break;
+			case OMCSE:
+				webdriver.getLogger().info("'APM' and 'Monitoring' displayed for OMC Standard Edition");
+				Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webdriver, "APM"), "'APM' servie should in welcome page");
+				Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webdriver, "infraMonitoring"),
+						"'Monitoring' servie should in welcome page");
+
+				webdriver
+				.getLogger()
+						.info("'Compliance', 'Log Analytics', 'IT Analytics' , 'Orchestraion'  and 'Security' NOT displayed for OMC Standard Edition");
+				Assert.assertFalse(WelcomeUtil.isServiceExistedInWelcome(webdriver, "LA"),
+						"'Log Analytics' servie should not in welcome page");
+				Assert.assertFalse(WelcomeUtil.isServiceExistedInWelcome(webdriver, "ITA"),
+						"'IT Analytics' servie should not in welcome page");
+				Assert.assertFalse(WelcomeUtil.isServiceExistedInWelcome(webdriver, "compliance"),
+						"'Compliance' servie should not in welcome page");
+				Assert.assertFalse(WelcomeUtil.isServiceExistedInWelcome(webdriver, "securityAnalytics"),
+						"'Security' servie should not in welcome page");
+				Assert.assertFalse(WelcomeUtil.isServiceExistedInWelcome(webdriver, "orchestration"),
+						"'Orchestration' servie should not in welcome page");
+
+				webdriver.getLogger().info("Verify the service links in welome page end.");
+
+				//verify the data explorer item in Explorers
+				webdriver.getLogger().info("Verify the Data Explorer item in Explorers in welcome page");
+				Assert.assertTrue(DashBoardUtils.isWelcomePageDataExplorerItemExisted(webdriver, "Data Explorer"),
+						"'Data Explorer' should in Explorers");
+				break;
+			case OMCLOG:
+				webdriver.getLogger().info("'Log Analytics' displayed for OMC Log Edition");
+				Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webdriver, "LA"),
+						"'Log Analytics' servie should in welcome page");
+
+				webdriver
+				.getLogger()
+						.info("'APM','Monitoring', 'IT Analytics', 'Orchestraion','Compliance' and 'Security' NOT displayed for OMC Log Edition");
+				Assert.assertFalse(WelcomeUtil.isServiceExistedInWelcome(webdriver, "APM"),
+						"'APM' servie should not in welcome page");
+				Assert.assertFalse(WelcomeUtil.isServiceExistedInWelcome(webdriver, "ITA"),
+						"'IT Analytics' servie should not in welcome page");
+				Assert.assertFalse(WelcomeUtil.isServiceExistedInWelcome(webdriver, "infraMonitoring"),
+						"'Monitoring' servie should not in welcome page");
+				Assert.assertFalse(WelcomeUtil.isServiceExistedInWelcome(webdriver, "orchestration"),
+						"'Orchestration' servie should not in welcome page");
+				Assert.assertFalse(WelcomeUtil.isServiceExistedInWelcome(webdriver, "compliance"),
+						"'Compliance' servie should not in welcome page");
+				Assert.assertFalse(WelcomeUtil.isServiceExistedInWelcome(webdriver, "securityAnalytics"),
+						"'Security' servie should not in welcome page");
+
+				webdriver.getLogger().info("Verify the service links in welome page end.");
+
+				//verify the data explorer item in Explorers
+				webdriver.getLogger().info("Verify the Data Explorer item in Explorers in welcome page");
+				Assert.assertTrue(DashBoardUtils.isWelcomePageDataExplorerItemExisted(webdriver, "Data Explorer"),
+						"'Data Explorer' should in Explorers");
+				break;
+			case SECSE:
+				webdriver.getLogger().info("'Compliance' displayed for OSMACC Compliance Edition");
+				Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webdriver, "compliance"),
+						"'Compliance' servie should in welcome page");
+
+				webdriver
+				.getLogger()
+				.info("'APM','Log Analytics','Monitoring', 'IT Analytics', 'Orchestraion' and 'Security' NOT displayed for OSMACC Compliance Edition");
+				Assert.assertFalse(WelcomeUtil.isServiceExistedInWelcome(webdriver, "APM"),
+						"'APM' servie should not in welcome page");
+				Assert.assertFalse(WelcomeUtil.isServiceExistedInWelcome(webdriver, "LA"),
+						"'Log Analytics' servie should not in welcome page");
+				Assert.assertFalse(WelcomeUtil.isServiceExistedInWelcome(webdriver, "ITA"),
+						"'IT Analytics' servie should not in welcome page");
+				Assert.assertFalse(WelcomeUtil.isServiceExistedInWelcome(webdriver, "infraMonitoring"),
+						"'Monitoring' servie should not in welcome page");
+				Assert.assertFalse(WelcomeUtil.isServiceExistedInWelcome(webdriver, "orchestration"),
+						"'Orchestration' servie should not in welcome page");
+				Assert.assertFalse(WelcomeUtil.isServiceExistedInWelcome(webdriver, "securityAnalytics"),
+						"'Security' servie should not in welcome page");
+
+				webdriver.getLogger().info("Verify the service links in welome page end.");
+
+				//verify the data explorer item in Explorers
+				webdriver.getLogger().info("Verify the Data Explorer item in Explorers in welcome page");
+				Assert.assertTrue(DashBoardUtils.isWelcomePageDataExplorerItemExisted(webdriver, "Data Explorer"),
+						"'Data Explorer' should in Explorers");
+				break;
+			case SECSMA:
+				webdriver.getLogger().info("'Security' displayed for OSMACC Security Edition");
+				Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webdriver, "securityAnalytics"),
+						"'Security' servie should in welcome page");
+
+				webdriver
+				.getLogger()
+				.info("'APM','Log Analytics','Monitoring', 'IT Analytics', 'Orchestraion' and 'Compliance' NOT displayed for OSMACC Security Edition");
+				Assert.assertFalse(WelcomeUtil.isServiceExistedInWelcome(webdriver, "compliance"),
+						"'Compliance' servie should not in welcome page");
+				Assert.assertFalse(WelcomeUtil.isServiceExistedInWelcome(webdriver, "APM"),
+						"'APM' servie should not in welcome page");
+				Assert.assertFalse(WelcomeUtil.isServiceExistedInWelcome(webdriver, "LA"),
+						"'Log Analytics' servie should not in welcome page");
+				Assert.assertFalse(WelcomeUtil.isServiceExistedInWelcome(webdriver, "ITA"),
+						"'IT Analytics' servie should not in welcome page");
+				Assert.assertFalse(WelcomeUtil.isServiceExistedInWelcome(webdriver, "infraMonitoring"),
+						"'Monitoring' servie should not in welcome page");
+				Assert.assertFalse(WelcomeUtil.isServiceExistedInWelcome(webdriver, "orchestration"),
+						"'Orchestration' servie should not in welcome page");
+
+				webdriver.getLogger().info("Verify the service links in welome page end.");
+
+				//verify the data explorer item in Explorers
+				webdriver.getLogger().info("Verify the Data Explorer item in Explorers in welcome page");
+				Assert.assertTrue(DashBoardUtils.isWelcomePageDataExplorerItemExisted(webdriver, "Data Explorer"),
+						"'Data Explorer' should in Explorers");
+				break;
+			case OMCTrail:
+				webdriver.getLogger().info(
+						"'APM','Log Analytics','Monitoring', 'IT Analytics' and 'Orchestraion' displayed for OMC Trail Edition");
+				Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webdriver, "APM"), "'APM' servie should in welcome page");
+				Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webdriver, "LA"),
+						"'Log Analytics' servie should in welcome page");
+				Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webdriver, "ITA"),
+						"'IT Analytics' servie should in welcome page");
+				Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webdriver, "infraMonitoring"),
+						"'Monitoring' servie should in welcome page");
+				Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webdriver, "orchestration"),
+						"'Orchestration' servie should in welcome page");
+
+				webdriver.getLogger().info("'Compliance' and 'Security' NOT displayed for OMC Trail Edition");
+				Assert.assertFalse(WelcomeUtil.isServiceExistedInWelcome(webdriver, "compliance"),
+						"'Compliance' servie should not in welcome page");
+				Assert.assertFalse(WelcomeUtil.isServiceExistedInWelcome(webdriver, "securityAnalytics"),
+						"'Security' servie should not in welcome page");
+
+				webdriver.getLogger().info("Verify the service links in welome page end.");
+
+				//verify the data explorer item in ITA
+				webdriver.getLogger().info("Verify the Data Explorer item in ITA in welcome page");
+				Assert.assertFalse(DashBoardUtils.isWelcomePageITADataExplorerItemExisted(webdriver, "Data Explorer"),
+						"'Data Explorer' should not in ITA");
+
+				//verify the data explorer item in Explorers
+				webdriver.getLogger().info("Verify the Data Explorer item in Explorers in welcome page");
+				Assert.assertTrue(DashBoardUtils.isWelcomePageDataExplorerItemExisted(webdriver, "Data Explorer"),
+						"'Data Explorer' should in Explorers");
+				break;
+			case OSMACCTrail:
+				webdriver.getLogger().info("'Compliance' and 'Security' displayed for OMC Trail Edition");
+				Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webdriver, "compliance"),
+						"'Compliance' servie should in welcome page");
+				Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webdriver, "securityAnalytics"),
+						"'Security' servie should in welcome page");
+
+				webdriver
+				.getLogger()
+						.info("'APM','Log Analytics','Monitoring', 'IT Analytics' and 'Orchestraion' NOT displayed for OSMACC Trail Edition");
+				Assert.assertFalse(WelcomeUtil.isServiceExistedInWelcome(webdriver, "APM"),
+						"'APM' servie should not in welcome page");
+				Assert.assertFalse(WelcomeUtil.isServiceExistedInWelcome(webdriver, "LA"),
+						"'Log Analytics' servie should not in welcome page");
+				Assert.assertFalse(WelcomeUtil.isServiceExistedInWelcome(webdriver, "ITA"),
+						"'IT Analytics' servie should not in welcome page");
+				Assert.assertFalse(WelcomeUtil.isServiceExistedInWelcome(webdriver, "infraMonitoring"),
+						"'Monitoring' servie should not in welcome page");
+				Assert.assertFalse(WelcomeUtil.isServiceExistedInWelcome(webdriver, "orchestration"),
+						"'Orchestration' servie should not in welcome page");
+
+				webdriver.getLogger().info("Verify the service links in welome page end.");
+
+				//verify the data explorer item in Explorers
+				webdriver.getLogger().info("Verify the Data Explorer item in Explorers in welcome page");
+				Assert.assertTrue(DashBoardUtils.isWelcomePageDataExplorerItemExisted(webdriver, "Data Explorer"),
+						"'Data Explorer' should in Explorers");
+				break;
+			default:
+				webdriver.getLogger().info("The tenantType is: " + tenantType);
+		}
 	}
 
 	private static String trimUrlParameters(String url)
