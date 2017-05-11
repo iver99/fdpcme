@@ -45,13 +45,11 @@
                     <ul class="dbd-tabs-nav">
                     </ul>
 
-                    <!-- ko if: enableAdd -->
-                    <div class="oj-tabs-facet demo-tabs-facet-flex">
+                    <div class="oj-tabs-facet demo-tabs-facet-flex" data-bind="visible:enableAdd">
                          <span id="add-nav" data-bind="click:addNewDashboard,attr: {title: getNlsString('DBSSET_BUILDER_ADD_DASHBOARD_TOSET')">
                              <i class="fa-icon-font fa-icon-font-14 dbd-icon-add"></i>
                          </span>
                     </div>
-                    <!--/ko-->
                 </div>
 
                 <ul id="dbd-set-option" style="display:none"
