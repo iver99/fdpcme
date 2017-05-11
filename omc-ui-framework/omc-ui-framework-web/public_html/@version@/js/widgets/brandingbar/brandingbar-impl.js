@@ -367,7 +367,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.removePillTitle = nls.PILL_REMOVE_TITLE;
             self.appName = ko.observable();
 
-            self.hasMessages = ko.observable(true);
+            self.hasMessages = ko.observable(false);
             self.messageList = ko.observableArray();
             self.clearMessageIcon = "/emsaasui/uifwk/@version@/images/widgets/clearEntry_ena.png";
             var errorMessageIcon = "/emsaasui/uifwk/@version@/images/widgets/stat_error_16.png";
