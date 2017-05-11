@@ -161,7 +161,7 @@ public class TestTimePicker_DateOnly extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("verify the time range is set correctly");
-		CommonUIUtils.verifyResult_FlexibleDate(webd, 2, returnDate, UIControls.SSTARTTEXT_DATEONLY1,
+		CommonUIUtils.verifyResult_FlexibleDate(webd, 1, returnDate, UIControls.SSTARTTEXT_DATEONLY1,
 				UIControls.SENDTEXT_DATEONLY1, true, false);
 
 		webd.shutdownBrowser(true);
@@ -176,7 +176,7 @@ public class TestTimePicker_DateOnly extends LoginAndLogout
 		//set time range
 		webd.getLogger().info("set timerange as Custom");
 
-		String returnDate = TimeSelectorUtil.setFlexibleRelativeTimeRangeWithDateOnly(webd, 6, TimeUnit.Month);
+		String returnDate = TimeSelectorUtil.setFlexibleRelativeTimeRangeWithDateOnly(webd, 2, 6, TimeUnit.Month);
 
 		//verify the result
 		webd.getLogger().info("verify the time range is set correctly");
@@ -199,7 +199,7 @@ public class TestTimePicker_DateOnly extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("verify the time range is set correctly");
-		CommonUIUtils.verifyResult_FlexibleDate(webd, 2, returnDate, UIControls.SSTARTTEXT_DATEONLY1,
+		CommonUIUtils.verifyResult_FlexibleDate(webd, 1, returnDate, UIControls.SSTARTTEXT_DATEONLY1,
 				UIControls.SENDTEXT_DATEONLY1, true, false);
 
 		webd.shutdownBrowser(true);
@@ -214,7 +214,7 @@ public class TestTimePicker_DateOnly extends LoginAndLogout
 		//set time range
 		webd.getLogger().info("set timerange as Custom");
 
-		String returnDate = TimeSelectorUtil.setFlexibleRelativeTimeRangeWithDateOnly(webd, 1, 4, TimeUnit.Week);
+		String returnDate = TimeSelectorUtil.setFlexibleRelativeTimeRangeWithDateOnly(webd, 2, 4, TimeUnit.Week);
 
 		//verify the result
 		webd.getLogger().info("verify the time range is set correctly");
