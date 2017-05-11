@@ -105,7 +105,7 @@ public class MetadataRetrieverTest
         Assert.assertEquals(oob.getLastModifiedBy(), "Oracle");
         Assert.assertEquals(oob.getIsSystem(), Boolean.TRUE);
         Assert.assertEquals(oob.getSharePublic(), Boolean.FALSE);
-        Assert.assertEquals(oob.getAppicationType().getValue(), 2);
+        Assert.assertEquals(oob.getAppicationType().getValue(), 8);
         Assert.assertEquals(oob.getTileList().size(), 1);
         Assert.assertEquals(oob.getTileList().get(0).getParameters().size(), 1);
         Assert.assertEquals(oob.getSubDashboards().size(), 1);

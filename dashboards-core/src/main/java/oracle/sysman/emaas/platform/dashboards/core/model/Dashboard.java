@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import javax.persistence.EntityManager;
 
@@ -13,11 +14,14 @@ import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.CommonResourceException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
+import oracle.sysman.emaas.platform.dashboards.core.nls.DatabaseResourceBundle;
+import oracle.sysman.emaas.platform.dashboards.core.nls.DatabaseResourceBundleControl;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
 import oracle.sysman.emaas.platform.dashboards.core.util.BigIntegerSerializer;
 import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
 import oracle.sysman.emaas.platform.dashboards.core.util.DateUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
+import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsSubDashboard;
@@ -209,6 +213,12 @@ public class Dashboard
 		return Dashboard.valueOf(ed, null, true, true, true);
 	}
 
+    public static Dashboard valueOf(EmsDashboard from, Dashboard to, boolean loadSubDashboards, boolean alwaysLoadTiles,
+            boolean loadTileParams)
+    {
+        return Dashboard.valueOf(from, to, loadSubDashboards, alwaysLoadTiles, loadTileParams, false);
+    }
+
 	/**
 	 * Get a dashboard instance from EmsDashboard instance, by providing the prototype dashboard object
 	 *
@@ -222,7 +232,7 @@ public class Dashboard
 	 * @return
 	 */
 	public static Dashboard valueOf(EmsDashboard from, Dashboard to, boolean loadSubDashboards, boolean alwaysLoadTiles,
-			boolean loadTileParams)
+			boolean loadTileParams, boolean loadScreenShot)
 	{
 		if (from == null) {
 			return null;
@@ -233,7 +243,6 @@ public class Dashboard
 		to.setCreationDate(from.getCreationDate());
 		to.setDashboardId(from.getDashboardId());
 		to.setDeleted(from.getDeleted() == null ? null : from.getDeleted().compareTo(BigInteger.ZERO) > 0);
-		to.setDescription(from.getDescription());
 		to.setEnableTimeRange(EnableTimeRangeState.fromValue(from.getEnableTimeRange()));
 		to.setEnableEntityFilter(EnableEntityFilterState.fromValue(from.getEnableEntityFilter()));
 		to.setEnableDescription(EnableDescriptionState.fromValue(from.getEnableDescription()));
@@ -243,13 +252,24 @@ public class Dashboard
 		to.setSharePublic(DataFormatUtils.integer2Boolean(from.getSharePublic()));
 		to.setLastModificationDate(from.getLastModificationDate());
 		to.setLastModifiedBy(from.getLastModifiedBy());
-		to.setName(from.getName());
 		to.setOwner(from.getOwner());
 		// by default, we'll not load screenshot for query
-		//		to.setScreenShot(from.getScreenShot());
+		if(loadScreenShot) {
+		    to.setScreenShot(from.getScreenShot());
+		}
 		to.setType(DataFormatUtils.dashboardTypeInteger2String(from.getType()));
 		to.setExtendedOptions(from.getExtendedOptions());
 		to.setApplicationType(from.getApplicationType());
+		
+		// translate OOB data
+		if(to.isSystem) {
+		    to.setName(getTranslatedString(DashboardApplicationType.fromValue(from.getApplicationType()), from.getName()));
+		    to.setDescription(getTranslatedString(DashboardApplicationType.fromValue(from.getApplicationType()), from.getDescription()));
+		} else {
+		    to.setName(from.getName());
+		    to.setDescription(from.getDescription());
+		}
+		
 		if (from.getType().equals(DASHBOARD_TYPE_CODE_SET)) {
 			to.setEnableTimeRange(null);
 			to.setIsSystem(DataFormatUtils.integer2Boolean(from.getIsSystem()));
@@ -897,9 +917,6 @@ public class Dashboard
 
 		for (int index = 0; index < dashboards.size(); index++) {
 			Dashboard subDashboard = dashboards.get(index);
-
-			Long tenantId = ed.getTenantId();
-
 			BigInteger subDashboardId = subDashboard.getDashboardId();
 			EmsDashboard subbed = dsf.getEmsDashboardById(subDashboardId);
 
@@ -921,5 +938,12 @@ public class Dashboard
 				}
 			}
 		}
+	}
+	
+	private static String getTranslatedString(DashboardApplicationType appType, String key) {
+/*	    DatabaseResourceBundle rb = (DatabaseResourceBundle) 
+	            ResourceBundle.getBundle(appType.getJsonValue(), UserContext.getLocale(), new DatabaseResourceBundleControl());
+	    return rb.getString(key);*/
+	    return key;
 	}
 }

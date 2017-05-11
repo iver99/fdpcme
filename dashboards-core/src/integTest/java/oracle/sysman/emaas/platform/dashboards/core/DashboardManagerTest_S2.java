@@ -245,7 +245,7 @@ public class DashboardManagerTest_S2 extends BaseTest
 		}
 		new NonStrictExpectations() {
 			{
-				anyDashboardServiceFacade.getEmsDashboardByName(anyString, anyString);
+				anyDashboardServiceFacade.getEmsDashboardByName(anyString);
 				result = new NoResultException("");
 			}
 		};

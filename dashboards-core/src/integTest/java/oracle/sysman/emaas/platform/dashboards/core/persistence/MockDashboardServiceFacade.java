@@ -22,6 +22,7 @@ import javax.persistence.EntityManager;
 import mockit.Mock;
 import mockit.MockUp;
 import oracle.sysman.emaas.platform.dashboards.core.util.FacadeUtil;
+import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsPreference;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
@@ -231,9 +232,9 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 
 
 	@Mock
-	public EmsDashboard getEmsDashboardByName(String name, String owner)
+	public EmsDashboard getEmsDashboardByName(String name)
 	{
-		List<EmsDashboard> ps = this.localFind(EmsDashboard.class, new EmsDashboardSelector(null, name, owner, true));
+		List<EmsDashboard> ps = this.localFind(EmsDashboard.class, new EmsDashboardSelector(null, name, UserContext.getCurrentUser(), true));
 		return ps.isEmpty() ? null : ps.get(0);
 	}
 

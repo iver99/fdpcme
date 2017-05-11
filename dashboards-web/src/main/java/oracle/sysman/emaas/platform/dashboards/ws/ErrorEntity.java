@@ -14,13 +14,14 @@ import java.io.IOException;
 
 import javax.ws.rs.core.Response.Status;
 
-import oracle.sysman.emaas.platform.emcpdf.cache.exception.CacheException;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardErrorConstants;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
+import oracle.sysman.emaas.platform.emcpdf.cache.exception.CacheException;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jettison.json.JSONException;
 
 /**
  * @author guobaochen
@@ -54,6 +55,14 @@ public class ErrorEntity
 	//	{
 	//
 	//	}
+	
+	   public ErrorEntity(JSONException e)
+	    {
+	        if (e != null) {
+	            errorCode = DashboardErrorConstants.JSON_FORMAT_ERROR_CODE;
+	            errorMessage = e.getLocalizedMessage();
+	        }
+	    }
 
 	public ErrorEntity(BasicServiceMalfunctionException e)
 	{

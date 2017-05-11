@@ -210,6 +210,9 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	private static final String NAV_ZDT_COUNTS = NAV_API_BASE + "zdt/counts";
 	private static final String NAV_STATIC_OMCSTATUS = NAV_API_BASE + "omcstatus";
 	private static final String NAV_WIDGET_NOTIFY = NAV_API_BASE + "widgetnotification";
+	private static final String NAV_REFRESH_OOB = NAV_API_BASE + "refresh/oob";
+	private static final String NAV_REFRESH_NLS = NAV_API_BASE + "refresh/nls";
+	private static final String NAV_TOOL = NAV_API_BASE + "tool";
 
 	public static final ObjectName WLS_RUNTIME_SERVICE_NAME;
 
@@ -435,6 +438,21 @@ public class RegistryServiceManager implements ApplicationServiceManager
 			if (applicationUrlHttps != null) {
 				links.add(new Link().withRel("ssf.widget.changed").withHref(applicationUrlHttps + NAV_WIDGET_NOTIFY));
 			}
+            if (applicationUrlHttp != null) {
+                links.add(new Link().withRel("refresh/oob").withHref(applicationUrlHttp + NAV_REFRESH_OOB));
+            }
+            if (applicationUrlHttps != null) {
+                links.add(new Link().withRel("refresh/oob").withHref(applicationUrlHttps + NAV_REFRESH_OOB));
+            }
+            if (applicationUrlHttp != null) {
+                links.add(new Link().withRel("refresh/resource_bundle").withHref(applicationUrlHttp + NAV_REFRESH_NLS));
+            }
+            if (applicationUrlHttps != null) {
+                links.add(new Link().withRel("refresh/resource_bundle").withHref(applicationUrlHttps + NAV_REFRESH_NLS));
+            }
+            if (applicationUrlHttp != null) {
+                links.add(new Link().withRel("tool").withHref(applicationUrlHttp + NAV_TOOL));
+            }
 			InfoManager.getInstance().getInfo().setLinks(links);
 
 			LOGGER.info("Registering service with 'Service Registry'");

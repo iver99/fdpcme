@@ -32,12 +32,14 @@ public class CombinedDashboardTest {
 		String prefKey = "prefKey";
 		
         EmsDashboard ed  = new EmsDashboard();
-        ed .setCreationDate(new Date());
+        ed.setCreationDate(new Date());
         ed.setDashboardId(dashboardId);
         ed.setDeleted(BigInteger.ZERO);
         ed.setName("dashboard1");
         ed.setDescription("desc");
         ed.setType(2);
+        ed.setApplicationType(1);
+        ed.setIsSystem(0);
         
         EmsPreference ep = new EmsPreference();
         ep.setPrefKey(prefKey);

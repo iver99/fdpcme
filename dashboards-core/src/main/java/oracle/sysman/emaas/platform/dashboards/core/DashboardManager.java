@@ -524,13 +524,12 @@ public class DashboardManager
 			LOGGER.debug("Dashboard not found for name \"{}\" is invalid", name);
 			return null;
 		}
-		String currentUser = UserContext.getCurrentUser();
 		EntityManager em = null;
 		try {
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			em = dsf.getEntityManager();
-			EmsDashboard ed = dsf.getEmsDashboardByName(name, currentUser);
-			return Dashboard.valueOf(ed);
+			EmsDashboard ed = dsf.getEmsDashboardByName(name);
+			return Dashboard.valueOf(ed, null, true, true, true, true);
 		}
 		catch (NoResultException e) {
 			LOGGER.debug("Dashboard not found for name \"{}\" because NoResultException is caught", name);

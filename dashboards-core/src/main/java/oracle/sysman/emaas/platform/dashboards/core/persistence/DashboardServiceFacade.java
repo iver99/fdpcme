@@ -91,20 +91,15 @@ public class DashboardServiceFacade
 	//		return em.createNamedQuery("EmsDashboardFavorite.findAll", EmsDashboardFavorite.class).getResultList();
 	//	}
 	@SuppressWarnings("unchecked")
-	public EmsDashboard getEmsDashboardByName(String name, String owner)
+	public EmsDashboard getEmsDashboardByName(String name)
 	{
-		String jpql = "select d from EmsDashboard d where d.name = ?1 and d.owner = ?2 and d.deleted = ?3";
-		Object[] params = new Object[] { StringEscapeUtils.escapeHtml4(name), owner, BigInteger.ZERO };
-		Query query = em.createQuery(jpql);
-		for (int i = 1; i <= params.length; i++) {
-			query.setParameter(i, params[i - 1]);
-		}
-		//EMCPDF-2396
-		List <Object> list=query.getResultList();
-		if(!list.isEmpty()){
-			return (EmsDashboard)list.get(0);
-		}
-		return null;
+        List<EmsDashboard> list = em.createNamedQuery("EmsDashboard.findByName")
+                .setParameter("name", StringEscapeUtils.escapeHtml4(name))
+                .setParameter("owner", UserContext.getCurrentUser()).getResultList();
+        if (!list.isEmpty()) {
+            return list.get(0);
+        }
+        return null;
 	}
 
 	public CombinedDashboard getCombinedEmsDashboardById(BigInteger dashboardId, String userName) {
