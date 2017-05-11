@@ -198,9 +198,9 @@ public class RegistrationEntity implements Serializable
 								userRoles = PrivilegeChecker.getUserRoles(TenantContext.getCurrentTenant(),
 										UserContext.getCurrentUser());
 							}
-							if (!PrivilegeChecker.isAdminUser(userRoles)) {
-								return null;
-							}
+//							if (!PrivilegeChecker.isAdminUser(userRoles)) {
+//								return null;
+//							}
 
 							List<LinkEntity> registeredAdminLinks = lookupLinksWithRelPrefix(NAME_ADMIN_LINK, true, true);
 							List<LinkEntity> filteredAdminLinks = filterAdminLinksByUserRoles(registeredAdminLinks, userRoles);
