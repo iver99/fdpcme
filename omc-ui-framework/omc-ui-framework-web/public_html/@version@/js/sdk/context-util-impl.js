@@ -952,6 +952,14 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
             self.getCompositeMeId = function () {
                 return getIndividualContext('composite', 'compositeMEID');
             };
+            
+            function restoreCompositeCtxFromSessionCache(cache) {
+                setIndividualContext('composite', 'compositeDisplayName', cache['compositeDisplayName'], false, false);
+                setIndividualContext('composite', 'compositeName', cache['compositeName'], false, false);
+                setIndividualContext('composite', 'compositeType', cache['compositeType'], false, false);
+                setIndividualContext('composite', 'compositeClass', cache['compositeClass'], false, false);
+                setIndividualContext('composite', 'compositeNeedRefresh', 'false', false, true);
+            }
 
             self.getCompositeEntity = function () {
                 var compositeEntity = getIndividualContext('composite', 'compositeEntity');
@@ -1003,6 +1011,7 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                     var compositeCacheKey = self.getCompositeMeId();
                     var cache = sessionCaches[0].retrieveDataFromCache(compositeCacheKey);
                     if (cache && cache['compositeType']) {
+                        restoreCompositeCtxFromSessionCache(cache);
                         return cache['compositeType'];
                     }
                     //Fetch composite name/type
@@ -1037,6 +1046,7 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                     var compositeCacheKey = self.getCompositeMeId();
                     var cache = sessionCaches[0].retrieveDataFromCache(compositeCacheKey);
                     if (cache && cache['compositeName']) {
+                        restoreCompositeCtxFromSessionCache(cache);
                         return cache['compositeName'];
                     }
                     //Fetch composite name/type
@@ -1061,6 +1071,7 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                     var compositeCacheKey = self.getCompositeMeId();
                     var cache = sessionCaches[0].retrieveDataFromCache(compositeCacheKey);
                     if (cache && cache['compositeDisplayName']) {
+                        restoreCompositeCtxFromSessionCache(cache);
                         return cache['compositeDisplayName'];
                     }
                     //Fetch composite name/type
@@ -1090,6 +1101,7 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                     var compositeCacheKey = self.getCompositeMeId();
                     var cache = sessionCaches[0].retrieveDataFromCache(compositeCacheKey);
                     if (cache && cache['compositeClass']) {
+                        restoreCompositeCtxFromSessionCache(cache);
                         return cache['compositeClass'];
                     }
                     //Fetch composite name/type
