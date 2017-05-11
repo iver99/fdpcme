@@ -41,26 +41,13 @@ define(['knockout',
             self.zdtStatus = ko.observable(false);
             self.notZdtStatus = ko.observable(true);
             self.renderDashboardOptsMenu = ko.observable(false);
-            self.dashboardOptsMenuId = ko.observable('#dashboard-opts-menu-fake');
-            self.renderDashboardOptsMenu.subscribe(function(val){
-                if(val){
-                    self.dashboardOptsMenuId('#dashboardOptsMenu'+self.toolBarGuid);
-                }
-            });
             var dashboardOptsMenuInitialized = false;
-            self.onDashboardOptsMenuClicked = function(){
+            self.onDashboardOptsMenuClicked = function(){   //trigger event to dashboardset.panels.model to hide some menu items
                 if(dashboardOptsMenuInitialized){
                     return;
                 }
                 $b.triggerEvent($b.EVENT_DASHBOARD_OPTION_MENU_RENDERED);
                 dashboardOptsMenuInitialized = true;
-            };
-            
-            self.onDashboardOptsMenuKeyPressed = function(e, d) {
-                if (d.keyCode === 13) {
-                    self.onDashboardOptsMenuClicked();
-                }
-                return true;
             };
             
             zdtUtil.detectPlannedDowntime(function (isUnderPlannedDowntime) {
@@ -722,6 +709,14 @@ define(['knockout',
                         break;
                     default:
                         break;
+                }
+            };
+            
+            self.dashboardOptsMenuBeforeOpen = function(event, ui){
+                if(!self.renderDashboardOptsMenu()){
+                    self.renderDashboardOptsMenu(true);
+                    self.onDashboardOptsMenuClicked();
+                    $('#dashboardOptsMenu'+self.toolBarGuid).ojMenu("refresh");
                 }
             };
 

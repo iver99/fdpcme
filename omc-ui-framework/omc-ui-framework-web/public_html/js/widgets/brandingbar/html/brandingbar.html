@@ -41,18 +41,15 @@
 
                 <!-- Toolbar -->  
                 <div id='emaas-appheader-menu-and-toolbar-container' data-bind="attr: {'aria-label': toolbarLabel}">
-                    <ul id="emaasAppheaderGlobalNavMenuId-fake" style="display:none"
-                        data-bind="ojComponent: {component: 'ojMenu'}">
-                    </ul>
-                    <!-- ko if: renderEmaasAppheaderGlobalNavMenu() -->
-                    <ul id="emaasAppheaderGlobalNavMenuId" data-bind="ojComponent: {component: 'ojMenu', select: globalNavMenuItemSelect}" style="display: none;">
+                    <ul id="emaasAppheaderGlobalNavMenuId" data-bind="ojComponent: {component: 'ojMenu', select: globalNavMenuItemSelect, beforeOpen: $data.emaasAppheaderGlobalNavMenuBeforeOpen}" style="display: none;">
+                        <!-- ko if: renderEmaasAppheaderGlobalNavMenu() -->
                         <!-- ko foreach: globalNavItems -->
                         <li class="oj-menu-item">
                             <a data-bind="attr:{'id':id}, href: url"><span data-bind="text: label"></span></a>
                         </li>
                         <!-- /ko -->
+                        <!-- /ko -->
                     </ul>
-                    <!-- /ko -->
 
                     <div class="emaas-appheader-toolbar-container">
                         <!--div class="emaas-appheader-toolbar oj-toolbar-no-chrome" aria-controls="player" data-bind="ojComponent: {component:'ojToolbar'}"-->
@@ -81,7 +78,7 @@
                             
                             <button id="menubutton"
                                     class='oj-button-half-chrome emaas-appheader-toolbar-button'
-                                    data-bind="ojComponent: { component: 'ojButton', chroming: 'half', label: userName, menu: emaasAppheaderGlobalNavMenuId()}, event: {mouseover: function(){renderEmaasAppheaderGlobalNavMenu(true);}, focus: function(){renderEmaasAppheaderGlobalNavMenu(true);}}" tabindex="0">
+                                    data-bind="ojComponent: { component: 'ojButton', chroming: 'half', label: userName, menu: '#emaasAppheaderGlobalNavMenuId'}" tabindex="0">
                             </button>
                         </div>
                     </div>
