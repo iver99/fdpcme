@@ -12,6 +12,8 @@ import oracle.sysman.emaas.platform.dashboards.core.persistence.PersistenceManag
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -161,8 +163,10 @@ public class DataManagerTest
 		Integer enableDescription = 1;
 		String extendedOptions = "extendedoptions";
 		Integer showInHome = 1;
-		final List<Object> objs = new ArrayList<Object>();
-		objs.add("");
+		final Map<String, Object> objs = new HashMap<String,Object>();		
+		Date date = new Date();
+		objs.put("LAST_MODIFICATION_DATE", null);
+		objs.put("CREATION_DATE", date);
 		new Expectations(){
 			{
 				query.getResultList();
@@ -256,12 +260,10 @@ public void getSyncDashboardTableRowInsert(@Mocked final PersistenceManager pers
 	Integer enableDescription = 1;
 	String extendedOptions = "extendedoptions";
 	Integer showInHome = 1;
-	final List<Object> objs = new ArrayList<Object>();
-	objs.add("");
 	new Expectations(){
 		{
 			query.getResultList();
-				result = objs;
+				result = new HashMap<String,Object>();
 		}
 	};
 	dataManager.syncDashboardTableRow(entityManager,
@@ -327,8 +329,10 @@ public void getSyncDashboardTableRowInsert(@Mocked final PersistenceManager pers
 		Integer widgetDeleted = 0; 
 		String widgetDeletionDate = "widgetDeletionDate" ;
 		Integer deleted = 0;
-		final List<Object> objs = new ArrayList<Object>();
-		objs.add("");
+		final Map<String, Object> objs = new HashMap<String,Object>();		
+		Date date = new Date();
+		objs.put("LAST_MODIFICATION_DATE", null);
+		objs.put("CREATION_DATE", date);
 
 		new Expectations(){
 			{
@@ -435,13 +439,11 @@ public void getSyncDashboardTableRowInsert(@Mocked final PersistenceManager pers
 		Integer widgetDeleted = 0; 
 		String widgetDeletionDate = "widgetDeletionDate" ;
 		Integer deleted = 0;
-		final List<Object> objs = new ArrayList<Object>();
-		objs.add("");
-
+		
 		new Expectations() {
 			{
 				query.getResultList();
-				result = objs;
+				result = new ArrayList<Map<String, Object>>();
 			}
 		};
 		dataManager.syncDashboardTile(entityManager,tileId, dashboardId, creationDate, lastModificationDate, lastModifiedBy, owner, title, height,
@@ -463,8 +465,10 @@ public void getSyncDashboardTableRowInsert(@Mocked final PersistenceManager pers
 		String creationDate = "creationDate";
 		String lastModificationDate = "lastmodificationdate";
 		Integer deleted = 0;
-		final List<Object> objs = new ArrayList<Object>();
-		objs.add("");
+		final Map<String, Object> objs = new HashMap<String,Object>();		
+		Date date = new Date();
+		objs.put("LAST_MODIFICATION_DATE", null);
+		objs.put("CREATION_DATE", date);
 
 		new Expectations(){
 			{
@@ -505,13 +509,11 @@ public void getSyncDashboardTableRowInsert(@Mocked final PersistenceManager pers
 		String creationDate = "creationDate";
 		String lastModificationDate = "lastmodificationdate";
 		Integer deleted = 0;
-		final List<Object> objs = new ArrayList<Object>();
-		objs.add("");
-
+		
 		new Expectations(){
 			{
 				query.getResultList();
-				result = objs;
+				result = new ArrayList<Map<String, Object>>();
 			}
 		};
 		dataManager.syncDashboardTileParam(entityManager,tileId, paramName,
@@ -532,8 +534,10 @@ public void getSyncDashboardTableRowInsert(@Mocked final PersistenceManager pers
 		String creationDate = "creationDate";
 		String lastModificationDate = "lastModificationDate";
 		Integer deleted = 0;
-		final List<Object> objs = new ArrayList<Object>();
-		objs.add("");
+		final Map<String, Object> objs = new HashMap<String,Object>();		
+		Date date = new Date();
+		objs.put("LAST_MODIFICATION_DATE", null);
+		objs.put("CREATION_DATE", date);
 
 		new Expectations(){
 			{
@@ -567,12 +571,10 @@ public void getSyncDashboardTableRowInsert(@Mocked final PersistenceManager pers
 		String creationDate = "creationDate";
 		String lastModificationDate = "lastModificationDate";
 		Integer deleted = 0;
-		final List<Object> objs = new ArrayList<Object>();
-		objs.add("");
 		new Expectations(){
 			{
 				query.getResultList();
-				result = objs;
+				result = new ArrayList<Map<String, Object>>();
 			}
 		};
 		dataManager.syncDashboardUserOption(entityManager,userName, tenantId, dashboardId,
@@ -590,8 +592,11 @@ public void getSyncDashboardTableRowInsert(@Mocked final PersistenceManager pers
 		String creationDate = "creationDate";
 		String lastModificationDate = "lastModificationDate";
 		BigInteger deleted = new BigInteger("0");
-		final List<Object> objs = new ArrayList<Object>();
-		objs.add("");
+		final Map<String, Object> objs = new HashMap<String,Object>();		
+		Date date = new Date();
+		objs.put("LAST_MODIFICATION_DATE", null);
+		objs.put("CREATION_DATE", date);
+		
 		new Expectations(){
 			{
 				query.getResultList();
@@ -620,13 +625,11 @@ public void getSyncDashboardTableRowInsert(@Mocked final PersistenceManager pers
 		String creationDate = "creationDate";
 		String lastModificationDate = "lastModificationDate";
 		BigInteger deleted = new BigInteger("0");
-		final List<Object> objs = new ArrayList<Object>();
-		objs.add("");
-
+		
 		new Expectations(){
 			{
 				query.getResultList();
-				result = objs;
+				result = new ArrayList<Map<String, Object>>();
 			}
 		};
 		dataManager.syncDashboardSet(entityManager,dashboardSetId, tenantId, subDashboardId,
@@ -643,8 +646,10 @@ public void getSyncDashboardTableRowInsert(@Mocked final PersistenceManager pers
 		String creationDate = "creationDate";
 		String lastModificationDate = "lastModificationDate";
 		Integer deleted = 0;
-		final List<Object> objs = new ArrayList<Object>();
-		objs.add("");
+		final Map<String, Object> objs = new HashMap<String,Object>();		
+		Date date = new Date();
+		objs.put("LAST_MODIFICATION_DATE", null);
+		objs.put("CREATION_DATE", date);
 		new Expectations(){
 			{
 				query.getResultList();
@@ -673,12 +678,10 @@ public void getSyncDashboardTableRowInsert(@Mocked final PersistenceManager pers
 		String creationDate = "creationDate";
 		String lastModificationDate = "lastModificationDate";
 		Integer deleted = 0;
-		final List<Object> objs = new ArrayList<Object>();
-		objs.add("");
 		new Expectations(){
 			{
 				query.getResultList();
-				result = objs;
+				result = new ArrayList<Map<String, Object>>();
 			}
 		};
 		dataManager.syncPreferences(entityManager,userName, prefKey, prefValue,
