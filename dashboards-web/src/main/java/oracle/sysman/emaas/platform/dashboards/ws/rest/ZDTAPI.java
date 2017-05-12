@@ -233,7 +233,7 @@ public class ZDTAPI extends APIBase
 		if (result != null && result.size() == 1) {
 				Map<String, Object> resultMap = result.get(0);
 				sync_date = resultMap.get("SYNC_DATE").toString();
-				sync_type = resultMap.get("SYNC_DATE").toString();
+				sync_type = resultMap.get("SYNC_TYPE").toString();
 				next_schedule_date =  resultMap.get("NEXT_SCHEDULE_SYNC_DATE").toString();
 				percentage = Double.parseDouble(resultMap.get("DIVERGENCE_PERCENTAGE").toString());
 		}
