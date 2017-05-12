@@ -588,8 +588,10 @@ public class DashboardAPI extends APIBase
 		} catch (InterruptedException e) {
 			LOGGER.error(e);
 		} catch (ExecutionException e) {
-			LOGGER.error(e.getCause() == null ? e : e.getCause());
+				LOGGER.error(e);
 		} catch (TimeoutException e) {
+			//if timeout, and the task is still running, attempt to stop the task
+			futureSubscried.cancel(true);
 			LOGGER.error(e);
 		}
 
@@ -624,13 +626,15 @@ public class DashboardAPI extends APIBase
 						LOGGER.warn("Failed to get futureUserInfo, won't continue to start registry info thread");
 					}
 				}
-			} catch (InterruptedException e) {
-				LOGGER.error(e);
-			} catch (ExecutionException e) {
-				LOGGER.error(e.getCause() == null ? e : e.getCause());
-			} catch (TimeoutException e) {
-				LOGGER.error(e);
-			}
+			}catch (InterruptedException e) {
+			LOGGER.error(e);
+		} catch (ExecutionException e) {
+			LOGGER.error(e.getCause() == null? e : e.getCause());
+		}catch(TimeoutException e){
+			//if timeout, and the task is still running, attempt to stop the task
+			futureUserInfo.cancel(true);
+			LOGGER.error(e);
+		}
 
 			//get reg data
 			try {
@@ -642,13 +646,15 @@ public class DashboardAPI extends APIBase
 					}
 					LOGGER.debug("Registration data is " + regEntity);
 				}
-			} catch (InterruptedException e) {
-				LOGGER.error(e);
-			} catch (ExecutionException e) {
-				LOGGER.error(e.getCause() == null ? e : e.getCause());
-			} catch (TimeoutException e) {
-				LOGGER.error(e);
-			}
+			}catch (InterruptedException e) {
+			LOGGER.error(e);
+		} catch (ExecutionException e) {
+			LOGGER.error(e.getCause());
+		}catch(TimeoutException e){
+			//if timeout, and the task is still running, attempt to stop the task
+			futureReg.cancel(true);
+			LOGGER.error(e);
+		}
 
 			sb.append("if(!window._uifwk){window._uifwk={};}if(!window._uifwk.cachedData){window._uifwk.cachedData={};}");
 			if (userInfo != null) {
@@ -685,14 +691,15 @@ public class DashboardAPI extends APIBase
 					LOGGER.debug("Dashboard data is " + getJsonUtil().toJson(dbd));
 					updateDashboardAllHref(dbd, curTenant);
 				}
-			} catch (ExecutionException e) {
-				LOGGER.error(e.getCause() == null ? e : e.getCause());
-			} catch (InterruptedException e) {
-				LOGGER.error(e);
-			} catch (TimeoutException e) {
-				LOGGER.error(e);
-			}
-
+			}catch (ExecutionException e) {
+			LOGGER.error(e.getCause() == null? e : e.getCause());
+		}catch (InterruptedException e) {
+			LOGGER.error(e);
+		}catch(TimeoutException e){
+			//if timeout, and the task is still running, attempt to stop the task
+			futureDashboard.cancel(true);
+			LOGGER.error(e);
+		}
 
 			LOGGER.info("Retrieving combined data cost {}ms", (System.currentTimeMillis() - begin));
 			return Response.ok(sb.toString()).build();
