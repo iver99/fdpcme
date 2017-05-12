@@ -29,8 +29,7 @@
                 </div>
             </header>
 
-            <!-- ko if: isDashboardSet -->
-            <div id="dbd-set-tabs" data-bind="stopDataBinding: !isDashboardSet()" class="no-print">
+            <div id="dbd-set-tabs" data-bind="stopDataBinding: !isDashboardSet(), visible:isDashboardSet" class="no-print">
                 <div id="dbd-tabs-container" data-bind="ojComponent:{component: 'ojTabs',truncation:'none',removable:disableRemove,reorderable:dashboardsetConfig.isCreator}">
                     <div id="dbd-set-name" class="oj-tabs-facet">
                             <span data-bind="text:dashboardsetName()"></span>
@@ -124,7 +123,6 @@
                             </div>
                      </div>
             </div>
-            <!-- /ko -->
             <!-- /ko -->
             <div id="dashboards-tabs-contents">
 
