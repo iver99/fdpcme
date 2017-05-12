@@ -2,10 +2,11 @@ package oracle.sysman.emaas.platform.dashboards.ws.rest.ssfDatautil;
 
 import mockit.Mocked;
 import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
+import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
 
 import org.testng.annotations.Test;
 
-import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
+
 
 public class SSFDataUtilTest {
 	
