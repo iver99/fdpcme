@@ -119,6 +119,8 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
         
         self.EVENT_DASHBOARD_CLEANUP_DELETED_WIDGETS = "EVENT_DASHBOARD_CLEANUP_DELETED_WIDGETS";
         
+        self.EVENT_DASHBOARD_OPTION_MENU_RENDERED = "EVENT_DASHBOARD_OPTION_MENU_RENDERED";
+        
         self.dispatcher = new dsp.Dispatcher();
         self.addEventListener = function(event, listener) {
             self.dispatcher.registerEventHandler(event, listener);

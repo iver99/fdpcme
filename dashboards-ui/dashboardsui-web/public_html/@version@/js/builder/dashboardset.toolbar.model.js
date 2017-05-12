@@ -36,6 +36,8 @@ define(['knockout',
             });
 
             self.isDashboardSet = ko.observable(ko.unwrap(dashboardInst.type)  === "SET");
+            
+            self.canLazyInitSetOptionMenu = ko.observable(false);
 
             var zdtUtil = new zdtUtilModel();
             self.zdtStatus = ko.observable(false);
@@ -173,6 +175,13 @@ define(['knockout',
                         break;
                     default:
                         break;
+                }
+            };
+            
+            self.dbdSetOptionBeforeOpen = function(){
+                if(!self.canLazyInitSetOptionMenu()){
+                    self.canLazyInitSetOptionMenu(true);
+                    $('#dbd-set-option').ojMenu("refresh");
                 }
             };
             

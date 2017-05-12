@@ -42,6 +42,16 @@ define(['knockout',
             var zdtUtil = new zdtUtilModel();
             self.zdtStatus = ko.observable(false);
             self.notZdtStatus = ko.observable(true);
+            self.renderDashboardOptsMenu = ko.observable(false);
+            var dashboardOptsMenuInitialized = false;
+            self.onDashboardOptsMenuClicked = function(){   //trigger event to dashboardset.panels.model to hide some menu items
+                if(dashboardOptsMenuInitialized){
+                    return;
+                }
+                $b.triggerEvent($b.EVENT_DASHBOARD_OPTION_MENU_RENDERED);
+                dashboardOptsMenuInitialized = true;
+            };
+            
             zdtUtil.detectPlannedDowntime(function (isUnderPlannedDowntime) {
 //                 self.zdtStatus(true);
 //                 self.notZdtStatus(false);
@@ -700,6 +710,14 @@ define(['knockout',
                         break;
                     default:
                         break;
+                }
+            };
+            
+            self.dashboardOptsMenuBeforeOpen = function(event, ui){
+                if(!self.renderDashboardOptsMenu()){
+                    self.renderDashboardOptsMenu(true);
+                    self.onDashboardOptsMenuClicked();
+                    $('#dashboardOptsMenu'+self.toolBarGuid).ojMenu("refresh");
                 }
             };
 

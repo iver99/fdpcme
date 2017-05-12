@@ -41,11 +41,13 @@
 
                 <!-- Toolbar -->  
                 <div id='emaas-appheader-menu-and-toolbar-container' data-bind="attr: {'aria-label': toolbarLabel}">
-                    <ul id="emaasAppheaderGlobalNavMenuId" data-bind="ojComponent: {component: 'ojMenu', select: globalNavMenuItemSelect}" style="display: none;">
+                    <ul id="emaasAppheaderGlobalNavMenuId" data-bind="ojComponent: {component: 'ojMenu', select: globalNavMenuItemSelect, beforeOpen: $data.emaasAppheaderGlobalNavMenuBeforeOpen}" style="display: none;">
+                        <!-- ko if: renderEmaasAppheaderGlobalNavMenu() -->
                         <!-- ko foreach: globalNavItems -->
-                        <li>
+                        <li class="oj-menu-item">
                             <a data-bind="attr:{'id':id}, href: url"><span data-bind="text: label"></span></a>
                         </li>
+                        <!-- /ko -->
                         <!-- /ko -->
                     </ul>
 
@@ -106,6 +108,7 @@
             </div>
             <!-- /ko -->
         </div>  
+        <!-- ko if: renderSessionTimeoutDialog -->
         <div style="display:none;" 
             data-bind="ojComponent:{component: 'ojDialog', 
                 initialVisibility: 'hide', title: sessionTimeoutWarnDialogTitle, resizeBehavior: 'none', cancelBehavior: 'none',
@@ -124,6 +127,7 @@
                 </button>
             </div>  
         </div>
+        <!-- /ko -->
         <!-- ko if: showGlobalContextBanner() !== false -->
         <div id="emaas-appheader-globalcxt" class="emaas-appheader-global-context">
             
