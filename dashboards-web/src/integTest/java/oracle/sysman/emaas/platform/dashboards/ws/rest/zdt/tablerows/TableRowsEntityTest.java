@@ -261,7 +261,8 @@ public class TableRowsEntityTest {
         dashboardTileRowEntity = new DashboardTileRowEntity();
         dashboardTileRowEntity.equals(new Integer(1));
         dashboardTileRowEntity.equals(new DashboardTileRowEntity());
-
+        
+        
     }
 
     private DashboardUserOptionsRowEntity dashboardUserOptionsRowEntity = new DashboardUserOptionsRowEntity();

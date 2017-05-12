@@ -47,8 +47,10 @@ import oracle.sysman.emaas.platform.dashboards.entity.EmsPreference;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.ScreenshotData;
 import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
+
 import oracle.sysman.emaas.platform.emcpdf.tenant.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.emcpdf.tenant.subscription2.TenantSubscriptionInfo;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.testng.Assert;
@@ -302,6 +304,33 @@ public class DashboardManagerTest_S2 extends BaseTest
 		//dm.saveNewDashboard(null, 0L);
 		//dm.updateDashboard(null, 0L);
 	}
+	
+	@Test(groups = { "s2" })
+	public void testSaveDashboardForImportS2() throws DashboardException, InterruptedException
+	{
+		loadMockBeforeMethod();
+		Dashboard dbd = new Dashboard();
+		dbd.setName("dashboard in testSaveDashboardForImportS2()" + System.currentTimeMillis());
+		dbd.setType(Dashboard.DASHBOARD_TYPE_NORMAL);
+		Tile t1 = createTileForDashboard(dbd);
+		createParameterForTile(t1);
+
+		DashboardManager dm = DashboardManager.getInstance();
+		Long tenantId1 = 1234L;
+		
+		Dashboard d1 = dm.saveForImportedDashboard(dbd, tenantId1, false);
+		
+		Assert.assertNotNull(dbd.getDashboardId());
+		
+		// update existing dbd
+		dbd.getTileList().get(0).setHeight(100);
+		Dashboard d2 = dm.saveForImportedDashboard(dbd, tenantId1, true);
+		
+		Assert.assertEquals(d1.getDashboardId().toString(), d2.getDashboardId().toString());
+
+		// post test
+		dm.deleteDashboard(d1.getDashboardId(), true, tenantId1);
+	}
 
 	@Test(groups = { "s2" })
 	public void testCreateDashboardDifUserSameNameSameTenantS2() throws DashboardException
@@ -422,7 +451,7 @@ public class DashboardManagerTest_S2 extends BaseTest
 		dm.deleteDashboard(dbd.getDashboardId(), true, tenantId1);
 		dm.deleteDashboard(dbd2.getDashboardId(), true, tenantId1);
 	}
-
+	
 	@Test(groups = { "s2" })
 	public void testCreateUpdateDashboardS2() throws DashboardException, InterruptedException
 	{

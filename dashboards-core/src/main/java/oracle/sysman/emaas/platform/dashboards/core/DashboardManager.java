@@ -7,6 +7,9 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -233,6 +236,32 @@ public class DashboardManager
 			}
 		}		
 	}
+	
+	/**
+	 * 
+	 * @param name
+	 * @param tenantId
+	 * @return
+	 */
+	public List<BigInteger> getDashboardIdsByNames(List<String> names, Long tenantId){
+    	if (names == null || names.isEmpty()) {
+    		LOGGER.debug("Dashboard not found for no input names");
+    		return null;
+    	}
+    	EntityManager em = null;
+    	try {
+    		DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+    		em = dsf.getEntityManager();
+    		return dsf.getDashboardIdsByNames(names, tenantId);   		
+    	} catch (NoResultException e) {
+    		LOGGER.error(e.getLocalizedMessage(), e);
+    	} finally {
+    		if (em != null) {
+    			em.close();
+    		}
+    	}
+    	return null;
+    }
 	
 
 	/**
@@ -1060,6 +1089,74 @@ public class DashboardManager
 			}
 		}
 	}
+	
+	private String generateNewName(DashboardServiceFacade dsf,Long tenantId,String name) {
+		String existingName = dsf.getDashboardNameWithMaxSuffixNumber(name, tenantId);
+		String finalString  = null;
+		if (existingName != null) {
+			Pattern pattern = Pattern.compile("\\d+$");
+			Matcher matcher = pattern.matcher(existingName);
+			if (matcher.find()) {
+				Integer num = new Integer(matcher.group());
+				int increaseNum = num.intValue() + 1;
+				finalString = existingName.replace(num.toString(), ("" + increaseNum));
+			} else {
+				finalString = existingName + "_1";
+			}
+		}
+		return finalString;
+	}
+	
+	private Dashboard resetDateAndOwnerForDashboard(Dashboard dbd) {
+		dbd.setCreationDate(null);
+		dbd.setLastModifiedBy(null);
+		dbd.setOwner(null);
+		dbd.setIsSystem(false);
+		dbd.setLastModificationDate(null);
+		if (dbd.getTileList() != null) {
+			for (Tile tile : dbd.getTileList()) {
+				tile.setCreationDate(null);
+				tile.setOwner(null);
+				tile.setLastModifiedBy(null);
+				tile.setLastModificationDate(null);
+			}
+		}
+		return dbd;
+	}
+	
+	public Dashboard saveForImportedDashboard(Dashboard dbd, Long tenantId, boolean overrided) throws DashboardException {		
+		//reset creation date and owner
+		resetDateAndOwnerForDashboard(dbd);
+		EntityManager em = null;
+		try {
+			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+			em = dsf.getEntityManager();
+			Dashboard sameName = getDashboardByNameAndDescriptionAndOwner(dbd.getName(), dbd.getDescription(), tenantId);
+			if (sameName != null) {
+				if (overrided) {
+					// update existing row
+					dbd.setDashboardId(sameName.getDashboardId());
+					return updateDashboard(dbd,tenantId);
+				} else {
+					// regenerated id and name and then insert new row
+					dbd.setDashboardId(null);
+					dbd.setName(generateNewName(dsf, tenantId, sameName.getName()));					
+					return saveNewDashboard(dbd, tenantId);
+				}
+			} else {
+				// re-generate dashboard ID and then directly insert
+				 dbd.setDashboardId(null);
+				 return saveNewDashboard(dbd, tenantId);
+			}
+		}
+		finally {
+			if (em != null) {
+				em.close();
+			}
+		}
+	}
+	
+	
 
 	/**
 	 * Save a newly created dashboard for given tenant
