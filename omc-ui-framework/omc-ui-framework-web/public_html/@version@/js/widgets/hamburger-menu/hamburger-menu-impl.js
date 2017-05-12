@@ -230,7 +230,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     'omc_root_admin', 
                     'omc_root_admin_alertrules', 
                     'omc_root_admin_agents',
-                    'omc_root_admin_entitiesconfig',
+//                    'omc_root_admin_entitiesconfig',
                     rootCompositeMenuid
                 ];
 
@@ -565,6 +565,14 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                         var menuItem = rawMenuObj;
                         //Some root menus should be always be there, like Home, Dashboards, Alerts etc.
                         if (defaultMenuIds.indexOf(menuItem.id) > -1) {
+                            return menuItem;
+                        }
+                        //Disable Entities Config menu item if current user is not an admin
+                        if (menuItem.id === 'omc_root_admin_entitiesconfig') {
+                            if (!userTenantUtil.isAdminUser()) {
+                                menuItem.disabled = true;
+                                menuItem.externalUrl = '#';
+                            }
                             return menuItem;
                         }
                         
