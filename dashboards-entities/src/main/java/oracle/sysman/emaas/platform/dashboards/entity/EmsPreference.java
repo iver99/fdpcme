@@ -22,7 +22,7 @@ import org.eclipse.persistence.annotations.QueryRedirectors;
 @IdClass(EmsPreferencePK.class)
 //@Multitenant(MultitenantType.SINGLE_TABLE)
 //@TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant.id", length = 32, primaryKey = true)
-@AdditionalCriteria("this.deleted = '0'")
+@AdditionalCriteria("this.deleted = '0' and (this.tenantId = :curTenantId or this.tenantId = -11)")
 @QueryRedirectors(insert = EmsPreferenceRedirector.class, delete = EmsPreferenceRedirector.class)
 public class EmsPreference extends EmBaseEntity implements Serializable
 {
