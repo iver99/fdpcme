@@ -55,6 +55,6 @@
 		"group": "com.oracle.omc.omctf.testsdk", 
 		"name": "omctf_omcsetup", 
 		"version": "1.+", 
-		"transitive": "false" 
+		"transitive": "true" 
 	}
 }
