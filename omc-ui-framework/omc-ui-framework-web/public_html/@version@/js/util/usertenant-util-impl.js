@@ -131,7 +131,7 @@ define(['jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk
                 var serviceUrl = "/sso.static/dashboards.configurations/userInfo";
                 if (dfu.isDevMode()){
                     if (dfu.getDevData() && dfu.getDevData().userRoles) {
-                        callback(dfu.getDevData().userRoles);
+                        callback(dfu.getDevData().userRoles.roleNames);
                     }
                     else {
                         callback(["APM Administrator","APM User","IT Analytics Administrator","Log Analytics Administrator","Log Analytics User","IT Analytics User"]);
