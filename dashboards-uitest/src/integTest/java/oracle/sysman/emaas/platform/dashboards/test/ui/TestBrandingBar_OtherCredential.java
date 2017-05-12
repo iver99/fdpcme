@@ -34,10 +34,12 @@ public class TestBrandingBar_OtherCredential extends LoginAndLogout
 		// Administration link for Administration Console UI
 		if (DashBoardUtils.isHamburgerMenuEnabled(webd)) {
 			BrandingBarUtil.expandSubMenu(webd, BrandingBarUtil.ROOT_MENU_ADMIN);
-			BrandingBarUtil.clickMenuItem(webd, BrandingBarUtil.GLOBAL_ADMIN_MENU_ENTITIES_CFG);
+			Assert.assertFalse(BrandingBarUtil.isMenuItemEnabled(webd, BrandingBarUtil.GLOBAL_ADMIN_MENU_ENTITIES_CFG),
+					"Entities Configuration menu should be disabled");
+			//BrandingBarUtil.clickMenuItem(webd, BrandingBarUtil.GLOBAL_ADMIN_MENU_ENTITIES_CFG);
 
 			//verify the url of opened page
-			DashBoardUtils.verifyURL(webd, "admin-console/ac/adminConsole.html");
+			//DashBoardUtils.verifyURL(webd, "admin-console/ac/adminConsole.html");
 		}
 		else {
 			Assert.assertFalse(BrandingBarUtil.isAdmin(webd));
@@ -55,10 +57,12 @@ public class TestBrandingBar_OtherCredential extends LoginAndLogout
 		// Administration link for Administration Console UI
 		if (DashBoardUtils.isHamburgerMenuEnabled(webd)) {
 			BrandingBarUtil.expandSubMenu(webd, BrandingBarUtil.ROOT_MENU_ADMIN);
-			BrandingBarUtil.clickMenuItem(webd, BrandingBarUtil.GLOBAL_ADMIN_MENU_ENTITIES_CFG);
+			Assert.assertFalse(BrandingBarUtil.isMenuItemEnabled(webd, BrandingBarUtil.GLOBAL_ADMIN_MENU_ENTITIES_CFG),
+					"Entities Configuration menu should be disabled");
+			//BrandingBarUtil.clickMenuItem(webd, BrandingBarUtil.GLOBAL_ADMIN_MENU_ENTITIES_CFG);
 
 			//verify the url of opened page
-			DashBoardUtils.verifyURL(webd, "admin-console/ac/adminConsole.html");
+			//DashBoardUtils.verifyURL(webd, "admin-console/ac/adminConsole.html");
 		}
 		else {
 			Assert.assertFalse(BrandingBarUtil.isAdmin(webd));
@@ -76,10 +80,12 @@ public class TestBrandingBar_OtherCredential extends LoginAndLogout
 		// Administration link for Administration Console UI
 		if (DashBoardUtils.isHamburgerMenuEnabled(webd)) {
 			BrandingBarUtil.expandSubMenu(webd, BrandingBarUtil.ROOT_MENU_ADMIN);
-			BrandingBarUtil.clickMenuItem(webd, BrandingBarUtil.GLOBAL_ADMIN_MENU_ENTITIES_CFG);
+			Assert.assertFalse(BrandingBarUtil.isMenuItemEnabled(webd, BrandingBarUtil.GLOBAL_ADMIN_MENU_ENTITIES_CFG),
+					"Entities Configuration menu should be disabled");
+			//BrandingBarUtil.clickMenuItem(webd, BrandingBarUtil.GLOBAL_ADMIN_MENU_ENTITIES_CFG);
 
 			//verify the url of opened page
-			DashBoardUtils.verifyURL(webd, "admin-console/ac/adminConsole.html");
+			//DashBoardUtils.verifyURL(webd, "admin-console/ac/adminConsole.html");
 		}
 		else {
 			Assert.assertFalse(BrandingBarUtil.isAdmin(webd));
