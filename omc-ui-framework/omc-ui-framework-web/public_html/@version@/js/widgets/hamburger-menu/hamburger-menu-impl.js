@@ -572,6 +572,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                         if (menuItem.id === 'omc_root_admin_entitiesconfig') {
                             if (!userTenantUtil.isAdminUser()) {
                                 menuItem.disabled = true;
+                                menuItem.externalUrl = '#';
                             }
                             return menuItem;
                         }
