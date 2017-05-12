@@ -26,6 +26,69 @@ public class TestBrandingBar_OtherCredential extends LoginAndLogout
 	}
 
 	@Test(alwaysRun = true)
+	public void testAdminConsoleLinkAPMUser()
+	{
+		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_apm_user1");
+		webd.getLogger().info("start to test in testAdminConsoleLink with normal APM user");
+		WaitUtil.waitForPageFullyLoaded(webd);
+		// Administration link for Administration Console UI
+		if (DashBoardUtils.isHamburgerMenuEnabled(webd)) {
+			BrandingBarUtil.expandSubMenu(webd, BrandingBarUtil.ROOT_MENU_ADMIN);
+			BrandingBarUtil.clickMenuItem(webd, BrandingBarUtil.GLOBAL_ADMIN_MENU_ENTITIES_CFG);
+
+			//verify the url of opened page
+			DashBoardUtils.verifyURL(webd, "admin-console/ac/adminConsole.html");
+		}
+		else {
+			Assert.assertFalse(BrandingBarUtil.isAdmin(webd));
+			webd.getLogger().info(
+					"Admin Console(Adminitration Link) should be unvisible in BrandingBar if login with normal user");
+		}
+	}
+
+	@Test(alwaysRun = true)
+	public void testAdminConsoleLinkITAUser()
+	{
+		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_ita_user1");
+		webd.getLogger().info("start to test in testAdminConsoleLink with normal ITA user");
+		WaitUtil.waitForPageFullyLoaded(webd);
+		// Administration link for Administration Console UI
+		if (DashBoardUtils.isHamburgerMenuEnabled(webd)) {
+			BrandingBarUtil.expandSubMenu(webd, BrandingBarUtil.ROOT_MENU_ADMIN);
+			BrandingBarUtil.clickMenuItem(webd, BrandingBarUtil.GLOBAL_ADMIN_MENU_ENTITIES_CFG);
+
+			//verify the url of opened page
+			DashBoardUtils.verifyURL(webd, "admin-console/ac/adminConsole.html");
+		}
+		else {
+			Assert.assertFalse(BrandingBarUtil.isAdmin(webd));
+			webd.getLogger().info(
+					"Admin Console(Adminitration Link) should be unvisible in BrandingBar if login with normal user");
+		}
+	}
+
+	@Test(alwaysRun = true)
+	public void testAdminConsoleLinkLAUser()
+	{
+		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_la_user1");
+		webd.getLogger().info("start to test in testAdminConsoleLink with normal LA user");
+		WaitUtil.waitForPageFullyLoaded(webd);
+		// Administration link for Administration Console UI
+		if (DashBoardUtils.isHamburgerMenuEnabled(webd)) {
+			BrandingBarUtil.expandSubMenu(webd, BrandingBarUtil.ROOT_MENU_ADMIN);
+			BrandingBarUtil.clickMenuItem(webd, BrandingBarUtil.GLOBAL_ADMIN_MENU_ENTITIES_CFG);
+
+			//verify the url of opened page
+			DashBoardUtils.verifyURL(webd, "admin-console/ac/adminConsole.html");
+		}
+		else {
+			Assert.assertFalse(BrandingBarUtil.isAdmin(webd));
+			webd.getLogger().info(
+					"Admin Console(Adminitration Link) should be unvisible in BrandingBar if login with normal user");
+		}
+	}
+
+	@Test(alwaysRun = true)
 	public void testAdminLinkAPMAdmin()
 	{
 		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_apm_admin1");
@@ -254,6 +317,132 @@ public class TestBrandingBar_OtherCredential extends LoginAndLogout
 			BrandingBarUtil.visitDashboardHome(webd);
 			WaitUtil.waitForPageFullyLoaded(webd);
 			Assert.assertFalse(BrandingBarUtil.isAdmin(webd));
+		}
+	}
+
+	@Test(alwaysRun = true)
+	public void testAgentsLinkAPMUser()
+	{
+		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_apm_user1");
+		webd.getLogger().info("start to test in testAgentsLink with APM normal user");
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		// Agents link
+		if (DashBoardUtils.isHamburgerMenuEnabled(webd)) {
+			BrandingBarUtil.expandSubMenu(webd, BrandingBarUtil.ROOT_MENU_ADMIN);
+			BrandingBarUtil.clickMenuItem(webd, BrandingBarUtil.GLOBAL_ADMIN_MENU_AGENTS);
+
+			//verify the url of opened page
+			DashBoardUtils.verifyURL(webd, "tenantmgmt/services/customersoftware");
+		}
+		else {
+			Assert.assertFalse(BrandingBarUtil.isAdmin(webd));
+			webd.getLogger().info("Agents Link should be unvisible in BrandingBar if login with normal user");
+		}
+	}
+
+	@Test(alwaysRun = true)
+	public void testAgentsLinkITAUser()
+	{
+		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_ita_user1");
+		webd.getLogger().info("start to test in testAgentsLink with ITA normal user");
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		// Agents link
+		if (DashBoardUtils.isHamburgerMenuEnabled(webd)) {
+			BrandingBarUtil.expandSubMenu(webd, BrandingBarUtil.ROOT_MENU_ADMIN);
+			BrandingBarUtil.clickMenuItem(webd, BrandingBarUtil.GLOBAL_ADMIN_MENU_AGENTS);
+
+			//verify the url of opened page
+			DashBoardUtils.verifyURL(webd, "tenantmgmt/services/customersoftware");
+		}
+		else {
+			Assert.assertFalse(BrandingBarUtil.isAdmin(webd));
+			webd.getLogger().info("Agents Link should be unvisible in BrandingBar if login with normal user");
+		}
+	}
+
+	@Test(alwaysRun = true)
+	public void testAgentsLinkLAUser()
+	{
+		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_la_user1");
+		webd.getLogger().info("start to test in testAgentsLink with LA normal user");
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		// Agents link
+		if (DashBoardUtils.isHamburgerMenuEnabled(webd)) {
+			BrandingBarUtil.expandSubMenu(webd, BrandingBarUtil.ROOT_MENU_ADMIN);
+			BrandingBarUtil.clickMenuItem(webd, BrandingBarUtil.GLOBAL_ADMIN_MENU_AGENTS);
+
+			//verify the url of opened page
+			DashBoardUtils.verifyURL(webd, "tenantmgmt/services/customersoftware");
+		}
+		else {
+			Assert.assertFalse(BrandingBarUtil.isAdmin(webd));
+			webd.getLogger().info("Agents Link should be unvisible in BrandingBar if login with normal user");
+		}
+	}
+
+	@Test(alwaysRun = true)
+	public void testAlertRulesAPMUser()
+	{
+		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_apm_user1");
+		webd.getLogger().info("start to test in testAlertRules with normal APM user");
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		// Alert Rules link
+		if (DashBoardUtils.isHamburgerMenuEnabled(webd)) {
+			BrandingBarUtil.expandSubMenu(webd, BrandingBarUtil.ROOT_MENU_ADMIN);
+			BrandingBarUtil.clickMenuItem(webd, BrandingBarUtil.GLOBAL_ADMIN_MENU_ALERT_RULES);
+
+			//verify the url of opened page
+			DashBoardUtils.verifyURL(webd, "eventUi/rules/html/rules-dashboard.html");
+		}
+		else {
+			Assert.assertFalse(BrandingBarUtil.isAdmin(webd));
+			webd.getLogger().info("Alert Rules Link should be unvisible in BrandingBar if login with normal user");
+		}
+	}
+
+	@Test(alwaysRun = true)
+	public void testAlertRulesITAUser()
+	{
+		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_ita_user1");
+		webd.getLogger().info("start to test in testAlertRules with normal ITA user");
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		// Alert Rules link
+		if (DashBoardUtils.isHamburgerMenuEnabled(webd)) {
+			BrandingBarUtil.expandSubMenu(webd, BrandingBarUtil.ROOT_MENU_ADMIN);
+			BrandingBarUtil.clickMenuItem(webd, BrandingBarUtil.GLOBAL_ADMIN_MENU_ALERT_RULES);
+
+			//verify the url of opened page
+			DashBoardUtils.verifyURL(webd, "eventUi/rules/html/rules-dashboard.html");
+		}
+		else {
+			Assert.assertFalse(BrandingBarUtil.isAdmin(webd));
+			webd.getLogger().info("Alert Rules Link should be unvisible in BrandingBar if login with normal user");
+		}
+	}
+
+	@Test(alwaysRun = true)
+	public void testAlertRulesLAUser()
+	{
+		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_la_user1");
+		webd.getLogger().info("start to test in testAlertRules with normal LA user");
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		// Alert Rules link
+		if (DashBoardUtils.isHamburgerMenuEnabled(webd)) {
+			BrandingBarUtil.expandSubMenu(webd, BrandingBarUtil.ROOT_MENU_ADMIN);
+			BrandingBarUtil.clickMenuItem(webd, BrandingBarUtil.GLOBAL_ADMIN_MENU_ALERT_RULES);
+
+			//verify the url of opened page
+			DashBoardUtils.verifyURL(webd, "eventUi/rules/html/rules-dashboard.html");
+		}
+		else {
+			Assert.assertFalse(BrandingBarUtil.isAdmin(webd));
+			webd.getLogger().info("Alert Rules Link should be unvisible in BrandingBar if login with normal user");
 		}
 	}
 }
