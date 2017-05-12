@@ -291,7 +291,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                                 dfdLoadServiceMenus.resolve();
                             }
                         }, true, function(){
-                            dfdLoadServiceMenus.reject();
+                            dfdLoadServiceMenus.resolve();
                         });
                     return dfdLoadServiceMenus;
                 }
@@ -319,7 +319,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                                         dfdGetUserGrants.resolve();
                                     },
                                     error: function (xhr, textStatus, errorThrown) {
-                                        dfdGetUserGrants.reject();
+                                        dfdGetUserGrants.resolve();
                                         oj.Logger.error("Failed to get UserGrants due to error: " + textStatus);
                                     }
                                 });
@@ -334,14 +334,14 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     if (!self.subscribedApps || self.subscribedApps.length < 1) {
                         function subscribedAppsCallback(data) {
                             if (!data) {
-                                dfdGetSubscribedApps.reject();
+                                dfdGetSubscribedApps.resolve();
                             }
                             else {
                                 self.subscribedApps = data.applications;
                                 dfdGetSubscribedApps.resolve();
                             }
                         }
-                        dfu.getSubscribedApps2WithEdition(subscribedAppsCallback);
+                        dfu.getSubscribedApps2WithEdition(subscribedAppsCallback, function(){dfdGetSubscribedApps.resolve();});
                     }
                     return dfdGetSubscribedApps;
                 }
@@ -962,11 +962,13 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 }
                 
                 function fetchLinkFromRegistrationData(data, linkType, serviceName) {
-                    var links = data[linkType];
-                    if (links && links.length > 0) {
-                        for (var i = 0; i < links.length; i++) {
-                            if (links[i].serviceName === serviceName) {
-                                return links[i].href;
+                    if (data) {
+                        var links = data[linkType];
+                        if (links && links.length > 0) {
+                            for (var i = 0; i < links.length; i++) {
+                                if (links[i].serviceName === serviceName) {
+                                    return links[i].href;
+                                }
                             }
                         }
                     }
