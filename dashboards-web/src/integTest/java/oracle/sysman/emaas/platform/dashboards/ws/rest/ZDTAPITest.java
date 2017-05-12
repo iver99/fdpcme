@@ -36,11 +36,12 @@ public class ZDTAPITest {
             {
                 DataManager.getInstance();
                 result = dataManager;
-                dataManager.getDashboardSetTableData(em);
+                dataManager.getDashboardSetTableData(em, anyString,anyString);
                 result = list;
             }
         };
-        zdtapi.getAllTableData();
+        zdtapi.getAllTableData("incremental");
+        zdtapi.getAllTableData("full");
     }
 
     @Test
@@ -51,11 +52,12 @@ public class ZDTAPITest {
             {
                 DataManager.getInstance();
                 result = dataManager;
-                dataManager.getDashboardSetTableData(em);
+                dataManager.getDashboardSetTableData(em, anyString, anyString);
                 result = new JSONException(throwable);
             }
         };
-        zdtapi.getAllTableData();
+        zdtapi.getAllTableData("incremental");
+        zdtapi.getAllTableData("full");
     }
 
     @Test
@@ -79,7 +81,7 @@ public class ZDTAPITest {
     @Test
     public void testSync(@Mocked final PersistenceManager persistenceManager, 
 			@Mocked final EntityManager em) throws Exception {
-        zdtapi.sync(new JSONObject());
+        zdtapi.sync("full", "2017-05-12 14:14:21");
     }
 
 }
