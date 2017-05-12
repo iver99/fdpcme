@@ -17,8 +17,8 @@ import java.util.Date;
  */
 public class ThreadPoolManager implements ApplicationServiceManager {
 
-    private static final Logger LOGGER = LogManager.getLogger(ThreadPoolStatusNotification.class);
-    private static final long PERIOD = Timer.ONE_SECOND * 60;
+    private static final Logger LOGGER = LogManager.getLogger(ThreadPoolManager.class);
+    private static final long PERIOD = Timer.ONE_SECOND * 120;
     private Timer timer;
     private Integer notificationId;
 
