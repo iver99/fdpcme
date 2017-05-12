@@ -1054,6 +1054,10 @@ public class DashboardAPI extends APIBase
 			clearUserContext();
 		}
 	}
+	
+
+
+	
 
 	private void logkeyHeaders(String api, String x_remote_user, String domain_name)
 	{
@@ -1107,4 +1111,7 @@ public class DashboardAPI extends APIBase
 		dbd.setScreenShotHref(screenShotUrl);
 		return dbd;
 	}
+	
+	
+
 }

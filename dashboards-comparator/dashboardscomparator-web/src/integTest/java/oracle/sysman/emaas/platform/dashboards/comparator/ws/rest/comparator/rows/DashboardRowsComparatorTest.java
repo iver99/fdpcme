@@ -111,7 +111,7 @@ public class DashboardRowsComparatorTest
 		TableRowsEntity tre2 = Deencapsulation.invoke(drc, "retrieveRowsEntityFromJsonForSingleInstance",
 				JSON_RESPONSE_DATA_TABLE);
 		InstancesComparedData<TableRowsEntity> cd = Deencapsulation.invoke(drc, "compareInstancesData",
-				new InstanceData<TableRowsEntity>(null, tre1), new InstanceData<TableRowsEntity>(null, tre2));
+				new InstanceData<TableRowsEntity>(null,null, tre1,0), new InstanceData<TableRowsEntity>(null, null,tre2,0));
 		// the 2 instances have the same data, so there is no difference from the compared result
 		TableRowsEntity result1 = cd.getInstance1().getData();
 		TableRowsEntity result2 = cd.getInstance1().getData();
@@ -134,15 +134,15 @@ public class DashboardRowsComparatorTest
 		tre2 = Deencapsulation.invoke(drc, "retrieveRowsEntityFromJsonForSingleInstance", JSON_RESPONSE_DATA_TABLE);
 		DashboardRowEntity dre1 = new DashboardRowEntity();
 		dre1.setApplicationType(1);
-		dre1.setDashboardId(new BigInteger("1001"));
-		dre1.setDeleted(new BigInteger("1"));
+		dre1.setDashboardId("1001");
+		dre1.setDeleted("1");
 		dre1.setIsSystem(1);
 		tre1.getEmsDashboard().add(dre1);
 		
 		DashboardSetRowEntity dsre1 = new DashboardSetRowEntity();
-		dsre1.setDashboardSetId(new BigInteger("1002"));
+		dsre1.setDashboardSetId("1002");
 		dsre1.setPosition(0L);
-		dsre1.setSubDashboardId(1001L);
+		dsre1.setSubDashboardId("1001");
 		dsre1.setTenantId(1L);
 		tre1.getEmsDashboardSet().add(dsre1);
 		DashboardTileParamsRowEntity dtpre1 = new DashboardTileParamsRowEntity();
@@ -151,10 +151,10 @@ public class DashboardRowsComparatorTest
 		dtpre1.setParamType(1L);
 		dtpre1.setParamValueStr("para1 value");
 		dtpre1.setTenantId(1L);
-		dtpre1.setTileId(new BigInteger("2023"));
+		dtpre1.setTileId("2023");
 		tre1.getEmsDashboardTileParams().add(dtpre1);
 		DashboardTileRowEntity dtre1 = new DashboardTileRowEntity();
-		dtre1.setDashboardId(new BigInteger("1001"));
+		dtre1.setDashboardId("1001");
 		dtre1.setHeight(3L);
 		dtre1.setIsMaximized(1);
 		dtre1.setOwner("emcsadmin");
@@ -163,12 +163,12 @@ public class DashboardRowsComparatorTest
 		dtre1.setProviderName("provider 1");
 		dtre1.setProviderVersion("1.0");
 		dtre1.setTenantId(1L);
-		dtre1.setTileId(new BigInteger("123456"));
+		dtre1.setTileId("123456");
 		dtre1.setTileRow(1L);
 		tre1.getEmsDashboardTile().add(dtre1);
 		DashboardUserOptionsRowEntity duore1 = new DashboardUserOptionsRowEntity();
 		duore1.setAutoRefreshInterval(1L);
-		duore1.setDashboardId(new BigInteger("1001"));
+		duore1.setDashboardId("1001");
 		duore1.setExtendedOptions("options");
 		duore1.setIsFavorite(1);
 		duore1.setTenantId(1L);
@@ -196,8 +196,8 @@ public class DashboardRowsComparatorTest
 				JsonUtil.buildNormalMapper().toJson(tre1));
 		tre2 = Deencapsulation.invoke(drc, "retrieveRowsEntityFromJsonForSingleInstance",
 				JsonUtil.buildNormalMapper().toJson(tre2));
-		cd = Deencapsulation.invoke(drc, "compareInstancesData", new InstanceData<TableRowsEntity>(null, tre1),
-				new InstanceData<TableRowsEntity>(null, tre2));
+		cd = Deencapsulation.invoke(drc, "compareInstancesData", new InstanceData<TableRowsEntity>(null,null, tre1,0),
+				new InstanceData<TableRowsEntity>(null, null,tre2,0));
 		result1 = cd.getInstance1().getData();
 		result2 = cd.getInstance2().getData();
 		Assert.assertEquals(result1.getEmsDashboard().get(0), dre1);
@@ -229,16 +229,16 @@ public class DashboardRowsComparatorTest
 		Assert.assertEquals(tre.getEmsDashboard().get(0).getLastModificationDate(), LAST_MODIFICATION_DATE);
 		
 		Assert.assertEquals(tre.getEmsDashboardSet().size(), 1);
-		Assert.assertEquals(tre.getEmsDashboardSet().get(0).getDashboardSetId().longValue(), 12);
+		Assert.assertEquals(tre.getEmsDashboardSet().get(0).getDashboardSetId(), "12");
 		Assert.assertEquals(tre.getEmsDashboardSet().get(0).getCreationDate(), CREATION_DATE);
 		Assert.assertEquals(tre.getEmsDashboardSet().get(0).getLastModificationDate(), LAST_MODIFICATION_DATE);
 		Assert.assertEquals(tre.getEmsDashboardTile().size(), 1);
-		Assert.assertEquals(tre.getEmsDashboardTile().get(0).getTileId().longValue(), 12);
+		Assert.assertEquals(tre.getEmsDashboardTile().get(0).getTileId(), "12");
 		Assert.assertEquals(tre.getEmsDashboardTile().get(0).getHeight().intValue(), 2);
 		Assert.assertEquals(tre.getEmsDashboardTile().get(0).getCreationDate(), CREATION_DATE);
 		Assert.assertEquals(tre.getEmsDashboardTile().get(0).getLastModificationDate(), LAST_MODIFICATION_DATE);
 		Assert.assertEquals(tre.getEmsDashboardTileParams().size(), 1);
-		Assert.assertEquals(tre.getEmsDashboardTileParams().get(0).getTileId().longValue(), 12);
+		Assert.assertEquals(tre.getEmsDashboardTileParams().get(0).getTileId(), "12");
 		Assert.assertEquals(tre.getEmsDashboardTileParams().get(0).getCreationDate(), CREATION_DATE);
 		Assert.assertEquals(tre.getEmsDashboardTileParams().get(0).getLastModificationDate(), LAST_MODIFICATION_DATE);
 		Assert.assertEquals(tre.getEmsDashboardTileParams().size(), 1);

@@ -19,7 +19,5 @@ public class DashboardComparatorLifecycleService extends AbstractApplicationLife
 		RegistryServiceManager rsm = new RegistryServiceManager();
 		addApplicationServiceManager(rsm);
 		addApplicationServiceManager(new LoggingServiceManager());
-		//		addApplicationServiceManager(new AvailabilityServiceManager(rsm));
-		//		addApplicationServiceManager(new EMTargetInitializer());
 	}
 }
