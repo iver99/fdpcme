@@ -299,7 +299,7 @@ public class TestDashBoard extends LoginAndLogout
 
 	}
 
-	//@Test
+	@Test
 	public void testDashboard_GCenabled() 
 	{						
 		//init test
@@ -344,9 +344,7 @@ public class TestDashBoard extends LoginAndLogout
 		newUrl3 = GlobalContextUtil.generateUrlWithGlobalContext(webd, baseUrl, "8426448730BDF663A9806A69AA2C445B", "LAST_5_MINUTE", null, null, null);
 		webd.open(newUrl3);
 		
-		EntitySelectorUtil.verifyCompositePillContent(webd, webd.getLogger(), "/SOA1213_base_domain/base_domain/soa_server1/soa-infra_System");
-		
-		//Assert.assertTrue(webd.isDisplayed("//span[text()='Composite: /SOA1213_base_domain/base_domain/soa_server1/soa-infra_System']"), "The composite isn't displayed in GC bar");
+		EntitySelectorUtil.verifyCompositePillContent(webd, webd.getLogger(), "/SOA1213_base_domain/base_domain/soa_server1/soa-infra_System");		
 	} 
 	
 	private String generateTimeStamp()
