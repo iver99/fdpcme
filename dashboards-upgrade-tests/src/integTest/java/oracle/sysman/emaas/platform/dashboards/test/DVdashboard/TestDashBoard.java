@@ -299,7 +299,7 @@ public class TestDashBoard extends LoginAndLogout
 
 	}
 
-	@Test
+	//@Test
 	public void testDashboard_GCenabled() 
 	{						
 		//init test
