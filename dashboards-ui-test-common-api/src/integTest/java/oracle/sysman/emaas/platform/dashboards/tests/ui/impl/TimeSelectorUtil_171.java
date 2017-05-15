@@ -480,12 +480,12 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 					.get(Index - 1).getAttribute("value")
 					+ " "
 					+ webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sStartTimeInput)).get(Index - 1)
-					.getAttribute("value");
+							.getAttribute("value");
 			String returnEndDate = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sEndDateInput))
 					.get(Index - 1).getAttribute("value")
 					+ " "
 					+ webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sEndTimeInput)).get(Index - 1)
-					.getAttribute("value");
+							.getAttribute("value");
 
 			returnStartDate = timeFormatChange(webd, returnStartDate, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
 			returnEndDate = timeFormatChange(webd, returnEndDate, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
@@ -577,12 +577,12 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 					.get(index - 1).getAttribute("value")
 					+ " "
 					+ webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sStartTimeInput)).get(index - 1)
-					.getAttribute("value");
+							.getAttribute("value");
 			String returnEndDate = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sEndDateInput))
 					.get(index - 1).getAttribute("value")
 					+ " "
 					+ webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sEndTimeInput)).get(index - 1)
-					.getAttribute("value");
+							.getAttribute("value");
 
 			returnStartDate = timeFormatChange(webd, returnStartDate, "MM/dd/yyyy", "MMM d, yyyy");
 			returnEndDate = timeFormatChange(webd, returnEndDate, "MM/dd/yyyy", "MMM d, yyyy");
@@ -819,101 +819,6 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 		webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn)).get(Index - 1).click();
 
 	}
-
-	//    public String setExcludeHour(WebDriver webd, int Index, String hours) throws Exception
-	//    {
-	//     	//click the datetimepicker component
-	//    	clickTimePicker(webd, Index);
-	//
-	//    	//select time range as Custom
-	//    	setTimeRange(webd, Index, TimeSelectorTimeRange.CUSTOM);
-	//
-	//    	//click time filter icon
-	//    	webd.getLogger().info("Click Time Filter Icon");
-	//		webd.getWebDriver().findElement(By.cssSelector(TimeSelectorUIControls.sTimeFilterIcon)).click();
-	//		webd.takeScreenShot();
-	//
-	//
-	//    	//set exclude hours
-	//		webd.getLogger().info("Enter excluded time");
-	//		webd.getWebDriver().findElement(By.cssSelector(TimeSelectorUIControls.sTimeExcludedInput)).clear();
-	//		webd.getWebDriver().findElement(By.cssSelector(TimeSelectorUIControls.sTimeExcludedInput)).sendKeys(hours);
-	//		webd.takeScreenShot();
-	//		//click apply button
-	//		webd.getLogger().info("Click Apply button");
-	//		webd.getWebDriver().findElement(By.cssSelector(TimeSelectorUIControls.sApplyBtn)).click();
-	//		webd.takeScreenShot();
-	//
-	//		return webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sFilterInfo)).get(Index).getText();
-	//    }
-	//
-	//    public String setExcludeHour(WebDriver webd, String hours) throws Exception
-	//    {
-	//     	//click the datetimepicker component
-	//    	clickTimePicker(webd);
-	//
-	//    	//select time range as Custom
-	//    	setTimeRange(webd, TimeSelectorTimeRange.CUSTOM);
-	//
-	//    	//click time filter icon
-	//    	webd.getLogger().info("Click Time Filter Icon");
-	//		webd.getWebDriver().findElement(By.cssSelector(TimeSelectorUIControls.sTimeFilterIcon)).click();
-	//		webd.takeScreenShot();
-	//
-	//    	//set exclude hours
-	//		webd.getLogger().info("Enter excluded time");
-	//		webd.getWebDriver().findElement(By.cssSelector(TimeSelectorUIControls.sTimeExcludedInput)).clear();
-	//		webd.getWebDriver().findElement(By.cssSelector(TimeSelectorUIControls.sTimeExcludedInput)).sendKeys(hours);
-	//		webd.takeScreenShot();
-	//		//click apply button
-	//		webd.getLogger().info("Click Apply button");
-	//		webd.getWebDriver().findElement(By.cssSelector(TimeSelectorUIControls.sApplyBtn)).click();
-	//		webd.takeScreenShot();
-	//
-	//		return webd.getWebDriver().findElement(By.cssSelector(TimeSelectorUIControls.sFilterInfo)).getText();
-	//    }
-	//
-	//    public void setExcludeDay(WebDriver webd, String ExcludeDays) throws Exception
-	//    {
-	//    	//click the datetimepicker component
-	//    	clickTimePicker(webd);
-	//
-	//    	//select time range as Custom
-	//    	setTimeRange(webd, TimeSelectorTimeRange.CUSTOM);
-	//
-	//    	//click time filter icon
-	//    	webd.getLogger().info("Click Time Filter Icon");
-	//		webd.getWebDriver().findElement(By.cssSelector(TimeSelectorUIControls.sTimeFilterIcon)).click();
-	//		webd.takeScreenShot();
-	//
-	//		//select excluded days
-	//		WebElement webe =webd.getWebDriver().findElement(By.cssSelector(TimeSelectorUIControls.sDayMonday));
-	//		if(webe.isSelected()){
-	//			webe.click();
-	//		};
-	//		webd.takeScreenShot();
-	//    }
-	//
-	//    public void setExcludeMonth(WebDriver webd, String ExcludeMonths) throws Exception
-	//    {
-	//    	//click the datetimepicker component
-	//    	clickTimePicker(webd);
-	//
-	//    	//select time range as Custom
-	//    	setTimeRange(webd, TimeSelectorTimeRange.CUSTOM);
-	//
-	//    	//click time filter icon
-	//    	webd.getLogger().info("Click Time Filter Icon");
-	//		webd.getWebDriver().findElement(By.cssSelector(TimeSelectorUIControls.sTimeFilterIcon)).click();
-	//		webd.takeScreenShot();
-	//
-	//		//select excluded months
-	//		WebElement webe =webd.getWebDriver().findElement(By.cssSelector(TimeSelectorUIControls.sDayMonday));
-	//		if(webe.isSelected()){
-	//			webe.click();
-	//		};
-	//		webd.takeScreenShot();
-	//    }
 
 	protected String dateConvert(WebDriver driver, String convertDate, TimeRange timerange, String fromDateFormat,
 			String toDateFormat)
