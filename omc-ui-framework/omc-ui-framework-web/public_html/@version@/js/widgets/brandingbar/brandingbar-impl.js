@@ -826,6 +826,10 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 };
 
                 var menuUtil = new menuModel();
+                if (!window._uifwk) {
+                    window._uifwk = {};
+                }
+                if (!window._uifwk.obbMenuLoadedListenerRegistered) {
                 menuUtil.subscribeServiceMenuLoadedEvent(function(){
                     $("#omcHamburgerMenu").on("ojopen", function(event, offcanvas) {
                         if(offcanvas.displayMode === "push")
@@ -873,6 +877,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         }
                     }
                 });
+                    window._uifwk.obbMenuLoadedListenerRegistered = true;
+                }
             }
             
             /**
