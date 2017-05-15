@@ -1331,9 +1331,10 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                             queryODSEntitiesByMeIds(entityMeIds, loadEntities);
                             for (var i = 0; i < entitiesFetched.length; i++) {
                                 var entity = entitiesFetched[i];
-                                if (entity['entityType'] === entitiesType) {
+                                //Do not filter by entitiesType for now, will add support once we have clear requirement for it
+//                                if (entity['entityType'] === entitiesType) {
                                     entities.push(entity);
-                                }
+//                                }
                             }
                         }
                         else if (entityMeIds && entityMeIds.length > 0) {
@@ -1343,13 +1344,14 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                                 entities.push(entitiesFetched[i]);
                             }
                         }
-                        else if (entitiesType) {
-                            //Query by entities type
-                            queryODSEntitiesByEntityType(entitiesType, loadEntities);
-                            for (var i = 0; i < entitiesFetched.length; i++) {
-                                entities.push(entitiesFetched[i]);
-                            }
-                        }
+                        //Do not query entities by entitiesType for now, will add support once we have clear requirement for it
+//                        else if (entitiesType) {
+//                            //Query by entities type
+//                            queryODSEntitiesByEntityType(entitiesType, loadEntities);
+//                            for (var i = 0; i < entitiesFetched.length; i++) {
+//                                entities.push(entitiesFetched[i]);
+//                            }
+//                        }
                         // update sessionStorage cache
                         sessionCaches[1].updateCacheData(entityCacheKey, 'entities', entities);
                     }
@@ -1451,16 +1453,17 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
             function getEntityCacheKey() {
                 var entityCacheKey = null;
                 var entityMeIds = self.getEntityMeIds();
-                var entitiesType = self.getEntitiesType();
-                if (entityMeIds && entityMeIds.length > 0 && entitiesType) {
-                    entityCacheKey = entityMeIds.sort().join() + entitiesType;
-                }
-                else if (entityMeIds && entityMeIds.length > 0) {
+//                var entitiesType = self.getEntitiesType();
+//                if (entityMeIds && entityMeIds.length > 0 && entitiesType) {
+//                    entityCacheKey = entityMeIds.sort().join() + entitiesType;
+//                }
+//                else 
+                if (entityMeIds && entityMeIds.length > 0) {
                     entityCacheKey = entityMeIds.sort().join();
                 }
-                else if (entitiesType) {
-                    entityCacheKey = entitiesType;
-                }
+//                else if (entitiesType) {
+//                    entityCacheKey = entitiesType;
+//                }
                 return entityCacheKey;
             }
 
