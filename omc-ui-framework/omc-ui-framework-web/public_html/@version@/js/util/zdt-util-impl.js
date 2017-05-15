@@ -1,4 +1,4 @@
-define(['knockout',
+define('uifwk/@version@/js/util/zdt-util-impl', ['knockout',
     'jquery',
     'ojs/ojcore',
     'uifwk/@version@/js/util/df-util-impl',
