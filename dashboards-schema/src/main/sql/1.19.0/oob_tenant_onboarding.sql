@@ -16,7 +16,7 @@ Rem    NOTES
 Rem      None
 Rem
 Rem    MODIFIED   (MM/DD/YY)
-Rem    miayu   1/26/1015  Created
+Rem    REX   5/10/2017  Created
 
 WHENEVER SQLERROR EXIT ROLLBACK
 SET FEEDBACK ON
@@ -24,23 +24,19 @@ SET SERVEROUTPUT ON
 SET VERIFY OFF
 SET ECHO OFF
 DEFINE TENANT_ID = '&1'
-DEFINE EMSAAS_SQL_ROOT = '&2'
 
 DECLARE
-  oob_dsb_count NUMBER;
   Valid_Input   NUMBER;
 BEGIN
-  -- If the count of OOB dashboards is ZERO then insert the OOB serches , otherwise do nothing
-  -- for given tenant.
   BEGIN
-    Valid_Input := TO_NUMBER( &TENANT_ID);
+    Valid_Input := TO_NUMBER(&TENANT_ID);
   EXCEPTION
   WHEN VALUE_ERROR THEN
     RAISE_APPLICATION_ERROR(-21000, ' Please  specify valid internal tenant id');
   END;
 END;
 /
-/*
+
 @&EMSAAS_SQL_ROOT/1.0.0/emaas_dashboards_seed_data_apm.sql &TENANT_ID
 @&EMSAAS_SQL_ROOT/1.0.0/emaas_dashboards_seed_data_ita.sql &TENANT_ID
 @&EMSAAS_SQL_ROOT/1.0.0/emaas_dashboards_seed_data_la.sql &TENANT_ID
@@ -106,12 +102,11 @@ END;
 @&EMSAAS_SQL_ROOT/1.18.0/emaas_dashboards_seed_data_cos.sql &TENANT_ID
 @&EMSAAS_SQL_ROOT/1.18.0/emaas_dashboards_seed_data_sec.sql &TENANT_ID
 @&EMSAAS_SQL_ROOT/1.18.0/emaas_dashboards_ude_application_type.sql &TENANT_ID
-*/
+
 /**
 --IMPORTANT: NO DDL is allowed in tenant onboarding process!!!!
 */
 
-COMMIT;
 /
 BEGIN
   DBMS_OUTPUT.PUT_LINE('Inserting OOB dashboards for &TENANT_ID is completed');
