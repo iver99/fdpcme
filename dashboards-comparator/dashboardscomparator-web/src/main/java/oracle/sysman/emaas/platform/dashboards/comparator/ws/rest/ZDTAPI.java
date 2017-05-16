@@ -245,7 +245,7 @@ public class ZDTAPI
 		}
 		try {
 			DashboardRowsComparator dcc = new DashboardRowsComparator();
-			InstancesComparedData<TableRowsEntity> result = dcc.compare(tenantIdParam, userTenant);
+			InstancesComparedData<TableRowsEntity> result = dcc.compare(tenantIdParam, userTenant,compareType);
 			
 			if (result != null) {
 				int comparedDataNum = dcc.countForComparedRows(result.getInstance1().getData()) + dcc.countForComparedRows(result.getInstance2().getData());
@@ -335,25 +335,5 @@ public class ZDTAPI
  		}
 		
 	}
-	
-	/*
-	public Long getTenantId(String tenantId)
-	{
-		if (tenantId == null) {
-			logger.error("No tenant information");
-			return null;
-		}
-					
-			try {
-				long internalTenantId = TenantIdProcessor.getInternalTenantIdFromOpcTenantId(tenantId);
-				logger.info("Get internal tenant id {} from opc tenant id {}", internalTenantId, tenantId);
-				return internalTenantId;
-			} catch (BasicServiceMalfunctionException e) {
-				logger.error("could not get internal tenantId from OPC tenant Id {}",e.getLocalizedMessage());
-			}
-			
-			return null;
-		
 
-	} */
 }

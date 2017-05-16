@@ -77,9 +77,9 @@ public class DashboardRowsComparator extends AbstractComparator
 		try {
 			logger.info("Starts to compare the two DF OMC instances: table by table and row by row");
 			
-			logger.info("key1={}, client1={}",key1, client1.getServiceUrls().get(0).toString());
+			//logger.info("key1={}, client1={}",key1, client1.getServiceUrls().get(0).toString());
 			
-			logger.info("key2={}, client1={}",key2, client2.getServiceUrls().get(0).toString());
+			//logger.info("key2={}, client1={}",key2, client2.getServiceUrls().get(0).toString());
 			
 			TableRowsEntity tre1 = retrieveRowsForSingleInstance(client1, tenantId, userTenant,comparisonType);
 			int rowNum1 = countForComparedRows(tre1);
@@ -120,52 +120,7 @@ public class DashboardRowsComparator extends AbstractComparator
 		
 		return count;
 	}
-	/*
-	private boolean hasSyncData(TableRowsEntity entity) {
-		if (entity != null) {
-			if (entity.getEmsDashboard() != null && !entity.getEmsDashboard().isEmpty()) return true;
-			if (entity.getEmsDashboardSet() != null && !entity.getEmsDashboardSet().isEmpty()) return true;
-			if (entity.getEmsDashboardTile() != null && !entity.getEmsDashboardTile().isEmpty()) return true;
-			if (entity.getEmsDashboardTileParams() != null && !entity.getEmsDashboardTileParams().isEmpty()) return true;
-			if (entity.getEmsDashboardUserOptions() != null && !entity.getEmsDashboardUserOptions().isEmpty()) return true;
-			if (entity.getEmsPreference() != null && !entity.getEmsPreference().isEmpty()) return true;
-			
-		}
-		return false;
-	}
 
-	public String sync(InstancesComparedData<TableRowsEntity> instancesData,String tenantId, String userTenant) throws Exception
-	{
-		if (instancesData == null) {
-			return "Errors: Failed to retrieve ZDT OMC instances: null retrieved!";
-		}
-		// switch the data for the instances for sync
-		InstanceData<TableRowsEntity> instance1 = new InstanceData<TableRowsEntity>(instancesData.getInstance1().getKey(),
-				instancesData.getInstance1().getClient(),
-				instancesData.getInstance2().getData(),0);
-		//logger.info("key is {} and data size is {}",instancesData.getInstance1().getKey(),instancesData.getInstance2().getData().getEmsDashboard().size());
-		InstanceData<TableRowsEntity> instance2 = new InstanceData<TableRowsEntity>(instancesData.getInstance2().getKey(),
-				instancesData.getInstance2().getClient(),
-				instancesData.getInstance1().getData(),0);
-		//int size = instancesData.getInstance1().getData().getEmsDashboard() == null?0:instancesData.getInstance1().getData().getEmsDashboard().size();
-		//logger.info("key is {} and data size is {}",instancesData.getInstance2().getKey(),size);
-		
-		InstancesComparedData<TableRowsEntity> syncData = new InstancesComparedData<TableRowsEntity>(instance1, instance2);
-		String message1 = null;
-		String message2 = null;
-		if (hasSyncData(syncData.getInstance1().getData())) {
-			logger.info("instance1 has data {}",syncData.getInstance1().getData().toString());
-			message1 = syncForInstance(syncData.getInstance1(), tenantId, userTenant);
-		}
-		if (hasSyncData(syncData.getInstance2().getData())) {
-			logger.info("instance2 has data {}",syncData.getInstance2().getData().toString());
-			message2 = syncForInstance(syncData.getInstance2(),  tenantId, userTenant);
-		}
-		
- 		return syncData.getInstance1().getKey() + ":{"+ (message1==null?"sync is successful":message1) + "}" 
- 		+ "____"+syncData.getInstance2().getKey()+":{" + (message2==null?"sync is successful":message2)+"}";
-	}
-*/
 	/**
 	 * Compares the dashboard rows data for the 2 instances, and put the compare result into <code>ComparedData</code> object
 	 *
