@@ -205,7 +205,7 @@ task DEVTest2(type:EMTest,dependsOn:omcSetup){
 }
 
 //Task is for dashboard UI Test
-task e2e (type: EMTest,dependsOn:omcSetup ){
+task e2e (type: EMTest,dependsOn:[omcSetup,onboardNewTenant] ){
 options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n','parallel':'none') {
         test('name': 'DashboardUITest', 'preserve-order':'true') {
             classes([:]) {
