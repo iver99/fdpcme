@@ -75,9 +75,11 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 }
                 
                 var currentCompositeParentId = null;
+                var processingObjMenuName = null;
                 //Show up a composite menu
                 function jumpToCompositeMenu(parentMenuId, rootMenuLabel, menuJson) {
-                    if (menuJson && menuJson.serviceCompositeMenus) {
+                    if (menuJson && menuJson.serviceCompositeMenus && rootMenuLabel !== processingObjMenuName) {
+                        processingObjMenuName = rootMenuLabel;
                         clearCompositeMenuItems();
                         currentCompositeParentId = parentMenuId;
                         if (menuJson.serviceMenuMsgBundle) {
@@ -105,7 +107,11 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                                         menuUtil.setCurrentMenuItem(currentMenuId, underOmcAdmin);
                                     }
                                 }
+                                processingObjMenuName = null;
                             });
+                        }
+                        else {
+                            processingObjMenuName = null;
                         }
                     }                  
                 }
