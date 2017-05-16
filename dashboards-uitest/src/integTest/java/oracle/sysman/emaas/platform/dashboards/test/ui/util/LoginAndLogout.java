@@ -18,13 +18,13 @@ public class LoginAndLogout
 		if (webd != null) {
 			((JavascriptExecutor) webd.getWebDriver()).executeScript("scroll(0,0)");
 			LoginUtils.doLogout(webd);
-			try {
-				webd.shutdownBrowser(true);
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-				webd.getLogger().warning("Failed to shutdown browser" + e.getMessage());
-			}
+//			try {
+//				webd.shutdownBrowser(true);
+//			}
+//			catch (Exception e) {
+//				e.printStackTrace();
+//				webd.getLogger().warning("Failed to shutdown browser" + e.getMessage());
+//			}
 		}
 	}
 

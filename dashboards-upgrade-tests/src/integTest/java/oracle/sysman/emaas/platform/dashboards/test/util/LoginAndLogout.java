@@ -19,13 +19,7 @@ public class LoginAndLogout
 	{
 		if (webd != null) {
 			LoginUtils.doLogout(webd);
-			try{
-                             webd.shutdownBrowser(true);
-                        }catch(Exception e){
-                        	LOGGER.info("context",e);
-                             webd.getLogger().warning("Failed to shutdown browser"+e.getMessage());
-                        }
-		}
+			}
 	}
 
 	public void customlogin(String testName, String customUser)
