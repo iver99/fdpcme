@@ -19,6 +19,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
+import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
 import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 
 import org.apache.logging.log4j.LogManager;
@@ -33,6 +34,26 @@ public class DataManager
 {
 	private static final Logger logger = LogManager.getLogger(DataManager.class);
 
+	private static final String SQL_INSERT_TO_ZDT_COMPARISON_TABLE = "insert into ems_zdt_comparator (comparison_date,next_schedule_comparison_date, comparison_type, comparison_result, divergence_percentage) "
+			+ "values (to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'), to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'), ?, ?, ?)";
+	
+	private static final String SQL_GET_COMPARISON_STATUS = "select * from (SELECT to_char(COMPARISON_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as COMPARISON_DATE, to_char(NEXT_SCHEDULE_COMPARISON_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as NEXT_SCHEDULE_COMPARISON_DATE,COMPARISON_TYPE, divergence_percentage "
+			+ "from ems_zdt_comparator order by comparison_date desc) where rownum = 1";
+	
+	private static final String SQL_INSERT_TO_ZDT_SYNC_TABLE = "insert into ems_zdt_sync (sync_date,next_schedule_sync_date, sync_type, sync_result, divergence_percentage, LAST_COMPARISON_DATE) "
+			+ "values (to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'), to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'), ?, ?, ?, to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'))";
+
+	private static final String SQL_GET_LAST_COMPARISON_DATE_FOR_SYNC = "SELECT * FROM (SELECT to_char(LAST_COMPARISON_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as LAST_COMPARISON_DATE FROM EMS_ZDT_SYNC WHERE SYNC_RESULT = 'SUCCESSFUL' ORDER BY SYNC_DATE DESC) WHERE ROWNUM = 1";
+	
+	private static final String SQL_GET_LATEST_COMPARISON_DATE = "SELECT * FROM (SELECT to_char(COMPARISON_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as COMPARISON_DATE FROM EMS_ZDT_COMPARATOR WHERE COMPARISON_RESULT IS NOT NULL ORDER BY COMPARISON_DATE DESC) WHERE ROWNUM = 1";
+	
+	private static final String SQL_GET_SYNC_STATUS = "select * from (SELECT to_char(SYNC_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as SYNC_DATE, to_char(NEXT_SCHEDULE_SYNC_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as NEXT_SCHEDULE_SYNC_DATE,SYNC_TYPE, divergence_percentage from ems_zdt_sync order by sync_date desc) where rownum = 1";
+	
+	private static final String SQL_GET_COMPARED_DATA_TO_SYNC_BY_DATE = "select SELECT to_char(COMPARISON_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as COMPARISON_DATE, comparison_result from ems_zdt_comparator where comparison_date > to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') and comparison_result is not null";
+	
+	private static final String SQL_GET_COMPARED_DATA_TO_SYNC = "SELECT to_char(COMPARISON_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as COMPARISON_DATE, comparison_result from ems_zdt_comparator where comparison_result is not null";
+	
+	
 	private static DataManager instance = new DataManager();
 	/**
 	 * Returns the singleton instance for zdt data manager
@@ -43,6 +64,111 @@ public class DataManager
 	{
 		return instance;
 	}
+	
+	public int saveToComparatorTable(EntityManager em, String comparisonDate, String nextCompareDate, String comparisonType,
+			String comparisonResult, double divergencePercentage) {
+		if (!em.getTransaction().isActive()) {
+			em.getTransaction().begin();
+		}
+		try {
+			em.createNativeQuery(SQL_INSERT_TO_ZDT_COMPARISON_TABLE).setParameter(1, comparisonDate).setParameter(2, nextCompareDate).setParameter(3, comparisonType)
+			.setParameter(4, comparisonResult).setParameter(5, divergencePercentage).executeUpdate();
+			em.getTransaction().commit();
+			return 0;
+		} catch (Exception e) {
+			logger.error("errors occurs in saveToComparatorTalbe, "+e.getLocalizedMessage());
+			return -1;
+		}
+	}
+	
+	public int saveToSyncTable(String syncDate, String nextSyncDate, String SyncType, 
+			String syncResult, double divergencePercentage, String lastComparisonDate) {
+		EntityManager em = new DashboardServiceFacade().getEntityManager();
+		if (!em.getTransaction().isActive()) {
+			em.getTransaction().begin();
+		}
+		try {
+			em.createNativeQuery(SQL_INSERT_TO_ZDT_SYNC_TABLE).setParameter(1, syncDate).setParameter(2, nextSyncDate).setParameter(3, SyncType)
+			.setParameter(4, syncResult).setParameter(5, divergencePercentage).setParameter(6, lastComparisonDate).executeUpdate();
+			em.getTransaction().commit();
+			return 0;
+		} catch (Exception e) {
+			logger.error("errors occurs in saveToComparatorTalbe, ", e.getLocalizedMessage());
+			return -1;
+		} finally {
+			if (em != null) {
+				em.close();
+			}
+		}
+	}
+	
+	public List<Map<String, Object>> getComparedDataToSync(EntityManager em, String date) {		
+		List<Map<String, Object>> result = null;
+		try {
+			if (date != null) {
+				result = getDatabaseTableData(em,SQL_GET_COMPARED_DATA_TO_SYNC_BY_DATE, date);				
+			} else {
+				result = getDatabaseTableData(em,SQL_GET_COMPARED_DATA_TO_SYNC,null);
+			}
+			
+		}catch(Exception e) {
+			logger.error("error occurs while executing sql:" + SQL_GET_COMPARED_DATA_TO_SYNC);
+		}
+		return result;
+	} 
+	
+	public String getLastComparisonDateForSync(EntityManager em) {
+		List<Object> result = getSingleTableData(em,SQL_GET_LAST_COMPARISON_DATE_FOR_SYNC);
+		if (result != null && result.size() == 1) {
+			return (String)result.get(0);
+		}
+		return null;
+	}
+	
+	public String getLatestComparisonDateForCompare(EntityManager em) {
+		List<Object> result = getSingleTableData(em,SQL_GET_LATEST_COMPARISON_DATE);
+		if (result != null && result.size() == 1) {
+			return (String)result.get(0);
+		}
+		return null;
+	}
+	
+	public List<Map<String, Object>> getSyncStatus(EntityManager em) {
+		try {
+			List<Map<String, Object>> result = getDatabaseTableData(em, SQL_GET_SYNC_STATUS, null);
+			return result;
+		} catch (Exception e) {
+			logger.error(e);
+		} 
+		return null;
+	}
+ 	
+	public List<Map<String, Object>> getComparatorStatus(EntityManager em) {
+		try {
+			List<Map<String, Object>> result = getDatabaseTableData(em, SQL_GET_COMPARISON_STATUS, null);
+			return result;
+		} catch (Exception e) {
+			logger.error(e);
+		} 
+		return null;
+	}
+	
+	private List<Object> getSingleTableData(EntityManager em, String nativeSql) {
+		if (StringUtil.isEmpty(nativeSql)) {
+			logger.error("can not query database with empty sql statement!");
+			return null;
+		}
+		List<Object>  result = null;
+		try {
+			Query query = em.createNativeQuery(nativeSql);
+			result = query.getResultList();
+		}catch(Exception e) {
+			logger.error(e);
+			logger.error("error occurs while executing sql:" + nativeSql);
+		}
+		return result;
+	}
+
 
 	/**
 	 * Retrieves total count for all dashbaord from all tenants
@@ -107,12 +233,19 @@ public class DataManager
 	 *
 	 * @return
 	 */
-	public List<Map<String, Object>> getDashboardSetTableData(EntityManager em)
+	public List<Map<String, Object>> getDashboardSetTableData(EntityManager em,String type, String date)
 	{
 		String sql = "SELECT TO_CHAR(DASHBOARD_SET_ID) AS DASHBOARD_SET_ID, TENANT_ID, TO_CHAR(SUB_DASHBOARD_ID) AS SUB_DASHBOARD_ID, "
 				+ "POSITION, CREATION_DATE, LAST_MODIFICATION_DATE, TO_CHAR(DELETED) AS DELETED"
 				+ " FROM EMS_DASHBOARD_SET";
-		return getDatabaseTableData(em,sql);
+		String sqlByDate = "SELECT TO_CHAR(DASHBOARD_SET_ID) AS DASHBOARD_SET_ID, TENANT_ID, TO_CHAR(SUB_DASHBOARD_ID) AS SUB_DASHBOARD_ID, "
+				+ "POSITION, CREATION_DATE, LAST_MODIFICATION_DATE, TO_CHAR(DELETED) AS DELETED"
+				+ " FROM EMS_DASHBOARD_SET WHERE LAST_MODIFICATION_DATE > to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')";
+		if (type.equals("incremental") && date != null) {
+			return getDatabaseTableData(em,sqlByDate,date);
+		} else {
+			return getDatabaseTableData(em,sql,null);
+		}
 	}
 
 	/**
@@ -120,12 +253,19 @@ public class DataManager
 	 *
 	 * @return
 	 */
-	public List<Map<String, Object>> getDashboardTableData(EntityManager em)
+	public List<Map<String, Object>> getDashboardTableData(EntityManager em, String type,String date)
 	{
 		String sql = "SELECT  TO_CHAR(DASHBOARD_ID) AS DASHBOARD_ID,  NAME, TYPE, DESCRIPTION, CREATION_DATE, LAST_MODIFICATION_DATE, LAST_MODIFIED_BY,"
 				+ " OWNER, IS_SYSTEM, APPLICATION_TYPE, ENABLE_TIME_RANGE, SCREEN_SHOT, TO_CHAR(DELETED) AS DELETED, TENANT_ID, ENABLE_REFRESH, "
 				+ "SHARE_PUBLIC, ENABLE_ENTITY_FILTER, ENABLE_DESCRIPTION, EXTENDED_OPTIONS, SHOW_INHOME FROM EMS_DASHBOARD";
-		return getDatabaseTableData(em,sql);
+		String sqlByDate = "SELECT  TO_CHAR(DASHBOARD_ID) AS DASHBOARD_ID,  NAME, TYPE, DESCRIPTION, CREATION_DATE, LAST_MODIFICATION_DATE, LAST_MODIFIED_BY,"
+				+ " OWNER, IS_SYSTEM, APPLICATION_TYPE, ENABLE_TIME_RANGE, SCREEN_SHOT, TO_CHAR(DELETED) AS DELETED, TENANT_ID, ENABLE_REFRESH, "
+				+ "SHARE_PUBLIC, ENABLE_ENTITY_FILTER, ENABLE_DESCRIPTION, EXTENDED_OPTIONS, SHOW_INHOME FROM EMS_DASHBOARD WHERE LAST_MODIFICATION_DATE > to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')";
+		if (type.equals("incremental") && date != null) {
+			return getDatabaseTableData(em,sqlByDate,date);
+		} else {
+			return getDatabaseTableData(em,sql,null);
+		}
 	}
 
 	/**
@@ -133,11 +273,17 @@ public class DataManager
 	 *
 	 * @return
 	 */
-	public List<Map<String, Object>> getDashboardTileParamsTableData(EntityManager em)
+	public List<Map<String, Object>> getDashboardTileParamsTableData(EntityManager em, String type,String date)
 	{
 		String sql = "SELECT TILE_ID, PARAM_NAME, TENANT_ID, IS_SYSTEM, PARAM_TYPE, PARAM_VALUE_STR, PARAM_VALUE_NUM, PARAM_VALUE_TIMESTAMP, "
 				+ "CREATION_DATE, LAST_MODIFICATION_DATE, DELETED FROM EMS_DASHBOARD_TILE_PARAMS";
-		return getDatabaseTableData(em,sql);
+		String sqlByDate = "SELECT TILE_ID, PARAM_NAME, TENANT_ID, IS_SYSTEM, PARAM_TYPE, PARAM_VALUE_STR, PARAM_VALUE_NUM, PARAM_VALUE_TIMESTAMP, "
+				+ "CREATION_DATE, LAST_MODIFICATION_DATE, DELETED FROM EMS_DASHBOARD_TILE_PARAMS WHERE LAST_MODIFICATION_DATE > to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')";
+		if (type.equals("incremental") && date != null) {
+			return getDatabaseTableData(em,sqlByDate,date);
+		} else {
+			return getDatabaseTableData(em,sql,null);
+		}
 	}
 
 	/**
@@ -145,13 +291,21 @@ public class DataManager
 	 *
 	 * @return
 	 */
-	public List<Map<String, Object>> getDashboardTileTableData(EntityManager em)
+	public List<Map<String, Object>> getDashboardTileTableData(EntityManager em,String type, String date)
 	{
 		String sql = "SELECT TILE_ID, TO_CHAR(DASHBOARD_ID) AS DASHBOARD_ID, CREATION_DATE, LAST_MODIFICATION_DATE, LAST_MODIFIED_BY, OWNER, TITLE, HEIGHT, WIDTH, IS_MAXIMIZED, POSITION, TENANT_ID,"
 				+ "WIDGET_UNIQUE_ID, WIDGET_NAME, WIDGET_DESCRIPTION, WIDGET_GROUP_NAME, WIDGET_ICON, WIDGET_HISTOGRAM, WIDGET_OWNER, "
 				+ "WIDGET_CREATION_TIME, WIDGET_SOURCE, WIDGET_KOC_NAME, WIDGET_VIEWMODE, WIDGET_TEMPLATE, PROVIDER_NAME, PROVIDER_VERSION, PROVIDER_ASSET_ROOT, "
 				+ "TILE_ROW, TILE_COLUMN, TYPE, WIDGET_SUPPORT_TIME_CONTROL, WIDGET_LINKED_DASHBOARD, WIDGET_DELETED, WIDGET_DELETION_DATE, DELETED FROM EMS_DASHBOARD_TILE";
-		return getDatabaseTableData(em,sql);
+		String sqlByDate = "SELECT TILE_ID, TO_CHAR(DASHBOARD_ID) AS DASHBOARD_ID, CREATION_DATE, LAST_MODIFICATION_DATE, LAST_MODIFIED_BY, OWNER, TITLE, HEIGHT, WIDTH, IS_MAXIMIZED, POSITION, TENANT_ID,"
+				+ "WIDGET_UNIQUE_ID, WIDGET_NAME, WIDGET_DESCRIPTION, WIDGET_GROUP_NAME, WIDGET_ICON, WIDGET_HISTOGRAM, WIDGET_OWNER, "
+				+ "WIDGET_CREATION_TIME, WIDGET_SOURCE, WIDGET_KOC_NAME, WIDGET_VIEWMODE, WIDGET_TEMPLATE, PROVIDER_NAME, PROVIDER_VERSION, PROVIDER_ASSET_ROOT, "
+				+ "TILE_ROW, TILE_COLUMN, TYPE, WIDGET_SUPPORT_TIME_CONTROL, WIDGET_LINKED_DASHBOARD, WIDGET_DELETED, WIDGET_DELETION_DATE, DELETED FROM EMS_DASHBOARD_TILE WHERE LAST_MODIFICATION_DATE > to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')";
+		if (type.equals("incremental") && date != null) {
+			return getDatabaseTableData(em,sqlByDate,date);
+		} else {
+			return getDatabaseTableData(em,sql,null);
+		}
 	}
 
 	/**
@@ -159,11 +313,17 @@ public class DataManager
 	 *
 	 * @return
 	 */
-	public List<Map<String, Object>> getDashboardUserOptionsTableData(EntityManager em)
+	public List<Map<String, Object>> getDashboardUserOptionsTableData(EntityManager em, String type,String date)
 	{
 		String sql = "SELECT USER_NAME, TENANT_ID, TO_CHAR(DASHBOARD_ID) AS DASHBOARD_ID, AUTO_REFRESH_INTERVAL, ACCESS_DATE, IS_FAVORITE, EXTENDED_OPTIONS, CREATION_DATE, LAST_MODIFICATION_DATE,"
 				+ " DELETED FROM EMS_DASHBOARD_USER_OPTIONS";
-		return getDatabaseTableData(em,sql);
+		String sqlByDate = "SELECT USER_NAME, TENANT_ID, TO_CHAR(DASHBOARD_ID) AS DASHBOARD_ID, AUTO_REFRESH_INTERVAL, ACCESS_DATE, IS_FAVORITE, EXTENDED_OPTIONS, CREATION_DATE, LAST_MODIFICATION_DATE,"
+				+ " DELETED FROM EMS_DASHBOARD_USER_OPTIONS WHERE LAST_MODIFICATION_DATE > to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')";
+		if (type.equals("incremental") && date != null) {
+			return getDatabaseTableData(em,sqlByDate,date);
+		} else {
+			return getDatabaseTableData(em,sql,null);
+		}
 	}
 
 	/**
@@ -171,10 +331,15 @@ public class DataManager
 	 *
 	 * @return
 	 */
-	public List<Map<String, Object>> getPreferenceTableData(EntityManager em)
+	public List<Map<String, Object>> getPreferenceTableData(EntityManager em,String type, String date)
 	{
 		String sql = "SELECT USER_NAME, PREF_KEY, PREF_VALUE, TENANT_ID, CREATION_DATE, LAST_MODIFICATION_DATE,DELETED FROM EMS_PREFERENCE";
-		return getDatabaseTableData(em,sql);
+		String sqlByDate = "SELECT USER_NAME, PREF_KEY, PREF_VALUE, TENANT_ID, CREATION_DATE, LAST_MODIFICATION_DATE,DELETED FROM EMS_PREFERENCE WHERE LAST_MODIFICATION_DATE > to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')";
+		if (type.equals("incremental") && date != null) {
+			return getDatabaseTableData(em,sqlByDate,date);
+		} else {
+			return getDatabaseTableData(em,sql,null);
+		}
 	}
 
 	/**
@@ -182,16 +347,26 @@ public class DataManager
 	 *
 	 * @return
 	 */
-	private List<Map<String, Object>> getDatabaseTableData(EntityManager em, String nativeSql)
+	private List<Map<String, Object>> getDatabaseTableData(EntityManager em, String nativeSql, String date)
 	{
 		if (StringUtil.isEmpty(nativeSql)) {
 			logger.error("Can't query database table with null or empty SQL statement!");
 			return null;
 		}
-		Query query = em.createNativeQuery(nativeSql);
-		query.setHint(QueryHints.RESULT_TYPE, ResultType.Map);
-		@SuppressWarnings("unchecked")
-		List<Map<String, Object>> list = query.getResultList();
+		List<Map<String, Object>> list = null;
+		try {
+			Query query = null;
+			if (date != null) {
+				query = em.createNativeQuery(nativeSql).setParameter(1, date);
+			} else {
+				query = em.createNativeQuery(nativeSql);
+			}		
+			query.setHint(QueryHints.RESULT_TYPE, ResultType.Map);
+			list = query.getResultList();
+		}
+		catch (Exception e) {
+			logger.error("Error occured when execute SQL:[" + nativeSql + "]");
+		}
 		return list;
 	}
 

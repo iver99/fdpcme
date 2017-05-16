@@ -15,5 +15,6 @@ Rem    NOTES
 Rem      None
 Rem
 
-
+@&EMSAAS_SQL_ROOT/1.19.0/emaas_dashboard_create_zdt_compare_table.sql
+@&EMSAAS_SQL_ROOT/1.19.0/emaas_dashboard_create_zdt_sync_table.sql
 
