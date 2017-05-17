@@ -10,11 +10,9 @@
 
 package oracle.sysman.emaas.platform.emcpdf.registry;
 
+import java.io.IOException;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceQuery;
@@ -853,4 +851,53 @@ public class RegistryLookupUtil
 			this.version = version;
 		}
 	}
+
+	//Below method is not used by DF now(will be used by SSF)
+	public static List<VersionedLink> getAllServicesInternalLinksByRel(String rel) throws IOException
+	{
+		LOGGER.debug("/getInternalLinksByRel/ Trying to retrieve service internal link with rel: \"{}\"", rel);
+		//.initComponent() reads the default "looup-client.properties" file in class path
+		//.initComponent(List<String> urls) can override the default Registry urls with a list of urls
+		if (LookupManager.getInstance().getLookupClient() == null) {
+			// making sure the initComponent is only called once during the client lifecycle
+			LookupManager.getInstance().initComponent();
+		}
+		List<InstanceInfo> instanceList = LookupManager.getInstance().getLookupClient().getInstancesWithLinkRelPrefix(rel,
+				"http");
+		if (instanceList == null) {
+			LOGGER.warn("Found no instances with specified http rel {}", rel);
+			return Collections.emptyList();
+		}
+		Map<String, VersionedLink> serviceLinksMap = new HashMap<String, VersionedLink>();
+		for (InstanceInfo ii : instanceList) {
+			List<Link> links = null;
+			try {
+				links = ii.getLinksWithRelPrefix(rel);
+				if (links == null || links.isEmpty()) {
+					LOGGER.warn("Found no links for InstanceInfo for service {}", ii.getServiceName());
+					continue;
+				}
+				LOGGER.debug("Retrieved {} links for service {}. Links list: {}", links == null ? 0 : links.size(),
+						ii.getServiceName(), StringUtil.arrayToCommaDelimitedString(links.toArray()));
+				for (Link link : links) {
+					if (link.getHref().startsWith("http://")) {
+						serviceLinksMap.put(ii.getServiceName(), new VersionedLink(links.get(0), getAuthorizationAccessToken(ii)));
+					}
+				}
+			}
+			catch (Exception e) {
+				LOGGER.error("Error to get links!", e);
+			}
+		}
+		if (serviceLinksMap.isEmpty()) {
+			LOGGER.warn("Found no internal widget notification links for rel {}", rel);
+			return Collections.emptyList();
+		}
+		else {
+			LOGGER.info("Widget notification links: {}", serviceLinksMap);
+			return new ArrayList<VersionedLink>(serviceLinksMap.values());
+		}
+	}
+
+
 }
