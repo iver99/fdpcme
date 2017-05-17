@@ -6,7 +6,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class DashboardBuilderUtil_1190 extends DashboardBuilderUtil_1100
+public class DashboardBuilderUtil_1190 extends DashboardBuilderUtil_1150
 {
 	@Override
 	public boolean verifyDashboard(WebDriver driver, String dashboardName, String description, boolean showTimeSelector) {
