@@ -191,7 +191,8 @@ define({
       "DATETIME_PICKER_TIME_FILTER_INFO_HOURS_EXCLUDED": "Hours excluded: ",
       "DATETIME_PICKER_TIME_FILTER_INFO_DAYS_EXCLUDED": "Days excluded: ",
       "DATETIME_PICKER_TIME_FILTER_INFO_MONTHS_EXCLUDED": "Months excluded: ",
-
+      
+      "DATETIME_PICKER_FLEX_REL_TIME_VALUE_ERROR_MSG": "Please enter a number greater than or equal to 1.",
 
       //time filter
       "TIME_FILTER_TITLE": "Filters",

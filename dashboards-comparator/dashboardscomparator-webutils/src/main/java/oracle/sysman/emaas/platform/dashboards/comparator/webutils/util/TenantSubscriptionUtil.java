@@ -51,8 +51,8 @@ public class TenantSubscriptionUtil
 		}
 		logger.info("Checking tenant (" + tenant + ") subscriptions. The entity naming href is " + domainLink.getHref());
 		String domainHref = domainLink.getHref();
-		RestClient rc = new RestClient();
-		String domainsResponse = rc.get(domainHref, tenant);
+		RestClient rc = RestClientProxy.getRestClient();
+		String domainsResponse = rc.get(domainHref, tenant, null);
 		logger.info("Checking tenant (" + tenant + ") subscriptions. Domains list response is " + domainsResponse);
 		JsonUtil ju = JsonUtil.buildNormalMapper();
 		try {
@@ -76,7 +76,7 @@ public class TenantSubscriptionUtil
 			String appMappingUrl = tenantAppUrl + "/lookups?opcTenantId=" + tenant;
 			logger.info(
 					"Checking tenant (" + tenant + ") subscriptions. tenant application mapping lookup URL is " + appMappingUrl);
-			String appMappingJson = rc.get(appMappingUrl, tenant);
+			String appMappingJson = rc.get(appMappingUrl, tenant, null);
 			logger.info("Checking tenant (" + tenant + ") subscriptions. application lookup response json is " + appMappingJson);
 			if (appMappingJson == null || "".equals(appMappingJson)) {
 				return null;

@@ -29,17 +29,17 @@ public class SubsriptionAppsUtil {
     /**
      * V2 suite
      */
-    private static final String OMC_SERVICE_TYPE = "OMC";
-    private static final String OSMACC_SERVICE_TYPE = "OSMACC";
+    public static final String OMC_SERVICE_TYPE = "OMC";
+    public static final String OSMACC_SERVICE_TYPE = "OSMACC";
 
     /**
      * V3 suite
      */
-    private static final String OMCSE_SERVICE_TYPE = "OMCSE";
-    private static final String OMCEE_SERVICE_TYPE = "OMCEE";
-    private static final String OMCLOG_SERVICE_TYPE = "OMCLOG";
-    private static final String SECSE_SERVICE_TYPE = "SECSE";
-    private static final String SECSMA_SERVICE_TYPE = "SECSMA";
+    public static final String OMCSE_SERVICE_TYPE = "OMCSE";
+    public static final String OMCEE_SERVICE_TYPE = "OMCEE";
+    public static final String OMCLOG_SERVICE_TYPE = "OMCLOG";
+    public static final String SECSE_SERVICE_TYPE = "SECSE";
+    public static final String SECSMA_SERVICE_TYPE = "SECSMA";
 
     /**
      * Edition info
