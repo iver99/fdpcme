@@ -59,6 +59,8 @@ public class BugVerification extends LoginAndLogout
 
 		DashBoardUtils.deleteDashboard(webd, "Dashboard_EMCPDF2040");
 		DashBoardUtils.deleteDashboard(webd, "Dashboard_EMCPDF2856");
+		DashBoardUtils.deleteDashboard(webd, "DashboardSet_3660");
+		DashBoardUtils.deleteDashboard(webd, "Dashboard_3660"); 
 
 		webd.getLogger().info("All test data have been removed");
 
@@ -276,7 +278,7 @@ public class BugVerification extends LoginAndLogout
 		webd.click(PageId.MENUBTNID);
 		webd.click(PageId.SIGNOUTID);
 
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		login(this.getClass().getName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testEMPCDF_812");
 
 		//check ita box
@@ -303,7 +305,7 @@ public class BugVerification extends LoginAndLogout
 		webd.getLogger().info("current url = " + url);
 
 		webd.getWebDriver().navigate()
-		.to(url.substring(0, url.indexOf("emsaasui")) + "emsaasui/emcpdfui/error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_MSG");
+				.to(url.substring(0, url.indexOf("emsaasui")) + "emsaasui/emcpdfui/error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_MSG");
 		webd.waitForElementPresent("css=" + PageId.ERRORPAGESINGOUTBTNCSS);
 		webd.takeScreenShot();
 
@@ -336,4 +338,75 @@ public class BugVerification extends LoginAndLogout
 		webd.getLogger().info("Verify the Explore Data menu is not diplayed in the page");
 		Assert.assertFalse(webd.isDisplayed("id=" + DashBoardPageId.EXPLOREDATABTNID), "Explore Data menu is displayed in dashboard");
         }        
+
+
+	@Test
+	public void testEMCPDF_3660() throws Exception
+	{
+		int newdsb_idx = 1;
+ 		int OOB_idx = 2;
+		//Initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testEMCPDF_3660");
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		//reset all filter options
+		webd.getLogger().info("Reset all filter options");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//create a dashboard set
+		webd.getLogger().info("Create a dashboard set");
+		DashboardHomeUtil.createDashboardSet(webd, "DashboardSet_3660", "test for set custom time range for dashboard in the set");
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		//add a OOB dashboard to the set
+		webd.getLogger().info("Add an OOB dashboard to the set");
+		DashboardBuilderUtil.addNewDashboardToSet(webd, "Databases");
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		//create one new dashboard in the same set
+		webd.getLogger().info("Create a dashboard inside dashboard set");
+		webd.getLogger().info("Click Add Dashboard Icon");
+		webd.click("css=" + PageId.DASHBOARDSETADDDASHBOARDICON_CSS);
+		DashboardBuilderUtil.createDashboardInsideSet(webd, "Dashboard_3660", null);
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		//verify the dashboard set and dashborad are created successfully
+		webd.getLogger().info("Verify the dashboard set is created successfully");
+		DashboardBuilderUtil.verifyDashboardSet(webd, "DashboardSet_3660");
+
+		//verify the dashboard is created successfully and in the set
+		DashboardBuilderUtil.verifyDashboardInsideSet(webd, "Databases");
+		DashboardBuilderUtil.verifyDashboardInsideSet(webd, "Dashboard_3660");
+
+		//verify the new created dashboard is not displayed on home page
+		webd.getLogger().info("Navigate to the dashboard home page and verify the new created dashboard is not displayed");
+		BrandingBarUtil.visitDashboardHome(webd);
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(webd, "Dashboard_3660"), "Expected dashboard Dashboard_3660 is found in dashboard home page");
+
+		//select the new created dashboardset and disable auto refresh
+		webd.getLogger().info("Open the new created dashboard set");
+		BrandingBarUtil.visitDashboardHome(webd);
+		DashboardHomeUtil.selectDashboard(webd, "DashboardSet_3660");
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		webd.getLogger().info("Set the refresh setting to OFF");
+		DashboardBuilderUtil.refreshDashboardSet(webd, DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_OFF);
+
+		//set & verify custom time range for added OOB database dashboard
+		webd.getLogger().info("Select the added OOB databaase dashboard in set");
+		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Databases");
+		WaitUtil.waitForPageFullyLoaded(webd);
+		Assert.assertNotNull(TimeSelectorUtil.setCustomTime(webd, OOB_idx, "04/07/2016 12:00 AM", "04/14/2016 12:30 PM"), "The return date time is null");
+		Assert.assertEquals(TimeSelectorUtil.getTimeRangeLabel(webd, OOB_idx).contains("Custom"), true);
+
+		//set & verify custom time range for new added dashboard
+		webd.getLogger().info("Select the new created dashboard in set");
+		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Dashboard_3660");
+		WaitUtil.waitForPageFullyLoaded(webd);
+		Assert.assertNotNull(TimeSelectorUtil.setCustomTime(webd, newdsb_idx, "05/08/2016 12:00 AM", "05/15/2016 13:30 PM"), "The return date time is null");
+		Assert.assertEquals(TimeSelectorUtil.getTimeRangeLabel(webd, newdsb_idx).contains("Custom"), true);
+
+	}
+
 }

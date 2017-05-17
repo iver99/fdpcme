@@ -32,6 +32,7 @@ import oracle.sysman.emaas.platform.dashboards.comparator.webutils.json.DomainsE
 /**
  * @author guobaochen
  */
+@Deprecated
 public class TenantSubscriptionUtil
 {
 

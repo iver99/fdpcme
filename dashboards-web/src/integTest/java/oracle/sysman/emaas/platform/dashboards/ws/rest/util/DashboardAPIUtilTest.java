@@ -1,8 +1,8 @@
 package oracle.sysman.emaas.platform.dashboards.ws.rest.util;
 
 import mockit.Mocked;
-import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
 import org.testng.Assert;
+import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 

@@ -4,9 +4,10 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
     'jquery',
     'uifwk/@version@/js/util/df-util-impl',
     'uifwk/@version@/js/sdk/entity-object',
-    'uifwk/@version@/js/sdk/SessionCacheUtil'
+    'uifwk/@version@/js/sdk/SessionCacheUtil',
+    'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg'
 ],
-    function (oj, ko, $, dfuModel, EntityObject, SessionCacheUtil)
+    function (oj, ko, $, dfuModel, EntityObject, SessionCacheUtil, nls)
     {
         function UIFWKContextUtil() {
             var self = this;
@@ -852,6 +853,65 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                 var tp = self.generateTimePeriodFromUnitAndDuration(unit, duration);
                 tp && self.setTimePeriod(tp, source);
             };
+            
+            self.getFlexTimePeriod = function(num, opt) {
+                var optLabel;
+                switch(opt) {
+                    case self.OMCTimeConstants.TIME_UNIT.SECOND:
+                        if(num === 1) {
+                            optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_SECOND;
+                        }else {
+                            optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_SECONDS;
+                        }                            
+                        break;
+                    case self.OMCTimeConstants.TIME_UNIT.MINUTE:
+                        if(num === 1) {
+                            optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_MINUTE;
+                        }else {
+                            optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_MINUTES;
+                        }                            
+                        break;
+                    case self.OMCTimeConstants.TIME_UNIT.HOUR:
+                        if(num === 1) {
+                            optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_HOUR;
+                        }else {
+                            optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_HOURS;
+                        }                            
+                        break;
+                    case self.OMCTimeConstants.TIME_UNIT.DAY:
+                        if(num === 1) {
+                            optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_DAY;
+                        }else {
+                            optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_DAYS;
+                        }                            
+                        break;
+                    case self.OMCTimeConstants.TIME_UNIT.WEEK:
+                        if(num === 1) {
+                            optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_WEEK;
+                        }else {
+                            optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_WEEKS;
+                        }                            
+                        break;
+                    case self.OMCTimeConstants.TIME_UNIT.MONTH:
+                        if(num === 1) {
+                            optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_MONTH;
+                        }else {
+                            optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_MONTHS;
+                        }                            
+                        break;
+                    case self.OMCTimeConstants.TIME_UNIT.YEAR:
+                        if(num === 1) {
+                            optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_YEAR;
+                        }else {
+                            optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_YEARS;
+                        }                            
+                        break;
+                    default:
+                        throw new Error("error in getting flexible relative time period: flexible relative time option-" + opt + " is invalid.");
+                }
+                    
+                return nls.DATETIME_PICKER_FLEX_REL_TIME_LAST + " " + num + " " + optLabel;
+            }
 
             /**
              * Set OMC global context of composite guid.
