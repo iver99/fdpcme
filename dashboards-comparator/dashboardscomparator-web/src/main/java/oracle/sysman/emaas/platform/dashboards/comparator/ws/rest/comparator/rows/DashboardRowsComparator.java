@@ -24,6 +24,7 @@ import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.JsonUtil
 import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.RestClientProxy;
 import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.AbstractComparator;
+import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.counts.CountsEntity;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.RowEntityComparator.CompareListPair;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.DashboardRowEntity;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.DashboardSetRowEntity;
@@ -82,7 +83,11 @@ public class DashboardRowsComparator extends AbstractComparator
 			//logger.info("key2={}, client1={}",key2, client2.getServiceUrls().get(0).toString());
 			
 			TableRowsEntity tre1 = retrieveRowsForSingleInstance(client1, tenantId, userTenant,comparisonType);
-			int rowNum1 = countForComparedRows(tre1);
+			CountsEntity entity1 = retrieveCountsForSingleInstance(tenantId, userTenant,client1);
+			if (entity1 == null) {
+				return null;
+			}
+			int rowNum1 = (int)(entity1.getCountOfDashboards() + entity1.getCountOfPreference() + entity1.getCountOfUserOptions());
 			if (tre1 == null) {
 				logger.error("Failed to retrieve ZDT table rows entity for instance {}", key1);
 				logger.info("Completed to compare the two DF OMC instances");
@@ -90,7 +95,11 @@ public class DashboardRowsComparator extends AbstractComparator
 			}
 
 			TableRowsEntity tre2 = retrieveRowsForSingleInstance(client2, tenantId, userTenant, comparisonType);
-			int rowNum2 = countForComparedRows(tre2);
+			CountsEntity entity2 = retrieveCountsForSingleInstance(tenantId, userTenant,client2);
+			if (entity2 == null) {
+				return null;
+			}
+			int rowNum2 = (int)(entity2.getCountOfDashboards() + entity2.getCountOfPreference() + entity2.getCountOfUserOptions());
 			if (tre2 == null) {
 				logger.error("Failed to retrieve ZDT table rows entity for instance {}", key2);
 				logger.info("Completed to compare the two DF OMC instances");
@@ -278,6 +287,26 @@ public class DashboardRowsComparator extends AbstractComparator
 			throw new ZDTException(ZDTErrorConstants.NULL_TABLE_ROWS_ERROR_CODE, ZDTErrorConstants.NULL_TABLE_ROWS_ERROR_MESSAGE);
 		}
 		return tre;
+	}
+	
+	private CountsEntity retrieveCountsForSingleInstance(String tenantId, String userTenant,LookupClient lc) throws Exception, IOException
+	{
+		Link lk = getSingleInstanceUrl(lc, "zdt/counts", "http");
+		if (lk == null) {
+			return null;
+		}
+		String response = new TenantSubscriptionUtil.RestClient().get(lk.getHref(), tenantId, userTenant);
+		
+		JsonUtil ju = JsonUtil.buildNormalMapper();
+		CountsEntity ze = ju.fromJson(response, CountsEntity.class);
+		if (ze == null) {
+			return null;
+		}
+		// TODO: for the 1st step implementation, let's log in log files then
+		logger.info(
+				"Retrieved counts for dashboards OMC instance: dashboard count - {}, favorites count - {}, preference count - {}",
+				ze.getCountOfDashboards(), ze.getCountOfUserOptions(), ze.getCountOfPreference());
+		return ze;
 	}
 
 	/**
