@@ -51,5 +51,6 @@ public class DashboardsComparatorCORSFilterTest {
     public void testInit() throws ServletException {
         dashboardsComparatorCORSFilter.init(filterConfig);
     }
+    
 
 }

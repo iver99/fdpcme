@@ -397,33 +397,19 @@ public class DashboardRowsComparator extends AbstractComparator
 		return key1;
 	}
 
-	public void setKey1(String key1) {
-		this.key1 = key1;
-	}
 
 	public String getKey2() {
 		return key2;
 	}
 
-	public void setKey2(String key2) {
-		this.key2 = key2;
-	}
 
 	public LookupClient getClient1() {
 		return client1;
-	}
-
-	public void setClient1(LookupClient client1) {
-		this.client1 = client1;
 	}
 
 	public LookupClient getClient2() {
 		return client2;
 	}
 
-	public void setClient2(LookupClient client2) {
-		this.client2 = client2;
-	}
-	
 	
 }
