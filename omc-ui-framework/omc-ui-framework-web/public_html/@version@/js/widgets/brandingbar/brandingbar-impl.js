@@ -73,10 +73,10 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 if (!self.entityContextReadOnly()) {
                     self.showEntityContextSelector(true);
                     var versionedContextSelectorUtils = window.getSDKVersionFile ?
-                                window.getSDKVersionFile('emsaasui/emcta/ta/js/sdk/contextSelector/api/ContextSelectorUtils') : null;
+                        window.getSDKVersionFile('emsaasui/emcta/ta/js/sdk/contextSelector/api/ContextSelectorUtils') : null;
                     var contextSelectorUtil = versionedContextSelectorUtils ? versionedContextSelectorUtils :
-                                '/emsaasui/emcta/ta/js/sdk/contextSelector/api/ContextSelectorUtils.js';
-                    
+                        '/emsaasui/emcta/ta/js/sdk/contextSelector/api/ContextSelectorUtils.js';
+
                     require([contextSelectorUtil], function (EmctaContextSelectorUtil) {
                         EmctaContextSelectorUtil.registerComponents();
                         self.isEntityContextLoaded(true);
@@ -191,17 +191,16 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             ;
 
             function handleShowHideTopology() {
+                if (self.topologyNeedRefresh && !self.isTopologyDisplayed()) {
+                    //when expanding the topology, do a refresh if needed
+                    console.log("**************topology displayed");
+                    console.log("**************refreshTopologyParams");
+                    refreshTopologyParams();
+                }
                 $("#ude-topology-div").slideToggle("fast", function () {
                     self.isTopologyDisplayed(!self.isTopologyDisplayed());
 
                     if (self.isTopologyDisplayed()) {
-                        //when expanding the topology, do a refresh if needed
-                        console.log("**************topology displayed");
-                        console.log("**************self.topologyNeedRefresh" + self.topologyNeedRefresh);
-                        if (self.topologyNeedRefresh) {
-                            console.log("**************refreshTopologyParams");
-                            refreshTopologyParams();
-                        }
                         var entityMeIds = cxtUtil.getEntityMeIds();
                         if (entityMeIds && entityMeIds.length) {
                             self.highlightedEntities(entityMeIds.concat([CONTEXT_CHANGE, NO_HIGHLIGHT]));
@@ -288,16 +287,21 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.topologySize = ko.observable();
             self.topologyHeight = ko.observable();
             self.topologySize.subscribe(function (topoHeight) {
-                topoHeight && topoHeight.h && self.topologyHeight(topoHeight.h);
+                var legendHeight = 0;
+                if($("#ude_topology_legend").length > 0) { //Re-set legend height if there is legend.
+                    //TO DO: hard-code legend height for now. Need to get legend height dynamically after UDE support it later.
+                    legendHeight = 300;
+                }
+                topoHeight && topoHeight.h && self.topologyHeight(Math.max(topoHeight.h, legendHeight));
                 if (self.topologyHeight() <= 201) {
                     self.topologyCssHeight(self.topologyHeight());
                 } else {
                     self.topologyCssHeight(201);
                 }
-                
-                if($("#ude_topology_legend").length > 0) {
+
+                if ($("#ude_topology_legend").length > 0) {
                     self.maxIconToRight("180px");
-                }else {
+                } else {
                     self.maxIconToRight("30px");
                 }
             });

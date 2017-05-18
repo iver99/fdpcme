@@ -43,6 +43,7 @@
     /*border: 1px solid #F0F0F0;*/
     /*height: 396px;*/
     background-color: #fcfdfe;
+    white-space: nowrap;
 }
 
 .float-left {
@@ -129,7 +130,7 @@
 
 .lrControlRadios {
     padding-left: 15px;
-    padding-bottom:10px;
+    padding-bottom:5px;
     display: inline-block;
     width: 93%;
 }
@@ -164,9 +165,9 @@
     vertical-align: middle
 }
 .buttons {
-    margin: 10px;
-    position: absolute;
+    margin: -10px 10px 10px;
     bottom: 20px;
+    vertical-align: bottom;
 }
 .errorMsg {
     margin: 10px;
@@ -417,4 +418,27 @@ div[id^='pickerPanel'] .oj-listbox-drop{
     border-radius: 1px;
     box-shadow: 1px 1px 3px 0 rgba(0,0,0,35);
     max-width: 340px;
+}
+
+.relRadios {
+    vertical-align: top;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+div[id^='pickerPanel'] .oj-messaging-inline-container{
+    .oj-message-error {
+        width: 430px;
+        height: 36px;
+        padding: 5px;
+        word-wrap: break-word;
+        word-break: normal;
+        overflow: auto;
+    }
+    .oj-message-summary {
+        font-size: 12px;
+    }
+    .oj-message-detail {
+        font-size: 12px;
+    }
 }
