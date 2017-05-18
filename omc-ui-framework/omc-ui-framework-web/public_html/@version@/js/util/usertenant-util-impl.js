@@ -149,6 +149,9 @@ define(['knockout', 'jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-i
                         if(data && data["currentUser"]){
                             window._uifwk.cachedData.loggedInUser = {"currentUser":data["currentUser"]};
                         }
+                        if(data && data["userGrants"]){
+                            window._uifwk.cachedData.userGrants = data["userGrants"];
+                        }
                         if(data && data["userRoles"]){
                             window._uifwk.cachedData.roles = data["userRoles"];
                             callback(data["userRoles"]);
@@ -212,7 +215,7 @@ define(['knockout', 'jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-i
                     callback(dfu.getDevData().userGrants);
                     return;
                 }
-                var serviceUrl = '/sso.static/getUserGrants?granteeUser=' + self.getTenantName() + '.' + self.getUserName();
+                var serviceUrl = '/sso.static/dashboards.configurations/userInfo';
                 if (window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.userGrants &&
                         ($.isFunction(window._uifwk.cachedData.userGrants) ? window._uifwk.cachedData.userGrants() : true)) {
                     callback($.isFunction(window._uifwk.cachedData.userGrants) ? window._uifwk.cachedData.userGrants() :
@@ -229,29 +232,57 @@ define(['knockout', 'jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-i
                         if (!window._uifwk.cachedData.userGrants) {
                             window._uifwk.cachedData.userGrants = ko.observable();
                         }
+                        if (!window._uifwk.cachedData.errGetUserGrants) {
+                            window._uifwk.cachedData.errGetUserGrants = ko.observable(false);
+                        }
+                        else {
+                            window._uifwk.cachedData.errGetUserGrants(false);
+                        }
 
                         function doneCallback(data) {
-                            window._uifwk.cachedData.userGrants(data);
+                            if(data && data["currentUser"]){
+                                window._uifwk.cachedData.loggedInUser = {"currentUser":data["currentUser"]};
+                            }
+                            if(data && data["userRoles"]){
+                                window._uifwk.cachedData.roles = data["userRoles"];
+                            }
+                            if(data && data["userGrants"]){
+                                window._uifwk.cachedData.userGrants(data["userGrants"]);
+                                callback(data["userGrants"]);
+                            }
+                            else {
+                                callback(null);
+                            }
                             window._uifwk.cachedData.isFetchingUserGrants = false;
-                            callback(data);
                         }
-                        ajaxUtil.ajaxWithRetry({
-                            url: serviceUrl,
-                            async: true,
-                            headers: dfu.getDefaultHeader()
-                        })
-                        .done(function(data) {
-                            doneCallback(data);
-                        })
-                        .fail(function() {
-                            console.log('Failed to get user granted privileges!');
-                            window._uifwk.cachedData.isFetchingUserGrants = false;
-                            callback(null);
-                        });
+                        if (window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.userInfo) {
+                            doneCallback(window._uifwk.cachedData.userInfo);
+                        }
+                        else {
+                            ajaxUtil.ajaxWithRetry({
+                                url: serviceUrl,
+                                async: true,
+                                headers: dfu.getDefaultHeader()
+                            })
+                            .done(function(data) {
+                                doneCallback(data);
+                            })
+                            .fail(function() {
+                                oj.Logger.error('Failed to get user granted privileges!');
+                                window._uifwk.cachedData.isFetchingUserGrants = false;
+                                window._uifwk.cachedData.errGetUserGrants(true);
+                                callback(null);
+                            });
+                        }
                     } 
                     else {
                         window._uifwk.cachedData.userGrants.subscribe(function(data) {
                             callback(data);
+                        });
+                        window._uifwk.cachedData.errGetUserGrants.subscribe(function(hitErr) {
+                            if (hitErr && callback) {
+                                callback(null);
+                            }
                         });
                     }
                 }
