@@ -982,7 +982,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
 //                    globalMenuIdHrefMapping['omc_root_admin'] = fetchLinkFromRegistrationData(data, 'adminLinks', 'EventUI');
                     globalMenuIdHrefMapping['omc_root_admin_alertrules'] = fetchLinkFromRegistrationData(data, 'adminLinks', 'EventUI');
                     globalMenuIdHrefMapping['omc_root_admin_agents'] = fetchLinkFromRegistrationData(data, 'adminLinks', 'TenantManagementUI');
-                    globalMenuIdHrefMapping['omc_root_admin_clouddiscoveryprofiles'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'MonitoringServiceUI')?fetchLinkFromRegistrationData(data, 'cloudServices', 'MonitoringServiceUI')+"?root=cmsCloudAccountsDashboard":null;
+                    globalMenuIdHrefMapping['omc_root_admin_clouddiscoveryprofiles'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'MonitoringServiceUI')?fetchLinkFromRegistrationData(data, 'cloudServices', 'MonitoringServiceUI')+"?root=cmsCloudProfilesDashboard":null;
                     globalMenuIdHrefMapping['omc_root_admin_entitiesconfig'] = fetchLinkFromRegistrationData(data, 'adminLinks', 'AdminConsoleSaaSUi');
                 }
                 
