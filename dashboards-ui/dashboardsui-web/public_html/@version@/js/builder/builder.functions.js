@@ -15,6 +15,7 @@ define(['knockout',
     ],
     function(ko, $, oj, dfu, dtm, dfumodel, ctxModel) {
         var ctxUtil = new ctxModel();
+        var omcTimeConstants = ctxUtil.OMCTimeConstants;
         function getTileDefaultWidth(wgt, mode) {
             if (wgt && (typeof wgt.WIDGET_DEFAULT_WIDTH==='number') && (wgt.WIDGET_DEFAULT_WIDTH%1)===0 && wgt.WIDGET_DEFAULT_WIDTH >= mode.MODE_MIN_COLUMNS && wgt.WIDGET_DEFAULT_WIDTH <= mode.MODE_MAX_COLUMNS){
                     return wgt.WIDGET_DEFAULT_WIDTH;
@@ -549,7 +550,7 @@ define(['knockout',
         Builder.registerFunction(eagerLoadDahshboardSingleTileAtPageLoad, "eagerLoadDahshboardSingleTileAtPageLoad");
 
         function eagerLoadDahshboardTilesAtPageLoad(dfu, ko, normalMode, tabletMode, mode, isUnderSet, timeSelector, targets) {
-          return $.Deferred(function(dtd) {
+          return $.Deferred(function(dtd) {// deferred is needed by async Builder.loadEntityContext
             var self = this;
             var current = new Date();
             var initStart = null;
@@ -562,10 +563,10 @@ define(['knockout',
                     continue;
                 }
                 shouldResolve = false;
-                var dashboard = dds[prop].dashboard;
+                var dashboard = dds[prop].dashboard; // this is the dashboard ko object
 
                 //get time and entity context for widgets when page is loaded
-                Builder.loadDashboardUserOptions(ko.unwrap(dashboard.id), self);
+                Builder.loadDashboardUserOptions(ko.unwrap(dashboard.id), self);// prepare user options data
                 self.dashboardExtendedOptions = dashboard.extendedOptions ? JSON.parse(dashboard.extendedOptions()) : null;
 
                 /****************get time context start *************/
@@ -574,16 +575,17 @@ define(['knockout',
                 initEnd = timeContext.end;
                 timePeriod = timeContext.timePeriod;
 
-                if(ctxUtil.formalizeTimePeriod(timePeriod)) {
-                    if(ctxUtil.formalizeTimePeriod(timePeriod) !== "CUSTOM") { //get start and end time for relative time period
+                if(ctxUtil.formalizeTimePeriod(timePeriod)) {// do this: result 'LAST 14 DAYS' => 'LAST_14_DAY'
+                    if(ctxUtil.formalizeTimePeriod(timePeriod) !== omcTimeConstants.QUICK_PICK.CUSTOM) { //get start and end time for relative time period
                         var tmp = ctxUtil.getStartEndTimeFromTimePeriod(ctxUtil.formalizeTimePeriod(timePeriod));
                         if(tmp) {
-                            initStart = tmp.start;
+                            initStart = tmp.start; // we get Date type data here
                             initEnd = tmp.end;
                         }
                     }
                 }
 
+                // for any unexpected input, we use default: last 14 days
                 if(!(initStart instanceof Date && initEnd instanceof Date)) {
                     initStart = new Date(current - 14*24*60*60*1000);
                     initEnd = current;
@@ -596,7 +598,7 @@ define(['knockout',
 
                 /****************get entity context start *****************/
                 $.when(Builder.loadEntityContext(self, dashboard.enableEntityFilter(), isUnderSet)).done(function(entityContext) {
-                    entityContext && targets(entityContext);
+                    entityContext && targets(entityContext);// returned entityContext is a json that will be sent to widgets
 
                     if (dashboard.tiles && dashboard.tiles() &&dashboard.tiles().length > 0){
                         for (var i=0;i<dashboard.tiles().length;i++){
@@ -605,8 +607,8 @@ define(['knockout',
                             Builder.eagerLoadDahshboardSingleTileAtPageLoad(dfu, ko, tile);
                         }
                     }
-                    window._contextPassedToWidgetsAtPageLoad = {timeSelector: timeSelector, targets: targets};
-                    dds[prop].eagerLoaded = true;
+                    window._contextPassedToWidgetsAtPageLoad = {timeSelector: timeSelector, targets: targets}; // automation needs this
+                    dds[prop].eagerLoaded = true; // ensure widget loaded for one time
                     dds[prop].eagerCreated = {normalMode: normalMode, tabletMode: tabletMode, timeSelector: timeSelector, targets: targets};
                     dtd.resolve();
                 });
@@ -667,7 +669,7 @@ define(['knockout',
                     }
                     if(!model.userExtendedOptions.timeSel || (model.userExtendedOptions.timeSel && !model.userExtendedOptions.timeSel.timePeriod)) {
                         model.userTimeSel = false;
-                        model.userExtendedOptions.timeSel = {timePeriod: "last14days", start: new Date(new Date()-14*24*60*60*1000).getTime(), end: new Date().getTime()};
+                        model.userExtendedOptions.timeSel = {timePeriod: "LAST_14_DAY", start: new Date(new Date()-14*24*60*60*1000).getTime(), end: new Date().getTime()};
                     }else {
                         model.userTimeSel = true;
                     }
@@ -683,7 +685,7 @@ define(['knockout',
                         model.userTimeSel = false;
                         model.userExtendedOptions = {};
                         model.userExtendedOptions.tsel = {quickPick: "host", entityContext: ""};
-                        model.userExtendedOptions.timeSel = {timePeriod: "last14days", start: new Date(new Date()-14*24*60*60*1000).getTime(), end: new Date().getTime()};
+                        model.userExtendedOptions.timeSel = {timePeriod: "LAST_14_DAY", start: new Date(new Date()-14*24*60*60*1000).getTime(), end: new Date().getTime()};
                         model.userExtendedOptions.autoRefresh = {"defaultValue": Builder.DEFAULT_AUTO_REFRESH_INTERVAL};
                     }
                 });
@@ -716,7 +718,7 @@ define(['knockout',
                             var tp = (model.userExtendedOptions.timeSel.timePeriod === "custom1") ? "custom" : model.userExtendedOptions.timeSel.timePeriod;
                             timePeriod = Builder.getTimePeriodString(tp) ? Builder.getTimePeriodString(tp) : tp;
                             //set global time context using dashboard saved time context
-                            if(ctxUtil.formalizeTimePeriod(timePeriod) === "CUSTOM") {
+                            if(ctxUtil.formalizeTimePeriod(timePeriod) === omcTimeConstants.QUICK_PICK.CUSTOM) {
                                 ctxUtil.setStartAndEndTime(start.getTime(), end.getTime());
                             }else {
                                 ctxUtil.setTimePeriod(ctxUtil.formalizeTimePeriod(timePeriod));
@@ -728,7 +730,7 @@ define(['knockout',
                             timePeriod = Builder.getTimePeriodString(tp) ? Builder.getTimePeriodString(tp) : tp;
                             model.userExtendedOptions.timeSel = {};
                             //set global time context using dashboard saved time context
-                            if(ctxUtil.formalizeTimePeriod(timePeriod) === "CUSTOM") {
+                            if(ctxUtil.formalizeTimePeriod(timePeriod) === omcTimeConstants.QUICK_PICK.CUSTOM) {
                                 ctxUtil.setStartAndEndTime(start.getTime(), end.getTime());
                             }else {
                                 ctxUtil.setTimePeriod(ctxUtil.formalizeTimePeriod(timePeriod));
@@ -736,7 +738,7 @@ define(['knockout',
                         }else {
                             start = new Date(now - 14*24*60*60*1000);
                             end = now;
-                            timePeriod = "Last 14 days";
+                            timePeriod = omcTimeConstants.QUICK_PICK.LAST_14_DAY;
                         }
                     }
                 }else if(val === "TRUE") { //Use time context in dashboard and ignore time context in globalcontext
@@ -755,10 +757,10 @@ define(['knockout',
                     } else {
                         start = new Date(now - 14 * 24 * 60 * 60 * 1000);
                         end = now;
-                        timePeriod = "Last 14 days";
+                        timePeriod = omcTimeConstants.QUICK_PICK.LAST_14_DAY;
                     }
                     //set non-global time context
-                    if(ctxUtil.formalizeTimePeriod(timePeriod) === "CUSTOM") {
+                    if(ctxUtil.formalizeTimePeriod(timePeriod) === omcTimeConstants.QUICK_PICK.CUSTOM) {
                         ctxUtil.setStartAndEndTime(start.getTime(), end.getTime());
                     }else {
                         ctxUtil.setTimePeriod(ctxUtil.formalizeTimePeriod(timePeriod));
@@ -773,10 +775,11 @@ define(['knockout',
                     //set non-global time context to null
                     ctxUtil.setTimePeriod(null);
                 }
+                //return start, end time and formalized time period
                 return {
                     start: start,
                     end: end,
-                    timePeriod: timePeriod
+                    timePeriod: ctxUtil.formalizeTimePeriod(timePeriod)
                 }
             };
             Builder.registerFunction(loadTimeContext, "loadTimeContext");

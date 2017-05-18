@@ -14,9 +14,9 @@ import java.io.IOException;
 import java.util.List;
 
 import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
-import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
-import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil.VersionedLink;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.model.RoleNamesEntity;
+import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
+import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil.VersionedLink;
 import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
 
 import org.apache.logging.log4j.LogManager;
@@ -57,8 +57,8 @@ public class PrivilegeChecker
 					String secAuthRolesApiUrl = endPoint.endsWith("/") ? endPoint + SECURITY_AUTH_ROLE_CHECK_API + tenantDotUser
 							: endPoint + "/" + SECURITY_AUTH_ROLE_CHECK_API + tenantDotUser;
 					RestClient rc = new RestClient();
-					rc.setHeader("X-USER-IDENTITY-DOMAIN-NAME",tenantName);
-					rc.setHeader("OAM_REMOTE_USER",tenantDotUser);
+					rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME,tenantName);
+					rc.setHeader(RestClient.OAM_REMOTE_USER,tenantDotUser);
 					rc.setType(null);
 					rc.setAccept(null);
 					String roleCheckResponse = rc.get(secAuthRolesApiUrl, tenantName, link.getAuthToken());

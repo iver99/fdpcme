@@ -55,7 +55,7 @@
                 <input type="radio" name="view" id="tiles-view-grid-1" data-bind="value: tilesViewGrid, attr: { 'id': tilesViewGridId },
                                     ojComponent: { component:'ojButton', display: 'icons', label: getNlsString('DBS_HOME_VIEW_GRID_LABEL'), icons: {start: 'icon-gridview-16 oj-fwk-icon dbs-icon-size-16'}}" />
                 <label data-bind="attr: { 'for': tilesViewListId }"></label>
-                <input type="radio" name="view" id="tiles-view-grid-2" title="List" data-bind="value: tilesViewList, attr: { 'id': tilesViewListId },
+                <input type="radio" name="view" id="tiles-view-grid-2" data-bind="value: tilesViewList, attr: { 'id': tilesViewListId },
                                     ojComponent: { component:'ojButton', display: 'icons', label: getNlsString('DBS_HOME_VIEW_LIST_LABEL'), icons: {start: 'icon-listview-16 oj-fwk-icon dbs-icon-size-16'}}" />
             </div>
         </span>
@@ -213,7 +213,7 @@
             </div>
             <div class="oj-row" style="margin-top: 10px">
                     <label for="dbsHDpIn" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_DES')"></label>
-                    <textarea id="dbsHDpIn" maxlength="95%" rows="6"
+                    <textarea id="dbsHDpIn" rows="6"
                               data-bind="ojComponent: {component: 'ojTextArea', value: createDashboardModel.description, rootAttributes: {style:'max-width:95%;'},
                                                     invalidComponentTracker: tracker,  
                                                     validators : [{type: 'regExp', options : {

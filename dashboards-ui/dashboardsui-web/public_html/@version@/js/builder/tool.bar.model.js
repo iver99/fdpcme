@@ -21,6 +21,8 @@ define(['knockout',
         // dashboard type to keep the same with return data from REST API
         var SINGLEPAGE_TYPE = "SINGLEPAGE";
         var DEFAULT_AUTO_REFRESH_INTERVAL = 300000;
+        var cxtUtil = new cxtModel();
+        var omcTimeConstants = cxtUtil.OMCTimeConstants;
 
         function ToolBarModel($b,dashboardSetOptions) {
             var self = this;
@@ -140,7 +142,7 @@ define(['knockout',
                                 }, function () {
                             console.log("update dashboard name && description  failed !");
                         });
-                        if($b.getDashboardTilesViewModel().timePeriod()!=="Custom") {
+                        if($b.getDashboardTilesViewModel().timePeriod()!==omcTimeConstants.QUICK_PICK.CUSTOM) {
                             $b.getDashboardTilesViewModel().initEnd(new Date());
                         }
                         if($("#dtpicker_"+self.dashboardId).children().get(0)) {
@@ -170,7 +172,6 @@ define(['knockout',
             };
 
             self.handleDeleteDashboardClicked = function() {
-               var cxtUtil = new cxtModel();
 		 var _url="/sso.static/dashboards.service/";
                 if (dfu.isDevMode()){
                     _url=dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"dashboards/");
@@ -207,7 +208,7 @@ define(['knockout',
             
             self.handleUnshareDashboardCancelled = function() {
                 // revert change
-                var dashboardSharing = ko.dataFor($(".share-settings")[0]).dashboardSharing;
+                var dashboardSharing = ko.dataFor($(".share-settings")[0]) && ko.dataFor($(".share-settings")[0]).rightPanelEdit && ko.dataFor($(".share-settings")[0]).rightPanelEdit.dashboardSharing;
                 dashboardSharing("shared");
                 $('#share-dashboard').ojDialog( "close" );
             };
@@ -438,6 +439,7 @@ define(['knockout',
                 $('#delete-dashboard').focus();
             };
             self.openDashboardUnshareConfirmDialog = function() {
+                self.notifyBindingPopupDialog();
                 $('#share-dashboard').ojDialog( "open" );
                 $('#share-dashboard').focus();
             };

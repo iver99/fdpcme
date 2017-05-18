@@ -18,6 +18,7 @@ import oracle.sysman.emaas.platform.dashboards.core.DashboardsFilter;
 import oracle.sysman.emaas.platform.dashboards.core.UserOptionsManager;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.functional.DashboardSameNameException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DatabaseDependencyUnavailableException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.UserOptionsNotFoundException;
@@ -29,7 +30,6 @@ import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableEntity
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableTimeRangeState;
 import oracle.sysman.emaas.platform.dashboards.core.model.PaginatedDashboards;
 import oracle.sysman.emaas.platform.dashboards.core.model.UserOptions;
-import oracle.sysman.emaas.platform.dashboards.core.model.subscription2.TenantSubscriptionInfo;
 import oracle.sysman.emaas.platform.dashboards.core.util.*;
 import oracle.sysman.emaas.platform.dashboards.webutils.ParallelThreadPool;
 import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
@@ -37,11 +37,14 @@ import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.model.RegistrationEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.model.UserInfoEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.DashboardAPIUtil;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.util.PrivilegeChecker;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.*;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.ScreenshotPathGenerator;
+import oracle.sysman.emaas.platform.emcpdf.tenant.TenantSubscriptionUtil;
+import oracle.sysman.emaas.platform.emcpdf.tenant.subscription2.TenantSubscriptionInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -58,6 +61,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.util.List;
 import java.util.concurrent.*;
 
 /**
@@ -102,7 +106,11 @@ public class DashboardAPI extends APIBase
 			return buildErrorResponse(error);
 		}
 		catch (DashboardException e) {
-			LOGGER.error(e.getLocalizedMessage(), e);
+			if(e instanceof DashboardSameNameException){
+				LOGGER.warn("Dashboard with the same name exists already!");
+			}else{
+				LOGGER.error(e.getLocalizedMessage(), e);
+			}
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (BasicServiceMalfunctionException e) {
@@ -466,7 +474,7 @@ public class DashboardAPI extends APIBase
 			@HeaderParam(value = "X-REMOTE-USER") final String userTenant, @HeaderParam(value = "Referer") String referer,
 			@PathParam("id") final BigInteger dashboardId,@HeaderParam(value = "SESSION_EXP") final String sessionExpiryTime)
 	{
-		final long TIMEOUT=30000;
+		/*final long TIMEOUT=30000;
 		Long begin=System.currentTimeMillis();
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [GET] /v1/dashboards/{}", dashboardId);
 		final DashboardManager dm = DashboardManager.getInstance();
@@ -478,199 +486,223 @@ public class DashboardAPI extends APIBase
 		Future<String> futureUserInfo =null;
 		Future<String> futureReg =null;
 		Future<String> futureSubscried =null;
-		Future<String> futureSubscried2 =null;
+		Future<String> futureSubscried2 =null;*/
 		try {
-			if (!DependencyStatus.getInstance().isDatabaseUp())  {
-				LOGGER.error("Error to call [GET] /v1/dashboards/{}/combinedData: database is down", dashboardId);
-				throw new DatabaseDependencyUnavailableException();
-			}
-			logkeyHeaders("combinedData()", userTenant, tenantIdParam);
-			
-			futureDashboard = pool.submit(new Callable<Dashboard>() {
+			final long TIMEOUT=30000;
+			Long begin=System.currentTimeMillis();
+			initializeUserContext(tenantIdParam, userTenant);
+			final String curTenant = TenantContext.getCurrentTenant();
+			final String curUser = UserContext.getCurrentUser();
+			infoInteractionLogAPIIncomingCall(curTenant, referer, "Service call to [GET] /v1/dashboards/{}/combinedData", dashboardId);
+			final DashboardManager dm = DashboardManager.getInstance();
+			StringBuilder sb=new StringBuilder();
+			ExecutorService pool = ParallelThreadPool.getThreadPool();
+
+			//retrieve user info
+			List<String> userInfo = null;
+			final Future<List<String>> futureUserInfo = pool.submit(new Callable<List<String>>() {
 				@Override
-				public Dashboard call() throws Exception {
-					try{
-						LOGGER.info("Parallel request dashboard data info...");
-						Long tenantId = getTenantId(tenantIdParam);
-						initializeUserContext(tenantIdParam, userTenant);
-						String userName = UserContext.getCurrentUser();
-						return dm.getCombinedDashboardById(dashboardId, tenantId, userName);
-					}catch(Exception e){
-						LOGGER.error("Error occurred when retrieving dashboard meta data using parallel request!");
-						LOGGER.error(e);
-						throw e;
-					}
-				}
-			});
-		}
-		
-		catch (DashboardException e) {
-			LOGGER.error(e);
-			return buildErrorResponse(new ErrorEntity(e));
-		}
-		finally {
-			clearUserContext();
-		}
-		//retrieve user info
-		String userInfoEntity = null;
-		futureUserInfo= pool.submit(new Callable<String>() {
-				@Override
-				public String call() throws Exception {
-					try{
+				public List<String> call() throws Exception {
+					try {
+						long startUserRoles = System.currentTimeMillis();
 						LOGGER.info("Parallel request user info...");
-						initializeUserContext(tenantIdParam, userTenant);
-						return JsonUtil.buildNormalMapper().toJson(new UserInfoEntity());
-					}catch(Exception e){
+						List<String> userRoles = PrivilegeChecker.getUserRoles(curTenant, curUser);
+						long endUserRoles = System.currentTimeMillis();
+						LOGGER.info("Time to get user roles: {}ms, user roles are: {}", (endUserRoles - startUserRoles), userRoles);
+						return userRoles;
+					} catch (Exception e) {
 						LOGGER.error("Error occurred when retrieving userInfo data using parallel request!");
 						LOGGER.error(e);
 						throw e;
-					}
-				}
-		});
-
-		//retrieve registration info
-		String regEntity=null;
-			futureReg = pool.submit(new Callable<String>() {
-				@Override
-				public String call() throws Exception {
-					try{
-						LOGGER.info("Parallel request registry info...");
-						initializeUserContext(tenantIdParam, userTenant);
-						return JsonUtil.buildNonNullMapper().toJson(new RegistrationEntity(sessionExpiryTime, null));
-					}catch(Exception e){
-						LOGGER.error("Error occurred when retrieving registration data using parallel request!");
-						LOGGER.error(e);
-						throw e;
+					} finally {
+						clearUserContext();
 					}
 				}
 			});
 
-		//retrieve subscribeapps API info
-		String subscribedApps=null;
-		futureSubscried = pool.submit(new Callable<String>() {
-			@Override
-			public String call() throws Exception {
-				try{
-					LOGGER.info("Parallel request subscribed apps info...");
-					return TenantSubscriptionUtil.getTenantSubscribedServicesString(tenantIdParam);
-				}catch(Exception e){
-					LOGGER.error("Error occurred when retrieving subscribed app data using parallel request!");
-					LOGGER.error(e);
-					throw e;
-				}
-			}
-		});
-		//retrieve subscribeapps2 API info
-		String subscribedApps2=null;
-		futureSubscried2 = pool.submit(new Callable<String>() {
-			@Override
-			public String call() throws Exception {
-				try{
-					LOGGER.info("Parallel request subscribed apps2 info...");
-//					return TenantSubscriptionUtil.getTenantSubscribedServicesString(tenantIdParam);
-					TenantSubscriptionInfo tenantSubscriptionInfo= new TenantSubscriptionInfo();
-					TenantSubscriptionUtil.getTenantSubscribedServices(tenantIdParam,tenantSubscriptionInfo);
-					String result = tenantSubscriptionInfo.toJson(tenantSubscriptionInfo);
-					LOGGER.info("Result is {}",result);
-					return result;
-				}catch(Exception e){
-					LOGGER.error("Error occurred when retrieving subscribed app2 data using parallel request!");
-					LOGGER.error(e);
-					throw e;
-				}
-			}
-		});
+			//retrieve subscribedapps API and subscribedapps2 API info
+			List<String> subscribedApps = null;
+			String subscribedApps2=null;
+			final TenantSubscriptionInfo tenantSubscriptionInfo = new TenantSubscriptionInfo();
+			final Future<List<String>> futureSubscried = pool.submit(new Callable<List<String>>() {
+				@Override
+				public List<String> call() throws Exception {
+					try {
+						long startApps = System.currentTimeMillis();
+						LOGGER.info("Parallel request subscribed apps info...");
+						List<String> apps = TenantSubscriptionUtil.getTenantSubscribedServices(curTenant, tenantSubscriptionInfo);
+						long endApps = System.currentTimeMillis();
+						LOGGER.info("Time to get subscribed apps: {}ms, subscribed apps are: {}", (endApps - startApps), apps);
+						return apps;
+					} catch (Exception e) {
+						LOGGER.error("Error occurred when retrieving subscribed data using parallel request!");
+						LOGGER.error(e);
+						throw e;
 
-		//get data
-		try {
-			if(futureReg!=null){
-				regEntity = futureReg.get(TIMEOUT, TimeUnit.MILLISECONDS);
-				if(regEntity !=null && !StringUtils.isEmpty(regEntity)){
-					sb.append("window._registrationServerCache=");
-					sb.append(regEntity).append(";");
+					} finally {
+						clearUserContext();
+					}
 				}
-				LOGGER.debug("Registration data is "+regEntity);
-			}
+			});
+
+			Future<Dashboard> futureDashboard = null;
+			try {
+				if (!DependencyStatus.getInstance().isDatabaseUp()) {
+					LOGGER.error("Error to call [GET] /v1/dashboards/{}/combinedData: database is down", dashboardId);
+					//throw new DatabaseDependencyUnavailableException(); // incase db is down, just log error and don't query dashboard data then
+				} else {
+					if (futureSubscried != null) {
+						subscribedApps = futureSubscried.get(TIMEOUT, TimeUnit.MILLISECONDS); // retrieve dashboard data after subscribed app thread is done
+						if (subscribedApps != null) {
+							final List<String> fSubscribedApps = subscribedApps;
+							logkeyHeaders("combinedData()", userTenant, curTenant);
+
+							futureDashboard = pool.submit(new Callable<Dashboard>() {
+								@Override
+								public Dashboard call() throws Exception {
+									try {
+										long startDash = System.currentTimeMillis();
+										LOGGER.info("2nd round parallel thread to request dashboard data info after thread for subscribed apps thread is completed...");
+										Long tenantId = getTenantId(curTenant);
+										initializeUserContext(curTenant, userTenant);
+										String userName = UserContext.getCurrentUser();
+										// put through subscribed apps to avoid to lookup this data again
+										Dashboard dashboard = dm.getCombinedDashboardById(dashboardId, tenantId, userName, fSubscribedApps);
+										long endDash = System.currentTimeMillis();
+										LOGGER.info("Time to retrieve dashboard meta data: {}ms, dashboard meta data are: {}", (endDash - startDash), dashboard);
+										return dashboard;
+									} catch (Exception e) {
+										LOGGER.error("Error occurred when retrieving dashboard meta data using parallel request!");
+										LOGGER.error(e);
+										throw e;
+									} finally {
+										clearUserContext();
+									}
+								}
+							});
+						} else {
+							LOGGER.warn("Failed to get subscribed app data, won't continue to start dashboard data thread");
+						}
+					}
+				}
 		} catch (InterruptedException e) {
 			LOGGER.error(e);
 		} catch (ExecutionException e) {
-			LOGGER.error(e.getCause() == null? e : e.getCause());
-		}catch(TimeoutException e){
+			LOGGER.error(e.getCause() == null ? e : e.getCause());
+		} catch (TimeoutException e) {
 			LOGGER.error(e);
 		}
 
-		sb.append("if(!window._uifwk){window._uifwk={};}if(!window._uifwk.cachedData){window._uifwk.cachedData={};}");
-		try {
-			if (futureUserInfo != null) {
-				userInfoEntity = futureUserInfo.get(TIMEOUT, TimeUnit.MILLISECONDS);
-				if (userInfoEntity != null && !StringUtils.isEmpty(userInfoEntity)) {
-					sb.append("window._uifwk.cachedData.userInfo=");
-					sb.append(userInfoEntity).append(";");
+			Future<String> futureReg = null;
+			//retrieve registration info
+			String regEntity = null;
+			try {
+				if (futureUserInfo != null) {
+					final List<String> fUserInfo = userInfo = futureUserInfo.get(TIMEOUT, TimeUnit.MILLISECONDS); // retrieve reg info after user info thread is done
+					if (userInfo != null) {
+						futureReg = pool.submit(new Callable<String>() {
+							@Override
+							public String call() throws Exception {
+								try {
+									long startRegInfo = System.currentTimeMillis();
+									LOGGER.info("2 round parallel to request registry info after thread for user info thread is completed...");
+									initializeUserContext(curTenant, userTenant);
+									String reg = JsonUtil.buildNonNullMapper().toJson(new RegistrationEntity(sessionExpiryTime, fUserInfo));
+									long endRegInfo = System.currentTimeMillis();
+									LOGGER.info("Time to get registration info: {}ms, registration info are: {}", (endRegInfo - startRegInfo), reg);
+									return reg;
+								} catch (Exception e) {
+									LOGGER.error("Error occurred when retrieving registration data using parallel request!");
+									LOGGER.error(e);
+									throw e;
+								} finally {
+									clearUserContext();
+								}
+							}
+						});
+					} else {
+						LOGGER.warn("Failed to get futureUserInfo, won't continue to start registry info thread");
+					}
 				}
-				LOGGER.debug("User info data is " + regEntity);
+			} catch (InterruptedException e) {
+				LOGGER.error(e);
+			} catch (ExecutionException e) {
+				LOGGER.error(e.getCause() == null ? e : e.getCause());
+			} catch (TimeoutException e) {
+				LOGGER.error(e);
 			}
-		} catch (InterruptedException e) {
-			LOGGER.error(e);
-		} catch (ExecutionException e) {
-			LOGGER.error(e.getCause() == null? e : e.getCause());
-		}catch(TimeoutException e){
-			LOGGER.error(e);
-		}
 
-		try {
-			if (futureSubscried != null) {
-				subscribedApps = futureSubscried.get(TIMEOUT, TimeUnit.MILLISECONDS);
-				if (!StringUtils.isEmpty(subscribedApps)) {
-					sb.append("window._uifwk.cachedData.subscribedapps=");
-					sb.append(subscribedApps).append(";");
+			//get reg data
+			try {
+				if (futureReg != null) {
+					regEntity = futureReg.get(TIMEOUT, TimeUnit.MILLISECONDS);
+					if (regEntity != null && !StringUtils.isEmpty(regEntity)) {
+						sb.append("window._registrationServerCache=");
+						sb.append(regEntity).append(";");
+					}
+					LOGGER.debug("Registration data is " + regEntity);
 				}
-				LOGGER.debug("Subscribed applications data is " + subscribedApps);
+			} catch (InterruptedException e) {
+				LOGGER.error(e);
+			} catch (ExecutionException e) {
+				LOGGER.error(e.getCause() == null ? e : e.getCause());
+			} catch (TimeoutException e) {
+				LOGGER.error(e);
 			}
-		} catch (InterruptedException e) {
-			LOGGER.error(e);
-		} catch (ExecutionException e) {
-			LOGGER.error(e.getCause());
-		}catch(TimeoutException e){
-			LOGGER.error(e);
-		}
 
-		try {
-			if (futureSubscried2 != null) {
-				subscribedApps2 = futureSubscried2.get(TIMEOUT, TimeUnit.MILLISECONDS);
-				if (!StringUtils.isEmpty(subscribedApps2)) {
-					sb.append("window._uifwk.cachedData.subscribedapps2=");
-					sb.append(subscribedApps2).append(";");
+			sb.append("if(!window._uifwk){window._uifwk={};}if(!window._uifwk.cachedData){window._uifwk.cachedData={};}");
+			if (userInfo != null) {
+				String userInfoRes = JsonUtil.buildNormalMapper().toJson(new UserInfoEntity(userInfo));
+				sb.append("window._uifwk.cachedData.userInfo=");
+				sb.append(userInfoRes).append(";");
+			}
+			LOGGER.debug("User info data is " + regEntity);
+
+			String apps = TenantSubscriptionUtil.getTenantSubscribedServicesString(curTenant);
+			if (!StringUtils.isEmpty(apps)) {
+				sb.append("window._uifwk.cachedData.subscribedapps=");
+				sb.append(apps).append(";");
+			}
+			LOGGER.debug("Subscribed applications data is " + apps);
+
+			//get subscribedapps2 data
+			subscribedApps2 = tenantSubscriptionInfo.toJson(tenantSubscriptionInfo);
+			if(!StringUtils.isEmpty(subscribedApps2)){
+				sb.append("window._uifwk.cachedData.subscribedapps2=");
+				sb.append(subscribedApps2).append(";");
+			}
+			LOGGER.info("Subscribed applications data2 is " + subscribedApps2);
+
+			//get meta dashboard data
+			Dashboard dbd = null;
+			try {
+				if (futureDashboard != null) {
+					dbd = futureDashboard.get(TIMEOUT, TimeUnit.MILLISECONDS);
+					if (dbd != null) {
+						sb.append("window._dashboardServerCache=");
+						sb.append(getJsonUtil().toJson(dbd)).append(";");
+					}
+					LOGGER.debug("Dashboard data is " + getJsonUtil().toJson(dbd));
+					updateDashboardAllHref(dbd, curTenant);
 				}
-				LOGGER.info("Subscribed applications data2 is " + subscribedApps2);
+			} catch (ExecutionException e) {
+				LOGGER.error(e.getCause() == null ? e : e.getCause());
+			} catch (InterruptedException e) {
+				LOGGER.error(e);
+			} catch (TimeoutException e) {
+				LOGGER.error(e);
 			}
-		} catch (InterruptedException e) {
-			LOGGER.error(e);
-		} catch (ExecutionException e) {
-			LOGGER.error(e.getCause());
-		}catch(TimeoutException e){
-			LOGGER.error(e);
-		}
 
-		try {
-			if(futureDashboard!=null){
-				dbd = futureDashboard.get(TIMEOUT, TimeUnit.MILLISECONDS);
-				if(dbd !=null){
-					sb.append("window._dashboardServerCache=");
-					sb.append(getJsonUtil().toJson(dbd)).append(";");
-				}
-				LOGGER.debug("Dashboard data is " + getJsonUtil().toJson(dbd));
-				updateDashboardAllHref(dbd, tenantIdParam);
-			}
-		} catch (ExecutionException e) {
-			LOGGER.error(e.getCause() == null? e : e.getCause());
-		}catch (InterruptedException e) {
-			LOGGER.error(e);
-		}catch(TimeoutException e){
-			LOGGER.error(e);
-		}
 
-		LOGGER.info("Retrieving combined data cost {}ms",(System.currentTimeMillis()-begin));
-		return Response.ok(sb.toString()).build();
+			LOGGER.info("Retrieving combined data cost {}ms", (System.currentTimeMillis() - begin));
+			return Response.ok(sb.toString()).build();
+
+		} catch (DashboardException e) {
+			LOGGER.error(e.getLocalizedMessage(), e);
+			return buildErrorResponse(new ErrorEntity(e));
+		} finally {
+			clearUserContext();
+		}
 	}
 
 	@GET

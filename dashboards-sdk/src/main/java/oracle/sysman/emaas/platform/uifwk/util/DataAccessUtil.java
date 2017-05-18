@@ -13,7 +13,8 @@ package oracle.sysman.emaas.platform.uifwk.util;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.StringUtil;
 import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
-import oracle.sysman.emaas.platform.uifwk.util.RegistryLookupUtil.VersionedLink;
+import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
+import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil.VersionedLink;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -43,15 +44,15 @@ public class DataAccessUtil
 			LOGGER.info("Configurations REST API link from dashboard-api href is: " + configurationsLink.getHref());
 			String registrationHref = configurationsLink.getHref() + "/brandingbardata";
 			RestClient rc = new RestClient();
-			rc.setHeader("X-USER-IDENTITY-DOMAIN-NAME", tenantName);
-			rc.setHeader("X-REMOTE-USER", userTenant);
+			rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME, tenantName);
+			rc.setHeader(RestClient.X_REMOTE_USER, userTenant);
 			//EMCPDF-3448, FEB20: 3 admin link dif found in farm jobs
-			rc.setHeader("OAM_REMOTE_USER", userTenant);
+			rc.setHeader(RestClient.OAM_REMOTE_USER, userTenant);
 			if (!StringUtil.isEmpty(referer)) {
-				rc.setHeader("Referer", referer);
+				rc.setHeader(RestClient.REFERER, referer);
 			}
 			if (!StringUtil.isEmpty(sessionExp)) {
-				rc.setHeader("SESSION_EXP", sessionExp);
+				rc.setHeader(RestClient.SESSION_EXP, sessionExp);
 			}
 			String response = rc.get(registrationHref, tenantName, ((VersionedLink) configurationsLink).getAuthToken());
 			LOGGER.info("Retrieved brandingbar data is: {}", response);

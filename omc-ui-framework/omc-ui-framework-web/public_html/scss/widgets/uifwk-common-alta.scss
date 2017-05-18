@@ -86,7 +86,11 @@ a:hover {
 #links_menu .oj-row{
     height:24px;
     line-height: 24px;
+    &[cloud-service-name="Configuration and Compliance"]{
+        min-width: 210px;
+    }
 }
+
 #links_menu .links-content-container{
     margin : 30px auto; 
     width: 100%;
@@ -96,7 +100,7 @@ a:hover {
     width: 24%;
     display: inline-block;
     vertical-align: top;
-    min-width: 330px;
+    min-width: 335px;
 }
 #links_menu .iconCircle {
     width: 100px;
@@ -476,4 +480,16 @@ a:hover {
 
 #omcMenuNavList .emaas-hamburger-menu-root-not-admin>.oj-navigationlist-item>a:first-child{
     margin-left: 10px;
+}
+
+#omcMenuNavList.oj-navigationlist-slider .oj-navigationlist-element:not(.oj-navigationlist-current)>.oj-navigationlist-category-divider:not(.oj-expanded) {
+    display: none; 
+}
+
+#omcMenuNavList.oj-navigationlist-slider .oj-navigationlist-item-element.oj-expanded:not(.oj-navigationlist-current)>.oj-navigationlist-group>.oj-navigationlist-category-divider:not(.oj-expanded) {
+    display:none;
+}
+
+#offcanvasInnerContainer .oj-web-applayout-scrollable {
+    overflow-y:auto;
 }

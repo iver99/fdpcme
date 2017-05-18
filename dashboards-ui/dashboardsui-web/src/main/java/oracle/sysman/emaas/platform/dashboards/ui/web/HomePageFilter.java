@@ -27,9 +27,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emaas.platform.dashboards.ui.web.context.GlobalContextUtil;
-import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.RegistryLookupUtil;
-import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.RegistryLookupUtil.VersionedLink;
-
+import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
+import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil.VersionedLink;
 import org.apache.commons.codec.EncoderException;
 import org.apache.commons.codec.net.URLCodec;
 import org.apache.http.HttpEntity;

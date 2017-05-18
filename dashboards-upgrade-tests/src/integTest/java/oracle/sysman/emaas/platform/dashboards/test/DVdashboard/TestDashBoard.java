@@ -6,8 +6,13 @@ import oracle.sysman.emaas.platform.dashboards.test.util.LoginAndLogout;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.EntitySelectorUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.GlobalContextUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.WelcomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.ITimeSelectorUtil.TimeRange;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.ITimeSelectorUtil.TimeUnit;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 
 import org.openqa.selenium.By;
@@ -126,7 +131,7 @@ public class TestDashBoard extends LoginAndLogout
 
 		//init test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start to test in testOpenLAWidget");
+		webd.getLogger().info("Start to test in testModifyDashboard_LA");
 
 		//reset the home page
 		webd.getLogger().info("Reset all filter options in the home page");
@@ -159,7 +164,7 @@ public class TestDashBoard extends LoginAndLogout
 
 		//init test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start to test in testOpenUDEWidget");
+		webd.getLogger().info("Start to test in testModifyDashboard_UDE");
 
 		//reset the home page
 		webd.getLogger().info("Reset all filter options in the home page");
@@ -184,6 +189,65 @@ public class TestDashBoard extends LoginAndLogout
 		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 		wait1.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//button[contains(@id,'save_widget_btn')]")));
 
+	}
+
+	@Test
+	public void testNoGCinURL()
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test in testNoGCinURL");
+
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//switch to Grid View
+		webd.getLogger().info("Switch to Grid view");
+		DashboardHomeUtil.gridView(webd);
+
+		//open the dashboard
+		webd.getLogger().info("Open the dashboard");
+		DashboardHomeUtil.selectDashboard(webd,
+				oracle.sysman.emaas.platform.dashboards.test.DPdashboard.TestDashBoard.dbName_DisableEntitiesTime);
+
+		Assert.assertFalse(GlobalContextUtil.isGlobalContextExisted(webd));
+
+		String currenturl = webd.getWebDriver().getCurrentUrl();
+
+		Assert.assertFalse(currenturl.contains("omcCtx="), "The global context infomation is in URL");
+	}
+
+	@Test
+	public void testNoGCinURL_EnableEntitiesTimeSelector()
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test in testNoGCinURL_EnableEntitiesTimeSelector");
+
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//switch to Grid View
+		webd.getLogger().info("Switch to Grid view");
+		DashboardHomeUtil.gridView(webd);
+
+		//open the dashboard
+		webd.getLogger().info("Open the dashboard");
+		DashboardHomeUtil.selectDashboard(webd,
+				oracle.sysman.emaas.platform.dashboards.test.DPdashboard.TestDashBoard.dbName_EnableEntitiesTime);
+
+		//verify the gc context
+		webd.getLogger().info("Start to verify the global context related information");
+		webd.getLogger().info("Verify 'All Entities' in global context bar doesn't displayed");
+		Assert.assertFalse(GlobalContextUtil.isGlobalContextExisted(webd),
+				"Shouldn't have 'All Entities' in global context bar in the page");
+		String currenturl = webd.getWebDriver().getCurrentUrl();
+		Assert.assertFalse(currenturl.contains("omcCtx="), "The global context infomation is in URL");
+
+		webd.getLogger().info("Set time selector");
+		TimeSelectorUtil.setFlexibleRelativeTimeRange(webd, 6, TimeUnit.Hour);
+		currenturl = webd.getWebDriver().getCurrentUrl();
+		Assert.assertFalse(currenturl.contains("omcCtx="), "The global context infomation is in URL");
 	}
 
 	@Test
@@ -235,9 +299,56 @@ public class TestDashBoard extends LoginAndLogout
 
 	}
 
+	@Test
+	public void testDashboard_GCenabled() 
+	{						
+		//init test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test dashboard GC enabled");
+	
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+	
+		//switch to Grid View
+		webd.getLogger().info("Switch to Grid view");
+		DashboardHomeUtil.gridView(webd);
+		
+        //open the dashboard
+		webd.getLogger().info("Open the dashboard");
+		DashboardHomeUtil.selectDashboard(webd, oracle.sysman.emaas.platform.dashboards.test.DPdashboard.TestDashBoard.dbName_GCenabled);
+	
+		String baseUrl = null;
+		String newUrl1 = null;
+		String newUrl2 = null;
+		String newUrl3 = null;
+		
+		baseUrl = webd.getWebDriver().getCurrentUrl();
+		
+		//Verify time range in dashboard should change
+		newUrl1 = GlobalContextUtil.generateUrlWithGlobalContext(webd, baseUrl, null, "LAST_5_MINUTE", null, null, null);		
+		webd.open(newUrl1);
+				
+		Assert.assertTrue(webd.isDisplayed("//span[text()='Last 5 minutes: ']"), "The time range displayed isn't right");
+		
+		//Verify dashboard when url without omcCtx
+		newUrl2 = newUrl1.split("&")[0];
+		webd.open(newUrl2);
+			
+		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
+		wait1.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//span[text()='Start typing entity name(s)...']")));
+	
+		Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(webd), "Global Context bar isn't displayed in dashboard page");
+		
+		//Verify dashboard when url having composite
+		newUrl3 = GlobalContextUtil.generateUrlWithGlobalContext(webd, baseUrl, "8426448730BDF663A9806A69AA2C445B", "LAST_5_MINUTE", null, null, null);
+		webd.open(newUrl3);
+		
+		EntitySelectorUtil.verifyCompositePillContent(webd, webd.getLogger(), "/SOA1213_base_domain/base_domain/soa_server1/soa-infra_System");		
+	} 
+	
 	private String generateTimeStamp()
 	{
 		return String.valueOf(System.currentTimeMillis());
 	}
-
 }

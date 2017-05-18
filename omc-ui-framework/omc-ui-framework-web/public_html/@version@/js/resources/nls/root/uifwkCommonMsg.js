@@ -88,6 +88,7 @@ define({
       "BRANDING_BAR_HAMBURGER_MENU_ROOT_ADMIN_LABEL": "Administration",
       "BRANDING_BAR_HAMBURGER_MENU_ADMIN_ALERTRULES_LABEL": "Alert Rules",
       "BRANDING_BAR_HAMBURGER_MENU_ADMIN_AGENTS_LABEL": "Agents",
+      "BRANDING_BAR_HAMBURGER_MENU_ADMIN_CLOUDDISCOVERYPROFILES_LABEL":"Cloud Discovery Profiles",
       "BRANDING_BAR_HAMBURGER_MENU_ADMIN_ENTITIESCONFIG_LABEL": "Entities Configuration",
       "BRANDING_BAR_HAMBURGER_MENU_APM_ADMIN_LABEL": "APM Admin",
       "BRANDING_BAR_HAMBURGER_MENU_MONITORING_ADMIN_LABEL": "Monitoring Admin",
@@ -175,12 +176,13 @@ define({
       "DATETIME_PICKER_RADIO_RANGE": "Range",
       "DATETIME_PICKER_BUTTONS_APPLY_BUTTON": "Apply",
       "DATETIME_PICKER_BUTTONS_CANCEL_BUTTON": "Cancel",
-      "DATETIME_PICKER_BADGE_MESSAGE_TITLE": "Showing data for ",
+      "DATETIME_PICKER_BADGE_MESSAGE_TITLE": "Showing data for {0}", //{0} is a time period like "Last 7 days" indicating the page is showing data for this time period
       "DATETIME_PICKER_BUTTONS_REPORTING_TIMEZONE": "Reporting time in UTC{0}{1}:{2}",
       "DATETIME_PICKER_TIME_RANGE": "Time Range",
       "DATETIME_PICKER_ERROR": "Error!",
       "DATETIME_PICKER_FORMAT_ERROR_MSG": "Please enter valid \"mm/dd/yyyy\" for date or \"hh:mm AM/PM\" for time.",
       "DATETIME_PICKER_TIME_VALIDATE_ERROR_MSG": "The start date/time is after the end date/time.",
+      "DATETIME_PICKER_TIME_VALIDATE_FUTURE_ERROR_MSG": "Date and time must be on or sooner than current date and time.",
       "DATETIME_PICKER_BEYOND_WINDOW_LIMIT_ERROR_MSG": "The selected time range should not exceed ",
       "DATETIME_PICKER_WINDOW_SIZE_WITH_DAYS": "{0} days {1} hours {2} minutes.",
       "DATETIME_PICKER_WINDOW_SIZE_WITH_HOURS": "{0} hours {1} minutes.",
@@ -190,7 +192,8 @@ define({
       "DATETIME_PICKER_TIME_FILTER_INFO_HOURS_EXCLUDED": "Hours excluded: ",
       "DATETIME_PICKER_TIME_FILTER_INFO_DAYS_EXCLUDED": "Days excluded: ",
       "DATETIME_PICKER_TIME_FILTER_INFO_MONTHS_EXCLUDED": "Months excluded: ",
-
+      
+      "DATETIME_PICKER_FLEX_REL_TIME_VALUE_ERROR_MSG": "Please enter a number greater than or equal to 1.",
 
       //time filter
       "TIME_FILTER_TITLE": "Filters",

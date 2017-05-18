@@ -20,10 +20,9 @@ import oracle.sysman.emaas.platform.emcpdf.cache.tool.DefaultKeyGenerator;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
-import oracle.sysman.emaas.platform.uifwk.ui.webutils.util.LogUtil.InteractionLogDirection;
-import oracle.sysman.emaas.platform.uifwk.ui.webutils.util.RegistryLookupUtil.VersionedLink;
 import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
 
+import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -68,17 +67,17 @@ public class DataFetcher
 			}
 			LOGGER.info("Configurations REST API link from dashboard-api href is: " + configurationsLink.getHref());
 			String registrationHref = configurationsLink.getHref() + "/registration";
-			RestClient rc = new RestClient();
-			rc.setHeader("X-USER-IDENTITY-DOMAIN-NAME", tenantIdParam);
-			rc.setHeader("X-REMOTE-USER", userTenant);
-			rc.setHeader("OAM_REMOTE_USER", userTenant);
+			RestClient rc = RestClientProxy.getRestClient();
+			rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME, tenantIdParam);
+			rc.setHeader(RestClient.X_REMOTE_USER, userTenant);
+			rc.setHeader(RestClient.OAM_REMOTE_USER, userTenant);
 			if (!StringUtil.isEmpty(referer)) {
-				rc.setHeader("Referer", referer);
+				rc.setHeader(RestClient.REFERER, referer);
 			}
 			if (!StringUtil.isEmpty(sessionExp)) {
-				rc.setHeader("SESSION_EXP", sessionExp);
+				rc.setHeader(RestClient.SESSION_EXP, sessionExp);
 			}
-			String response = rc.get(registrationHref, tenantIdParam, ((VersionedLink) configurationsLink).getAuthToken());
+			String response = rc.get(registrationHref, tenantIdParam, ((RegistryLookupUtil.VersionedLink) configurationsLink).getAuthToken());
 			if(response!=null){
 				cache.put(userTenantKey, response);
 			}
