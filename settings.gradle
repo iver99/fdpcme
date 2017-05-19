@@ -1,6 +1,10 @@
 // alphabetical
 include \
-  'dashboards-core',
+   'dashboards-core',
+        'dashboards-comparator',
+        'dashboards-comparator:dashboardscomparator-web',
+        'dashboards-comparator:dashboardscomparator-webutils',
+        'dashboards-comparator:dashboardscomparator-ee',
   'dashboards-ee',
   'dashboards-entities',
   'dashboards-schema',
