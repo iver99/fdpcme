@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
 import java.io.*;
-import java.math.BigInteger;
 
 /**
  * Created by guochen on 11/18/16.
@@ -108,10 +107,14 @@ public class AdditionalDataFilter implements Filter {
             // so no need to parse the static resource again or go to the next filter
             // just concatinate the data string into one
             String langAttr = NLSFilter.getLangAttr(httpReq);
-            String dashboardData = AdditionalDataProvider.getAdditionalDataForRequest(httpReq);
-            String newResponseText = getResponseTextFromCachedHtmls(uri, langAttr, dashboardData);
+            String dashboardData = AdditionalDataProvider.getPreloadDataForRequest(httpReq);
+            String newResponseText = getPreloadTextFromCachedHtmls(uri, langAttr, dashboardData);
             LOGGER.debug("After getting cached static html fragment, contactinating the data and inserting into html, the response text is {}", newResponseText);
             updateResponseWithAdditionDataText(response, newResponseText);
+
+			String postData = AdditionalDataProvider.getPostloadDataForRequest(httpReq);
+			updateResponseWithAdditionDataText(response, postData);
+			wrapper.getWriter().close();
             return;
         }
 
@@ -129,16 +132,20 @@ public class AdditionalDataFilter implements Filter {
         int idxDashboard = responseText.indexOf(ADDITIONA_DATA_TO_REPLACE);
         String beforeDashboardDataPart = responseText.substring(idxLangAttr + LANG_ATTR_TO_REPLACE.length(), idxDashboard);
         LOGGER.debug("Before dashboard&after lang attr part is {}", beforeDashboardDataPart);
-        String afterDashboardDataPart = responseText.substring(idxDashboard + ADDITIONA_DATA_TO_REPLACE.length(), responseText.length());
+		int idxBodyEnd = responseText.indexOf("</body>");
+        String afterDashboardDataPart = responseText.substring(idxDashboard + ADDITIONA_DATA_TO_REPLACE.length(), idxBodyEnd);
         LOGGER.debug("After part is {}", afterDashboardDataPart);
         hfc.cacheElementsForRequest(uri, beforeLangAttrPart, beforeDashboardDataPart, afterDashboardDataPart);
 
         String langAttr = NLSFilter.getLangAttr(httpReq);
-        String dashboardData = AdditionalDataProvider.getAdditionalDataForRequest(httpReq);
-        newResponseText = getResponseTextFromCachedHtmls(uri, langAttr, dashboardData);
+        String preData = AdditionalDataProvider.getPreloadDataForRequest(httpReq);
+        newResponseText = getPreloadTextFromCachedHtmls(uri, langAttr, preData);
         LOGGER.debug("After inserting additional data, the response text is {}", newResponseText);
-
         updateResponseWithAdditionDataText(response, newResponseText);
+
+		String postData = AdditionalDataProvider.getPostloadDataForRequest(httpReq);
+		updateResponseWithAdditionDataText(response, postData);
+		wrapper.getWriter().close();
     }
 
     /**
@@ -152,8 +159,8 @@ public class AdditionalDataFilter implements Filter {
         response.setCharacterEncoding("utf-8");
         response.setContentType("text/html;charset=utf-8");
         try (PrintWriter writer = response.getWriter()) {
-            writer.println(newResponseText);
-        }
+			writer.println(newResponseText);
+		}
     }
 
     /**
@@ -161,7 +168,7 @@ public class AdditionalDataFilter implements Filter {
      * 
      * @param dashboardData
      */
-    private String getResponseTextFromCachedHtmls(String uri, String langAttr, String dashboardData) {
+    private String getPreloadTextFromCachedHtmls(String uri, String langAttr, String dashboardData) {
         String newResponseText;
         HtmlFragmentCache.CachedHtml ce = HtmlFragmentCache.getInstance().getCachedElementsForRequest(uri);
         StringBuilder sb = new StringBuilder(ce.getBeforeLangAttrPart());

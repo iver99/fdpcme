@@ -28,27 +28,23 @@ public class AdditionalDataProviderTest
     @Mocked
     DashboardDataAccessUtil dashboardDataAccessUtil;
     @Test(groups = { "s2" })
-    public void testGetAdditionalDataForRequest(){
+    public void testGetPreloadDataForRequest(){
         new Expectations(){
             {
                 httpServletRequest.getHeader(anyString);
-                result = "tenant.admin";
+				result = "tenant.admin";
                 httpServletRequest.getRequestURI();
-                result = "/emsaasui/emcpdfui/builder.html";
-                httpServletRequest.getParameter("dashboardId");
-                result = "37";
+				result = "/emsaasui/emcpdfui/builder.html";
                 HtmlBootstrapJsUtil.getSDKVersionJS();
-                result = "2.3.0";
-                DashboardDataAccessUtil.getCombinedData(anyString,anyString,anyString, anyString,(BigInteger)any);
-                result = "data";
+				result = "2.3.0";
             }
         };
 
-        AdditionalDataProvider.getAdditionalDataForRequest(httpServletRequest);
+        AdditionalDataProvider.getPreloadDataForRequest(httpServletRequest);
     }
 
     @Test(groups = { "s2" })
-    public void testGetAdditionalDataForRequestParamNull(){
+    public void testGetPreloadDataForRequestParamNull(){
         new Expectations(){
             {
                 httpServletRequest.getHeader(anyString);
@@ -56,10 +52,11 @@ public class AdditionalDataProviderTest
             }
         };
 
-        AdditionalDataProvider.getAdditionalDataForRequest(httpServletRequest);
+        AdditionalDataProvider.getPreloadDataForRequest(httpServletRequest);
     }
+
     @Test(groups = { "s2" })
-    public void testGetAdditionalDataForRequest2ND(){
+    public void testGetPreloadDataForRequest2ND(){
         new Expectations(){
             {
                 httpServletRequest.getHeader(anyString);
@@ -71,7 +68,7 @@ public class AdditionalDataProviderTest
             }
         };
 
-        AdditionalDataProvider.getAdditionalDataForRequest(httpServletRequest);
-    }
+        AdditionalDataProvider.getPreloadDataForRequest(httpServletRequest);
+	}
 
 }
