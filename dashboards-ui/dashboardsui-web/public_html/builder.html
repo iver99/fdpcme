@@ -80,7 +80,8 @@
                     <!--/ko-->
                     <!--/ko-->
                     <!--/ko-->
-                </ul>                
+                </ul>
+                <!-- ko if: renderDeletionDialogs -->
                     <div style="display:none" id="deleteDashboardset"
                          data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'icon', rootAttributes: { style: 'min-width: 480px; min-height:200px;'}}">
                         <div class="oj-dialog-header oj-helper-clearfix">
@@ -99,7 +100,7 @@
                                                  rootAttributes: {style:'margin-right:20px'}},click:dbConfigMenuClick.cancelDeleteDbs"></button>
                         </div>
                     </div>
-                <!--single dashboard in dashboard set close-->
+                    <!--single dashboard in dashboard set close-->
                     <div style="display:none" id="deleteDashboard"
                              data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'icon', rootAttributes: { style: 'min-width: 460px; min-height:200px;'}}">
                             <div class="oj-dialog-header oj-helper-clearfix">
@@ -122,6 +123,7 @@
                                                      rootAttributes: {style:'margin-right:20px'}},click:$data.cancelRemoveDashboard"></button>
                             </div>
                      </div>
+                <!-- /ko -->
             </div>
             <!-- /ko -->
             <div id="dashboards-tabs-contents">

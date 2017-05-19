@@ -171,6 +171,7 @@ define(['knockout',
                         self.dbConfigMenuClick.homeDbs(self);
                         break;
                     case 'dbs-delete':
+                        self.renderDeletionDialogs(true);
                         $('#deleteDashboardset').ojDialog("open");
                         break;
                     default:
@@ -346,6 +347,8 @@ define(['knockout',
                 $('#duplicateDsbDialog').ojDialog('close');
             };
 
+            /* defer rendering of dashboard set and dashboard dialog until deletion button is clicked */
+            self.renderDeletionDialogs = ko.observable(false);
             self.dbConfigMenuClick = new dbConfigMenuClick();
 
             self.dashboardsetMenu = ko.observableArray([
@@ -812,6 +815,7 @@ define(['knockout',
 
            self.removeDashboardInSet = function (removeId,currentSelectedItem,whetherDelete,event){
                 if (self.dashboardInstMap[removeId].type !== 'new' && self.dashboardInstMap[removeId].$b.isDashboardUpdated() === true && !whetherDelete) {
+                    self.renderDeletionDialogs(true);
                     $('#deleteDashboard').ojDialog("open");
                     event.preventDefault();
                 } else {
