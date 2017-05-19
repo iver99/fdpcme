@@ -292,7 +292,6 @@ public class DashboardServiceFacade
 	public EmsPreference mergeEmsPreference(EmsPreference emsPreference)
 	{
 		emsPreference.setLastModificationDate(DateUtil.getGatewayTime());
-		setTenantBeforePersist(emsPreference);
 		EmsPreference entity = null;
 		entity = em.merge(emsPreference);
 		commitTransaction();
@@ -389,7 +388,6 @@ public class DashboardServiceFacade
 	{
 		emsPreference.setCreationDate(DateUtil.getGatewayTime());
 		emsPreference.setLastModificationDate(emsPreference.getCreationDate());
-		setTenantBeforePersist(emsPreference);
 		em.persist(emsPreference);
 		commitTransaction();
 		return emsPreference;
