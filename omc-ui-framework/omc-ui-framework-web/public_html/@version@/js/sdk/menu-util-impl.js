@@ -32,6 +32,7 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
                 'GLOBAL_ADMIN': 'omc_root_admin',
                 'GLOBAL_ADMIN_ALERTRULES': 'omc_root_admin_alertrules',
                 'GLOBAL_ADMIN_AGENTS': 'omc_root_admin_agents',
+                'GLOBAL_ADMIN_CLOUDDISCOVERYPROFILES': 'omc_root_admin_clouddiscoveryprofiles',
                 'GLOBAL_ADMIN_ENTITIESCONFIG': 'omc_root_admin_entitiesconfig',
                 'GLOBAL_ADMIN_GRP_APM': 'omc_root_admin_grp_APM',
                 'GLOBAL_ADMIN_GRP_MONITORING': 'omc_root_admin_grp_Monitoring',
@@ -65,6 +66,10 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
              * @returns
              */
             self.fireServiceMenuLoadedEvent = function(){
+                if (!window._uifwk) {
+                    window._uifwk = {};
+                }
+                window._uifwk.serviceMenuLoaded = true;
                 var message = {'tag': 'EMAAS_OMC_GLOBAL_MENU_SERVICE_MENU_LOADED'};
                 window.postMessage(message, window.location.href);
             };
@@ -167,7 +172,9 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
                 window._uifwk.compositeMenuParentId = parentMenuId;
                 window._uifwk.compositeMenuName = objMenuName;
                 window._uifwk.compositeMenuJson = menuJson;
-                fireCompositeMenuDisplayEvent(parentMenuId, objMenuName, menuJson);
+                if (window._uifwk.serviceMenuLoaded) {
+                    fireCompositeMenuDisplayEvent(parentMenuId, objMenuName, menuJson);
+                }
             };
             
             /**
