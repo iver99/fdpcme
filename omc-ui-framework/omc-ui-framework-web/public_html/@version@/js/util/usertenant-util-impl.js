@@ -126,7 +126,12 @@ define(['knockout', 'jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-i
             self.getUserRoles = function(callback,sendAsync) {
                 var serviceUrl = "/sso.static/dashboards.configurations/userInfo";
                 if (dfu.isDevMode()){
-                    callback(["APM Administrator","APM User","IT Analytics Administrator","Log Analytics Administrator","Log Analytics User","IT Analytics User"]);
+                    if (dfu.getDevData() && dfu.getDevData().userRoles) {
+                        callback(dfu.getDevData().userRoles.roleNames);
+                    }
+                    else {
+                        callback(["APM Administrator","APM User","IT Analytics Administrator","Log Analytics Administrator","Log Analytics User","IT Analytics User"]);
+                    }
                     return;
                 }
                 if(window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.roles){
@@ -180,6 +185,8 @@ define(['knockout', 'jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-i
             self.ADMIN_ROLE_NAME_SECURITY = "Security Analytics Administrator";
             self.ADMIN_ROLE_NAME_COMPLIANCE = "Compliance Administrator";
             self.ADMIN_ROLE_NAME_ORCHESTRATION = "Orchestration Administrator";
+            self.ADMIN_ROLE_NAME_OMC = "OMC Administrator";
+            
             self.userHasRole = function(role){
                 self.getUserRoles(function(data){
                     self.userRoles = data; 
@@ -189,6 +196,20 @@ define(['knockout', 'jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-i
                 }else{
                     return true;
                 }
+            };
+            
+            self.isAdminUser = function() {
+                if (self.userHasRole(self.ADMIN_ROLE_NAME_OMC) || 
+                    self.userHasRole(self.ADMIN_ROLE_NAME_APM) ||
+                    self.userHasRole(self.ADMIN_ROLE_NAME_ITA) ||
+                    self.userHasRole(self.ADMIN_ROLE_NAME_LA) ||
+                    self.userHasRole(self.ADMIN_ROLE_NAME_MONITORING) ||
+                    self.userHasRole(self.ADMIN_ROLE_NAME_SECURITY) ||
+                    self.userHasRole(self.ADMIN_ROLE_NAME_COMPLIANCE) ||
+                    self.userHasRole(self.ADMIN_ROLE_NAME_ORCHESTRATION)) {
+                    return true;
+                }
+                return false;
             };
             
             /**
@@ -254,4 +275,5 @@ define(['knockout', 'jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-i
         return DashboardFrameworkUserTenantUtility;
     }
 );
+
 
