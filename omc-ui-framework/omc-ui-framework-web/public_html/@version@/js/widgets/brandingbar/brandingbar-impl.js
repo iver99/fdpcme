@@ -672,9 +672,14 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 if(!self.renderEmaasAppheaderGlobalNavMenu()){
                     self.renderEmaasAppheaderGlobalNavMenu(true);
                     $('#emaasAppheaderGlobalNavMenuId').ojMenu("refresh");
-                    self.aboutBoxImmediateLoading(true);
                 }
             };
+
+            $("#emaasAppheaderGlobalNavMenuId").ojMenu({
+                "beforeOpen": function (event, ui) {
+                    self.aboutBoxImmediateLoading(true);
+                }
+            });
 
             var templatePath = "uifwk/js/widgets/navlinks/html/navigation-links.html";
             var vmPath = "uifwk/js/widgets/navlinks/js/navigation-links";
