@@ -12,6 +12,7 @@ import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.DashboardDataAcc
 import oracle.sysman.emaas.platform.uifwk.bootstrap.HtmlBootstrapJsUtil;
 import oracle.sysman.emaas.platform.uifwk.util.DataAccessUtil;
 
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
@@ -62,13 +63,57 @@ public class AdditionalDataProviderTest
                 httpServletRequest.getHeader(anyString);
                 result = "tenant.admin";
                 httpServletRequest.getRequestURI();
-                result = "!/emsaasui/emcpdfui/builder.html";
-                HtmlBootstrapJsUtil.getAllBootstrapJS(httpServletRequest);
-                result = "bootstrapjs";
+                result = "/emsaasui/emcpdfui/builder.html";
+                HtmlBootstrapJsUtil.getSDKVersionJS();
+                result = "sdkversionjs";
             }
         };
 
         AdditionalDataProvider.getPreloadDataForRequest(httpServletRequest);
 	}
+
+    @Test(groups = { "s2" })
+    public void testGetPostloadDataForRequest(){
+        new Expectations(){
+            {
+                httpServletRequest.getRequestURI();
+                result = "/emsaasui/emcpdfui/builder.html";
+                httpServletRequest.getHeader(anyString);
+                result = "tenant.admin";
+                httpServletRequest.getParameter(anyString);
+                result = "24";
+                DashboardDataAccessUtil.getCombinedData(anyString, anyString, anyString, anyString, (BigInteger)any);
+            }
+        };
+
+        AdditionalDataProvider.getPostloadDataForRequest(httpServletRequest);
+    }
+
+    @Test(groups = { "s2" })
+    public void testGetPostloadDataForRequest_otherURI(){
+        new Expectations(){
+            {
+                httpServletRequest.getRequestURI();
+                result = "/emsaasui/emcpdfui/home.html";
+            }
+        };
+
+        String data = AdditionalDataProvider.getPostloadDataForRequest(httpServletRequest);
+        Assert.assertEquals(data, "</body></html>");
+    }
+
+    @Test(groups = { "s2" })
+    public void testGetPostloadDataForRequest_nullParam(){
+        new Expectations(){
+            {
+                httpServletRequest.getRequestURI();
+                result = "/emsaasui/emcpdfui/builder.html";
+                httpServletRequest.getHeader(anyString);
+                result = "tenant";
+            }
+        };
+
+        AdditionalDataProvider.getPostloadDataForRequest(httpServletRequest);
+    }
 
 }
