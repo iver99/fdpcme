@@ -10,6 +10,7 @@
 
 package oracle.sysman.emaas.platform.emcpdf.registry;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -451,5 +452,83 @@ public class RegistryLookupUtilTest
 						Arrays.asList(lkSecurity), Arrays.asList(lkCompliance), Arrays.asList(lkOrchestration));
 			}
 		};
+	}
+
+	@Test(groups = { "s2" })
+	public void testGetAllServicesInternalLinksByRel(final @Mocked  Builder anyBuilder, final  @Mocked InstanceInfo anyInstanceInfo,
+													 final  @Mocked LookupManager anyLockupManager, final  @Mocked LookupClient anyClient/*, final InstanceQuery anyInstanceQuery*/) throws Exception {
+		new Expectations(){
+			{
+				LookupManager.getInstance();
+				result = anyLockupManager;
+				anyLockupManager.getLookupClient();
+				result = anyClient;
+				anyClient.getInstancesWithLinkRelPrefix(anyString);
+				result = new Delegate<List<InstanceInfo>>() {
+					@SuppressWarnings("unused")
+					List<InstanceInfo> lookup(InstanceQuery query)
+					{
+						List<InstanceInfo> list = new ArrayList<InstanceInfo>();
+						for (int i = 0; i < 7; i++) {
+							list.add(anyInstanceInfo);
+						}
+						return list;
+					}
+				};
+			}
+		};
+		RegistryLookupUtil.getAllServicesInternalLinksByRel("Rel");
+	}
+
+
+	@Test(groups = { "s2" })
+	public void testGetAllServiceInternalLinksByRelException(@Mocked final LookupManager anyLookupManager,
+															 @Mocked final LookupClient anyLookupClient, @Mocked final InstanceInfo anyInstanceInfo,
+															 @Mocked final List<InstanceInfo> anyInstanceInfoList, @Mocked final Throwable throwable) throws IOException
+	{
+		final List<InstanceInfo> iiList = new ArrayList<InstanceInfo>();
+		iiList.add(anyInstanceInfo);
+		new Expectations() {
+			{
+				LookupManager.getInstance().getLookupClient();
+				result = anyLookupClient;
+				anyLookupClient.getInstancesWithLinkRelPrefix(anyString, anyString);
+				result = iiList;
+				anyInstanceInfo.getLinksWithRelPrefix(anyString);
+				result = new Exception(throwable);
+			}
+		};
+		List<VersionedLink> linkList = RegistryLookupUtil.getAllServicesInternalLinksByRel("ssf.widget.changed");
+		Assert.assertNotNull(linkList);
+	}
+
+	@Test(groups = { "s2" })
+	public void testGetAllServiceInternalLinksByRel(@Mocked final VersionedLink link, @Mocked final LookupManager anyLookupManager,
+													@Mocked final LookupClient anyLookupClient, @Mocked final InstanceInfo anyInstanceInfo,
+													@Mocked final List<InstanceInfo> anyInstanceInfoList) throws IOException
+	{
+		final List<Link> links = new ArrayList<Link>();
+		links.add(link);
+		final List<InstanceInfo> iiList = new ArrayList<InstanceInfo>();
+		iiList.add(anyInstanceInfo);
+		final String serviceName = "Test Service";
+		new Expectations() {
+			{
+				LookupManager.getInstance().getLookupClient();
+				result = anyLookupClient;
+				anyLookupClient.getInstancesWithLinkRelPrefix(anyString, anyString);
+				result = iiList;
+				anyInstanceInfo.getLinksWithRelPrefix(anyString);
+				result = links;
+				anyInstanceInfo.getServiceName();
+				result = serviceName;
+				link.getHref();
+				result = "http://test.link.com";
+			}
+		};
+		List<VersionedLink> linkList = RegistryLookupUtil.getAllServicesInternalLinksByRel("ssf.widget.changed");
+		Assert.assertNotNull(linkList);
+		Assert.assertEquals(linkList.size(), 1);
+		Assert.assertEquals(linkList.get(0).getHref(), link.getHref());
 	}
 }
