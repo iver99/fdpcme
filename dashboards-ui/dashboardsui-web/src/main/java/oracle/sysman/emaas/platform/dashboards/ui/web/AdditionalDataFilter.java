@@ -111,9 +111,11 @@ public class AdditionalDataFilter implements Filter {
             String newResponseText = getPreloadTextFromCachedHtmls(uri, langAttr, dashboardData);
             LOGGER.debug("After getting cached static html fragment, contactinating the data and inserting into html, the response text is {}", newResponseText);
             updateResponseWithAdditionDataText(response, newResponseText);
+			wrapper.getWriter().flush();
 
 			String postData = AdditionalDataProvider.getPostloadDataForRequest(httpReq);
 			updateResponseWithAdditionDataText(response, postData);
+			wrapper.getWriter().flush();
 			wrapper.getWriter().close();
             return;
         }
@@ -134,7 +136,7 @@ public class AdditionalDataFilter implements Filter {
         LOGGER.debug("Before dashboard&after lang attr part is {}", beforeDashboardDataPart);
 		int idxBodyEnd = responseText.indexOf("</body>");
         String afterDashboardDataPart = responseText.substring(idxDashboard + ADDITIONA_DATA_TO_REPLACE.length(), idxBodyEnd);
-        LOGGER.debug("After part is {}", afterDashboardDataPart);
+		LOGGER.debug("After part is {}", afterDashboardDataPart);
         hfc.cacheElementsForRequest(uri, beforeLangAttrPart, beforeDashboardDataPart, afterDashboardDataPart);
 
         String langAttr = NLSFilter.getLangAttr(httpReq);
@@ -142,9 +144,11 @@ public class AdditionalDataFilter implements Filter {
         newResponseText = getPreloadTextFromCachedHtmls(uri, langAttr, preData);
         LOGGER.debug("After inserting additional data, the response text is {}", newResponseText);
         updateResponseWithAdditionDataText(response, newResponseText);
+		wrapper.getWriter().flush();
 
 		String postData = AdditionalDataProvider.getPostloadDataForRequest(httpReq);
 		updateResponseWithAdditionDataText(response, postData);
+		wrapper.getWriter().flush();
 		wrapper.getWriter().close();
     }
 
