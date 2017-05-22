@@ -137,8 +137,9 @@ public class TenantSubscriptionUtil {
                     LOGGER.error(e);
                     throw new RetryableLookupClient.RetryableLookupException(e);
                 }
+                String responseLog = appsResponse.length()>=120 ? appsResponse.substring(0,120) : appsResponse;
                 //print part of the response, if cannot get the right information we need, then we print full response later.
-                LOGGER.info("Retrieved data for tenant ({}) from serviceRequest API. URL is {}, part of the query response is {}.... It took {}ms", tenant, queryHref, appsResponse.substring(0,120), (System.currentTimeMillis() - subappQueryStart));
+                LOGGER.info("Retrieved data for tenant ({}) from serviceRequest API. URL is {}, part of the query response is {}.... It took {}ms", tenant, queryHref, responseLog, (System.currentTimeMillis() - subappQueryStart));
                 JsonUtil ju = JsonUtil.buildNormalMapper();
                 try {
                     List<ServiceRequestCollection> src = ju.fromJsonToList(appsResponse, ServiceRequestCollection.class);
@@ -174,7 +175,7 @@ public class TenantSubscriptionUtil {
                     }
                     tenantSubscriptionInfo.setSubscriptionAppsList(subAppsList);
                     //Edition info integrity check...
-                    if(!EditionInfoIntegrityCheck(subAppsList)){
+                    if(!checkEditionInfoIntegrity(subAppsList)){
                         LOGGER.info("#2.Full response from /serviceRequest is {}", appsResponse);
                     }
 
@@ -204,7 +205,7 @@ public class TenantSubscriptionUtil {
         return apps;
     }
 
-    private static boolean EditionInfoIntegrityCheck(List<SubscriptionApps> subAppsList) {
+    private static boolean checkEditionInfoIntegrity(List<SubscriptionApps> subAppsList) {
         if(!subAppsList.isEmpty()){
             LOGGER.info("Checking edition info's integrity");
             if(subAppsList.get(0).getEditionComponentsList()!=null && !subAppsList.get(0).getEditionComponentsList().isEmpty() ){

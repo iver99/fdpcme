@@ -855,7 +855,7 @@ public class RegistryLookupUtil
 	//Below method is not used by DF now(will be used by SSF)
 	public static List<VersionedLink> getAllServicesInternalLinksByRel(String rel) throws IOException
 	{
-		LOGGER.debug("/getInternalLinksByRel/ Trying to retrieve service internal link with rel: \"{}\"", rel);
+		LOGGER.debug("/getAllServicesInternalLinksByRel/ Trying to retrieve service internal link with rel: \"{}\"", rel);
 		//.initComponent() reads the default "looup-client.properties" file in class path
 		//.initComponent(List<String> urls) can override the default Registry urls with a list of urls
 		if (LookupManager.getInstance().getLookupClient() == null) {
