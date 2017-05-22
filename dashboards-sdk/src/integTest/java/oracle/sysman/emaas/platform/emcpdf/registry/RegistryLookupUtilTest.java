@@ -463,7 +463,7 @@ public class RegistryLookupUtilTest
 				result = anyLockupManager;
 				anyLockupManager.getLookupClient();
 				result = anyClient;
-				anyClient.getInstancesWithLinkRelPrefix(anyString);
+				/*anyClient.getInstancesWithLinkRelPrefix(anyString);
 				result = new Delegate<List<InstanceInfo>>() {
 					@SuppressWarnings("unused")
 					List<InstanceInfo> lookup(InstanceQuery query)
@@ -474,7 +474,7 @@ public class RegistryLookupUtilTest
 						}
 						return list;
 					}
-				};
+				};*/
 			}
 		};
 		RegistryLookupUtil.getAllServicesInternalLinksByRel("Rel");
