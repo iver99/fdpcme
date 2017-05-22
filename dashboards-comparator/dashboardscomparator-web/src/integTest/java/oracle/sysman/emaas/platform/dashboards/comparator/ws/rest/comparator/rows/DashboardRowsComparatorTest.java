@@ -387,12 +387,10 @@ public class DashboardRowsComparatorTest
             }
         };
         DashboardRowsComparator drc = new DashboardRowsComparator();
-        drc.setClient1(client1);
-        drc.setClient2(client2);
+      
         drc.getKey2();
         drc.getKey1();
-        drc.setKey1("");
-        drc.setKey2("");
+     
         drc.getClient1();
         drc.getClient2();
         

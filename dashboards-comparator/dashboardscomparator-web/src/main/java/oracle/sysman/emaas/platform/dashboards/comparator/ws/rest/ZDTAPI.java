@@ -284,12 +284,12 @@ public class ZDTAPI
 				obj.put("comparisonDateTime", comparisonDate);
 				obj.put("comparisonType", compareType);
 				obj.put("divergencePercentage", percentage);
-			/*	
+				
 				JSONObject subObj = new JSONObject();
 				subObj.put(result.getInstance1().getKey(), result2);
 				subObj.put(result.getInstance2().getKey(), result1);
 				obj.put("divergenceSummary", subObj);
-			*/	
+			
 				message = obj.toString();
 				
 			} else {
@@ -305,7 +305,7 @@ public class ZDTAPI
 		return Response.status(status).entity(message).build();
 	}
 
-	@PUT
+	@GET
 	@Path("sync")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response syncOnDF(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,

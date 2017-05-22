@@ -11,6 +11,7 @@
 package oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 
@@ -87,7 +88,12 @@ public class DashboardRowsComparator extends AbstractComparator
 			if (entity1 == null) {
 				return null;
 			}
-			int rowNum1 = (int)(entity1.getCountOfDashboards() + entity1.getCountOfPreference() + entity1.getCountOfUserOptions());
+			int rowNum1 = (int)(entity1.getCountOfDashboards()
+					+ entity1.getCountOfPreference()
+					+ entity1.getCountOfDashboardSet()
+					+ entity1.getCountOfTile()
+					+ entity1.getCountOfTileParam() 
+					+ entity1.getCountOfUserOptions());
 			if (tre1 == null) {
 				logger.error("Failed to retrieve ZDT table rows entity for instance {}", key1);
 				logger.info("Completed to compare the two DF OMC instances");
@@ -99,7 +105,12 @@ public class DashboardRowsComparator extends AbstractComparator
 			if (entity2 == null) {
 				return null;
 			}
-			int rowNum2 = (int)(entity2.getCountOfDashboards() + entity2.getCountOfPreference() + entity2.getCountOfUserOptions());
+			int rowNum2 = (int)(entity2.getCountOfDashboards()
+					+ entity2.getCountOfPreference()
+					+ entity2.getCountOfDashboardSet()
+					+ entity2.getCountOfTile()
+					+ entity2.getCountOfTileParam() 
+					+ entity2.getCountOfUserOptions());
 			if (tre2 == null) {
 				logger.error("Failed to retrieve ZDT table rows entity for instance {}", key2);
 				logger.info("Completed to compare the two DF OMC instances");
@@ -380,7 +391,7 @@ public class DashboardRowsComparator extends AbstractComparator
 			return "Errors:Get a null or empty link for one single instance!";
 		}
 		logger.info("link is {} ",lk.getHref());
-		String url = lk.getHref() + "?syncType=" + type + "&syncDate=" + syncDate;
+		String url = lk.getHref() + "?syncType=" + type + "&syncDate=" + URLEncoder.encode(syncDate, "UTF-8");
 		logger.info("sync url is "+ url);
 		String response = new TenantSubscriptionUtil.RestClient().get(url, tenantId, userTenant);
 		/*RestClient rc = RestClientProxy.getRestClient();

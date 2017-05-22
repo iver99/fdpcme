@@ -114,11 +114,15 @@ public class ZDTAPI extends APIBase
 			DashboardServiceFacade dsf = new DashboardServiceFacade();
 			em = dsf.getEntityManager();
 			long dashboardCount = DataManager.getInstance().getAllDashboardsCount(em);
-			long favoriteCount = DataManager.getInstance().getAllFavoriteCount(em);
+			long userOptionsCount = DataManager.getInstance().getAllUserOptionsCount(em);
 			long preferenceCount = DataManager.getInstance().getAllPreferencessCount(em);
+			long dashboardSetCount = DataManager.getInstance().getAllDashboardSetCount(em);
+			long tileCount = DataManager.getInstance().getAllTileCount(em);
+			long tileParamCount = DataManager.getInstance().getAllTileParamsCount(em);
 			logger.debug("ZDT counters: dashboards count - {}, favorite count - {}, preference count - {}", dashboardCount,
-				favoriteCount, preferenceCount);
-			zdte = new ZDTEntity(dashboardCount, favoriteCount, preferenceCount);
+					userOptionsCount, preferenceCount);
+			zdte = new ZDTEntity(dashboardCount, userOptionsCount, preferenceCount,
+					dashboardSetCount,tileCount,tileParamCount);
 		
 		} catch (Exception e) {
 			logger.error("error while getting count of tables");

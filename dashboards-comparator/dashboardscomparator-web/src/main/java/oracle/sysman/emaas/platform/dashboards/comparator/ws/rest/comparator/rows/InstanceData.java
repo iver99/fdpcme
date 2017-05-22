@@ -58,4 +58,22 @@ public class InstanceData<T>
 		return client;
 	}
 
+	public void setKey(String key) {
+		this.key = key;
+	}
+
+	public void setData(T data) {
+		this.data = data;
+	}
+
+	public void setClient(LookupClient client) {
+		this.client = client;
+	}
+
+	public void setTotalRowNum(int totalRowNum) {
+		this.totalRowNum = totalRowNum;
+	}
+	
+	
+
 }

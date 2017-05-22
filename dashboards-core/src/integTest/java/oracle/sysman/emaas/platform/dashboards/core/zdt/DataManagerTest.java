@@ -49,7 +49,7 @@ public class DataManagerTest
                 result = 1;
             }
         };
-        dataManager.getAllFavoriteCount(entityManager);
+        dataManager.getAllUserOptionsCount(entityManager);
     }
 
     @Test
@@ -63,6 +63,44 @@ public class DataManagerTest
         };
         dataManager.getAllPreferencessCount(entityManager);
     }
+    
+    @Test
+    public void testGetAllDashboardSetCount(@Mocked final PersistenceManager persistenceManager, 
+			@Mocked final EntityManager entityManager, @Mocked final Query query){
+        new Expectations(){
+            {
+                query.getSingleResult();
+                result = 1;
+            }
+        };
+        dataManager.getAllDashboardSetCount(entityManager);
+    }
+    
+    @Test
+    public void testGetAllTileCount(@Mocked final PersistenceManager persistenceManager, 
+			@Mocked final EntityManager entityManager, @Mocked final Query query){
+        new Expectations(){
+            {
+                query.getSingleResult();
+                result = 1;
+            }
+        };
+        dataManager.getAllTileCount(entityManager);
+    }
+    
+    @Test
+    public void testGetAllTileParamCount(@Mocked final PersistenceManager persistenceManager, 
+			@Mocked final EntityManager entityManager, @Mocked final Query query){
+        new Expectations(){
+            {
+                query.getSingleResult();
+                result = 1;
+            }
+        };
+        dataManager.getAllTileParamsCount(entityManager);
+    }
+    
+    
     @Test
     public void testGetDashboardSetTableData(@Mocked final PersistenceManager persistenceManager, 
 			@Mocked final EntityManager entityManager, @Mocked final Query query){

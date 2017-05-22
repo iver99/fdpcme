@@ -49,7 +49,7 @@ public class DataManager
 	
 	private static final String SQL_GET_SYNC_STATUS = "select * from (SELECT to_char(SYNC_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as SYNC_DATE, to_char(NEXT_SCHEDULE_SYNC_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as NEXT_SCHEDULE_SYNC_DATE,SYNC_TYPE, divergence_percentage from ems_zdt_sync order by sync_date desc) where rownum = 1";
 	
-	private static final String SQL_GET_COMPARED_DATA_TO_SYNC_BY_DATE = "select SELECT to_char(COMPARISON_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as COMPARISON_DATE, comparison_result from ems_zdt_comparator where comparison_date > to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') and comparison_result is not null";
+	private static final String SQL_GET_COMPARED_DATA_TO_SYNC_BY_DATE = "SELECT to_char(COMPARISON_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as COMPARISON_DATE, comparison_result from ems_zdt_comparator where comparison_date > to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') and comparison_result is not null";
 	
 	private static final String SQL_GET_COMPARED_DATA_TO_SYNC = "SELECT to_char(COMPARISON_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as COMPARISON_DATE, comparison_result from ems_zdt_comparator where comparison_result is not null";
 	
@@ -193,15 +193,72 @@ public class DataManager
 	 *
 	 * @return
 	 */
-	public long getAllFavoriteCount(EntityManager em)
+	public long getAllUserOptionsCount(EntityManager em)
 	{
 		try {
-			String sql = "SELECT COUNT(1) FROM EMS_DASHBOARD d, EMS_DASHBOARD_USER_OPTIONS uo WHERE d.DASHBOARD_ID=uo.DASHBOARD_ID AND d.TENANT_ID=uo.TENANT_ID AND d.DELETED<>1 AND IS_FAVORITE=1";
+			String sql = "SELECT COUNT(1) FROM EMS_DASHBOARD_USER_OPTIONS WHERE DELETED<>1";
 			Query query = em.createNativeQuery(sql);
 			long count = ((Number) query.getSingleResult()).longValue();
 			return count;
 		}catch(NoResultException e){
-			logger.warn("Get all favorite count did not retrieve any data!");
+			logger.warn("Get all user options count did not retrieve any data!");
+			return 0L;
+		}
+		
+	}
+	
+	/**
+	 * Retrieves total count for all favorites from all tenants
+	 *
+	 * @return
+	 */
+	public long getAllTileCount(EntityManager em)
+	{
+		try {
+			String sql = "SELECT COUNT(1) FROM EMS_DASHBOARD_TILE  WHERE DELETED <> 1";
+			Query query = em.createNativeQuery(sql);
+			long count = ((Number) query.getSingleResult()).longValue();
+			return count;
+		}catch(NoResultException e){
+			logger.warn("Get all tile count did not retrieve any data!");
+			return 0L;
+		}
+		
+	}
+	
+	/**
+	 * Retrieves total count for all favorites from all tenants
+	 *
+	 * @return
+	 */
+	public long getAllDashboardSetCount(EntityManager em)
+	{
+		try {
+			String sql = "SELECT COUNT(1) FROM EMS_DASHBOARD_SET  WHERE DELETED <> 1";
+			Query query = em.createNativeQuery(sql);
+			long count = ((Number) query.getSingleResult()).longValue();
+			return count;
+		}catch(NoResultException e){
+			logger.warn("Get all DASHBOARD SET count did not retrieve any data!");
+			return 0L;
+		}
+		
+	}
+	
+	/**
+	 * Retrieves total count for all favorites from all tenants
+	 *
+	 * @return
+	 */
+	public long getAllTileParamsCount(EntityManager em)
+	{
+		try {
+			String sql = "SELECT COUNT(1) FROM EMS_DASHBOARD_TILE_PARAMS  WHERE DELETED <> 1";
+			Query query = em.createNativeQuery(sql);
+			long count = ((Number) query.getSingleResult()).longValue();
+			return count;
+		}catch(NoResultException e){
+			logger.warn("Get all tile params count did not retrieve any data!");
 			return 0L;
 		}
 		

@@ -70,7 +70,7 @@ public class ZDTAPITest {
                 result = dataManager;
                 dataManager.getAllDashboardsCount(em);
                 result = 1;
-                dataManager.getAllFavoriteCount(em);
+                dataManager.getAllUserOptionsCount(em);
                 result = 1;
                 dataManager.getAllPreferencessCount(em);
                 result = 1;
