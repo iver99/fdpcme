@@ -790,6 +790,20 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     injectHamburgerMenuComponent();
                 }
                 
+                function resetCurrentHamburgerMenu() {
+                    //Set current menu item if specified by API call
+                    if (window._uifwk && window._uifwk.currentOmcMenuItemId) {
+                        menuUtil.setCurrentMenuItem(window._uifwk.currentOmcMenuItemId, window._uifwk.underOmcAdmin);
+                    }
+                    else {
+                        //Set current menu item if specified from branding bar params
+                        var selectedMenuId = params.omcCurrentMenuId;
+                        if (selectedMenuId) {
+                            menuUtil.setCurrentMenuItem(selectedMenuId);
+                        }
+                    }
+                }
+                
                 self.xlargeScreen = oj.ResponsiveKnockoutUtils.createMediaQueryObservable('(min-width: 1440px)');
 
                 self.xlargeScreen.subscribe(function(isXlarge){
@@ -809,6 +823,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                                     "selector": "#omcHamburgerMenu",
                                     "autoDismiss": "none"
                                 });
+                            resetCurrentHamburgerMenu();
                         }else if($("#omcHamburgerMenu").hasClass("oj-offcanvas-overlay")){
                                 oj.OffcanvasUtils.close({
                                     "edge": "start",
@@ -823,19 +838,23 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                                             "selector": "#omcHamburgerMenu",
                                             "autoDismiss": "none"
                                         });
+                                        resetCurrentHamburgerMenu();
                                 },500);
                         }
                     }
                 });
 
                 self.toggleHamburgerMenu = function() {
-                    return oj.OffcanvasUtils.toggle({
+                    oj.OffcanvasUtils.toggle({
                             "edge": "start",
                             "displayMode": self.xlargeScreen() ? "push" : "overlay",
     //                      "content": "#main-container",
                             "selector": "#omcHamburgerMenu",
                             "autoDismiss": self.xlargeScreen() ? "none" : "focusLoss"
                         });
+                    if($("#omcHamburgerMenu").hasClass("oj-offcanvas-open")) {
+                        resetCurrentHamburgerMenu();
+                    }
                 };
 
                 var menuUtil = new menuModel();
