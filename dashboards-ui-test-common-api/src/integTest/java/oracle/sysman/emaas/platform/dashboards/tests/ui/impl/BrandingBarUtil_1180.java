@@ -22,8 +22,6 @@ import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
 public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
@@ -557,24 +555,21 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 		driver.getLogger().info("Click branding bar user menu button.");
 		driver.click(DashBoardPageId.BRAND_BAR_USER_MENU);
 
-		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), 900L);
-		By locator = By.id(DashBoardPageId.USERMENUPOPUPID);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
-		driver.takeScreenShot();
+		//		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), 900L);
+		//		By locator = By.id(DashBoardPageId.USERMENUPOPUPID);
+		//		wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+
 		Assert.assertTrue(driver.isDisplayed("id=" + DashBoardPageId.USERMENUPOPUPID));
 		driver.getLogger().info("User menu popup is displayed.");
 
 		switch (option) {
 			case USERMENU_OPTION_HELP:
-				driver.takeScreenShot();
 				driver.getLogger().info("Click Help menu.");
 				driver.click(DashBoardPageId.OPTION_HELP);
 				break;
 			case USERMENU_OPTION_ABOUT:
-				driver.takeScreenShot();
 				driver.getLogger().info("Click About menu.");
 				driver.click(DashBoardPageId.OPTION_ABOUT);
-				driver.takeScreenShot();
 				driver.getLogger().info("Close the About dialog.");
 				driver.click(DashBoardPageId.ABOUTDIALOGCLOSE);
 				break;
@@ -585,7 +580,7 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 			default:
 				break;
 		}
-		driver.takeScreenShot();
+
 	}
 
 	@Override
@@ -776,8 +771,6 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 			driver.waitForElementPresent("css=" + DashBoardPageId_1180.ORACLE_LOGO_IMG_CSS);
 			if (driver.isDisplayed("css=" + DashBoardPageId_1180.ORACLE_LOGO_IMG_CSS)) {
 				driver.click("css=" + DashBoardPageId_1180.ORACLE_LOGO_IMG_CSS);
-				driver.takeScreenShot();
-				driver.savePageToFile();
 			}
 			WaitUtil.waitForPageFullyLoaded(driver);
 		}
@@ -793,8 +786,6 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 	{
 		driver.getLogger().info("Click Hamburger Menu Icon");
 		driver.click("css=" + DashBoardPageId_1180.HAMBURGERMENU_ICON_CSS);
-		driver.takeScreenShot();
-		driver.savePageToFile();
 	}
 
 	private String cloudServiceLinkToHamburgerMenuItem(WebDriver driver, String cloudServiceLinkName)

@@ -23,7 +23,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
@@ -307,22 +306,17 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 		driver.waitForElementPresent(DashBoardPageId.BRAND_BAR_USER_MENU);
 		driver.getLogger().info("Click branding bar user menu button.");
 		driver.click(DashBoardPageId.BRAND_BAR_USER_MENU);
-
-		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), 900L);
-		By locator = By.id(DashBoardPageId.USERMENUPOPUPID);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
-		driver.takeScreenShot();
 		Assert.assertTrue(driver.isDisplayed("id=" + DashBoardPageId.USERMENUPOPUPID));
 		driver.getLogger().info("User menu popup is displayed.");
 
 		switch (option) {
 			case USERMENU_OPTION_HELP:
-				driver.takeScreenShot();
+
 				driver.getLogger().info("Click Help menu.");
 				driver.click(DashBoardPageId.OPTION_HELP);
 				break;
 			case USERMENU_OPTION_ABOUT:
-				driver.takeScreenShot();
+
 				driver.getLogger().info("Click About menu.");
 				driver.click(DashBoardPageId.OPTION_ABOUT);
 				driver.takeScreenShot();
@@ -336,7 +330,7 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 			default:
 				break;
 		}
-		driver.takeScreenShot();
+
 	}
 
 	/* (non-Javadoc)
@@ -431,16 +425,10 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 	 */
 	private void checkLinksMenuVisibility(WebDriver driver, boolean visible)
 	{
-		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), 900L);
-		By locator = By.id(DashBoardPageId.BRANDINGBARNAVLINKSID);
 		if (visible) {
-			wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
-			driver.takeScreenShot();
 			Assert.assertTrue(driver.isDisplayed("id=" + DashBoardPageId.BRANDINGBARNAVLINKSID));
 		}
 		else {
-			wait.until(ExpectedConditions.invisibilityOfElementLocated(locator));
-			driver.takeScreenShot();
 			Assert.assertFalse(driver.isDisplayed("id=" + DashBoardPageId.BRANDINGBARNAVLINKSID));
 		}
 
@@ -457,19 +445,19 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 	{
 		String parentId = null;
 		switch (linkType) {
-		//Home links
+			//Home links
 			case "home":
 				parentId = DashBoardPageId.BRANDINGBARHOMELINKSID;
 				break;
-				//Cloud service links
+			//Cloud service links
 			case "cs":
 				parentId = DashBoardPageId.BRANDINGBARCLOUDSERVICELINKSID;
 				break;
-				//Visual analyzer links
+			//Visual analyzer links
 			case "va":
 				parentId = DashBoardPageId.BRANDINGBARVISUALANALYZERLINKSID;
 				break;
-				//Administration links
+			//Administration links
 			case "admin":
 				parentId = DashBoardPageId.BRANDINGBARADMINLINKSID;
 				break;
@@ -538,6 +526,7 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 			driver.click("id=" + DashBoardPageId.LINKID);
 		}
 		driver.takeScreenShot();
+		driver.savePageToFile();
 		return isExisted;
 	}
 
@@ -574,9 +563,9 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 			String navBarId = "id=" + DashBoardPageId.LINKID;
 			driver.waitForElementPresent(navBarId);
 			driver.click(navBarId);
-			WaitUtil.waitForPageFullyLoaded(driver);
 		}
 		driver.takeScreenShot();
+		driver.savePageToFile();
 	}
 
 	/**
@@ -617,6 +606,7 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 		}
 
 		driver.takeScreenShot();
+		driver.savePageToFile();
 	}
 
 	/**
