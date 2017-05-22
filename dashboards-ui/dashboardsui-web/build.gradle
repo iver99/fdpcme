@@ -22,7 +22,7 @@ def File sourceWebappDir = new File(project.projectDir, 'public_html')
 
 // source directories where jet, ckeditor, font-awesome files are copied
 def File sourceJetDestDir = new File(sourceWebappDir, 'libs/@version@/js/oraclejet')
-//def File sourceCKeditorDesDir = new File(sourceWebappDir, 'libs/@version@/js/ckeditor')
+def File sourceCKeditorDesDir = new File(sourceWebappDir, 'libs/@version@/js/ckeditor')
 def File sourceFontDestDir = new File(sourceWebappDir, 'libs/@version@/css/font-awesome')
 
 // folders for minify, fingereprint js files
@@ -61,9 +61,8 @@ dependencies {
         providedCompile getProjectArtifact('javax.ws.rs-api')   
         compile getProjectArtifact('oraclejet')     
 		compile getProjectArtifact('font-awesome')   
-        compile getProjectArtifact('jmockit')   
-  
-    	
+        compile getProjectArtifact('jmockit')  
+	compile getProjectArtifact('ckeditor')  
      
 	ftpAntTask('org.apache.ant:ant-commons-net:12.1.2-0-0') {
 	        module('commons-net:commons-net:1.4.1') {
@@ -186,6 +185,48 @@ project.task("cleanFont") << {
     sourceFontDestDir.deleteDir()
 }
 
+//unpack js libs from artifactory
+project.task("unpackJSLibFromArtifactory") << {    
+	def File buildCKeditorUnzipDir = new File(buildDir.absolutePath, 'ckeditor')
+	
+	//first time or if custom cleans removes it
+	sourceCKeditorDesDir.mkdirs()
+
+	configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
+	    if (artifact.name.equals('ckeditor_full') && files(sourceCKeditorDesDir.listFiles()).isEmpty()) {
+		logger.lifecycle("Unpacking artifact ${artifact.name}, version:${artifact.moduleVersion.id.version}..")
+		sourceCKeditorDesDir.mkdirs()
+
+		project.copy {
+		    from project.zipTree(artifact.file.absolutePath)
+		    into buildCKeditorUnzipDir.absolutePath
+		}
+ 
+		if(project.hasProperty("devMode")){
+	            project.copy {
+			from  buildCKeditorUnzipDir.absolutePath+'/ckeditor/'
+			into sourceCKeditorDesDir.absolutePath
+		    }
+		}
+		else
+		{
+		    def outputDir = file(stagingDir+"/libs/"+versionPathElement+"/js/ckeditor");
+		    outputs.dir outputDir
+		    project.copy {
+			from  buildCKeditorUnzipDir
+			into outputDir
+		    }
+		}
+		project.delete(buildCKeditorUnzipDir)
+	    }
+	}
+}
+ 
+project.task("cleanJSLib") << {
+	println 'JS lib ckeditor dir : ' + sourceCKeditorDesDir.absolutePath
+	sourceCKeditorDesDir.deleteDir()
+}
+
 task copyJsSource(type:Copy, dependsOn:[cleanJs, compileSass]) {//unpackJETFromArtifactory, unpackJSLibFromArtifactory,unpackFontFromArtifactory,compileSass]) {
 
     from (webRootSourceDir) {
@@ -229,10 +270,10 @@ task copyJsSource(type:Copy, dependsOn:[cleanJs, compileSass]) {//unpackJETFromA
     }
 }
 
-task stageJs(dependsOn:[unpackJETFromArtifactory,unpackFontFromArtifactory,copyJsSource]) {//, unpackJSLibFromArtifactory
+task stageJs(dependsOn:[unpackJETFromArtifactory,unpackFontFromArtifactory,unpackJSLibFromArtifactory,copyJsSource]) {//, unpackJSLibFromArtifactory
 }
 
-clean.dependsOn cleanJet, cleanJs, cleanFont//cleanJSLib,
+clean.dependsOn cleanJet, cleanJs, cleanFont,cleanJSLib
 
 task jsCodeCoverage(type:JavaExec, dependsOn:[cleanJs, stageJs]){//copyJsSource]) {
 
@@ -243,7 +284,7 @@ task jsCodeCoverage(type:JavaExec, dependsOn:[cleanJs, stageJs]){//copyJsSource]
         if (artifact.name.equals('JSCover-all')) {
 		logger.lifecycle("filepath"+artifact.file.absolutePath)
 		//args artifact.file.absolutePath, '-fs', '--local-storage', '--no-instrument-reg=.*\\/js\\/util\\/.*','--no-instrument-reg=.*\\/ckeditor\\/.*', '--no-instrument-reg=.*\\/oraclejet\\/.*',stagingDir, buildDir.absolutePath+'/staging/public_htmlcc'
-		args artifact.file.absolutePath, '-fs', '--local-storage', '--no-instrument-reg=.*\\/d3\\/.*', '--no-instrument-reg=.*\\/canvg\\/.*', '--no-instrument-reg=.*\\/html2canvas\\/.*', '--no-instrument-reg=.*\\/oraclejet\\/.*', '--no-instrument-reg=.*\\/ita-tool\\/.*', '--no-instrument-reg=.*\\/js\\/jquery\\/.*', '--no-instrument-reg=.*\\/js\\/resources\\/nls\\/root\\/uifwkCommonMsg.js',stagingDir, buildDir.absolutePath+'/staging/public_htmlcc'
+		args artifact.file.absolutePath, '-fs', '--local-storage', '--no-instrument-reg=.*\\/d3\\/.*', '--no-instrument-reg=.*\\/canvg\\/.*', '--no-instrument-reg=.*\\/html2canvas\\/.*', '--no-instrument-reg=.*\\/oraclejet\\/.*', '--no-instrument-reg=.*\\/ita-tool\\/.*', '--no-instrument-reg=.*\\/js\\/jquery\\/.*', '--no-instrument-reg=.*\\/js\\/resources\\/nls\\/root\\/uifwkCommonMsg.js','--no-instrument-reg=.*\\/ckeditor\\/.*',stagingDir, buildDir.absolutePath+'/staging/public_htmlcc'
             }
 	}      
     
@@ -542,7 +583,7 @@ task restDoc {
 
 
 //copy files without any convert when -PdevMode enabled
-task copyDevJs(type:Copy, dependsOn: [cleanJs, unpackJETFromArtifactory,unpackFontFromArtifactory,compileSass]){//, unpackJSLibFromArtifactory
+task copyDevJs(type:Copy, dependsOn: [cleanJs, unpackJETFromArtifactory,unpackFontFromArtifactory,unpackJSLibFromArtifactory,compileSass]){//, unpackJSLibFromArtifactory
     from('public_html') {
 	include "**/*"
     }
