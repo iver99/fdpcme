@@ -12,8 +12,8 @@ public class EmsDashboardSetPK implements Serializable
 	private static final long serialVersionUID = 6345975239287337011L;
 
 	private BigInteger dashboardSetId;
-
 	private BigInteger subDashboardId;
+	private Long tenantId;
 
 	@Override
 	public boolean equals(Object other)
@@ -21,7 +21,8 @@ public class EmsDashboardSetPK implements Serializable
 		if (other instanceof EmsDashboardSetPK) {
 			final EmsDashboardSetPK otherEmsDashboardSetPK = (EmsDashboardSetPK) other;
 			final boolean isEqual = otherEmsDashboardSetPK.dashboardSetId.equals(dashboardSetId)
-					&& otherEmsDashboardSetPK.subDashboardId.equals(subDashboardId);
+					&& otherEmsDashboardSetPK.subDashboardId.equals(subDashboardId)
+					&& otherEmsDashboardSetPK.tenantId.equals(tenantId);
 			return isEqual;
 		}
 		return false;
@@ -52,4 +53,20 @@ public class EmsDashboardSetPK implements Serializable
 	{
 		this.subDashboardId = subDashboardId;
 	}
+
+    /**
+     * @return the tenantId
+     */
+    public Long getTenantId()
+    {
+        return tenantId;
+    }
+
+    /**
+     * @param tenantId the tenantId to set
+     */
+    public void setTenantId(Long tenantId)
+    {
+        this.tenantId = tenantId;
+    }
 }

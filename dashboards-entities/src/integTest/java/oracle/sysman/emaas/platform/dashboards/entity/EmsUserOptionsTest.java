@@ -7,8 +7,9 @@ import org.testng.annotations.Test;
 
  @Test(groups = {"s1"})
  public class EmsUserOptionsTest {
+     private Long tenantId = 1L;
      private EmsUserOptions emsUserOptions = new EmsUserOptions();
-     private EmsUserOptionsPK emsUserOptionsPK = new EmsUserOptionsPK("", BigInteger.valueOf(1L));
+     private EmsUserOptionsPK emsUserOptionsPK = new EmsUserOptionsPK("", BigInteger.valueOf(1L), tenantId);
     @Test
     public void testGetAccessDate() throws Exception {
         emsUserOptions.setAccessDate(new Date());

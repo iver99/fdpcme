@@ -11,6 +11,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
@@ -28,6 +29,7 @@ import javax.persistence.TemporalType;
     @NamedQuery(name = "EmsDashboardTile.deleteByDashboardIds", query = "delete from EmsDashboardTile o where o.deleted = 0 and o.dashboard.dashboardId in :ids")
 })
 @Table(name = "EMS_DASHBOARD_TILE")
+@IdClass(EmsDashboardTilePK.class)
 //@SequenceGenerator(name = "EmsDashboardTile_Id_Seq_Gen", sequenceName = "EMS_DASHBOARD_TILE_SEQ", allocationSize = 1)
 //@Multitenant(MultitenantType.SINGLE_TABLE)
 //@TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant.id", length = 32, primaryKey = true)
@@ -113,6 +115,12 @@ public class EmsDashboardTile extends EmBaseEntity implements Serializable
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "dashboardTile", orphanRemoval = true)
 	private List<EmsDashboardTileParams> dashboardTileParamsList;
+	
+    @Override @Id
+    public Long getTenantId() {
+        return super.getTenantId();
+    }
+
 
 	public EmsDashboardTile()
 	{

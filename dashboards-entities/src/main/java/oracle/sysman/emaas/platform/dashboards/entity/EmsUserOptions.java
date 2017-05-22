@@ -52,6 +52,11 @@ public class EmsUserOptions extends EmBaseEntity implements Serializable
 	
 	@Column(name = "DELETED", nullable = false, length = 1)
 	private Boolean deleted;
+	
+    @Override @Id
+    public Long getTenantId() {
+        return super.getTenantId();
+    }
 
 	public EmsUserOptions()
 	{

@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.ResourceBundle;
 
 import javax.persistence.EntityManager;
 
@@ -14,14 +13,12 @@ import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.CommonResourceException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
-import oracle.sysman.emaas.platform.dashboards.core.nls.DatabaseResourceBundle;
-import oracle.sysman.emaas.platform.dashboards.core.nls.DatabaseResourceBundleControl;
+import oracle.sysman.emaas.platform.dashboards.core.nls.DatabaseResourceBundleUtil;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
 import oracle.sysman.emaas.platform.dashboards.core.util.BigIntegerSerializer;
 import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
 import oracle.sysman.emaas.platform.dashboards.core.util.DateUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
-import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsSubDashboard;
@@ -262,13 +259,13 @@ public class Dashboard
 		to.setApplicationType(from.getApplicationType());
 		
 		// translate OOB data
-		if(to.isSystem) {
-		    to.setName(getTranslatedString(DashboardApplicationType.fromValue(from.getApplicationType()), from.getName()));
-		    to.setDescription(getTranslatedString(DashboardApplicationType.fromValue(from.getApplicationType()), from.getDescription()));
-		} else {
+//		if(to.isSystem) {
+//		    to.setName(DatabaseResourceBundleUtil.getTranslatedString(DashboardApplicationType.fromValue(from.getApplicationType()), from.getName()));
+//		    to.setDescription(DatabaseResourceBundleUtil.getTranslatedString(DashboardApplicationType.fromValue(from.getApplicationType()), from.getDescription()));
+//		} else {
 		    to.setName(from.getName());
 		    to.setDescription(from.getDescription());
-		}
+//		}
 		
 		if (from.getType().equals(DASHBOARD_TYPE_CODE_SET)) {
 			to.setEnableTimeRange(null);
@@ -938,12 +935,5 @@ public class Dashboard
 				}
 			}
 		}
-	}
-	
-	private static String getTranslatedString(DashboardApplicationType appType, String key) {
-/*	    DatabaseResourceBundle rb = (DatabaseResourceBundle) 
-	            ResourceBundle.getBundle(appType.getJsonValue(), UserContext.getLocale(), new DatabaseResourceBundleControl());
-	    return rb.getString(key);*/
-	    return key;
 	}
 }

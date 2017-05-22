@@ -57,6 +57,11 @@ public class EmsSubDashboard extends EmBaseEntity implements Serializable
 			@JoinColumn(name = "DASHBOARD_SET_ID", referencedColumnName = "DASHBOARD_ID", insertable = false, updatable = false),
 			@JoinColumn(name = "TENANT_ID", referencedColumnName = "TENANT_ID", insertable = false, updatable = false) })
 	private EmsDashboard dashboardSet;
+	
+    @Override @Id
+    public Long getTenantId() {
+        return super.getTenantId();
+    }
 
 	public EmsSubDashboard()
 	{

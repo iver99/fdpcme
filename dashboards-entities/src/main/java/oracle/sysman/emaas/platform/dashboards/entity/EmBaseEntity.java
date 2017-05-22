@@ -3,6 +3,7 @@ package oracle.sysman.emaas.platform.dashboards.entity;
 import java.util.Date;
 
 import javax.persistence.Column;
+import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -25,7 +26,8 @@ public class EmBaseEntity {
 	@Column(name = "LAST_MODIFICATION_DATE")
 	private Date lastModificationDate;
 	
-	@Column(name = "TENANT_ID", nullable = false, length = 32, /*insertable = false, */updatable = false)
+	@Id
+	@Column(name = "TENANT_ID", nullable = false, length = 32/*, insertable = false*/, updatable = false)
 	private Long tenantId;
 
 	public Date getCreationDate() {

@@ -50,6 +50,11 @@ public class EmsDashboardTileParams extends EmBaseEntity implements Serializable
 	@JoinColumns(value = { @JoinColumn(name = "TILE_ID", referencedColumnName = "TILE_ID"),
 			@JoinColumn(name = "TENANT_ID", referencedColumnName = "TENANT_ID", insertable = false, updatable = false) })
 	private EmsDashboardTile dashboardTile;
+	
+    @Override @Id
+    public Long getTenantId() {
+        return super.getTenantId();
+    }
 
 	public EmsDashboardTileParams()
 	{

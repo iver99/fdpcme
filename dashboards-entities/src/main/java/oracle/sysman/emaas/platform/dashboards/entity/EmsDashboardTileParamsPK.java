@@ -7,16 +7,18 @@ public class EmsDashboardTileParamsPK implements Serializable
 	private static final long serialVersionUID = 7310567904803274617L;
 
 	private String paramName;
-	private String dashboardTile;
+	private EmsDashboardTilePK dashboardTile;
+	private Long tenantId;
 
 	public EmsDashboardTileParamsPK()
 	{
 	}
 
-	public EmsDashboardTileParamsPK(String paramName, String emsDashboardTile)
+	public EmsDashboardTileParamsPK(String paramName, EmsDashboardTilePK emsDashboardTile, Long tenantId)
 	{
 		this.paramName = paramName;
-		dashboardTile = emsDashboardTile;
+		this.dashboardTile = emsDashboardTile;
+		this.tenantId = tenantId;
 	}
 
 	@Override
@@ -25,13 +27,14 @@ public class EmsDashboardTileParamsPK implements Serializable
 		if (other instanceof EmsDashboardTileParamsPK) {
 			final EmsDashboardTileParamsPK otherEmsDashboardTileParamsPK = (EmsDashboardTileParamsPK) other;
 			final boolean areEqual = otherEmsDashboardTileParamsPK.paramName.equals(paramName)
-					&& otherEmsDashboardTileParamsPK.dashboardTile.equals(dashboardTile);
+					&& otherEmsDashboardTileParamsPK.dashboardTile.equals(dashboardTile)
+					&& otherEmsDashboardTileParamsPK.tenantId.equals(tenantId);
 			return areEqual;
 		}
 		return false;
 	}
 
-	public String getDashboardTile()
+	public EmsDashboardTilePK getDashboardTile()
 	{
 		return dashboardTile;
 	}
@@ -47,7 +50,7 @@ public class EmsDashboardTileParamsPK implements Serializable
 		return super.hashCode();
 	}
 
-	public void setDashboardTile(String emsDashboardTile)
+	public void setDashboardTile(EmsDashboardTilePK emsDashboardTile)
 	{
 		dashboardTile = emsDashboardTile;
 	}
@@ -56,4 +59,20 @@ public class EmsDashboardTileParamsPK implements Serializable
 	{
 		this.paramName = paramName;
 	}
+
+    /**
+     * @return the tenantId
+     */
+    public Long getTenantId()
+    {
+        return tenantId;
+    }
+
+    /**
+     * @param tenantId the tenantId to set
+     */
+    public void setTenantId(Long tenantId)
+    {
+        this.tenantId = tenantId;
+    }
 }

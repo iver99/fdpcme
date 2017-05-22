@@ -12,6 +12,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -21,6 +22,7 @@ import javax.persistence.Table;
 
 @Entity
 @NamedQueries({
+        @NamedQuery(name = "EmsDashboard.findById", query = "select o from EmsDashboard o where o.deleted=0 and o.dashboardId = :id"),
         @NamedQuery(name = "EmsDashboard.findAll", query = "select o from EmsDashboard o where o.deleted=0"),
         @NamedQuery(name = "EmsDashboard.queryBySubDashboardID", query = "select a from EmsDashboard a ,EmsSubDashboard b "
                 + "where a.dashboardId = b.dashboardSetId and b.subDashboardId = :p"),
@@ -29,6 +31,7 @@ import javax.persistence.Table;
         @NamedQuery(name = "EmsDashboard.findByName", query = "select d from EmsDashboard d where d.name = :name and (d.owner = :owner or d.isSystem = 1) and d.deleted = 0")
 })
 @Table(name = "EMS_DASHBOARD")
+@IdClass(EmsDashboardPK.class)
 //@SequenceGenerator(name = "EmsDashboard_Id_Seq_Gen", sequenceName = "EMS_DASHBOARD_SEQ", allocationSize = 1)
 //@Multitenant(MultitenantType.SINGLE_TABLE)
 //@TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant.id", length = 32, primaryKey = true)
@@ -74,8 +77,6 @@ public class EmsDashboard extends EmBaseEntity implements Serializable
 	@Basic(fetch = FetchType.EAGER)
 	@Column(name = "SCREEN_SHOT", columnDefinition = "CLOB NULL")
 	private String screenShot;
-//	@Column(name = "TENANT_ID", nullable = false, length = 32, insertable = false, updatable = false)
-//	private Long tenantId;
 	@Column(nullable = false)
 	private Integer type;
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "dashboard", orphanRemoval = true)
@@ -85,6 +86,11 @@ public class EmsDashboard extends EmBaseEntity implements Serializable
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "dashboardSet", orphanRemoval = true)
 	@OrderBy("position ASC")
 	private List<EmsSubDashboard> subDashboardList;
+	
+	@Override @Id
+    public Long getTenantId() {
+        return super.getTenantId();
+    }
 
 	public EmsDashboard()
 	{
