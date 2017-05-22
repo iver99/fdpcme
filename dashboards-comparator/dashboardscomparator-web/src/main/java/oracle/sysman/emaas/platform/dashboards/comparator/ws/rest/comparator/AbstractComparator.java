@@ -42,7 +42,7 @@ public abstract class AbstractComparator
 	 * get this information We will also publish an SDK with the following signature (that uses the rest sdk) HashMap<String,
 	 * LookupClient> getOMCInstanceClients();
 	 */
-	public Entry<String, LookupClient>[] getOMCInstances()
+	public HashMap<String, LookupClient> getOMCInstances()
 	{
 
 		try {
@@ -50,7 +50,12 @@ public abstract class AbstractComparator
 			// TODO: code is from EMCPSM-1975, need to verify in real ZDT environment
 			HashMap<String, LookupClient> lcMap = CloudLookups.getCloudLookupClients();
 			Set<Entry<String, LookupClient>> entrySet = lcMap.entrySet();
-
+			logger.info("how many entries {}", entrySet.size());
+			for (String key : lcMap.keySet()) {
+				logger.info("key= {}",key);
+				   LookupClient client = lcMap.get(key);
+				   logger.info("look up client is {}",client.toString());
+				  }
 			if (entrySet.size() != ZDT_INSTANCES_AMOUNT) {
 				logger.error(
 						"Unexpected: retrieved unexpected amount of OMC instances from SDK method. Expected amount is {}, and actually amount is {}",
@@ -58,16 +63,7 @@ public abstract class AbstractComparator
 				logger.info("Completed to compare the two DF OMC instances");
 				return null;
 			}
-
-			@SuppressWarnings("unchecked")
-			Entry<String, LookupClient>[] instances = (Entry<String, LookupClient>[]) entrySet.toArray();
-
-			//			Entry<String, LookupClient>[] instances = new Entry<String, LookupClient>[ZDT_INSTANCES_AMOUNT];
-
-			//			Iterator<Entry<String, LookupClient>> itr = entrySet.iterator();
-			//
-			//			Entry<String, LookupClient> ins1 = itr.next();
-			return instances;
+			return lcMap;
 		}
 		catch (Exception e) {
 			logger.error(e.getLocalizedMessage(), e);

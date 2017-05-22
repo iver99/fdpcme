@@ -12,15 +12,13 @@ package oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
-import java.math.BigInteger;
-
 /**
  * @author guochen
  */
 public class DashboardRowEntity implements RowEntity
 {
 	@JsonProperty("DASHBOARD_ID")
-	private BigInteger dashboardId;
+	private String dashboardId;
 
 	@JsonProperty("NAME")
 	private String name;
@@ -56,7 +54,7 @@ public class DashboardRowEntity implements RowEntity
 	private String screenShot;
 
 	@JsonProperty("DELETED")
-	private BigInteger deleted;
+	private String deleted;
 
 	@JsonProperty("TENANT_ID")
 	private Long tenantId;
@@ -75,180 +73,12 @@ public class DashboardRowEntity implements RowEntity
 
 	@JsonProperty("EXTENDED_OPTIONS")
 	private String extendedOptions;
+	
+	@JsonProperty("SHOW_INHOME")
+	private Integer showInHome;
 
 	public DashboardRowEntity()
 	{
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj)
-	{
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		DashboardRowEntity other = (DashboardRowEntity) obj;
-		if (applicationType == null) {
-			if (other.applicationType != null) {
-				return false;
-			}
-		}
-		else if (!applicationType.equals(other.applicationType)) {
-			return false;
-		}
-		if (creationDate == null) {
-			if (other.creationDate != null) {
-				return false;
-			}
-		}
-		else if (!creationDate.equals(other.creationDate)) {
-			return false;
-		}
-		if (dashboardId == null) {
-			if (other.dashboardId != null) {
-				return false;
-			}
-		}
-		else if (!dashboardId.equals(other.dashboardId)) {
-			return false;
-		}
-		if (deleted == null) {
-			if (other.deleted != null) {
-				return false;
-			}
-		}
-		else if (!deleted.equals(other.deleted)) {
-			return false;
-		}
-		if (description == null) {
-			if (other.description != null) {
-				return false;
-			}
-		}
-		else if (!description.equals(other.description)) {
-			return false;
-		}
-		if (enableDescription == null) {
-			if (other.enableDescription != null) {
-				return false;
-			}
-		}
-		else if (!enableDescription.equals(other.enableDescription)) {
-			return false;
-		}
-		if (enableEntityFilter == null) {
-			if (other.enableEntityFilter != null) {
-				return false;
-			}
-		}
-		else if (!enableEntityFilter.equals(other.enableEntityFilter)) {
-			return false;
-		}
-		if (enableRefresh == null) {
-			if (other.enableRefresh != null) {
-				return false;
-			}
-		}
-		else if (!enableRefresh.equals(other.enableRefresh)) {
-			return false;
-		}
-		if (enableTimeRange == null) {
-			if (other.enableTimeRange != null) {
-				return false;
-			}
-		}
-		else if (!enableTimeRange.equals(other.enableTimeRange)) {
-			return false;
-		}
-		if (extendedOptions == null) {
-			if (other.extendedOptions != null) {
-				return false;
-			}
-		}
-		else if (!extendedOptions.equals(other.extendedOptions)) {
-			return false;
-		}
-		if (isSystem == null) {
-			if (other.isSystem != null) {
-				return false;
-			}
-		}
-		else if (!isSystem.equals(other.isSystem)) {
-			return false;
-		}
-		if (lastModificationDate == null) {
-			if (other.lastModificationDate != null) {
-				return false;
-			}
-		}
-		else if (!lastModificationDate.equals(other.lastModificationDate)) {
-			return false;
-		}
-		if (lastModifiedBy == null) {
-			if (other.lastModifiedBy != null) {
-				return false;
-			}
-		}
-		else if (!lastModifiedBy.equals(other.lastModifiedBy)) {
-			return false;
-		}
-		if (name == null) {
-			if (other.name != null) {
-				return false;
-			}
-		}
-		else if (!name.equals(other.name)) {
-			return false;
-		}
-		if (owner == null) {
-			if (other.owner != null) {
-				return false;
-			}
-		}
-		else if (!owner.equals(other.owner)) {
-			return false;
-		}
-		if (screenShot == null) {
-			if (other.screenShot != null) {
-				return false;
-			}
-		}
-		else if (!screenShot.equals(other.screenShot)) {
-			return false;
-		}
-		if (sharePublic == null) {
-			if (other.sharePublic != null) {
-				return false;
-			}
-		}
-		else if (!sharePublic.equals(other.sharePublic)) {
-			return false;
-		}
-		if (tenantId == null) {
-			if (other.tenantId != null) {
-				return false;
-			}
-		}
-		else if (!tenantId.equals(other.tenantId)) {
-			return false;
-		}
-		if (type == null) {
-			if (other.type != null) {
-				return false;
-			}
-		}
-		else if (!type.equals(other.type)) {
-			return false;
-		}
-		return true;
 	}
 
 	/**
@@ -270,7 +100,7 @@ public class DashboardRowEntity implements RowEntity
 	/**
 	 * @return the dashboardId
 	 */
-	public BigInteger getDashboardId()
+	public String getDashboardId()
 	{
 		return dashboardId;
 	}
@@ -278,7 +108,7 @@ public class DashboardRowEntity implements RowEntity
 	/**
 	 * @return the deleted
 	 */
-	public BigInteger getDeleted()
+	public String getDeleted()
 	{
 		return deleted;
 	}
@@ -403,36 +233,6 @@ public class DashboardRowEntity implements RowEntity
 		return type;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode()
-	{
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + (applicationType == null ? 0 : applicationType.hashCode());
-		result = prime * result + (creationDate == null ? 0 : creationDate.hashCode());
-		result = prime * result + (dashboardId == null ? 0 : dashboardId.hashCode());
-		result = prime * result + (deleted == null ? 0 : deleted.hashCode());
-		result = prime * result + (description == null ? 0 : description.hashCode());
-		result = prime * result + (enableDescription == null ? 0 : enableDescription.hashCode());
-		result = prime * result + (enableEntityFilter == null ? 0 : enableEntityFilter.hashCode());
-		result = prime * result + (enableRefresh == null ? 0 : enableRefresh.hashCode());
-		result = prime * result + (enableTimeRange == null ? 0 : enableTimeRange.hashCode());
-		result = prime * result + (extendedOptions == null ? 0 : extendedOptions.hashCode());
-		result = prime * result + (isSystem == null ? 0 : isSystem.hashCode());
-		result = prime * result + (lastModificationDate == null ? 0 : lastModificationDate.hashCode());
-		result = prime * result + (lastModifiedBy == null ? 0 : lastModifiedBy.hashCode());
-		result = prime * result + (name == null ? 0 : name.hashCode());
-		result = prime * result + (owner == null ? 0 : owner.hashCode());
-		result = prime * result + (screenShot == null ? 0 : screenShot.hashCode());
-		result = prime * result + (sharePublic == null ? 0 : sharePublic.hashCode());
-		result = prime * result + (tenantId == null ? 0 : tenantId.hashCode());
-		result = prime * result + (type == null ? 0 : type.hashCode());
-		return result;
-	}
-
 	/**
 	 * @param applicationType
 	 *            the applicationType to set
@@ -455,7 +255,7 @@ public class DashboardRowEntity implements RowEntity
 	 * @param dashboardId
 	 *            the dashboardId to set
 	 */
-	public void setDashboardId(BigInteger dashboardId)
+	public void setDashboardId(String dashboardId)
 	{
 		this.dashboardId = dashboardId;
 	}
@@ -464,7 +264,7 @@ public class DashboardRowEntity implements RowEntity
 	 * @param deleted
 	 *            the deleted to set
 	 */
-	public void setDeleted(BigInteger deleted)
+	public void setDeleted(String deleted)
 	{
 		this.deleted = deleted;
 	}
@@ -603,19 +403,195 @@ public class DashboardRowEntity implements RowEntity
 	{
 		this.type = type;
 	}
+	
+	
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString()
-	{
-		return "DashboardRowEntity [dashboardId=" + dashboardId + ", name=" + name + ", type=" + type + ", description="
-				+ description + ", creationDate=" + creationDate + ", lastModificationDate=" + lastModificationDate
-				+ ", lastModifiedBy=" + lastModifiedBy + ", owner=" + owner + ", isSystem=" + isSystem + ", applicationType="
-				+ applicationType + ", enableTimeRange=" + enableTimeRange + ", screenShot=" + screenShot + ", deleted=" + deleted
-				+ ", tenantId=" + tenantId + ", enableRefresh=" + enableRefresh + ", sharePublic=" + sharePublic
-				+ ", enableEntityFilter=" + enableEntityFilter + ", enableDescription=" + enableDescription + ", extendedOptions="
-				+ extendedOptions + "]";
+	public Integer getShowInHome() {
+		return showInHome;
 	}
+
+	public void setShowInHome(Integer showInHome) {
+		this.showInHome = showInHome;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((applicationType == null) ? 0 : applicationType.hashCode());
+		result = prime * result
+				+ ((creationDate == null) ? 0 : creationDate.hashCode());
+		result = prime * result
+				+ ((dashboardId == null) ? 0 : dashboardId.hashCode());
+		result = prime * result + ((deleted == null) ? 0 : deleted.hashCode());
+		result = prime * result
+				+ ((description == null) ? 0 : description.hashCode());
+		result = prime
+				* result
+				+ ((enableDescription == null) ? 0 : enableDescription
+						.hashCode());
+		result = prime
+				* result
+				+ ((enableEntityFilter == null) ? 0 : enableEntityFilter
+						.hashCode());
+		result = prime * result
+				+ ((enableRefresh == null) ? 0 : enableRefresh.hashCode());
+		result = prime * result
+				+ ((enableTimeRange == null) ? 0 : enableTimeRange.hashCode());
+		result = prime * result
+				+ ((extendedOptions == null) ? 0 : extendedOptions.hashCode());
+		result = prime * result
+				+ ((isSystem == null) ? 0 : isSystem.hashCode());
+		result = prime
+				* result
+				+ ((lastModificationDate == null) ? 0 : lastModificationDate
+						.hashCode());
+		result = prime * result
+				+ ((lastModifiedBy == null) ? 0 : lastModifiedBy.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((owner == null) ? 0 : owner.hashCode());
+		result = prime * result
+				+ ((screenShot == null) ? 0 : screenShot.hashCode());
+		result = prime * result
+				+ ((sharePublic == null) ? 0 : sharePublic.hashCode());
+		result = prime * result
+				+ ((showInHome == null) ? 0 : showInHome.hashCode());
+		result = prime * result
+				+ ((tenantId == null) ? 0 : tenantId.hashCode());
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		DashboardRowEntity other = (DashboardRowEntity) obj;
+		if (applicationType == null) {
+			if (other.applicationType != null)
+				return false;
+		} else if (!applicationType.equals(other.applicationType))
+			return false;
+		if (creationDate == null) {
+			if (other.creationDate != null)
+				return false;
+		} else if (!creationDate.equals(other.creationDate))
+			return false;
+		if (dashboardId == null) {
+			if (other.dashboardId != null)
+				return false;
+		} else if (!dashboardId.equals(other.dashboardId))
+			return false;
+		if (deleted == null) {
+			if (other.deleted != null)
+				return false;
+		} else if (!deleted.equals(other.deleted))
+			return false;
+		if (description == null) {
+			if (other.description != null)
+				return false;
+		} else if (!description.equals(other.description))
+			return false;
+		if (enableDescription == null) {
+			if (other.enableDescription != null)
+				return false;
+		} else if (!enableDescription.equals(other.enableDescription))
+			return false;
+		if (enableEntityFilter == null) {
+			if (other.enableEntityFilter != null)
+				return false;
+		} else if (!enableEntityFilter.equals(other.enableEntityFilter))
+			return false;
+		if (enableRefresh == null) {
+			if (other.enableRefresh != null)
+				return false;
+		} else if (!enableRefresh.equals(other.enableRefresh))
+			return false;
+		if (enableTimeRange == null) {
+			if (other.enableTimeRange != null)
+				return false;
+		} else if (!enableTimeRange.equals(other.enableTimeRange))
+			return false;
+		if (extendedOptions == null) {
+			if (other.extendedOptions != null)
+				return false;
+		} else if (!extendedOptions.equals(other.extendedOptions))
+			return false;
+		if (isSystem == null) {
+			if (other.isSystem != null)
+				return false;
+		} else if (!isSystem.equals(other.isSystem))
+			return false;
+		if (lastModificationDate == null) {
+			if (other.lastModificationDate != null)
+				return false;
+		} else if (!lastModificationDate.equals(other.lastModificationDate))
+			return false;
+		if (lastModifiedBy == null) {
+			if (other.lastModifiedBy != null)
+				return false;
+		} else if (!lastModifiedBy.equals(other.lastModifiedBy))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (owner == null) {
+			if (other.owner != null)
+				return false;
+		} else if (!owner.equals(other.owner))
+			return false;
+		if (screenShot == null) {
+			if (other.screenShot != null)
+				return false;
+		} else if (!screenShot.equals(other.screenShot))
+			return false;
+		if (sharePublic == null) {
+			if (other.sharePublic != null)
+				return false;
+		} else if (!sharePublic.equals(other.sharePublic))
+			return false;
+		if (showInHome == null) {
+			if (other.showInHome != null)
+				return false;
+		} else if (!showInHome.equals(other.showInHome))
+			return false;
+		if (tenantId == null) {
+			if (other.tenantId != null)
+				return false;
+		} else if (!tenantId.equals(other.tenantId))
+			return false;
+		if (type == null) {
+			if (other.type != null)
+				return false;
+		} else if (!type.equals(other.type))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "DashboardRowEntity [dashboardId=" + dashboardId + ", name="
+				+ name + ", type=" + type + ", description=" + description
+				+ ", creationDate=" + creationDate + ", lastModificationDate="
+				+ lastModificationDate + ", lastModifiedBy=" + lastModifiedBy
+				+ ", owner=" + owner + ", isSystem=" + isSystem
+				+ ", applicationType=" + applicationType + ", enableTimeRange="
+				+ enableTimeRange + ", screenShot=" + screenShot + ", deleted="
+				+ deleted + ", tenantId=" + tenantId + ", enableRefresh="
+				+ enableRefresh + ", sharePublic=" + sharePublic
+				+ ", enableEntityFilter=" + enableEntityFilter
+				+ ", enableDescription=" + enableDescription
+				+ ", extendedOptions=" + extendedOptions + ", showInHome="
+				+ showInHome + "]";
+	}
+	
+	
+
 }
