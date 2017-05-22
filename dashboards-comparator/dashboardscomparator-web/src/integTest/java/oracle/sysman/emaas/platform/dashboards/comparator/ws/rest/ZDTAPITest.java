@@ -111,11 +111,16 @@ public class ZDTAPITest {
     	tableRow2.setEmsDashboard(new ArrayList<DashboardRowEntity>());
     	InstanceData<TableRowsEntity> instance1 = new InstanceData<TableRowsEntity>("", null,tableRow1,  100);
     	InstanceData<TableRowsEntity> instance2 = new InstanceData<TableRowsEntity>("", null,tableRow2,  100);
-    	
+    	instance1.setKey("omc");
+    	instance1.setClient(null);
+    	instance1.setData(tableRow2);;
+    	instance1.setTotalRowNum(100);
     	final HashMap<String, LookupClient> lookupEntry = new HashMap<String, LookupClient>();
     	
     	
     	final InstancesComparedData<TableRowsEntity> comparedData = new InstancesComparedData<TableRowsEntity>(instance1, instance2);  
+    	comparedData.setInstance1(instance1);
+    	comparedData.setInstance2(instance2);
     	new Expectations() {
     		{ 	
     			abstractComparator.getOMCInstances();
