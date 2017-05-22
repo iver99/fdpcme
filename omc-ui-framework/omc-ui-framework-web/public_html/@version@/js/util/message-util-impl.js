@@ -64,6 +64,18 @@ define(['knockout', 'jquery'],
                     window.postMessage(messageObj, window.location.href);
                 }
             };
+            
+            /**
+             * Remove all messages
+             *
+             * @param
+             *
+             * @returns
+             */
+            self.clearAllMessages = function() {
+                var messageObj = {tag: 'EMAAS_SHOW_PAGE_LEVEL_MESSAGE', action: 'clear'};
+                window.postMessage(messageObj, window.location.href);
+            };
 
             /**
              * Format a message by replacing the placeholds inside the message string with parameters passed in

@@ -6,9 +6,8 @@ configurations {
 }
 
 version = project.ext.getServiceVersion("DashboardService-API")
-group = 'emaas/applications/dashboards-framework'
-ext.deployname=artifactPrefix+'dashboards-api'
-def artifactId = appName 
+deployname=artifactPrefix+'dashboards-api'
+def artifactId = appName
 def groupId = group 
 def versionNumber = version
 

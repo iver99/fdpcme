@@ -10,8 +10,6 @@
 
 package oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities;
 
-import java.math.BigInteger;
-
 import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
@@ -26,7 +24,7 @@ public class DashboardUserOptionsRowEntity implements RowEntity
 	private Long tenantId;
 
 	@JsonProperty("DASHBOARD_ID")
-	private BigInteger dashboardId;
+	private String dashboardId;
 
 	@JsonProperty("AUTO_REFRESH_INTERVAL")
 	private Long autoRefreshInterval;
@@ -45,96 +43,17 @@ public class DashboardUserOptionsRowEntity implements RowEntity
 
 	@JsonProperty("LAST_MODIFICATION_DATE")
 	private String lastModificationDate;
+	
+	@JsonProperty("DELETED")
+	private Integer deleted;
+	
+	
+	public Integer getDeleted() {
+		return deleted;
+	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj)
-	{
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		DashboardUserOptionsRowEntity other = (DashboardUserOptionsRowEntity) obj;
-		if (accessDate == null) {
-			if (other.accessDate != null) {
-				return false;
-			}
-		}
-		else if (!accessDate.equals(other.accessDate)) {
-			return false;
-		}
-		if (autoRefreshInterval == null) {
-			if (other.autoRefreshInterval != null) {
-				return false;
-			}
-		}
-		else if (!autoRefreshInterval.equals(other.autoRefreshInterval)) {
-			return false;
-		}
-		if (creationDate == null) {
-			if (other.creationDate != null) {
-				return false;
-			}
-		}
-		else if (!creationDate.equals(other.creationDate)) {
-			return false;
-		}
-		if (dashboardId == null) {
-			if (other.dashboardId != null) {
-				return false;
-			}
-		}
-		else if (!dashboardId.equals(other.dashboardId)) {
-			return false;
-		}
-		if (extendedOptions == null) {
-			if (other.extendedOptions != null) {
-				return false;
-			}
-		}
-		else if (!extendedOptions.equals(other.extendedOptions)) {
-			return false;
-		}
-		if (isFavorite == null) {
-			if (other.isFavorite != null) {
-				return false;
-			}
-		}
-		else if (!isFavorite.equals(other.isFavorite)) {
-			return false;
-		}
-		if (lastModificationDate == null) {
-			if (other.lastModificationDate != null) {
-				return false;
-			}
-		}
-		else if (!lastModificationDate.equals(other.lastModificationDate)) {
-			return false;
-		}
-		if (tenantId == null) {
-			if (other.tenantId != null) {
-				return false;
-			}
-		}
-		else if (!tenantId.equals(other.tenantId)) {
-			return false;
-		}
-		if (userName == null) {
-			if (other.userName != null) {
-				return false;
-			}
-		}
-		else if (!userName.equals(other.userName)) {
-			return false;
-		}
-		return true;
+	public void setDeleted(Integer deleted) {
+		this.deleted = deleted;
 	}
 
 	/**
@@ -154,17 +73,9 @@ public class DashboardUserOptionsRowEntity implements RowEntity
 	}
 
 	/**
-	 * @return the creationDate
-	 */
-	public String getCreationDate()
-	{
-		return creationDate;
-	}
-
-	/**
 	 * @return the dashboardId
 	 */
-	public BigInteger getDashboardId()
+	public String getDashboardId()
 	{
 		return dashboardId;
 	}
@@ -186,14 +97,6 @@ public class DashboardUserOptionsRowEntity implements RowEntity
 	}
 
 	/**
-	 * @return the lastModificationDate
-	 */
-	public String getLastModificationDate()
-	{
-		return lastModificationDate;
-	}
-
-	/**
 	 * @return the tenantId
 	 */
 	public Long getTenantId()
@@ -209,24 +112,20 @@ public class DashboardUserOptionsRowEntity implements RowEntity
 		return userName;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
+	/**
+	 * @return the creationDate
 	 */
-	@Override
-	public int hashCode()
+	public String getCreationDate()
 	{
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + (accessDate == null ? 0 : accessDate.hashCode());
-		result = prime * result + (autoRefreshInterval == null ? 0 : autoRefreshInterval.hashCode());
-		result = prime * result + (creationDate == null ? 0 : creationDate.hashCode());
-		result = prime * result + (dashboardId == null ? 0 : dashboardId.hashCode());
-		result = prime * result + (extendedOptions == null ? 0 : extendedOptions.hashCode());
-		result = prime * result + (isFavorite == null ? 0 : isFavorite.hashCode());
-		result = prime * result + (lastModificationDate == null ? 0 : lastModificationDate.hashCode());
-		result = prime * result + (tenantId == null ? 0 : tenantId.hashCode());
-		result = prime * result + (userName == null ? 0 : userName.hashCode());
-		return result;
+		return creationDate;
+	}
+
+	/**
+	 * @return the lastModificationDate
+	 */
+	public String getLastModificationDate()
+	{
+		return lastModificationDate;
 	}
 
 	/**
@@ -248,19 +147,10 @@ public class DashboardUserOptionsRowEntity implements RowEntity
 	}
 
 	/**
-	 * @param creationDate
-	 *            the creationDate to set
-	 */
-	public void setCreationDate(String creationDate)
-	{
-		this.creationDate = creationDate;
-	}
-
-	/**
 	 * @param dashboardId
 	 *            the dashboardId to set
 	 */
-	public void setDashboardId(BigInteger dashboardId)
+	public void setDashboardId(String dashboardId)
 	{
 		this.dashboardId = dashboardId;
 	}
@@ -284,15 +174,6 @@ public class DashboardUserOptionsRowEntity implements RowEntity
 	}
 
 	/**
-	 * @param lastModificationDate
-	 *            the lastModificationDate to set
-	 */
-	public void setLastModificationDate(String lastModificationDate)
-	{
-		this.lastModificationDate = lastModificationDate;
-	}
-
-	/**
 	 * @param tenantId
 	 *            the tenantId to set
 	 */
@@ -310,6 +191,25 @@ public class DashboardUserOptionsRowEntity implements RowEntity
 		this.userName = userName;
 	}
 
+	/**
+	 * @param creationDate
+	 *            the creationDate to set
+	 */
+	public void setCreationDate(String creationDate)
+	{
+		this.creationDate = creationDate;
+	}
+
+	/**
+	 * @param lastModificationDate
+	 *            the lastModificationDate to set
+	 */
+	public void setLastModificationDate(String lastModificationDate)
+	{
+		this.lastModificationDate = lastModificationDate;
+	}
+
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
@@ -318,7 +218,100 @@ public class DashboardUserOptionsRowEntity implements RowEntity
 	{
 		return "DashboardUserOptionsRowEntity [userName=" + userName + ", tenantId=" + tenantId + ", dashboardId=" + dashboardId
 				+ ", autoRefreshInterval=" + autoRefreshInterval + ", accessDate=" + accessDate + ", isFavorite=" + isFavorite
-				+ ", extendedOptions=" + extendedOptions + ", creationDate=" + creationDate + ", lastModificationDate="
-				+ lastModificationDate + "]";
+				+ ", extendedOptions=" + extendedOptions + ", creationDate=" + creationDate + ", lastModificationDate=" + lastModificationDate+ "]";
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((accessDate == null) ? 0 : accessDate.hashCode());
+		result = prime
+				* result
+				+ ((autoRefreshInterval == null) ? 0 : autoRefreshInterval
+						.hashCode());
+		result = prime * result
+				+ ((creationDate == null) ? 0 : creationDate.hashCode());
+		result = prime * result
+				+ ((dashboardId == null) ? 0 : dashboardId.hashCode());
+		result = prime * result + ((deleted == null) ? 0 : deleted.hashCode());
+		result = prime * result
+				+ ((extendedOptions == null) ? 0 : extendedOptions.hashCode());
+		result = prime * result
+				+ ((isFavorite == null) ? 0 : isFavorite.hashCode());
+		result = prime
+				* result
+				+ ((lastModificationDate == null) ? 0 : lastModificationDate
+						.hashCode());
+		result = prime * result
+				+ ((tenantId == null) ? 0 : tenantId.hashCode());
+		result = prime * result
+				+ ((userName == null) ? 0 : userName.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		DashboardUserOptionsRowEntity other = (DashboardUserOptionsRowEntity) obj;
+		if (accessDate == null) {
+			if (other.accessDate != null)
+				return false;
+		} else if (!accessDate.equals(other.accessDate))
+			return false;
+		if (autoRefreshInterval == null) {
+			if (other.autoRefreshInterval != null)
+				return false;
+		} else if (!autoRefreshInterval.equals(other.autoRefreshInterval))
+			return false;
+		if (creationDate == null) {
+			if (other.creationDate != null)
+				return false;
+		} else if (!creationDate.equals(other.creationDate))
+			return false;
+		if (dashboardId == null) {
+			if (other.dashboardId != null)
+				return false;
+		} else if (!dashboardId.equals(other.dashboardId))
+			return false;
+		if (deleted == null) {
+			if (other.deleted != null)
+				return false;
+		} else if (!deleted.equals(other.deleted))
+			return false;
+		if (extendedOptions == null) {
+			if (other.extendedOptions != null)
+				return false;
+		} else if (!extendedOptions.equals(other.extendedOptions))
+			return false;
+		if (isFavorite == null) {
+			if (other.isFavorite != null)
+				return false;
+		} else if (!isFavorite.equals(other.isFavorite))
+			return false;
+		if (lastModificationDate == null) {
+			if (other.lastModificationDate != null)
+				return false;
+		} else if (!lastModificationDate.equals(other.lastModificationDate))
+			return false;
+		if (tenantId == null) {
+			if (other.tenantId != null)
+				return false;
+		} else if (!tenantId.equals(other.tenantId))
+			return false;
+		if (userName == null) {
+			if (other.userName != null)
+				return false;
+		} else if (!userName.equals(other.userName))
+			return false;
+		return true;
+	}
+	
+	
 }

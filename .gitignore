@@ -135,7 +135,7 @@ test-output/
 test-reports/
 tmp/
 work/
-META-INF/
+
 
 .chef
 /dashboards-ui/dashboardsui-web/public_html/@version@/css/
