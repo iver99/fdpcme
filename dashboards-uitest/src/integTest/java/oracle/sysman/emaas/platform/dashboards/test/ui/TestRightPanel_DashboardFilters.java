@@ -1,8 +1,9 @@
 package oracle.sysman.emaas.platform.dashboards.test.ui;
 
+import java.util.logging.Logger;
+
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.DashBoardUtils;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.LoginAndLogout;
-import oracle.sysman.emaas.platform.dashboards.test.ui.util.PageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
@@ -16,9 +17,6 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
-
-import java.util.logging.Logger;
-
 
 /**
  * @version
@@ -154,7 +152,16 @@ public class TestRightPanel_DashboardFilters extends LoginAndLogout
 		//to verify jira EMCPDF-3338
 		//back to dashboard page and verify the time in widget
 		webd.getLogger().info("Back to dashboard home page");
-		BrandingBarUtil.visitDashboardHome(webd);
+
+		webd.getLogger().info("Check if having hamburger menu");
+		if (DashBoardUtils.isHamburgerMenuEnabled(webd)) {
+			webd.getLogger().info("Hamburger Menu Enable");
+			BrandingBarUtil.goBackToParentMenu(webd);
+			BrandingBarUtil.clickMenuItem(webd, BrandingBarUtil.ROOT_MENU_DASHBOARDS);
+		}
+		else {
+			BrandingBarUtil.visitDashboardHome(webd);
+		}
 
 		DashboardHomeUtil.selectDashboard(webd, dbRespectGCTimeRangeName_LA);
 
@@ -211,11 +218,13 @@ public class TestRightPanel_DashboardFilters extends LoginAndLogout
 
 		//Verify the time range in UDE page
 		webd.getLogger().info("Verify the time range in UDE page");
-		Assert.assertEquals(GlobalContextUtil.getTimeRangeLabel(webd).contains("Last week") || GlobalContextUtil.getTimeRangeLabel(webd).contains("Last 7 days"), true);
+		Assert.assertEquals(GlobalContextUtil.getTimeRangeLabel(webd).contains("Last week")
+				|| GlobalContextUtil.getTimeRangeLabel(webd).contains("Last 7 days"), true);
 
 		//to verify jira EMCPDF-3338
 		//back to dashboard page and verify the time in widget
 		webd.getLogger().info("Back to dashboard home page");
+
 		BrandingBarUtil.visitDashboardHome(webd);
 
 		DashboardHomeUtil.selectDashboard(webd, dbRespectGCTimeRangeName_UDE);
@@ -278,7 +287,15 @@ public class TestRightPanel_DashboardFilters extends LoginAndLogout
 		//to verify jira EMCPDF-3338
 		//back to dashboard page and verify the time in widget
 		webd.getLogger().info("Back to dashboard home page");
-		BrandingBarUtil.visitDashboardHome(webd);
+		webd.getLogger().info("Check if having hamburger menu");
+		if (DashBoardUtils.isHamburgerMenuEnabled(webd)) {
+			webd.getLogger().info("Hamburger Menu Enable");
+			BrandingBarUtil.goBackToParentMenu(webd);
+			BrandingBarUtil.clickMenuItem(webd, BrandingBarUtil.ROOT_MENU_DASHBOARDS);
+		}
+		else {
+			BrandingBarUtil.visitDashboardHome(webd);
+		}
 
 		DashboardHomeUtil.selectDashboard(webd, dbName_LAWidget);
 
@@ -336,7 +353,8 @@ public class TestRightPanel_DashboardFilters extends LoginAndLogout
 
 		//Verify the time range in UDE page
 		webd.getLogger().info("Verify the time range in UDE page");
-		Assert.assertEquals(GlobalContextUtil.getTimeRangeLabel(webd).contains("Last week") || GlobalContextUtil.getTimeRangeLabel(webd).contains("Last 7 days"), true);
+		Assert.assertEquals(GlobalContextUtil.getTimeRangeLabel(webd).contains("Last week")
+				|| GlobalContextUtil.getTimeRangeLabel(webd).contains("Last 7 days"), true);
 
 		//to verify jira EMCPDF-3338
 		//back to dashboard page and verify the time in widget
