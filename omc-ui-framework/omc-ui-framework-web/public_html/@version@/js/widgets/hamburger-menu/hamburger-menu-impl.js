@@ -75,9 +75,11 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 }
                 
                 var currentCompositeParentId = null;
+                var processingObjMenuName = null;
                 //Show up a composite menu
                 function jumpToCompositeMenu(parentMenuId, rootMenuLabel, menuJson) {
-                    if (menuJson && menuJson.serviceCompositeMenus) {
+                    if (menuJson && menuJson.serviceCompositeMenus && rootMenuLabel !== processingObjMenuName) {
+                        processingObjMenuName = rootMenuLabel;
                         clearCompositeMenuItems();
                         currentCompositeParentId = parentMenuId;
                         if (menuJson.serviceMenuMsgBundle) {
@@ -105,7 +107,11 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                                         menuUtil.setCurrentMenuItem(currentMenuId, underOmcAdmin);
                                     }
                                 }
+                                processingObjMenuName = null;
                             });
+                        }
+                        else {
+                            processingObjMenuName = null;
                         }
                     }                  
                 }
@@ -230,7 +236,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     'omc_root_admin', 
                     'omc_root_admin_alertrules', 
                     'omc_root_admin_agents',
-                    'omc_root_admin_entitiesconfig',
+//                    'omc_root_admin_entitiesconfig',
                     rootCompositeMenuid
                 ];
 
@@ -565,6 +571,14 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                         var menuItem = rawMenuObj;
                         //Some root menus should be always be there, like Home, Dashboards, Alerts etc.
                         if (defaultMenuIds.indexOf(menuItem.id) > -1) {
+                            return menuItem;
+                        }
+                        //Disable Entities Config menu item if current user is not an admin
+                        if (menuItem.id === 'omc_root_admin_entitiesconfig') {
+                            if (!userTenantUtil.isAdminUser()) {
+                                menuItem.disabled = true;
+                                menuItem.externalUrl = '#';
+                            }
                             return menuItem;
                         }
                         
@@ -968,7 +982,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
 //                    globalMenuIdHrefMapping['omc_root_admin'] = fetchLinkFromRegistrationData(data, 'adminLinks', 'EventUI');
                     globalMenuIdHrefMapping['omc_root_admin_alertrules'] = fetchLinkFromRegistrationData(data, 'adminLinks', 'EventUI');
                     globalMenuIdHrefMapping['omc_root_admin_agents'] = fetchLinkFromRegistrationData(data, 'adminLinks', 'TenantManagementUI');
-                    globalMenuIdHrefMapping['omc_root_admin_clouddiscoveryprofiles'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'MonitoringServiceUI')?fetchLinkFromRegistrationData(data, 'cloudServices', 'MonitoringServiceUI')+"?root=cmsCloudAccountsDashboard":null;
+                    globalMenuIdHrefMapping['omc_root_admin_clouddiscoveryprofiles'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'MonitoringServiceUI')?fetchLinkFromRegistrationData(data, 'cloudServices', 'MonitoringServiceUI')+"?root=cmsCloudProfilesDashboard":null;
                     globalMenuIdHrefMapping['omc_root_admin_entitiesconfig'] = fetchLinkFromRegistrationData(data, 'adminLinks', 'AdminConsoleSaaSUi');
                 }
                 

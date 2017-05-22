@@ -256,6 +256,8 @@ public class ConfigurationAPI extends APIBase
             } catch (ExecutionException e) {
                 _LOGGER.error(e.getCause() == null ? e : e.getCause());
             }catch(TimeoutException e){
+				//if timeout, and the task is still running, attempt to stop the task
+				futureSubscribedApps.cancel(true);
                 _LOGGER.error(e);
             }
             //get subscribapps2 API data
@@ -272,6 +274,8 @@ public class ConfigurationAPI extends APIBase
             } catch (ExecutionException e) {
                 _LOGGER.error(e.getCause() == null ? e : e.getCause());
             }catch(TimeoutException e){
+				//if timeout, and the task is still running, attempt to stop the task
+				futureUserRoles.cancel(true);
                 _LOGGER.error(e);
             }
 

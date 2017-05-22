@@ -66,6 +66,10 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
              * @returns
              */
             self.fireServiceMenuLoadedEvent = function(){
+                if (!window._uifwk) {
+                    window._uifwk = {};
+                }
+                window._uifwk.serviceMenuLoaded = true;
                 var message = {'tag': 'EMAAS_OMC_GLOBAL_MENU_SERVICE_MENU_LOADED'};
                 window.postMessage(message, window.location.href);
             };
@@ -168,7 +172,9 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
                 window._uifwk.compositeMenuParentId = parentMenuId;
                 window._uifwk.compositeMenuName = objMenuName;
                 window._uifwk.compositeMenuJson = menuJson;
-                fireCompositeMenuDisplayEvent(parentMenuId, objMenuName, menuJson);
+                if (window._uifwk.serviceMenuLoaded) {
+                    fireCompositeMenuDisplayEvent(parentMenuId, objMenuName, menuJson);
+                }
             };
             
             /**

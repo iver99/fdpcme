@@ -3,11 +3,13 @@ define('uifwk/@version@/js/widgets/navlinks/navigation-links-impl', ['knockout',
     'uifwk/@version@/js/util/df-util-impl', 
     'ojs/ojcore', 
     'uifwk/@version@/js/util/preference-util-impl', 
-    'uifwk/@version@/js/sdk/context-util-impl'],
-        function (ko, $, dfumodel, oj, pfu, contextModel) {
+    'uifwk/@version@/js/sdk/context-util-impl',
+    'uifwk/@version@/js/util/usertenant-util-impl'],
+        function (ko, $, dfumodel, oj, pfu, contextModel, usertenantModel) {
             function NavigationLinksViewModel(params) {
                 var self = this;
                 var cxtUtil = new contextModel();
+                var userTenantUtil = new usertenantModel();
                 var dfHomeUrl = null;
                 var dfWelcomeUrl = null;
                 var dfDashboardsUrl = null;
@@ -202,8 +204,8 @@ define('uifwk/@version@/js/widgets/navlinks/navigation-links-impl', ['knockout',
                         }
                         //Check whether to show admin links, if discovered admin links is not null, then means user has admin privilege
                         if (data.adminLinks) {
-                            self.isAdmin = true;
-                            self.isAdminLinksVisible(true);
+                            self.isAdmin = userTenantUtil.isAdminUser();
+                            self.isAdminLinksVisible(self.isAdmin);
                             if (data.adminLinks.length > 0) {
                                 discoveredAdminLinks = data.adminLinks;
                                 refreshAdminLinks();

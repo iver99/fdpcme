@@ -170,7 +170,9 @@ define(['knockout',
                 self.show();
             };
 
+            self.initTileKoRightBtnsResizeHdls = ko.observable(false);
             self.showPullRightBtn = function(clientGuid, data, event) {
+                self.initTileKoRightBtnsResizeHdls(true);
                 $("#tile"+clientGuid+" .dbd-btn-group").css("display", "inline-block");
                 $("#tile"+clientGuid+" .dbd-btn-editor").css("display", "flex");
                 $("#tile"+clientGuid+" .dbd-btn-maxminToggle").css("display", "flex");

@@ -952,6 +952,14 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
             self.getCompositeMeId = function () {
                 return getIndividualContext('composite', 'compositeMEID');
             };
+            
+            function restoreCompositeCtxFromSessionCache(cache) {
+                setIndividualContext('composite', 'compositeDisplayName', cache['compositeDisplayName'], false, false);
+                setIndividualContext('composite', 'compositeName', cache['compositeName'], false, false);
+                setIndividualContext('composite', 'compositeType', cache['compositeType'], false, false);
+                setIndividualContext('composite', 'compositeClass', cache['compositeClass'], false, false);
+                setIndividualContext('composite', 'compositeNeedRefresh', 'false', false, true);
+            }
 
             self.getCompositeEntity = function () {
                 var compositeEntity = getIndividualContext('composite', 'compositeEntity');
@@ -1003,6 +1011,7 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                     var compositeCacheKey = self.getCompositeMeId();
                     var cache = sessionCaches[0].retrieveDataFromCache(compositeCacheKey);
                     if (cache && cache['compositeType']) {
+                        restoreCompositeCtxFromSessionCache(cache);
                         return cache['compositeType'];
                     }
                     //Fetch composite name/type
@@ -1037,6 +1046,7 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                     var compositeCacheKey = self.getCompositeMeId();
                     var cache = sessionCaches[0].retrieveDataFromCache(compositeCacheKey);
                     if (cache && cache['compositeName']) {
+                        restoreCompositeCtxFromSessionCache(cache);
                         return cache['compositeName'];
                     }
                     //Fetch composite name/type
@@ -1061,6 +1071,7 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                     var compositeCacheKey = self.getCompositeMeId();
                     var cache = sessionCaches[0].retrieveDataFromCache(compositeCacheKey);
                     if (cache && cache['compositeDisplayName']) {
+                        restoreCompositeCtxFromSessionCache(cache);
                         return cache['compositeDisplayName'];
                     }
                     //Fetch composite name/type
@@ -1090,6 +1101,7 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                     var compositeCacheKey = self.getCompositeMeId();
                     var cache = sessionCaches[0].retrieveDataFromCache(compositeCacheKey);
                     if (cache && cache['compositeClass']) {
+                        restoreCompositeCtxFromSessionCache(cache);
                         return cache['compositeClass'];
                     }
                     //Fetch composite name/type
@@ -1319,9 +1331,10 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                             queryODSEntitiesByMeIds(entityMeIds, loadEntities);
                             for (var i = 0; i < entitiesFetched.length; i++) {
                                 var entity = entitiesFetched[i];
-                                if (entity['entityType'] === entitiesType) {
+                                //Do not filter by entitiesType for now, will add support once we have clear requirement for it
+//                                if (entity['entityType'] === entitiesType) {
                                     entities.push(entity);
-                                }
+//                                }
                             }
                         }
                         else if (entityMeIds && entityMeIds.length > 0) {
@@ -1331,13 +1344,14 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                                 entities.push(entitiesFetched[i]);
                             }
                         }
-                        else if (entitiesType) {
-                            //Query by entities type
-                            queryODSEntitiesByEntityType(entitiesType, loadEntities);
-                            for (var i = 0; i < entitiesFetched.length; i++) {
-                                entities.push(entitiesFetched[i]);
-                            }
-                        }
+                        //Do not query entities by entitiesType for now, will add support once we have clear requirement for it
+//                        else if (entitiesType) {
+//                            //Query by entities type
+//                            queryODSEntitiesByEntityType(entitiesType, loadEntities);
+//                            for (var i = 0; i < entitiesFetched.length; i++) {
+//                                entities.push(entitiesFetched[i]);
+//                            }
+//                        }
                         // update sessionStorage cache
                         sessionCaches[1].updateCacheData(entityCacheKey, 'entities', entities);
                     }
@@ -1439,16 +1453,17 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
             function getEntityCacheKey() {
                 var entityCacheKey = null;
                 var entityMeIds = self.getEntityMeIds();
-                var entitiesType = self.getEntitiesType();
-                if (entityMeIds && entityMeIds.length > 0 && entitiesType) {
-                    entityCacheKey = entityMeIds.sort().join() + entitiesType;
-                }
-                else if (entityMeIds && entityMeIds.length > 0) {
+//                var entitiesType = self.getEntitiesType();
+//                if (entityMeIds && entityMeIds.length > 0 && entitiesType) {
+//                    entityCacheKey = entityMeIds.sort().join() + entitiesType;
+//                }
+//                else 
+                if (entityMeIds && entityMeIds.length > 0) {
                     entityCacheKey = entityMeIds.sort().join();
                 }
-                else if (entitiesType) {
-                    entityCacheKey = entitiesType;
-                }
+//                else if (entitiesType) {
+//                    entityCacheKey = entitiesType;
+//                }
                 return entityCacheKey;
             }
 

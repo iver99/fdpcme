@@ -226,17 +226,17 @@ public class TimeSelectorUtil_1130 extends TimeSelectorUtil_175
 		webd.click("css=" + TimeSelectorUIControls.sEndDateInput);
 		webd.takeScreenShot();
 
-		if (webd.isDisplayed(TimeSelectorUIControls.sErrorMsg)) {
-			try {
-				throw new Exception(webd.getText(TimeSelectorUIControls.sErrorMsg));
-			}
-			catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return null;
-		}
-		else {
+//		if (webd.isDisplayed(TimeSelectorUIControls.sErrorMsg)) {
+//			try {
+//				throw new Exception(webd.getText(TimeSelectorUIControls.sErrorMsg));
+//			}
+//			catch (Exception e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//			return null;
+//		}
+//		else {
 			try {
 				clickApplyButton(webd);
 			}
@@ -247,7 +247,7 @@ public class TimeSelectorUtil_1130 extends TimeSelectorUtil_175
 			String returnTimeRange = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn))
 					.get(index - 1).getText();
 			return dateConvert(webd, returnTimeRange, TimeRange.Custom, "MM/dd/yyyy", "MMM d, yyyy");
-		}
+//		}
 	}
 
 	@Override
@@ -282,17 +282,17 @@ public class TimeSelectorUtil_1130 extends TimeSelectorUtil_175
 		driver.click("css=" + optionLocator);
 		driver.takeScreenShot();
 
-		if (driver.isDisplayed(TimeSelectorUIControls.sErrorMsg)) {
-			try {
-				throw new Exception(driver.getText(TimeSelectorUIControls.sErrorMsg));
-			}
-			catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return null;
-		}
-		else {
+//		if (driver.isDisplayed(TimeSelectorUIControls.sErrorMsg)) {
+//			try {
+//				throw new Exception(driver.getText(TimeSelectorUIControls.sErrorMsg));
+//			}
+//			catch (Exception e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//			return null;
+//		}
+//		else {
 			try {
 				clickApplyButton(driver);
 			}
@@ -326,7 +326,7 @@ public class TimeSelectorUtil_1130 extends TimeSelectorUtil_175
 
 				return dateConvert(driver, returnDate, TimeRange.Custom, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
 			}
-		}
+//		}
 	}
 
 	@Override
@@ -365,17 +365,17 @@ public class TimeSelectorUtil_1130 extends TimeSelectorUtil_175
 		webd.click("css=" + optionLocator);
 		webd.takeScreenShot();
 
-		if (webd.isDisplayed(TimeSelectorUIControls.sErrorMsg)) {
-			try {
-				throw new Exception(webd.getText(TimeSelectorUIControls.sErrorMsg));
-			}
-			catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return null;
-		}
-		else {
+//		if (webd.isDisplayed(TimeSelectorUIControls.sErrorMsg)) {
+//			try {
+//				throw new Exception(webd.getText(TimeSelectorUIControls.sErrorMsg));
+//			}
+//			catch (Exception e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//			return null;
+//		}
+//		else {
 			try {
 				clickApplyButton(webd);
 			}
@@ -408,7 +408,7 @@ public class TimeSelectorUtil_1130 extends TimeSelectorUtil_175
 
 				return dateConvert(webd, returnDate, TimeRange.Custom, "MM/dd/yyyy", "MMM d, yyyy");
 			}
-		}
+//		}
 	}
 
 	@Override

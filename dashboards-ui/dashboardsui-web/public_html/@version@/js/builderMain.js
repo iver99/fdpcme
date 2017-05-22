@@ -284,27 +284,7 @@ require(['knockout',
                         var logger = new _emJETCustomLogger();
                         var menuUtil = new menuModel();
                         menuUtil.subscribeServiceMenuLoadedEvent(function(){
-                            var $b;
-                            $("#omcMenuNavList").addClass("df-computed-content-width");
-                            var $visibleHeaderBar = $(".dashboard-content:visible .head-bar-container");
-                            var $visibleRightDrawer = $(".dbd-left-panel:visible");
-                            if ($visibleHeaderBar.length > 0 && ko.dataFor($visibleHeaderBar[0])) {
-                                $b = ko.dataFor($visibleHeaderBar[0]).$b;
-                                $b && $b.triggerBuilderResizeEvent('hamburger menu show/hide status changed');
-                            }else if ($visibleRightDrawer.length > 0 && ko.dataFor($visibleRightDrawer[0])) {
-                                $b = ko.dataFor($visibleRightDrawer[0]).$b;
-                                $b && $b.triggerBuilderResizeEvent('hamburger menu show/hide status changed');
-                            }
-                            $("#omcHamburgerMenu").on("ojopen", function(event, offcanvas) {
-                                setTimeout(function(){
-                                    $b && $b.triggerBuilderResizeEvent('hamburger menu show/hide status changed');
-                                }, 100);
-                            });
-                            $("#omcHamburgerMenu").on("ojclose", function (event, offcanvas) {
-                                setTimeout(function(){
-                                    $b && $b.triggerBuilderResizeEvent('hamburger menu show/hide status changed');
-                                }, 100);
-                            });
+                            $(window).trigger('resize');    //initialize content page width when hamburger menu enabled
                         });
                         var logReceiver = dfu.getLogUrl();
                         //require(['emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils'], function(TargetSelectorUtils) {
@@ -449,7 +429,37 @@ require(['knockout',
                                     //Builder.attachEagerLoadedDahshboardTilesAtPageLoad();
 
                                     $("#loading").hide();
-                                    $('#globalBody').show();
+                                    $('#globalBody').show(function(){
+                                        if(!$("#hamburgerButton")[0]){
+                                            return; //hamburger menu disabled
+                                        }
+                                        var triggerBuilderResize = function(delayTime){
+                                            var $b;
+                                            if(!delayTime){
+                                                delayTime = 100;
+                                            }
+                                            $("#omcMenuNavList").addClass("df-computed-content-width");
+                                            var $visibleHeaderBar = $(".dashboard-content:visible .head-bar-container");
+                                            var $visibleRightDrawer = $(".dbd-left-panel:visible");
+                                            if ($visibleHeaderBar.length > 0 && ko.dataFor($visibleHeaderBar[0])) {
+                                                $b = ko.dataFor($visibleHeaderBar[0]).$b;
+                                                $b && $b.triggerBuilderResizeEvent('hamburger menu show/hide status changed');
+                                            }else if ($visibleRightDrawer.length > 0 && ko.dataFor($visibleRightDrawer[0])) {
+                                                $b = ko.dataFor($visibleRightDrawer[0]).$b;
+                                                $b && $b.triggerBuilderResizeEvent('hamburger menu show/hide status changed');
+                                            }
+                                            setTimeout(function(){
+                                                $b && $b.triggerBuilderResizeEvent('hamburger menu show/hide status changed');
+                                            }, delayTime);
+                                        };
+                                        $("#omcHamburgerMenu").on("ojopen", function(event, offcanvas) {
+                                            triggerBuilderResize();
+                                        });
+                                        $("#omcHamburgerMenu").on("ojclose", function (event, offcanvas) {
+                                            triggerBuilderResize();
+                                        });
+                                        $(window).trigger('resize');    //initialize content page width when hamburger menu enabled
+                                    });
                                 });
                             /*}, function(e) {
                                 console.log(e.errorMessage());

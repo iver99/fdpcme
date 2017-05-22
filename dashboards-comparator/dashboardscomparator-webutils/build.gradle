@@ -42,6 +42,7 @@ artifactoryPublish {
  
 dependencies { 
 	 compile configurations.testNG
+       compile project(':dashboards-sdk')
         compile(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1'){ transitive = false }
         compile(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1'){ transitive = false }
         compile(group: 'com.oracle.adf', name: 'wls-api', version: '12.1.2-0-0'){ transitive = false }

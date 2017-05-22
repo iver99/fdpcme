@@ -119,6 +119,8 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
         
         self.EVENT_DASHBOARD_CLEANUP_DELETED_WIDGETS = "EVENT_DASHBOARD_CLEANUP_DELETED_WIDGETS";
         
+        self.EVENT_DASHBOARD_OPTION_MENU_RENDERED = "EVENT_DASHBOARD_OPTION_MENU_RENDERED";
+        
         self.dispatcher = new dsp.Dispatcher();
         self.addEventListener = function(event, listener) {
             self.dispatcher.registerEventHandler(event, listener);
@@ -145,7 +147,7 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
         self.triggerBuilderResizeEvent = function(message) {
             var height = $(window).height()/* - $('#headerWrapper').outerHeight()
                     - $('#head-bar-container').outerHeight()*/;
-            var width = $(window).width();
+            var width = $("#omcHamburgerMenu:visible").not(".oj-offcanvas-overlay")[0]?$(window).width()-$("#omcHamburgerMenu").width():$(window).width();
             var $visibleDashboard = $("#dashboards-tabs-contents .dashboard-content:visible");
             var $rightPanelToggler = $('.right-panel-toggler');
             var $dbdLeftPanel = $('.dbd-left-panel');

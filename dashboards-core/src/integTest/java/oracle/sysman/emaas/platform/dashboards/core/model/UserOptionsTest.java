@@ -34,8 +34,8 @@ public class UserOptionsTest {
     @Test
     public void testGetDashboardId() {
     	BigInteger id = BigInteger.valueOf(1L);
-    	userOptions.setDashboardId(id);
-        Assert.assertEquals(userOptions.getDashboardId(),id);
+    	userOptions.setDashboardId(id.toString());
+        Assert.assertEquals(userOptions.getDashboardId(),id.toString());
     }
 
     @Test
@@ -57,7 +57,7 @@ public class UserOptionsTest {
 
         userOptions = UserOptions.valueOf(emsUserOptions);
         Assert.assertEquals(userOptions.getUserName(),"name");
-        Assert.assertEquals(userOptions.getDashboardId(),id);
+        Assert.assertEquals(userOptions.getDashboardId(),id.toString());
         Assert.assertEquals(userOptions.getAutoRefreshInterval(),new Long(30000L));
 
     }
@@ -65,7 +65,7 @@ public class UserOptionsTest {
     @Test
     public void testToEntity() {
         userOptions.setUserName("name");
-        userOptions.setDashboardId(BigInteger.valueOf(1L));
+        userOptions.setDashboardId("1");
         userOptions.setAutoRefreshInterval(30000L);
 
         EmsUserOptions emsUserOptions = null;
@@ -96,7 +96,7 @@ public class UserOptionsTest {
         }
 
         try{
-            userOptions.setDashboardId(BigInteger.valueOf(1L));
+            userOptions.setDashboardId("1");
             userOptions.setAutoRefreshInterval(null);
             userOptions.toEntity(null,"new name");
         }catch (Exception ignored){
