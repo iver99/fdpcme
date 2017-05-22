@@ -50,6 +50,7 @@ requirejs.config({
     bundles: function() {
         if ((window.DEV_MODE !==null && typeof window.DEV_MODE ==="object") ||
                 (window.gradleDevMode !==null && typeof window.gradleDevMode ==="boolean")) {
+            window.dfBootstrapDataReceived.resolve();
             return {};
 	}
         var bundles = {'builder/builder.jet.partition': [
