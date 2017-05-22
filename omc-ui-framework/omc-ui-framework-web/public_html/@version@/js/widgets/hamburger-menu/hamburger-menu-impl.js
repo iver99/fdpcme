@@ -857,6 +857,10 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
 
                 //Menu selection handler when a menu is clicked
                 self.selectionHandler = function(data, event) {
+                    if (!window._uifwk) {
+                        window._uifwk = {};
+                    }
+                    window._uifwk.currentOmcMenuItemId = data.id;
                     self.selectedItem(data.id);
                     if (event.type === 'click' && (data.id.indexOf('omc_root_') !== -1 || data.selfHandleMenuSelection === 'false' 
                             || !serviceAppId || data.appId !== serviceAppId)) {
