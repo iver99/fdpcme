@@ -791,6 +791,14 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 }
                 
                 function resetCurrentHamburgerMenu() {
+                    //Show composite menu if it's called before hamburger menu finished loading
+                    if (window._uifwk && window._uifwk.compositeMenuName && window._uifwk.compositeMenuJson 
+                            && window._uifwk.stayInComposite && !window._uifwk.isCompositeMenuShown) {
+                        menuUtil.showCompositeObjectMenu(window._uifwk.compositeMenuParentId,
+                                                        window._uifwk.compositeMenuName, 
+                                                        window._uifwk.compositeMenuJson, 
+                                                        window._uifwk.compositeMenuCollapseCallback);
+                    }
                     //Set current menu item if specified by API call
                     if (window._uifwk && window._uifwk.currentOmcMenuItemId) {
                         menuUtil.setCurrentMenuItem(window._uifwk.currentOmcMenuItemId, window._uifwk.underOmcAdmin);

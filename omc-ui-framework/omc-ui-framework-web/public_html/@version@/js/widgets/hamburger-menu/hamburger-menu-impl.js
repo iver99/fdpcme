@@ -857,10 +857,6 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
 
                 //Menu selection handler when a menu is clicked
                 self.selectionHandler = function(data, event) {
-                    if (!window._uifwk) {
-                        window._uifwk = {};
-                    }
-                    window._uifwk.currentOmcMenuItemId = data.id;
                     self.selectedItem(data.id);
                     if (event.type === 'click' && (data.id.indexOf('omc_root_') !== -1 || data.selfHandleMenuSelection === 'false' 
                             || !serviceAppId || data.appId !== serviceAppId)) {
@@ -878,6 +874,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                         clearCompositeMenuItems();
                         self.expanded([]);
                         self.dataSource(new oj.JsonTreeDataSource(omcMenus));
+                        window._uifwk.isCompositeMenuShown = false;
                         //$("#omcMenuNavList").ojNavigationList("refresh");
                         if (window._uifwk.compositeMenuCollapseCallback) {
                             var callback = window._uifwk.compositeMenuCollapseCallback;
@@ -915,6 +912,24 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     }
                     
                     if (item && /*((item.id.indexOf("omc_root")>-1 && item.id.indexOf("omc_root_admin")<0) ||!item.children) &&*/ !item.disabled) {
+                        if (!item.children || item.children.length <= 0) {
+                            if (!window._uifwk) {
+                                window._uifwk = {};
+                            }
+                            if (window._uifwk.stayInComposite && window._uifwk.compositeMenuJson) {
+                                var rootCompositMenuItem = {'id': rootCompositeMenuid, 
+                                                            'labelKey': window._uifwk.compositeMenuName, 
+                                                            'externalUrl': '#', 
+                                                            'children': window._uifwk.compositeMenuJson.serviceCompositeMenus};
+                                if (!findItem(rootCompositMenuItem, data.id)) {
+                                    window._uifwk.stayInComposite = false;
+                                }
+                            }
+                            else {
+                                window._uifwk.stayInComposite = false;
+                            }
+                            window._uifwk.currentOmcMenuItemId = data.id;
+                        }
                         if(item.externalUrl && item.externalUrl !== '#' && item.children && item.children.length > 0){
                             self.preventExpandForAPMLabel = true;
                         }
