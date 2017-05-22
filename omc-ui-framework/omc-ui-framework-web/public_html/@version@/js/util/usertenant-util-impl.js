@@ -198,6 +198,20 @@ define(['knockout', 'jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-i
                 }
             };
             
+            self.isAdminUser = function() {
+                if (self.userHasRole(self.ADMIN_ROLE_NAME_OMC) ||
+                    self.userHasRole(self.ADMIN_ROLE_NAME_APM) ||
+                    self.userHasRole(self.ADMIN_ROLE_NAME_ITA) ||
+                    self.userHasRole(self.ADMIN_ROLE_NAME_LA) ||
+                    self.userHasRole(self.ADMIN_ROLE_NAME_MONITORING) ||
+                    self.userHasRole(self.ADMIN_ROLE_NAME_SECURITY) ||
+                    self.userHasRole(self.ADMIN_ROLE_NAME_COMPLIANCE) ||
+                    self.userHasRole(self.ADMIN_ROLE_NAME_ORCHESTRATION)) {
+                    return true;
+                }
+                return false;
+            };
+
             /**
              * Get user granted privileges
              *
@@ -256,24 +270,9 @@ define(['knockout', 'jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-i
                     }
                 }
             };
-
-            self.isAdminUser = function() {
-                if (self.userHasRole(self.ADMIN_ROLE_NAME_OMC) || 
-                    self.userHasRole(self.ADMIN_ROLE_NAME_APM) ||
-                    self.userHasRole(self.ADMIN_ROLE_NAME_ITA) ||
-                    self.userHasRole(self.ADMIN_ROLE_NAME_LA) ||
-                    self.userHasRole(self.ADMIN_ROLE_NAME_MONITORING) ||
-                    self.userHasRole(self.ADMIN_ROLE_NAME_SECURITY) ||
-                    self.userHasRole(self.ADMIN_ROLE_NAME_COMPLIANCE) ||
-                    self.userHasRole(self.ADMIN_ROLE_NAME_ORCHESTRATION)) {
-                    return true;
-                }
-                return false;
-            };
         }
 
         return DashboardFrameworkUserTenantUtility;
     }
 );
-
 
