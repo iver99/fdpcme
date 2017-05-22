@@ -11,6 +11,7 @@
 package oracle.sysman.emaas.platform.dashboards.tests.ui.impl;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -59,6 +60,14 @@ public class EntitySelectorUtil_1140 extends EntitySelectorUtil_Version implemen
 		logger.log(Level.INFO, "{0} pills found", new Object[] { count });
 		return count;
 	}
+        
+        @Override
+        public ArrayList<String> getPillContents(WebDriver driver, Logger logger)
+        {
+                Assert.assertTrue(false, "This method is not available in the current version");
+                logger.info("Method not available in the current version"); 
+                return null;
+        }
 
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IEntitySelectorUtil#openEntitySelector(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
@@ -246,6 +255,22 @@ public class EntitySelectorUtil_1140 extends EntitySelectorUtil_Version implemen
         {
                 Assert.assertTrue(false, "This method is not available in the current version");
                 logger.info("Method not available in the current version");  
+        }
+        
+        @Override
+        public boolean verifyPillExistsByDisplayName(WebDriver driver, Logger logger, String displayName)
+        {
+                Assert.assertTrue(false, "This method is not available in the current version");
+                logger.info("Method not available in the current version"); 
+                return false;
+        }
+        
+        @Override
+        public boolean verifyPillExistsByIndex(WebDriver driver, Logger logger, int pillIndex, String displayName)
+        {
+                Assert.assertTrue(false, "This method is not available in the current version");
+                logger.info("Method not available in the current version"); 
+                return false;
         }
         
 	/* (non-Javadoc)
