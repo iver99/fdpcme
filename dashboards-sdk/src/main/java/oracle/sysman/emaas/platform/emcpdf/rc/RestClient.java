@@ -124,8 +124,6 @@ public class RestClient {
         }
 
         ClientConfig cc = new DefaultClientConfig();
-        //TODO
-//        cc.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
         Client client = Client.create(cc);
         client.setConnectTimeout(DEFAULT_TIMEOUT);
         client.setReadTimeout(DEFAULT_TIMEOUT);
@@ -181,8 +179,9 @@ public class RestClient {
         }
 
         ClientConfig cc = new DefaultClientConfig();
-//        cc.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
         Client client = Client.create(cc);
+        client.setConnectTimeout(DEFAULT_TIMEOUT);
+        client.setReadTimeout(DEFAULT_TIMEOUT);
         if (StringUtil.isEmpty(auth)) {
             LOGGER.warn("Warning: RestClient get an empty auth token when connection to url {}", url);
             itrLogger.warn("Warning: RestClient get an empty auth token when connection to url {}", url);
