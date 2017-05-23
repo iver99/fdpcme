@@ -23,7 +23,7 @@ import java.util.Map;
  * Created by chehao on 2017/3/13 13:19.
  */
 public class RestClient {
-    private final Logger LOGGER = LogManager.getLogger(RestClient.class);
+    private static final Logger LOGGER = LogManager.getLogger(RestClient.class);
     private Logger itrLogger = LogUtil.getInteractionLogger();
     public static final String OAM_REMOTE_USER = "OAM_REMOTE_USER";
     public static final String X_USER_IDENTITY_DOMAIN_NAME = "X-USER-IDENTITY-DOMAIN-NAME";
@@ -44,8 +44,13 @@ public class RestClient {
     private String type = MediaType.APPLICATION_JSON;
 
 	static {
-		client.setConnectTimeout(DEFAULT_TIMEOUT);
-		client.setReadTimeout(DEFAULT_TIMEOUT);
+		synchronized (RestClient.class) {
+			long start = System.currentTimeMillis();
+			client.setConnectTimeout(DEFAULT_TIMEOUT);
+			client.setReadTimeout(DEFAULT_TIMEOUT);
+			long end = System.currentTimeMillis();
+			LOGGER.info("Time to initialize jersey client is {}ms", end - start);
+		}
 	}
 
     public RestClient(String loggerName){
