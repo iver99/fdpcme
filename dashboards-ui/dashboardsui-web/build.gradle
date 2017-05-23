@@ -195,25 +195,22 @@ project.task("unpackJSLibFromArtifactory") << {
 	configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
 	    if (artifact.name.equals('ckeditor_full') && files(sourceCKeditorDesDir.listFiles()).isEmpty()) {
 		logger.lifecycle("Unpacking artifact ${artifact.name}, version:${artifact.moduleVersion.id.version}..")
-		sourceCKeditorDesDir.mkdirs()
+		buildCKeditorUnzipDir.mkdirs()
 
 		project.copy {
 		    from project.zipTree(artifact.file.absolutePath)
 		    into buildCKeditorUnzipDir.absolutePath
 		}
- 
-		if(project.hasProperty("devMode")){
-	            project.copy {
-			from  buildCKeditorUnzipDir.absolutePath+'/ckeditor/'
-			into sourceCKeditorDesDir.absolutePath
-		    }
+		project.copy {
+		    from buildCKeditorUnzipDir.absolutePath+'/ckeditor/'
+		    into sourceCKeditorDesDir.absolutePath
 		}
-		else
-		{
+
+		if(!project.hasProperty("devMode")){
 		    def outputDir = file(stagingDir+"/libs/"+versionPathElement+"/js/ckeditor");
 		    outputs.dir outputDir
 		    project.copy {
-			from  buildCKeditorUnzipDir
+			from buildCKeditorUnzipDir.absolutePath+'/ckeditor/'
 			into outputDir
 		    }
 		}
