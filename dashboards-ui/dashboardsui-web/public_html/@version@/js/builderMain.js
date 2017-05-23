@@ -2,7 +2,8 @@
  * @preserve Copyright (c) 2014, Oracle and/or its affiliates.
  * All rights reserved.
  */
-window.dfBootstrapDataReceived  = $.Deferred();
+
+ 
 requirejs.config({
     // Setup module id mapping
     map: {
@@ -48,11 +49,16 @@ requirejs.config({
         'uifwk': '/emsaasui/uifwk'
     },
     bundles: function() {
-        if ((window.DEV_MODE !==null && typeof window.DEV_MODE ==="object") ||
-                (window.gradleDevMode !==null && typeof window.gradleDevMode ==="boolean")) {
+        if (window.DEV_MODE !==null && typeof window.DEV_MODE ==="object") {
+            // we init bootstrap data part variables for local machine DEV mode here
+            // for normal mode or gradle dev mode, $.Deferred() and resolve() will be injected into html
+            window.dfBootstrapDataReceived  = $.Deferred();
             window.dfBootstrapDataReceived.resolve();
             return {};
-	}
+	    }
+        if (window.gradleDevMode !==null && typeof window.gradleDevMode ==="boolean") {
+            return {};
+	    }
         var bundles = {'builder/builder.jet.partition': [
             'ojs/ojcore',
             'ojs/ojknockout',
