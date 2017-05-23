@@ -10,6 +10,7 @@
 
 package oracle.sysman.emaas.platform.dashboards.tests.ui.util;
 
+import java.util.ArrayList;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 import java.util.logging.Logger;
 
@@ -29,27 +30,34 @@ public interface IEntitySelectorUtil extends IUiTestCommonAPI
         
 	/**
 	 * @param driver
-	 * @param
-	 * @return
+	 * @param logger
+	 * @return 
 	 */
 	public int getNumberOfPills(WebDriver driver, Logger logger);
+        
+        /**
+         * @param driver
+         * @param logger
+         * @return 
+         */
+        public ArrayList<String> getPillContents(WebDriver driver, Logger logger);
 
 	/**
 	 * @param driver
-	 * @param
-	 * @return
+	 * @param logger
 	 */
 	public void openEntitySelector(WebDriver driver, Logger logger);
 
 	/**
 	 * @param driver
-	 * @param
-	 * @return
+         * @param logger
+	 * @param indexOfPillToRemove
 	 */
 	public void removePill(WebDriver driver, Logger logger, int indexOfPillToRemove);
         
         /**
          * @param driver
+         * @param logger
          * @param pillIndex
          * @param entityName
          * @param entityType
@@ -59,28 +67,30 @@ public interface IEntitySelectorUtil extends IUiTestCommonAPI
 
 	/**
 	 * @param driver
-	 * @param
-	 * @return
+         * @param logger
+	 * @param text
 	 */
 	public void searchText(WebDriver driver, Logger logger, String text);
 
 	/**
 	 * @param driver
-	 * @param
-	 * @return
+         * @param logger
+	 * @param entityName
+	 * @param entityType
 	 */
 	public void selectCompositeEntity(WebDriver driver, Logger logger, String entityName, String entityType);
 
 	/**
 	 * @param driver
-	 * @param
-	 * @return
+         * @param logger
+	 * @param entityName
+	 * @param entityType
 	 */
 	public void selectEntity(WebDriver driver, Logger logger, String entityName, String entityType);
 
 	/**
 	 * @param driver
-	 * @param 
+	 * @param logger
 	 * @return
 	 */
 	public boolean validateReadOnlyMode(WebDriver driver, Logger logger);
@@ -88,21 +98,21 @@ public interface IEntitySelectorUtil extends IUiTestCommonAPI
         /**
          * @param driver
          * @param logger
-         * @param text 
+         * @param displayName 
          */
         public void verifyCompositePillContent(WebDriver driver, Logger logger, String displayName);
         
         /**
          * @param driver
          * @param logger
-         * @param text 
+         * @param displayName 
          */
         public void verifyEntityPillContent(WebDriver driver, Logger logger, String displayName);
         
         /**
          * @param driver
          * @param logger
-         * @param text 
+         * @param displayName 
          */
         public void verifyPillContains(WebDriver driver, Logger logger, String displayName);
         
@@ -110,7 +120,24 @@ public interface IEntitySelectorUtil extends IUiTestCommonAPI
          * @param driver
          * @param logger
          * @param pillIndex
-         * @param text 
+         * @param displayName 
          */
         public void verifyPillContentByIndex(WebDriver driver, Logger logger, int pillIndex, String displayName);
+        
+        /**
+         * @param driver
+         * @param logger
+         * @param displayName
+         * @return 
+         */
+        public boolean verifyPillExistsByDisplayName(WebDriver driver, Logger logger, String displayName);
+        
+        /**
+         * @param driver
+         * @param logger
+         * @param pillIndex
+         * @param displayName
+         * @return 
+         */
+        public boolean verifyPillExistsByIndex(WebDriver driver, Logger logger, int pillIndex, String displayName);
 }
