@@ -3,6 +3,7 @@ package oracle.sysman.emaas.platform.dashboards.core;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -786,7 +787,7 @@ public class DashboardManagerTest extends BaseTest
 		// query by key word, case in-sensitive
 		pd = dm.listDashboards("key", null, null, tenant1, true);
 		long icSize = pd.getTotalResults();
-		Assert.assertEquals(icSize, originSize + 8); // dbd6/dbd9/10/12/13 not in the returned list
+		Assert.assertEquals(icSize, 8); // dbd6/dbd9/10/12/13 not in the returned list
 		for (Dashboard dbd : pd.getDashboards()) {
 			if (dbd.getName().equals(dbd6.getName())) {
 				AssertJUnit.fail("Failed: unexpected dashboard returned: owned by others");
@@ -808,6 +809,20 @@ public class DashboardManagerTest extends BaseTest
 
 		// query all
 		List<Dashboard> dbList = dm.listAllDashboards(tenant1);
+		// test tenant will only have APM and ITA in test env
+		// Please check the logic in {@link TenantSubscriptionUtil.getTenantSubscribedServices}
+		Iterator<Dashboard> it = dbList.iterator();
+		while(it.hasNext()) {
+		    Dashboard db = it.next();
+		    Integer appType = db.getApplicationType();
+		    if(appType == null){
+		        continue;
+		    } else {
+	            if(appType != 1 && appType != 2 && appType != 8 && !"OTHER_DIF_TENANT".equals(db.getOwner())) {
+	                it.remove();
+	            }
+		    }
+		}
 		allSize = dbList == null ? 0 : dbList.size();
 		Assert.assertEquals(allSize, originSize + 10);// dbd9/10/12 not in the returned list, as they're deleleted or from other tenants
 		pd = dm.listDashboards(null, null, tenant1, true);
@@ -825,7 +840,7 @@ public class DashboardManagerTest extends BaseTest
 		Assert.assertEquals(3, pd.getLimit().intValue());
 		Assert.assertEquals(3, pd.getCount());
 		Assert.assertEquals(0, pd.getOffset());
-		Assert.assertEquals(allSize, pd.getTotalResults());
+		Assert.assertEquals(allSize, pd.getTotalResults() + originSize);
 
 		// query by page size/offset
 		DashboardsFilter filter = new DashboardsFilter();
@@ -837,7 +852,7 @@ public class DashboardManagerTest extends BaseTest
 		Assert.assertEquals(2, pd.getLimit().intValue());
 		Assert.assertEquals(2, pd.getCount());
 		Assert.assertEquals(2, pd.getOffset());
-		Assert.assertEquals(allSize, pd.getTotalResults());
+		Assert.assertEquals(allSize, pd.getTotalResults() + originSize);
 
 		// query by page size/offset
 		pd = dm.listDashboards("key", Integer.MAX_VALUE, 2, tenant1, true);
@@ -874,8 +889,20 @@ public class DashboardManagerTest extends BaseTest
 		Long tenant1 = 11L;
 
 		PaginatedDashboards pd = null;
-		pd = dm.listDashboards(null, null, null, tenant1, true,null,null);
-		long initRequsult=pd.getTotalResults();
+        DashboardsFilter filter1 = new DashboardsFilter();
+        filter1.setIncludedAppsFromString("ITAnalytics");
+		pd = dm.listDashboards(null, null, null, tenant1, true, null, filter1);
+		long initItaResult = pd.getTotalResults();
+		
+        DashboardsFilter filter2 = new DashboardsFilter();
+        filter2.setIncludedAppsFromString("LogAnalytics");
+        pd = dm.listDashboards(null, null, null, tenant1, true, null, filter2);
+        long initRequsult = pd.getTotalResults();
+        
+        DashboardsFilter filter4 = new DashboardsFilter();
+        filter4.setIncludedAppsFromString("APM");
+        pd = dm.listDashboards(null, null, null, tenant1, true, null, filter4);
+        long initApmResult = pd.getTotalResults();
 		
 		//prepare data
 		UserContext.setCurrentUser("SYSMAN");
@@ -908,11 +935,9 @@ public class DashboardManagerTest extends BaseTest
 		UserContext.setCurrentUser("SYSMAN");
 
 		try{
-			DashboardsFilter filter1 = new DashboardsFilter();
-			filter1.setIncludedAppsFromString("ITAnalytics");
 			pd = dm.listDashboards(null, null, null, tenant1, true,null,filter1);
 			long result1 = pd.getTotalResults();
-			Assert.assertEquals(result1,initRequsult+ 1);//itadbd will be listed
+			Assert.assertEquals(result1,initItaResult + 1);//itadbd will be listed
 			for (Dashboard dbd : pd.getDashboards()) {
 				if (dbd.getName().equals(ladbd.getName())) {
 					AssertJUnit.fail("Failed: unexpected LA dashboard get filtered");
@@ -925,8 +950,6 @@ public class DashboardManagerTest extends BaseTest
 				}
 			}
 
-			DashboardsFilter filter2 = new DashboardsFilter();
-			filter2.setIncludedAppsFromString("LogAnalytics");
 			pd = dm.listDashboards(null, null, null, tenant1, true,null,filter2);
 			long result2 = pd.getTotalResults();
 			Assert.assertEquals(result2, initRequsult+1);//ladbd will be listed
@@ -961,11 +984,9 @@ public class DashboardManagerTest extends BaseTest
 				}
 			}
 			
-			DashboardsFilter filter4 = new DashboardsFilter();
-			filter4.setIncludedAppsFromString("APM");
 			pd = dm.listDashboards(null, null, null, tenant1, true,null,filter4);
 			long result4 = pd.getTotalResults();
-			Assert.assertEquals(result4, initRequsult+1);//APM will be listed
+			Assert.assertEquals(result4, initApmResult + 1);//APM will be listed
 			
 			for (Dashboard dbd : pd.getDashboards()) {
 				if (dbd.getName().equals(itadbd.getName())) {
@@ -1000,8 +1021,15 @@ public class DashboardManagerTest extends BaseTest
 		Long tenant1 = 11L;
 
 		PaginatedDashboards pd =null;
-		pd = dm.listDashboards(null, null, null, tenant1, true,null,null);
+        DashboardsFilter filter1 = new DashboardsFilter();
+        filter1.setIncludedAppsFromString("ITAnalytics");
+		pd = dm.listDashboards(null, null, null, tenant1, true, null, filter1);
 		long initRequsult=pd.getTotalResults();
+		
+		DashboardsFilter filter2 = new DashboardsFilter();
+		filter2.setIncludedAppsFromString("APM,ITAnalytics");
+	    pd = dm.listDashboards(null, null, null, tenant1, true, null, filter2);
+	    long initApmItaResult = pd.getTotalResults();
 		
 		//prepare data
 		UserContext.setCurrentUser("SYSMAN");
@@ -1063,8 +1091,6 @@ public class DashboardManagerTest extends BaseTest
 		orchestrationdbd = dm.saveNewDashboard(orchestrationdbd, tenant1);
 		
 		try{
-			DashboardsFilter filter1 = new DashboardsFilter();
-			filter1.setIncludedAppsFromString("ITAnalytics");
 			pd = dm.listDashboards(null, null, null, tenant1, true,null,filter1);
 			long result1 = pd.getTotalResults();
 			Assert.assertEquals(result1, initRequsult+1);//LogAnalytics,Orchestration will be listed
@@ -1080,12 +1106,10 @@ public class DashboardManagerTest extends BaseTest
 				}
 			}
 			
-			DashboardsFilter filter2 = new DashboardsFilter();
 			TenantContext.setCurrentTenant("emaastesttenant1");
-			filter2.setIncludedAppsFromString("APM,ITAnalytics");
 			pd = dm.listDashboards(null, null, null, tenant1, true,null,filter2);
 			long result2 = pd.getTotalResults();
-			Assert.assertEquals(result2, initRequsult+2);//APM,ITAnalytics will be listed
+			Assert.assertEquals(result2, initApmItaResult + 2);//APM,ITAnalytics will be listed
 			for (Dashboard dbd : pd.getDashboards()) {
 				if (dbd.getName().equals(orchestrationdbd.getName())) {
 					AssertJUnit.fail("Failed: unexpected Orchestration dashboard get filtered");
@@ -1117,8 +1141,15 @@ public class DashboardManagerTest extends BaseTest
 		Long tenant1 = 11L;
 		Long id=1L;
 		PaginatedDashboards pd =null;
-		pd = dm.listDashboards(null, null, null, tenant1, true,null,null);
+        DashboardsFilter filter1 = new DashboardsFilter();
+        filter1.setIncludedAppsFromString("LogAnalytics");
+		pd = dm.listDashboards(null, null, null, tenant1, true, null, filter1);
 		long initRequsult=pd.getTotalResults();
+		
+        DashboardsFilter filter2 = new DashboardsFilter();
+        filter2.setIncludedAppsFromString("ITAnalytics");
+        pd = dm.listDashboards(null, null, null, tenant1, true, null, filter2);
+        long initItaResult=pd.getTotalResults();
 		
 		//prepare data
 		UserContext.setCurrentUser("SYSMAN");
@@ -1191,8 +1222,6 @@ public class DashboardManagerTest extends BaseTest
 		mixedSet2 = dm.saveNewDashboard(mixedSet2, tenant1);
 		UserContext.setCurrentUser("SYSMAN");
 		try{
-			DashboardsFilter filter1 = new DashboardsFilter();
-			filter1.setIncludedAppsFromString("LogAnalytics");
 			pd = dm.listDashboards(null, null, null, tenant1, true,null,filter1);
 			long result1 = pd.getTotalResults();
 			Assert.assertEquals(result1, initRequsult+3);//ladbd,laset mixedset1 will be listed
@@ -1205,11 +1234,9 @@ public class DashboardManagerTest extends BaseTest
 				}
 			}
 			
-			DashboardsFilter filter2 = new DashboardsFilter();
-			filter2.setIncludedAppsFromString("ITAnalytics");
 			pd = dm.listDashboards(null, null, null, tenant1, true,null,filter2);
 			long result2 = pd.getTotalResults();
-			Assert.assertEquals(result2, 3);//itadbd,itaset,mixedset2 will be listed
+			Assert.assertEquals(result2, initItaResult + 3);//itadbd,itaset,mixedset2 will be listed
 			for (Dashboard dbd : pd.getDashboards()) {
 				if (dbd.getName().equals(ladbd.getName())) {
 					AssertJUnit.fail("Failed: unexpected LA dashboard get filtered");
@@ -1241,7 +1268,9 @@ public class DashboardManagerTest extends BaseTest
 		Long id=1L;
 
 		PaginatedDashboards pd =null;
-		pd = dm.listDashboards(null, null, null, tenant1, true,null,null);
+        DashboardsFilter filter1 = new DashboardsFilter();
+        filter1.setIncludedAppsFromString("LogAnalytics");
+        pd = dm.listDashboards(null, null, null, tenant1, true, null, filter1);
 		long initRequsult=pd.getTotalResults();
 		
 		//oob dashboard contains a la tile
@@ -1329,8 +1358,6 @@ public class DashboardManagerTest extends BaseTest
 		UserContext.setCurrentUser("SYSMAN");
 
 		try{
-			DashboardsFilter filter1 = new DashboardsFilter();
-			filter1.setIncludedAppsFromString("LogAnalytics");
 			pd = dm.listDashboards(null, null, null, tenant1, true,null,filter1);
 			long result1 = pd.getTotalResults();
 			Assert.assertEquals(result1, initRequsult+6);//all dashboard/dashboard set will be listed
@@ -1397,7 +1424,7 @@ public class DashboardManagerTest extends BaseTest
 		// a dashboard in different tenant. shouldn't be queried
 		Dashboard set7 = new Dashboard();
 		set7.setType(Dashboard.DASHBOARD_TYPE_SET);
-		set7.setName("SET9-" + System.currentTimeMillis());
+		set7.setName("SET7-" + System.currentTimeMillis());
 		set7 = dm.saveNewDashboard(set7, tenant2);
 
 		// test deleted dashboards shouldn't be queried
@@ -1414,14 +1441,14 @@ public class DashboardManagerTest extends BaseTest
 		set9.setIsSystem(true);
 		set9.setType(Dashboard.DASHBOARD_TYPE_SET);
 		set9.setAppicationType(DashboardApplicationType.APM);
-		set9.setName("SET-" + System.currentTimeMillis());
+		set9.setName("SET9-" + System.currentTimeMillis());
 		set9 = dm.saveNewDashboard(set9, tenant1);
 
 		// owned by others, system dashboard, but from different tenant. should not be queried
 		UserContext.setCurrentUser("OTHER USER");
 		Dashboard set10 = new Dashboard();
 		set10.setType(Dashboard.DASHBOARD_TYPE_SET);
-		set10.setName("SET-" + System.currentTimeMillis());
+		set10.setName("SET10-" + System.currentTimeMillis());
 		set10 = dm.saveNewDashboard(set10, tenant2);
 
 		// system dashboard not owned, and from service not subscribed. should not be queried
@@ -1429,7 +1456,7 @@ public class DashboardManagerTest extends BaseTest
 		Dashboard set11 = new Dashboard();
 		set11.setType(Dashboard.DASHBOARD_TYPE_SET);
 		set11.setAppicationType(DashboardApplicationType.LogAnalytics);
-		set11.setName("SET-" + System.currentTimeMillis());
+		set11.setName("SET11-" + System.currentTimeMillis());
 		set11 = dm.saveNewDashboard(set11, tenant2);
 		UserContext.setCurrentUser("SYSMAN");
 
@@ -1463,7 +1490,9 @@ public class DashboardManagerTest extends BaseTest
 			dm.deleteDashboard(set3.getDashboardId(), true, tenant1);
 			dm.deleteDashboard(set4.getDashboardId(), true, tenant1);
 			dm.deleteDashboard(set5.getDashboardId(), true, tenant1);
+			UserContext.setCurrentUser("SET");
 			dm.deleteDashboard(set6.getDashboardId(), true, tenant1);
+			UserContext.setCurrentUser("SYSMAN");
 			dm.deleteDashboard(set7.getDashboardId(), true, tenant2);
 			dm.deleteDashboard(set8.getDashboardId(), true, tenant1);
 			UserContext.setCurrentUser("OTHER");
@@ -1487,8 +1516,10 @@ public class DashboardManagerTest extends BaseTest
 		Long id=1L;
 
 		UserContext.setCurrentUser("SYSMAN");
+        DashboardsFilter filter1 = new DashboardsFilter();
+        filter1.setIncludedOwnersFromString("Share");
 		PaginatedDashboards pd =null;
-		pd = dm.listDashboards(null, null, null, tenant1, true,null,null);
+        pd = dm.listDashboards(null, null, null, tenant1, true, null, filter1);
 		long originSize = pd.getTotalResults();
 		
 		//oob dashboard contains a Orchestration tile, shared, SYSMAN's dashboard ,should not be listed
@@ -1583,8 +1614,6 @@ public class DashboardManagerTest extends BaseTest
 		UserContext.setCurrentUser("SYSMAN");
 
 		try{
-			DashboardsFilter filter1 = new DashboardsFilter();
-			filter1.setIncludedOwnersFromString("Share");
 			pd = dm.listDashboards(null, null, null, tenant1, true,null,filter1);
 			long result1 = pd.getTotalResults();
 			for (Dashboard dbd : pd.getDashboards()) {
