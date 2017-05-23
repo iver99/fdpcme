@@ -32,6 +32,9 @@ public class RestClient {
     public static final String SESSION_EXP = "SESSION_EXP";
     public static final String X_OMC_SERVICE_TRACE = "X-OMC-SERVICE-TRACE";
 
+	private static ClientConfig cc = new DefaultClientConfig();
+	private static Client client = Client.create(cc);
+
     //timeout milli-seconds
     private static final Integer DEFAULT_TIMEOUT = 30000;
     private Map<String, Object> headers;
@@ -39,6 +42,11 @@ public class RestClient {
     private String accept = MediaType.APPLICATION_JSON;
     //Default type is json
     private String type = MediaType.APPLICATION_JSON;
+
+	static {
+		client.setConnectTimeout(DEFAULT_TIMEOUT);
+		client.setReadTimeout(DEFAULT_TIMEOUT);
+	}
 
     public RestClient(String loggerName){
         if(!StringUtil.isEmpty(loggerName)){
@@ -81,10 +89,11 @@ public class RestClient {
             return null;
         }
 
-        ClientConfig cc = new DefaultClientConfig();
-        Client client = Client.create(cc);
-        client.setConnectTimeout(DEFAULT_TIMEOUT);
-        client.setReadTimeout(DEFAULT_TIMEOUT);
+		// as jersey client cost for creating new object is high, will reuse the instance
+//        ClientConfig cc = new DefaultClientConfig();
+//        Client client = Client.create(cc);
+//        client.setConnectTimeout(DEFAULT_TIMEOUT);
+//        client.setReadTimeout(DEFAULT_TIMEOUT);
 
         if (StringUtil.isEmpty(auth)) {
             LOGGER.warn("Warning: RestClient get an empty auth token when connection to url {}", url);
@@ -123,12 +132,13 @@ public class RestClient {
             return null;
         }
 
-        ClientConfig cc = new DefaultClientConfig();
+		// as jersey client cost for creating new object is high, will reuse the instance
+        /*ClientConfig cc = new DefaultClientConfig();
         //TODO
 //        cc.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
         Client client = Client.create(cc);
         client.setConnectTimeout(DEFAULT_TIMEOUT);
-        client.setReadTimeout(DEFAULT_TIMEOUT);
+        client.setReadTimeout(DEFAULT_TIMEOUT);*/
 
         if (StringUtil.isEmpty(auth)) {
             LOGGER.warn("Warning: RestClient get an empty auth token when connection to url {}", url);
@@ -180,9 +190,9 @@ public class RestClient {
             return null;
         }
 
-        ClientConfig cc = new DefaultClientConfig();
+        /*ClientConfig cc = new DefaultClientConfig();
 //        cc.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
-        Client client = Client.create(cc);
+        Client client = Client.create(cc);*/
         if (StringUtil.isEmpty(auth)) {
             LOGGER.warn("Warning: RestClient get an empty auth token when connection to url {}", url);
             itrLogger.warn("Warning: RestClient get an empty auth token when connection to url {}", url);
