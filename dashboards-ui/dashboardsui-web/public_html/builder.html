@@ -11,6 +11,7 @@
         <script type="text/javascript">
                 ////ADDITIONALDATA////
         </script>
+        
         <script data-main="@version@/js/builderMain" src="libs/@version@/js/oraclejet/js/libs/require/require.js"></script>
 
     </head>
@@ -19,7 +20,7 @@
         <div class="loadingIndicator" id="printLoading" style="display: none; z-index:1000"></div>
         <div id="globalBody" style="display: none;" class="oj-web-applayout-offcanvas-wrapper oj-offcanvas-outer-wrapper">
             <div id="offcanvasInnerContainer" class="oj-offcanvas-inner-wrapper">
-                <div id="mainContent" role="main" class="oj-web-applayout-scrollable oj-web-applayout-page">
+                <div id="mainContent" role="main" class="oj-web-applayout-scrollable oj-web-applayout-page" style="overflow-y: hidden;overflow-x:hidden;">
             <!-- ko stopBinding: true -->
             <header id="headerWrapper" role="banner" class="no-print">
                 <div data-bind="component: {
