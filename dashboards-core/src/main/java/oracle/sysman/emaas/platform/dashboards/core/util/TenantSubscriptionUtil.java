@@ -17,7 +17,6 @@ import java.net.SocketTimeoutException;
 import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import oracle.sysman.emaas.platform.dashboards.core.model.subscription2.*;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter;
 import oracle.sysman.emaas.platform.dashboards.core.util.lookup.RetryableLookupClient;
 import oracle.sysman.emaas.platform.dashboards.core.util.lookup.RetryableLookupClient.RetryableLookupException;
@@ -25,21 +24,12 @@ import oracle.sysman.emaas.platform.dashboards.core.util.lookup.RetryableLookupC
 
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.exception.CacheInconsistencyException;
-import java.net.SocketTimeoutException;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter;
-import oracle.sysman.emaas.platform.dashboards.core.restclient.AppMappingCollection;
-import oracle.sysman.emaas.platform.dashboards.core.restclient.AppMappingEntity;
-import oracle.sysman.emaas.platform.dashboards.core.restclient.DomainEntity;
-import oracle.sysman.emaas.platform.dashboards.core.restclient.DomainsEntity;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil.VersionedLink;
-import oracle.sysman.emaas.platform.dashboards.core.util.lookup.RetryableLookupClient;
-import oracle.sysman.emaas.platform.dashboards.core.util.lookup.RetryableLookupClient.RetryableLookupException;
-import oracle.sysman.emaas.platform.dashboards.core.util.lookup.RetryableLookupClient.RetryableRunner;
-import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.DefaultKeyGenerator;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
@@ -50,9 +40,6 @@ import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import com.sun.jersey.api.client.ClientHandlerException;
-import com.sun.jersey.api.client.UniformInterfaceException;
 
 /**
  * @author guobaochen
@@ -208,7 +195,7 @@ public class TenantSubscriptionUtil
 //                    LOGGER.info("Before mapping subcribed app list is {}",subAppsList.getEditionComponentsList().);
                     List<String> subscribeAppsList= SubsriptionAppsUtil.getSubscribedAppsList(tenantSubscriptionInfo);
                     //Edition info integrity check...
-                    if(!EditionInfoIntegrityCheck(subAppsList)){
+                    if(!editionInfoIntegrityCheck(subAppsList)){
                         LOGGER.info("#2.Full response from /serviceRequest is {}", appsResponse);
                     }
                     LOGGER.info("After mapping Subscribed App list is {}",subscribeAppsList);
@@ -276,7 +263,7 @@ public class TenantSubscriptionUtil
 	{
 	}
 
-    private static boolean EditionInfoIntegrityCheck(List<SubscriptionApps> subAppsList) {
+    private static boolean editionInfoIntegrityCheck(List<SubscriptionApps> subAppsList) {
         if(!subAppsList.isEmpty()){
             LOGGER.info("Checking edition info's integrity");
 
