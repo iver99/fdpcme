@@ -47,6 +47,7 @@ import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
 import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -167,12 +168,15 @@ public class TenantSubscriptionUtil
                     LOGGER.error(e);
                     throw new RetryableLookupException(e);
                 }
-                LOGGER.info("Retrieved data for tenant ({}) from serviceRequest API. URL is {}, query response is {}. It took {}ms", tenant, queryHref, appsResponse, (System.currentTimeMillis() - subappQueryStart));
+                String responseLog = appsResponse.length()>=120 ? appsResponse.substring(0,120) : appsResponse;
+                //print part of the response, if cannot get the right information we need, then we print full response later.
+                LOGGER.info("Retrieved data for tenant ({}) from serviceRequest API. URL is {}, part of the query response is {}.... It took {}ms", tenant, queryHref, responseLog, (System.currentTimeMillis() - subappQueryStart));
                 JsonUtil ju = JsonUtil.buildNormalMapper();
                 try {
                     List<ServiceRequestCollection> src = ju.fromJsonToList(appsResponse, ServiceRequestCollection.class);
                     if(src == null || src.isEmpty()){
                         LOGGER.error("Checking tenant (" + tenant + ") subscriptions. Empty application mapping items are retrieved");
+                        LOGGER.info("#1.Full response from /serviceRequest is {}", appsResponse);
                         return Collections.emptyList();
                     }
                     List<SubscriptionApps> subAppsList = new ArrayList<SubscriptionApps>();
@@ -203,9 +207,14 @@ public class TenantSubscriptionUtil
                     tenantSubscriptionInfo.setSubscriptionAppsList(subAppsList);
 //                    LOGGER.info("Before mapping subcribed app list is {}",subAppsList.getEditionComponentsList().);
                     List<String> subscribeAppsList= SubsriptionAppsUtil.getSubscribedAppsList(tenantSubscriptionInfo);
+                    //Edition info integrity check...
+                    if(!EditionInfoIntegrityCheck(subAppsList)){
+                        LOGGER.info("#2.Full response from /serviceRequest is {}", appsResponse);
+                    }
                     LOGGER.info("After mapping Subscribed App list is {}",subscribeAppsList);
                     if(subscribeAppsList == null ){
                         LOGGER.error("After Mapping action,Empty subscription list found!");
+                        LOGGER.info("#3.Full response from /serviceRequest is {}", appsResponse);
                         return Collections.emptyList();
                     }
                     LOGGER.info("Put subscribe apps into cache,{}", subscribeAppsList);
@@ -266,4 +275,20 @@ public class TenantSubscriptionUtil
 	private TenantSubscriptionUtil()
 	{
 	}
+
+    private static boolean EditionInfoIntegrityCheck(List<SubscriptionApps> subAppsList) {
+        if(!subAppsList.isEmpty()){
+            LOGGER.info("Checking edition info's integrity");
+
+            if(subAppsList.get(0).getEditionComponentsList()!=null && !subAppsList.get(0).getEditionComponentsList().isEmpty() ){
+                String editionInfo = subAppsList.get(0).getEditionComponentsList().get(0).getEdition();
+                if(!StringUtils.isEmpty(editionInfo)){
+                    LOGGER.info("Integrity of edition info check passed...");
+                    return true;
+                }
+            }
+        }
+        LOGGER.warn("Integrity of edition info check failed...");
+        return false;
+    }
 }

@@ -525,7 +525,7 @@ public class TenantSubscriptionUtilTest
                 result = links;
 
                 anyClient.getWithException(anyString, anyString, anyString);
-				JsonUtil.buildNormalMapper();
+//				JsonUtil.buildNormalMapper();
 				result = new IOException();
 			}
 		};
