@@ -259,7 +259,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 self.timePeriodsNlsObject[quickPicks.LAST_1_YEAR] = self.timePeriodLast1year;
                 self.timePeriodsNlsObject[quickPicks.LATEST] = self.timePeriodLatest;
                 self.timePeriodsNlsObject[quickPicks.CUSTOM] = self.timePeriodCustom;
-
+                
                 //initialize class assuming that dtpicker is on the left of page
                 self.drawerChosen = ko.observable("leftDrawerChosen");
                 self.timeFilterIconCss = ko.observable("float-right");
@@ -639,6 +639,46 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                 self.dateTimeInfo(self.getDateTimeInfo(self.startDateISO().slice(0, 10), self.endDateISO().slice(0, 10), self.startTime(), self.endTime(), self.timePeriod()));
                             }
                         });
+                    }
+                }
+                
+                self.setTimePeriodDisabled = function(tpDisabledId) {
+                    $(self.panelId + "a").each(function() {
+                        var tpEle = $(this);
+                        var tpId = tpEle.attr("data-tp-id");
+                        if(tpDisabledId === tpId) {
+                            if(!tpEle.hasClass("drawerDisabled")) {
+                                tpEle.addClass("drawerDisabled");
+                            }
+                        }
+                    });
+                };
+                
+                self.setAllTimePeriodsEnabled = function() {
+                    $(self.panelId + "a").each(function() {
+                        var tpEle = $(this);
+                        if(tpEle.hasClass("drawerDisabled")) {
+                            tpEle.removeClass("drawerDisabled");
+                        }
+                    });
+                };
+                
+                if(params.timePeriodsSet && params.timePeriodsToBeDisabled) {
+                    if(isArray(params.timePeriodsToBeDisabled) && params.timePeriodsToBeDisabled.length>0) {
+                        for(var i=0; i<params.timePeriodsToBeDisabled.length; i++) {
+                            var tpDisabledId = params.timePeriodsToBeDisabled[i];
+                            self.setTimePeriodDisabled(tpDisabledId);
+                        }
+                    }else if(ko.isObservable(params.timePeriodsToBeDisabled)) {
+                        self.timePeriodsToBeDisabled = ko.computed(function() {
+                            self.setAllTimePeriodsEnabled();
+                            for(var i=0; i<params.timePeriodsToBeDisabled().length; i++) {
+                                var tpDisabledId = params.timePeriodsToBeDisabled()[i];
+                                self.setTimePeriodDisabled(tpDisabledId);
+                                //remove time periods from "Recently Used" list
+                                self.recentList.remove(function(data) {return data.timePeriod === tpDisabledId});
+                            }
+                        }, self);
                     }
                 }
                 
@@ -1865,6 +1905,10 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             self.setTimePeriodChosen("RECENT");
                             $("#recentPanel_"+self.randomId).ojPopup("open", "#drawer14_"+self.randomId, {"my": "start top", "at": "end top"});
                         }
+                        return;
+                    }
+                    
+                    if($(event.target).hasClass("drawerDisabled")) {
                         return;
                     }
 
