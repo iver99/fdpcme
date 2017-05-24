@@ -75,9 +75,11 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 }
                 
                 var currentCompositeParentId = null;
+                var processingObjMenuName = null;
                 //Show up a composite menu
                 function jumpToCompositeMenu(parentMenuId, rootMenuLabel, menuJson) {
-                    if (menuJson && menuJson.serviceCompositeMenus) {
+                    if (menuJson && menuJson.serviceCompositeMenus && rootMenuLabel !== processingObjMenuName) {
+                        processingObjMenuName = rootMenuLabel;
                         clearCompositeMenuItems();
                         currentCompositeParentId = parentMenuId;
                         if (menuJson.serviceMenuMsgBundle) {
@@ -105,7 +107,11 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                                         menuUtil.setCurrentMenuItem(currentMenuId, underOmcAdmin);
                                     }
                                 }
+                                processingObjMenuName = null;
                             });
+                        }
+                        else {
+                            processingObjMenuName = null;
                         }
                     }                  
                 }
@@ -912,7 +918,8 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                             self.preventExpandForAPMLabel = false;
                         }
                         //Auto close hamburger menu when it's not in pinned status
-                        if($("#omcHamburgerMenu").hasClass("oj-offcanvas-overlay")) {
+                        if($("#omcHamburgerMenu").hasClass("oj-offcanvas-overlay") && 
+                                (self.preventExpandForAPMLabel ||  !item.children || item.children.length <= 0)) {
                             oj.OffcanvasUtils.close({
                                 "edge": "start",
                                 "displayMode": "overlay",
@@ -976,7 +983,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
 //                    globalMenuIdHrefMapping['omc_root_admin'] = fetchLinkFromRegistrationData(data, 'adminLinks', 'EventUI');
                     globalMenuIdHrefMapping['omc_root_admin_alertrules'] = fetchLinkFromRegistrationData(data, 'adminLinks', 'EventUI');
                     globalMenuIdHrefMapping['omc_root_admin_agents'] = fetchLinkFromRegistrationData(data, 'adminLinks', 'TenantManagementUI');
-                    globalMenuIdHrefMapping['omc_root_admin_clouddiscoveryprofiles'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'MonitoringServiceUI')?fetchLinkFromRegistrationData(data, 'cloudServices', 'MonitoringServiceUI')+"?root=cmsCloudAccountsDashboard":null;
+                    globalMenuIdHrefMapping['omc_root_admin_clouddiscoveryprofiles'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'MonitoringServiceUI')?fetchLinkFromRegistrationData(data, 'cloudServices', 'MonitoringServiceUI')+"?root=cmsCloudProfilesDashboard":null;
                     globalMenuIdHrefMapping['omc_root_admin_entitiesconfig'] = fetchLinkFromRegistrationData(data, 'adminLinks', 'AdminConsoleSaaSUi');
                 }
                 

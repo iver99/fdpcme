@@ -522,6 +522,15 @@ public class DashBoardUtils
 				break;
 			case OMCLOG:
 				webdriver.getLogger().info("'Log Analytics' displayed for OMC Log Edition");
+				webdriver.getLogger().info("Check if having hamburger menu");
+				if (DashBoardUtils.isHamburgerMenuEnabled(webdriver)) {
+					webdriver.getLogger().info("Hamburger Menu Enable");
+					if (BrandingBarUtil.ROOT_MENU_LA.equals(BrandingBarUtil.getCurrentMenuHeader(webdriver).trim())) {
+						webdriver.getLogger().info("Now in LA service menu, need to back to root menu");
+						BrandingBarUtil.goBackToParentMenu(webdriver);
+					}
+				}
+
 				Assert.assertTrue(BrandingBarUtil.isCloudServiceLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_CS_LA),
 						"'Log Analytics' should in clould service link");
 
@@ -917,24 +926,29 @@ public class DashBoardUtils
 			throw new NoSuchElementException("Widget with title=" + widgetName + ", index=" + index + " is not found");
 		}
 		driver.getLogger().info("Found widget with name=" + widgetName + ", index =" + index + " before opening widget link");
-		WebElement widgetDataExplore = widgetTitle.findElement(By.xpath(DashBoardPageId_190.BUILDERTILEDATAEXPLORELOCATOR));
-		if (widgetDataExplore == null) {
-			throw new NoSuchElementException("Widget data explorer link for title=" + widgetName + ", index=" + index
-					+ " is not found");
+
+		try {
+			WebElement widgetDataExplore = widgetTitle.findElement(By.xpath(DashBoardPageId_190.BUILDERTILEDATAEXPLORELOCATOR));
+			if (widgetDataExplore == null) {
+				//				driver.getLogger().info("Can't find Data Explorer element in DOM");
+				//				return false;
+				throw new NoSuchElementException("Widget data explorer link for title=" + widgetName + ", index=" + index
+						+ " is not found");
+			}
+
+			driver.getLogger().info("Found widget configure button");
+			Actions builder = new Actions(driver.getWebDriver());
+			driver.getLogger().info("Now moving to the widget title bar");
+			builder.moveToElement(widgetTitle).perform();
+			driver.takeScreenShot();
+			driver.getLogger().info("and clicks the widget config button");
+
+			return widgetDataExplore.isDisplayed();
 		}
-		driver.getLogger().info("Found widget configure button");
-		Actions builder = new Actions(driver.getWebDriver());
-		driver.getLogger().info("Now moving to the widget title bar");
-		builder.moveToElement(widgetTitle).perform();
-		driver.takeScreenShot();
-		driver.getLogger().info("and clicks the widget config button");
-		//		builder.moveToElement(widgetDataExplore).click().perform();
-		//		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		//		wait.until(ExpectedConditions.elementToBeClickable(widgetDataExplore));
-		//		widgetDataExplore.click();
-		//		driver.takeScreenShot();
-		return widgetDataExplore.isDisplayed();
-		//check if the Open In icon displayed or not
+		catch (NoSuchElementException ex) {
+			driver.getLogger().info("Can't find Data Explorer element in DOM");
+			return false;
+		}
 	}
 
 	public static void verifyServiceAlwaysDisplayedInWelcomePage(WebDriver webdriver)

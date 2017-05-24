@@ -88,29 +88,41 @@ public class EntitySelectorUtil_1160 extends EntitySelectorUtil_1150
 	@Override
 	public void removePill(WebDriver driver, Logger logger, int indexOfPillToRemove)
 	{
-		logger.log(Level.INFO, "Remove pill from Entity Selector");
+		logger.log(Level.INFO, "Remove pill at index {0} from Global Context bar", new Object[]{ indexOfPillToRemove });
 		//Take in consideration that XPath uses 1-based indexing
 		indexOfPillToRemove++;
+                
+                //Determine if user is trying to remove a regular pill or one being edited
+                boolean isEditable = driver.isDisplayed("xpath=" + DashBoardPageId.EntSelTypeAheadFieldInput);
+                
 		final int prevPillCount = getNumberOfPills(driver, logger);
 		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), UNTIL_TIMEOUT);
 		WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(MessageFormat.format(
 				DashBoardPageId.EntSelPillToRemoveByIndex, indexOfPillToRemove))));
-		logger.log(Level.INFO, "Click button to remove pill from Entity Selector ");
+		logger.log(Level.INFO, "Click button to remove pill");
 		element.click();
-		//Wait until the pill is removed
-		final WebDriver finalDriver = driver;
-                final Logger finalLogger = logger;
-		wait.until(new ExpectedCondition<Boolean>() {
+                
+                if (isEditable) {
+                    //editing hides the pill, therefore we cannot rely on the number 
+                    //of pills to validate the element was removed
+                    WaitUtil.waitForPageFullyLoaded(driver);
+                } else {
+                    //Wait until the pill is removed
+                    final WebDriver finalDriver = driver;
+                    final Logger finalLogger = logger;
+                    wait.until(new ExpectedCondition<Boolean>() {
 
-			@Override
-			public Boolean apply(org.openqa.selenium.WebDriver driver)
-			{
-				return getNumberOfPills(finalDriver, finalLogger) < prevPillCount;
-			}
-		});
+                            @Override
+                            public Boolean apply(org.openqa.selenium.WebDriver driver)
+                            {
+                                    return getNumberOfPills(finalDriver, finalLogger) < prevPillCount;
+                            }
+                    });
+                }
+                
                 driver.takeScreenShot();
-		logger.log(Level.INFO, "The pill at index {0} has been removed", new Object[] { indexOfPillToRemove });
-
+                driver.savePageToFile();
+                logger.log(Level.INFO, "The pill at index {0} has been removed", new Object[] { --indexOfPillToRemove });
 	}
         
         /* (non-Javadoc)

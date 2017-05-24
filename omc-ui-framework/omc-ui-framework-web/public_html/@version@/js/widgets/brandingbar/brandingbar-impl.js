@@ -672,14 +672,9 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 if(!self.renderEmaasAppheaderGlobalNavMenu()){
                     self.renderEmaasAppheaderGlobalNavMenu(true);
                     $('#emaasAppheaderGlobalNavMenuId').ojMenu("refresh");
-                }
-            };
-
-            $("#emaasAppheaderGlobalNavMenuId").ojMenu({
-                "beforeOpen": function (event, ui) {
                     self.aboutBoxImmediateLoading(true);
                 }
-            });
+            };
 
             var templatePath = "uifwk/js/widgets/navlinks/html/navigation-links.html";
             var vmPath = "uifwk/js/widgets/navlinks/js/navigation-links";
@@ -839,6 +834,10 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 };
 
                 var menuUtil = new menuModel();
+                if (!window._uifwk) {
+                    window._uifwk = {};
+                }
+                if (!window._uifwk.obbMenuLoadedListenerRegistered) {
                 menuUtil.subscribeServiceMenuLoadedEvent(function(){
                     $("#omcHamburgerMenu").on("ojopen", function(event, offcanvas) {
                         if(offcanvas.displayMode === "push")
@@ -886,6 +885,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         }
                     }
                 });
+                    window._uifwk.obbMenuLoadedListenerRegistered = true;
+                }
             }
             
             /**
