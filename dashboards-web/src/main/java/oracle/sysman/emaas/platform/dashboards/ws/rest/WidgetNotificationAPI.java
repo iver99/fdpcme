@@ -22,6 +22,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import oracle.sysman.emaas.platform.dashboards.core.util.DateUtil;
+import oracle.sysman.emaas.platform.dashboards.core.util.ZDTContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.jettison.json.JSONObject;
@@ -50,7 +52,7 @@ public class WidgetNotificationAPI extends APIBase
 	{
 		try {
 			infoInteractionLogAPIIncomingCall(tenantIdParam, "Saved Search Service",
-					"Service call to [POST] /v1/widgetnotification \npayload is \"{}\"", data.toString());
+					"Service call to [POST] /v1/widgetnotification \npayload is \"{}\", APIGWTIME is {}", data.toString(), ZDTContext.getRequestTime());
 
 			if (tenantIdParam == null || "".equals(tenantIdParam)) {
 				throw new CommonSecurityException(

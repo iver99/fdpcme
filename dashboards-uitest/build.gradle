@@ -30,10 +30,11 @@ dependencies {
  
     testConfig project(path: ':dashboards-ui-test-common-api', configuration: 'integTestOutput')  
     testConfig getProjectArtifact('jmockit')   	
-	testConfig getProjectArtifact('log4j-api')   	
-	testConfig getProjectArtifact('log4j-core')   	
-	testConfig getProjectArtifact('log4j-slf4j-impl')   
-}
+    testConfig getProjectArtifact('log4j-api')   	
+    testConfig getProjectArtifact('log4j-core')   	
+    testConfig getProjectArtifact('log4j-slf4j-impl')
+    testConfig getProjectArtifact('omctfSetupTestSDK')
+} 
 
 artifactoryPublish {
 publications ('integTest')

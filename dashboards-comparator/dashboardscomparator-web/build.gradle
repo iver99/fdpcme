@@ -10,7 +10,7 @@ ext.restDocOutputDir = "${restDocRootDir}"
 
 //Security client version
 ext.emaasSecurityClientVersion = getDependentSdkVersion('com.oracle.emaas.emcpsf.sdk', 'security-client', '1.+')
-
+ext.emaasRegistryLookupClientVersion = getDependentSdkVersion('com.oracle.emaas.emcpsm', 'registry-lookup-client', '1.+');
 
 tasks.withType(JavaCompile) {
         options.compilerArgs << "-Xlint:unchecked"
@@ -108,7 +108,8 @@ test {
 
 dependencies {
 	compile configurations.restAssured 
-	providedCompile project(':dashboards-comparator:dashboardscomparator-webutils')  { transitive = false }
+	
+    providedCompile project(':dashboards-comparator:dashboardscomparator-webutils')  { transitive = false }
 	providedCompile(group: 'javax.servlet', name:'servlet-api', version:'2.5') { transitive = false }
 	providedCompile(group: 'com.sun.jersey', name: 'jersey-client', version: '1.17') { transitive = false }
 	providedCompile(group: 'com.sun.jersey', name: 'jersey-core', version: '1.17.1') {transitive=false}
@@ -130,7 +131,7 @@ dependencies {
 	
 	providedCompile(group: 'org.codehaus.groovy', name:'groovy-all', version:'2.2.1') { transitive = false }
 	
-	providedCompile(group: 'com.oracle.emaas.emcpsm', name:'registry-lookup-client', version:'1.+') { transitive = false }
+	providedCompile(group: 'com.oracle.emaas.emcpsm', name:'registry-lookup-client', version:"${emaasRegistryLookupClientVersion}") { transitive = false }
 	providedCompile(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2') { transitive = false }
 	providedCompile (group: 'com.oracle.emaas.emcpgw.sdk', name: 'gateway-client', version: '1.+')
 
@@ -146,7 +147,7 @@ dependencies {
 	testCompile(group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.13'){ transitive = false }
 	testCompile(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2'){ transitive = false }
         testCompile(group: 'commons-logging', name:'commons-logging', version:'1.1.1'){ transitive = false }
-	testCompile(group: 'com.oracle.emaas.emcpsm', name:'registry-lookup-client', version:'1.+'){ transitive = false }
+	testCompile(group: 'com.oracle.emaas.emcpsm', name:'registry-lookup-client', version:"${emaasRegistryLookupClientVersion}"){ transitive = false }
 //	testCompile(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2'){ transitive = false }
         testCompile('com.sun.jersey:jersey-servlet:1.17.1') { transitive = false }
 	testCompile('com.sun.jersey:jersey-server:1.17.1') { transitive = false }

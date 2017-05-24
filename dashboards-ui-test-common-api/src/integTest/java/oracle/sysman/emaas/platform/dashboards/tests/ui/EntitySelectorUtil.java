@@ -10,6 +10,7 @@
 
 package oracle.sysman.emaas.platform.dashboards.tests.ui;
 
+import java.util.ArrayList;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.IEntitySelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.UtilLoader;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
@@ -31,7 +32,7 @@ public class EntitySelectorUtil
 
 	/**
 	 * @param driver
-	 * @param
+	 * @param logger
 	 * @return
 	 */
 	public static int getNumberOfPills(WebDriver driver, Logger logger)
@@ -39,11 +40,21 @@ public class EntitySelectorUtil
 		IEntitySelectorUtil esu = new UtilLoader<IEntitySelectorUtil>().loadUtil(driver, IEntitySelectorUtil.class);
 		return esu.getNumberOfPills(driver, logger);
 	}
+        
+        /**
+         * @param driver
+         * @param logger
+         * @return 
+         */
+        public static ArrayList<String> getPillContents(WebDriver driver, Logger logger)
+        {
+                IEntitySelectorUtil esu = new UtilLoader<IEntitySelectorUtil>().loadUtil(driver, IEntitySelectorUtil.class);
+		return esu.getPillContents(driver, logger);
+        }
 
 	/**
 	 * @param driver
-	 * @param
-	 * @return
+	 * @param logger
 	 */
 	public static void openEntitySelector(WebDriver driver, Logger logger)
 	{
@@ -53,8 +64,8 @@ public class EntitySelectorUtil
 
 	/**
 	 * @param driver
-	 * @param
-	 * @return
+	 * @param logger
+         * @param indexOfPillToRemove
 	 */
 	public static void removePill(WebDriver driver, Logger logger, int indexOfPillToRemove)
 	{
@@ -65,6 +76,7 @@ public class EntitySelectorUtil
         /**
          * 
          * @param driver
+	 * @param logger
          * @param pillIndex
          * @param entityName
          * @param entityType
@@ -77,8 +89,8 @@ public class EntitySelectorUtil
 
 	/**
 	 * @param driver
-	 * @param
-	 * @return
+	 * @param logger
+	 * @param text
 	 */
 	public static void searchText(WebDriver driver, Logger logger, String text)
 	{
@@ -88,8 +100,9 @@ public class EntitySelectorUtil
 
 	/**
 	 * @param driver
-	 * @param
-	 * @return
+	 * @param logger
+	 * @param entityName
+         * @param entityType
 	 */
 	public static void selectCompositeEntity(WebDriver driver, Logger logger, String entityName, String entityType)
 	{
@@ -99,8 +112,9 @@ public class EntitySelectorUtil
 
 	/**
 	 * @param driver
-	 * @param
-	 * @return
+	 * @param logger
+	 * @param entityName
+         * @param entityType
 	 */
 	public static void selectEntity(WebDriver driver, Logger logger, String entityName, String entityType)
 	{
@@ -122,7 +136,7 @@ public class EntitySelectorUtil
         /**
          * @param driver
          * @param logger
-         * @param text 
+         * @param displayName 
          */
         public static void verifyCompositePillContent(WebDriver driver, Logger logger, String displayName)
         {
@@ -133,7 +147,7 @@ public class EntitySelectorUtil
         /**
          * @param driver
          * @param logger
-         * @param text 
+         * @param displayName 
          */
         public static void verifyEntityPillContent(WebDriver driver, Logger logger, String displayName)
         {
@@ -144,7 +158,7 @@ public class EntitySelectorUtil
         /**
          * @param driver
          * @param logger
-         * @param text 
+         * @param displayName 
          */
         public static void verifyPillContains(WebDriver driver, Logger logger, String displayName)
         {
@@ -156,12 +170,37 @@ public class EntitySelectorUtil
          * @param driver
          * @param logger
          * @param pillIndex
-         * @param text 
+         * @param displayName 
          */
         public static void verifyPillContentByIndex(WebDriver driver, Logger logger, int pillIndex, String displayName)
         {
                 IEntitySelectorUtil esu = new UtilLoader<IEntitySelectorUtil>().loadUtil(driver, IEntitySelectorUtil.class);
                 esu.verifyPillContentByIndex(driver, logger, pillIndex, displayName);
+        }
+        
+        /**
+         * @param driver
+         * @param logger
+         * @param displayName
+         * @return 
+         */
+        public static boolean verifyPillExistsByDisplayName(WebDriver driver, Logger logger, String displayName)
+        {
+                IEntitySelectorUtil esu = new UtilLoader<IEntitySelectorUtil>().loadUtil(driver, IEntitySelectorUtil.class);
+                return esu.verifyPillExistsByDisplayName(driver, logger, displayName);
+        }
+        
+        /**
+         * @param driver
+         * @param logger
+         * @param pillIndex
+         * @param displayName
+         * @return 
+         */
+        public static boolean verifyPillExistsByIndex(WebDriver driver, Logger logger, int pillIndex, String displayName)
+        {
+                IEntitySelectorUtil esu = new UtilLoader<IEntitySelectorUtil>().loadUtil(driver, IEntitySelectorUtil.class);
+                return esu.verifyPillExistsByIndex(driver, logger, pillIndex, displayName);
         }
 
 }

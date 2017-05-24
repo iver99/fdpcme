@@ -17,25 +17,28 @@
         <script type="text/javascript">
             ////ADDITIONALDATA////
         </script>
+        
         <!-- RequireJS bootstrap file -->
         <script data-main="@version@/js/homeMain" src="libs/@version@/js/oraclejet/js/libs/require/require.js"></script>
     </head>
     <body>
         <div class="loadingIndicator" id="loading" data-bind="text:getNlsString('DBS_HOME_LOADING')"></div>
-        <div id="globalBody" style="display: none"> 
-            <!-- Header section which contains the Global Branding, Global Navigation, and Application Navigation code.
-                Template is located in /templates/demoAppHeaderTemplate.html
-            -->
-            <header id="headerWrapper" role="banner">
-                <div data-bind="component: {
-                        name: 'df-oracle-branding-bar',
-                        params: brandingbarParams
-                    }">
-                </div>
-            </header>
-
+        <div id="globalBody" style="display: none" class="oj-web-applayout-offcanvas-wrapper oj-offcanvas-outer-wrapper"> 
+            <div id="offcanvasInnerContainer" class="oj-offcanvas-inner-wrapper">
             <!-- main content -->
-            <div id="mainContent" style="display: none;" role="main">
+            <div id="mainContent" style="display: none;" role="main" class="oj-web-applayout-scrollable oj-web-applayout-page">
+                <!-- Header section which contains the Global Branding, Global Navigation, and Application Navigation code.
+                    Template is located in /templates/demoAppHeaderTemplate.html
+                -->
+                <!-- ko stopBinding -->
+                <header id="headerWrapper" role="banner">
+                    <div data-bind="component: {
+                            name: 'df-oracle-branding-bar',
+                            params: brandingbarParams
+                        }">
+                    </div>
+                </header>
+                <!-- /ko -->
                         <div class="main-content-area main-content-area-sm main-content-area-md main-content-area-lg main-content-area-xsl main-content-area-xl">
                             <div id="dhometab" class="dbs-tab-container">
                                 <div class="oj-row oj-cols-nopad" style="max-width: none;">
@@ -119,13 +122,13 @@
                     <tbody>
                         <tr style="height:103px; ">
                             <td width="33%" class="dbs-welcome-centeredImage">
-                                <img height="91" width="114" src="@version@/images/browse.png" alt="browse">                    
+                                <img height="91" width="114" src="@version@/images/browse.png" data-bind="attr: {alt: getNlsString('DBS_HOME_WC_DLG_BROWSE')}">                    
                             </td>
                             <td width="33%" class="dbs-welcome-centeredImage">
-                                <img height="92" width="115" src="@version@/images/build.png" alt="build">                    
+                                <img height="92" width="115" src="@version@/images/build.png" data-bind="attr: {alt: getNlsString('DBS_HOME_WC_DLG_BUILD')}">                    
                             </td>
                             <td width="33%" class="dbs-welcome-centeredImage">
-                                <img height="113" width="114" src="@version@/images/explore.png" alt="explore">                    
+                                <img height="113" width="114" src="@version@/images/explore.png" data-bind="attr: {alt: getNlsString('DBS_HOME_WC_DLG_EXPLORE')}">                    
                             </td>
                         </tr>
                         <tr>
@@ -174,7 +177,7 @@
                     </div>
                     </div>
                     <!-- welcome dialog end -->
-
+                </div>
             </div>            
         </div>
     </body>

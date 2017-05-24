@@ -310,7 +310,7 @@ public class DashboardAPITest
 			{
 				anyDependencyStatus.isDatabaseUp();
 				result = true;
-				mockedDashboardManager.getCombinedDashboardById((BigInteger) any, anyLong, anyString);
+				mockedDashboardManager.getCombinedDashboardById((BigInteger) any, anyLong, anyString, (List<String>)any);
 				result = new CombinedDashboard();
 				Deencapsulation.invoke(dashboardAPI, "updateDashboardAllHref", withAny(new CombinedDashboard()), anyString);
 				result = any;

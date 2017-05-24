@@ -34,6 +34,9 @@ public class PreferenceRowEntity implements RowEntity
 
 	@JsonProperty("LAST_MODIFICATION_DATE")
 	private String lastModificationDate;
+	
+	@JsonProperty("DELETED")
+	private String deleted;
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
@@ -149,6 +152,14 @@ public class PreferenceRowEntity implements RowEntity
 		return lastModificationDate;
 	}
 
+
+	public String getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(String deleted) {
+		this.deleted = deleted;
+	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()

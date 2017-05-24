@@ -10,7 +10,10 @@
 
 package oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows;
 
+import oracle.sysman.emaas.platform.dashboards.core.util.BigIntegerSerializer;
+
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import java.math.BigInteger;
 
@@ -20,7 +23,7 @@ import java.math.BigInteger;
 public class DashboardTileParamsRowEntity implements RowEntity
 {
 	@JsonProperty("TILE_ID")
-	private BigInteger tileId;
+	private String tileId;
 
 	@JsonProperty("PARAM_NAME")
 	private String paramName;
@@ -48,104 +51,18 @@ public class DashboardTileParamsRowEntity implements RowEntity
 
 	@JsonProperty("LAST_MODIFICATION_DATE")
 	private String lastModificationDate;
+	
+	@JsonProperty("DELETED")
+	private Integer deleted;
+	
+	
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj)
-	{
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		DashboardTileParamsRowEntity other = (DashboardTileParamsRowEntity) obj;
-		if (creationDate == null) {
-			if (other.creationDate != null) {
-				return false;
-			}
-		}
-		else if (!creationDate.equals(other.creationDate)) {
-			return false;
-		}
-		if (lastModificationDate == null) {
-			if (other.lastModificationDate != null) {
-				return false;
-			}
-		}
-		else if (!lastModificationDate.equals(other.lastModificationDate)) {
-			return false;
-		}
-		if (isSystem == null) {
-			if (other.isSystem != null) {
-				return false;
-			}
-		}
-		else if (!isSystem.equals(other.isSystem)) {
-			return false;
-		}
-		if (paramName == null) {
-			if (other.paramName != null) {
-				return false;
-			}
-		}
-		else if (!paramName.equals(other.paramName)) {
-			return false;
-		}
-		if (paramType == null) {
-			if (other.paramType != null) {
-				return false;
-			}
-		}
-		else if (!paramType.equals(other.paramType)) {
-			return false;
-		}
-		if (paramValueNum == null) {
-			if (other.paramValueNum != null) {
-				return false;
-			}
-		}
-		else if (!paramValueNum.equals(other.paramValueNum)) {
-			return false;
-		}
-		if (paramValueStr == null) {
-			if (other.paramValueStr != null) {
-				return false;
-			}
-		}
-		else if (!paramValueStr.equals(other.paramValueStr)) {
-			return false;
-		}
-		if (paramValueTimestamp == null) {
-			if (other.paramValueTimestamp != null) {
-				return false;
-			}
-		}
-		else if (!paramValueTimestamp.equals(other.paramValueTimestamp)) {
-			return false;
-		}
-		if (tenantId == null) {
-			if (other.tenantId != null) {
-				return false;
-			}
-		}
-		else if (!tenantId.equals(other.tenantId)) {
-			return false;
-		}
-		if (tileId == null) {
-			if (other.tileId != null) {
-				return false;
-			}
-		}
-		else if (!tileId.equals(other.tileId)) {
-			return false;
-		}
-		return true;
+	public Integer getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(Integer deleted) {
+		this.deleted = deleted;
 	}
 
 	/**
@@ -207,7 +124,7 @@ public class DashboardTileParamsRowEntity implements RowEntity
 	/**
 	 * @return the tileId
 	 */
-	public BigInteger getTileId()
+	public String getTileId()
 	{
 		return tileId;
 	}
@@ -226,28 +143,6 @@ public class DashboardTileParamsRowEntity implements RowEntity
 	public String getLastModificationDate()
 	{
 		return lastModificationDate;
-	}
-
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode()
-	{
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + (isSystem == null ? 0 : isSystem.hashCode());
-		result = prime * result + (paramName == null ? 0 : paramName.hashCode());
-		result = prime * result + (paramType == null ? 0 : paramType.hashCode());
-		result = prime * result + (paramValueNum == null ? 0 : paramValueNum.hashCode());
-		result = prime * result + (paramValueStr == null ? 0 : paramValueStr.hashCode());
-		result = prime * result + (paramValueTimestamp == null ? 0 : paramValueTimestamp.hashCode());
-		result = prime * result + (tenantId == null ? 0 : tenantId.hashCode());
-		result = prime * result + (tileId == null ? 0 : tileId.hashCode());
-		result = prime * result + (creationDate == null ? 0 : creationDate.hashCode());
-		result = prime * result + (lastModificationDate == null ? 0 : lastModificationDate.hashCode());
-		return result;
 	}
 
 	/**
@@ -317,7 +212,7 @@ public class DashboardTileParamsRowEntity implements RowEntity
 	 * @param tileId
 	 *            the tileId to set
 	 */
-	public void setTileId(BigInteger tileId)
+	public void setTileId(String tileId)
 	{
 		this.tileId = tileId;
 	}
@@ -340,14 +235,115 @@ public class DashboardTileParamsRowEntity implements RowEntity
 		this.lastModificationDate = lastModificationDate;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
-	public String toString()
-	{
-		return "DashboardTileParamsRowEntity [tileId=" + tileId + ", paramName=" + paramName + ", tenantId=" + tenantId
-				+ ", isSystem=" + isSystem + ", paramType=" + paramType + ", paramValueStr=" + paramValueStr + ", paramValueNum="
-				+ paramValueNum + ", paramValueTimestamp=" + paramValueTimestamp + ", creationDate=" + creationDate + ", lastModificationDate=" + lastModificationDate+ "]";
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((creationDate == null) ? 0 : creationDate.hashCode());
+		result = prime * result + ((deleted == null) ? 0 : deleted.hashCode());
+		result = prime * result
+				+ ((isSystem == null) ? 0 : isSystem.hashCode());
+		result = prime
+				* result
+				+ ((lastModificationDate == null) ? 0 : lastModificationDate
+						.hashCode());
+		result = prime * result
+				+ ((paramName == null) ? 0 : paramName.hashCode());
+		result = prime * result
+				+ ((paramType == null) ? 0 : paramType.hashCode());
+		result = prime * result
+				+ ((paramValueNum == null) ? 0 : paramValueNum.hashCode());
+		result = prime * result
+				+ ((paramValueStr == null) ? 0 : paramValueStr.hashCode());
+		result = prime
+				* result
+				+ ((paramValueTimestamp == null) ? 0 : paramValueTimestamp
+						.hashCode());
+		result = prime * result
+				+ ((tenantId == null) ? 0 : tenantId.hashCode());
+		result = prime * result + ((tileId == null) ? 0 : tileId.hashCode());
+		return result;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		DashboardTileParamsRowEntity other = (DashboardTileParamsRowEntity) obj;
+		if (creationDate == null) {
+			if (other.creationDate != null)
+				return false;
+		} else if (!creationDate.equals(other.creationDate))
+			return false;
+		if (deleted == null) {
+			if (other.deleted != null)
+				return false;
+		} else if (!deleted.equals(other.deleted))
+			return false;
+		if (isSystem == null) {
+			if (other.isSystem != null)
+				return false;
+		} else if (!isSystem.equals(other.isSystem))
+			return false;
+		if (lastModificationDate == null) {
+			if (other.lastModificationDate != null)
+				return false;
+		} else if (!lastModificationDate.equals(other.lastModificationDate))
+			return false;
+		if (paramName == null) {
+			if (other.paramName != null)
+				return false;
+		} else if (!paramName.equals(other.paramName))
+			return false;
+		if (paramType == null) {
+			if (other.paramType != null)
+				return false;
+		} else if (!paramType.equals(other.paramType))
+			return false;
+		if (paramValueNum == null) {
+			if (other.paramValueNum != null)
+				return false;
+		} else if (!paramValueNum.equals(other.paramValueNum))
+			return false;
+		if (paramValueStr == null) {
+			if (other.paramValueStr != null)
+				return false;
+		} else if (!paramValueStr.equals(other.paramValueStr))
+			return false;
+		if (paramValueTimestamp == null) {
+			if (other.paramValueTimestamp != null)
+				return false;
+		} else if (!paramValueTimestamp.equals(other.paramValueTimestamp))
+			return false;
+		if (tenantId == null) {
+			if (other.tenantId != null)
+				return false;
+		} else if (!tenantId.equals(other.tenantId))
+			return false;
+		if (tileId == null) {
+			if (other.tileId != null)
+				return false;
+		} else if (!tileId.equals(other.tileId))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "DashboardTileParamsRowEntity [tileId=" + tileId
+				+ ", paramName=" + paramName + ", tenantId=" + tenantId
+				+ ", isSystem=" + isSystem + ", paramType=" + paramType
+				+ ", paramValueStr=" + paramValueStr + ", paramValueNum="
+				+ paramValueNum + ", paramValueTimestamp="
+				+ paramValueTimestamp + ", creationDate=" + creationDate
+				+ ", lastModificationDate=" + lastModificationDate
+				+ ", deleted=" + deleted + "]";
+	}
+	
+	
 }

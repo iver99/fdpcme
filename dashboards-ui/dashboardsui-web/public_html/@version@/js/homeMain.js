@@ -4,10 +4,14 @@
  */
 
 requirejs.config({
-    bundles: ((window.DEV_MODE !==null && typeof window.DEV_MODE ==="object") ||
-                (window.gradleDevMode !==null && typeof window.gradleDevMode ==="boolean")) ? undefined : {
-        'uifwk/@version@/js/uifwk-impl-partition-cached':
-            [
+    bundles: function() {
+        if ((window.DEV_MODE !==null && typeof window.DEV_MODE ==="object") ||
+                (window.gradleDevMode !==null && typeof window.gradleDevMode ==="boolean")) {
+            return {};
+	}
+        var versionedUifwkPartition = window.getSDKVersionFile ? window.getSDKVersionFile("emsaasui/uifwk/js/uifwk-partition") : "uifwk/js/uifwk-partition";
+        var bundles = {};
+        bundles[versionedUifwkPartition] = [
             'uifwk/js/util/ajax-util',
             'uifwk/js/util/df-util',
             'uifwk/js/util/logging-util',
@@ -19,6 +23,7 @@ requirejs.config({
             'uifwk/js/util/usertenant-util',
             'uifwk/js/util/zdt-util',
             'uifwk/js/sdk/context-util',
+            'uifwk/js/sdk/menu-util',
             'uifwk/js/widgets/aboutbox/js/aboutbox',
             'uifwk/js/widgets/brandingbar/js/brandingbar',
             'uifwk/js/widgets/datetime-picker/js/datetime-picker',
@@ -29,8 +34,9 @@ requirejs.config({
             'text!uifwk/js/widgets/brandingbar/html/brandingbar.html',
             'text!uifwk/js/widgets/timeFilter/html/timeFilter.html',
             'text!uifwk/js/widgets/datetime-picker/html/datetime-picker.html'
-            ]
-    },
+            ];
+        return bundles; 
+    }(),
     //Set up module mapping
     map: {
         '*':
@@ -101,6 +107,7 @@ require(['dashboards/dbsmodel',
     'uifwk/js/util/df-util',
     'dashboards/dashboardhome-impl',
     'uifwk/js/util/logging-util',
+    'uifwk/js/sdk/menu-util',
     'common.uifwk',
     'ojs/ojmodel',
     'ojs/ojknockout',
@@ -117,7 +124,7 @@ require(['dashboards/dbsmodel',
     'ojs/ojmenu',
     'ojs/ojtable'
 ],
-        function(model, ko, $, oj, dfu, dfumodel, dashboardhome_impl, _emJETCustomLogger) // this callback gets executed when all required modules are loaded
+        function(model, ko, $, oj, dfu, dfumodel, dashboardhome_impl, _emJETCustomLogger, menuModel) // this callback gets executed when all required modules are loaded
         {
             var logger = new _emJETCustomLogger();
             var logReceiver = dfu.getLogUrl();
@@ -134,7 +141,7 @@ require(['dashboards/dbsmodel',
                 oj.Logger.error(msg, true);
 
                 return false; 
-            }
+            };
 
 
             if (!ko.components.isRegistered('df-oracle-branding-bar')) {
@@ -158,7 +165,15 @@ require(['dashboards/dbsmodel',
             ko.virtualElements.allowedBindings.stopBinding = true;
 
             var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
-
+            var menuUtil = new menuModel();
+            var filterId = dfu_model.getUrlParam('filter');
+            var defaultMenuId = menuUtil.OMCMenuConstants.GLOBAL_DASHBOARDS;
+            if (filterId === 'ocs') {
+                defaultMenuId = menuUtil.OMCMenuConstants.GLOBAL_ORCHESTRATION;
+            } 
+            else if (filterId === 'ita') {
+                defaultMenuId = menuUtil.OMCMenuConstants.GLOBAL_ITANALYTICS;
+            }
             function HeaderViewModel() {
                 var self = this;
                 self.userName = dfu.getUserName();
@@ -169,7 +184,9 @@ require(['dashboards/dbsmodel',
                     tenantName: self.tenantName,
                     appId: self.appId,
                     isAdmin:true,
-                    showGlobalContextBanner: false
+                    showGlobalContextBanner: false,
+                    omcHamburgerMenuOptIn: true,
+                    omcCurrentMenuId: defaultMenuId
                 };
             }
 
