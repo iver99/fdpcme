@@ -795,6 +795,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                                     "displayMode": "push",
                                     "selector": "#omcHamburgerMenu"
                                 });
+                            var $b = $(".right-panel-toggler:visible")[0] && ko.dataFor($(".right-panel-toggler:visible")[0]).$b;
+                            $b && $b.triggerBuilderResizeEvent('Hamburger menu is closed.');
                         }
                     }else{
                         if(!$("#omcHamburgerMenu").hasClass("oj-offcanvas-open")){
@@ -804,6 +806,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                                     "selector": "#omcHamburgerMenu",
                                     "autoDismiss": "none"
                                 });
+                            var $b = $(".right-panel-toggler:visible")[0] && ko.dataFor($(".right-panel-toggler:visible")[0]).$b;
+                            $b && $b.triggerBuilderResizeEvent('Hamburger menu is opened.');
                         }else if($("#omcHamburgerMenu").hasClass("oj-offcanvas-overlay")){
                                 oj.OffcanvasUtils.close({
                                     "edge": "start",
@@ -818,13 +822,15 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                                             "selector": "#omcHamburgerMenu",
                                             "autoDismiss": "none"
                                         });
+                                        var $b = $(".right-panel-toggler:visible")[0] && ko.dataFor($(".right-panel-toggler:visible")[0]).$b;
+                                        $b && $b.triggerBuilderResizeEvent('Hamburger menu is opened.');
                                 },500);
                         }
                     }
                 });
 
                 self.toggleHamburgerMenu = function() {
-                    return oj.OffcanvasUtils.toggle({
+                    oj.OffcanvasUtils.toggle({
                             "edge": "start",
                             "displayMode": self.xlargeScreen() ? "push" : "overlay",
     //                      "content": "#main-container",
@@ -842,9 +848,13 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     $("#omcHamburgerMenu").on("ojopen", function(event, offcanvas) {
                         if(offcanvas.displayMode === "push")
                             $("#offcanvasInnerContainer").width(document.body.clientWidth-250);
+                            var $b = $(".right-panel-toggler:visible")[0] && ko.dataFor($(".right-panel-toggler:visible")[0]).$b;
+                            $b && $b.triggerBuilderResizeEvent('Hamburger menu is opened.');
                         });
                     $("#omcHamburgerMenu").on("ojclose", function(event, offcanvas) {
                         $("#offcanvasInnerContainer").width(document.body.clientWidth);
+                        var $b = $(".right-panel-toggler:visible")[0] && ko.dataFor($(".right-panel-toggler:visible")[0]).$b;
+                        $b && $b.triggerBuilderResizeEvent('Hamburger menu is closed.');
                     });
                     $(window).resize(function() {
                         if ($("#omcHamburgerMenu").hasClass("oj-offcanvas-open") && !$("#omcHamburgerMenu").hasClass("oj-offcanvas-overlay")) {
@@ -863,6 +873,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                                     "autoDismiss": "none"
                                 });
                         })());
+                        var $b = $(".right-panel-toggler:visible")[0] && ko.dataFor($(".right-panel-toggler:visible")[0]).$b;
+                        $b && $b.triggerBuilderResizeEvent('Hamburger menu is opened.');
                     }
                     
                     //Show composite menu if it's called before hamburger menu finished loading
