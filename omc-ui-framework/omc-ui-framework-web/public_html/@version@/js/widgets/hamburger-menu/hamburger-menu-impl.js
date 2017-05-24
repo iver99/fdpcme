@@ -918,7 +918,8 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                             self.preventExpandForAPMLabel = false;
                         }
                         //Auto close hamburger menu when it's not in pinned status
-                        if($("#omcHamburgerMenu").hasClass("oj-offcanvas-overlay")) {
+                        if($("#omcHamburgerMenu").hasClass("oj-offcanvas-overlay") && 
+                                (self.preventExpandForAPMLabel ||  !item.children || item.children.length <= 0)) {
                             oj.OffcanvasUtils.close({
                                 "edge": "start",
                                 "displayMode": "overlay",
