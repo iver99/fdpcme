@@ -132,7 +132,7 @@ public class TestSuiteLicensing_OMCLOG extends LoginAndLogout
 		LoginAndLogout.logoutMethod();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testGlobalContextCreateDashboard()
 	{
 
@@ -145,11 +145,11 @@ public class TestSuiteLicensing_OMCLOG extends LoginAndLogout
 		DashboardHomeUtil.gridView(webd);
 		DashboardHomeUtil.createDashboard(webd, DSBNAME, null);
 		DashboardBuilderUtil.verifyDashboard(webd, DSBNAME, null, false);
-		//Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(webd), "The global context exists in builder Page");
+		Assert.assertFalse(GlobalContextUtil.isGlobalContextExisted(webd), "The global context exists in builder Page");
 		//Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd),"/SOA1213_base_domain/base_domain/soa_server1/soa-infra_System");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testGlobalContextCreateDashboardSet()
 	{
 
@@ -162,11 +162,11 @@ public class TestSuiteLicensing_OMCLOG extends LoginAndLogout
 		DashboardHomeUtil.gridView(webd);
 		DashboardHomeUtil.createDashboardSet(webd, DSBSETNAME, null);
 		DashboardBuilderUtil.verifyDashboardSet(webd, DSBSETNAME);
-		//Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(webd), "The global context exists in builder Page");
+		Assert.assertFalse(GlobalContextUtil.isGlobalContextExisted(webd), "The global context exists in builder Page");
 		//Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd),"/SOA1213_base_domain/base_domain/soa_server1/soa-infra_System");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testGlobalContextDashboardHome()
 	{
 
@@ -180,7 +180,7 @@ public class TestSuiteLicensing_OMCLOG extends LoginAndLogout
 
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testGlobalContextLA()
 	{
 
@@ -193,7 +193,7 @@ public class TestSuiteLicensing_OMCLOG extends LoginAndLogout
 		//Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd),"/SOA1213_base_domain/base_domain/soa_server1/soa-infra_System");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testGlobalContextOOBDashboard()
 	{
 
@@ -206,11 +206,11 @@ public class TestSuiteLicensing_OMCLOG extends LoginAndLogout
 		BrandingBarUtil.visitDashboardHome(webd);
 		DashboardHomeUtil.gridView(webd);
 		DashboardHomeUtil.selectOOB(webd, "Host Operations");
-		//Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(webd), "The global context doesn't exist in OOB dashboard");
+		Assert.assertFalse(GlobalContextUtil.isGlobalContextExisted(webd), "The global context doesn't exist in OOB dashboard");
 		//Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd),"/SOA1213_base_domain/base_domain/soa_server1/soa-infra_System");
 	}
 	
-	@Test
+	@Test(alwaysRun = true)
 	public void testGlobalContextOOBDashboardSet()
 	{
 
@@ -223,11 +223,11 @@ public class TestSuiteLicensing_OMCLOG extends LoginAndLogout
 		BrandingBarUtil.visitDashboardHome(webd);
 		DashboardHomeUtil.gridView(webd);
 		DashboardHomeUtil.selectDashboard(webd, "Enterprise Health");
-		//Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(webd), "The global context exists in OOBDashboard Set");
+		Assert.assertFalse(GlobalContextUtil.isGlobalContextExisted(webd), "The global context exists in OOBDashboard Set");
 		//Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd),"/SOA1213_base_domain/base_domain/soa_server1/soa-infra_System");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testGlobalContextUDE()
 	{
 
@@ -241,7 +241,7 @@ public class TestSuiteLicensing_OMCLOG extends LoginAndLogout
 		//Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd),"/SOA1213_base_domain/base_domain/soa_server1/soa-infra_System");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testGlobalContextWelcomePage()
 	{
 
@@ -380,7 +380,7 @@ public class TestSuiteLicensing_OMCLOG extends LoginAndLogout
 		Assert.assertTrue(url2.contains("omcCtx="), "The global context infomation in URL is lost in OOB dashboard page");		
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void tesTGlobalContext_SwitchEntity()
 	{
 		dbName_tailsTest = "selfDb-" + DashBoardUtils.generateTimeStamp();
