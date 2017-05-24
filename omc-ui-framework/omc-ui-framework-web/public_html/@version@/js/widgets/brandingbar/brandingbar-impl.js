@@ -785,6 +785,28 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     injectHamburgerMenuComponent();
                 }
                 
+                function resetCurrentHamburgerMenu() {
+                    //Show composite menu if it's called before hamburger menu finished loading
+                    if (window._uifwk && window._uifwk.compositeMenuName && window._uifwk.compositeMenuJson 
+                            && window._uifwk.stayInComposite && !window._uifwk.isCompositeMenuShown) {
+                        menuUtil.showCompositeObjectMenu(window._uifwk.compositeMenuParentId,
+                                                        window._uifwk.compositeMenuName, 
+                                                        window._uifwk.compositeMenuJson, 
+                                                        window._uifwk.compositeMenuCollapseCallback);
+                    }
+                    //Set current menu item if specified by API call
+                    if (window._uifwk && window._uifwk.currentOmcMenuItemId) {
+                        menuUtil.setCurrentMenuItem(window._uifwk.currentOmcMenuItemId, window._uifwk.underOmcAdmin);
+                    }
+                    else {
+                        //Set current menu item if specified from branding bar params
+                        var selectedMenuId = params.omcCurrentMenuId;
+                        if (selectedMenuId) {
+                            menuUtil.setCurrentMenuItem(selectedMenuId);
+                        }
+                    }
+                }
+                
                 self.xlargeScreen = oj.ResponsiveKnockoutUtils.createMediaQueryObservable('(min-width: 1440px)');
 
                 self.xlargeScreen.subscribe(function(isXlarge){
@@ -795,6 +817,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                                     "displayMode": "push",
                                     "selector": "#omcHamburgerMenu"
                                 });
+                            var $b = $(".right-panel-toggler:visible")[0] && ko.dataFor($(".right-panel-toggler:visible")[0]).$b;
+                            $b && $b.triggerBuilderResizeEvent('Hamburger menu is closed.');
                         }
                     }else{
                         if(!$("#omcHamburgerMenu").hasClass("oj-offcanvas-open")){
@@ -804,6 +828,9 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                                     "selector": "#omcHamburgerMenu",
                                     "autoDismiss": "none"
                                 });
+                            resetCurrentHamburgerMenu();
+                            var $b = $(".right-panel-toggler:visible")[0] && ko.dataFor($(".right-panel-toggler:visible")[0]).$b;
+                            $b && $b.triggerBuilderResizeEvent('Hamburger menu is opened.');
                         }else if($("#omcHamburgerMenu").hasClass("oj-offcanvas-overlay")){
                                 oj.OffcanvasUtils.close({
                                     "edge": "start",
@@ -818,19 +845,25 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                                             "selector": "#omcHamburgerMenu",
                                             "autoDismiss": "none"
                                         });
+                                        resetCurrentHamburgerMenu();
+                                        var $b = $(".right-panel-toggler:visible")[0] && ko.dataFor($(".right-panel-toggler:visible")[0]).$b;
+                                        $b && $b.triggerBuilderResizeEvent('Hamburger menu is opened.');
                                 },500);
                         }
                     }
                 });
 
                 self.toggleHamburgerMenu = function() {
-                    return oj.OffcanvasUtils.toggle({
+                    oj.OffcanvasUtils.toggle({
                             "edge": "start",
                             "displayMode": self.xlargeScreen() ? "push" : "overlay",
     //                      "content": "#main-container",
                             "selector": "#omcHamburgerMenu",
                             "autoDismiss": self.xlargeScreen() ? "none" : "focusLoss"
                         });
+                    if($("#omcHamburgerMenu").hasClass("oj-offcanvas-open")) {
+                        resetCurrentHamburgerMenu();
+                    }
                 };
 
                 var menuUtil = new menuModel();
@@ -842,9 +875,13 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     $("#omcHamburgerMenu").on("ojopen", function(event, offcanvas) {
                         if(offcanvas.displayMode === "push")
                             $("#offcanvasInnerContainer").width(document.body.clientWidth-250);
+                            var $b = $(".right-panel-toggler:visible")[0] && ko.dataFor($(".right-panel-toggler:visible")[0]).$b;
+                            $b && $b.triggerBuilderResizeEvent('Hamburger menu is opened.');
                         });
                     $("#omcHamburgerMenu").on("ojclose", function(event, offcanvas) {
                         $("#offcanvasInnerContainer").width(document.body.clientWidth);
+                        var $b = $(".right-panel-toggler:visible")[0] && ko.dataFor($(".right-panel-toggler:visible")[0]).$b;
+                        $b && $b.triggerBuilderResizeEvent('Hamburger menu is closed.');
                     });
                     $(window).resize(function() {
                         if ($("#omcHamburgerMenu").hasClass("oj-offcanvas-open") && !$("#omcHamburgerMenu").hasClass("oj-offcanvas-overlay")) {
@@ -863,6 +900,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                                     "autoDismiss": "none"
                                 });
                         })());
+                        var $b = $(".right-panel-toggler:visible")[0] && ko.dataFor($(".right-panel-toggler:visible")[0]).$b;
+                        $b && $b.triggerBuilderResizeEvent('Hamburger menu is opened.');
                     }
                     
                     //Show composite menu if it's called before hamburger menu finished loading
