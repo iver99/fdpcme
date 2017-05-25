@@ -3,7 +3,8 @@ define(['knockout',
 'ojs/ojcore',
 'dfutil',
 'uifwk/js/util/mobile-util',
-'uiutil'
+'uiutil',
+'ojs/ojcollapsible'
 ],
 function (ko, $, oj, dfu, mbu, uiutil) {
     function rightPanelControl($b) {
