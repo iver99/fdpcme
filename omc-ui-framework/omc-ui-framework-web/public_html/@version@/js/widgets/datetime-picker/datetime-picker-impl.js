@@ -2291,7 +2291,11 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         self.timeValidateError(false);
                     }
                     
-                    var endDate = oj.IntlConverterUtils.dateToLocalIso(new Date(self.endDate())).slice(0, 10) + self.endTime();
+                    var endDate = oj.IntlConverterUtils.dateToLocalIso(new Date(self.endDate())).slice(0, 10);
+                    if(!params.hideTimeSelection) {
+                        endDate = endDate + self.endTime();
+                    }
+                    
                     var current = oj.IntlConverterUtils.dateToLocalIso(new Date());
                     if(endDate > current) {
                         self.timeValidateFutureError(true);

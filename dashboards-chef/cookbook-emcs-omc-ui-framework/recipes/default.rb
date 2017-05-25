@@ -26,6 +26,7 @@ bash "create_servicemanger_properties_file"  do
     echo "characteristics=_tenantAgnostic:true,SAAS_deploymentUuid:#{node["SAAS_deploymentUuid"]}" >> servicemanager.properties
     echo "buildId=@version@" >> servicemanager.properties 
    EOH
+
 end
 
 # set the MW_HOME environment variable

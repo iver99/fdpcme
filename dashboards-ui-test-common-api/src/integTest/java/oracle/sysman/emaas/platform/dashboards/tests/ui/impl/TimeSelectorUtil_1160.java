@@ -101,18 +101,19 @@ public class TimeSelectorUtil_1160 extends TimeSelectorUtil_1130
 		webd.clear("css=" + TimeSelectorUIControls.sEndTimeInput);
 		webd.sendKeys("css=" + TimeSelectorUIControls.sEndTimeInput, endTime);
 		webd.takeScreenShot();
-		webd.savePageToFile();
-		if (webd.isDisplayed(TimeSelectorUIControls.sErrorMsg)) {
-			try {
-				throw new Exception(webd.getText(TimeSelectorUIControls.sErrorMsg));
-			}
-			catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return null;
-		}
-		else {
+                webd.savePageToFile();
+
+//		if (webd.isDisplayed(TimeSelectorUIControls.sErrorMsg)) {
+//			try {
+//				throw new Exception(webd.getText(TimeSelectorUIControls.sErrorMsg));
+//			}
+//			catch (Exception e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//			return null;
+//		}
+//		else {
 			try {
 				clickApplyButton(webd);
 			}
@@ -123,7 +124,7 @@ public class TimeSelectorUtil_1160 extends TimeSelectorUtil_1130
 			String returnTimeRange = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn))
 					.get(index - 1).getText();
 			return dateConvert(webd, returnTimeRange, TimeRange.Custom, "MM/dd/yyyy hh:mm:ss:SSS a", "MMM d, yyyy hh:mm:ss:SSS a");
-		}
+//		}
 	}
 
 	@Override
@@ -155,17 +156,17 @@ public class TimeSelectorUtil_1160 extends TimeSelectorUtil_1130
 		String optionLocator = getOptionsLocator(driver, relTimeUnit.getTimeUnit());
 		driver.click("css=" + optionLocator);
 
-		if (driver.isDisplayed(TimeSelectorUIControls.sErrorMsg)) {
-			try {
-				throw new Exception(driver.getText(TimeSelectorUIControls.sErrorMsg));
-			}
-			catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return null;
-		}
-		else {
+//		if (driver.isDisplayed(TimeSelectorUIControls.sErrorMsg)) {
+//			try {
+//				throw new Exception(driver.getText(TimeSelectorUIControls.sErrorMsg));
+//			}
+//			catch (Exception e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//			return null;
+//		}
+//		else {
 			try {
 				clickApplyButton(driver);
 			}
@@ -198,7 +199,7 @@ public class TimeSelectorUtil_1160 extends TimeSelectorUtil_1130
 
 				return dateConvert(driver, returnDate, TimeRange.Custom, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
 			}
-		}
+//		}
 	}
 
 	@Override
@@ -234,17 +235,17 @@ public class TimeSelectorUtil_1160 extends TimeSelectorUtil_1130
 		String optionLocator = getOptionsLocator(webd, relTimeUnit.getTimeUnit());
 		webd.click("css=" + optionLocator);
 
-		if (webd.isDisplayed(TimeSelectorUIControls.sErrorMsg)) {
-			try {
-				throw new Exception(webd.getText(TimeSelectorUIControls.sErrorMsg));
-			}
-			catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return null;
-		}
-		else {
+//		if (webd.isDisplayed(TimeSelectorUIControls.sErrorMsg)) {
+//			try {
+//				throw new Exception(webd.getText(TimeSelectorUIControls.sErrorMsg));
+//			}
+//			catch (Exception e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//			return null;
+//		}
+//		else {
 			try {
 				clickApplyButton(webd);
 			}
@@ -260,15 +261,10 @@ public class TimeSelectorUtil_1160 extends TimeSelectorUtil_1130
 			}
 			else {
 				String returnStartDate = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sDateTimePick))
-						.get(index - 1).findElement(By.cssSelector(TimeSelectorUIControls.sStartDateInput)).getAttribute("value")
-						+ " "
-						+ webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sDateTimePick)).get(index - 1)
-						.findElement(By.cssSelector(TimeSelectorUIControls.sStartTimeInput)).getAttribute("value");
+						.get(index - 1).findElement(By.cssSelector(TimeSelectorUIControls.sStartDateInput)).getAttribute("value");
+				
 				String returnEndDate = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sDateTimePick))
-						.get(index - 1).findElement(By.cssSelector(TimeSelectorUIControls.sEndDateInput)).getAttribute("value")
-						+ " "
-						+ webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sDateTimePick)).get(index - 1)
-						.findElement(By.cssSelector(TimeSelectorUIControls.sEndTimeInput)).getAttribute("value");
+						.get(index - 1).findElement(By.cssSelector(TimeSelectorUIControls.sEndDateInput)).getAttribute("value");
 
 				returnStartDate = timeFormatChange(webd, returnStartDate, "MM/dd/yyyy", "MMM d, yyyy");
 				returnEndDate = timeFormatChange(webd, returnEndDate, "MM/dd/yyyy", "MMM d, yyyy");
@@ -277,7 +273,7 @@ public class TimeSelectorUtil_1160 extends TimeSelectorUtil_1130
 
 				return dateConvert(webd, returnDate, TimeRange.Custom, "MM/dd/yyyy", "MMM d, yyyy");
 			}
-		}
+//		}
 	}
 
 	@Override
@@ -309,17 +305,17 @@ public class TimeSelectorUtil_1160 extends TimeSelectorUtil_1130
 		String optionLocator = getOptionsLocator(driver, relTimeUnit.getTimeUnit());
 		driver.click("css=" + optionLocator);
 
-		if (driver.isDisplayed(TimeSelectorUIControls.sErrorMsg)) {
-			try {
-				throw new Exception(driver.getText(TimeSelectorUIControls.sErrorMsg));
-			}
-			catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return null;
-		}
-		else {
+//		if (driver.isDisplayed(TimeSelectorUIControls.sErrorMsg)) {
+//			try {
+//				throw new Exception(driver.getText(TimeSelectorUIControls.sErrorMsg));
+//			}
+//			catch (Exception e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//			return null;
+//		}
+//		else {
 			try {
 				clickApplyButton(driver);
 			}
@@ -355,7 +351,7 @@ public class TimeSelectorUtil_1160 extends TimeSelectorUtil_1130
 				return dateConvert(driver, returnDate, TimeRange.Custom, "MM/dd/yyyy hh:mm:ss:SSS a",
 						"MMM d, yyyy hh:mm:ss:SSS a");
 			}
-		}
+//		}
 	}
 
 	@Override

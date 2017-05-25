@@ -926,24 +926,29 @@ public class DashBoardUtils
 			throw new NoSuchElementException("Widget with title=" + widgetName + ", index=" + index + " is not found");
 		}
 		driver.getLogger().info("Found widget with name=" + widgetName + ", index =" + index + " before opening widget link");
-		WebElement widgetDataExplore = widgetTitle.findElement(By.xpath(DashBoardPageId_190.BUILDERTILEDATAEXPLORELOCATOR));
-		if (widgetDataExplore == null) {
-			throw new NoSuchElementException("Widget data explorer link for title=" + widgetName + ", index=" + index
-					+ " is not found");
+
+		try {
+			WebElement widgetDataExplore = widgetTitle.findElement(By.xpath(DashBoardPageId_190.BUILDERTILEDATAEXPLORELOCATOR));
+			if (widgetDataExplore == null) {
+				//				driver.getLogger().info("Can't find Data Explorer element in DOM");
+				//				return false;
+				throw new NoSuchElementException("Widget data explorer link for title=" + widgetName + ", index=" + index
+						+ " is not found");
+			}
+
+			driver.getLogger().info("Found widget configure button");
+			Actions builder = new Actions(driver.getWebDriver());
+			driver.getLogger().info("Now moving to the widget title bar");
+			builder.moveToElement(widgetTitle).perform();
+			driver.takeScreenShot();
+			driver.getLogger().info("and clicks the widget config button");
+
+			return widgetDataExplore.isDisplayed();
 		}
-		driver.getLogger().info("Found widget configure button");
-		Actions builder = new Actions(driver.getWebDriver());
-		driver.getLogger().info("Now moving to the widget title bar");
-		builder.moveToElement(widgetTitle).perform();
-		driver.takeScreenShot();
-		driver.getLogger().info("and clicks the widget config button");
-		//		builder.moveToElement(widgetDataExplore).click().perform();
-		//		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		//		wait.until(ExpectedConditions.elementToBeClickable(widgetDataExplore));
-		//		widgetDataExplore.click();
-		//		driver.takeScreenShot();
-		return widgetDataExplore.isDisplayed();
-		//check if the Open In icon displayed or not
+		catch (NoSuchElementException ex) {
+			driver.getLogger().info("Can't find Data Explorer element in DOM");
+			return false;
+		}
 	}
 
 	public static void verifyServiceAlwaysDisplayedInWelcomePage(WebDriver webdriver)
