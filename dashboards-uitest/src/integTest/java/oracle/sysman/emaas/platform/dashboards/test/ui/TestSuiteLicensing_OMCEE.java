@@ -180,7 +180,7 @@ public class TestSuiteLicensing_OMCEE extends LoginAndLogout
 
 	}
 
-	@Test(alwaysRun = true) 
+	//@Test(alwaysRun = true) 
 	//commented out because of welcome page api version control's known issue
 	public void testGlobalContextITA()
 	{
@@ -190,7 +190,7 @@ public class TestSuiteLicensing_OMCEE extends LoginAndLogout
 		webd.getLogger().info("Start the test case: testGlobalContextITA");
 
 		BrandingBarUtil.visitWelcome(webd);
-		WelcomeUtil.visitITA(webd, "performanceAnayticsDatabase");
+		WelcomeUtil.visitITA(webd, "performanceAnalyticsDatabase");
 		Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(webd), "The global context exists in ITA Page");
 		//Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd),"/SOA1213_base_domain/base_domain/soa_server1/soa-infra_System");
 
