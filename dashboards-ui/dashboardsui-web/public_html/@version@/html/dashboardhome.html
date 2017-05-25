@@ -115,7 +115,7 @@
         <!-- ko if:  $component.isTilesView() === 'gridtview' -->
         <div data-bind="text: dashboard.name" style="font-size: 1.1rem; font-weight: bold; margin-bottom: 5px; text-align: center"></div>
         <!-- /ko -->
-        <span style="font-weight: bold;" data-bind="text: getNlsString('DBS_HOME_DSB_PAGE_INFO_DESC')"></span><div data-bind="html: dashboard.description"></div><br/>
+        <span style="font-weight: bold;" data-bind="text: getNlsString('DBS_HOME_DSB_PAGE_INFO_DESC')"></span><div style="word-wrap: break-word;" data-bind="html: dashboard.description, css:{'dsbinfopopson': dashboard.hasLongDscrpt}"></div><br/>
         <!-- ko if:  $component.isTilesView() === 'gridtview' -->
         <span style="font-weight: bold;" data-bind="text: getNlsString('DBS_HOME_DSB_PAGE_INFO_CREATE')"></span><span data-bind="text: dashboard.owner"></span><br/>
         <span style="font-weight: bold;" data-bind="text: getNlsString('DBS_HOME_DSB_PAGE_INFO_CDATE')"></span><span data-bind="text: getDateString(dashboard.createdOn)"></span><br/>
@@ -246,5 +246,6 @@
         </div>
     </div>                      
 </div>
+<div id="ruler" style="word-wrap: break-word; width: 260px; visibility: hidden;"></div>
 <!-- Create Dashboard dilog end -->
                     

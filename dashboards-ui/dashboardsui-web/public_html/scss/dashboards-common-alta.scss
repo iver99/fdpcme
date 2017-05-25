@@ -55,6 +55,21 @@ a:hover {
     box-shadow: 2px 2px 2px #888888;
 }
 
+div.dsbinfopopson{
+    position:relative;
+    word-wrap: break-word;
+    line-height: 1.2rem;
+    max-height: 2.4rem;
+    overflow: hidden;
+}
+
+div.dsbinfopopson::after{
+    content:"...";position:absolute;top:1.2rem;right:0;padding-left:40px;
+    background:-webkit-linear-gradient(left,transparent,white);
+    background:-o-linear-gradient(right,transparent,white);
+    background:-moz-linear-gradient(right,transparent,white);
+    background:linear-gradient(toright,transparent,white);
+}
 
 /*.fa-icon-font {
   font-family: FaFont;
