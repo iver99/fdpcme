@@ -12,7 +12,6 @@ import javax.persistence.EntityManager;
 import oracle.sysman.emaas.platform.dashboards.core.BaseTest;
 import oracle.sysman.emaas.platform.dashboards.core.util.DateUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.IdGenerator;
-import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.ZDTContext;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
@@ -35,7 +34,7 @@ public class DashboardServiceFacadeTest extends BaseTest
 		Assert.assertNotNull(emsdashboard.getCreationDate());
 		Assert.assertNotNull(emsdashboard.getDashboardId());
 		Assert.assertNotNull(emsdashboard.getDeleted());
-		Assert.assertNotNull(emsdashboard.getDescription());
+//		Assert.assertNotNull(emsdashboard.getDescription());
 		Assert.assertNotNull(emsdashboard.getEnableTimeRange());
 		Assert.assertNotNull(emsdashboard.getIsSystem());
 		//		Assert.assertNotNull(emsdashboard.getLastModificationDate());
