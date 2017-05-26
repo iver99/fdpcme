@@ -209,6 +209,34 @@ require(['ojs/ojcore',
                         }
                     }
                 };
+                
+                /** 
+                 * EMCPDF-4054: test case for ITA. ITA page is configured to show date only. However they set end time as 23:59:59. 
+                 * When test case selects end date as current date, date+time is larger than current date+time. "Apply" button is disabled and result in diff.
+                 * Fix on dashboard side is to validate date only.
+                 */
+                var now = new Date();
+                var start = new Date(now - 3*24*60*60*1000);
+                var end = new Date(now.getFullYear(), now.getMonth(), now.getDate()-1, 23, 59, 59);
+                self.start3 = ko.observable(self.dateConverter.format(oj.IntlConverterUtils.dateToLocalIso(start)));
+                self.end3 = ko.observable(self.dateConverter.format(oj.IntlConverterUtils.dateToLocalIso(end)));
+                
+                self.timeParams3 = {
+                    startDateTime: start,
+                    endDateTime: end,
+                    hideTimeSelection: true,
+                    callbackAfterApply: function (start, end, tp, tf, relTimeVal, relTimeUnit) {
+                        var appliedStart = oj.IntlConverterUtils.dateToLocalIso(start);
+                        var appliedEnd = oj.IntlConverterUtils.dateToLocalIso(end);
+                        if((self.isTimePeriodLessThan1day(tp) || relTimeUnit==="SECOND" || relTimeUnit==="MINUTE" || relTimeUnit === "HOUR") && (start.getTimezoneOffset() !== end.getTimezoneOffset())) {
+                            self.start3(self.dateConverter.format(appliedStart)+" ("+self.getGMTTimezone(start)+")");
+                            self.end3(self.dateConverter.format(appliedEnd)+" ("+self.getGMTTimezone(end)+")");
+                        }else {
+                            self.start3(self.dateConverter.format(appliedStart));
+                            self.end3(self.dateConverter.format(appliedEnd));
+                        }
+                    }
+                };
             }
             ko.applyBindings(new MyViewModel(), document.getElementById("dateTimePicker"));
         }

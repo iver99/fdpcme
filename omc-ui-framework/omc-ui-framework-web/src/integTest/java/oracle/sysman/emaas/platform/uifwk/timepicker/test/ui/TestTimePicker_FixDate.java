@@ -11,6 +11,8 @@
 package oracle.sysman.emaas.platform.uifwk.timepicker.test.ui;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.ITimeSelectorUtil.TimeRange;
@@ -300,6 +302,37 @@ public class TestTimePicker_FixDate extends LoginAndLogout
 				UIControls.SENDTEXT_COMPACT, false, false);
 
 		webd.shutdownBrowser(true);
+	}
+	
+	@Test(alwaysRun = true)
+	public void testTimePicker_Custom_currentDate() throws ParseException
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test case: testTimePicker_Custom_currentDate");
+		
+		Date now = new Date();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
+		String currentDate = dateFormat.format( now ); 
+		
+		webd.getLogger().info("Set the end date as current day");
+		String returnDate = TimeSelectorUtil.setCustomTime(webd, "04/14/2016 12:00 AM", currentDate);			
+		webd.getLogger().info("Return Date:  " + returnDate);
+
+		//verify the result
+		webd.getLogger().info("verify the time range is set correctly");
+		CommonUIUtils.verifyResult(webd, 1, returnDate, TimeRange.Custom, UIControls.SSTARTTEXT, UIControls.SENDTEXT, false,
+				false);
+		
+		webd.getLogger().info("Set the stard date and end date as current day");
+		returnDate = TimeSelectorUtil.setCustomTime(webd, currentDate, currentDate);			
+		webd.getLogger().info("Return Date:  " + returnDate);
+
+		//verify the result
+		webd.getLogger().info("verify the time range is set correctly");
+		CommonUIUtils.verifyResult(webd, 1, returnDate, TimeRange.Custom, UIControls.SSTARTTEXT, UIControls.SENDTEXT, false,
+				false);
+
+		webd.shutdownBrowser(true);			
 	}
 
 	@Test(alwaysRun = true)
