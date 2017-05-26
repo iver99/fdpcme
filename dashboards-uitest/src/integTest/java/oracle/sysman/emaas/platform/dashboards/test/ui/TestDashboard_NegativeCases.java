@@ -6,6 +6,7 @@ import oracle.sysman.emaas.platform.dashboards.test.ui.util.PageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
 
+import org.openqa.selenium.StaleElementReferenceException;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -278,8 +279,9 @@ public class TestDashboard_NegativeCases extends LoginAndLogout
 	}
 
 	@Test
-	public void testModifyDashboardWithSameNameDesc()
+	public void testModifyDashboardWithSameNameDesc() throws InterruptedException
 	{
+		String errormsg="";
 		dbName_2 = "Dashboard Same Name-" + DashBoardUtils.generateTimeStamp();
 		//init the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -308,9 +310,17 @@ public class TestDashboard_NegativeCases extends LoginAndLogout
 		//verify the dashboard can't be modified successfully
 		webd.getLogger().info("Verify the dashboard set not modified successfuly, the error message displayed");
 		if (webd.isDisplayed("css=" + PageId.DASHBOARD_BUILDER_ERRMSG_CSS)) {
-			Assert.assertTrue(webd.isDisplayed("css=" + PageId.DASHBOARD_BUILDER_ERRMSG_CSS));
-			Assert.assertEquals(webd.getText("css=" + PageId.DASHBOARD_BUILDER_ERRMSG_CSS),
-					"Name already exists. Provide a unique name.");
+			try{
+				errormsg = webd.getText("css=" + PageId.DASHBOARD_BUILDER_ERRMSG_CSS);
+			}
+			catch(StaleElementReferenceException ex){
+				wait(1000);
+				webd.getLogger().info("having StaleElementReferenceException, then need to wait 1 sec and retry");
+				errormsg = webd.getText("css=" + PageId.DASHBOARD_BUILDER_ERRMSG_CSS);				
+			}
+			finally{
+				Assert.assertEquals(errormsg, "Name already exists. Provide a unique name.");
+			}			
 		}
 		else {
 			Assert.fail("Test: testModifyDashboardWithSameNameDesc failed due to dashbord created successfully!");
