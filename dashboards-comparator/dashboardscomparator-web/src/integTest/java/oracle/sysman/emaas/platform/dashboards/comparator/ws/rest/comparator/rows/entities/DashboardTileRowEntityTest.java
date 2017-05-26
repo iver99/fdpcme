@@ -13,8 +13,8 @@ public class DashboardTileRowEntityTest
 		DashboardTileRowEntity dtre1 = new DashboardTileRowEntity();
 		DashboardTileRowEntity dtre2 = new DashboardTileRowEntity();
 		Assert.assertEquals(dtre1, dtre2);
-		dtre1.setDashboardId(new BigInteger("12"));
-		dtre2.setDashboardId(new BigInteger("12"));
+		dtre1.setDashboardId("12");
+		dtre2.setDashboardId("12");
 		Assert.assertEquals(dtre1, dtre2);
 		dtre1.setLastModifiedBy("emcsadmin");
 		dtre2.setLastModifiedBy("emcsadmin");
@@ -95,9 +95,9 @@ public class DashboardTileRowEntityTest
 		dtre2.setWidgetSupportTimeControl(1);
 		Assert.assertEquals(dtre1, dtre2);
 
-		dtre2.setDashboardId(new BigInteger("22"));
+		dtre2.setDashboardId("22");
 		Assert.assertNotEquals(dtre1, dtre2);
-		dtre2.setDashboardId(new BigInteger("12"));
+		dtre2.setDashboardId("12");
 		dtre2.setLastModifiedBy("emcsadmin1");
 		Assert.assertNotEquals(dtre1, dtre2);
 		dtre2.setLastModifiedBy("emcsadmin");
@@ -185,8 +185,8 @@ public class DashboardTileRowEntityTest
 		DashboardTileRowEntity dtre1 = new DashboardTileRowEntity();
 		DashboardTileRowEntity dtre2 = new DashboardTileRowEntity();
 		Assert.assertEquals(dtre1.hashCode(), dtre2.hashCode());
-		dtre1.setDashboardId(new BigInteger("12"));
-		dtre2.setDashboardId(new BigInteger("12"));
+		dtre1.setDashboardId("12");
+		dtre2.setDashboardId("12");
 		Assert.assertEquals(dtre1.hashCode(), dtre2.hashCode());
 		dtre1.setLastModifiedBy("emcsadmin");
 		dtre2.setLastModifiedBy("emcsadmin");
@@ -267,9 +267,9 @@ public class DashboardTileRowEntityTest
 		dtre2.setWidgetSupportTimeControl(1);
 		Assert.assertEquals(dtre1.hashCode(), dtre2.hashCode());
 
-		dtre2.setDashboardId(new BigInteger("22"));
+		dtre2.setDashboardId("22");
 		Assert.assertNotEquals(dtre1.hashCode(), dtre2.hashCode());
-		dtre2.setDashboardId(new BigInteger("12"));
+		dtre2.setDashboardId("12");
 		dtre2.setLastModifiedBy("emcsadmin1");
 		Assert.assertNotEquals(dtre1.hashCode(), dtre2.hashCode());
 		dtre2.setLastModifiedBy("emcsadmin");

@@ -1104,7 +1104,26 @@ define(['knockout',
                     return '/sso.static/dashboards.configurations/registration';
                 }
             };
-
+            
+            /**
+             * Check if service type is V1 or not.
+             * 
+             * @param {type} subscribedApps: applications returned from subscribedapps rest api.
+             * @returns {Boolean}
+             */
+            self.isV1ServiceTypes = function(subscribedApps) {
+                var len = subscribedApps.length;
+                var nonV1ServiceTypes = ["OMC", "OSMACC", "OMCSE", "OMCEE", "OMCLOG", "SECSE", "SECSMA"];
+                var isV1ServiceTypes = true;
+                for(var i=0; i<len; i++) {
+                    var app = subscribedApps[i];
+                    if($.inArray(app["id"], nonV1ServiceTypes) >=0) {
+                        isV1ServiceTypes = false;
+                        return isV1ServiceTypes;
+                    }
+                }
+                return isV1ServiceTypes;
+            };
         }
 
         return DashboardFrameworkUtility;

@@ -44,36 +44,15 @@ requirejs.config({
         'emcta':'/emsaasui/emcta/ta/js',
 //        'emcta': '/emsaasui/emcta/ta/@version@/js', //for DEV_MODE
         'emcla':'/emsaasui/emlacore/js',
-        'emcsutl': '/emsaasui/uifwk/emcsDependencies/uifwk/js/util',
+        'emcsutl': '/emsaasui/uifwk/emcsDependencies/uifwk/js/util', // why we need this?
         'uifwk': '/emsaasui/uifwk'
     },
-    bundles: ((window.DEV_MODE !==null && typeof window.DEV_MODE ==="object") ||
-                (window.gradleDevMode !==null && typeof window.gradleDevMode ==="boolean")) ? undefined : {
-        'uifwk/@version@/js/uifwk-impl-partition-cached':
-            [
-            'uifwk/js/util/ajax-util',
-            'uifwk/js/util/df-util',
-            'uifwk/js/util/logging-util',
-            'uifwk/js/util/message-util',
-            'uifwk/js/util/mobile-util',
-            'uifwk/js/util/preference-util',
-            'uifwk/js/util/screenshot-util',
-            'uifwk/js/util/typeahead-search',
-            'uifwk/js/util/usertenant-util',
-            'uifwk/js/util/zdt-util',
-            'uifwk/js/sdk/context-util',
-            'uifwk/js/widgets/aboutbox/js/aboutbox',
-            'uifwk/js/widgets/brandingbar/js/brandingbar',
-            'uifwk/js/widgets/datetime-picker/js/datetime-picker',
-            'uifwk/js/widgets/navlinks/js/navigation-links',
-            'uifwk/js/widgets/timeFilter/js/timeFilter',
-            'text!uifwk/js/widgets/aboutbox/html/aboutbox.html',
-            'text!uifwk/js/widgets/navlinks/html/navigation-links.html',
-            'text!uifwk/js/widgets/brandingbar/html/brandingbar.html',
-            'text!uifwk/js/widgets/timeFilter/html/timeFilter.html',
-            'text!uifwk/js/widgets/datetime-picker/html/datetime-picker.html'
-            ],
-        'builder/builder.jet.partition': [
+    bundles: function() {
+        if ((window.DEV_MODE !==null && typeof window.DEV_MODE ==="object") ||
+                (window.gradleDevMode !==null && typeof window.gradleDevMode ==="boolean")) {
+            return {};
+	}
+        var bundles = {'builder/builder.jet.partition': [
             'ojs/ojcore',
             'ojs/ojknockout',
             'ojs/ojmenu',
@@ -161,8 +140,34 @@ requirejs.config({
             'promise',
             'knockout',
             'jquery',
-            'ojL10n']
-    },
+            'ojL10n']};
+        var versionedUifwkPartition = window.getSDKVersionFile ? window.getSDKVersionFile("emsaasui/uifwk/js/uifwk-partition") : "uifwk/js/uifwk-partition";
+        bundles[versionedUifwkPartition] = [
+            'uifwk/js/util/ajax-util',
+            'uifwk/js/util/df-util',
+            'uifwk/js/util/logging-util',
+            'uifwk/js/util/message-util',
+            'uifwk/js/util/mobile-util',
+            'uifwk/js/util/preference-util',
+            'uifwk/js/util/screenshot-util',
+            'uifwk/js/util/typeahead-search',
+            'uifwk/js/util/usertenant-util',
+            'uifwk/js/util/zdt-util',
+            'uifwk/js/sdk/context-util',
+            'uifwk/js/sdk/menu-util',
+            'uifwk/js/widgets/aboutbox/js/aboutbox',
+            'uifwk/js/widgets/brandingbar/js/brandingbar',
+            'uifwk/js/widgets/datetime-picker/js/datetime-picker',
+            'uifwk/js/widgets/navlinks/js/navigation-links',
+            'uifwk/js/widgets/timeFilter/js/timeFilter',
+            'text!uifwk/js/widgets/aboutbox/html/aboutbox.html',
+            'text!uifwk/js/widgets/navlinks/html/navigation-links.html',
+            'text!uifwk/js/widgets/brandingbar/html/brandingbar.html',
+            'text!uifwk/js/widgets/timeFilter/html/timeFilter.html',
+            'text!uifwk/js/widgets/datetime-picker/html/datetime-picker.html'
+            ];
+        return bundles;
+    }(),
     // Shim configurations for modules that do not expose AMD
     shim: {
         'jquery': {
@@ -206,6 +211,7 @@ require(['knockout',
     'knockout.mapping',
     'uifwk/js/util/df-util',
     'uifwk/js/util/logging-util',
+    'uifwk/js/sdk/menu-util',
     'ojs/ojcore',
     'builder/builder.functions',
     'builder/builder.jet.partition',
@@ -226,6 +232,7 @@ require(['knockout',
         var dashboard = null;
         var mode = null, normalMode = null, tabletMode = null;
         var timeSelectorModel = null;
+        // default targets for 'all entities',for both target selector shown or hidden scenarios
         var targets = ko.observable({"criteria":"{\"version\":\"1.0\",\"criteriaList\":[]}"});
         
         $(document).ready(function () {
@@ -255,6 +262,7 @@ require(['knockout',
 
                 require(['uifwk/js/util/df-util',
                     'uifwk/js/util/logging-util',
+                    'uifwk/js/sdk/menu-util',
                     'dashboards/dashboardhome-impl',
                     'jqueryui',
                     'common.uifwk',
@@ -264,9 +272,33 @@ require(['knockout',
                     'builder/dashboardset.panels.model',
                     'builder/dashboardDataSource/dashboard.datasource'
                 ],
-                    function(dfumodel, _emJETCustomLogger, dashboardhome_impl) // this callback gets executed when all required modules are loaded
+                    function(dfumodel, _emJETCustomLogger, menuModel, dashboardhome_impl) // this callback gets executed when all required modules are loaded
                     {
                         var logger = new _emJETCustomLogger();
+                        var menuUtil = new menuModel();
+                        menuUtil.subscribeServiceMenuLoadedEvent(function(){
+                            var $b;
+                            $("#omcMenuNavList").addClass("df-computed-content-width");
+                            var $visibleHeaderBar = $(".dashboard-content:visible .head-bar-container");
+                            var $visibleRightDrawer = $(".dbd-left-panel:visible");
+                            if ($visibleHeaderBar.length > 0 && ko.dataFor($visibleHeaderBar[0])) {
+                                $b = ko.dataFor($visibleHeaderBar[0]).$b;
+                                $b && $b.triggerBuilderResizeEvent('hamburger menu show/hide status changed');
+                            }else if ($visibleRightDrawer.length > 0 && ko.dataFor($visibleRightDrawer[0])) {
+                                $b = ko.dataFor($visibleRightDrawer[0]).$b;
+                                $b && $b.triggerBuilderResizeEvent('hamburger menu show/hide status changed');
+                            }
+                            $("#omcHamburgerMenu").on("ojopen", function(event, offcanvas) {
+                                setTimeout(function(){
+                                    $b && $b.triggerBuilderResizeEvent('hamburger menu show/hide status changed');
+                                }, 100);
+                            });
+                            $("#omcHamburgerMenu").on("ojclose", function (event, offcanvas) {
+                                setTimeout(function(){
+                                    $b && $b.triggerBuilderResizeEvent('hamburger menu show/hide status changed');
+                                }, 100);
+                            });
+                        });
                         var logReceiver = dfu.getLogUrl();
                         //require(['emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils'], function(TargetSelectorUtils) {
                         //TargetSelectorUtils.registerComponents();
@@ -327,7 +359,9 @@ require(['knockout',
 				appId: self.appId,
 				isAdmin:true,
 				showGlobalContextBanner: ko.observable(false),
-				showTimeSelector: ko.observable(false),
+                                omcHamburgerMenuOptIn: true,
+                                omcCurrentMenuId: menuUtil.OMCMenuConstants.GLOBAL_DASHBOARDS,
+                                showTimeSelector: ko.observable(false),
 				timeSelectorParams: {
 				    startDateTime: ko.observable(null),
 				    endDateTime: ko.observable(null),
@@ -339,7 +373,7 @@ require(['knockout',
 				showEntitySelector: ko.observable(false),
 				entityContextParams: {
 				    readOnly: false,
-                                    onlyComposites: true
+				    onlyComposites: true
 				}
 			    };
 

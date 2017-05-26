@@ -18,13 +18,13 @@ public class LoginAndLogout
 		if (webd != null) {
 			((JavascriptExecutor) webd.getWebDriver()).executeScript("scroll(0,0)");
 			LoginUtils.doLogout(webd);
-			try {
-				webd.shutdownBrowser(true);
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-				webd.getLogger().warning("Failed to shutdown browser" + e.getMessage());
-			}
+//			try {
+//				webd.shutdownBrowser(true);
+//			}
+//			catch (Exception e) {
+//				e.printStackTrace();
+//				webd.getLogger().warning("Failed to shutdown browser" + e.getMessage());
+//			}
 		}
 	}
 
@@ -107,7 +107,8 @@ public class LoginAndLogout
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-			url = oracle.sysman.emsaas.login.utils.Utils.getProperty("OMCS_DASHBOARD_URL");
+//			url = oracle.sysman.emsaas.login.utils.Utils.getProperty("OMCS_DASHBOARD_URL");
+			url = oracle.sysman.emsaas.login.utils.Utils.getProperty("OHS_URL")+"/emsaasui/emcpdfui/home.html";
 		}
 
 		String testPropertiesFile = System.getenv("EMAAS_PROPERTIES_FILE");

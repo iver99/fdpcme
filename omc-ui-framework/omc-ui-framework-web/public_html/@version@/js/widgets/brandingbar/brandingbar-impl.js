@@ -73,10 +73,10 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 if (!self.entityContextReadOnly()) {
                     self.showEntityContextSelector(true);
                     var versionedContextSelectorUtils = window.getSDKVersionFile ?
-                                window.getSDKVersionFile('emsaasui/emcta/ta/js/sdk/contextSelector/api/ContextSelectorUtils') : null;
+                        window.getSDKVersionFile('emsaasui/emcta/ta/js/sdk/contextSelector/api/ContextSelectorUtils') : null;
                     var contextSelectorUtil = versionedContextSelectorUtils ? versionedContextSelectorUtils :
-                                '/emsaasui/emcta/ta/js/sdk/contextSelector/api/ContextSelectorUtils.js';
-                    
+                        '/emsaasui/emcta/ta/js/sdk/contextSelector/api/ContextSelectorUtils.js';
+
                     require([contextSelectorUtil], function (EmctaContextSelectorUtil) {
                         EmctaContextSelectorUtil.registerComponents();
                         self.isEntityContextLoaded(true);
@@ -191,17 +191,16 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             ;
 
             function handleShowHideTopology() {
+                if (self.topologyNeedRefresh && !self.isTopologyDisplayed()) {
+                    //when expanding the topology, do a refresh if needed
+                    console.log("**************topology displayed");
+                    console.log("**************refreshTopologyParams");
+                    refreshTopologyParams();
+                }
                 $("#ude-topology-div").slideToggle("fast", function () {
                     self.isTopologyDisplayed(!self.isTopologyDisplayed());
 
                     if (self.isTopologyDisplayed()) {
-                        //when expanding the topology, do a refresh if needed
-                        console.log("**************topology displayed");
-                        console.log("**************self.topologyNeedRefresh" + self.topologyNeedRefresh);
-                        if (self.topologyNeedRefresh) {
-                            console.log("**************refreshTopologyParams");
-                            refreshTopologyParams();
-                        }
                         var entityMeIds = cxtUtil.getEntityMeIds();
                         if (entityMeIds && entityMeIds.length) {
                             self.highlightedEntities(entityMeIds.concat([CONTEXT_CHANGE, NO_HIGHLIGHT]));
@@ -288,16 +287,21 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.topologySize = ko.observable();
             self.topologyHeight = ko.observable();
             self.topologySize.subscribe(function (topoHeight) {
-                topoHeight && topoHeight.h && self.topologyHeight(topoHeight.h);
+                var legendHeight = 0;
+                if($("#ude_topology_legend").length > 0) { //Re-set legend height if there is legend.
+                    //TO DO: hard-code legend height for now. Need to get legend height dynamically after UDE support it later.
+                    legendHeight = 300;
+                }
+                topoHeight && topoHeight.h && self.topologyHeight(Math.max(topoHeight.h, legendHeight));
                 if (self.topologyHeight() <= 201) {
                     self.topologyCssHeight(self.topologyHeight());
                 } else {
                     self.topologyCssHeight(201);
                 }
-                
-                if($("#ude_topology_legend").length > 0) {
+
+                if ($("#ude_topology_legend").length > 0) {
                     self.maxIconToRight("180px");
-                }else {
+                } else {
                     self.maxIconToRight("30px");
                 }
             });
@@ -826,6 +830,10 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 };
 
                 var menuUtil = new menuModel();
+                if (!window._uifwk) {
+                    window._uifwk = {};
+                }
+                if (!window._uifwk.obbMenuLoadedListenerRegistered) {
                 menuUtil.subscribeServiceMenuLoadedEvent(function(){
                     $("#omcHamburgerMenu").on("ojopen", function(event, offcanvas) {
                         if(offcanvas.displayMode === "push")
@@ -853,6 +861,14 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         })());
                     }
                     
+                    //Show composite menu if it's called before hamburger menu finished loading
+                    if (window._uifwk && window._uifwk.compositeMenuName && window._uifwk.compositeMenuJson) {
+                        menuUtil.showCompositeObjectMenu(window._uifwk.compositeMenuParentId,
+                                                        window._uifwk.compositeMenuName, 
+                                                        window._uifwk.compositeMenuJson, 
+                                                        window._uifwk.compositeMenuCollapseCallback);
+                    }
+                    
                     //Set current menu item if specified by API call
                     if (window._uifwk && window._uifwk.currentOmcMenuItemId) {
                         menuUtil.setCurrentMenuItem(window._uifwk.currentOmcMenuItemId, window._uifwk.underOmcAdmin);
@@ -865,6 +881,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         }
                     }
                 });
+                    window._uifwk.obbMenuLoadedListenerRegistered = true;
+                }
             }
             
             /**
@@ -971,6 +989,15 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         else if (data.action.toUpperCase() === 'REMOVE') {
                             removeMessage(data);
                         }
+                        else if (data.action.toUpperCase() === 'CLEAR') {
+                            displayMessageCount = 0;
+                            hiddenMessages = [];
+                            displayMessages = [];
+                            self.messageList(displayMessages);
+                            self.hasHiddenMessages(false);
+                            self.hasMessages(false);
+                            self.hiddenMessagesExpanded(false);
+                        }
                     }
                     //Show message by default
                     else {
@@ -1033,16 +1060,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     message.detail = data.detail;
                     message.category = data.category;
                     message.icon = imgBackground;
-                    if (data.type && data.type.toUpperCase() === 'CORRECT') {
-                        hiddenMessages = [];
-                        displayMessages = [];
-                        self.messageList(displayMessages);
-                        self.hasHiddenMessages(false);
-                        self.hasMessages(false);
-                        self.hiddenMessagesExpanded(true);
-                        return;
-                    }
-                    else if (data.type && data.type.toUpperCase() === 'ERROR') {
+                    if (data.type && data.type.toUpperCase() === 'ERROR') {
                         message.iconAltText = self.altTextError;
                         message.imgCssStyle = "background:url('" + messageIconSprite + "') no-repeat 0px -78px;height:16px;";
                     }
@@ -1088,11 +1106,12 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 
                         if (isMsgNeeded === true) {
                             if (displayMessageCount < maxMsgDisplayCnt || self.hiddenMessagesExpanded()) {
-                                displayMessages.push(message);
+                                displayMessages.unshift(message);
                                 displayMessageCount++;
                             }
                             else {
-                                hiddenMessages.push(message);
+                                displayMessages.unshift(message);
+                                hiddenMessages.unshift(displayMessages.pop()); 
                             }
                         }
                     }

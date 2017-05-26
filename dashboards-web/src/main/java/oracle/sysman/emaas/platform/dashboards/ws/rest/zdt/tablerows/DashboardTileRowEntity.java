@@ -12,18 +12,16 @@ package oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
-import java.math.BigInteger;
-
 /**
  * @author guochen
  */
 public class DashboardTileRowEntity implements RowEntity
 {
 	@JsonProperty("TILE_ID")
-	private BigInteger tileId;
+	private String tileId;
 
 	@JsonProperty("DASHBOARD_ID")
-	private BigInteger dashboardId;
+	private String dashboardId;
 
 	@JsonProperty("CREATION_DATE")
 	private String creationDate;
@@ -114,6 +112,41 @@ public class DashboardTileRowEntity implements RowEntity
 
 	@JsonProperty("WIDGET_LINKED_DASHBOARD")
 	private Long widgetLinkedDashboard;
+	
+	@JsonProperty("WIDGET_DELETED")
+	private Integer widgetDeleted;
+	
+	@JsonProperty("WIDGET_DELETION_DATE")
+	private String widgetDeletionDate;
+	
+	@JsonProperty("DELETED")
+	private Integer deleted;
+	
+	
+
+	public Integer getWidgetDeleted() {
+		return widgetDeleted;
+	}
+
+	public void setWidgetDeleted(Integer widgetDeleted) {
+		this.widgetDeleted = widgetDeleted;
+	}
+
+	public String getWidgetDeletionDate() {
+		return widgetDeletionDate;
+	}
+
+	public void setWidgetDeletionDate(String widgetDeletionDate) {
+		this.widgetDeletionDate = widgetDeletionDate;
+	}
+
+	public Integer getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(Integer deleted) {
+		this.deleted = deleted;
+	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
@@ -401,7 +434,7 @@ public class DashboardTileRowEntity implements RowEntity
 	/**
 	 * @return the dashboardId
 	 */
-	public BigInteger getDashboardId()
+	public String getDashboardId()
 	{
 		return dashboardId;
 	}
@@ -497,7 +530,7 @@ public class DashboardTileRowEntity implements RowEntity
 	/**
 	 * @return the tileId
 	 */
-	public BigInteger getTileId()
+	public String getTileId()
 	{
 		return tileId;
 	}
@@ -702,7 +735,7 @@ public class DashboardTileRowEntity implements RowEntity
 	 * @param dashboardId
 	 *            the dashboardId to set
 	 */
-	public void setDashboardId(BigInteger dashboardId)
+	public void setDashboardId(String dashboardId)
 	{
 		this.dashboardId = dashboardId;
 	}
@@ -810,7 +843,7 @@ public class DashboardTileRowEntity implements RowEntity
 	 * @param tileId
 	 *            the tileId to set
 	 */
-	public void setTileId(BigInteger tileId)
+	public void setTileId(String tileId)
 	{
 		this.tileId = tileId;
 	}

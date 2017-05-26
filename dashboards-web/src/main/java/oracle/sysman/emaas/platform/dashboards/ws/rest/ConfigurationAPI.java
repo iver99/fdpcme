@@ -222,26 +222,8 @@ public class ConfigurationAPI extends APIBase
                     }
                 }
             });
-            //retrieve subscribapp2 api data
-            futureSubscribedApps2 = pool.submit(new Callable<String>() {
-                @Override
-                public String call() throws Exception {
-                    try{
-                        _LOGGER.info("Parallel request subscribed apps2 info...");
-                        long startSubsApps = System.currentTimeMillis();
-                        TenantSubscriptionInfo tenantSubscriptionInfo= new TenantSubscriptionInfo();
-                        TenantSubscriptionUtil.getTenantSubscribedServices(tenantIdParam,tenantSubscriptionInfo);
-                        String result = tenantSubscriptionInfo.toJson(tenantSubscriptionInfo);
-                        long endSubsApps = System.currentTimeMillis();
-                        _LOGGER.info("Time to get subscribed app: {}ms. Retrieved data is: {}", (endSubsApps - startSubsApps), result);
-                        return result;
-                    }catch(Exception e){
-                        _LOGGER.error("Error occurred when retrieving subscribed data using parallel request!", e);
-                        throw e;
-                    }
-                }
-            });
             //retrieve subscribapp api data
+			final TenantSubscriptionInfo tenantSubscriptionInfo= new TenantSubscriptionInfo();
             futureSubscribedApps = pool.submit(new Callable<List<String>>() {
                 @Override
                 public List<String> call() throws Exception {
@@ -249,7 +231,7 @@ public class ConfigurationAPI extends APIBase
                         // this ensures subscribed app data inside cache, and reused by registration data retrieval
                         _LOGGER.info("Parallel request subscribed apps info...");
                         long startSubsApps = System.currentTimeMillis();
-                        List<String> apps = TenantSubscriptionUtil.getTenantSubscribedServices(tenantIdParam, new TenantSubscriptionInfo());
+                        List<String> apps = TenantSubscriptionUtil.getTenantSubscribedServices(tenantIdParam, tenantSubscriptionInfo);
                         long endSubsApps = System.currentTimeMillis();
                         _LOGGER.info("Time to get subscribed app: {}ms. Retrieved data is: {}", (endSubsApps - startSubsApps), apps);
                         return apps;
@@ -275,20 +257,9 @@ public class ConfigurationAPI extends APIBase
             }catch(TimeoutException e){
                 _LOGGER.error(e);
             }
-            //get subscribapps2 data
-            String subApps2 = null;
-            try {
-                if(futureSubscribedApps2!=null){
-                    subApps2 = futureSubscribedApps2.get(TIMEOUT, TimeUnit.MILLISECONDS);
-                    _LOGGER.info("Subscribed apps data is " + subApps2);
-                }
-            } catch (InterruptedException e) {
-                _LOGGER.error(e);
-            } catch (ExecutionException e) {
-                _LOGGER.error(e.getCause() == null ? e : e.getCause());
-            }catch(TimeoutException e){
-                _LOGGER.error(e);
-            }
+            //get subscribapps2 API data
+            String subApps2 = tenantSubscriptionInfo.toJson(tenantSubscriptionInfo);
+
             List<String> userRoles = null;
             try {
                 if(futureUserRoles!=null){
