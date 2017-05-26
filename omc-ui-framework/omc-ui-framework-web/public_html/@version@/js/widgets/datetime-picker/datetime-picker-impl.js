@@ -642,20 +642,8 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     }
                 }
                 
-                self.setTimePeriodDisabled = function(tpDisabledId) {
-                    $(self.panelId + "a").each(function() {
-                        var tpEle = $(this);
-                        var tpId = tpEle.attr("data-tp-id");
-                        if(tpDisabledId === tpId) {
-                            if(!tpEle.hasClass("drawerDisabled")) {
-                                tpEle.addClass("drawerDisabled");
-                            }
-                        }
-                    });
-                };
-                
                 self.setAllTimePeriodsEnabled = function() {
-                    $(self.panelId + "a").each(function() {
+                    $(self.panelId + " a").each(function() {
                         var tpEle = $(this);
                         if(tpEle.hasClass("drawerDisabled")) {
                             tpEle.removeClass("drawerDisabled");
@@ -663,22 +651,20 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     });
                 };
                 
-                if(params.timePeriodsSet && params.timePeriodsToBeDisabled) {
-                    if(isArray(params.timePeriodsToBeDisabled) && params.timePeriodsToBeDisabled.length>0) {
-                        for(var i=0; i<params.timePeriodsToBeDisabled.length; i++) {
-                            var tpDisabledId = params.timePeriodsToBeDisabled[i];
-                            self.setTimePeriodDisabled(tpDisabledId);
-                        }
-                    }else if(ko.isObservable(params.timePeriodsToBeDisabled)) {
-                        self.timePeriodsToBeDisabled = ko.computed(function() {
-                            self.setAllTimePeriodsEnabled();
-                            for(var i=0; i<params.timePeriodsToBeDisabled().length; i++) {
-                                var tpDisabledId = params.timePeriodsToBeDisabled()[i];
-                                self.setTimePeriodDisabled(tpDisabledId);
-                                //remove time periods from "Recently Used" list
-                                self.recentList.remove(function(data) {return data.timePeriod === tpDisabledId});
+                self.setTimePeriodsDisabled = function() {
+                    if(params.timePeriodsSet && params.timePeriodsToBeDisabled) {
+                        var timePeriodsToBeDiasabled = ko.unwrap(params.timePeriodsToBeDisabled);
+                        self.setAllTimePeriodsEnabled();
+                        $(self.panelId + " a").each(function() {
+                            var tpEle = $(this);
+                            var tpId = tpEle.attr("data-tp-id");
+                            if($.inArray(tpId, timePeriodsToBeDiasabled) > -1) {
+                                if(!tpEle.hasClass("drawerDisabled")) {
+                                    tpEle.addClass("drawerDisabled");
+                                }
+                                self.recentList.remove(function(data) {return data.timePeriod === tpId});
                             }
-                        }, self);
+                        });
                     }
                 }
                 
@@ -1702,9 +1688,10 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         $("#overflowedLabelInfo_"+self.randomId).ojPopup('close');
                         $('.badge-popup-message').ojPopup("close");
                         
-                        //Set style of self.timePeriod() to be chosen
+                        //Set style of self.timePeriod() to "not shown", "chosen", "disabled"
                         self.setTimePeriodsNotToShow(ko.unwrap(self.timePeriodsNotToShow));
                         self.setTimePeriodChosen(self.timePeriod());
+                        self.setTimePeriodsDisabled();
                         self.showRightPanel(false);
 
                         $(self.panelId).ojPopup('open', self.wrapperId + ' #dropDown_' + self.randomId, self.panelPosition);
