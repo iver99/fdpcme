@@ -10,6 +10,7 @@
         },
         {
             name: "builderMain",
+            include: ["dashboards/dashboardhome-impl", 'dashboards/dbsdashboardpanel', 'text!../../@version@/html/dashboardhome.html'],
             exclude: ["builder/builder.jet.partition"]
         },
         {
