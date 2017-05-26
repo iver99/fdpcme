@@ -25,7 +25,7 @@ define([], function() {
 
         self.delayResizeListenerQueue = [];
         self.triggerEvent = function(event, p1, p2, p3, p4) {
-            if (event === Builder.EVENT_BUILDER_RESIZE) {
+            if (event === "EVENT_BUILDER_RESIZE") {
                 var delayedEvent = {
                     event: event,
                     p1: p1,
@@ -37,7 +37,7 @@ define([], function() {
                 self.delayResizeListenerQueue.push(delayedEvent);
                 setTimeout(function() {
                     self.executeDelayedEvent();
-                }, 500);
+                }, 500); // builder resize event will be handled after delay time, and might be ignored if there're repeated event later
             }
             else
                 self.executeListenersImmediately(event, p1, p2, p3, p4);
@@ -46,7 +46,9 @@ define([], function() {
         self.executeDelayedEvent = function() {
             var delayedEvent = self.delayResizeListenerQueue.shift();
             if (delayedEvent) {
-                if (self.delayResizeListenerQueue.length <= 0) {// execute the delay event now
+                if (self.delayResizeListenerQueue.length > 0) {
+                    console.debug("Delayed event is ignored as there're " + self.delayResizeListenerQueue.length + " new event(s) in delayed queue");
+                } else {// execute the delay event now
                     var delay = performance.now() - delayedEvent.timestamp;
                     console.info("Execute delayed event for builder resize after delay of " + delay + "ms");
                     self.executeListenersImmediately(delayedEvent.event, delayedEvent.p1, delayedEvent.p2, delayedEvent.p3, delayedEvent.p4);
