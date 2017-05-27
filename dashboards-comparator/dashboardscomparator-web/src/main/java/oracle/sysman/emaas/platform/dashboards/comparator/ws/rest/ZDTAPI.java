@@ -231,20 +231,40 @@ public class ZDTAPI
 		
 	}
 	
+	private String getMaxTimeStampStr(int skipMinutes) {
+		Date currentUtcDate = getCurrentUTCTime();
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(currentUtcDate);
+		cal.add(Calendar.MINUTE, (skipMinutes * (-1)));
+		Date maxTimeStamp = cal.getTime();
+		String maxTimeStampStr = getTimeString(maxTimeStamp);
+		return maxTimeStampStr;
+	}
+	
 	@GET
 	@Path("compare")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response compareRows(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
-            @HeaderParam(value = "X-REMOTE-USER") String userTenant, @QueryParam("type") @DefaultValue("incremental")  String compareType) {
+            @HeaderParam(value = "X-REMOTE-USER") String userTenant, @QueryParam("type") @DefaultValue("incremental")  String compareType,
+            @QueryParam("before") int skipMinutes) {
 		logger.info("incoming call from zdt comparator to do row comparing");
 		String message = "";
 		int status = 200;
 		if (compareType == null) {
 			compareType = "incremental";
 		}
+		if (skipMinutes <= 0) {
+			skipMinutes = 5;    // to check: what is the accurate default skipping time for comparator?
+		}
+		String maxComparedDate = null;
+		if (skipMinutes > 0) {
+			maxComparedDate = getMaxTimeStampStr(skipMinutes);
+		}
+		logger.info("the max compared date is "+maxComparedDate);
+		
 		try {
 			DashboardRowsComparator dcc = new DashboardRowsComparator();
-			InstancesComparedData<TableRowsEntity> result = dcc.compare(tenantIdParam, userTenant,compareType);
+			InstancesComparedData<TableRowsEntity> result = dcc.compare(tenantIdParam, userTenant,compareType,maxComparedDate);
 			
 			if (result != null) {
 				int comparedDataNum = dcc.countForComparedRows(result.getInstance1().getData()) + dcc.countForComparedRows(result.getInstance2().getData());

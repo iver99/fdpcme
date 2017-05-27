@@ -37,7 +37,8 @@ public class DataManagerTest
                 result = 1;
             }
         };
-        dataManager.getAllDashboardsCount(entityManager);
+        dataManager.getAllDashboardsCount(entityManager, null);
+        dataManager.getAllDashboardsCount(entityManager, "2017-09-10");
     }
 
     @Test
@@ -49,7 +50,8 @@ public class DataManagerTest
                 result = 1;
             }
         };
-        dataManager.getAllUserOptionsCount(entityManager);
+         dataManager.getAllUserOptionsCount(entityManager, null);
+        dataManager.getAllUserOptionsCount(entityManager, "2017-09-10");
     }
 
     @Test
@@ -61,7 +63,8 @@ public class DataManagerTest
                 result = 1;
             }
         };
-        dataManager.getAllPreferencessCount(entityManager);
+        dataManager.getAllPreferencessCount(entityManager, null);
+        dataManager.getAllPreferencessCount(entityManager, "2017-09-10");
     }
     
     @Test
@@ -73,7 +76,8 @@ public class DataManagerTest
                 result = 1;
             }
         };
-        dataManager.getAllDashboardSetCount(entityManager);
+        dataManager.getAllDashboardSetCount(entityManager, null);
+        dataManager.getAllDashboardSetCount(entityManager, "2017-09-10");
     }
     
     @Test
@@ -85,7 +89,8 @@ public class DataManagerTest
                 result = 1;
             }
         };
-        dataManager.getAllTileCount(entityManager);
+        dataManager.getAllTileCount(entityManager, null);
+        dataManager.getAllTileCount(entityManager, "2017-09-10");
     }
     
     @Test
@@ -97,7 +102,8 @@ public class DataManagerTest
                 result = 1;
             }
         };
-        dataManager.getAllTileParamsCount(entityManager);
+        dataManager.getAllTileParamsCount(entityManager, null);
+        dataManager.getAllTileParamsCount(entityManager, "2017-09-10");
     }
     
     
@@ -111,8 +117,8 @@ public class DataManagerTest
 				result = list;
 			}
 		};
-		dataManager.getDashboardSetTableData(entityManager,"full","2017-05-12 11:21:23");
-		dataManager.getDashboardSetTableData(entityManager,"full",null);
+		dataManager.getDashboardSetTableData(entityManager,"full","2017-05-12 11:21:23","2017-05-12 11:21:23");
+		dataManager.getDashboardSetTableData(entityManager,"full",null, null);
 
 	}
 	@Test
@@ -125,7 +131,7 @@ public class DataManagerTest
 				result = list;
 			}
 		};
-		dataManager.getDashboardTableData(entityManager,"full","2017-05-12 11:21:23");
+		dataManager.getDashboardTableData(entityManager,"full","2017-05-12 11:21:23","2017-05-12 11:21:23");
 	}
 
 	@Test
@@ -138,7 +144,7 @@ public class DataManagerTest
 				result = list;
 			}
 		};
-		dataManager.getDashboardTileParamsTableData(entityManager,"full","2017-05-12 11:21:23");
+		dataManager.getDashboardTileParamsTableData(entityManager,"full","2017-05-12 11:21:23","2017-05-12 11:21:23");
 	}
 	@Test
 	public void testGetDahboardTileTableData(@Mocked final PersistenceManager persistenceManager, 
@@ -150,7 +156,7 @@ public class DataManagerTest
 				result = list;
 			}
 		};
-		dataManager.getDashboardTileTableData(entityManager,"full","2017-05-12 11:21:23");
+		dataManager.getDashboardTileTableData(entityManager,"full","2017-05-12 11:21:23","2017-05-12 11:21:23");
 	}
 
 	@Test
@@ -163,7 +169,7 @@ public class DataManagerTest
 				result = list;
 			}
 		};
-		dataManager.getDashboardUserOptionsTableData(entityManager,"full","2017-05-12 11:21:23");
+		dataManager.getDashboardUserOptionsTableData(entityManager,"full","2017-05-12 11:21:23","2017-05-12 11:21:23");
 	}
 	
 	@Test
@@ -276,7 +282,7 @@ public class DataManagerTest
 				result = list;
 			}
 		};
-		dataManager.getPreferenceTableData(entityManager,"full","2017-05-12 11:21:23");
+		dataManager.getPreferenceTableData(entityManager,"full","2017-05-12 11:21:23","2017-05-12 11:21:23");
 	}
 
 	@Test

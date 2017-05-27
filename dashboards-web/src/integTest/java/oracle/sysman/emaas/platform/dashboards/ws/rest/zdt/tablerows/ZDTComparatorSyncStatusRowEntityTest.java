@@ -8,20 +8,20 @@ public class ZDTComparatorSyncStatusRowEntityTest {
 	
 	@Test
 	public void testZdtComparatorRowsEntityGetterSetter() {
-		ZDTComparatorStatusRowEntity entity = new ZDTComparatorStatusRowEntity( "comparisonDate", 
+		ZDTSyncStatusRowEntity entity = new ZDTSyncStatusRowEntity( "comparisonDate", 
 				"comparisonType",
 				"nextComparisonDate", 
 				0.99);
 		
-		Assert.assertEquals(entity.getComparisonDate(), "comparisonDate");
-		Assert.assertEquals(entity.getComparisonType(), "comparisonType");
-		Assert.assertEquals(entity.getNextComparisonDate(), "nextComparisonDate");
+		Assert.assertEquals(entity.getLastSyncDateTime(), "comparisonDate");
+		Assert.assertEquals(entity.getSyncType(), "comparisonType");
+		Assert.assertEquals(entity.getNextScheduledSyncDateTime(), "nextComparisonDate");
 		Assert.assertEquals(entity.getDivergencePercentage(), 0.99);
 		
-		entity.setComparisonDate("");
-		entity.setComparisonType("");
+		entity.setLastSyncDateTime("");
+		entity.setSyncType("");
 		entity.setDivergencePercentage(0.0);
-		entity.setNextComparisonDate("");
+		entity.setNextScheduledSyncDateTime("");
 	}
 
 }

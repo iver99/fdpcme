@@ -65,30 +65,30 @@ public class ZDTAPI extends APIBase
 	@GET
 	@Path("tablerows")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getAllTableData(@QueryParam("comparisonType") String type)
+	public Response getAllTableData(@QueryParam("comparisonType") String type, @QueryParam("maxComparedDate") String maxComparedData)
 	{
 		infoInteractionLogAPIIncomingCall(null, null, "Service call to [GET] /v1/zdt/tablerows?comparisonType=");
 
 		JSONObject obj = new JSONObject();
 		EntityManager em = null;
 		if (type == null) {
-			type = "full";
+			type = "incremental";
 		}
 		try {
 			DashboardServiceFacade dsf = new DashboardServiceFacade();
 			em = dsf.getEntityManager();
 			String lastComparisonDate = DataManager.getInstance().getLatestComparisonDateForCompare(em);
-			JSONArray tableData = getDashboardTableData(em,type, lastComparisonDate);
+			JSONArray tableData = getDashboardTableData(em,type, lastComparisonDate,maxComparedData);
 			obj.put(TABLE_DATA_KEY_DASHBOARD, tableData);
-			tableData = getDashboardSetTableData(em,type, lastComparisonDate);
+			tableData = getDashboardSetTableData(em,type, lastComparisonDate,maxComparedData);
 			obj.put(TABLE_DATA_KEY_DASHBOARD_SET, tableData);
-			tableData = getDashboardTileTableData(em,type, lastComparisonDate);
+			tableData = getDashboardTileTableData(em,type, lastComparisonDate,maxComparedData);
 			obj.put(TABLE_DATA_KEY_DASHBOARD_TILES, tableData);
-			tableData = getDashboardTileParamsTableData(em,type, lastComparisonDate);
+			tableData = getDashboardTileParamsTableData(em,type, lastComparisonDate,maxComparedData);
 			obj.put(TABLE_DATA_KEY_DASHBOARD_TILE_PARAMS, tableData);
-			tableData = getDashboardUserOptionsTableData(em,type, lastComparisonDate);
+			tableData = getDashboardUserOptionsTableData(em,type, lastComparisonDate,maxComparedData);
 			obj.put(TABLE_DATA_KEY_DASHBOARD_USER_OPTIONS, tableData);
-			tableData = getPreferenceTableData(em,type, lastComparisonDate);
+			tableData = getPreferenceTableData(em,type, lastComparisonDate,maxComparedData);
 			obj.put(TABLE_DATA_KEY_DASHBOARD_PREFERENCES, tableData);
 		}
 		catch (JSONException e) {
@@ -105,7 +105,7 @@ public class ZDTAPI extends APIBase
 	@GET
 	@Path("counts")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getEntitiesCount()
+	public Response getEntitiesCount(@QueryParam("maxComparedDate") String maxComparedData)
 	{
 		infoInteractionLogAPIIncomingCall(null, null, "Service call to [GET] /v1/zdt/counts");
 		EntityManager em = null;
@@ -113,12 +113,12 @@ public class ZDTAPI extends APIBase
 		try {
 			DashboardServiceFacade dsf = new DashboardServiceFacade();
 			em = dsf.getEntityManager();
-			long dashboardCount = DataManager.getInstance().getAllDashboardsCount(em);
-			long userOptionsCount = DataManager.getInstance().getAllUserOptionsCount(em);
-			long preferenceCount = DataManager.getInstance().getAllPreferencessCount(em);
-			long dashboardSetCount = DataManager.getInstance().getAllDashboardSetCount(em);
-			long tileCount = DataManager.getInstance().getAllTileCount(em);
-			long tileParamCount = DataManager.getInstance().getAllTileParamsCount(em);
+			long dashboardCount = DataManager.getInstance().getAllDashboardsCount(em,maxComparedData);
+			long userOptionsCount = DataManager.getInstance().getAllUserOptionsCount(em,maxComparedData);
+			long preferenceCount = DataManager.getInstance().getAllPreferencessCount(em,maxComparedData);
+			long dashboardSetCount = DataManager.getInstance().getAllDashboardSetCount(em,maxComparedData);
+			long tileCount = DataManager.getInstance().getAllTileCount(em,maxComparedData);
+			long tileParamCount = DataManager.getInstance().getAllTileParamsCount(em,maxComparedData);
 			logger.debug("ZDT counters: dashboards count - {}, favorite count - {}, preference count - {}", dashboardCount,
 					userOptionsCount, preferenceCount);
 			zdte = new ZDTEntity(dashboardCount, userOptionsCount, preferenceCount,
@@ -269,7 +269,7 @@ public class ZDTAPI extends APIBase
 		String comparison_type = "";
 		//String comparison_result = null;
 		String next_schedule_date = "";
-		double percentage = 0.0;
+		String percentage = "0.0";
 		em =  new DashboardServiceFacade().getEntityManager();
 		List<Map<String, Object>> result = DataManager.getInstance().getComparatorStatus(em);
 		if (result != null && result.size() == 1) {
@@ -278,7 +278,7 @@ public class ZDTAPI extends APIBase
 				comparison_type = resultMap.get("COMPARISON_TYPE").toString();
 				next_schedule_date =  resultMap.get("NEXT_SCHEDULE_COMPARISON_DATE").toString();
 				//	comparison_result = resultMap.get("").toString();
-				percentage = Double.parseDouble(resultMap.get("DIVERGENCE_PERCENTAGE").toString());
+				percentage = resultMap.get("DIVERGENCE_PERCENTAGE").toString();
 		}
 		ZDTComparatorStatusRowEntity comparatorStatus = new ZDTComparatorStatusRowEntity(comparison_date,comparison_type, next_schedule_date, percentage);
 		try {
@@ -353,33 +353,33 @@ public class ZDTAPI extends APIBase
 
 	
 
-	private JSONArray getDashboardSetTableData(EntityManager em, String type, String date)
+	private JSONArray getDashboardSetTableData(EntityManager em, String type, String date, String maxComparedData)
 	{
-		List<Map<String, Object>> list = DataManager.getInstance().getDashboardSetTableData(em, type,date);
+		List<Map<String, Object>> list = DataManager.getInstance().getDashboardSetTableData(em, type,date,maxComparedData);
 		return getJSONArrayForListOfObjects(TABLE_DATA_KEY_DASHBOARD_SET, list);
 	}
 
-	private JSONArray getDashboardTableData(EntityManager em, String type, String date)
+	private JSONArray getDashboardTableData(EntityManager em, String type, String date, String maxComparedData)
 	{
-		List<Map<String, Object>> list = DataManager.getInstance().getDashboardTableData(em, type,date);
+		List<Map<String, Object>> list = DataManager.getInstance().getDashboardTableData(em, type,date,maxComparedData);
 		return getJSONArrayForListOfObjects(TABLE_DATA_KEY_DASHBOARD, list);
 	}
 
-	private JSONArray getDashboardTileParamsTableData(EntityManager em, String type, String date)
+	private JSONArray getDashboardTileParamsTableData(EntityManager em, String type, String date, String maxComparedData)
 	{
-		List<Map<String, Object>> list = DataManager.getInstance().getDashboardTileParamsTableData(em ,type,date);
+		List<Map<String, Object>> list = DataManager.getInstance().getDashboardTileParamsTableData(em ,type,date,maxComparedData);
 		return getJSONArrayForListOfObjects(TABLE_DATA_KEY_DASHBOARD_TILE_PARAMS, list);
 	}
 
-	private JSONArray getDashboardTileTableData(EntityManager em, String type, String date)
+	private JSONArray getDashboardTileTableData(EntityManager em, String type, String date, String maxComparedData)
 	{
-		List<Map<String, Object>> list = DataManager.getInstance().getDashboardTileTableData(em, type,date);
+		List<Map<String, Object>> list = DataManager.getInstance().getDashboardTileTableData(em, type,date,maxComparedData);
 		return getJSONArrayForListOfObjects(TABLE_DATA_KEY_DASHBOARD_TILES, list);
 	}
 
-	private JSONArray getDashboardUserOptionsTableData(EntityManager em, String type, String date)
+	private JSONArray getDashboardUserOptionsTableData(EntityManager em, String type, String date, String maxComparedData)
 	{
-		List<Map<String, Object>> list = DataManager.getInstance().getDashboardUserOptionsTableData(em, type,date);
+		List<Map<String, Object>> list = DataManager.getInstance().getDashboardUserOptionsTableData(em, type,date,maxComparedData);
 		return getJSONArrayForListOfObjects(TABLE_DATA_KEY_DASHBOARD_USER_OPTIONS, list);
 	}
 
@@ -401,9 +401,9 @@ public class ZDTAPI extends APIBase
 		return array;
 	}
 
-	private JSONArray getPreferenceTableData(EntityManager em, String type, String date)
+	private JSONArray getPreferenceTableData(EntityManager em, String type, String date, String maxComparedData)
 	{
-		List<Map<String, Object>> list = DataManager.getInstance().getPreferenceTableData(em, type,date);
+		List<Map<String, Object>> list = DataManager.getInstance().getPreferenceTableData(em, type,date,maxComparedData);
 		return getJSONArrayForListOfObjects(TABLE_DATA_KEY_DASHBOARD_PREFERENCES, list);
 	}
 }

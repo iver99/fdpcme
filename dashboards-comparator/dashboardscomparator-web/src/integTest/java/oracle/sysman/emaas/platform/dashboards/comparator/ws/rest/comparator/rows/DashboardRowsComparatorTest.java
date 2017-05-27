@@ -351,7 +351,7 @@ public class DashboardRowsComparatorTest
         };
 		DashboardRowsComparator drc = new DashboardRowsComparator();
 	
-		drc.compare(null, null, null);
+		drc.compare(null, null, null, "2017-05-27");
 	}
 	
 	@Test

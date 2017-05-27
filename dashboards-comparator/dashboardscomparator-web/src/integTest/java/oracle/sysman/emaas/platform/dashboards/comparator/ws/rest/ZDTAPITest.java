@@ -99,7 +99,7 @@ public class ZDTAPITest {
     @Test
     public void testCompareRows1() {
     	
-    	zdtapi.compareRows(tenant, userTenant,"full");
+    	zdtapi.compareRows(tenant, userTenant,"full",30);
     }
     
     @Test
@@ -135,7 +135,7 @@ public class ZDTAPITest {
     		}
     	};
     	
-    	zdtapi.compareRows(tenant, userTenant,"full");
+    	zdtapi.compareRows(tenant, userTenant,"full", 30);
     }
   
     

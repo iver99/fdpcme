@@ -37,12 +37,12 @@ public class ZDTAPITest {
             {
                 DataManager.getInstance();
                 result = dataManager;
-                dataManager.getDashboardSetTableData(em, anyString,anyString);
+                dataManager.getDashboardSetTableData(em, anyString,anyString,anyString);
                 result = list;
             }
         };
-        zdtapi.getAllTableData("incremental");
-        zdtapi.getAllTableData("full");
+        zdtapi.getAllTableData("incremental",null);
+        zdtapi.getAllTableData("full", "2017-05-27");
     }
 
     @Test
@@ -53,12 +53,12 @@ public class ZDTAPITest {
             {
                 DataManager.getInstance();
                 result = dataManager;
-                dataManager.getDashboardSetTableData(em, anyString, anyString);
+                dataManager.getDashboardSetTableData(em, anyString, anyString, anyString);
                 result = new JSONException(throwable);
             }
         };
-        zdtapi.getAllTableData("incremental");
-        zdtapi.getAllTableData("full");
+        zdtapi.getAllTableData("incremental", "2017-05-27");
+        zdtapi.getAllTableData("full", "2017-05-27");
     }
 
     @Test
@@ -68,15 +68,15 @@ public class ZDTAPITest {
             {
                 DataManager.getInstance();
                 result = dataManager;
-                dataManager.getAllDashboardsCount(em);
+                dataManager.getAllDashboardsCount(em, "2017-05-27");
                 result = 1;
-                dataManager.getAllUserOptionsCount(em);
+                dataManager.getAllUserOptionsCount(em, "2017-05-27");
                 result = 1;
-                dataManager.getAllPreferencessCount(em);
+                dataManager.getAllPreferencessCount(em, "2017-05-27");
                 result = 1;
             }
         };
-        zdtapi.getEntitiesCount();
+        zdtapi.getEntitiesCount( "2017-05-27");
     }
 
     @Test

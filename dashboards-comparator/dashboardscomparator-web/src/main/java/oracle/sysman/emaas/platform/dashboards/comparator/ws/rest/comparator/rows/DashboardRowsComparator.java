@@ -74,7 +74,7 @@ public class DashboardRowsComparator extends AbstractComparator
 			}
 	}
 
-	public InstancesComparedData<TableRowsEntity> compare(String tenantId, String userTenant, String comparisonType) throws ZDTException
+	public InstancesComparedData<TableRowsEntity> compare(String tenantId, String userTenant, String comparisonType, String maxComparedDate) throws ZDTException
 	{
 		try {
 			logger.info("Starts to compare the two DF OMC instances: table by table and row by row");
@@ -83,8 +83,8 @@ public class DashboardRowsComparator extends AbstractComparator
 			
 			//logger.info("key2={}, client1={}",key2, client2.getServiceUrls().get(0).toString());
 			
-			TableRowsEntity tre1 = retrieveRowsForSingleInstance(client1, tenantId, userTenant,comparisonType);
-			CountsEntity entity1 = retrieveCountsForSingleInstance(tenantId, userTenant,client1);
+			TableRowsEntity tre1 = retrieveRowsForSingleInstance(client1, tenantId, userTenant,comparisonType,maxComparedDate);
+			CountsEntity entity1 = retrieveCountsForSingleInstance(tenantId, userTenant,client1, maxComparedDate);
 			if (entity1 == null) {
 				return null;
 			}
@@ -100,8 +100,8 @@ public class DashboardRowsComparator extends AbstractComparator
 				return null;
 			}
 
-			TableRowsEntity tre2 = retrieveRowsForSingleInstance(client2, tenantId, userTenant, comparisonType);
-			CountsEntity entity2 = retrieveCountsForSingleInstance(tenantId, userTenant,client2);
+			TableRowsEntity tre2 = retrieveRowsForSingleInstance(client2, tenantId, userTenant, comparisonType,maxComparedDate);
+			CountsEntity entity2 = retrieveCountsForSingleInstance(tenantId, userTenant,client2,maxComparedDate);
 			if (entity2 == null) {
 				return null;
 			}
@@ -300,13 +300,14 @@ public class DashboardRowsComparator extends AbstractComparator
 		return tre;
 	}
 	
-	private CountsEntity retrieveCountsForSingleInstance(String tenantId, String userTenant,LookupClient lc) throws Exception, IOException
+	private CountsEntity retrieveCountsForSingleInstance(String tenantId, String userTenant,LookupClient lc ,String maxComparedTime) throws Exception, IOException
 	{
 		Link lk = getSingleInstanceUrl(lc, "zdt/counts", "http");
 		if (lk == null) {
 			return null;
 		}
-		String response = new TenantSubscriptionUtil.RestClient().get(lk.getHref(), tenantId, userTenant);
+		String url = lk.getHref() + "?maxComparedDate="+URLEncoder.encode(maxComparedTime, "UTF-8");
+		String response = new TenantSubscriptionUtil.RestClient().get(url, tenantId, userTenant);
 		
 		JsonUtil ju = JsonUtil.buildNormalMapper();
 		CountsEntity ze = ju.fromJson(response, CountsEntity.class);
@@ -324,14 +325,15 @@ public class DashboardRowsComparator extends AbstractComparator
 	 * @throws Exception
 	 * @throws IOException
 	 */
-	private TableRowsEntity retrieveRowsForSingleInstance(LookupClient lc, String tenantId, String userTenant, String comparisonType) throws Exception, IOException, ZDTException
+	private TableRowsEntity retrieveRowsForSingleInstance(LookupClient lc, String tenantId, String userTenant, 
+			String comparisonType, String maxComparedDate) throws Exception, IOException, ZDTException
 	{
 		Link lk = getSingleInstanceUrl(lc, "zdt/tablerows", "http");
 		if (lk == null) {
 			logger.warn("Get a null or empty link for one single instance!");
 			throw new ZDTException(ZDTErrorConstants.NULL_LINK_ERROR_CODE, ZDTErrorConstants.NULL_LINK_ERROR_MESSAGE);
 		}
-		String url = lk.getHref() + "?comparisonType="+comparisonType;
+		String url = lk.getHref() + "?comparisonType="+comparisonType+"&maxComparedDate="+URLEncoder.encode(maxComparedDate, "UTF-8");
 		String response = new TenantSubscriptionUtil.RestClient().get(url, tenantId,userTenant);
 		/*
 		RestClient rc = RestClientProxy.getRestClient();
