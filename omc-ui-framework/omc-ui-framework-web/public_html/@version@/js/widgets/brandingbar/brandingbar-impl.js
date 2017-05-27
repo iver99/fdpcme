@@ -756,6 +756,16 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 }
             }
             
+            function triggerDashboardResizeEvent(message) {
+                if (window.selectedDashboardInst && window.selectedDashboardInst() && window.selectedDashboardInst().$b) {
+                    window.selectedDashboardInst().$b.triggerBuilderResizeEvent(message);
+                }
+                else if ($(".right-panel-toggler")[0] && ko.dataFor($(".right-panel-toggler")[0])) {
+                    var $b = ko.dataFor($(".right-panel-toggler")[0]).$b;
+                    $b && $b.triggerBuilderResizeEvent(message);
+                }
+            }
+            
             self.hamburgerMenuEnabled = omcHamburgerMenuOptIn ? true : false;
             self.isHamburgerMenuRegistered = ko.observable(false);
             if (omcHamburgerMenuOptIn) {
@@ -863,11 +873,14 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 if (!window._uifwk.obbMenuLoadedListenerRegistered) {
                 menuUtil.subscribeServiceMenuLoadedEvent(function(){
                     $("#omcHamburgerMenu").on("ojopen", function(event, offcanvas) {
-                        if(offcanvas.displayMode === "push")
+                        if(offcanvas.displayMode === "push") {
                             $("#offcanvasInnerContainer").width(document.body.clientWidth-250);
-                        });
+                            triggerDashboardResizeEvent('Hamburger menu opened.');
+                        }});
+                        
                     $("#omcHamburgerMenu").on("ojclose", function(event, offcanvas) {
                         $("#offcanvasInnerContainer").width(document.body.clientWidth);
+                        triggerDashboardResizeEvent('Hamburger menu closed.');
                     });
                     $(window).resize(function() {
                         if ($("#omcHamburgerMenu").hasClass("oj-offcanvas-open") && !$("#omcHamburgerMenu").hasClass("oj-offcanvas-overlay")) {
