@@ -138,6 +138,10 @@ public class DashboardManager
         DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
         List<BigInteger> ids = dsf.getDashboardIdsByAppType(applicationType);
         dsf.cleanDashboardsPermanentById(ids);
+        EntityManager em = dsf.getEntityManager();
+        if (em != null) {
+            em.close();
+        }
 	}
 
 	/**
