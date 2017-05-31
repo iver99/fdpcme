@@ -20,19 +20,24 @@ public class UserInfoEntityTest {
 
         ui.getCurrentUser();
         ui.getUserRoles();
+        ui.getUserGrants();
     }
 
     @Test
     public void testUserInfoEntityWithUserRoles(@Mocked final PrivilegeChecker anyPrivilegeChecker){
         final List<String> userRoles = Arrays.asList(PrivilegeChecker.ADMIN_ROLE_NAME_ITA, PrivilegeChecker.ADMIN_ROLE_NAME_APM);
-        UserInfoEntity ui =new UserInfoEntity(userRoles);
+        final String userGrants = "ADMINISTER_LOG_TYPE,RUN_AWR_VIEWER_APP,USE_TARGET_ANALYTICS";
+        UserInfoEntity ui =new UserInfoEntity(userRoles, userGrants);
 
         new Expectations() {
             {
                 PrivilegeChecker.getUserRoles(anyString, anyString);
                 times = 0;
+                PrivilegeChecker.getUserGrants(anyString, anyString);
+                times = 0;
             }
         };
         ui.getUserRoles();
+        ui.getUserGrants();
     }
 }

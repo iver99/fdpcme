@@ -38,9 +38,44 @@ public class PrivilegeChecker
 	public static final String ADMIN_ROLE_NAME_ORCHESTRATION = "Orchestration Administrator";
 	public static final String ADMIN_ROLE_NAME_OMC = "OMC Administrator";
 	public static final String SECURITY_AUTH_ROLE_CHECK_API = "api/v1/roles/grants/getRoles?grantee=";
+	public static final String SECURITY_AUTH_USER_GRANTS_CHECK_API = "api/v1/priv/grants/getUserGrants?granteeUser=";
 	private static final String SECURITY_AUTHORIZATION_SERVICENAME = "SecurityAuthorization";
 	private static final String SECURITY_AUTHORIZATION_VERSION = "1.0+";
 
+	public static String getUserGrants(String tenantName, String userName)
+	{
+		String userGrants = null;
+		if (tenantName != null && userName != null) {
+			try {
+				VersionedLink link = RegistryLookupUtil.getServiceInternalEndpoint(SECURITY_AUTHORIZATION_SERVICENAME,
+						SECURITY_AUTHORIZATION_VERSION, tenantName);
+				if (link == null || link.getHref() == null) {
+					LOGGER.error("Failed to discover SecurityAuthorization service URL for user grants checking.");
+				}
+				else {
+					String tenantDotUser = tenantName + "." + userName;
+					String endPoint = link.getHref();
+					String secAuthUserGrantsApiUrl = endPoint.endsWith("/") ? endPoint + SECURITY_AUTH_USER_GRANTS_CHECK_API + tenantDotUser
+							: endPoint + "/" + SECURITY_AUTH_USER_GRANTS_CHECK_API + tenantDotUser;
+					RestClient rc = new RestClient();
+					rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME,tenantName);
+					rc.setHeader(RestClient.OAM_REMOTE_USER,tenantDotUser);
+					rc.setType(null);
+					rc.setAccept(null);
+					userGrants = rc.get(secAuthUserGrantsApiUrl, tenantName, link.getAuthToken());
+					LOGGER.debug("Checking user grants for tenant user (" + tenantDotUser + "). The response is " + userGrants);
+				}
+			} catch (Exception e) {
+				LOGGER.error(e);
+			}
+		}
+		else {
+			LOGGER.warn("Tenant name or user name is empty. User grants checking is skipped.");
+		}
+
+		return userGrants;
+	}
+	
 	public static List<String> getUserRoles(String tenantName, String userName)
 	{
 		List<String> roleNames = null;
