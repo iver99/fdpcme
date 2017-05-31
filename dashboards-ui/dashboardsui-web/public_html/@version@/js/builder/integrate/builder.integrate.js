@@ -11,25 +11,17 @@ define(['jquery',
     function($, oj, dfu) {
         function fireDashboardItemChangeEventTo(tile, dashboardItemChangeEvent) {
             var deferred = $.Deferred();
-            dfu.ajaxWithRetry({url: '@version@/html/widgetLoading.html',
-                tile: tile,
-                success: function () {
+            setTimeout(function () {
                     /**
                      * A widget needs to define its parent's onDashboardItemChangeEvent() method to resposne to dashboardItemChangeEvent
                      */
-                    if (this.tile.onDashboardItemChangeEvent) {
-                        this.tile.onDashboardItemChangeEvent(dashboardItemChangeEvent);
-                        console.log(this.tile.title());
-                        oj.Logger.log(this.tile.title());
+                    if (tile.onDashboardItemChangeEvent) {
+                        tile.onDashboardItemChangeEvent(dashboardItemChangeEvent);
+                        console.log(tile.title());
+                        oj.Logger.log(tile.title());
                         deferred.resolve();
                     }
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    console.log(textStatus);
-                    oj.Logger.log(textStatus);
-                    deferred.reject(textStatus);
-                }
-            });
+            },0);
             return deferred.promise();
         }
         Builder.registerFunction(fireDashboardItemChangeEventTo, 'fireDashboardItemChangeEventTo');
