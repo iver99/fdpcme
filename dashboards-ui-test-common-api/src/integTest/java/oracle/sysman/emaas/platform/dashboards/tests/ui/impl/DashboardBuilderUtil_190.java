@@ -409,7 +409,9 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 			driver.uncheck("css=" + DashBoardPageId_190.BUILDEROPTIONSEDITSHOWDESCRIPTIONCSS);
 		}
 
-		driver.takeScreenShot();
+		//driver.takeScreenShot();
+		//add wait to fix EMCPDF-4112
+		driver.waitForServer();
 		driver.getLogger().info("DashboardBuilderUtil.edit complete");
 	}
 
