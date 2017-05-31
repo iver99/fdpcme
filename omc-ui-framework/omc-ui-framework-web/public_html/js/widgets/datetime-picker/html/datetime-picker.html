@@ -69,7 +69,7 @@
                 <!-- popup for recently used time ranges -->
                 <div style="background-color: #fcfdfe; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px;" data-bind="ojComponent: {component: 'ojPopup'}, attr: {id: 'recentPanel_'+randomId}">
                     <div data-bind="foreach: recentList()">
-                        <div style="padding: 5px;" data-bind="html: $parent.getRecentDateTimeInfo($data), event: {mouseover: $parent.hoverOnDrawer, mouseout: $parent.hoverOutDrawer}, click: $parent.chooseByRecent"></div>
+                        <div style="padding: 5px; cursor: pointer;" data-bind="html: $parent.getRecentDateTimeInfo($data), event: {mouseover: $parent.hoverOnDrawer, mouseout: $parent.hoverOutDrawer}, click: $parent.chooseByRecent"></div>
                     </div>
                 </div>
 

@@ -1431,8 +1431,8 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     return timezoneOffset;
                 };
                 
-                self.getFlexTimePeriod = function(num, opt) {
-                    return ctxUtil.getFlexTimePeriod(num, opt);
+                self.getTranslatedFlexTimePeriod = function(num, opt) {
+                    return ctxUtil.getTranslatedFlexTimePeriod(num, opt);
                 }
 
                 /**
@@ -1484,9 +1484,9 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     if(timePeriod === self.timePeriodCustom) {
                         if(self.lrCtrlVal() === "flexRelTimeCtrl") { //For custom relative time
                             if(self.getParam(self.timeDisplay) === "short") {
-                                dateTimeInfo = "<span style='font-weight:bold; padding-right: 5px; display: inline-block;' class='show-individual-time-span1-short'>" + self.getFlexTimePeriod(self.flexRelTimeVal(), self.flexRelTimeOpt()[0])  + "</span>";
+                                dateTimeInfo = "<span style='font-weight:bold; padding-right: 5px; display: inline-block;' class='show-individual-time-span1-short'>" + self.getTranslatedFlexTimePeriod(self.flexRelTimeVal(), self.flexRelTimeOpt()[0])  + "</span>";
                             }else {
-                                dateTimeInfo = "<span style='font-weight:bold; padding-right: 5px; display:" + self.hideRangeLabel + ";' " + "class='show-individual-time-span1'>" + self.getFlexTimePeriod(self.flexRelTimeVal(), self.flexRelTimeOpt()[0]) + ": </span>";
+                                dateTimeInfo = "<span style='font-weight:bold; padding-right: 5px; display:" + self.hideRangeLabel + ";' " + "class='show-individual-time-span1'>" + self.getTranslatedFlexTimePeriod(self.flexRelTimeVal(), self.flexRelTimeOpt()[0]) + ": </span>";
                                 dateTimeInfo += start + "<span style='font-weight:bold; " + hyphenDisplay + "' "+ "class='show-individual-time-span2'>" +" - </span>" + end;
                             }
                         }else if(self.lrCtrlVal() === "latestOnCustom") {
@@ -1544,7 +1544,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     }else { // for flexible relative time range
                         var tp = ctxUtil.parseTimePeriodToUnitAndDuration(recent.timePeriod);
                         if(tp) {
-                            return self.getFlexTimePeriod(tp.duration, tp.unit);
+                            return self.getTranslatedFlexTimePeriod(tp.duration, tp.unit);
                         }
                     }
                 }
