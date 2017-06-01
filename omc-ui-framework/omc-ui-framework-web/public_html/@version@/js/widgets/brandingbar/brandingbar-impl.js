@@ -109,7 +109,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 self.udeTopologyData = data;
             };
             self.updateGlobalContextByTopologySelection = params.updateGlobalContextByTopologySelection;
-
+            self.showMaxMinButtonInDF = ko.observable(true);
             if (params) {
                 self.associations(params.associations);
                 self.layout(params.layout);
@@ -327,21 +327,39 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 $b && $b.triggerBuilderResizeEvent('Topology is restored!');
             };
             self.maxMinTopologyToggle = function () {
-                if (!self.isMaximized()) {
-                    self.maximizeTopology();
-                } else {
-                    self.restoreTopology();
+                if (self.showMaxMinButtonInDF() === true) {
+                    if (!self.isMaximized()) {
+                        self.maximizeTopology();
+                    } else {
+                        self.restoreTopology();
+                    }
                 }
             };
 
             self.topologyCssHeight = ko.observable();
             self.topologyStyle = ko.computed(function () {
-                var height = "100%; max-height: 204px"
+                if (self.showMaxMinButtonInDF() === true) {
+                    var height = "100%; max-height: 204px";
                 if (self.topologyCssHeight()) {
                     height = (self.topologyCssHeight() + 3) + "px";
                 }
-                return "display: flex; float: left; width: 100%; height: " + height + ";";
+                    return "display: flex; float: left; width: 100%; height: " + height + ";";
+                } else {
+                    return "height:100%;width:100%;";
+                }
             });
+
+            /*
+             * Called by UDE if topology is maximized or restored
+             */
+            self.topologyResizeCallback = function (isMaximized) {
+                var $b = $(".right-panel-toggler:visible")[0] && ko.dataFor($(".right-panel-toggler:visible")[0]).$b;
+                if (isMaximized) {
+                    $b && $b.triggerBuilderResizeEvent('Topology is maximized!');
+                } else {
+                    $b && $b.triggerBuilderResizeEvent('Topology is restored!');
+                }
+            };
 
             //NLS strings
             self.productName = nls.BRANDING_BAR_MANAGEMENT_CLOUD;
