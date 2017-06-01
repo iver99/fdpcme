@@ -764,6 +764,9 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     var $b = ko.dataFor($(".right-panel-toggler")[0]).$b;
                     $b && $b.triggerBuilderResizeEvent(message);
                 }
+                else {
+                    $(window).trigger('resize');
+                }
             }
             
             self.hamburgerMenuEnabled = omcHamburgerMenuOptIn ? true : false;
@@ -898,6 +901,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                                     "selector": "#omcHamburgerMenu",
                                     "autoDismiss": "none"
                                 });
+                            triggerDashboardResizeEvent('Hamburger menu opened.');
                         })());
                     }
                     
