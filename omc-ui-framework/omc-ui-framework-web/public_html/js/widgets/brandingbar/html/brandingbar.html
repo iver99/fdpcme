@@ -1,143 +1,143 @@
-    <script id="omc-hamburger-menu-template" type="text/html">
-        <div id="omcHamburgerMenu" style="width:250px;" class="oj-contrast-marker oj-web-applayout-offcanvas oj-offcanvas-start">
-            <div data-bind="component: {
+<script id="omc-hamburger-menu-template" type="text/html">
+    <div id="omcHamburgerMenu" style="width:250px;" class="oj-contrast-marker oj-web-applayout-offcanvas oj-offcanvas-start">
+        <div data-bind="component: {
                 name: 'omc-uifwk-hamburger-menu',
                 params: menuParams
                 }">
-            </div>
         </div>
-    </script>
-    <div class="emaas-brandingbar">
-        <div class="emaas-appheader">
-            <!-- ko if: hamburgerMenuEnabled -->
-            <!-- hamburger menu button-->
-            <div>
-                <button id="hamburgerButton" class="oj-button-half-chrome emaas-appheader-hamburger-button emaas-appheader-toolbar-button" 
+    </div>
+</script>
+<div class="emaas-brandingbar">
+    <div class="emaas-appheader">
+        <!-- ko if: hamburgerMenuEnabled -->
+        <!-- hamburger menu button-->
+        <div>
+            <button id="hamburgerButton" class="oj-button-half-chrome emaas-appheader-hamburger-button emaas-appheader-toolbar-button" 
                     data-bind="ojComponent: {component:'ojButton', display:'icons', chroming: 'half',
                                 label: hamburgerBtnLabel, 
                                 icons: {start: 'fa-icon-font fa-bars'}}, 
                     click: toggleHamburgerMenu, attr: {title: hamburgerBtnLabel}" role="button" tabindex="0">
-                </button>
-            </div>
-            <!-- /ko -->
-            <div id="emaas-appheader-bar" data-testapiversion="1.18.0" class="oj-row emaas-appheader-lite" style="max-width: 1920px;padding-left: 10px">
+            </button>
+        </div>
+        <!-- /ko -->
+        <div id="emaas-appheader-bar" data-testapiversion="1.18.0" class="oj-row emaas-appheader-lite" style="max-width: 1920px;padding-left: 10px">
 
-                <!-- logo -->  
-                <div class="emaas-appheader-logo" data-bind="attr: {'aria-label': textOracle}">
-                    <div class="emaas-appheader-appname-table-cell-baseline">
-                        <!--oracle_logo_lrg-->
-                        <img class="emaas-appheader-logo-img"  src="/emsaasui/uifwk/@version@/images/imgbackground.png"
+            <!-- logo -->  
+            <div class="emaas-appheader-logo" data-bind="attr: {'aria-label': textOracle}">
+                <div class="emaas-appheader-appname-table-cell-baseline">
+                    <!--oracle_logo_lrg-->
+                    <img class="emaas-appheader-logo-img"  src="/emsaasui/uifwk/@version@/images/imgbackground.png"
                          style="background: url('/emsaasui/uifwk/@version@/images/uifwkSprite.png') no-repeat 0px -158px;height:19px;" width="158" height="19" data-bind="attr: {alt: textOracle}, click: gotoHomePage"/> 
-                    </div>
-                    <div class="emaas-appheader-appname-table-cell-baseline" style="padding-left: 4px">
-                        <span class="emaas-appheader-appname" data-bind="text: productName"></span>
-                        <span role="separator" class="oj-toolbar-separator emaas-appheader-seperator" data-bind="visible: appName"></span>
-                        <span class="emaas-appheader-appname emaas-appheader-appname-oneline" data-bind="text: appName"></span>
-                    </div>
-<!--                    <div class="emaas-appheader-appname emaas-appheader-appname-twoline">
-                        <span data-bind="text: appName"></span>
-                    </div>-->
                 </div>
+                <div class="emaas-appheader-appname-table-cell-baseline" style="padding-left: 4px">
+                    <span class="emaas-appheader-appname" data-bind="text: productName"></span>
+                    <span role="separator" class="oj-toolbar-separator emaas-appheader-seperator" data-bind="visible: appName"></span>
+                    <span class="emaas-appheader-appname emaas-appheader-appname-oneline" data-bind="text: appName"></span>
+                </div>
+                <!--                    <div class="emaas-appheader-appname emaas-appheader-appname-twoline">
+                                        <span data-bind="text: appName"></span>
+                                    </div>-->
+            </div>
 
-                <!-- Toolbar -->  
-                <div id='emaas-appheader-menu-and-toolbar-container' data-bind="attr: {'aria-label': toolbarLabel}">
-                    <ul id="emaasAppheaderGlobalNavMenuId" data-bind="ojComponent: {component: 'ojMenu', select: globalNavMenuItemSelect}" style="display: none;">
-                        <!-- ko foreach: globalNavItems -->
-                        <li>
-                            <a data-bind="attr:{'id':id}, href: url"><span data-bind="text: label"></span></a>
-                        </li>
-                        <!-- /ko -->
-                    </ul>
+            <!-- Toolbar -->  
+            <div id='emaas-appheader-menu-and-toolbar-container' data-bind="attr: {'aria-label': toolbarLabel}">
+                <ul id="emaasAppheaderGlobalNavMenuId" data-bind="ojComponent: {component: 'ojMenu', select: globalNavMenuItemSelect}" style="display: none;">
+                    <!-- ko foreach: globalNavItems -->
+                    <li>
+                        <a data-bind="attr:{'id':id}, href: url"><span data-bind="text: label"></span></a>
+                    </li>
+                    <!-- /ko -->
+                </ul>
 
-                    <div class="emaas-appheader-toolbar-container">
-                        <!--div class="emaas-appheader-toolbar oj-toolbar-no-chrome" aria-controls="player" data-bind="ojComponent: {component:'ojToolbar'}"-->
-			<div class="emaas-appheader-toolbar oj-toolbar-no-chrome oj-toolbar">
-                            <!-- ko if: notificationVisible -->
-                            <button id="notificationButton" class="oj-button-half-chrome emaas-appheader-toolbar-button"
-                                    data-bind="ojComponent: {component:'ojButton', display:'icons', chroming: 'half',
+                <div class="emaas-appheader-toolbar-container">
+                    <!--div class="emaas-appheader-toolbar oj-toolbar-no-chrome" aria-controls="player" data-bind="ojComponent: {component:'ojToolbar'}"-->
+                    <div class="emaas-appheader-toolbar oj-toolbar-no-chrome oj-toolbar">
+                        <!-- ko if: notificationVisible -->
+                        <button id="notificationButton" class="oj-button-half-chrome emaas-appheader-toolbar-button"
+                                data-bind="ojComponent: {component:'ojButton', display:'icons', chroming: 'half',
                                                 label: textNotifications, disabled: notificationDisabled,
                                                 icons: {start: 'fa-icon-font fa-notification'}}, 
                                     click: notificationMenuHandler, attr: {title: textNotifications}" role="button" tabindex="0">
-                            </button>
-                            <!-- /ko -->
-                            <!-- ko if: navLinksVisible -->
-                            <button id="linksButton" class="oj-button-half-chrome emaas-appheader-toolbar-button" 
-                                    data-bind="ojComponent: {component:'ojButton', display:'icons', chroming: 'half',
+                        </button>
+                        <!-- /ko -->
+                        <!-- ko if: navLinksVisible -->
+                        <button id="linksButton" class="oj-button-half-chrome emaas-appheader-toolbar-button" 
+                                data-bind="ojComponent: {component:'ojButton', display:'icons', chroming: 'half',
                                                 label: textAppNavigator, 
                                                 icons: {start: 'fa-icon-font fa-compass'}}, 
                                     click: linkMenuHandler, attr: {title: textAppNavigator}" role="button" tabindex="0">
-                                <!--<img class="emaas-appheader-toolbar-button-icon" data-bind="attr: {alt: textAppNavigator, src: navLinksIcon, title: textAppNavigator}"/>--> 
-                            </button>
-                            <!-- /ko -->
+                            <!--<img class="emaas-appheader-toolbar-button-icon" data-bind="attr: {alt: textAppNavigator, src: navLinksIcon, title: textAppNavigator}"/>--> 
+                        </button>
+                        <!-- /ko -->
 
-                            <!-- This is how to add a separator to the toolbar.  
-                                 Be sure to include the role and aria-orientation as shown to make it accessible.  -->
-                            <span role="separator" class="oj-toolbar-separator"></span>
-                            
-                            <button id="menubutton"
-                                    class='oj-button-half-chrome emaas-appheader-toolbar-button'
-                                    data-bind="ojComponent: { component: 'ojButton', chroming: 'half', label: userName, menu: '#emaasAppheaderGlobalNavMenuId'}" tabindex="0">
-                            </button>
-                        </div>
+                        <!-- This is how to add a separator to the toolbar.  
+                             Be sure to include the role and aria-orientation as shown to make it accessible.  -->
+                        <span role="separator" class="oj-toolbar-separator"></span>
+
+                        <button id="menubutton"
+                                class='oj-button-half-chrome emaas-appheader-toolbar-button'
+                                data-bind="ojComponent: { component: 'ojButton', chroming: 'half', label: userName, menu: '#emaasAppheaderGlobalNavMenuId'}" tabindex="0">
+                        </button>
                     </div>
                 </div>
             </div>
-            
-            <!-- About box -->    
-            <!-- ko if: aboutBoxImmediateLoading -->
-            <div data-bind="component: {
+        </div>
+
+        <!-- About box -->    
+        <!-- ko if: aboutBoxImmediateLoading -->
+        <div data-bind="component: {
                     name: 'df-oracle-about-box',
                     params: aboutBoxKocParams
                 }">
-            </div>
-            <!-- /ko -->
-            <!-- End of about box -->
-               
-            <!-- ko if: navLinksVisible -->
-            <!--Navigation Menu: Quick Links/Favorites/Recent Dashboards etc.-->
-            <div class="oj-component-initnode" id="links_menu">
-                <!-- ko if: navLinksImmediateLoading -->
-                <div data-bind="component: {
+        </div>
+        <!-- /ko -->
+        <!-- End of about box -->
+
+        <!-- ko if: navLinksVisible -->
+        <!--Navigation Menu: Quick Links/Favorites/Recent Dashboards etc.-->
+        <div class="oj-component-initnode" id="links_menu">
+            <!-- ko if: navLinksImmediateLoading -->
+            <div data-bind="component: {
                     name: 'df-oracle-nav-links',
                     params: navLinksKocParams
                     }">
-                </div>
-                <!-- /ko -->
             </div>
             <!-- /ko -->
-        </div>  
-        <div style="display:none;" 
-            data-bind="ojComponent:{component: 'ojDialog', 
+        </div>
+        <!-- /ko -->
+    </div>  
+    <div style="display:none;" 
+         data-bind="ojComponent:{component: 'ojDialog', 
                 initialVisibility: 'hide', title: sessionTimeoutWarnDialogTitle, resizeBehavior: 'none', cancelBehavior: 'none',
                 rootAttributes: { style: 'width: 450px;'}}, attr: {id: sessionTimeoutWarnDialogId}">   
-            <div class="oj-dialog-body" style="height: 50px;" >
-                <div class="emaas-warn-msg-table-cell">
-                    <img width="16" height="16" data-bind="attr: {alt: altTextWarn, src: sessionTimeoutWarnIcon}"/> 
-                </div>
-                <div class="emaas-warn-msg-table-cell" style="padding-left: 5px">
-                    <span class="emaas-appheader-appname" data-bind="text: sessionTimeoutMsg"></span>
-                </div>
-            </div>     
-            <div class="oj-dialog-footer" style="padding-right: 18px" > 
-                <button id="session-continue-btn" data-bind="click: sessionTimeoutConfirmed, 
+        <div class="oj-dialog-body" style="height: 50px;" >
+            <div class="emaas-warn-msg-table-cell">
+                <img width="16" height="16" data-bind="attr: {alt: altTextWarn, src: sessionTimeoutWarnIcon}"/> 
+            </div>
+            <div class="emaas-warn-msg-table-cell" style="padding-left: 5px">
+                <span class="emaas-appheader-appname" data-bind="text: sessionTimeoutMsg"></span>
+            </div>
+        </div>     
+        <div class="oj-dialog-footer" style="padding-right: 18px" > 
+            <button id="session-continue-btn" data-bind="click: sessionTimeoutConfirmed, 
                     ojComponent: {component: 'ojButton', label: sessionTimeoutBtnOK}" >  
-                </button>
-            </div>  
-        </div>
-        <!-- ko if: showGlobalContextBanner() !== false -->
-        <div id="emaas-appheader-globalcxt" class="emaas-appheader-global-context">
-            
-            <div id="emctas-globalbar" data-bind="component:{name:'emctas-globalbar', 
+            </button>
+        </div>  
+    </div>
+    <!-- ko if: showGlobalContextBanner() !== false -->
+    <div id="emaas-appheader-globalcxt" class="emaas-appheader-global-context">
+
+        <div id="emctas-globalbar" data-bind="component:{name:'emctas-globalbar', 
                 params:{ }
                 }">
-            </div>  
-            
-            <!-- ko if: showEntitySelector() -->
-            <span style="float: left;padding-top:5px;padding-bottom: 5px;margin-right:6px;">
+        </div>  
+
+        <!-- ko if: showEntitySelector() -->
+        <span style="float: left;padding-top:5px;padding-bottom: 5px;margin-right:6px;">
             <div id="topologyButtonWrapper" data-bind="ojComponent: {component: 'ojButtonset', checked: isTopologyButtonChecked}" style="height:32px; background-color: white; border-radius: 2px;">
-            <label for="buttonShowTopology"></label>
-            <input type="checkbox" id="buttonShowTopology" value="buttonShowTopology" class="oj-button-half-chrome emaas-appheader-toolbar-button" role="button"
-               data-bind=" click: showTopology, attr: {title: topologyBtnLabel},
+                <label for="buttonShowTopology"></label>
+                <input type="checkbox" id="buttonShowTopology" value="buttonShowTopology" class="oj-button-half-chrome emaas-appheader-toolbar-button" role="button"
+                       data-bind=" click: showTopology, attr: {title: topologyBtnLabel},
                 ojComponent: {
                     component:'ojButton', 
                     chroming: 'outlined', disabled: topologyDisabled,
@@ -145,14 +145,14 @@
                     icons: {start:'emctas-icon-font-16 emctas-topology-icon'}
                }" style="height:29px; margin-bottom:0px"/>
             </div>
-            </span>
-            <!-- ko if: showEntityContextSelector() && isEntityContextLoaded() -->
-            <div id="emcta-ctxtSel" class="emaas-appheader-flexbox-auto emaas-appheader-emcta-ctxtSel animated_transitions" style="flex: auto;" data-bind="component:{name:'emcta-context-selector',
+        </span>
+        <!-- ko if: showEntityContextSelector() && isEntityContextLoaded() -->
+        <div id="emcta-ctxtSel" class="emaas-appheader-flexbox-auto emaas-appheader-emcta-ctxtSel animated_transitions" style="flex: auto;" data-bind="component:{name:'emcta-context-selector',
                 params:{id: 'emcta-ctxtSel', entityContextParams: entityContextParams}}">
-            </div>
-            <!-- /ko -->
-            <!-- ko if: !showEntityContextSelector() -->
-            <div class="ude-sdk emaas-appheader-inline-flexbox emaas-appheader-flexbox-auto animated_transitions" style="padding-bottom: 5px; padding-top: 5px; height: 32px; display: flex; min-width:200px;">
+        </div>
+        <!-- /ko -->
+        <!-- ko if: !showEntityContextSelector() -->
+        <div class="ude-sdk emaas-appheader-inline-flexbox emaas-appheader-flexbox-auto animated_transitions" style="padding-bottom: 5px; padding-top: 5px; height: 32px; display: flex; min-width:200px;">
             <div class="ude-sdk emcta_panel_border flexBoxNoShrink flexBoxColumn flexBoxAuto animated_transitions" id="globalBar_wrapper"
                  style="padding:2px; overflow: hidden;">
                 <!-- ko if: compositeCxtText() -->
@@ -163,72 +163,72 @@
                           data-bind="text:compositeCxtText, attr:{title:cxtCompositeName}" class="ude-sdk">
                     </span>
                     <!-- ko if: showReadOnlyPillRemove -->
-                        <!-- ko ifnot: compositeCxtText() == gcAllEntities -->
-                         <a href="#" data-bind="click: removeROCompositePill, attr:{id:'globalBar_pillWrapper' + '_remove'}" style="display: inline-block">
-                            <div aria-hidden="true" role="button" class="pill_remove_gc" data-bind="attr: {title:removePillTitle}"></div>
-                         </a>
-                        <!-- /ko -->
+                    <!-- ko ifnot: compositeCxtText() == gcAllEntities -->
+                    <a href="#" data-bind="click: removeROCompositePill, attr:{id:'globalBar_pillWrapper' + '_remove'}" style="display: inline-block">
+                        <div aria-hidden="true" role="button" class="pill_remove_gc" data-bind="attr: {title:removePillTitle}"></div>
+                    </a>
+                    <!-- /ko -->
                     <!-- /ko -->
                 </div>
                 <!-- /ko -->
                 <!-- ko foreach: entitiesList() -->
                 <div class="ude-sdk pill filterpill_value filterpill_with_value"
                      style="margin-bottom: auto; margin-top: auto; margin-left: 0px;
-                            padding-left: 8px; padding-right: 8px; padding-top: 3px;padding-bottom: 1px;
-                            height: 20px; font-size: 14px; font-weight: normal; cursor: default;"
+                     padding-left: 8px; padding-right: 8px; padding-top: 3px;padding-bottom: 1px;
+                     height: 20px; font-size: 14px; font-weight: normal; cursor: default;"
                      data-bind="attr: {id: 'globalBar_pillWrapper_' + $index()}">
                     <span style="white-space: nowrap; vertical-align: super;"
-                        data-bind="text:$data.displayName, attr:{title:$data.entityName}" class="ude-sdk">
+                          data-bind="text:$data.displayName, attr:{title:$data.entityName}" class="ude-sdk">
                     </span>
                     <!-- ko if: showReadOnlyPillRemove -->
-                        <a href="#" data-bind="click: $parent.removeROEntityPill, attr:{id:'globalBar_pillWrapper_' + $index() + '_remove'}" style="display: inline-block">
-                            <div aria-hidden="true" role="button" class="pill_remove_gc" data-bind="attr: {title:$parent.removePillTitle}"></div>
-                        </a>
+                    <a href="#" data-bind="click: $parent.removeROEntityPill, attr:{id:'globalBar_pillWrapper_' + $index() + '_remove'}" style="display: inline-block">
+                        <div aria-hidden="true" role="button" class="pill_remove_gc" data-bind="attr: {title:$parent.removePillTitle}"></div>
+                    </a>
                     <!-- /ko -->
                 </div>
                 <!-- /ko -->
             </div>
-            </div>
-            <!-- /ko -->
-            <!-- /ko -->
-            <!-- ko if: showTimeSelector() === true -->
-                <!-- ko if: showEntitySelector() === false -->
-                    <div class="ude-sdk emaas-appheader-inline-flexbox emaas-appheader-flexbox-auto animated_transitions" style="padding-bottom: 5px; padding-top: 5px; height: 32px; display: flex;">
-                        <div class="ude-sdk emcta_panel_border flexBoxNoShrink flexBoxColumn flexBoxAuto animated_transitions" id="globalBar_wrapper"
-                            style="padding:2px;">
-                        </div>
-                    </div>
-                <!-- /ko -->
-                <div id ="emaas-appheader-timecxt" class="emaas-appheader-time-context" data-bind="component: {name: 'df-datetime-picker', params: timeSelectorParams}" style="padding-top: 5px">
-                </div>
-            <!-- /ko -->
         </div>
+        <!-- /ko -->
+        <!-- /ko -->
+        <!-- ko if: showTimeSelector() === true -->
+        <!-- ko if: showEntitySelector() === false -->
+        <div class="ude-sdk emaas-appheader-inline-flexbox emaas-appheader-flexbox-auto animated_transitions" style="padding-bottom: 5px; padding-top: 5px; height: 32px; display: flex;">
+            <div class="ude-sdk emcta_panel_border flexBoxNoShrink flexBoxColumn flexBoxAuto animated_transitions" id="globalBar_wrapper"
+                 style="padding:2px;">
+            </div>
+        </div>
+        <!-- /ko -->
+        <div id ="emaas-appheader-timecxt" class="emaas-appheader-time-context" data-bind="component: {name: 'df-datetime-picker', params: timeSelectorParams}" style="padding-top: 5px">
+        </div>
+        <!-- /ko -->
+    </div>
 
-        
-        <!-- ko if: showEntitySelector() -->
-        <!-- topology --->
-        <!-- ko if: isTopologyCompRegistered() !== false -->
-        <div id="ude-topology-div" style="overflow-y:auto; height:auto; display: flex; padding-left: 10px; padding-right: 10px; padding-bottom: 5px;"
-             data-bind="visible: isTopologyDisplayed, 
+
+    <!-- ko if: showEntitySelector() -->
+    <!-- topology --->
+    <!-- ko if: isTopologyCompRegistered() !== false -->
+    <div id="ude-topology-div" style="overflow-y:auto; height:auto; display: flex; padding-left: 10px; padding-right: 10px; padding-bottom: 5px;"
+         data-bind="visible: isTopologyDisplayed, 
                         event: {mouseover: showMaxMinButtonInDF() ? showTopologyMaxIcon: null, 
                                 mouseout: showMaxMinButtonInDF()? hideTopologyMaxIcon: null}" class="ude-sdk">
-            <!-- ko if: topologyHeight() > 201 && showMaxMinButtonInDF() -->
-            <div id="ude-topology-title" style="display: flex; position: absolute; z-index: 1" data-bind="style: {right: maxIconToRight}">
-                    <button data-bind="attr: {'id': 'maxMinTopology', title: isMaximized() ? topologyRestoreLabel : topologyMaximizeLabel}, click: maxMinTopologyToggle,
+        <!-- ko if: topologyHeight() > 201 && showMaxMinButtonInDF() -->
+        <div id="ude-topology-title" style="display: flex; position: absolute; z-index: 1" data-bind="style: {right: maxIconToRight}">
+            <button data-bind="attr: {'id': 'maxMinTopology', title: isMaximized() ? topologyRestoreLabel : topologyMaximizeLabel}, click: maxMinTopologyToggle,
                                     style: {display: 'none'},
                                     ojComponent: {
                                         component: 'ojButton', chroming: 'half',
                                         icons: {start: isMaximized() ? 'fa-icon-font icon-font-16 emaas-appheader-restore-icon' : 'fa-icon-font icon-font-16 emaas-appheader-maximize-icon'},
                                         label: ''
                                     }" >
-                    </button>
-            </div>
-            <!-- /ko -->
-            
-            <!--<div data-bind="attr: {style: topologyStyle}" style="margin: 0 auto">test div</div>-->
+            </button>
+        </div>
+        <!-- /ko -->
+
+        <!--<div data-bind="attr: {style: topologyStyle}" style="margin: 0 auto">test div</div>-->
         <div style="overflow-y: auto; height: auto; display: flex;
-            border-width: 1px; border-color: #d6dfe6; border-style: solid; background-color: white;">
-        <div class="ude-topology ude-topology-in-brandingbar" data-bind="attr: {style: topologyStyle},
+             border-width: 1px; border-color: #d6dfe6; border-style: solid; background-color: white;">
+            <div class="ude-topology ude-topology-in-brandingbar" data-bind="attr: {style: topologyStyle},
            component:{name:'emctas-topology', 
             params:{
                    entityQueryVars: queryVars(),
@@ -244,58 +244,59 @@
                    topologySize: topologySize,
                    topologyData: topologyData,
                    showMaxMinButtonInDF: showMaxMinButtonInDF,
-                   topologyResizeCallback: topologyResizeCallback
+                   topologyResizeCallback: topologyResizeCallback,
+                   showEnterpriseTopology:showEnterpriseTopology
                 }
             }">
+            </div>
         </div>
-        </div>
-        </div>
-        <!-- /ko -->
-        <!-- End of topology -->
-        <!-- /ko -->
+    </div>
+    <!-- /ko -->
+    <!-- End of topology -->
+    <!-- /ko -->
 
-        <!-- /ko -->  <!-- End of Global Context Banner -->
-    </div>  <!--End of emaas-brandingbar-->
+    <!-- /ko -->  <!-- End of Global Context Banner -->
+</div>  <!--End of emaas-brandingbar-->
 
-        <!-- ko if: hasMessages -->
-        <div>
-            <!-- ko foreach: messageList -->
-            <div class="emaas-appheader-message-box" 
-                data-bind="css: {'emaas-appheader-message-box-error' : type === 'error', 
+<!-- ko if: hasMessages -->
+<div>
+    <!-- ko foreach: messageList -->
+    <div class="emaas-appheader-message-box" 
+         data-bind="css: {'emaas-appheader-message-box-error' : type === 'error', 
                                    'emaas-appheader-message-box-warn' : type === 'warn',
                                    'emaas-appheader-message-box-confirm' : type === 'confirm',
                                    'emaas-appheader-message-box-info' : type === 'info'}">
-                <div style="float:left;">
-                    <div class="emaas-appheader-message-table-cell" >
-                        <img class="emaas-appheader-message-icon" data-bind="attr: {alt: iconAltText, src: icon, style: imgCssStyle}"/>
-                    </div>
-                    <div class="emaas-appheader-message-table-cell emaas-appheader-message-textbox">
-                        <span class="emaas-appheader-message emaas-appheader-message-summary" data-bind="text: summary"></span>
-                        <!-- ko if: detail && detail !== '' -->
-                        <span class="emaas-appheader-message emaas-appheader-message-detail" data-bind="text: detail"></span>
-                        <!-- /ko -->
-                    </div>
-                </div>
-                <div style="float:right;padding-right: 20px;">
-                    <!--clearEntry_ena-->
-                    <img class="emaas-appheader-message-icon emaas-appheader-message-icon-clear" 
-                         src="/emsaasui/uifwk/@version@/images/imgbackground.png"
-                         style="background: url('/emsaasui/uifwk/@version@/images/uifwkSprite.png') no-repeat 0px -142px;height:16px;"
-                         data-bind="attr: {alt: $parent.altTextClear}, click: $parent.clearMessage"/>
-                </div>
+        <div style="float:left;">
+            <div class="emaas-appheader-message-table-cell" >
+                <img class="emaas-appheader-message-icon" data-bind="attr: {alt: iconAltText, src: icon, style: imgCssStyle}"/>
             </div>
+            <div class="emaas-appheader-message-table-cell emaas-appheader-message-textbox">
+                <span class="emaas-appheader-message emaas-appheader-message-summary" data-bind="text: summary"></span>
+                <!-- ko if: detail && detail !== '' -->
+                <span class="emaas-appheader-message emaas-appheader-message-detail" data-bind="text: detail"></span>
+                <!-- /ko -->
+            </div>
+        </div>
+        <div style="float:right;padding-right: 20px;">
+            <!--clearEntry_ena-->
+            <img class="emaas-appheader-message-icon emaas-appheader-message-icon-clear" 
+                 src="/emsaasui/uifwk/@version@/images/imgbackground.png"
+                 style="background: url('/emsaasui/uifwk/@version@/images/uifwkSprite.png') no-repeat 0px -142px;height:16px;"
+                 data-bind="attr: {alt: $parent.altTextClear}, click: $parent.clearMessage"/>
+        </div>
+    </div>
+    <!-- /ko -->
+    <!-- ko if: (hasHiddenMessages() === true || hiddenMessagesExpanded() === true) -->
+    <div class="emaas-appheader-message-box emaas-appheader-message-box-tool" >
+        <div style="float:right;padding-right: 20px;">
+            <!-- ko if: hiddenMessagesExpanded() === false -->
+            <a data-bind="attr: {href: 'javascript: this.click()', title: showMoreLinkTitle}, click: expandAllMessages, text: showMoreLinkTxt"></a>
             <!-- /ko -->
-            <!-- ko if: (hasHiddenMessages() === true || hiddenMessagesExpanded() === true) -->
-            <div class="emaas-appheader-message-box emaas-appheader-message-box-tool" >
-                <div style="float:right;padding-right: 20px;">
-                    <!-- ko if: hiddenMessagesExpanded() === false -->
-                    <a data-bind="attr: {href: 'javascript: this.click()', title: showMoreLinkTitle}, click: expandAllMessages, text: showMoreLinkTxt"></a>
-                    <!-- /ko -->
-                    <!-- ko if: hiddenMessagesExpanded() === true -->
-                    <a data-bind="attr: {href: 'javascript: this.click()', title: showFirstNOnlyTitle}, click: collapseMessages, text: showFirstNOnlyTxt"></a>
-                    <!-- /ko -->
-                </div>
-            </div>
+            <!-- ko if: hiddenMessagesExpanded() === true -->
+            <a data-bind="attr: {href: 'javascript: this.click()', title: showFirstNOnlyTitle}, click: collapseMessages, text: showFirstNOnlyTxt"></a>
             <!-- /ko -->
         </div>
-        <!-- /ko -->
+    </div>
+    <!-- /ko -->
+</div>
+<!-- /ko -->
