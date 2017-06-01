@@ -500,7 +500,7 @@ define(['knockout',
                             if (sharedVisibleCondition || isOobSet) {
                                 self.dashboardsetItems.push(singleDashboardItem);
                                 self.reorderedDbsSetItems.push(singleDashboardItem);
-                                addNewTab(singleDashboardItem.name(), singleDashboardItem.dashboardId, -1, singleDashboardItem.type);
+                                addNewTab(singleDashboardItem.name(), singleDashboardItem.dashboardId, -1, singleDashboardItem.type, false); // won't refresh inside loop but do it outside of the loop
 
                                 if (self.extendedOptions && self.extendedOptions.selectedTab === singleDashboardItem.dashboardId) {
                                     var findResult = findTargetInArr(self.dashboardsetItems, self.extendedOptions.selectedTab);
@@ -514,6 +514,7 @@ define(['knockout',
                                 self.addNewDashboard();
                             }
                         });
+                        $("#dbd-tabs-container").ojTabs("refresh"); /* this avoids repeated refreshing on tabs but do it for only one time after the loop above */
 
                             singleDashboardItem = self.dashboardsetItems[indexOfSelectedTabInUserOption];
                             var noSubDashboard = !singleDashboardItem;
@@ -558,7 +559,7 @@ define(['knockout',
                 }
             }
 
-                function addNewTab(tabName, dashboardId, insertIndex, type) {
+                function addNewTab(tabName, dashboardId, insertIndex, type, noTabsRefresh) {
                     var tabContent;
                     if (type === "new") {
                         tabContent = $("<li class='other-nav creator-"+self.dashboardsetConfig.isCreator()+"' id='dashboardTab-" + dashboardId + "' data-tabs-name='Dashboard'><span class='tabs-name'>" + tabName + "</span></li>");
@@ -571,6 +572,9 @@ define(['knockout',
                                 "content": $("<div class='dbd-info other-nav-info' id='dashboardTabInfo-" + dashboardId + "'></div>"),
                                 "index": insertIndex
                             });
+                    if (noTabsRefresh === false) { /* refresh will be ignored only this parameter is set to false explicitely */
+                        return;
+                    }
                     $("#dbd-tabs-container").ojTabs("refresh");
                 }
 
