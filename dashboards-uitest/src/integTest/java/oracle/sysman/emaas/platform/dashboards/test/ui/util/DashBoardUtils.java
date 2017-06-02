@@ -74,9 +74,9 @@ public class DashBoardUtils
 
 	public static void closeOverviewPage()
 	{
-//		driver.getLogger().info("before clicking overview button");
-//		driver.click(PageId.OVERVIEWCLOSEID);
-//		driver.getLogger().info("after clicking overview button");
+		//		driver.getLogger().info("before clicking overview button");
+		//		driver.click(PageId.OVERVIEWCLOSEID);
+		//		driver.getLogger().info("after clicking overview button");
 	}
 
 	public static void deleteDashboard(WebDriver webdriver, String DashboardName)
@@ -522,6 +522,15 @@ public class DashBoardUtils
 				break;
 			case OMCLOG:
 				webdriver.getLogger().info("'Log Analytics' displayed for OMC Log Edition");
+				webdriver.getLogger().info("Check if having hamburger menu");
+				if (DashBoardUtils.isHamburgerMenuEnabled(webdriver)) {
+					webdriver.getLogger().info("Hamburger Menu Enable");
+					if (BrandingBarUtil.ROOT_MENU_LA.equals(BrandingBarUtil.getCurrentMenuHeader(webdriver).trim())) {
+						webdriver.getLogger().info("Now in LA service menu, need to back to root menu");
+						BrandingBarUtil.goBackToParentMenu(webdriver);
+					}
+				}
+
 				Assert.assertTrue(BrandingBarUtil.isCloudServiceLinkExisted(webdriver, BrandingBarUtil.NAV_LINK_TEXT_CS_LA),
 						"'Log Analytics' should in clould service link");
 

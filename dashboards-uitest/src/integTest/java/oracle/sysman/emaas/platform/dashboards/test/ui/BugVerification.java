@@ -3,6 +3,8 @@ package oracle.sysman.emaas.platform.dashboards.test.ui;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.DashBoardUtils;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.LoginAndLogout;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.PageId;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_190;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
@@ -30,9 +32,9 @@ public class BugVerification extends LoginAndLogout
 		DashBoardUtils.loadWebDriver(webd);
 	}
 
-	public void initTestCustom(String testName, String Username)
+	public void initTestCustom(String testName, String Username, String tenantName)
 	{
-		customlogin(this.getClass().getName() + "." + testName, Username);
+		customlogin(this.getClass().getName() + "." + testName, Username, tenantName);
 		DashBoardUtils.loadWebDriver(webd);
 
 	}
@@ -96,7 +98,7 @@ public class BugVerification extends LoginAndLogout
 	public void testEMCPDF_2425()
 	{
 		//login the dashboard with user emaastesttenant1_la_admin1
-		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_la_admin1");
+		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_la_admin1", "emaastesttenant1");
 		webd.getLogger().info("start to test in testEMCPDF_2425");
 		WaitUtil.waitForPageFullyLoaded(webd);
 
@@ -121,7 +123,7 @@ public class BugVerification extends LoginAndLogout
 	public void testEMCPDF_2425_1()
 	{
 		//login the dashboard with user emaastesttenant1_la_admin1
-		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_ita_admin1");
+		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_ita_admin1", "emaastesttenant1");
 		webd.getLogger().info("start to test in testEMCPDF_2425_1");
 		WaitUtil.waitForPageFullyLoaded(webd);
 
@@ -133,6 +135,44 @@ public class BugVerification extends LoginAndLogout
 		webd.getLogger().info("Verify the dashboard set");
 		DashboardBuilderUtil.verifyDashboardSet(webd, "DashboardSet_2425");
 		DashboardBuilderUtil.verifyDashboardInsideSet(webd, "Databases");
+
+	}
+
+	/*@Test
+	public void testEMCPDF_2855()
+	{
+		//Initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test case: testEMCPDF_2855");
+
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//visit LA page
+		BrandingBarUtil.visitApplicationCloudService(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_LA);
+                WaitUtil.waitForPageFullyLoaded(webd);
+
+		String laCtx_url = webd.getWebDriver().getCurrentUrl();
+		Assert.assertTrue(laCtx_url.contains("log-analytics-search"), "Failed to open the LA page");
+		webd.getLogger().info("Start to test opening LA page...");
+
+		//verify omcCtx exist in the LA url
+		webd.getLogger().info("start to verify omcCtx exist in the LA page url");
+		Assert.assertTrue(laCtx_url.contains("omcCtx="), "The global context infomation in URL is lost");
+
+		//find notification button and click it to open notification page
+		WebElement ntButton = webd.getWebDriver().findElement(By.xpath(PageId.NOTIFICATIONBUTTON_LA));
+		Assert.assertTrue(ntButton.isDisplayed(), "Notiification button isn't displayed in the page.");
+		webd.click(PageId.NOTIFICATIONBUTTON_LA);
+
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		//verify omcCtx exist in the Notification page url
+		webd.switchToWindow();
+		String lantCtx_url = webd.getWebDriver().getCurrentUrl();
+		webd.getLogger().info("start to verify omcCtx exist in the Notification page url: " + lantCtx_url);
+		Assert.assertTrue(lantCtx_url.contains("omcCtx="), "The global context infomation in URL is lost");
 
 	}
 
@@ -194,7 +234,7 @@ public class BugVerification extends LoginAndLogout
 		webd.getLogger().info("Verfiy the home page");
 		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, WelcomeUtil.SERVICE_NAME_DASHBOARDS),
 				"It is NOT the home page!");
-	}
+	}*/
 
 	@Test
 	public void testEMPCDF_2970()
@@ -282,4 +322,18 @@ public class BugVerification extends LoginAndLogout
 		webd.getLogger().info("welcome page is verified successfully");
 		webd.getLogger().info("complete testing in testEMPCDF_832");
 	}
+
+        @Test
+        public void testEMCPDF_3120()
+        {
+                //Initialize the test
+                //login the dashboard with emaastesttenantnoita and onboard OCS Service only
+                initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emcsadmin", "emaastesttenantnoita");
+                WaitUtil.waitForPageFullyLoaded(webd);
+		webd.getLogger().info("Start the test case: testEMCPDF_3120");
+                
+		//verify the Explore Data menu is disabled
+		webd.getLogger().info("Verify the Explore Data menu is not diplayed in the page");
+		Assert.assertFalse(webd.isDisplayed("id=" + DashBoardPageId.EXPLOREDATABTNID), "Explore Data menu is displayed in dashboard");
+        }        
 }

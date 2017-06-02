@@ -15,6 +15,7 @@ import java.sql.SQLException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
 
 import oracle.sysman.emaas.platform.dashboards.core.persistence.PersistenceManager;
 import oracle.sysman.emaas.platform.dashboards.core.util.SessionInfoUtil;
@@ -29,7 +30,7 @@ public class DBConnectionManager
 {
 	private static final Logger LOGGER = LogManager.getLogger(DBConnectionManager.class);
 	private static DBConnectionManager instance;
-	
+
 	private static final String MODULE_NAME = "DashboardService"; // application service name
 	private final String ACTION_NAME = this.getClass().getSimpleName();//current class name
 
@@ -60,17 +61,19 @@ public class DBConnectionManager
 	{
 		EntityManager em = null;
 		try {
-			final EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();			
-			em = emf.createEntityManager();		
+			final EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+			em = emf.createEntityManager();
 			try {
 				SessionInfoUtil.setModuleAndAction(em, MODULE_NAME, ACTION_NAME);
 			} catch (SQLException e) {
 				LOGGER.info("setModuleAndAction in DBConnectionManager",e);
-			} 
+			}
 			BigDecimal result = (BigDecimal) em.createNativeQuery("select 1 from dual").getSingleResult();
 			return BigDecimal.valueOf(1).equals(result);
-		}
-		catch (Exception e) {
+		} catch(NoResultException e){
+			LOGGER.warn("get all dashboards count did not retrieve any data!");
+			return false;
+		} catch (Exception e) {
 			LOGGER.error(e.getLocalizedMessage(), e);
 			return false;
 		}

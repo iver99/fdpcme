@@ -50,7 +50,7 @@ public class TableRowsEntityTest {
     private DashboardRowEntity dashboardRowEntity = new DashboardRowEntity();
     @Test
     public void testDashboardRowEntity(){
-        dashboardRowEntity.setDashboardId(new BigInteger("1"));
+        dashboardRowEntity.setDashboardId("1");
         dashboardRowEntity.getDashboardId();
         dashboardRowEntity.setName("name");
         dashboardRowEntity.getName();
@@ -74,7 +74,7 @@ public class TableRowsEntityTest {
         dashboardRowEntity.getEnableTimeRange();
         dashboardRowEntity.setScreenShot("screenshot");
         dashboardRowEntity.getScreenShot();
-        dashboardRowEntity.setDeleted(new BigInteger("1"));
+        dashboardRowEntity.setDeleted("1");
         dashboardRowEntity.getDeleted();
         dashboardRowEntity.setTenantId(1L);
         dashboardRowEntity.getTenantId();
@@ -96,7 +96,7 @@ public class TableRowsEntityTest {
         dashboardRowEntity.equals(instance);
         dashboardRowEntity.equals(new Integer(1));
         instance = new DashboardRowEntity();
-        instance.setDashboardId(new BigInteger("1"));
+        instance.setDashboardId("1");
         instance.setName("name");
         instance.setType(1L);
         instance.setDescription("desc");
@@ -108,7 +108,7 @@ public class TableRowsEntityTest {
         instance.setApplicationType(1);
         instance.setEnableTimeRange(1);
         instance.setScreenShot("screenshot");
-        instance.setDeleted(new BigInteger("1"));
+        instance.setDeleted("1");
         instance.setTenantId(1L);
         instance.setEnableRefresh(1);
         instance.setSharePublic(1);
@@ -125,11 +125,11 @@ public class TableRowsEntityTest {
     private DashboardSetRowEntity dashboardSetRowEntity = new DashboardSetRowEntity();
     @Test
     public void testDashboardSetRowEntity(){
-        dashboardSetRowEntity.setDashboardSetId( new BigInteger("1"));
+        dashboardSetRowEntity.setDashboardSetId( "1");
         dashboardSetRowEntity.getDashboardSetId();
         dashboardSetRowEntity.setTenantId(1L);
         dashboardSetRowEntity.getTenantId();
-        dashboardSetRowEntity.setSubDashboardId(new BigInteger("1"));
+        dashboardSetRowEntity.setSubDashboardId("1");
         dashboardSetRowEntity.getSubDashboardId();
         dashboardSetRowEntity.setPosition(1L);
         dashboardSetRowEntity.getPosition();
@@ -149,7 +149,7 @@ public class TableRowsEntityTest {
     private DashboardTileParamsRowEntity dashboardTileParamsRowEntity = new DashboardTileParamsRowEntity();
     @Test
     public void testDashboardTileParamsRowEntity(){
-        dashboardTileParamsRowEntity.setTileId(new BigInteger("1"));
+        dashboardTileParamsRowEntity.setTileId("1");
         dashboardTileParamsRowEntity.setParamName("name");
         dashboardTileParamsRowEntity.setTenantId(1L);
         dashboardTileParamsRowEntity.setIsSystem(1);
@@ -186,7 +186,7 @@ public class TableRowsEntityTest {
     @Test
     public void testDashboardTileRowEntity(){
         dashboardTileRowEntity.setTenantId(1L);
-        dashboardTileRowEntity.setDashboardId(new BigInteger("1"));
+        dashboardTileRowEntity.setDashboardId("1");
         dashboardTileRowEntity.setCreationDate("creation");
         dashboardTileRowEntity.setLastModificationDate("last");
         dashboardTileRowEntity.setLastModifiedBy("lastmodified");
@@ -217,7 +217,7 @@ public class TableRowsEntityTest {
         dashboardTileRowEntity.setTenantId(1L);
         dashboardTileRowEntity.setWidgetSupportTimeControl(1);
         dashboardTileRowEntity.setWidgetLinkedDashboard(1L);
-        dashboardTileRowEntity.setTileId(new BigInteger("1"));
+        dashboardTileRowEntity.setTileId("1");
         dashboardTileRowEntity.setType(1L);
         dashboardTileRowEntity.getTenantId();
         dashboardTileRowEntity.getDashboardId();
@@ -269,7 +269,7 @@ public class TableRowsEntityTest {
     public void testDashboardUserOptionsRowEntity(){
         dashboardUserOptionsRowEntity.setUserName("name");
         dashboardUserOptionsRowEntity.setTenantId(1L);
-        dashboardUserOptionsRowEntity.setDashboardId(new BigInteger("1"));
+        dashboardUserOptionsRowEntity.setDashboardId("1");
         dashboardUserOptionsRowEntity.setAutoRefreshInterval(1L);
         dashboardUserOptionsRowEntity.setAccessDate("sccessdate");
         dashboardUserOptionsRowEntity.setIsFavorite(1);

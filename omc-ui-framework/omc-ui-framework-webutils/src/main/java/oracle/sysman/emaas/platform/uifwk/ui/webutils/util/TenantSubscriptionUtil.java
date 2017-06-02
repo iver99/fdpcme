@@ -31,7 +31,6 @@ import org.apache.logging.log4j.Logger;
  */
 public class TenantSubscriptionUtil
 {
-	private static final String HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME = "X-USER-IDENTITY-DOMAIN-NAME";
 
 	private static Logger LOGGER = LogManager.getLogger(TenantSubscriptionUtil.class);
 
@@ -72,9 +71,9 @@ public class TenantSubscriptionUtil
 		LOGGER.info("Checking tenant (" + tenant + ") subscriptions. Subscribedapp link retrieved from dashboard-api href is "
 				+ subAppLink.getHref());
 		String subAppHref = subAppLink.getHref();
-		RestClient rc = new RestClient();
-		rc.setHeader(HTTP_HEADER_X_USER_IDENTITY_DOMAIN_NAME, tenant);
-		rc.setHeader("X-REMOTE-USER", tenant + "." + user);
+		RestClient rc = RestClientProxy.getRestClient();
+		rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME, tenant);
+		rc.setHeader(RestClient.X_REMOTE_USER, tenant + "." + user);
 		String subAppResponse = rc.get(subAppHref, tenant, ((VersionedLink) subAppLink).getAuthToken());
 		if(subAppResponse!=null){
 			cache.put(tenantKey, subAppResponse);

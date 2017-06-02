@@ -207,7 +207,7 @@ define(['knockout',
             
             self.handleUnshareDashboardCancelled = function() {
                 // revert change
-                var dashboardSharing = ko.dataFor($(".share-settings")[0]).dashboardSharing;
+                var dashboardSharing = ko.dataFor($(".share-settings")[0]) && ko.dataFor($(".share-settings")[0]).rightPanelEdit && ko.dataFor($(".share-settings")[0]).rightPanelEdit.dashboardSharing;
                 dashboardSharing("shared");
                 $('#share-dashboard').ojDialog( "close" );
             };
@@ -438,6 +438,7 @@ define(['knockout',
                 $('#delete-dashboard').focus();
             };
             self.openDashboardUnshareConfirmDialog = function() {
+                self.notifyBindingPopupDialog();
                 $('#share-dashboard').ojDialog( "open" );
                 $('#share-dashboard').focus();
             };
