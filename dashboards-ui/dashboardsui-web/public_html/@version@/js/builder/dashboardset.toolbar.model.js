@@ -559,7 +559,7 @@ define(['knockout',
                 }
             }
 
-                function addNewTab(tabName, dashboardId, insertIndex, type, noTabsRefresh) {
+                function addNewTab(tabName, dashboardId, insertIndex, type, tabsRefresh) {
                     var tabContent;
                     if (type === "new") {
                         tabContent = $("<li class='other-nav creator-"+self.dashboardsetConfig.isCreator()+"' id='dashboardTab-" + dashboardId + "' data-tabs-name='Dashboard'><span class='tabs-name'>" + tabName + "</span></li>");
@@ -572,7 +572,7 @@ define(['knockout',
                                 "content": $("<div class='dbd-info other-nav-info' id='dashboardTabInfo-" + dashboardId + "'></div>"),
                                 "index": insertIndex
                             });
-                    if (noTabsRefresh === false) { /* refresh will be ignored only this parameter is set to false explicitely */
+                    if (tabsRefresh === false) { /* refresh will be ignored only this parameter is set to false explicitely */
                         return;
                     }
                     $("#dbd-tabs-container").ojTabs("refresh");
