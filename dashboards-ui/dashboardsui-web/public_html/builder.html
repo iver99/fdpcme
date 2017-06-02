@@ -676,7 +676,7 @@
             </div>
 
             <!-- ko ifnot: rightPanelControl.completelyHidden -->
-            <div class="df-right-panel no-print" data-bind="stopDataBinding:isDashboardSet ? isOobDashboardset() : ($b.dashboard.systemDashboard&&$b.dashboard.systemDashboard()),style:{top:isDashboardSet() ?'100px':'91px'}">
+            <div class="df-right-panel no-print" data-bind="stopDataBinding:isDashboardSet ? isOobDashboardset() : ($b.dashboard.systemDashboard&&$b.dashboard.systemDashboard()),style:{display: rightPanelControl.completelyHidden()?'none':'block', top:isDashboardSet() ?'100px':'91px'}">
                 <!-- ko if: rightPanelControl.showRightPanelToggler -->
                 <div class="right-panel-toggler no-print fit-size" style="max-width: 30px;" data-bind="
                         style: {
