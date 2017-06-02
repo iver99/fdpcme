@@ -4,6 +4,7 @@ define(['knockout',
 'dfutil',
 'uifwk/js/util/mobile-util',
 'uiutil',
+'ojs/ojradioset',
 'ojs/ojcollapsible'
 ],
 function (ko, $, oj, dfu, mbu, uiutil) {
