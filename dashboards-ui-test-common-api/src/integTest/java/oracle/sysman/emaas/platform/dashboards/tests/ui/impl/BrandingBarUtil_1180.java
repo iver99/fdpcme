@@ -716,6 +716,11 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 		if (isHamburgerMenuEnabled(driver)) {
 			//click the menu "Dashboards" in hamburger menu
 			driver.getLogger().info("[visitDashboardHome] start to visit 'Dashboards' menu in hamburger menu.");
+			//verify if current menu is rootmenu
+			while(!isRootMenu(driver))
+			{
+				goBackToParentMenu(driver);
+			}
 			clickMenuItem(driver, ROOT_MENU_DASHBOARDS);
 		}
 		else {
@@ -734,6 +739,11 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 		if (isHamburgerMenuEnabled(driver)) {
 			//check the 'My Favorite' options in filter options in Dashboard home page
 			driver.getLogger().info("[visitMyFavorites] start to visit 'My Favorites' link in home page.");
+			//verify if current menu is rootmenu
+			while(!isRootMenu(driver))
+			{
+				goBackToParentMenu(driver);
+			}
 			clickMenuItem(driver, ROOT_MENU_DASHBOARDS);
 			if (!DashboardHomeUtil.isFilterOptionSelected(driver, "favorites")) {
 				DashboardHomeUtil.filterOptions(driver, "favorites");
@@ -755,6 +765,11 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 		if (isHamburgerMenuEnabled(driver)) {
 			//click the menu "Home" in hamburger menu
 			driver.getLogger().info("[visitMyHome] start to visit 'Home' link from hamburger menu.");
+			//verify if current menu is rootmenu
+			while(!isRootMenu(driver))
+			{
+				goBackToParentMenu(driver);
+			}
 			clickMenuItem(driver, ROOT_MENU_HOME);
 		}
 		else {
@@ -857,6 +872,18 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 		}
 		else {
 			return false;
+		}
+	}
+	
+	private boolean isRootMenu(WebDriver driver)
+	{
+		if(driver.isDisplayed("css=" + DashBoardPageId_1180.HAMBURGERMENU_PREVIOUSICON_CSS))
+		{
+			return false;			
+		}
+		else
+		{
+			return true;
 		}
 	}
 }
