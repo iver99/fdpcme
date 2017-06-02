@@ -22,6 +22,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import javax.persistence.EntityManager;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
@@ -40,6 +41,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.StreamingOutput;
 
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardConstants;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardManager;
@@ -48,9 +50,7 @@ import oracle.sysman.emaas.platform.dashboards.core.UserOptionsManager;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.DashboardSameNameException;
-import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
-import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DatabaseDependencyUnavailableException;
-import oracle.sysman.emaas.platform.dashboards.core.exception.resource.UserOptionsNotFoundException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.resource.*;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.DeleteSystemDashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
@@ -59,6 +59,7 @@ import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableEntity
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableTimeRangeState;
 import oracle.sysman.emaas.platform.dashboards.core.model.PaginatedDashboards;
 import oracle.sysman.emaas.platform.dashboards.core.model.UserOptions;
+import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
 import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
@@ -67,6 +68,7 @@ import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.core.model.subscription2.TenantSubscriptionInfo;
 import oracle.sysman.emaas.platform.dashboards.core.util.*;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.webutils.ParallelThreadPool;
 import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
 import oracle.sysman.emaas.platform.dashboards.webutils.ParallelThreadPool;
@@ -86,6 +88,7 @@ import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.ScreenshotPathGenerator;
 
+import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -746,6 +749,76 @@ public class DashboardAPI extends APIBase
 		} finally {
 			clearUserContext();
 		}
+	}
+
+	@PUT
+	@Path("{id: [1-9][0-9]*}/addWidget/{widgetId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response addNewWidgetToDashboard(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") final String tenantIdParam,
+											@HeaderParam(value = "X-REMOTE-USER") final String userTenant, @HeaderParam(value = "Referer") String referer,
+											@PathParam("id") final BigInteger dashboardId, @PathParam("widgetId") final BigInteger widgetId){
+		infoInteractionLogAPIIncomingCall(tenantIdParam, referer,
+				"Service call to [GET] /v1/dashboards/{}/addWidget/{}",dashboardId, widgetId);
+		logkeyHeaders("addNewWidgetToDashboard()", userTenant, tenantIdParam);
+		//check if widget is existed.
+		long start = System.currentTimeMillis();
+		RestClient rc = new RestClient();
+		Link tenantsLink = RegistryLookupUtil.getServiceInternalLink("SavedSearch", "1.0+", "search", null);
+		String tenantHref = tenantsLink.getHref() + "/" + widgetId;
+		String tenantName = TenantContext.getCurrentTenant();
+		String savedSearchResponse = null;
+		try {
+			rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME, tenantName);
+			savedSearchResponse = rc.get(tenantHref, tenantName,((RegistryLookupUtil.VersionedLink) tenantsLink).getAuthToken());
+			LOGGER.info("Retrieved from SSF API widget data is {}", savedSearchResponse);
+			LOGGER.info("It takes {}ms to retrieve saved search meta data from SavedSearch API", (System.currentTimeMillis() - start));
+			if(savedSearchResponse == null){
+				throw new WidgetNotExistedException();
+			}
+		}catch(WidgetNotExistedException e){
+			LOGGER.error(e);
+			return buildErrorResponse(new ErrorEntity(e));
+		}catch (Exception e) {
+			LOGGER.error(e);
+		}
+		//check dashboard is existed, if existed, put new widget into last position
+//		DashboardManager dm = DashboardManager.getInstance();
+		Long tenantId = null;
+		Dashboard dbd = null;
+		try {
+			tenantId = getTenantId(tenantIdParam);
+			initializeUserContext(tenantIdParam, userTenant);
+//			String userName = UserContext.getCurrentUser();
+//			Dashboard dbd = null;
+//			dbd = dm.getCombinedDashboardById(dashboardId, tenantId, userName);
+			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+//			EntityManager em = null;
+//			em = dsf.getEntityManager();
+			DashboardManager manager = DashboardManager.getInstance();
+			EmsDashboard ed = manager.getEmsDashboardById(dsf, dashboardId, tenantId, null);
+			dbd = Dashboard.valueOf(ed, dbd, true, true, true);
+			LOGGER.info("Dashboard with id {} is existed!", ed);
+//			updateDashboardAllHref(dbd, tenantIdParam);//TODO ????
+		} catch (BasicServiceMalfunctionException e) {
+			LOGGER.error(e);
+			return buildErrorResponse(new ErrorEntity(e));
+		}catch (DashboardNotFoundException e) {
+			LOGGER.error(e);
+			return buildErrorResponse(new ErrorEntity(e));
+		}catch (TenantWithoutSubscriptionException e) {
+			LOGGER.error(e);
+			return buildErrorResponse(new ErrorEntity(e));
+		}catch (CommonSecurityException e) {
+			LOGGER.error(e);
+			return buildErrorResponse(new ErrorEntity(e));
+		}catch (DashboardException e) {
+			LOGGER.error(e);
+			return buildErrorResponse(new ErrorEntity(e));
+		}finally {
+			clearUserContext();
+		}
+		return Response.ok(dbd.toString()).build();
+
 	}
 
 	@GET
