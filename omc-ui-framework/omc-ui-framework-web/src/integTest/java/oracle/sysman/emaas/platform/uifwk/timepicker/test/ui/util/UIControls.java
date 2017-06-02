@@ -45,6 +45,8 @@ public class UIControls
 	public static final String SENDTEXT_DATEONLY1 = "//*[@id='end1']";
 	public static final String SSTARTTEXT_DATEONLY2 = "//*[@id='start2']";
 	public static final String SENDTEXT_DATEONLY2 = "//*[@id='end2']";
+	public static final String SSTARTTEXT_DATEONLY3 = "//*[@id='start3']";
+	public static final String SENDTEXT_DATEONLY3 = "//*[@id='end3']";
 
 	public static final String TIMERANGEBTN_CSS = ".oj-select-choice[id^='dropDown']";
 	public static final String RECENTUSE_CSS = "a[data-bind*=timePeriodRecent]";

@@ -14,15 +14,21 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.ITimeSelectorUtil.TimeRange;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.TimeSelectorUIControls;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
 /**
@@ -346,5 +352,161 @@ public class CommonUIUtils
 
 		driver.getLogger().info("Verify Result Pass!");
 
+	}
+	
+	public static String verifyErrorMsg(WebDriver webd, int index, String startDateTime, String endDateTime, boolean DateOnly, boolean MillionSecond)
+	{
+		String start = null;
+		String end = null;
+		String startDate = null;
+		String startTime = null;
+		String endDate = null;
+		String endTime = null;
+		
+		try {
+			if(DateOnly){
+			startDate = timeFormatChange(webd, startDateTime, "MM/dd/yy", "MM/dd/yyyy");
+			}
+			else if(MillionSecond){
+				start = timeFormatChange(webd, startDateTime, "MM/dd/yy hh:mm:ss:SSS a", "MM/dd/yyyy hh:mm:ss:SSS a");
+			}
+			else
+			{
+				start = timeFormatChange(webd, startDateTime, "MM/dd/yy hh:mm a", "MM/dd/yyyy hh:mm a");
+			}
+		}
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+		try {
+			if(DateOnly){
+				endDate = timeFormatChange(webd, endDateTime, "MM/dd/yy", "MM/dd/yyyy");
+				}
+				else if(MillionSecond){
+					end = timeFormatChange(webd, endDateTime, "MM/dd/yy hh:mm:ss:SSS a", "MM/dd/yyyy hh:mm:ss:SSS a");
+				}
+				else
+				{
+					end = timeFormatChange(webd, endDateTime, "MM/dd/yy hh:mm a", "MM/dd/yyyy hh:mm a");
+				}
+		}
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		try {
+			//click the datetimepicker component
+			webd.waitForElementPresent("css=" + TimeSelectorUIControls.sTimeRangeBtn);
+			webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn)).get(index - 1).click();
+
+			webd.takeScreenShot();
+		}
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		webd.getLogger().info("start:"+start);
+		webd.getLogger().info("end:"+end);
+		
+		if(!DateOnly)
+		{
+			String regex = "(.*?)\\s+(.*)";
+			Pattern p = Pattern.compile(regex);
+			Matcher mStart = p.matcher(start);
+			Matcher mEnd = p.matcher(end);		
+	
+			if (mStart.find()) {
+				startDate = mStart.group(1);
+				startTime = mStart.group(2);
+				webd.getLogger().info("start date is:" + startDate + ",start time is:" + startTime);
+	
+			}
+			if (mEnd.find()) {
+				endDate = mEnd.group(1);
+				endTime = mEnd.group(2);
+				webd.getLogger().info("end date is:" + endDate + ",end time is:" + endTime);
+			}
+		}
+		
+		webd.getLogger().info("the start date in dashboard is:" + startDate + ",the end date in dashboard is:" + endDate);
+		webd.getLogger().info("we are going to set the custom time in dashboard page");
+				
+		webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_Custom);
+		webd.click("css=" + TimeSelectorUIControls.sTimeRange_Custom);
+		webd.takeScreenShot();
+
+		webd.waitForElementPresent("css=" + TimeSelectorUIControls.sRangeRadio);
+		webd.click("css=" + TimeSelectorUIControls.sRangeRadio);
+		webd.takeScreenShot();
+
+		//set start date time and end date time
+		webd.getLogger().info("Verify if custom panpel displayed...");
+		WebDriverWait wdwait = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
+		wdwait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(TimeSelectorUIControls.sPickPanel)));
+		//webd.isDisplayed(TimeSelectorUIControls.sPickPanel);
+		webd.takeScreenShot();
+
+		if(DateOnly)
+		{
+			webd.getLogger().info("Input the start date and end date...");
+			webd.click("css=" + TimeSelectorUIControls.sStartDateInput);
+			webd.clear("css=" + TimeSelectorUIControls.sStartDateInput);
+			webd.sendKeys("css=" + TimeSelectorUIControls.sStartDateInput, startDate);
+			webd.click("css=" + TimeSelectorUIControls.sEndDateInput);
+			webd.clear("css=" + TimeSelectorUIControls.sEndDateInput);
+			webd.sendKeys("css=" + TimeSelectorUIControls.sEndDateInput, endDate);
+			webd.click("css=" + TimeSelectorUIControls.sEndDateInput);
+		}
+		else
+		{		
+			webd.getLogger().info("Input the start date time and end date time...");
+			webd.click("css=" + TimeSelectorUIControls.sStartDateInput);
+			webd.clear("css=" + TimeSelectorUIControls.sStartDateInput);
+			webd.sendKeys("css=" + TimeSelectorUIControls.sStartDateInput, startDate);
+			webd.click("css=" + TimeSelectorUIControls.sStartTimeInput);
+			webd.clear("css=" + TimeSelectorUIControls.sStartTimeInput);
+			webd.sendKeys("css=" + TimeSelectorUIControls.sStartTimeInput, startTime);
+			webd.click("css=" + TimeSelectorUIControls.sEndDateInput);
+			webd.clear("css=" + TimeSelectorUIControls.sEndDateInput);
+			webd.sendKeys("css=" + TimeSelectorUIControls.sEndDateInput, endDate);
+			webd.click("css=" + TimeSelectorUIControls.sEndTimeInput);
+			webd.clear("css=" + TimeSelectorUIControls.sEndTimeInput);
+			webd.sendKeys("css=" + TimeSelectorUIControls.sEndTimeInput, endTime);
+			webd.click("css=" + TimeSelectorUIControls.sEndTimeInput);
+		}
+		webd.takeScreenShot();
+		
+		webd.isElementPresent("css=" + TimeSelectorUIControls.sApplyBtn);
+		if (webd.isDisplayed("css=" + TimeSelectorUIControls.sErrorMsg)) {			
+			Assert.assertTrue("true".equals(webd.getAttribute("css=" + TimeSelectorUIControls.sApplyBtn + "@disabled")));
+			return webd.getText("css=" + TimeSelectorUIControls.sErrorMsg);
+		}
+		else
+		{
+			return "Set time format is correct";
+		}
+	}
+	
+	public static String timeFormatChange(WebDriver driver, String testTime, String inputDateFormat, String outputDateFormat)
+	{
+		SimpleDateFormat inputFormat = new SimpleDateFormat(inputDateFormat, Locale.US);
+		SimpleDateFormat outputFormat = new SimpleDateFormat(outputDateFormat,Locale.US);
+		Date date = null;
+		try {
+			date = inputFormat.parse(testTime);
+		}
+		catch (ParseException e) {
+			driver.getLogger().info(e.getLocalizedMessage());
+		}
+
+		return outputFormat.format(date);
+	}
+	
+	public void getCurrentDate()
+	{
+		Date now = new Date();
 	}
 }
