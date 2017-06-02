@@ -336,34 +336,35 @@ require(['knockout',
                                 self.builderTitle = dfu_model.generateWindowTitle(dashboard.name(), null, null, getNlsString("DBS_HOME_TITLE_DASHBOARDS"));
                             }
 
-                function DashboardsetHeaderViewModel() {
-                    var self = this;
-                    self.userName = dfu.getUserName();
-                    self.tenantName = dfu.getTenantName();
-                    self.appId = "Dashboard";
-                    self.brandingbarParams = {
-                    userName: self.userName,
-                    tenantName: self.tenantName,
-                    appId: self.appId,
-                    isAdmin:true,
-                    showGlobalContextBanner: ko.observable(false),
-                                    omcHamburgerMenuOptIn: true,
-                                    omcCurrentMenuId: menuUtil.OMCMenuConstants.GLOBAL_DASHBOARDS,
-                                    showTimeSelector: ko.observable(false),
-                    timeSelectorParams: {
-                        startDateTime: ko.observable(null),
-                        endDateTime: ko.observable(null),
-                        timePeriod: ko.observable("LAST_14_DAY"),
-                                        timePeriodsSet: "SHORT_TERM",
-                                        enableLatestOnCustomPanel: ko.observable(true),
-                        hideMainLabel: true,
-                        callbackAfterApply: null
-                    },
-                    showEntitySelector: ko.observable(false),
-                    entityContextParams: {
-                        readOnly: false
-                    }
-                    };
+			function DashboardsetHeaderViewModel() {
+			    var self = this;
+			    self.userName = dfu.getUserName();
+			    self.tenantName = dfu.getTenantName();
+			    self.appId = "Dashboard";
+			    self.brandingbarParams = {
+				userName: self.userName,
+				tenantName: self.tenantName,
+				appId: self.appId,
+				isAdmin:true,
+				showGlobalContextBanner: ko.observable(false),
+                                omcHamburgerMenuOptIn: true,
+                                omcCurrentMenuId: menuUtil.OMCMenuConstants.GLOBAL_DASHBOARDS,
+                                showTimeSelector: ko.observable(false),
+				timeSelectorParams: {
+				    startDateTime: ko.observable(null),
+				    endDateTime: ko.observable(null),
+				    timePeriod: ko.observable("LAST_14_DAY"),
+                                    timePeriodsSet: "SHORT_TERM",
+                                    enableLatestOnCustomPanel: ko.observable(true),
+				    hideMainLabel: true,
+				    callbackAfterApply: null
+				},
+				showEntitySelector: ko.observable(false),
+				entityContextParams: {
+				    readOnly: false,
+                                    onlyComposites: true
+				}
+			    };
 
                                 $("#headerWrapper").on("DOMSubtreeModified", function() {
                                     var height = $("#headerWrapper").height();
