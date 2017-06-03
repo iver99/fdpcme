@@ -146,7 +146,7 @@ task onboardAllTenants(dependsOn:[omcOnboardTenants(testTenants_v3)]){
 
 //Task added from "emcpdf_qa_test_3n"
 task QATest(type:EMTest,dependsOn:[onboardAllTenants]) {
-	include "oracle/sysman/emaas/platform/dashboards/test/dashboard/*"
+        include "oracle/sysman/emaas/platform/dashboards/test/dashboard/*"
 	include "oracle/sysman/emaas/platform/dashboards/test/common/*"
 	include "oracle/sysman/emaas/platform/dashboards/logging/*"
 	include "oracle/sysman/emaas/platform/dashboards/test/Configuration/*"
@@ -170,6 +170,8 @@ task DEVUiTest(type:EMTest,dependsOn:omcSetup){
 apply from: 'onboard_tenant.gradle'
 
 task QATest1(type:EMTest,dependsOn:[omcSetup, onboardNewTenant]){ 
+
+        environment "WEBDRIVER_WAIT_TIMEOUT", "300000"
 	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/BrandingBar_TestAnalyzerPage.class"
 	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/BrandingBar_TestDashboardPage.class"
 	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/BrandingBar_TestOtherPage.class"
@@ -182,6 +184,7 @@ task QATest1(type:EMTest,dependsOn:[omcSetup, onboardNewTenant]){
 	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_RecentUseOption.class"
 	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_MillionSeconds.class"
 	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_DateOnly.class"
+	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_ErrorMsg.class"
         useWebdriver = true
 	useRestAssured=true
 }
@@ -209,6 +212,7 @@ task DEVTest2(type:EMTest,dependsOn:omcSetup){
 //Task is for dashboard UI Test
 task e2e (type: EMTest,dependsOn:omcSetup ){
 options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n','parallel':'none') {
+        environment "WEBDRIVER_WAIT_TIMEOUT", "300000"
         test('name': 'DashboardUITest', 'preserve-order':'true') {
             classes([:]) {
                 'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashBoard_SimpleCRUD')
