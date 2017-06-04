@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -69,11 +70,13 @@ import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.core.model.subscription2.TenantSubscriptionInfo;
 import oracle.sysman.emaas.platform.dashboards.core.util.*;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
 import oracle.sysman.emaas.platform.dashboards.webutils.ParallelThreadPool;
 import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
 import oracle.sysman.emaas.platform.dashboards.webutils.ParallelThreadPool;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.model.RegistrationEntity;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.model.SearchModel;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.model.UserInfoEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.DashboardAPIUtil;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.PrivilegeChecker;
@@ -767,6 +770,7 @@ public class DashboardAPI extends APIBase
 		String savedSearchResponse = null;
 		String tenantName = null;
 		String userName = null;
+        SearchModel searchModel = null;
 		try {
 			initializeUserContext(tenantIdParam, userTenant);
 			String tenantHref = tenantsLink.getHref() + "/" + widgetId;
@@ -777,9 +781,11 @@ public class DashboardAPI extends APIBase
 			savedSearchResponse = rc.get(tenantHref, tenantName,((RegistryLookupUtil.VersionedLink) tenantsLink).getAuthToken());
 			LOGGER.info("Retrieved from SSF API widget data is {}", savedSearchResponse);
 			LOGGER.info("It takes {}ms to retrieve saved search meta data from SavedSearch API", (System.currentTimeMillis() - start));
-			if(savedSearchResponse == null){
-				throw new WidgetNotExistedException();
-			}
+            JsonUtil ju = JsonUtil.buildNormalMapper();
+            searchModel = ju.fromJson(savedSearchResponse, SearchModel.class);
+            if(savedSearchResponse == null || searchModel == null){
+                throw new WidgetNotExistedException();
+            }
 		}catch(WidgetNotExistedException e){
 			LOGGER.error(e);
 			return buildErrorResponse(new ErrorEntity(e));
@@ -787,33 +793,20 @@ public class DashboardAPI extends APIBase
 			LOGGER.error(e);
 		}
 		//check dashboard is existed, if existed, put new widget into last position
-//		DashboardManager dm = DashboardManager.getInstance();
 		Long tenantId = null;
 		Dashboard dbd = null;
+		EmsDashboard ed = null;
 		try {
 			tenantId = getTenantId(tenantIdParam);
-
-//			String userName = UserContext.getCurrentUser();
-//			Dashboard dbd = null;
-//			dbd = dm.getCombinedDashboardById(dashboardId, tenantId, userName);
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
-//			EntityManager em = null;
-//			em = dsf.getEntityManager();
 			DashboardManager manager = DashboardManager.getInstance();
-			EmsDashboard ed = manager.getEmsDashboardById(dsf, dashboardId, tenantId, null);
-			dbd = Dashboard.valueOf(ed, dbd, true, true, true);
+			ed = manager.getEmsDashboardById(dsf, dashboardId, tenantId, null);
+//			dbd = Dashboard.valueOf(ed, dbd, true, true, true);
 			LOGGER.info("Dashboard with id {} is existed!", ed);
-//			updateDashboardAllHref(dbd, tenantIdParam);//TODO ????
 		} catch (BasicServiceMalfunctionException e) {
 			LOGGER.error(e);
 			return buildErrorResponse(new ErrorEntity(e));
-		}catch (DashboardNotFoundException e) {
-			LOGGER.error(e);
-			return buildErrorResponse(new ErrorEntity(e));
-		}catch (TenantWithoutSubscriptionException e) {
-			LOGGER.error(e);
-			return buildErrorResponse(new ErrorEntity(e));
-		}catch (CommonSecurityException e) {
+		}catch (DashboardNotFoundException | CommonSecurityException | TenantWithoutSubscriptionException e) {
 			LOGGER.error(e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}catch (DashboardException e) {
@@ -822,6 +815,56 @@ public class DashboardAPI extends APIBase
 		}finally {
 			clearUserContext();
 		}
+		//put the widget into the bottom of the dashboard.
+		try {
+			if(ed == null){
+				throw new DashboardNotFoundException();
+			}
+			List<EmsDashboardTile> tileList = ed.getDashboardTileList();
+            LOGGER.info("origin tile list size is {}",tileList.size());
+			EmsDashboardTile newTile = new EmsDashboardTile();
+            newTile.setTileId(searchModel.getId().toString());
+            newTile.setWidgetUniqueId(searchModel.getId().toString());
+            newTile.setTitle(searchModel.getName());
+            newTile.setWidgetName(searchModel.getName());
+            newTile.setWidgetDescription(searchModel.getDescription());
+            newTile.setWidgetOwner(searchModel.getOwner());
+            newTile.setCreationDate(searchModel.getCreationDate());
+//                newTile.setWidgetGroupName();//TODO need to query category API SSF.
+            newTile.setWidgetSupportTimeControl(1);//TODO confirm
+            //TODO WIDGET_SCREENSHOT_HREF
+//                newTile.setWidgetKocName();
+//                newTile.setWidgetTemplate();
+//                newTile.setWidgetViewmode();
+
+//                newTile.setProviderAssetRoot();
+//                newTile.setProviderName();
+//                newTile.setProviderVersion();
+            newTile.setColumn(0);
+            newTile.setRow(0);
+            newTile.setWidth(6);
+            newTile.setHeight(12);
+            newTile.setWidgetSource(1);
+//                newTile.setType();//Confirm
+			//dashboard is empty
+			if(tileList == null | tileList.isEmpty()){
+				tileList = new ArrayList<>();
+                tileList.add(newTile);
+			}else{
+				//calculate the widget position
+
+				//TODO
+				tileList.add(newTile);
+				DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+				dsf.mergeEmsDashboard(ed);
+                LOGGER.info("new tile list size is {}",ed.getDashboardTileList().size());
+				dbd = Dashboard.valueOf(ed, dbd, true, true, true);
+			}
+
+		} catch (DashboardNotFoundException e) {
+			LOGGER.error(e);
+		}
+		LOGGER.info("Add new Widget into dashboard api tooks {}ms", (System.currentTimeMillis()-start));
 		return Response.ok(dbd.toString()).build();
 
 	}
