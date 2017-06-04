@@ -764,11 +764,16 @@ public class DashboardAPI extends APIBase
 		long start = System.currentTimeMillis();
 		RestClient rc = new RestClient();
 		Link tenantsLink = RegistryLookupUtil.getServiceInternalLink("SavedSearch", "1.0+", "search", null);
-		String tenantHref = tenantsLink.getHref() + "/" + widgetId;
-		String tenantName = TenantContext.getCurrentTenant();
 		String savedSearchResponse = null;
+		String tenantName = null;
+		String userName = null;
 		try {
+			initializeUserContext(tenantIdParam, userTenant);
+			String tenantHref = tenantsLink.getHref() + "/" + widgetId;
+			tenantName = TenantContext.getCurrentTenant();
+			userName = UserContext.getCurrentUser();
 			rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME, tenantName);
+			rc.setHeader(RestClient.X_REMOTE_USER, tenantName+ "." +userName);
 			savedSearchResponse = rc.get(tenantHref, tenantName,((RegistryLookupUtil.VersionedLink) tenantsLink).getAuthToken());
 			LOGGER.info("Retrieved from SSF API widget data is {}", savedSearchResponse);
 			LOGGER.info("It takes {}ms to retrieve saved search meta data from SavedSearch API", (System.currentTimeMillis() - start));
@@ -787,7 +792,7 @@ public class DashboardAPI extends APIBase
 		Dashboard dbd = null;
 		try {
 			tenantId = getTenantId(tenantIdParam);
-			initializeUserContext(tenantIdParam, userTenant);
+
 //			String userName = UserContext.getCurrentUser();
 //			Dashboard dbd = null;
 //			dbd = dm.getCombinedDashboardById(dashboardId, tenantId, userName);
