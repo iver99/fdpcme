@@ -16,6 +16,7 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -23,7 +24,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import javax.persistence.EntityManager;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
@@ -59,6 +59,7 @@ import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableDescri
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableEntityFilterState;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableTimeRangeState;
 import oracle.sysman.emaas.platform.dashboards.core.model.PaginatedDashboards;
+import oracle.sysman.emaas.platform.dashboards.core.model.Tile;
 import oracle.sysman.emaas.platform.dashboards.core.model.UserOptions;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
 import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
@@ -73,11 +74,8 @@ import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
 import oracle.sysman.emaas.platform.dashboards.webutils.ParallelThreadPool;
 import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
-import oracle.sysman.emaas.platform.dashboards.webutils.ParallelThreadPool;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
-import oracle.sysman.emaas.platform.dashboards.ws.rest.model.RegistrationEntity;
-import oracle.sysman.emaas.platform.dashboards.ws.rest.model.SearchModel;
-import oracle.sysman.emaas.platform.dashboards.ws.rest.model.UserInfoEntity;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.model.*;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.DashboardAPIUtil;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.PrivilegeChecker;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
@@ -95,23 +93,11 @@ import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import com.sun.jersey.core.util.Base64;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.CacheControl;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.core.StreamingOutput;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.math.BigInteger;
 import java.util.List;
-import java.util.concurrent.*;
 
 /**
  * @author wenjzhu
@@ -766,26 +752,42 @@ public class DashboardAPI extends APIBase
 		//check if widget is existed.
 		long start = System.currentTimeMillis();
 		RestClient rc = new RestClient();
-		Link tenantsLink = RegistryLookupUtil.getServiceInternalLink("SavedSearch", "1.0+", "search", null);
-		String savedSearchResponse = null;
+		Link searchLink = RegistryLookupUtil.getServiceInternalLink("SavedSearch", "1.0+", "search", null);
+		String searchResponse = null;
+		String categoryResponse = null;
 		String tenantName = null;
 		String userName = null;
         SearchModel searchModel = null;
+		CategoryModel categoryModel = null;
 		try {
 			initializeUserContext(tenantIdParam, userTenant);
-			String tenantHref = tenantsLink.getHref() + "/" + widgetId;
+			String searchHref = searchLink.getHref() + "/" + widgetId;
 			tenantName = TenantContext.getCurrentTenant();
 			userName = UserContext.getCurrentUser();
+			//retrieve search data
 			rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME, tenantName);
 			rc.setHeader(RestClient.X_REMOTE_USER, tenantName+ "." +userName);
-			savedSearchResponse = rc.get(tenantHref, tenantName,((RegistryLookupUtil.VersionedLink) tenantsLink).getAuthToken());
-			LOGGER.info("Retrieved from SSF API widget data is {}", savedSearchResponse);
-			LOGGER.info("It takes {}ms to retrieve saved search meta data from SavedSearch API", (System.currentTimeMillis() - start));
+			searchResponse = rc.get(searchHref, tenantName,((RegistryLookupUtil.VersionedLink) searchLink).getAuthToken());
+			LOGGER.info("Retrieved from SSF API widget data is {}", searchResponse);
+			LOGGER.info("It takes {}ms to retrieve saved search meta data from SavedSearch API", (System.currentTimeMillis()- start));
             JsonUtil ju = JsonUtil.buildNormalMapper();
-            searchModel = ju.fromJson(savedSearchResponse, SearchModel.class);
-            if(savedSearchResponse == null || searchModel == null){
-                throw new WidgetNotExistedException();
-            }
+            searchModel = ju.fromJson(searchResponse, SearchModel.class);
+			if(searchResponse == null || searchModel == null){
+				LOGGER.error("searchResponse or searchModel is empty or null!!");
+				throw new WidgetNotExistedException();
+			}
+			//retrieve category data
+			long start2 =System.currentTimeMillis();
+			Link categoryLink = RegistryLookupUtil.getServiceInternalLink("SavedSearch", "1.0+", "category", null);
+			LOGGER.info("Retrieving category information with id {}", searchModel.getCategory().getId());
+			String categoryHref = categoryLink.getHref() + "/" + searchModel.getCategory().getId();
+			categoryResponse = rc.get(categoryHref, tenantName,((RegistryLookupUtil.VersionedLink) searchLink).getAuthToken());
+			categoryModel = ju.fromJson(categoryResponse, CategoryModel.class);
+			LOGGER.info("It takes {}ms to retrieve category data from SavedSearch API", (System.currentTimeMillis()- start2));
+			if(categoryResponse == null || categoryModel == null){
+				LOGGER.error("categoryResponse or categoryModel is empty or null!!");
+				throw new WidgetNotExistedException();
+			}
 		}catch(WidgetNotExistedException e){
 			LOGGER.error(e);
 			return buildErrorResponse(new ErrorEntity(e));
@@ -821,7 +823,7 @@ public class DashboardAPI extends APIBase
 				throw new DashboardNotFoundException();
 			}
 			List<EmsDashboardTile> tileList = ed.getDashboardTileList();
-            LOGGER.info("origin tile list size is {}",tileList.size());
+//            LOGGER.info("origin tile list size is {}",tileList.size());
 			EmsDashboardTile newTile = new EmsDashboardTile();
             newTile.setTileId(IdGenerator.getTileId(ZDTContext.getRequestId(), 1));//confirm
 			newTile.setTitle(searchModel.getName());
@@ -833,26 +835,36 @@ public class DashboardAPI extends APIBase
 			newTile.setOwner(searchModel.getOwner());
             newTile.setCreationDate(searchModel.getCreationDate());
 			newTile.setDashboard(ed);
-			newTile.setIsMaximized(1);//confirm
-			newTile.setPosition(1);//confirm
+			newTile.setIsMaximized(0);
+			newTile.setPosition(0);//if dashboard contains no widget, set it to 0
 			newTile.setWidgetHistogram("");//confirm
 			newTile.setWidgetDeleted(0);//confirm
 			newTile.setDeleted(false);
 
-//                newTile.setWidgetGroupName();//TODO need to query category API SSF.
-            newTile.setWidgetSupportTimeControl(1);//TODO confirm
-            //TODO WIDGET_SCREENSHOT_HREF
-                newTile.setWidgetKocName("emcla-visualization");
-                newTile.setWidgetTemplate("/html/search/widgets/visualizationWidget.html");
-                newTile.setWidgetViewmode("/js/viewmodel/search/widget/VisualizationWidget.js");
+			newTile.setWidgetSupportTimeControl(1);//TODO confirm
+			if(searchModel.getParameters()!=null && !searchModel.getParameters().isEmpty()){
+				for(ParameterModel p : searchModel.getParameters()){
+					if("WIDGET_KOC_NAME".equals(p.getName())){
+						newTile.setWidgetKocName(p.getValue());
+					}
+					if("WIDGET_VIEWMODEL".equals(p.getName())){
+						newTile.setWidgetViewmode(p.getValue());
+					}
+					if("WIDGET_TEMPLATE".equals(p.getName())){
+						newTile.setWidgetTemplate(p.getValue());
+					}
+				}
+			}
+			//TODO WIDGET_SCREENSHOT_HREF
 
-//                newTile.setProviderAssetRoot();
-//                newTile.setProviderName();
-//                newTile.setProviderVersion();
-            newTile.setColumn(0);
-            newTile.setRow(0);
-            newTile.setWidth(6);
-            newTile.setHeight(12);
+          	newTile.setWidgetGroupName(categoryModel.getName());
+			newTile.setProviderAssetRoot(categoryModel.getProviderAssetRoot());
+            newTile.setProviderName(categoryModel.getProviderName());
+            newTile.setProviderVersion(categoryModel.getProviderVersion());
+            newTile.setColumn(0);//if dashboard contains no widget, set it to 0
+            newTile.setRow(0);//if dashboard contains no widget, set it to 0
+            newTile.setWidth(12);
+            newTile.setHeight(2);
             newTile.setWidgetSource(1);
 //                newTile.setType();//Confirm
 			//dashboard is empty
@@ -861,8 +873,9 @@ public class DashboardAPI extends APIBase
                 tileList.add(newTile);
 			}else{
 				//calculate the widget position
-
-				//TODO
+				int row = calculateWidgetPosition(tileList).getRow();
+				LOGGER.info("Calculated row number is {}", row);
+				newTile.setRow(row);
 				tileList.add(newTile);
 				DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 				dsf.mergeEmsDashboard(ed);
@@ -876,6 +889,32 @@ public class DashboardAPI extends APIBase
 		LOGGER.info("Add new Widget into dashboard api tooks {}ms", (System.currentTimeMillis()-start));
 		return Response.ok(dbd.toString()).build();
 
+	}
+
+	/**
+	 * calculate the column and row value(put new widget at the bottom)
+	 * @param tileList
+	 * @return
+	 */
+	private Tile calculateWidgetPosition(List<EmsDashboardTile> tileList){
+		Tile t = new Tile();
+		if(tileList == null || tileList.isEmpty()){
+			LOGGER.warn("Tile list is null empty!");
+			return null;
+		}
+		int maxRow = 0;
+		int maxHeight = 0;
+		for(EmsDashboardTile tile : tileList){
+			if(tile.getRow()>maxRow){
+				maxRow = tile.getRow();
+			}
+			if(tile.getHeight()>maxHeight){
+				maxHeight = tile.getHeight();
+			}
+		}
+		t.setRow(maxRow + maxHeight);
+//		t.setColumn(col);
+		return t;
 	}
 
 	@GET
