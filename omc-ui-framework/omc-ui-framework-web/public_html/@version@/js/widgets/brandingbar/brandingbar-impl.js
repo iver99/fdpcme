@@ -110,7 +110,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             };
             self.updateGlobalContextByTopologySelection = params.updateGlobalContextByTopologySelection;
             self.showMaxMinButtonInDF = ko.observable(true);
-            self.showEnterpriseTopology = ko.observable(false);
+            self.showEnterpriseTopology = true;
             if (params) {
                 self.associations(params.associations);
                 self.layout(params.layout);
@@ -1364,7 +1364,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                             self.miniEntityCardActions(true);
                             self.topologyParamsSet = true;
                         }
-                        if (self.showEnterpriseTopology()) { // set queryvar with   non-empty for enterprise topology
+                        if (self.showEnterpriseTopology) { // set queryvar with   non-empty for enterprise topology
                             self.layout("LINEAR");
                             self.queryVars({entityName: "test", entityType: " test"});
                         }
@@ -1409,13 +1409,13 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     if (!cxtUtil.getCompositeMeId()) {
                         window.centernodeid_diagram = cxtUtil.getEntities()[0]['meId'];
                     }
-                    self.showEnterpriseTopology(false);
+                    self.showEnterpriseTopology = false;
                     window.globalpillsempty = false;
                 }
                 //When no compositeMEID exists, disable topology button
                 else {
                     //show enterprise topology
-                    self.showEnterpriseTopology(true);
+                    self.showEnterpriseTopology = true;
                     window.globalpillsempty = true;
                     if (self.isTopologyDisplayed() && !self.topologyDisabled()) {
                         self.showTopology();
