@@ -10,6 +10,7 @@
 
 package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.ws.rs.GET;
@@ -59,10 +60,12 @@ public class RegistryLookupAPI extends APIBase
 			}
 			initializeUserContext(tenantIdParam, userTenant);
 			Map<String, String> baseVanityUrls = RegistryLookupUtil.getVanityBaseURLs(tenantIdParam);
+//			EMCPDF-4115 modify cache content under multi-thread env
+			Map<String, String> copyBaseVanityUrls = new HashMap<>();
 			if (baseVanityUrls != null) {
 				//Remove tenant name from url if it's inserted already
 				for (Map.Entry<String, String> entry : baseVanityUrls.entrySet()) {
-					String url = entry.getValue();
+					String url = entry.getValue();//https://emaastesttenant1.apm.management.omclrg.oraclecorp.com
 					if (url != null && url.indexOf("://") != -1) {
 						String[] splittedUrl = url.split("://");
 						if (splittedUrl.length == 2 && splittedUrl[1].startsWith(tenantIdParam + ".")) {
@@ -74,12 +77,12 @@ public class RegistryLookupAPI extends APIBase
 						}
 
 					}
-					baseVanityUrls.put(entry.getKey(), url);
+					copyBaseVanityUrls.put(entry.getKey(), url);
 				}
 			}
 
-			if (baseVanityUrls != null) {
-				return Response.status(Status.OK).entity(JsonUtil.buildNormalMapper().toJson(baseVanityUrls)).build();
+			if (copyBaseVanityUrls != null) {
+				return Response.status(Status.OK).entity(JsonUtil.buildNormalMapper().toJson(copyBaseVanityUrls)).build();
 			}
 			else {
 				ErrorEntity error = new ErrorEntity(DashboardErrorConstants.REGISTRY_LOOKUP_VANITY_URL_NOT_FOUND_ERROR_CODE,
