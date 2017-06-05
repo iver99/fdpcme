@@ -1164,8 +1164,10 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 }
                 if(params.defaultTimePeriod) {
                     var defaultTP = formalizeTimePeriod(ko.unwrap(params.defaultTimePeriod));
-                    if(defaultTP !== ctxUtil.OMCTimeConstants.QUICK_PICK.CUSTOM) {
-                        if(self.timePeriodsNlsObject[defaultTP] || isValidFlexRelTimePeriod(defaultTP)) {
+                    if(self.timePeriodsNlsObject[defaultTP] || isValidFlexRelTimePeriod(defaultTP)) {
+                        if(ko.isObservable(params.defaultTimePeriod)) {
+                            self.defaultTimePeriod = params.defaultTimePeriod;
+                        }else {
                             self.defaultTimePeriod(defaultTP);
                         }
                     }
@@ -1176,7 +1178,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         if(value === true) {
                            var defaultTP = formalizeTimePeriod(ko.unwrap(self.defaultTimePeriod));
                             if(self.timePeriodsNlsObject[defaultTP] || isValidFlexRelTimePeriod(defaultTP)) {
-                                self.badgeTimePeriod(defaultTP);
+                                self.badgeTimePeriod = self.defaultTimePeriod;
                             }
                         }else if(value === false){
                             self.badgeTimePeriod(null);
@@ -1187,11 +1189,13 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 if(self.getParam(params.showBadge)){
                     var defaultTP = formalizeTimePeriod(ko.unwrap(self.defaultTimePeriod));
                     if(self.timePeriodsNlsObject[defaultTP] || isValidFlexRelTimePeriod(defaultTP)) {
-                        self.badgeTimePeriod(defaultTP);
+                        self.badgeTimePeriod = self.defaultTimePeriod;
                     }
                 }
                 
-                self.badgeMsgTitle(msgUtil.formatMessage(nls.DATETIME_PICKER_BADGE_MESSAGE_TITLE, self.timePeriodsNlsObject[self.badgeTimePeriod()]));
+                self.badgeMsgTitle = ko.computed(function() {
+                    return msgUtil.formatMessage(nls.DATETIME_PICKER_BADGE_MESSAGE_TITLE, self.timePeriodsNlsObject[self.badgeTimePeriod()]);
+                }, self);
 
                 if(!ko.components.isRegistered("time-filter")) {
                     ko.components.register("time-filter", {
@@ -3343,8 +3347,18 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 self.badgeStartTime = ko.observable();
                 self.badgeEndTime = ko.observable();
                 self.badgeMouseOverHandler = function (widget, event) {
-                    var _time = self.getTimeRangeForFlexRelTime(self.badgeTimePeriod());
-                    var _startTime,_endTime;
+                    var _time;
+                    var _startTime;
+                    var _endTime;
+                    
+                    if(self.badgeTimePeriod() === ctxUtil.OMCTimeConstants.QUICK_PICK.CUSTOM) {
+                        _time = {
+                            start: oj.IntlConverterUtils.dateToLocalIso(newDateWithMilliseconds(ko.unwrap(params.defaultStartDateTime))),
+                            end: oj.IntlConverterUtils.dateToLocalIso(newDateWithMilliseconds(ko.unwrap(params.defaultEndDateTime)))
+                        };
+                    }else {
+                        _time = self.getTimeRangeForFlexRelTime(self.badgeTimePeriod());
+                    }
 
                     _startTime = _time.start.slice(10);
                     _endTime = _time.end.slice(10);
