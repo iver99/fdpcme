@@ -4,15 +4,19 @@ import mockit.Expectations;
 import mockit.Mocked;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.tenant.TenantIdProcessor;
 import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.JsonUtil;
+import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.RestClientProxy;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.AbstractComparator;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.counts.CountsEntity;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.InstanceData;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.InstancesComparedData;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.DashboardRowEntity;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.TableRowsEntity;
+import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
+import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
 
 import org.testng.annotations.Test;
 
@@ -43,17 +47,38 @@ public class ZDTAPITest {
     String tenant;
     @Mocked
     String userTenant;
+    @Mocked
+	RestClient restClient;
+	@Mocked
+	RestClientProxy proxy;
+	@Mocked
+	LookupManager lookupManager;
     
 
     @Test
-    public void testCompareOnDF(@Mocked final JsonUtil jsonUtil, @Mocked final LookupClient client1, @Mocked final LookupClient client2) throws IOException{
+    public void testCompareOnDF(@Mocked final JsonUtil jsonUtil, @Mocked final LookupClient client1, @Mocked final LookupClient client2,
+    		 @Mocked final RestClient anyRestClient,@Mocked final CountsEntity anyCountEntity,
+    		 @Mocked final LookupManager lookup) throws IOException{
     	final HashMap<String, LookupClient> lookupEntry = new HashMap<String, LookupClient>();
+    	final String anyResponse = "response";
     	new Expectations(){
             {
                 abstractComparator.getOMCInstances();
                 result = lookupEntry;
     			lookupEntry.put("omc1",client1);
     	    	lookupEntry.put("omc2",client2);
+    	    	proxy.getRestClient();
+    	    	result = anyRestClient;
+    	    	lookupManager.getInstance();
+    	    	result = lookup;
+    	    	lookup.getAuthorizationToken();
+    	    	result = new char[10];
+    	    	anyRestClient.get(anyString, anyString, anyString);
+   	    	    result = anyResponse;
+    	    	 JsonUtil.buildNormalMapper();
+    	    	 result = jsonUtil;
+    	    	jsonUtil.fromJson(anyString,CountsEntity.class);
+    	    	result = count;
             }
         };
         zdtapi.compareOnDF(tenant, userTenant);

@@ -15,7 +15,6 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.RestClientProxy;
-import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
 
 import org.apache.logging.log4j.LogManager;
@@ -28,7 +27,7 @@ import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.JsonUtil
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.AbstractComparator;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.InstancesComparedData;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.InstanceData;
-
+import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
 /**
  * @author guochen
  */
@@ -141,15 +140,18 @@ public class DashboardCountsComparator extends AbstractComparator
 			return null;
 		}
 		logger.info("lookup link is {}", lk.getHref());
-		String response = new TenantSubscriptionUtil.RestClient().get(lk.getHref(), tenantId, userTenant);
-		logger.info("Checking sync reponse. Response is " + response);
+		//String response = new TenantSubscriptionUtil.RestClient().get(lk.getHref(), tenantId, userTenant);
 		
-		/*RestClient rc = RestClientProxy.getRestClient();
+		
+		RestClient rc = RestClientProxy.getRestClient();
 		rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME,tenantId);
 		rc.setHeader(RestClient.X_REMOTE_USER,userTenant);
+		
 		char[] authToken = LookupManager.getInstance().getAuthorizationToken();
+		//String response = rc.get(lk.getHref(),tenantId,new String(authToken));
 		String response = rc.get(lk.getHref(),tenantId,new String(authToken));
-		*/
+		logger.info("Checking sync reponse. Response is " + response);
+		
 		JsonUtil ju = JsonUtil.buildNormalMapper();
 		CountsEntity ze = ju.fromJson(response, CountsEntity.class);
 		if (ze == null) {

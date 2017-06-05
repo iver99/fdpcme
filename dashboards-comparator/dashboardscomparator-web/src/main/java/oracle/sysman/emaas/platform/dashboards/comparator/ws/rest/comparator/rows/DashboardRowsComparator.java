@@ -23,7 +23,7 @@ import oracle.sysman.emaas.platform.dashboards.comparator.exception.ZDTErrorCons
 import oracle.sysman.emaas.platform.dashboards.comparator.exception.ZDTException;
 import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.RestClientProxy;
-import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.TenantSubscriptionUtil;
+import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.AbstractComparator;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.counts.CountsEntity;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.RowEntityComparator.CompareListPair;
@@ -36,6 +36,7 @@ import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.row
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.TableRowsEntity;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.ZDTComparatorStatusRowEntity;
 import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
+import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -307,8 +308,14 @@ public class DashboardRowsComparator extends AbstractComparator
 			return null;
 		}
 		String url = lk.getHref() + "?maxComparedDate="+URLEncoder.encode(maxComparedTime, "UTF-8");
-		String response = new TenantSubscriptionUtil.RestClient().get(url, tenantId, userTenant);
+		//String response = new TenantSubscriptionUtil.RestClient().get(url, tenantId, userTenant);
+		RestClient rc = RestClientProxy.getRestClient();
+		rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME,tenantId);
+		rc.setHeader(RestClient.X_REMOTE_USER,userTenant);
 		
+		char[] authToken = LookupManager.getInstance().getAuthorizationToken();
+		//String response = rc.get(lk.getHref(),tenantId,new String(authToken));
+		String response = rc.get(url,tenantId,new String(authToken));
 		JsonUtil ju = JsonUtil.buildNormalMapper();
 		CountsEntity ze = ju.fromJson(response, CountsEntity.class);
 		if (ze == null) {
@@ -334,15 +341,14 @@ public class DashboardRowsComparator extends AbstractComparator
 			throw new ZDTException(ZDTErrorConstants.NULL_LINK_ERROR_CODE, ZDTErrorConstants.NULL_LINK_ERROR_MESSAGE);
 		}
 		String url = lk.getHref() + "?comparisonType="+comparisonType+"&maxComparedDate="+URLEncoder.encode(maxComparedDate, "UTF-8");
-		String response = new TenantSubscriptionUtil.RestClient().get(url, tenantId,userTenant);
-		/*
+		//String response = new TenantSubscriptionUtil.RestClient().get(url, tenantId,userTenant);
+		
 		RestClient rc = RestClientProxy.getRestClient();
 		rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME, tenantId);
 		rc.setHeader(RestClient.X_REMOTE_USER, userTenant);
-		//char[] authToken = RegistrationManager.getInstance().getAuthorizationToken();
 		char[] authToken = LookupManager.getInstance().getAuthorizationToken();
-		String response = rc.get(lk.getHref(), tenantId, new String(authToken));
-		*/
+		String response = rc.get(url, tenantId,new String(authToken));
+		
 		logger.info("Checking dashboard OMC instance table rows. Response is " + response);
 		return retrieveRowsEntityFromJsonForSingleInstance(response);
 	}
@@ -353,7 +359,16 @@ public class DashboardRowsComparator extends AbstractComparator
 			logger.warn("Get a null or empty link for one single instance!");
 			throw new ZDTException(ZDTErrorConstants.NULL_LINK_ERROR_CODE, ZDTErrorConstants.NULL_LINK_ERROR_MESSAGE);
 		}
-		String response =  new TenantSubscriptionUtil.RestClient().get(lk.getHref(), tenantId,userTenant);
+		//String response =  new TenantSubscriptionUtil.RestClient().get(lk.getHref(), tenantId,userTenant);
+		RestClient rc = RestClientProxy.getRestClient();
+		rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME, tenantId);
+		rc.setHeader(RestClient.X_REMOTE_USER, userTenant);
+		char[] authToken = LookupManager.getInstance().getAuthorizationToken();
+		String token = null;
+		if (authToken != null) {
+			token = new String(authToken);
+		}
+		String response = rc.get(lk.getHref(), tenantId, new String(authToken));
 		logger.info("checking comparator status is " + response);
 		
 		return response;
@@ -365,7 +380,12 @@ public class DashboardRowsComparator extends AbstractComparator
 			logger.warn("Get a null or empty link for one single instance!");
 			throw new ZDTException(ZDTErrorConstants.NULL_LINK_ERROR_CODE, ZDTErrorConstants.NULL_LINK_ERROR_MESSAGE);
 		}
-		String response =  new TenantSubscriptionUtil.RestClient().get(lk.getHref(), tenantId,userTenant);
+		//String response =  new TenantSubscriptionUtil.RestClient().get(lk.getHref(), tenantId,userTenant);
+		RestClient rc = RestClientProxy.getRestClient();
+		rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME, tenantId);
+		rc.setHeader(RestClient.X_REMOTE_USER, userTenant);
+		char[] authToken = LookupManager.getInstance().getAuthorizationToken();
+		String response = rc.get(lk.getHref(), tenantId, new String(authToken));
 		logger.info("checking sync status is " + response);
 		
 		return response;
@@ -380,7 +400,12 @@ public class DashboardRowsComparator extends AbstractComparator
 		JsonUtil jsonUtil = JsonUtil.buildNonNullMapper();
 		String entityStr = jsonUtil.toJson(statusRowEntity);
  		logger.info("print the put data {} !",entityStr);
- 		String response = new TenantSubscriptionUtil.RestClient().put(lk.getHref(), entityStr, tenantId, userTenant);
+ 		//String response = new TenantSubscriptionUtil.RestClient().put(lk.getHref(), entityStr, tenantId, userTenant);
+ 		RestClient rc = RestClientProxy.getRestClient();
+		rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME, tenantId);
+		rc.setHeader(RestClient.X_REMOTE_USER, userTenant);
+		char[] authToken = LookupManager.getInstance().getAuthorizationToken();
+		String response = rc.put(lk.getHref(), entityStr,tenantId, new String(authToken));
  		logger.info("Checking sync reponse. Response is " + response);
 		return response;
 	}
@@ -395,13 +420,13 @@ public class DashboardRowsComparator extends AbstractComparator
 		logger.info("link is {} ",lk.getHref());
 		String url = lk.getHref() + "?syncType=" + type + "&syncDate=" + URLEncoder.encode(syncDate, "UTF-8");
 		logger.info("sync url is "+ url);
-		String response = new TenantSubscriptionUtil.RestClient().get(url, tenantId, userTenant);
-		/*RestClient rc = RestClientProxy.getRestClient();
+		//String response = new TenantSubscriptionUtil.RestClient().get(url, tenantId, userTenant);
+		RestClient rc = RestClientProxy.getRestClient();
 		rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME,tenantId);
 		rc.setHeader(RestClient.X_REMOTE_USER,userTenant);
 		char[] authToken = LookupManager.getInstance().getAuthorizationToken();
-		String response = rc.put(lk.getHref(), entityStr, tenantId, new String(authToken));
-		*/
+		String response = rc.get(lk.getHref(),tenantId, new String(authToken));
+		
 		logger.info("Checking sync reponse. Response is " + response);
 		return response;
 	}

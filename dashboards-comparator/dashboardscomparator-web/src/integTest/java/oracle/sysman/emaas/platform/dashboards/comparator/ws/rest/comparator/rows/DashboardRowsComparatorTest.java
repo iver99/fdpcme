@@ -16,10 +16,11 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceI
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceQuery;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
 import oracle.sysman.emaas.platform.dashboards.comparator.exception.ZDTException;
 import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.JsonUtil;
-import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.TenantSubscriptionUtil;
+import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.RestClientProxy;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.AbstractComparator;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.DashboardRowEntity;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.DashboardSetRowEntity;
@@ -28,6 +29,7 @@ import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.row
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.DashboardUserOptionsRowEntity;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.PreferenceRowEntity;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.TableRowsEntity;
+import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
 @Test(groups = { "s1" })
 public class DashboardRowsComparatorTest
 {
@@ -42,6 +44,12 @@ public class DashboardRowsComparatorTest
 	LookupClient client1;
 	@Mocked
 	LookupClient client2;
+	@Mocked
+	RestClient restClient;
+	@Mocked
+	RestClientProxy proxy;
+	@Mocked
+	LookupManager lookupManager;
 
 	// @formatter:off
 	private static final String JSON_RESPONSE_DATA_TABLE="{"
@@ -324,14 +332,24 @@ public class DashboardRowsComparatorTest
 	}
 	
 	@Test 
-	public void testretrieveComparatorStatusForOmcInstance() throws Exception {
+	public void testretrieveComparatorStatusForOmcInstance(@Mocked final LookupManager lookup) throws Exception {
 		final HashMap<String, LookupClient> lookupEntry = new HashMap<String, LookupClient>();
+		final String anyResponse = "";
+		final RestClient anyRestClient = new RestClient();
     	new Expectations(){
             {
                 abstractComparator.getOMCInstances();
                 result = lookupEntry;
     			lookupEntry.put("omc1",client1);
     	    	lookupEntry.put("omc2",client2);
+    	    	proxy.getRestClient();
+    	    	result = anyRestClient;
+    	    	lookupManager.getInstance();
+    	    	result = lookup;
+    	    	lookup.getAuthorizationToken();
+    	    	result = new char[10];
+    	    	anyRestClient.get(anyString, anyString, anyString);
+   	    	    result = anyResponse;
             }
         };
 		DashboardRowsComparator drc = new DashboardRowsComparator();
