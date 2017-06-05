@@ -823,19 +823,28 @@ public class DashboardAPI extends APIBase
 			List<EmsDashboardTile> tileList = ed.getDashboardTileList();
             LOGGER.info("origin tile list size is {}",tileList.size());
 			EmsDashboardTile newTile = new EmsDashboardTile();
-            newTile.setTileId(searchModel.getId().toString());
-            newTile.setWidgetUniqueId(searchModel.getId().toString());
-            newTile.setTitle(searchModel.getName());
+            newTile.setTileId(IdGenerator.getTileId(ZDTContext.getRequestId(), 1));//confirm
+			newTile.setTitle(searchModel.getName());
+			newTile.setWidgetUniqueId(searchModel.getId().toString());
             newTile.setWidgetName(searchModel.getName());
             newTile.setWidgetDescription(searchModel.getDescription());
             newTile.setWidgetOwner(searchModel.getOwner());
+			newTile.setWidgetCreationTime(searchModel.getCreationDate().toString());
+			newTile.setOwner(searchModel.getOwner());
             newTile.setCreationDate(searchModel.getCreationDate());
+			newTile.setDashboard(ed);
+			newTile.setIsMaximized(1);//confirm
+			newTile.setPosition(1);//confirm
+			newTile.setWidgetHistogram("");//confirm
+			newTile.setWidgetDeleted(0);//confirm
+			newTile.setDeleted(false);
+
 //                newTile.setWidgetGroupName();//TODO need to query category API SSF.
             newTile.setWidgetSupportTimeControl(1);//TODO confirm
             //TODO WIDGET_SCREENSHOT_HREF
-//                newTile.setWidgetKocName();
-//                newTile.setWidgetTemplate();
-//                newTile.setWidgetViewmode();
+                newTile.setWidgetKocName("emcla-visualization");
+                newTile.setWidgetTemplate("/html/search/widgets/visualizationWidget.html");
+                newTile.setWidgetViewmode("/js/viewmodel/search/widget/VisualizationWidget.js");
 
 //                newTile.setProviderAssetRoot();
 //                newTile.setProviderName();
