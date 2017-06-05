@@ -809,7 +809,7 @@ public class TestSuiteLicensing_OMCEE extends LoginAndLogout
 		verifyPerfAnalyticsDatabase();
 	}
 
-	@Test(alwaysRun = true)
+	//@Test(alwaysRun = true)
 	public void verifyResourceAnalyticsDatabase_GridView_OMCEE()
 	{
 		//initTest
@@ -828,7 +828,7 @@ public class TestSuiteLicensing_OMCEE extends LoginAndLogout
 		verifyResourceAnalyticsDatabase();
 	}
 
-	@Test(alwaysRun = true)
+	//@Test(alwaysRun = true)
 	public void verifyResourceAnalyticsDatabase_ListView_OMCEE()
 	{
 		//initTest
@@ -847,7 +847,7 @@ public class TestSuiteLicensing_OMCEE extends LoginAndLogout
 		verifyResourceAnalyticsDatabase();
 	}
 
-	@Test(alwaysRun = true)
+	//@Test(alwaysRun = true)
 	public void verifyResourceAnalyticsDatabase_WithFilter_GridView_OMCEE()
 	{
 		//initTest
@@ -870,7 +870,7 @@ public class TestSuiteLicensing_OMCEE extends LoginAndLogout
 		verifyResourceAnalyticsDatabase();
 	}
 
-	@Test(alwaysRun = true)
+	//@Test(alwaysRun = true)
 	public void verifyResourceAnalyticsDatabase_WithFilter_ListView_OMCEE()
 	{
 		//initTest
