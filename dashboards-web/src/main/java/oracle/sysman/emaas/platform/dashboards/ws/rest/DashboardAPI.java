@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Locale;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -40,6 +42,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.StreamingOutput;
 
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardConstants;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardManager;
@@ -48,9 +51,7 @@ import oracle.sysman.emaas.platform.dashboards.core.UserOptionsManager;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.DashboardSameNameException;
-import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
-import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DatabaseDependencyUnavailableException;
-import oracle.sysman.emaas.platform.dashboards.core.exception.resource.UserOptionsNotFoundException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.resource.*;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.DeleteSystemDashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
@@ -58,7 +59,9 @@ import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableDescri
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableEntityFilterState;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableTimeRangeState;
 import oracle.sysman.emaas.platform.dashboards.core.model.PaginatedDashboards;
+import oracle.sysman.emaas.platform.dashboards.core.model.Tile;
 import oracle.sysman.emaas.platform.dashboards.core.model.UserOptions;
+import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
 import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
@@ -67,12 +70,12 @@ import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.core.model.subscription2.TenantSubscriptionInfo;
 import oracle.sysman.emaas.platform.dashboards.core.util.*;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
 import oracle.sysman.emaas.platform.dashboards.webutils.ParallelThreadPool;
 import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
-import oracle.sysman.emaas.platform.dashboards.webutils.ParallelThreadPool;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
-import oracle.sysman.emaas.platform.dashboards.ws.rest.model.RegistrationEntity;
-import oracle.sysman.emaas.platform.dashboards.ws.rest.model.UserInfoEntity;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.model.*;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.DashboardAPIUtil;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.PrivilegeChecker;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
@@ -86,26 +89,15 @@ import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.ScreenshotPathGenerator;
 
+import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import com.sun.jersey.core.util.Base64;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.CacheControl;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.core.StreamingOutput;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.math.BigInteger;
 import java.util.List;
-import java.util.concurrent.*;
 
 /**
  * @author wenjzhu
@@ -746,6 +738,183 @@ public class DashboardAPI extends APIBase
 		} finally {
 			clearUserContext();
 		}
+	}
+
+	@PUT
+	@Path("{id: [1-9][0-9]*}/addWidget/{widgetId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response addNewWidgetToDashboard(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") final String tenantIdParam,
+											@HeaderParam(value = "X-REMOTE-USER") final String userTenant, @HeaderParam(value = "Referer") String referer,
+											@PathParam("id") final BigInteger dashboardId, @PathParam("widgetId") final BigInteger widgetId){
+		infoInteractionLogAPIIncomingCall(tenantIdParam, referer,
+				"Service call to [GET] /v1/dashboards/{}/addWidget/{}",dashboardId, widgetId);
+		logkeyHeaders("addNewWidgetToDashboard()", userTenant, tenantIdParam);
+		//check if widget is existed.
+		long start = System.currentTimeMillis();
+		RestClient rc = new RestClient();
+		Link searchLink = RegistryLookupUtil.getServiceInternalLink("SavedSearch", "1.0+", "search", null);
+		String searchResponse = null;
+		String categoryResponse = null;
+		String tenantName = null;
+		String userName = null;
+        SearchModel searchModel = null;
+		CategoryModel categoryModel = null;
+		try {
+			initializeUserContext(tenantIdParam, userTenant);
+			String searchHref = searchLink.getHref() + "/" + widgetId;
+			tenantName = TenantContext.getCurrentTenant();
+			userName = UserContext.getCurrentUser();
+			//retrieve search data
+			rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME, tenantName);
+			rc.setHeader(RestClient.X_REMOTE_USER, tenantName+ "." +userName);
+			searchResponse = rc.get(searchHref, tenantName,((RegistryLookupUtil.VersionedLink) searchLink).getAuthToken());
+			LOGGER.info("Retrieved from SSF API widget data is {}", searchResponse);
+			LOGGER.info("It takes {}ms to retrieve saved search meta data from SavedSearch API", (System.currentTimeMillis()- start));
+            JsonUtil ju = JsonUtil.buildNormalMapper();
+            searchModel = ju.fromJson(searchResponse, SearchModel.class);
+			if(searchResponse == null || searchModel == null){
+				LOGGER.error("searchResponse or searchModel is empty or null!!");
+				throw new WidgetNotExistedException();
+			}
+			//retrieve category data
+			long start2 =System.currentTimeMillis();
+			Link categoryLink = RegistryLookupUtil.getServiceInternalLink("SavedSearch", "1.0+", "category", null);
+			LOGGER.info("Retrieving category information with id {}", searchModel.getCategory().getId());
+			String categoryHref = categoryLink.getHref() + "/" + searchModel.getCategory().getId();
+			categoryResponse = rc.get(categoryHref, tenantName,((RegistryLookupUtil.VersionedLink) searchLink).getAuthToken());
+			categoryModel = ju.fromJson(categoryResponse, CategoryModel.class);
+			LOGGER.info("It takes {}ms to retrieve category data from SavedSearch API", (System.currentTimeMillis()- start2));
+			if(categoryResponse == null || categoryModel == null){
+				LOGGER.error("categoryResponse or categoryModel is empty or null!!");
+				throw new WidgetNotExistedException();
+			}
+		}catch(WidgetNotExistedException e){
+			LOGGER.error(e);
+			return buildErrorResponse(new ErrorEntity(e));
+		}catch (Exception e) {
+			LOGGER.error(e);
+		}
+		//check dashboard is existed, if existed, put new widget into last position
+		Long tenantId = null;
+		Dashboard dbd = null;
+		EmsDashboard ed = null;
+		try {
+			tenantId = getTenantId(tenantIdParam);
+			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+			DashboardManager manager = DashboardManager.getInstance();
+			ed = manager.getEmsDashboardById(dsf, dashboardId, tenantId, null);
+//			dbd = Dashboard.valueOf(ed, dbd, true, true, true);
+			LOGGER.info("Dashboard with id {} is existed!", ed);
+		} catch (BasicServiceMalfunctionException e) {
+			LOGGER.error(e);
+			return buildErrorResponse(new ErrorEntity(e));
+		}catch (DashboardNotFoundException | CommonSecurityException | TenantWithoutSubscriptionException e) {
+			LOGGER.error(e);
+			return buildErrorResponse(new ErrorEntity(e));
+		}catch (DashboardException e) {
+			LOGGER.error(e);
+			return buildErrorResponse(new ErrorEntity(e));
+		}finally {
+			clearUserContext();
+		}
+		//put the widget into the bottom of the dashboard.
+		try {
+			if(ed == null){
+				throw new DashboardNotFoundException();
+			}
+			List<EmsDashboardTile> tileList = ed.getDashboardTileList();
+//            LOGGER.info("origin tile list size is {}",tileList.size());
+			EmsDashboardTile newTile = new EmsDashboardTile();
+            newTile.setTileId(IdGenerator.getTileId(ZDTContext.getRequestId(), 1));//confirm
+			newTile.setTitle(searchModel.getName());
+			newTile.setWidgetUniqueId(searchModel.getId().toString());
+            newTile.setWidgetName(searchModel.getName());
+            newTile.setWidgetDescription(searchModel.getDescription());
+            newTile.setWidgetOwner(searchModel.getOwner());
+			newTile.setWidgetCreationTime(searchModel.getCreationDate().toString());
+			newTile.setOwner(searchModel.getOwner());
+            newTile.setCreationDate(searchModel.getCreationDate());
+			newTile.setDashboard(ed);
+			newTile.setIsMaximized(0);
+			newTile.setPosition(0);//if dashboard contains no widget, set it to 0
+			newTile.setWidgetHistogram("");//confirm
+			newTile.setWidgetDeleted(0);//confirm
+			newTile.setDeleted(false);
+
+			newTile.setWidgetSupportTimeControl(1);//TODO confirm
+			if(searchModel.getParameters()!=null && !searchModel.getParameters().isEmpty()){
+				for(ParameterModel p : searchModel.getParameters()){
+					if("WIDGET_KOC_NAME".equals(p.getName())){
+						newTile.setWidgetKocName(p.getValue());
+					}
+					if("WIDGET_VIEWMODEL".equals(p.getName())){
+						newTile.setWidgetViewmode(p.getValue());
+					}
+					if("WIDGET_TEMPLATE".equals(p.getName())){
+						newTile.setWidgetTemplate(p.getValue());
+					}
+				}
+			}
+			//TODO WIDGET_SCREENSHOT_HREF
+
+          	newTile.setWidgetGroupName(categoryModel.getName());
+			newTile.setProviderAssetRoot(categoryModel.getProviderAssetRoot());
+            newTile.setProviderName(categoryModel.getProviderName());
+            newTile.setProviderVersion(categoryModel.getProviderVersion());
+            newTile.setColumn(0);//if dashboard contains no widget, set it to 0
+            newTile.setRow(0);//if dashboard contains no widget, set it to 0
+            newTile.setWidth(12);
+            newTile.setHeight(2);
+            newTile.setWidgetSource(1);
+//                newTile.setType();//Confirm
+			//dashboard is empty
+			if(tileList == null | tileList.isEmpty()){
+				tileList = new ArrayList<>();
+                tileList.add(newTile);
+			}else{
+				//calculate the widget position
+				int row = calculateWidgetPosition(tileList).getRow();
+				LOGGER.info("Calculated row number is {}", row);
+				newTile.setRow(row);
+				tileList.add(newTile);
+				DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+				dsf.mergeEmsDashboard(ed);
+                LOGGER.info("new tile list size is {}",ed.getDashboardTileList().size());
+				dbd = Dashboard.valueOf(ed, dbd, true, true, true);
+			}
+
+		} catch (DashboardNotFoundException e) {
+			LOGGER.error(e);
+		}
+		LOGGER.info("Add new Widget into dashboard api tooks {}ms", (System.currentTimeMillis()-start));
+		return Response.ok(dbd.toString()).build();
+
+	}
+
+	/**
+	 * calculate the column and row value(put new widget at the bottom)
+	 * @param tileList
+	 * @return
+	 */
+	private Tile calculateWidgetPosition(List<EmsDashboardTile> tileList){
+		Tile t = new Tile();
+		if(tileList == null || tileList.isEmpty()){
+			LOGGER.warn("Tile list is null empty!");
+			return null;
+		}
+		int maxRow = 0;
+		int maxHeight = 0;
+		for(EmsDashboardTile tile : tileList){
+			if(tile.getRow()>maxRow){
+				maxRow = tile.getRow();
+			}
+			if(tile.getHeight()>maxHeight){
+				maxHeight = tile.getHeight();
+			}
+		}
+		t.setRow(maxRow + maxHeight);
+//		t.setColumn(col);
+		return t;
 	}
 
 	@GET
