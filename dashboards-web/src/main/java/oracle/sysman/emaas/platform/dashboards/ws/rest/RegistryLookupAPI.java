@@ -81,7 +81,7 @@ public class RegistryLookupAPI extends APIBase
 				}
 			}
 
-			if (copyBaseVanityUrls != null) {
+			if (!copyBaseVanityUrls.isEmpty()) {
 				return Response.status(Status.OK).entity(JsonUtil.buildNormalMapper().toJson(copyBaseVanityUrls)).build();
 			}
 			else {
