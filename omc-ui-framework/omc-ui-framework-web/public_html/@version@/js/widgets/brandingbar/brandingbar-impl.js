@@ -122,7 +122,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             var dfu = new dfumodel(self.userName, self.tenantName);
             //Append uifwk css file into document head
             dfu.loadUifwkCss();
-            self.udeEnterPriseTopologyLanded = false;
+            //self.udeEnterPriseTopologyLanded = false;
             if (!ko.components.isRegistered('emctas-globalbar'))
             {
                 var versionedTemplate = window.getSDKVersionFile ?
@@ -138,7 +138,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             window.emctasGlobalBarCallback = function () {
                 //enable enterpriseTopology
                 self.udeEnterPriseTopologyLanded = true;
-
+                self.topologyDisabled(false);
             };
 
             if (self.showGlobalContextBanner() === true) {
