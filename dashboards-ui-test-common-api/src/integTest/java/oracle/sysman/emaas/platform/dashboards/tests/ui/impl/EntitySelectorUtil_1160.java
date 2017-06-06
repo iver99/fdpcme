@@ -383,11 +383,6 @@ public class EntitySelectorUtil_1160 extends EntitySelectorUtil_1150
                 String xpath = category.equals(CATEGORY_COMPOSITE) ? MessageFormat.format(DashBoardPageId.EntSelSuggestionByCompositeCategory,
                                     entityType) : MessageFormat.format(DashBoardPageId.EntSelSuggestionByEntitiesCategory, entityType);
                 List<WebElement> suggestions = driver.getWebDriver().findElements(By.xpath(xpath));
-                logger.log(Level.INFO, "XPATH = {0}", xpath);
-                logger.log(Level.INFO, "Suggestions");
-                for (int i = 0; i < suggestions.size(); i++) {
-                    logger.log(Level.INFO, "[{0}] = {1}", new Object[]{i, suggestions.get(i).getText()});
-                }                
                 
                 String trimmed = entityName.replaceAll(" +", "");
                 logger.log(Level.INFO, "Looking for value in typeahead: {0}", trimmed);
