@@ -122,7 +122,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             var dfu = new dfumodel(self.userName, self.tenantName);
             //Append uifwk css file into document head
             dfu.loadUifwkCss();
-
+            self.udeEnterPriseTopologyLanded = false;
             if (!ko.components.isRegistered('emctas-globalbar'))
             {
                 var versionedTemplate = window.getSDKVersionFile ?
@@ -135,6 +135,11 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     template: {require: 'text!' + template}
                 });
             }
+            window.emctasGlobalBarCallback = function () {
+                //enable enterpriseTopology
+                self.udeEnterPriseTopologyLanded = true;
+                alert('emctasGlobalBarCallback');
+            };
 
             if (self.showGlobalContextBanner() === true) {
                 refreshOMCContext();
@@ -1364,7 +1369,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                             self.miniEntityCardActions(true);
                             self.topologyParamsSet = true;
                         }
-                        if (self.showEnterpriseTopology) { // set queryvar with   non-empty for enterprise topology
+                        if (self.udeEnterPriseTopologyLanded && self.showEnterpriseTopology) { // set queryvar with   non-empty for enterprise topology
                             self.layout("LINEAR");
                             self.queryVars({entityName: "test", entityType: " test"});
                         }
@@ -1420,8 +1425,12 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     if (self.isTopologyDisplayed() && !self.topologyDisabled()) {
                         self.showTopology();
                     }
-
-                    self.topologyDisabled(false);
+                    if (self.udeEnterPriseTopologyLanded) {
+                        self.topologyDisabled(false);
+                    }
+                    else {
+                        self.topologyDisabled(true);
+                    }
 
                 }
 
