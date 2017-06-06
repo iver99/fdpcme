@@ -4,17 +4,28 @@
  */
 package oracle.sysman.emaas.platform.uifwk.nls.filter;
 
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.logging.log4j.LogManager;
-
-import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletResponseWrapper;
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
+
+import org.apache.logging.log4j.LogManager;
 
 public class NLSFilter implements Filter
 {
@@ -62,9 +73,10 @@ public class NLSFilter implements Filter
             return null;
         }
         // get the accept-language header
-        String alh = StringEscapeUtils.escapeHtml4(httpRequest.getHeader("Accept-Language"));
+        //String alh = StringEscapeUtils.escapeHtml4(httpRequest.getHeader("Accept-Language"));
+        Locale alh = httpRequest.getLocale();
         // calculate the UI locale
-        String locale = getSupportedLocale(alh);
+        String locale = getSupportedLocale(alh.toLanguageTag());
 
         // Replaces lang="en-US" by lang="xx" in response text
         return "lang=\"" + locale + "\"";
