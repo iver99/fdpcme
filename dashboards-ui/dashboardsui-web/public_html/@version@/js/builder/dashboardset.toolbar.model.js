@@ -571,7 +571,6 @@ define(['knockout',
                                 "content": $("<div class='dbd-info other-nav-info' id='dashboardTabInfo-" + dashboardId + "'></div>"),
                                 "index": insertIndex
                             });
-                    //$("#dbd-tabs-container").ojTabs("refresh");/* refresh will be ignored after addTab operation */
                 }
 
             function findTargetInArr(dashboardsetItems,dashboardPickerId){
