@@ -1193,9 +1193,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     }
                 }
                 
-                self.badgeMsgTitle = ko.computed(function() {
-                    return msgUtil.formatMessage(nls.DATETIME_PICKER_BADGE_MESSAGE_TITLE, self.timePeriodsNlsObject[self.badgeTimePeriod()]);
-                }, self);
+                self.badgeMsgTitle(msgUtil.formatMessage(nls.DATETIME_PICKER_BADGE_MESSAGE_TITLE, self.timePeriodsNlsObject[self.badgeTimePeriod()]));
 
                 if(!ko.components.isRegistered("time-filter")) {
                     ko.components.register("time-filter", {
@@ -3351,6 +3349,8 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     var _startTime;
                     var _endTime;
                     
+                    self.badgeMsgTitle(msgUtil.formatMessage(nls.DATETIME_PICKER_BADGE_MESSAGE_TITLE, self.timePeriodsNlsObject[self.badgeTimePeriod()]));
+
                     if(self.badgeTimePeriod() === ctxUtil.OMCTimeConstants.QUICK_PICK.CUSTOM) {
                         _time = {
                             start: oj.IntlConverterUtils.dateToLocalIso(newDateWithMilliseconds(ko.unwrap(params.defaultStartDateTime))),
