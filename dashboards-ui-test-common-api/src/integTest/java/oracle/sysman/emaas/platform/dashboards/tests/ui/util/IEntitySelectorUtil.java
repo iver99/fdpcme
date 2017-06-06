@@ -68,9 +68,11 @@ public interface IEntitySelectorUtil extends IUiTestCommonAPI
 	/**
 	 * @param driver
          * @param logger
-	 * @param text
+	 * @param entityName
+         * @param entityType
+         * @param category
 	 */
-	public void searchText(WebDriver driver, Logger logger, String text);
+	public void searchText(WebDriver driver, Logger logger, String entityName, String entityType, String category);
 
 	/**
 	 * @param driver

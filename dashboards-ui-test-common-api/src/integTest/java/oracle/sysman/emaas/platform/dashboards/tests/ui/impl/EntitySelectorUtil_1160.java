@@ -146,10 +146,10 @@ public class EntitySelectorUtil_1160 extends EntitySelectorUtil_1150
                 pill.click();
                 
                 //Write the new entity name
-                searchText(driver, logger, entityName);
+                searchText(driver, logger, entityName, entityType, category);
                 
                 //Select first option matching entity name, type and category
-                selectFirstSuggestionByCategory(driver, logger, category, entityName, entityType, true);
+                selectSuggestionByCategory(driver, logger, category, entityName, entityType, true);
                 driver.takeScreenShot();
                 logger.log(Level.INFO, "New selection for pill is ''{0}''.", new Object[]{entityName});
         }
@@ -158,14 +158,14 @@ public class EntitySelectorUtil_1160 extends EntitySelectorUtil_1150
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IEntitySelectorUtil#searchText(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
 	@Override
-	public void searchText(WebDriver driver, Logger logger, final String text)
+	public void searchText(WebDriver driver, Logger logger, final String entityName, final String entityType, final String category)
 	{
 		//Write text in entity selector
 		logger.log(Level.INFO, "Waiting for Entity Selector input to be clickable");
 		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), UNTIL_TIMEOUT);
 		WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By
 				.xpath(DashBoardPageId.EntSelTypeAheadFieldInput)));
-		logger.log(Level.INFO, "Searching value ''{0}'' in Entity Selector", text);
+		logger.log(Level.INFO, "Searching value ''{0}'' in Entity Selector", entityName);
 		element.click();
                 //Wait until suggestions are displayed before typing the text to avoid timing issues
                 wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(DashBoardPageId.EntSelSuggestionPopup)));
@@ -173,15 +173,27 @@ public class EntitySelectorUtil_1160 extends EntitySelectorUtil_1150
                 //metric with parenthesis in name loses the left parenthesis when added to data palette search box
                 //see Selenium Issue 1723 - Firefox Driver send_keys won't send left parenthesis
                 //Using workaround suggested in issue
-                element.sendKeys(interceptStringForSearch(logger, text));
+                element.sendKeys(interceptStringForSearch(logger, entityName));
 		driver.takeScreenShot();
 
 		//Wait until the results are displayed
-		logger.log(Level.INFO, "Waiting for results to be displayed for text ''{0}''", text);
+                logger.log(Level.INFO, "Waiting for results to be displayed for text ''{0}''", entityName);
                 WaitUtil.waitForPageFullyLoaded(driver);
                 
+                final WebDriver finalDriver = driver;
+                final Logger finalLogger = logger;
+                wait.until(new ExpectedCondition<Boolean>() {
+                    
+                    @Override
+                    public Boolean apply(org.openqa.selenium.WebDriver driver) {
+                        int index = getTypeAheadIndex(finalDriver, finalLogger, category, entityName, entityType);
+                        return (index > -1 || index == -99);
+                    }
+                    
+                });
+                
 		driver.takeScreenShot();
-		logger.log(Level.INFO, "Results for ''{0}'' are available", text);
+		logger.log(Level.INFO, "Results for ''{0}'' are available", entityName);
 
 	}
 
@@ -192,10 +204,10 @@ public class EntitySelectorUtil_1160 extends EntitySelectorUtil_1150
 	public void selectCompositeEntity(WebDriver driver, Logger logger, String entityName, String entityType)
 	{
 		//search text in entity selector
-		searchText(driver, logger, entityName);
+		searchText(driver, logger, entityName, entityType, CATEGORY_COMPOSITE);
 
 		//select the first composite entity found with that description
-		selectFirstSuggestionByCategory(driver, logger, CATEGORY_COMPOSITE, entityName, entityType, false);
+		selectSuggestionByCategory(driver, logger, CATEGORY_COMPOSITE, entityName, entityType, false);
 
 	}
 
@@ -206,10 +218,10 @@ public class EntitySelectorUtil_1160 extends EntitySelectorUtil_1150
 	public void selectEntity(WebDriver driver, Logger logger, String entityName, String entityType)
 	{
 		//search text in entity selector
-		searchText(driver, logger, entityName);
+		searchText(driver, logger, entityName, entityType, CATEGORY_ENTITIES);
 
 		//select the first entity found with that description
-		selectFirstSuggestionByCategory(driver, logger, CATEGORY_ENTITIES, entityName, entityType, false);
+		selectSuggestionByCategory(driver, logger, CATEGORY_ENTITIES, entityName, entityType, false);
 
 	}
 
@@ -258,19 +270,17 @@ public class EntitySelectorUtil_1160 extends EntitySelectorUtil_1150
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IEntitySelectorUtil#selectFirstSuggestionByCategory(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
-	private void selectFirstSuggestionByCategory(WebDriver driver, Logger logger, String category, String entityName, String entityType, boolean isEditingPill)
+	private void selectSuggestionByCategory(WebDriver driver, Logger logger, String category, String entityName, String entityType, boolean isEditingPill)
 	{
-		//select the first composite entity that matches category and entity type
+		//select the composite entity that matches category and entity type
 		logger.log(Level.INFO, "Waiting for the matching suggestion to be clickable");
                 driver.takeScreenShot();
                 driver.savePageToFile();
-		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), UNTIL_TIMEOUT);
-		logger.log(Level.INFO, "Click on first available suggestion");
-                // TODO Auto-generated method stub
-		final int prevCount = getNumberOfPills(driver, logger);
-		String xpath = category.equals(CATEGORY_COMPOSITE) ? MessageFormat.format(DashBoardPageId.EntSelSuggestionByCompositeCategory,
-				entityType) : MessageFormat.format(DashBoardPageId.EntSelSuggestionByEntitiesCategory, entityType);
-		WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(xpath)));
+                
+                //Click on the suggestion that matches the search parameters
+                final int prevCount = getNumberOfPills(driver, logger);
+                logger.log(Level.INFO, "Click on matching suggestion");
+                WebElement element = getMatchingSuggestion(driver, logger, category, entityName, entityType);
 		element.click();
                 driver.takeScreenShot();
                 driver.savePageToFile();
@@ -293,7 +303,7 @@ public class EntitySelectorUtil_1160 extends EntitySelectorUtil_1150
         {
                 logger.log(Level.INFO, "Waiting for the type ahead input to disappear");
                 //Wait for typeahead input to dissappear
-                driver.waitForElementNotVisible("xpath=" + DashBoardPageId.EntSelTypeAheadFieldInput);
+                driver.waitForNotElementPresent("xpath=" + DashBoardPageId.EntSelTypeAheadFieldInput);
                 
                 logger.log(Level.INFO, "Waiting for the edited pill to be updated");
                 WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), UNTIL_TIMEOUT);
@@ -355,6 +365,59 @@ public class EntitySelectorUtil_1160 extends EntitySelectorUtil_1150
                     }
                 }
                 return correct;
+        }
+        
+        private int getTypeAheadIndex(WebDriver driver, Logger logger, String category, String entityName, String entityType) {
+                String xpath = category.equals(CATEGORY_COMPOSITE) ? MessageFormat.format(DashBoardPageId.EntSelSuggestionByCompositeCategory,
+                                    entityType) : MessageFormat.format(DashBoardPageId.EntSelSuggestionByEntitiesCategory, entityType);
+                List<WebElement> suggestions = driver.getWebDriver().findElements(By.xpath(xpath));
+                if (suggestions.isEmpty()) {
+                    return -99;
+                } else {
+                    WebElement elem = getMatchingSuggestion(driver, logger, category, entityName, entityType);
+                    return elem == null ? -1 : suggestions.indexOf(elem);
+                }
+        }
+        
+        private WebElement getMatchingSuggestion(WebDriver driver, Logger logger, String category, String entityName, String entityType) {
+                String xpath = category.equals(CATEGORY_COMPOSITE) ? MessageFormat.format(DashBoardPageId.EntSelSuggestionByCompositeCategory,
+                                    entityType) : MessageFormat.format(DashBoardPageId.EntSelSuggestionByEntitiesCategory, entityType);
+                List<WebElement> suggestions = driver.getWebDriver().findElements(By.xpath(xpath));
+                logger.log(Level.INFO, "XPATH = {0}", xpath);
+                logger.log(Level.INFO, "Suggestions");
+                for (int i = 0; i < suggestions.size(); i++) {
+                    logger.log(Level.INFO, "[{0}] = {1}", new Object[]{i, suggestions.get(i).getText()});
+                }                
+                
+                String trimmed = entityName.replaceAll(" +", "");
+                logger.log(Level.INFO, "Looking for value in typeahead: {0}", trimmed);
+                if (!suggestions.isEmpty()) {
+                    logger.log(Level.INFO, "Check first for exact match in list.");
+                    for (int i = 0; i < suggestions.size(); i++) {
+                        WebElement suggestion = suggestions.get(i);
+                        String value = suggestion.getText().replaceAll(" +", "").split("\n")[0];
+                        logger.log(Level.INFO, value);
+                        if (value.equals(trimmed)) {
+                            logger.log(Level.INFO, "Exact match found at index: {0}", i);
+                            return suggestion;
+                        }
+                    }
+                    logger.log(Level.INFO, "No match found, check if string is contained.");
+                    for (int i = 0; i < suggestions.size(); i++) {
+                        WebElement suggestion = suggestions.get(i);
+                        String value = suggestion.getText().replaceAll(" +", "").split("\n")[0];
+                        logger.log(Level.INFO, value);
+                        if (value.contains(trimmed)) {
+                            logger.log(Level.INFO, "Text contained at index: {0}", i);
+                            return suggestion;
+                        }
+                    }
+                } else {
+                    logger.log(Level.INFO, "No results for: {0}", trimmed);
+                    return null;
+                }
+                logger.log(Level.INFO, "String not found, suggestions might not have refreshed.");
+                return null;
         }
 
 }
