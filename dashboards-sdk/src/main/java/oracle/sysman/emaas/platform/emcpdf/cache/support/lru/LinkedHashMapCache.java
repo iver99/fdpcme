@@ -10,9 +10,7 @@ import oracle.sysman.emaas.platform.emcpdf.cache.util.TimeUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.LinkedHashMap;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 /**
  * Created by chehao on 2016/12/9.
@@ -72,6 +70,21 @@ public class LinkedHashMapCache extends AbstractCache{
         Object obj=super.get(key, factory);
        if(obj!=null){
            LOGGER.debug("CachedItem with key {} and value {} is [retrieved] from cache group {}",key,obj,name);
+           //EMCPDF-4115
+           if(obj instanceof Collection){
+               if(obj instanceof List){
+                   LOGGER.debug("#1 Returning a unmodifiableList for key = {}", key);
+                   return Collections.unmodifiableList((List)obj);
+               }
+               if(obj instanceof Set){
+                   LOGGER.debug("#2 Returning a unmodifiableSet for key = {}", key);
+                   return Collections.unmodifiableSet((Set)obj);
+               }
+               if(obj instanceof Map){
+                   LOGGER.debug("#3 Returning a unmodifiableMap for key = {}", key);
+                   return Collections.unmodifiableMap((Map)obj);
+               }
+           }
            return obj;
        }
        return null;

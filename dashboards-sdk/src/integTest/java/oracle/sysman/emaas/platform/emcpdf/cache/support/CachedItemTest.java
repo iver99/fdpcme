@@ -13,11 +13,11 @@ public class CachedItemTest {
     public void testCachedItem(){
         CachedItem ci=new CachedItem("key", "value");
         ci.getValue();
-        ci.setValue("value2");
+//        ci.setValue("value2");
         ci.getCreationTime();
-        ci.setCreationTime(null);
+//        ci.setCreationTime(null);
         ci.getKey();
-        ci.setKey("key2");
+//        ci.setKey("key2");
         ci.getLastAccessTime();
         ci.setLastAccessTime(null);
         ci.getLastRefreshTime();
