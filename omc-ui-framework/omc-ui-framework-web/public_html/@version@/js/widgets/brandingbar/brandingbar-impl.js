@@ -817,17 +817,14 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 }
                 
                 (function() {
+                    if (!window._uifwk) {
+                        window._uifwk = {};
+                    }
                     var beforePrint = function() {
-                        if (!window._uifwk) {
-                            window._uifwk = {};
-                        }
                         window._uifwk.isUnderPrint = true;
                     };
 
                     var afterPrint = function() {
-                        if (!window._uifwk) {
-                            window._uifwk = {};
-                        }
                         window._uifwk.isUnderPrint = false;
                     };
 
@@ -850,7 +847,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 self.xlargeScreen = oj.ResponsiveKnockoutUtils.createMediaQueryObservable('(min-width: 1440px)');
 
                 self.xlargeScreen.subscribe(function(isXlarge){
-                    if (window._uifwk && window._uifwk.isUnderPrint) {
+                    if (window._uifwk && (window._uifwk.isUnderPrint || window._uifwk.resizeTriggeredByPrint)) {
                         return;
                     }
                     if(!isXlarge){
@@ -920,6 +917,12 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         triggerDashboardResizeEvent('Hamburger menu closed.');
                     });
                     $(window).resize(function() {
+                        if (window._uifwk.isUnderPrint) {
+                            window._uifwk.resizeTriggeredByPrint = true;
+                        }
+                        else {
+                            window._uifwk.resizeTriggeredByPrint = false;
+                        }
                         if ($("#omcHamburgerMenu").hasClass("oj-offcanvas-open") && !$("#omcHamburgerMenu").hasClass("oj-offcanvas-overlay")) {
                             $("#offcanvasInnerContainer").width(document.body.clientWidth - 250);
                         } else {
