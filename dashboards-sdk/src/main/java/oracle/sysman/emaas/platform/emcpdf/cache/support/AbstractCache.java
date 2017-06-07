@@ -24,10 +24,6 @@ public abstract class AbstractCache implements ICache {
         return cacheCounter;
     }
 
-    public void setCacheCounter(SimpleCacheCounter cacheCounter) {
-        this.cacheCounter = cacheCounter;
-    }
-
     @Override
     public Object get(Object key) throws ExecutionException {
         return get(key, null);
@@ -55,7 +51,8 @@ public abstract class AbstractCache implements ICache {
                     put(key, valueFromFactory);
                 }
             } catch (Exception e) {
-                LOGGER.error(e.getLocalizedMessage());
+                LOGGER.error("Error occurred when retrieving data from cache factory!");
+                LOGGER.error(e);
                 throw new ExecutionException(e);
             }
         }
@@ -90,7 +87,6 @@ public abstract class AbstractCache implements ICache {
 
     @Override
     public void clear() {
-        LOGGER.debug("All Cache status data is reset!");
         cacheCounter.reset();
     }
 

@@ -62,6 +62,7 @@ public class LinkedHashMapCache extends AbstractCache{
     public void clear() {
         super.clear();
         cacheMap.clear();
+        LOGGER.info("Cache group with name {} is cleared!", name);
     }
 
     @Override
@@ -70,7 +71,7 @@ public class LinkedHashMapCache extends AbstractCache{
         if (checkCacheStatusNotAvailable()) return null;
         Object obj=super.get(key, factory);
        if(obj!=null){
-           LOGGER.debug("CachedItem with key {} and value {} is retrieved from cache group {}",key,obj,name);
+           LOGGER.debug("CachedItem with key {} and value {} is [retrieved] from cache group {}",key,obj,name);
            return obj;
        }
        return null;
@@ -80,7 +81,7 @@ public class LinkedHashMapCache extends AbstractCache{
     public void put(Object key, Object value) {
         if (checkCacheStatusNotAvailable()) return;
         cacheMap.put(key, new CachedItem(key,value));
-        LOGGER.debug("CachedItem with key {} and value {} is cached into cache group {}",key,value,name);
+        LOGGER.debug("CachedItem with key {} and value {} is [cached] into cache group {}",key,value,name);
     }
 
     @Override
@@ -88,7 +89,7 @@ public class LinkedHashMapCache extends AbstractCache{
         if (checkCacheStatusNotAvailable()) return;
         super.evict(key);
         cacheMap.remove(key);
-        LOGGER.debug("Cached Item with key {} is evicted from cache group {}",key,name);
+        LOGGER.debug("Cached Item with key {} is [evicted] from cache group {}",key,name);
     }
 
     @Override
@@ -103,11 +104,15 @@ public class LinkedHashMapCache extends AbstractCache{
 
     @Override
     public boolean isExpired(CachedItem cachedItem) {
-//    	LOGGER.debug("time to live is {}, creation time is {}, current time is {}",timeToLive,cachedItem.getCreationTime(),System.currentTimeMillis());
+        long now = System.currentTimeMillis();
         if(timeToLive<=0){
+            LOGGER.debug("CachedItem time to live <=0, not expired.");
             return false;
         }
-        return (System.currentTimeMillis()-cachedItem.getCreationTime())>TimeUtil.toMillis(timeToLive);
+        boolean isExpired = (now-cachedItem.getCreationTime()) > TimeUtil.toMillis(timeToLive);
+        LOGGER.debug("CachedItem key = {}, value = {}, time to live is {}, creation time is {}, current time is {},is expired? {}",
+                cachedItem.getKey(), cachedItem.getValue(), timeToLive, cachedItem.getCreationTime(), now, isExpired);
+        return isExpired;
     }
 
     private void logCacheStatus(){
