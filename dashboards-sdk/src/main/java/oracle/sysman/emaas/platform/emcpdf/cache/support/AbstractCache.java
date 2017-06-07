@@ -123,10 +123,10 @@ public abstract class AbstractCache implements ICache {
      */
     public class SimpleCacheCounter implements CacheCounter {
 
-        private long hitCount;
+        private volatile long hitCount;
 
-        private long requestCount;
-        private long evictionCount;
+        private volatile long requestCount;
+        private volatile long evictionCount;
         public SimpleCacheCounter() {
             hitCount = 0L;
             requestCount = 0L;
