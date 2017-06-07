@@ -377,15 +377,23 @@ public class BugVerification extends LoginAndLogout
     		//open APM oob dashboard
     		webd.getLogger().info("Open APM oob dashboard");
     		DashboardHomeUtil.selectDashboard(webd, "Application Performance Monitoring");
-    			
-    		//below to verify the fix for EMCPDF-4039
-    		webd.getLogger().info("Hide the hamburger menu");
-    		Assert.assertFalse(BrandingBarUtil.toggleHamburgerMenu(webd) , "Hamburger menu should be hidden");
-    		webd.getLogger().info("Display the hamburger menu");
-    		Assert.assertTrue(BrandingBarUtil.toggleHamburgerMenu(webd) , "Hamburger menu should be displayed");
-    		webd.getLogger().info("Check the current hamburger menu");
-    		currenMenuHeader = BrandingBarUtil.getCurrentMenuHeader(webd);
-    		Assert.assertEquals(currenMenuHeader.trim(), "APM");			
+
+		if(DashBoardUtils.isHamburgerMenuEnabled(webd))
+		{
+			webd.getlLogger().info("Verify in APM page");    			
+	    		//below to verify the fix for EMCPDF-4039
+	    		webd.getLogger().info("Hide the hamburger menu");
+	    		Assert.assertFalse(BrandingBarUtil.toggleHamburgerMenu(webd) , "Hamburger menu should be hidden");
+	    		webd.getLogger().info("Display the hamburger menu");
+	    		Assert.assertTrue(BrandingBarUtil.toggleHamburgerMenu(webd) , "Hamburger menu should be displayed");
+	    		webd.getLogger().info("Check the current hamburger menu");
+	    		currenMenuHeader = BrandingBarUtil.getCurrentMenuHeader(webd);
+	    		Assert.assertEquals(currenMenuHeader.trim(), "APM");
+		}
+		else
+		{
+			webd.getLogger().info("Hamburger menu is not enabled in APM, do need to verify the fix for EMCPDF-4039");
+		}		
     	}
     	else
     	{
