@@ -816,9 +816,43 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     }
                 }
                 
+                (function() {
+                    var beforePrint = function() {
+                        if (!window._uifwk) {
+                            window._uifwk = {};
+                        }
+                        window._uifwk.isUnderPrint = true;
+                    };
+
+                    var afterPrint = function() {
+                        if (!window._uifwk) {
+                            window._uifwk = {};
+                        }
+                        window._uifwk.isUnderPrint = false;
+                    };
+
+                    if (window.matchMedia) {
+                        var mediaQueryList = window.matchMedia('print');
+                        mediaQueryList.addListener(function(mql) {
+                            if (mql.matches) {
+                                beforePrint();
+                            } else {
+                                afterPrint();
+                            }
+                        });
+                    }
+
+                    window.onbeforeprint = beforePrint;
+                    window.onafterprint = afterPrint;
+
+                }());
+                
                 self.xlargeScreen = oj.ResponsiveKnockoutUtils.createMediaQueryObservable('(min-width: 1440px)');
 
                 self.xlargeScreen.subscribe(function(isXlarge){
+                    if (window._uifwk && window._uifwk.isUnderPrint) {
+                        return;
+                    }
                     if(!isXlarge){
                         if($("#omcHamburgerMenu").hasClass("oj-offcanvas-open")){
                             oj.OffcanvasUtils.close({
