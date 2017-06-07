@@ -380,7 +380,7 @@ public class BugVerification extends LoginAndLogout
 
 		if(DashBoardUtils.isHamburgerMenuEnabled(webd))
 		{
-			webd.getlLogger().info("Verify in APM page");    			
+			webd.getLogger().info("Verify in APM page");    			
 	    		//below to verify the fix for EMCPDF-4039
 	    		webd.getLogger().info("Hide the hamburger menu");
 	    		Assert.assertFalse(BrandingBarUtil.toggleHamburgerMenu(webd) , "Hamburger menu should be hidden");
