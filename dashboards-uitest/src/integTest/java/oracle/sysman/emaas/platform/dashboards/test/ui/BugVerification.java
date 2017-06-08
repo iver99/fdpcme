@@ -368,7 +368,7 @@ public class BugVerification extends LoginAndLogout
     		Assert.assertTrue(BrandingBarUtil.toggleHamburgerMenu(webd) , "Hamburger menu should be displayed");
     		webd.getLogger().info("Check the current hamburger menu");
     		currenMenuHeader = BrandingBarUtil.getCurrentMenuHeader(webd);
-    		Assert.assertEquals(currenMenuHeader.trim(), "OMC Management Cloud");
+    		Assert.assertEquals(currenMenuHeader.trim(), BrandingBarUtil.ROOT_MENU_TITLE);
     			
     		//back to the dashboard home page
     		webd.getLogger().info("Navigate to Dashboard Home page");
