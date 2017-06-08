@@ -7,6 +7,7 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -15,9 +16,7 @@ import org.testng.Assert;
 
 public class VerifyOOBUtil
 {
-	private static WebDriver webd;
-
-	public static void verifyAPM()
+	public static void verifyAPM(WebDriver webd)
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
 		//verify the current url
@@ -31,7 +30,7 @@ public class VerifyOOBUtil
 		webd.getLogger().info("Verification end...");
 	}
 
-	public static void verifyApplicationPerfAnalytics()
+	public static void verifyApplicationPerfAnalytics(WebDriver webd)
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
 		//verify the current url
@@ -50,7 +49,7 @@ public class VerifyOOBUtil
 		webd.getLogger().info("Verify end...");
 	}
 
-	public static void verifyApplicationServers()
+	public static void verifyApplicationServers(WebDriver webd)
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
 
@@ -58,20 +57,20 @@ public class VerifyOOBUtil
 		webd.getLogger().info("Start to verify the OOB Dashboard - Application Servers opened correctly");
 
 		//verify all the widgets displayed
-		webd.getLogger().info("Verify all the widgets in dashboard");
-		DashboardBuilderUtil.verifyWidget(webd, "Application Server Status");
-		DashboardBuilderUtil.verifyWidget(webd, "Application Server: Fatal Alerts");
-		DashboardBuilderUtil.verifyWidget(webd, "Application Server: Critical Alerts");
-		DashboardBuilderUtil.verifyWidget(webd, "Application Server: Warning Alerts");
-		DashboardBuilderUtil.verifyWidget(webd, "Application Servers: Top 5 by Alert Count");
-		DashboardBuilderUtil.verifyWidget(webd, "Application Server Performance Metrics");
-		DashboardBuilderUtil.verifyWidget(webd, "Average Memory Usage");
-		DashboardBuilderUtil.verifyWidget(webd, "CPU Utilization by Application Server Type");
-		DashboardBuilderUtil.verifyWidget(webd, "Application Servers Grouped by Web Request Rate");
-		DashboardBuilderUtil.verifyWidget(webd, "Application Server Log Records");
+//		webd.getLogger().info("Verify all the widgets in dashboard");
+//		DashboardBuilderUtil.verifyWidget(webd, "Application Server Status");
+//		DashboardBuilderUtil.verifyWidget(webd, "Application Server: Fatal Alerts");
+//		DashboardBuilderUtil.verifyWidget(webd, "Application Server: Critical Alerts");
+//		DashboardBuilderUtil.verifyWidget(webd, "Application Server: Warning Alerts");
+//		DashboardBuilderUtil.verifyWidget(webd, "Application Servers: Top 5 by Alert Count");
+//		DashboardBuilderUtil.verifyWidget(webd, "Application Server Performance Metrics");
+//		DashboardBuilderUtil.verifyWidget(webd, "Average Memory Usage");
+//		DashboardBuilderUtil.verifyWidget(webd, "CPU Utilization by Application Server Type");
+//		DashboardBuilderUtil.verifyWidget(webd, "Application Servers Grouped by Web Request Rate");
+//		DashboardBuilderUtil.verifyWidget(webd, "Application Server Log Records");
 
 		webd.getLogger().info("Verify the icon in OOB");
-		VerifyOOBUtil.verifyIconInOobDashboard();
+		VerifyOOBUtil.verifyIconInOobDashboard(webd);
 
 		webd.getLogger().info("Verify the icon in widget");
 		VerifyOOBUtil.verifyIconInWidget(webd, "Application Server Status");
@@ -89,7 +88,7 @@ public class VerifyOOBUtil
 
 	}
 
-	public static void verifyAvailabilityAnalytics()
+	public static void verifyAvailabilityAnalytics(WebDriver webd)
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
 		//verify the current url
@@ -102,7 +101,7 @@ public class VerifyOOBUtil
 		webd.getLogger().info("Verification end...");
 	}
 
-	public static void verifyCategoricalAdvanced()
+	public static void verifyCategoricalAdvanced(WebDriver webd)
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
 
@@ -110,14 +109,14 @@ public class VerifyOOBUtil
 		webd.getLogger().info("Start to verify the OOB Dashboard - Categorical - Advanced opened correctly");
 
 		//verify all the widgets displayed
-		webd.getLogger().info("Verify all the widgets in dashboard");
-		DashboardBuilderUtil.verifyWidget(webd, "Bar Chart with Top N");
-		DashboardBuilderUtil.verifyWidget(webd, "Bar Chart with Color and Group by option");
-		DashboardBuilderUtil.verifyWidget(webd, "Bar Chart with Color option");
-		DashboardBuilderUtil.verifyWidget(webd, "Pareto Chart");
+//		webd.getLogger().info("Verify all the widgets in dashboard");
+//		DashboardBuilderUtil.verifyWidget(webd, "Bar Chart with Top N");
+//		DashboardBuilderUtil.verifyWidget(webd, "Bar Chart with Color and Group by option");
+//		DashboardBuilderUtil.verifyWidget(webd, "Bar Chart with Color option");
+//		DashboardBuilderUtil.verifyWidget(webd, "Pareto Chart");
 
 		webd.getLogger().info("Verify the icon in OOB");
-		VerifyOOBUtil.verifyIconInOobDashboard();
+		VerifyOOBUtil.verifyIconInOobDashboard(webd);
 
 		webd.getLogger().info("Verify the icon in widget");
 		VerifyOOBUtil.verifyIconInWidget(webd, "Bar Chart with Top N");
@@ -128,7 +127,7 @@ public class VerifyOOBUtil
 		webd.getLogger().info("Verification end...");
 	}
 
-	public static void verifyCategoricalBasic()
+	public static void verifyCategoricalBasic(WebDriver webd)
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
 
@@ -136,16 +135,16 @@ public class VerifyOOBUtil
 		webd.getLogger().info("Start to verify the OOB Dashboard - Categorical - Basic opened correctly");
 
 		//verify all the widgets displayed
-		webd.getLogger().info("Verify all the widgets in dashboard");
-		DashboardBuilderUtil.verifyWidget(webd, "Donut");
-		DashboardBuilderUtil.verifyWidget(webd, "Treemap");
-		DashboardBuilderUtil.verifyWidget(webd, "Histogram");
-		DashboardBuilderUtil.verifyWidget(webd, "Analytics Line - Categorical");
-		DashboardBuilderUtil.verifyWidget(webd, "Bar Chart");
-		DashboardBuilderUtil.verifyWidget(webd, "Stacked Bar Chart");
+//		webd.getLogger().info("Verify all the widgets in dashboard");
+//		DashboardBuilderUtil.verifyWidget(webd, "Donut");
+//		DashboardBuilderUtil.verifyWidget(webd, "Treemap");
+//		DashboardBuilderUtil.verifyWidget(webd, "Histogram");
+//		DashboardBuilderUtil.verifyWidget(webd, "Analytics Line - Categorical");
+//		DashboardBuilderUtil.verifyWidget(webd, "Bar Chart");
+//		DashboardBuilderUtil.verifyWidget(webd, "Stacked Bar Chart");
 
 		webd.getLogger().info("Verify the icon in OOB");
-		VerifyOOBUtil.verifyIconInOobDashboard();
+		VerifyOOBUtil.verifyIconInOobDashboard(webd);
 
 		webd.getLogger().info("Verify the icon in widget");
 		VerifyOOBUtil.verifyIconInWidget(webd, "Donut");
@@ -158,7 +157,7 @@ public class VerifyOOBUtil
 		webd.getLogger().info("Verification end...");
 	}
 
-	public static void verifyDatabaseOperations()
+	public static void verifyDatabaseOperations(WebDriver webd)
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
 		//verify the current url
@@ -174,17 +173,17 @@ public class VerifyOOBUtil
 		webd.getLogger().info("Verify the OOB Dashboard - Database Operations opened finished");
 	}
 
-	public static void verifyDatabaseOperations_Details()
+	public static void verifyDatabaseOperations_Details(WebDriver webd)
 	{
 		//verify all the widgets displayed
-		webd.getLogger().info("Verify all the widgets in dashboard -- <Database Operations>");
-		DashboardBuilderUtil.verifyWidget(webd, "Database Log Trends");
-		DashboardBuilderUtil.verifyWidget(webd, "Database Critical Incidents by Target Type");
-		DashboardBuilderUtil.verifyWidget(webd, "Top Database Targets with Log Errors");
-		DashboardBuilderUtil.verifyWidget(webd, "Database Top Errors");
+//		webd.getLogger().info("Verify all the widgets in dashboard -- <Database Operations>");
+//		DashboardBuilderUtil.verifyWidget(webd, "Database Log Trends");
+//		DashboardBuilderUtil.verifyWidget(webd, "Database Critical Incidents by Target Type");
+//		DashboardBuilderUtil.verifyWidget(webd, "Top Database Targets with Log Errors");
+//		DashboardBuilderUtil.verifyWidget(webd, "Database Top Errors");
 
 		webd.getLogger().info("Verify the icon in OOB");
-		VerifyOOBUtil.verifyIconInOobDashboard();
+		VerifyOOBUtil.verifyIconInOobDashboard(webd);
 
 		webd.getLogger().info("Verify the icon in widget");
 		VerifyOOBUtil.verifyIconInWidget(webd, "Database Log Trends");
@@ -195,7 +194,7 @@ public class VerifyOOBUtil
 		webd.getLogger().info("Verification end...");
 	}
 
-	public static void verifyDatabases()
+	public static void verifyDatabases(WebDriver webd)
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
 
@@ -203,19 +202,19 @@ public class VerifyOOBUtil
 		webd.getLogger().info("Start to verify the OOB Dashboard - Databases opened correctly");
 
 		//verify all the widgets displayed
-		webd.getLogger().info("Verify all the widgets in dashboard");
-		DashboardBuilderUtil.verifyWidget(webd, "Database Status");
-		DashboardBuilderUtil.verifyWidget(webd, "Databases: Fatal Alerts");
-		DashboardBuilderUtil.verifyWidget(webd, "Databases: Critical Alerts");
-		DashboardBuilderUtil.verifyWidget(webd, "Databases: Warning Alerts");
-		DashboardBuilderUtil.verifyWidget(webd, "Databases: Top 5 by Alert Count");
-		DashboardBuilderUtil.verifyWidget(webd, "Database Performance Metrics");
-		DashboardBuilderUtil.verifyWidget(webd, "Database Log Trends");
-		DashboardBuilderUtil.verifyWidget(webd, "Space Used by Database Type");
-		DashboardBuilderUtil.verifyWidget(webd, "Databases Grouped by Transactions");
+//		webd.getLogger().info("Verify all the widgets in dashboard");
+//		DashboardBuilderUtil.verifyWidget(webd, "Database Status");
+//		DashboardBuilderUtil.verifyWidget(webd, "Databases: Fatal Alerts");
+//		DashboardBuilderUtil.verifyWidget(webd, "Databases: Critical Alerts");
+//		DashboardBuilderUtil.verifyWidget(webd, "Databases: Warning Alerts");
+//		DashboardBuilderUtil.verifyWidget(webd, "Databases: Top 5 by Alert Count");
+//		DashboardBuilderUtil.verifyWidget(webd, "Database Performance Metrics");
+//		DashboardBuilderUtil.verifyWidget(webd, "Database Log Trends");
+//		DashboardBuilderUtil.verifyWidget(webd, "Space Used by Database Type");
+//		DashboardBuilderUtil.verifyWidget(webd, "Databases Grouped by Transactions");
 
 		webd.getLogger().info("Verify the icon in OOB");
-		VerifyOOBUtil.verifyIconInOobDashboard();
+		VerifyOOBUtil.verifyIconInOobDashboard(webd);
 
 		webd.getLogger().info("Verify the icon in widget");
 		VerifyOOBUtil.verifyIconInWidget(webd, "Database Status");
@@ -231,7 +230,7 @@ public class VerifyOOBUtil
 		webd.getLogger().info("Verification end...");
 	}
 
-	public static void verifyDatabaseSecurity()
+	public static void verifyDatabaseSecurity(WebDriver webd)
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
 		//verify the current url
@@ -240,19 +239,19 @@ public class VerifyOOBUtil
 		//verify the url of opened page
 		DashBoardUtils.verifyURL_WithPara(webd, "emcpdfui/builder.html?dashboardId=48");
 
-		DashboardBuilderUtil.verifyWidget(webd, "Top 10 Oracle DBs by Threats");
-		DashboardBuilderUtil.verifyWidget(webd, "Threat Trend on Oracle DBs");
-		DashboardBuilderUtil.verifyWidget(webd, "Top 10 Oracle DBs by Activity");
-		DashboardBuilderUtil.verifyWidget(webd, "Activity Trend on Oracle DBs");
-		DashboardBuilderUtil.verifyWidget(webd, "Top 10 Oracle DBs with Account Modifications on High privileges");
-		DashboardBuilderUtil.verifyWidget(webd, "Top 10 Oracle DBs with Sensitive Object Accesses");
-		DashboardBuilderUtil.verifyWidget(webd, "Top 10 Oracle DBs by Startups / Shutdowns");
-		DashboardBuilderUtil.verifyWidget(webd, "Top 10 Oracle DBs with Account Modifications");
-		DashboardBuilderUtil.verifyWidget(webd, "Top 10 Oracle DBs with Schema Changes");
-		DashboardBuilderUtil.verifyWidget(webd, "Top 10 Oracle DBs with Anomalies");
+//		DashboardBuilderUtil.verifyWidget(webd, "Top 10 Oracle DBs by Threats");
+//		DashboardBuilderUtil.verifyWidget(webd, "Threat Trend on Oracle DBs");
+//		DashboardBuilderUtil.verifyWidget(webd, "Top 10 Oracle DBs by Activity");
+//		DashboardBuilderUtil.verifyWidget(webd, "Activity Trend on Oracle DBs");
+//		DashboardBuilderUtil.verifyWidget(webd, "Top 10 Oracle DBs with Account Modifications on High privileges");
+//		DashboardBuilderUtil.verifyWidget(webd, "Top 10 Oracle DBs with Sensitive Object Accesses");
+//		DashboardBuilderUtil.verifyWidget(webd, "Top 10 Oracle DBs by Startups / Shutdowns");
+//		DashboardBuilderUtil.verifyWidget(webd, "Top 10 Oracle DBs with Account Modifications");
+//		DashboardBuilderUtil.verifyWidget(webd, "Top 10 Oracle DBs with Schema Changes");
+//		DashboardBuilderUtil.verifyWidget(webd, "Top 10 Oracle DBs with Anomalies");
 
 		webd.getLogger().info("Verify the icon in OOB");
-		VerifyOOBUtil.verifyIconInOobDashboard();
+		VerifyOOBUtil.verifyIconInOobDashboard(webd);
 
 		webd.getLogger().info("Verify the icon in widget");
 		VerifyOOBUtil.verifyIconInWidget(webd, "Top 10 Oracle DBs by Threats");
@@ -269,7 +268,7 @@ public class VerifyOOBUtil
 		webd.getLogger().info("Verification end...");
 	}
 
-	public static void verifyDNS()
+	public static void verifyDNS(WebDriver webd)
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
 		//verify the current url
@@ -278,17 +277,17 @@ public class VerifyOOBUtil
 		//verify the url of opened page
 		DashBoardUtils.verifyURL_WithPara(webd, "emcpdfui/builder.html?dashboardId=40");
 
-		DashboardBuilderUtil.verifyWidget(webd, "Total DNS Messages");
-		DashboardBuilderUtil.verifyWidget(webd, "Unique DNS Queries");
-		DashboardBuilderUtil.verifyWidget(webd, "Top 10 DNS Domains");
-		DashboardBuilderUtil.verifyWidget(webd, "Top 10 DNS Sources");
-		DashboardBuilderUtil.verifyWidget(webd, "Top 10 DNS Non-Standard TLDs");
-		DashboardBuilderUtil.verifyWidget(webd, "Top 10 DNS Sources with TXT Lookup");
-		DashboardBuilderUtil.verifyWidget(webd, "DNS Queries Per Domain");
-		DashboardBuilderUtil.verifyWidget(webd, "DNS Responses by Type");
+//		DashboardBuilderUtil.verifyWidget(webd, "Total DNS Messages");
+//		DashboardBuilderUtil.verifyWidget(webd, "Unique DNS Queries");
+//		DashboardBuilderUtil.verifyWidget(webd, "Top 10 DNS Domains");
+//		DashboardBuilderUtil.verifyWidget(webd, "Top 10 DNS Sources");
+//		DashboardBuilderUtil.verifyWidget(webd, "Top 10 DNS Non-Standard TLDs");
+//		DashboardBuilderUtil.verifyWidget(webd, "Top 10 DNS Sources with TXT Lookup");
+//		DashboardBuilderUtil.verifyWidget(webd, "DNS Queries Per Domain");
+//		DashboardBuilderUtil.verifyWidget(webd, "DNS Responses by Type");
 
 		webd.getLogger().info("Verify the icon in OOB");
-		VerifyOOBUtil.verifyIconInOobDashboard();
+		VerifyOOBUtil.verifyIconInOobDashboard(webd);
 
 		webd.getLogger().info("Verify the icon in widget");
 		VerifyOOBUtil.verifyIconInWidget(webd, "Total DNS Messages");
@@ -303,7 +302,7 @@ public class VerifyOOBUtil
 		webd.getLogger().info("Verification end...");
 	}
 
-	public static void verifyEnterpriseHealth()
+	public static void verifyEnterpriseHealth(WebDriver webd)
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
 		//verify the current url
@@ -317,10 +316,10 @@ public class VerifyOOBUtil
 		DashboardBuilderUtil.verifyDashboardSet(webd, "Enterprise Health");
 	}
 
-	public static void verifyEnterpriseHealth_Details()
+	public static void verifyEnterpriseHealth_Details(WebDriver webd)
 	{
 		webd.getLogger().info("Verify the icon in dashboard set -- <Enterprise Health>");
-		VerifyOOBUtil.verifyIconInOobDashboardSet();
+		VerifyOOBUtil.verifyIconInOobDashboardSet(webd);
 
 		//verify the dashboards in set
 		//comment below verify, if there is no expected dashboard in set, selectDashboardInsideSet api would throw error
@@ -335,28 +334,28 @@ public class VerifyOOBUtil
 		//verify each dashboard
 		webd.getLogger().info("Verify Dashboard <Summary> in set");
 		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Summary");
-		VerifyOOBUtil.verifySummary();
+		VerifyOOBUtil.verifySummary(webd);
 
 		webd.getLogger().info("Verify Dashboard <Hosts> in set");
 		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Hosts");
-		VerifyOOBUtil.verifyHosts();
+		VerifyOOBUtil.verifyHosts(webd);
 
 		webd.getLogger().info("Verify Dashboard <Databases> in set");
 		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Databases");
-		VerifyOOBUtil.verifyDatabases();
+		VerifyOOBUtil.verifyDatabases(webd);
 
 		webd.getLogger().info("Verify Dashboard <Application Servers> in set");
 		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Application Servers");
-		VerifyOOBUtil.verifyApplicationServers();
+		VerifyOOBUtil.verifyApplicationServers(webd);
 
 		webd.getLogger().info("Verify Dashboard <Entities> in set");
 		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Entities");
-		VerifyOOBUtil.verifyEntities();
+		VerifyOOBUtil.verifyEntities(webd);
 
 		webd.getLogger().info("Verification end...");
 	}
 
-	public static void verifyEntities()
+	public static void verifyEntities(WebDriver webd)
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
 
@@ -364,10 +363,10 @@ public class VerifyOOBUtil
 		webd.getLogger().info("Start to verify the OOB Dashboard - Entities opened correctly");
 
 		webd.getLogger().info("Verify all the widgets in dashboard");
-		DashboardBuilderUtil.verifyWidget(webd, "Entities");
+//		DashboardBuilderUtil.verifyWidget(webd, "Entities");
 
 		webd.getLogger().info("Verify the icon in OOB");
-		VerifyOOBUtil.verifyIconInOobDashboard();
+		VerifyOOBUtil.verifyIconInOobDashboard(webd);
 
 		webd.getLogger().info("Verify the icon in widget");
 		VerifyOOBUtil.verifyIconInWidget(webd, "Entities");
@@ -375,7 +374,7 @@ public class VerifyOOBUtil
 		webd.getLogger().info("Verification end...");
 	}
 
-	public static void verifyExadataHealth()
+	public static void verifyExadataHealth(WebDriver webd)
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
 
@@ -390,10 +389,10 @@ public class VerifyOOBUtil
 		DashboardBuilderUtil.verifyDashboardSet(webd, "Exadata Health");
 	}
 
-	public static void verifyExadataHealth_Details()
+	public static void verifyExadataHealth_Details(WebDriver webd)
 	{
 		webd.getLogger().info("Verify the icon in dashboard set -- <Exadata Health>");
-		VerifyOOBUtil.verifyIconInOobDashboardSet();
+		VerifyOOBUtil.verifyIconInOobDashboardSet(webd);
 
 		//verify the dashboards in set
 		//comment below verify, if there is no expected dashboard in set, selectDashboardInsideSet api would throw error
@@ -405,16 +404,16 @@ public class VerifyOOBUtil
 		//verify each dashboard
 		webd.getLogger().info("Verify Dashboard <Overview> in set");
 		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Overview");
-		VerifyOOBUtil.verifyOverview();
+		VerifyOOBUtil.verifyOverview(webd);
 
 		webd.getLogger().info("Verify Dashboard <Performance> in set");
 		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Performance");
-		VerifyOOBUtil.verifyPerformance();
+		VerifyOOBUtil.verifyPerformance(webd);
 
 		webd.getLogger().info("Verification end...");
 	}
 
-	public static void verifyFirewall()
+	public static void verifyFirewall(WebDriver webd)
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
 		//verify the current url
@@ -423,20 +422,20 @@ public class VerifyOOBUtil
 		//verify the url of opened page
 		DashBoardUtils.verifyURL_WithPara(webd, "emcpdfui/builder.html?dashboardId=47");
 
-		DashboardBuilderUtil.verifyWidget(webd, "Top 10 Denied Sources");
-		DashboardBuilderUtil.verifyWidget(webd, "Denied Connections by Source");
-		DashboardBuilderUtil.verifyWidget(webd, "Top 10 Denied Destination Ports");
-		DashboardBuilderUtil.verifyWidget(webd, "Denied Connections by Destination Port");
-		DashboardBuilderUtil.verifyWidget(webd, "Top 10 Sources connected to Insecure Ports");
-		DashboardBuilderUtil.verifyWidget(webd, "Top 10 Sources Connected to Unassigned Internal IP");
-		DashboardBuilderUtil.verifyWidget(webd, "Top 10 Connected Sources");
-		DashboardBuilderUtil.verifyWidget(webd, "Top 10 Sources by Bytes Transferred");
-		DashboardBuilderUtil.verifyWidget(webd, "Top 10 Destinations by Bytes Transferred");
-		DashboardBuilderUtil.verifyWidget(webd, "Top 10 Sources Connect to External Resources");
-		DashboardBuilderUtil.verifyWidget(webd, "Last Network Configuration Change");
+//		DashboardBuilderUtil.verifyWidget(webd, "Top 10 Denied Sources");
+//		DashboardBuilderUtil.verifyWidget(webd, "Denied Connections by Source");
+//		DashboardBuilderUtil.verifyWidget(webd, "Top 10 Denied Destination Ports");
+//		DashboardBuilderUtil.verifyWidget(webd, "Denied Connections by Destination Port");
+//		DashboardBuilderUtil.verifyWidget(webd, "Top 10 Sources connected to Insecure Ports");
+//		DashboardBuilderUtil.verifyWidget(webd, "Top 10 Sources Connected to Unassigned Internal IP");
+//		DashboardBuilderUtil.verifyWidget(webd, "Top 10 Connected Sources");
+//		DashboardBuilderUtil.verifyWidget(webd, "Top 10 Sources by Bytes Transferred");
+//		DashboardBuilderUtil.verifyWidget(webd, "Top 10 Destinations by Bytes Transferred");
+//		DashboardBuilderUtil.verifyWidget(webd, "Top 10 Sources Connect to External Resources");
+//		DashboardBuilderUtil.verifyWidget(webd, "Last Network Configuration Change");
 
 		webd.getLogger().info("Verify the icon in OOB");
-		VerifyOOBUtil.verifyIconInOobDashboard();
+		VerifyOOBUtil.verifyIconInOobDashboard(webd);
 
 		webd.getLogger().info("Verify the icon in widget");
 		VerifyOOBUtil.verifyIconInWidget(webd, "Top 10 Denied Sources");
@@ -454,7 +453,7 @@ public class VerifyOOBUtil
 		webd.getLogger().info("Verification end...");
 	}
 
-	public static void verifyHostOperations()
+	public static void verifyHostOperations(WebDriver webd)
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
 
@@ -471,17 +470,17 @@ public class VerifyOOBUtil
 		webd.getLogger().info("Verify the OOB Dashboard - Host Operations opened finished");
 	}
 
-	public static void verifyHostOperations_Details()
+	public static void verifyHostOperations_Details(WebDriver webd)
 	{
 		//verify all the widgets displayed
-		webd.getLogger().info("Verify all the widgets in dashboard -- <Host Operations>");
-		DashboardBuilderUtil.verifyWidget(webd, "Host Logs Trend");
-		DashboardBuilderUtil.verifyWidget(webd, "Top Host Log Sources");
-		DashboardBuilderUtil.verifyWidget(webd, "Top Host Log Entries by Service");
-		DashboardBuilderUtil.verifyWidget(webd, "Top SUDO Users");
+//		webd.getLogger().info("Verify all the widgets in dashboard -- <Host Operations>");
+//		DashboardBuilderUtil.verifyWidget(webd, "Host Logs Trend");
+//		DashboardBuilderUtil.verifyWidget(webd, "Top Host Log Sources");
+//		DashboardBuilderUtil.verifyWidget(webd, "Top Host Log Entries by Service");
+//		DashboardBuilderUtil.verifyWidget(webd, "Top SUDO Users");
 
 		webd.getLogger().info("Verify the icon in OOB");
-		VerifyOOBUtil.verifyIconInOobDashboard();
+		VerifyOOBUtil.verifyIconInOobDashboard(webd);
 
 		webd.getLogger().info("Verify the icon in widget");
 		VerifyOOBUtil.verifyIconInWidget(webd, "Host Logs Trend");
@@ -492,7 +491,7 @@ public class VerifyOOBUtil
 		webd.getLogger().info("Verification end...");
 	}
 
-	public static void verifyHosts()
+	public static void verifyHosts(WebDriver webd)
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
 
@@ -500,19 +499,19 @@ public class VerifyOOBUtil
 		webd.getLogger().info("Start to verify the OOB Dashboard - Hosts opened correctly");
 
 		webd.getLogger().info("Verify all the widgets in dashboard");
-		DashboardBuilderUtil.verifyWidget(webd, "Host Status");
-		DashboardBuilderUtil.verifyWidget(webd, "Hosts: Fatal Alerts");
-		DashboardBuilderUtil.verifyWidget(webd, "Hosts: Critical Alerts");
-		DashboardBuilderUtil.verifyWidget(webd, "Hosts: Warning Alerts");
-		DashboardBuilderUtil.verifyWidget(webd, "Hosts: Top 5 by Alert Count");
-		DashboardBuilderUtil.verifyWidget(webd, "Host Performance Metrics");
-		DashboardBuilderUtil.verifyWidget(webd, "Hosts Grouped by Memory Utilization");
-		DashboardBuilderUtil.verifyWidget(webd, "CPU Utilization by Host Type");
-		DashboardBuilderUtil.verifyWidget(webd, "Avg Disk I/O Request Rate");
-		DashboardBuilderUtil.verifyWidget(webd, "Host Log Trend");
+//		DashboardBuilderUtil.verifyWidget(webd, "Host Status");
+//		DashboardBuilderUtil.verifyWidget(webd, "Hosts: Fatal Alerts");
+//		DashboardBuilderUtil.verifyWidget(webd, "Hosts: Critical Alerts");
+//		DashboardBuilderUtil.verifyWidget(webd, "Hosts: Warning Alerts");
+//		DashboardBuilderUtil.verifyWidget(webd, "Hosts: Top 5 by Alert Count");
+//		DashboardBuilderUtil.verifyWidget(webd, "Host Performance Metrics");
+//		DashboardBuilderUtil.verifyWidget(webd, "Hosts Grouped by Memory Utilization");
+//		DashboardBuilderUtil.verifyWidget(webd, "CPU Utilization by Host Type");
+//		DashboardBuilderUtil.verifyWidget(webd, "Avg Disk I/O Request Rate");
+//		DashboardBuilderUtil.verifyWidget(webd, "Host Log Trend");
 
 		webd.getLogger().info("Verify the icon in OOB");
-		VerifyOOBUtil.verifyIconInOobDashboard();
+		VerifyOOBUtil.verifyIconInOobDashboard(webd);
 
 		webd.getLogger().info("Verify the icon in widget");
 		VerifyOOBUtil.verifyIconInWidget(webd, "Host Status");
@@ -529,7 +528,7 @@ public class VerifyOOBUtil
 		webd.getLogger().info("Verification end...");
 	}
 
-	public static void verifyIconInOobDashboard()
+	public static void verifyIconInOobDashboard(WebDriver webd)
 	{
 		webd.getLogger().info("Verify the save icon is not displayed in OOB");
 		Assert.assertFalse(webd.isDisplayed("css=" + DashBoardPageId.DASHBOARDSAVECSS), "Save icon is displayed in OOB Dashboard");
@@ -543,7 +542,7 @@ public class VerifyOOBUtil
 				"Edit menu is displayed in OOB Dashboard");
 	}
 
-	public static void verifyIconInOobDashboardSet()
+	public static void verifyIconInOobDashboardSet(WebDriver webd)
 	{
 		//verify the edit menu & save icon are not displayed in OOB
 		webd.getLogger().info("Verify the save icon is not displayed in OOB");
@@ -562,7 +561,18 @@ public class VerifyOOBUtil
 		driver.click(DashBoardPageId_190.BUILDERTILESEDITAREA);
 		
 		String titleTitlesLocator = String.format(DashBoardPageId.BUILDERTILETITLELOCATOR, widgetname);
-		WebElement tileTitle = driver.getWebDriver().findElement(By.xpath(titleTitlesLocator));
+		
+		WebElement tileTitle = null;
+		try
+		{
+			tileTitle = driver.getWebDriver().findElement(By.xpath(titleTitlesLocator));
+		}
+		catch (NoSuchElementException e) {			
+			Assert.assertTrue(false,"verifyIconInWidget failed: "+ e.getLocalizedMessage());			
+		}
+		if (tileTitle == null) {
+			Assert.assertTrue(false,"verifyIconInWidget failed: Not find expected widget "+ widgetname);			
+		}
 
 		tileTitle.click();
 		
@@ -574,7 +584,7 @@ public class VerifyOOBUtil
 				"widiget configuration icon is displayed");
 	}
 
-	public static void verifyMiddlewareOperations()
+	public static void verifyMiddlewareOperations(WebDriver webd)
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
 		//verify the current url
@@ -590,16 +600,16 @@ public class VerifyOOBUtil
 		webd.getLogger().info("Verify the OOB Dashboard - Middleware Operations opened finished");
 	}
 
-	public static void verifyMiddlewareOperations_Details()
+	public static void verifyMiddlewareOperations_Details(WebDriver webd)
 	{
-		webd.getLogger().info("Verify all the widgets in dashboard  -- <Middleware Operations>");
-		DashboardBuilderUtil.verifyWidget(webd, "Middleware Logs Trend");
-		DashboardBuilderUtil.verifyWidget(webd, "Top Middleware Error Codes");
-		DashboardBuilderUtil.verifyWidget(webd, "Top Middleware Targets with Errors");
-		DashboardBuilderUtil.verifyWidget(webd, "Web Server Top Accessed Pages");
+//		webd.getLogger().info("Verify all the widgets in dashboard  -- <Middleware Operations>");
+//		DashboardBuilderUtil.verifyWidget(webd, "Middleware Logs Trend");
+//		DashboardBuilderUtil.verifyWidget(webd, "Top Middleware Error Codes");
+//		DashboardBuilderUtil.verifyWidget(webd, "Top Middleware Targets with Errors");
+//		DashboardBuilderUtil.verifyWidget(webd, "Web Server Top Accessed Pages");
 
 		webd.getLogger().info("Verify the icon in OOB");
-		VerifyOOBUtil.verifyIconInOobDashboard();
+		VerifyOOBUtil.verifyIconInOobDashboard(webd);
 
 		webd.getLogger().info("Verify the icon in widget");
 		VerifyOOBUtil.verifyIconInWidget(webd, "Middleware Logs Trend");
@@ -610,7 +620,7 @@ public class VerifyOOBUtil
 		webd.getLogger().info("Verification end...");
 	}
 
-	public static void verifyOrchestration()
+	public static void verifyOrchestration(WebDriver webd)
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
 		//verify the current url
@@ -625,21 +635,21 @@ public class VerifyOOBUtil
 		webd.getLogger().info("Verification end...");
 	}
 
-	public static void verifyOverview()
+	public static void verifyOverview(WebDriver webd)
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
 
 		//verify the dashboard open correctly
 		webd.getLogger().info("Start to verify the OOB Dashboard - Overview opened correctly");
 
-		webd.getLogger().info("Verify all the widgets in dashboard");
-		DashboardBuilderUtil.verifyWidget(webd, "Entities by Database Machine");
-		DashboardBuilderUtil.verifyWidget(webd, "Exadata Inventory");
-		DashboardBuilderUtil.verifyWidget(webd, "Entity Types in Database Machines");
-		DashboardBuilderUtil.verifyWidget(webd, "Exadata Capacity by Disk Type");
+//		webd.getLogger().info("Verify all the widgets in dashboard");
+//		DashboardBuilderUtil.verifyWidget(webd, "Entities by Database Machine");
+//		DashboardBuilderUtil.verifyWidget(webd, "Exadata Inventory");
+//		DashboardBuilderUtil.verifyWidget(webd, "Entity Types in Database Machines");
+//		DashboardBuilderUtil.verifyWidget(webd, "Exadata Capacity by Disk Type");
 
 		webd.getLogger().info("Verify the icon in OOB");
-		VerifyOOBUtil.verifyIconInOobDashboard();
+		VerifyOOBUtil.verifyIconInOobDashboard(webd);
 
 		webd.getLogger().info("Verify the icon in widget");
 		VerifyOOBUtil.verifyIconInWidget(webd, "Entities by Database Machine");
@@ -650,7 +660,7 @@ public class VerifyOOBUtil
 		webd.getLogger().info("Verification end...");
 	}
 
-	public static void verifyPerfAnalyticsApplication()
+	public static void verifyPerfAnalyticsApplication(WebDriver webd)
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
 
@@ -664,7 +674,7 @@ public class VerifyOOBUtil
 		webd.getLogger().info("Verification end...");
 	}
 
-	public static void verifyPerfAnalyticsDatabase()
+	public static void verifyPerfAnalyticsDatabase(WebDriver webd)
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
 
@@ -678,24 +688,24 @@ public class VerifyOOBUtil
 		webd.getLogger().info("Verification end...");
 	}
 
-	public static void verifyPerformance()
+	public static void verifyPerformance(WebDriver webd)
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
 
 		//verify the dashboard open correctly
 		webd.getLogger().info("Start to verify the OOB Dashboard - Performance opened correctly");
 
-		webd.getLogger().info("Verify all the widgets in dashboard");
-		DashboardBuilderUtil.verifyWidget(webd, "Oracle Exadata Storage Server Read Response Time");
-		DashboardBuilderUtil.verifyWidget(webd, "Top 5 Databases by Active Sessions");
-		DashboardBuilderUtil.verifyWidget(webd, "Host CPU Utilization and Memory Utilization");
-		DashboardBuilderUtil.verifyWidget(webd, "Oracle Exadata Storage Server Infiniband Network Performance");
-		DashboardBuilderUtil.verifyWidget(webd, "Oracle Exadata Storage Server Write Response Time");
-		DashboardBuilderUtil.verifyWidget(webd, "Oracle Exadata Storage Server Read/Write Response Times");
-		DashboardBuilderUtil.verifyWidget(webd, "Oracle Exadata Storage Server I/O Utilization by DB Machine");
+//		webd.getLogger().info("Verify all the widgets in dashboard");
+//		DashboardBuilderUtil.verifyWidget(webd, "Oracle Exadata Storage Server Read Response Time");
+//		DashboardBuilderUtil.verifyWidget(webd, "Top 5 Databases by Active Sessions");
+//		DashboardBuilderUtil.verifyWidget(webd, "Host CPU Utilization and Memory Utilization");
+//		DashboardBuilderUtil.verifyWidget(webd, "Oracle Exadata Storage Server Infiniband Network Performance");
+//		DashboardBuilderUtil.verifyWidget(webd, "Oracle Exadata Storage Server Write Response Time");
+//		DashboardBuilderUtil.verifyWidget(webd, "Oracle Exadata Storage Server Read/Write Response Times");
+//		DashboardBuilderUtil.verifyWidget(webd, "Oracle Exadata Storage Server I/O Utilization by DB Machine");
 
 		webd.getLogger().info("Verify the icon in OOB");
-		VerifyOOBUtil.verifyIconInOobDashboard();
+		VerifyOOBUtil.verifyIconInOobDashboard(webd);
 
 		webd.getLogger().info("Verify the icon in widget");
 		VerifyOOBUtil.verifyIconInWidget(webd, "Oracle Exadata Storage Server Read Response Time");
@@ -709,7 +719,7 @@ public class VerifyOOBUtil
 		webd.getLogger().info("Verification end...");
 	}
 
-	public static void verifyResourceAnalyticsDatabase()
+	public static void verifyResourceAnalyticsDatabase(WebDriver webd)
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
 		//verify the current url
@@ -722,7 +732,7 @@ public class VerifyOOBUtil
 		webd.getLogger().info("Verification end...");
 	}
 
-	public static void verifyResourceAnalyticsHost()
+	public static void verifyResourceAnalyticsHost(WebDriver webd)
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
 		//verify the current url
@@ -736,7 +746,7 @@ public class VerifyOOBUtil
 		webd.getLogger().info("Verification end...");
 	}
 
-	public static void verifyResourceAnalyticsMiddleware()
+	public static void verifyResourceAnalyticsMiddleware(WebDriver webd)
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
 
@@ -751,30 +761,30 @@ public class VerifyOOBUtil
 
 	}
 
-	public static void verifySummary()
+	public static void verifySummary(WebDriver webd)
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
 
 		//verify the dashboard open correctly
 		webd.getLogger().info("Start to verify the OOB Dashboard - Summary opened correctly");
 
-		webd.getLogger().info("Verify all the widgets in dashboard");
-		DashboardBuilderUtil.verifyWidget(webd, "Entity Status");
-		DashboardBuilderUtil.verifyWidget(webd, "Entity Count");
-		DashboardBuilderUtil.verifyWidget(webd, "Entities: Fatal Alerts");
-		DashboardBuilderUtil.verifyWidget(webd, "Entities: Critical Alerts");
-		DashboardBuilderUtil.verifyWidget(webd, "Entities: Warning Alerts");
-		DashboardBuilderUtil.verifyWidget(webd, "Host Status by Type");
-		DashboardBuilderUtil.verifyWidget(webd, "Host CPU Metrics");
-		DashboardBuilderUtil.verifyWidget(webd, "Database Status by Type");
-		DashboardBuilderUtil.verifyWidget(webd, "Database I/O Metrics");
-		DashboardBuilderUtil.verifyWidget(webd, "Application Server Status by Type");
-		DashboardBuilderUtil.verifyWidget(webd, "Application Server Load Metrics");
-		DashboardBuilderUtil.verifyWidget(webd, "Load Balancer Status by Type");
-		DashboardBuilderUtil.verifyWidget(webd, "Load Balancer Performance Metrics");
+//		webd.getLogger().info("Verify all the widgets in dashboard");
+//		DashboardBuilderUtil.verifyWidget(webd, "Entity Status");
+//		DashboardBuilderUtil.verifyWidget(webd, "Entity Count");
+//		DashboardBuilderUtil.verifyWidget(webd, "Entities: Fatal Alerts");
+//		DashboardBuilderUtil.verifyWidget(webd, "Entities: Critical Alerts");
+//		DashboardBuilderUtil.verifyWidget(webd, "Entities: Warning Alerts");
+//		DashboardBuilderUtil.verifyWidget(webd, "Host Status by Type");
+//		DashboardBuilderUtil.verifyWidget(webd, "Host CPU Metrics");
+//		DashboardBuilderUtil.verifyWidget(webd, "Database Status by Type");
+//		DashboardBuilderUtil.verifyWidget(webd, "Database I/O Metrics");
+//		DashboardBuilderUtil.verifyWidget(webd, "Application Server Status by Type");
+//		DashboardBuilderUtil.verifyWidget(webd, "Application Server Load Metrics");
+//		DashboardBuilderUtil.verifyWidget(webd, "Load Balancer Status by Type");
+//		DashboardBuilderUtil.verifyWidget(webd, "Load Balancer Performance Metrics");
 
 		webd.getLogger().info("Verify the icon in OOB");
-		VerifyOOBUtil.verifyIconInOobDashboard();
+		VerifyOOBUtil.verifyIconInOobDashboard(webd);
 
 		webd.getLogger().info("Verify the icon in widget");
 		VerifyOOBUtil.verifyIconInWidget(webd, "Entity Status");
@@ -794,20 +804,20 @@ public class VerifyOOBUtil
 		webd.getLogger().info("Verification end...");
 	}
 
-	public static void verifyTimeseriesArea()
+	public static void verifyTimeseriesArea(WebDriver webd)
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
 
 		//verify the dashboard open correctly
 		webd.getLogger().info("Start to verify the OOB Dashboard - Timeseries - Area opened correctly");
 
-		webd.getLogger().info("Verify all the widgets in dashboard");
-		DashboardBuilderUtil.verifyWidget(webd, "Area Chart");
-		DashboardBuilderUtil.verifyWidget(webd, "Stacked Area Chart");
-		DashboardBuilderUtil.verifyWidget(webd, "Stacked Area Chart with Group By");
+//		webd.getLogger().info("Verify all the widgets in dashboard");
+//		DashboardBuilderUtil.verifyWidget(webd, "Area Chart");
+//		DashboardBuilderUtil.verifyWidget(webd, "Stacked Area Chart");
+//		DashboardBuilderUtil.verifyWidget(webd, "Stacked Area Chart with Group By");
 
 		webd.getLogger().info("Verify the icon in OOB");
-		VerifyOOBUtil.verifyIconInOobDashboard();
+		VerifyOOBUtil.verifyIconInOobDashboard(webd);
 
 		webd.getLogger().info("Verify the icon in widget");
 		VerifyOOBUtil.verifyIconInWidget(webd, "Area Chart");
@@ -817,20 +827,20 @@ public class VerifyOOBUtil
 		webd.getLogger().info("the verification end...");
 	}
 
-	public static void verifyTimeseriesLineAdvanced()
+	public static void verifyTimeseriesLineAdvanced(WebDriver webd)
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
 
 		//verify the dashboard open correctly
 		webd.getLogger().info("Start to verify the OOB Dashboard - Timeseries - Line Advanced opened correctly");
 
-		webd.getLogger().info("Verify all the widgets in dashboard");
-		DashboardBuilderUtil.verifyWidget(webd, "Line Chart with Color");
-		DashboardBuilderUtil.verifyWidget(webd, "Stacked Line Chart with Group By");
-		DashboardBuilderUtil.verifyWidget(webd, "Stacked Line Chart with Color and Group by");
+//		webd.getLogger().info("Verify all the widgets in dashboard");
+//		DashboardBuilderUtil.verifyWidget(webd, "Line Chart with Color");
+//		DashboardBuilderUtil.verifyWidget(webd, "Stacked Line Chart with Group By");
+//		DashboardBuilderUtil.verifyWidget(webd, "Stacked Line Chart with Color and Group by");
 
 		webd.getLogger().info("Verify the icon in OOB");
-		VerifyOOBUtil.verifyIconInOobDashboard();
+		VerifyOOBUtil.verifyIconInOobDashboard(webd);
 
 		webd.getLogger().info("Verify the icon in widget");
 		VerifyOOBUtil.verifyIconInWidget(webd, "Line Chart with Color");
@@ -840,21 +850,21 @@ public class VerifyOOBUtil
 		webd.getLogger().info("the verification end...");
 	}
 
-	public static void verifyTimeseriesLineBasic()
+	public static void verifyTimeseriesLineBasic(WebDriver webd)
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
 
 		//verify the dashboard open correctly
 		webd.getLogger().info("Start to verify the OOB Dashboard - Timeseries - Line Basic opened correctly");
 
-		webd.getLogger().info("Verify all the widgets in dashboard");
-		DashboardBuilderUtil.verifyWidget(webd, "Line Chart");
-		DashboardBuilderUtil.verifyWidget(webd, "Analytics Line");
-		DashboardBuilderUtil.verifyWidget(webd, "Line Chart with Shared Y-axis");
-		DashboardBuilderUtil.verifyWidget(webd, "Line Chart with Reference Line");
+//		webd.getLogger().info("Verify all the widgets in dashboard");
+//		DashboardBuilderUtil.verifyWidget(webd, "Line Chart");
+//		DashboardBuilderUtil.verifyWidget(webd, "Analytics Line");
+//		DashboardBuilderUtil.verifyWidget(webd, "Line Chart with Shared Y-axis");
+//		DashboardBuilderUtil.verifyWidget(webd, "Line Chart with Reference Line");
 
 		webd.getLogger().info("Verify the icon in OOB");
-		VerifyOOBUtil.verifyIconInOobDashboard();
+		VerifyOOBUtil.verifyIconInOobDashboard(webd);
 
 		webd.getLogger().info("Verify the icon in widget");
 		VerifyOOBUtil.verifyIconInWidget(webd, "Line Chart");
@@ -865,7 +875,7 @@ public class VerifyOOBUtil
 		webd.getLogger().info("the verification end...");
 	}
 
-	public static void verifyTrendAndForecasting()
+	public static void verifyTrendAndForecasting(WebDriver webd)
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
 
@@ -873,11 +883,12 @@ public class VerifyOOBUtil
 		webd.getLogger().info("Start to verify the OOB Dashboard -Trend and Forecasting opened correctly");
 
 		//verify all the widgets displayed
-		webd.getLogger().info("Verify all the widgets in dashboard");
-		DashboardBuilderUtil.verifyWidget(webd, "Analytics Line with Trend and Forecasting");
-		DashboardBuilderUtil.verifyWidget(webd, "Line Chart with Trend and Forecasting");
+//		webd.getLogger().info("Verify all the widgets in dashboard");
+//		DashboardBuilderUtil.verifyWidget(webd, "Analytics Line with Trend and Forecasting");
+//		DashboardBuilderUtil.verifyWidget(webd, "Line Chart with Trend and Forecasting");
+		
 		webd.getLogger().info("Verify the icon in OOB");
-		VerifyOOBUtil.verifyIconInOobDashboard();
+		VerifyOOBUtil.verifyIconInOobDashboard(webd);
 
 		webd.getLogger().info("Verify the icon in widget");
 		VerifyOOBUtil.verifyIconInWidget(webd, "Analytics Line with Trend and Forecasting");
@@ -886,7 +897,7 @@ public class VerifyOOBUtil
 		webd.getLogger().info("Verification end...");
 	}
 
-	public static void verifyUIGallery()
+	public static void verifyUIGallery(WebDriver webd)
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
 		//verify the current url
@@ -900,10 +911,10 @@ public class VerifyOOBUtil
 		DashboardBuilderUtil.verifyDashboardSet(webd, "UI Gallery");
 	}
 
-	public static void verifyUIGallery_Details()
+	public static void verifyUIGallery_Details(WebDriver webd)
 	{
 		webd.getLogger().info("Verify the icon in dashboard set --<UIGallery>");
-		VerifyOOBUtil.verifyIconInOobDashboardSet();
+		VerifyOOBUtil.verifyIconInOobDashboardSet(webd);
 
 		//verify the dashboards in set
 		//comment below verify, if there is no expected dashboard in set, selectDashboardInsideSet api would throw error
@@ -920,52 +931,52 @@ public class VerifyOOBUtil
 		//verify each dashboard
 		webd.getLogger().info("Verify Dashboard <Timeseries - Line Basic> in set");
 		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Timeseries - Line Basic");
-		VerifyOOBUtil.verifyTimeseriesLineBasic();
+		VerifyOOBUtil.verifyTimeseriesLineBasic(webd);
 
 		webd.getLogger().info("Verify Dashboard <Timeseries - Line Advanced> in set");
 		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Timeseries - Line Advanced");
-		VerifyOOBUtil.verifyTimeseriesLineAdvanced();
+		VerifyOOBUtil.verifyTimeseriesLineAdvanced(webd);
 
 		webd.getLogger().info("Verify Dashboard <Timeseries - Area> in set");
 		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Timeseries - Area");
-		VerifyOOBUtil.verifyTimeseriesArea();
+		VerifyOOBUtil.verifyTimeseriesArea(webd);
 
 		webd.getLogger().info("Verify Dashboard <Categorical - Basic> in set");
 		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Categorical - Basic");
-		VerifyOOBUtil.verifyCategoricalBasic();
+		VerifyOOBUtil.verifyCategoricalBasic(webd);
 
 		webd.getLogger().info("Verify Dashboard <Categorical - Advanced> in set");
 		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Categorical - Advanced");
-		VerifyOOBUtil.verifyCategoricalAdvanced();
+		VerifyOOBUtil.verifyCategoricalAdvanced(webd);
 
 		webd.getLogger().info("Verify Dashboard <Trend and Forecasting> in set");
 		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Trend and Forecasting");
-		VerifyOOBUtil.verifyTrendAndForecasting();
+		VerifyOOBUtil.verifyTrendAndForecasting(webd);
 				
 		webd.getLogger().info("Verify Dashboard <Others> in set");
 		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Others");
-		verifyOthers();
+		verifyOthers(webd);
 
 		webd.getLogger().info("Verification end...");
 	}
 
-	public static void verifyOthers()
+	public static void verifyOthers(WebDriver webd)
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
 
 		//verify the dashboard open correctly
 		webd.getLogger().info("Start to verify the OOB Dashboard - Others opened correctly");
 
-		webd.getLogger().info("Verify all the widgets in dashboard");
-//		DashboardBuilderUtil.verifyWidget(webd, "Label");
-//		DashboardBuilderUtil.verifyWidget(webd, "Circular Gauge");
-		DashboardBuilderUtil.verifyWidget(webd, "Table");
-//		DashboardBuilderUtil.verifyWidget(webd, "Vertical Gauge");
-//		DashboardBuilderUtil.verifyWidget(webd, "Horizontal Gauge");
-		DashboardBuilderUtil.verifyWidget(webd, "Scatter Chart");
+//		webd.getLogger().info("Verify all the widgets in dashboard");
+////		DashboardBuilderUtil.verifyWidget(webd, "Label");
+////		DashboardBuilderUtil.verifyWidget(webd, "Circular Gauge");
+//		DashboardBuilderUtil.verifyWidget(webd, "Table");
+////		DashboardBuilderUtil.verifyWidget(webd, "Vertical Gauge");
+////		DashboardBuilderUtil.verifyWidget(webd, "Horizontal Gauge");
+//		DashboardBuilderUtil.verifyWidget(webd, "Scatter Chart");
 
 		webd.getLogger().info("Verify the icon in OOB");
-		VerifyOOBUtil.verifyIconInOobDashboard();
+		VerifyOOBUtil.verifyIconInOobDashboard(webd);
 
 		webd.getLogger().info("Verify the icon in widget");
 //		VerifyOOBUtil.verifyIconInWidget(webd, "Label");

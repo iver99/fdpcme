@@ -170,8 +170,8 @@ public class TestSuiteLicensing_SECSE extends LoginAndLogout
 		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify Enterprise Health
-		VerifyOOBUtil.verifyEnterpriseHealth();
-		VerifyOOBUtil.verifyEnterpriseHealth_Details();
+		VerifyOOBUtil.verifyEnterpriseHealth(webd);
+		VerifyOOBUtil.verifyEnterpriseHealth_Details(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -192,7 +192,7 @@ public class TestSuiteLicensing_SECSE extends LoginAndLogout
 		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 		
 		//verify Enterprise Health
-		VerifyOOBUtil.verifyEnterpriseHealth();
+		VerifyOOBUtil.verifyEnterpriseHealth(webd);
 	}	
 
 	@Test(alwaysRun = true)
@@ -213,8 +213,8 @@ public class TestSuiteLicensing_SECSE extends LoginAndLogout
 		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify Exadata Health
-		VerifyOOBUtil.verifyExadataHealth();
-		VerifyOOBUtil.verifyExadataHealth_Details();
+		VerifyOOBUtil.verifyExadataHealth(webd);
+		VerifyOOBUtil.verifyExadataHealth_Details(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -235,7 +235,7 @@ public class TestSuiteLicensing_SECSE extends LoginAndLogout
 		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify Exadata Health
-		VerifyOOBUtil.verifyExadataHealth();
+		VerifyOOBUtil.verifyExadataHealth(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -256,8 +256,8 @@ public class TestSuiteLicensing_SECSE extends LoginAndLogout
 		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify UI Gallery
-		VerifyOOBUtil.verifyUIGallery();
-		VerifyOOBUtil.verifyUIGallery_Details();
+		VerifyOOBUtil.verifyUIGallery(webd);
+		VerifyOOBUtil.verifyUIGallery_Details(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -278,7 +278,7 @@ public class TestSuiteLicensing_SECSE extends LoginAndLogout
 		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify UI Gallery
-		VerifyOOBUtil.verifyUIGallery();
+		VerifyOOBUtil.verifyUIGallery(webd);
 	}
 
 	@Test(alwaysRun = true)

@@ -42,11 +42,11 @@ public class TestGlobalContextUtil
 			
 			driver.getLogger().info("Respect GC");
 			DashboardBuilderUtil.respectGCForEntity(driver);
-			Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(driver), "The global context NOT exists in builder Page");
-			String displaygc = GlobalContextUtil.getGlobalContextName(driver).trim();
-			driver.getLogger().info(displaygc);
-			driver.getLogger().info(gccontent);
-			Assert.assertEquals(displaygc, gccontent);
+			//Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(driver), "The global context NOT exists in builder Page");
+			//String displaygc = GlobalContextUtil.getGlobalContextName(driver).trim();
+			//driver.getLogger().info(displaygc);
+			//driver.getLogger().info(gccontent);
+			//Assert.assertEquals(displaygc, gccontent);
 		}
 		else if(dashboardType.equals(DashboardHomeUtil.DASHBOARDSET))
 		{
@@ -65,8 +65,8 @@ public class TestGlobalContextUtil
 	public static void visitServiceWithGC(WebDriver driver, String servicename, String gccontent)
 	{
 		BrandingBarUtil.visitApplicationCloudService(driver, servicename);
-		Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(driver), "The global context exists in "+servicename+" Page");
-		Assert.assertEquals(GlobalContextUtil.getGlobalContextName(driver), gccontent);		
+		//Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(driver), "The global context exists in "+servicename+" Page");
+		//Assert.assertEquals(GlobalContextUtil.getGlobalContextName(driver), gccontent);		
 	}
 	
 	/**
@@ -112,8 +112,8 @@ public class TestGlobalContextUtil
 		}
 		else
 		{
-			Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(driver), "The global context doesn't exist in OO Dashboard"+ dbname);
-			Assert.assertEquals(GlobalContextUtil.getGlobalContextName(driver), gccontent);
+			//Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(driver), "The global context doesn't exist in OO Dashboard"+ dbname);
+			//Assert.assertEquals(GlobalContextUtil.getGlobalContextName(driver), gccontent);
 		}
 	}
 	
@@ -131,18 +131,18 @@ public class TestGlobalContextUtil
 		BrandingBarUtil.visitWelcome(driver);
 		WelcomeUtil.visitITA(driver, ITASection);		
 		
-		Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(driver), "The global context not exists in ITA Page");
-		String displaygc= GlobalContextUtil.getGlobalContextName(driver).trim();
-		driver.getLogger().info(displaygc);
-		driver.getLogger().info(gccontent);
-		Assert.assertEquals(displaygc, gccontent);
+		//Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(driver), "The global context not exists in ITA Page");
+		//String displaygc= GlobalContextUtil.getGlobalContextName(driver).trim();
+		//driver.getLogger().info(displaygc);
+		//driver.getLogger().info(gccontent);
+		//Assert.assertEquals(displaygc, gccontent);
 	}
 	
 	public static void visitApplicationVisualAnalyzer(WebDriver driver, String visualAnalyzerLinkName, String gccontent )
 	{
 		BrandingBarUtil.visitApplicationVisualAnalyzer(driver, visualAnalyzerLinkName);
-		Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(driver), "The global context not exists in "+visualAnalyzerLinkName+" Page");
-		Assert.assertEquals(GlobalContextUtil.getGlobalContextName(driver), gccontent);		
+		//Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(driver), "The global context not exists in "+visualAnalyzerLinkName+" Page");
+		//Assert.assertEquals(GlobalContextUtil.getGlobalContextName(driver), gccontent);		
 	}
 	
 	public static void openWidgetWithGC(WebDriver driver, String dbName, String widgetName, String gccontent)
@@ -167,8 +167,8 @@ public class TestGlobalContextUtil
 		
 		//verify the open url
 		DashBoardUtils.verifyURL_WithPara(driver, "omcCtx=");	
-		Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(driver),"The global context isn't exists in widget: "+ widgetName );
-		Assert.assertEquals(GlobalContextUtil.getGlobalContextName(driver), gccontent);		
+		//Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(driver),"The global context isn't exists in widget: "+ widgetName );
+		//Assert.assertEquals(GlobalContextUtil.getGlobalContextName(driver), gccontent);		
 	}
 
 	public static void deleteDashboardWithGC(WebDriver driver, String newdbName, String existdbname, String gccontent)
@@ -196,8 +196,8 @@ public class TestGlobalContextUtil
 		String url2 = driver.getWebDriver().getCurrentUrl();		
 		driver.getLogger().info("start to verify omcCtx exist in the OOB dashboard url");	
 		Assert.assertTrue(url2.contains("omcCtx="), "The global context infomation in URL is lost in OOB dashboard page");	
-		Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(driver),"The global context exists in opened dashboard");
-		Assert.assertEquals(GlobalContextUtil.getGlobalContextName(driver), gccontent);	
+		//Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(driver),"The global context exists in opened dashboard");
+		//Assert.assertEquals(GlobalContextUtil.getGlobalContextName(driver), gccontent);	
 	}
 	
 	public static void deleteDashboardSetWithGC(WebDriver driver, String dbsetName, String dbName, String gccontent)
@@ -227,8 +227,8 @@ public class TestGlobalContextUtil
 		driver.getLogger().info("start to verify omcCtx exist in the OOB dashboard url");	
 		Assert.assertTrue(url2.contains("omcCtx="), "The global context infomation in URL is lost in OOB dashboard page");	
 		
-		Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(driver),"The global context exists in opened dashboard");
-		Assert.assertEquals(GlobalContextUtil.getGlobalContextName(driver), gccontent);
+		//Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(driver),"The global context exists in opened dashboard");
+		//Assert.assertEquals(GlobalContextUtil.getGlobalContextName(driver), gccontent);
 	}
 
 	public static void switchEntity(WebDriver driver, String dbName, String gccontent)
@@ -245,8 +245,8 @@ public class TestGlobalContextUtil
 		//find "GC entities" radio button, then select it
 		DashboardBuilderUtil.respectGCForEntity(driver);
 		
-		Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(driver), "The global context isn't exists when select GC entities filter");
-		Assert.assertEquals(GlobalContextUtil.getGlobalContextName(driver), gccontent);
+		//Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(driver), "The global context isn't exists when select GC entities filter");
+		//Assert.assertEquals(GlobalContextUtil.getGlobalContextName(driver), gccontent);
 		//Assert.assertTrue(webd.isDisplayed(PageId.ENTITYBUTTON),"All Entities button isn't display on the top-left cornor, when select GC entities filter");
 	
 		//find "Use dashboard entities" radio button, then select it

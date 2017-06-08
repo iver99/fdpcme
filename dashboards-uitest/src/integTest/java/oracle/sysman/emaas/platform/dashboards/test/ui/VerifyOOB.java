@@ -34,7 +34,7 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Open the OOB dashboard");
 		DashboardHomeUtil.selectDashboard(webd, "Application Performance Monitoring");
 
-		VerifyOOBUtil.verifyAPM();
+		VerifyOOBUtil.verifyAPM(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -52,7 +52,7 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Open the OOB dashboard");
 		DashboardHomeUtil.selectDashboard(webd, "Application Performance Monitoring");
 
-		VerifyOOBUtil.verifyAPM();
+		VerifyOOBUtil.verifyAPM(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -75,7 +75,7 @@ public class VerifyOOB extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, "Application Performance Monitoring");
 
 		//verify APM
-		VerifyOOBUtil.verifyAPM();
+		VerifyOOBUtil.verifyAPM(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -98,7 +98,7 @@ public class VerifyOOB extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, "Application Performance Monitoring");
 
 		//verify APM
-		VerifyOOBUtil.verifyAPM();
+		VerifyOOBUtil.verifyAPM(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -117,7 +117,7 @@ public class VerifyOOB extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, "Application Performance Analytics");
 
 		//verify Application PerfAnalytics
-		VerifyOOBUtil.verifyApplicationPerfAnalytics();
+		VerifyOOBUtil.verifyApplicationPerfAnalytics(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -136,7 +136,7 @@ public class VerifyOOB extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, "Application Performance Analytics");
 
 		//verify Application PerfAnalytics
-		VerifyOOBUtil.verifyApplicationPerfAnalytics();
+		VerifyOOBUtil.verifyApplicationPerfAnalytics(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -159,7 +159,7 @@ public class VerifyOOB extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, "Application Performance Analytics");
 
 		//verify Application PerfAnalytics
-		VerifyOOBUtil.verifyApplicationPerfAnalytics();
+		VerifyOOBUtil.verifyApplicationPerfAnalytics(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -182,7 +182,7 @@ public class VerifyOOB extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, "Application Performance Analytics");
 
 		//verify Application PerfAnalytics
-		VerifyOOBUtil.verifyApplicationPerfAnalytics();
+		VerifyOOBUtil.verifyApplicationPerfAnalytics(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -201,7 +201,7 @@ public class VerifyOOB extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, "Availability Analytics");
 
 		//verify Availability nalytics
-		VerifyOOBUtil.verifyAvailabilityAnalytics();
+		VerifyOOBUtil.verifyAvailabilityAnalytics(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -220,7 +220,7 @@ public class VerifyOOB extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, "Availability Analytics");
 
 		//verify Availability nalytics
-		VerifyOOBUtil.verifyAvailabilityAnalytics();
+		VerifyOOBUtil.verifyAvailabilityAnalytics(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -243,7 +243,7 @@ public class VerifyOOB extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, "Availability Analytics");
 
 		//verify Availability nalytics
-		VerifyOOBUtil.verifyAvailabilityAnalytics();
+		VerifyOOBUtil.verifyAvailabilityAnalytics(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -266,7 +266,7 @@ public class VerifyOOB extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, "Availability Analytics");
 
 		//verify Availability Analytics
-		VerifyOOBUtil.verifyAvailabilityAnalytics();
+		VerifyOOBUtil.verifyAvailabilityAnalytics(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -287,8 +287,8 @@ public class VerifyOOB extends LoginAndLogout
 		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify Database Operations
-		VerifyOOBUtil.verifyDatabaseOperations();
-		VerifyOOBUtil.verifyDatabaseOperations_Details();
+		VerifyOOBUtil.verifyDatabaseOperations(webd);
+		VerifyOOBUtil.verifyDatabaseOperations_Details(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -309,7 +309,7 @@ public class VerifyOOB extends LoginAndLogout
 		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify Database Operations
-		VerifyOOBUtil.verifyDatabaseOperations();
+		VerifyOOBUtil.verifyDatabaseOperations(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -334,7 +334,7 @@ public class VerifyOOB extends LoginAndLogout
 		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify Database Operations
-		VerifyOOBUtil.verifyDatabaseOperations();
+		VerifyOOBUtil.verifyDatabaseOperations(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -359,7 +359,7 @@ public class VerifyOOB extends LoginAndLogout
 		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify Database Operations
-		VerifyOOBUtil.verifyDatabaseOperations();
+		VerifyOOBUtil.verifyDatabaseOperations(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -378,7 +378,7 @@ public class VerifyOOB extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, "Oracle Database Security");
 
 		//verify Database Security
-		VerifyOOBUtil.verifyDatabaseSecurity();
+		VerifyOOBUtil.verifyDatabaseSecurity(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -397,7 +397,7 @@ public class VerifyOOB extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, "Oracle Database Security");
 
 		//verify Database Security
-		VerifyOOBUtil.verifyDatabaseSecurity();
+		VerifyOOBUtil.verifyDatabaseSecurity(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -420,7 +420,7 @@ public class VerifyOOB extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, "Oracle Database Security");
 
 		//verify Database Security
-		VerifyOOBUtil.verifyDatabaseSecurity();
+		VerifyOOBUtil.verifyDatabaseSecurity(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -443,7 +443,7 @@ public class VerifyOOB extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, "Oracle Database Security");
 
 		//verify Database Security
-		VerifyOOBUtil.verifyDatabaseSecurity();
+		VerifyOOBUtil.verifyDatabaseSecurity(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -462,7 +462,7 @@ public class VerifyOOB extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, "DNS");
 
 		//verify DNS
-		VerifyOOBUtil.verifyDNS();
+		VerifyOOBUtil.verifyDNS(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -481,7 +481,7 @@ public class VerifyOOB extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, "DNS");
 
 		//verify DNS
-		VerifyOOBUtil.verifyDNS();
+		VerifyOOBUtil.verifyDNS(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -504,7 +504,7 @@ public class VerifyOOB extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, "DNS");
 
 		//verify DNS
-		VerifyOOBUtil.verifyDNS();
+		VerifyOOBUtil.verifyDNS(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -527,7 +527,7 @@ public class VerifyOOB extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, "DNS");
 
 		//verify DNS
-		VerifyOOBUtil.verifyDNS();
+		VerifyOOBUtil.verifyDNS(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -548,8 +548,8 @@ public class VerifyOOB extends LoginAndLogout
 		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify Enterprise Health
-		VerifyOOBUtil.verifyEnterpriseHealth();
-		VerifyOOBUtil.verifyEnterpriseHealth_Details();
+		VerifyOOBUtil.verifyEnterpriseHealth(webd);
+		VerifyOOBUtil.verifyEnterpriseHealth_Details(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -570,7 +570,7 @@ public class VerifyOOB extends LoginAndLogout
 		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify Enterprise Health
-		VerifyOOBUtil.verifyEnterpriseHealth();
+		VerifyOOBUtil.verifyEnterpriseHealth(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -595,7 +595,7 @@ public class VerifyOOB extends LoginAndLogout
 		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify Enterprise Health
-		VerifyOOBUtil.verifyEnterpriseHealth();
+		VerifyOOBUtil.verifyEnterpriseHealth(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -620,7 +620,7 @@ public class VerifyOOB extends LoginAndLogout
 		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify Enterprise Health
-		VerifyOOBUtil.verifyEnterpriseHealth();
+		VerifyOOBUtil.verifyEnterpriseHealth(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -641,8 +641,8 @@ public class VerifyOOB extends LoginAndLogout
 		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify Exadata Health
-		VerifyOOBUtil.verifyExadataHealth();
-		VerifyOOBUtil.verifyExadataHealth_Details();
+		VerifyOOBUtil.verifyExadataHealth(webd);
+		VerifyOOBUtil.verifyExadataHealth_Details(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -663,7 +663,7 @@ public class VerifyOOB extends LoginAndLogout
 		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify Exadata Health
-		VerifyOOBUtil.verifyExadataHealth();
+		VerifyOOBUtil.verifyExadataHealth(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -688,7 +688,7 @@ public class VerifyOOB extends LoginAndLogout
 		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify Exadata Health
-		VerifyOOBUtil.verifyExadataHealth();
+		VerifyOOBUtil.verifyExadataHealth(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -713,7 +713,7 @@ public class VerifyOOB extends LoginAndLogout
 		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify Exadata Health
-		VerifyOOBUtil.verifyExadataHealth();
+		VerifyOOBUtil.verifyExadataHealth(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -732,7 +732,7 @@ public class VerifyOOB extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, "Firewall");
 
 		//verify Firewall
-		VerifyOOBUtil.verifyFirewall();
+		VerifyOOBUtil.verifyFirewall(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -751,7 +751,7 @@ public class VerifyOOB extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, "Firewall");
 
 		//verify Firewall
-		VerifyOOBUtil.verifyFirewall();
+		VerifyOOBUtil.verifyFirewall(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -774,7 +774,7 @@ public class VerifyOOB extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, "Firewall");
 
 		//verify Firewall
-		VerifyOOBUtil.verifyFirewall();
+		VerifyOOBUtil.verifyFirewall(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -797,7 +797,7 @@ public class VerifyOOB extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, "Firewall");
 
 		//verify Firewall
-		VerifyOOBUtil.verifyFirewall();
+		VerifyOOBUtil.verifyFirewall(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -818,8 +818,8 @@ public class VerifyOOB extends LoginAndLogout
 		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify Host Operations
-		VerifyOOBUtil.verifyHostOperations();
-		VerifyOOBUtil.verifyHostOperations_Details();
+		VerifyOOBUtil.verifyHostOperations(webd);
+		VerifyOOBUtil.verifyHostOperations_Details(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -840,7 +840,7 @@ public class VerifyOOB extends LoginAndLogout
 		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify Host Operations
-		VerifyOOBUtil.verifyHostOperations();
+		VerifyOOBUtil.verifyHostOperations(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -865,7 +865,7 @@ public class VerifyOOB extends LoginAndLogout
 		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify Host Operations
-		VerifyOOBUtil.verifyHostOperations();
+		VerifyOOBUtil.verifyHostOperations(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -890,7 +890,7 @@ public class VerifyOOB extends LoginAndLogout
 		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify Host Operations
-		VerifyOOBUtil.verifyHostOperations();
+		VerifyOOBUtil.verifyHostOperations(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -911,8 +911,8 @@ public class VerifyOOB extends LoginAndLogout
 		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify Middleware Operations
-		VerifyOOBUtil.verifyMiddlewareOperations();
-		VerifyOOBUtil.verifyMiddlewareOperations_Details();
+		VerifyOOBUtil.verifyMiddlewareOperations(webd);
+		VerifyOOBUtil.verifyMiddlewareOperations_Details(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -933,7 +933,7 @@ public class VerifyOOB extends LoginAndLogout
 		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify Middleware Operations
-		VerifyOOBUtil.verifyMiddlewareOperations();
+		VerifyOOBUtil.verifyMiddlewareOperations(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -958,7 +958,7 @@ public class VerifyOOB extends LoginAndLogout
 		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify Middleware Operations
-		VerifyOOBUtil.verifyMiddlewareOperations();
+		VerifyOOBUtil.verifyMiddlewareOperations(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -983,7 +983,7 @@ public class VerifyOOB extends LoginAndLogout
 		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify Middleware Operations
-		VerifyOOBUtil.verifyMiddlewareOperations();
+		VerifyOOBUtil.verifyMiddlewareOperations(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -1004,7 +1004,7 @@ public class VerifyOOB extends LoginAndLogout
 		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify Orchestration Workflows
-		VerifyOOBUtil.verifyOrchestration();
+		VerifyOOBUtil.verifyOrchestration(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -1025,7 +1025,7 @@ public class VerifyOOB extends LoginAndLogout
 		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify Orchestration Workflows
-		VerifyOOBUtil.verifyOrchestration();
+		VerifyOOBUtil.verifyOrchestration(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -1050,7 +1050,7 @@ public class VerifyOOB extends LoginAndLogout
 		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify Orchestration Workflows
-		VerifyOOBUtil.verifyOrchestration();
+		VerifyOOBUtil.verifyOrchestration(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -1075,7 +1075,7 @@ public class VerifyOOB extends LoginAndLogout
 		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify Orchestration Workflows
-		VerifyOOBUtil.verifyOrchestration();
+		VerifyOOBUtil.verifyOrchestration(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -1094,7 +1094,7 @@ public class VerifyOOB extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, "Performance Analytics Application Server");
 
 		//verify Perf Analytics Application
-		VerifyOOBUtil.verifyPerfAnalyticsApplication();
+		VerifyOOBUtil.verifyPerfAnalyticsApplication(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -1113,7 +1113,7 @@ public class VerifyOOB extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, "Performance Analytics Application Server");
 
 		//verify Perf Analytics Application
-		VerifyOOBUtil.verifyPerfAnalyticsApplication();
+		VerifyOOBUtil.verifyPerfAnalyticsApplication(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -1136,7 +1136,7 @@ public class VerifyOOB extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, "Performance Analytics Application Server");
 
 		//verify Perf Analytics Application
-		VerifyOOBUtil.verifyPerfAnalyticsApplication();
+		VerifyOOBUtil.verifyPerfAnalyticsApplication(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -1159,7 +1159,7 @@ public class VerifyOOB extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, "Performance Analytics Application Server");
 
 		//verify Perf Analytics Application
-		VerifyOOBUtil.verifyPerfAnalyticsApplication();
+		VerifyOOBUtil.verifyPerfAnalyticsApplication(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -1178,7 +1178,7 @@ public class VerifyOOB extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, "Performance Analytics: Database");
 
 		//verify Perf Analytics Database
-		VerifyOOBUtil.verifyPerfAnalyticsDatabase();
+		VerifyOOBUtil.verifyPerfAnalyticsDatabase(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -1197,7 +1197,7 @@ public class VerifyOOB extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, "Performance Analytics: Database");
 
 		//verify Perf Analytics Database
-		VerifyOOBUtil.verifyPerfAnalyticsDatabase();
+		VerifyOOBUtil.verifyPerfAnalyticsDatabase(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -1220,7 +1220,7 @@ public class VerifyOOB extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, "Performance Analytics: Database");
 
 		//verify Perf Analytics Database
-		VerifyOOBUtil.verifyPerfAnalyticsDatabase();
+		VerifyOOBUtil.verifyPerfAnalyticsDatabase(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -1243,7 +1243,7 @@ public class VerifyOOB extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, "Performance Analytics: Database");
 
 		//verify Perf Analytics Database
-		VerifyOOBUtil.verifyPerfAnalyticsDatabase();
+		VerifyOOBUtil.verifyPerfAnalyticsDatabase(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -1262,7 +1262,7 @@ public class VerifyOOB extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, "Resource Analytics: Database");
 
 		//verify Resource Analytics Database
-		VerifyOOBUtil.verifyResourceAnalyticsDatabase();
+		VerifyOOBUtil.verifyResourceAnalyticsDatabase(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -1281,7 +1281,7 @@ public class VerifyOOB extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, "Resource Analytics: Database");
 
 		//verify Resource Analytics Database
-		VerifyOOBUtil.verifyResourceAnalyticsDatabase();
+		VerifyOOBUtil.verifyResourceAnalyticsDatabase(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -1304,7 +1304,7 @@ public class VerifyOOB extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, "Resource Analytics: Database");
 
 		//verify Resource Analytics Database
-		VerifyOOBUtil.verifyResourceAnalyticsDatabase();
+		VerifyOOBUtil.verifyResourceAnalyticsDatabase(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -1327,7 +1327,7 @@ public class VerifyOOB extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, "Resource Analytics: Database");
 
 		//verify Resource Analytics Database
-		VerifyOOBUtil.verifyResourceAnalyticsDatabase();
+		VerifyOOBUtil.verifyResourceAnalyticsDatabase(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -1346,7 +1346,7 @@ public class VerifyOOB extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, "Resource Analytics: Host");
 
 		//verify Resource Analytics Host
-		VerifyOOBUtil.verifyResourceAnalyticsHost();
+		VerifyOOBUtil.verifyResourceAnalyticsHost(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -1365,7 +1365,7 @@ public class VerifyOOB extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, "Resource Analytics: Host");
 
 		//verify Resource Analytics Host
-		VerifyOOBUtil.verifyResourceAnalyticsHost();
+		VerifyOOBUtil.verifyResourceAnalyticsHost(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -1388,7 +1388,7 @@ public class VerifyOOB extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, "Resource Analytics: Host");
 
 		//verify Resource Analytics Host
-		VerifyOOBUtil.verifyResourceAnalyticsHost();
+		VerifyOOBUtil.verifyResourceAnalyticsHost(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -1411,7 +1411,7 @@ public class VerifyOOB extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, "Resource Analytics: Host");
 
 		//verify Resource Analytics Host
-		VerifyOOBUtil.verifyResourceAnalyticsHost();
+		VerifyOOBUtil.verifyResourceAnalyticsHost(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -1429,7 +1429,7 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Open the OOB dashboard---Resource Analytics: Middleware");
 		DashboardHomeUtil.selectDashboard(webd, "Resource Analytics: Middleware");
 
-		VerifyOOBUtil.verifyResourceAnalyticsMiddleware();
+		VerifyOOBUtil.verifyResourceAnalyticsMiddleware(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -1448,7 +1448,7 @@ public class VerifyOOB extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, "Resource Analytics: Middleware");
 
 		//verify Resource Analytics Middleware
-		VerifyOOBUtil.verifyResourceAnalyticsMiddleware();
+		VerifyOOBUtil.verifyResourceAnalyticsMiddleware(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -1471,7 +1471,7 @@ public class VerifyOOB extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, "Resource Analytics: Middleware");
 
 		//verify Resource Analytics Middleware
-		VerifyOOBUtil.verifyResourceAnalyticsMiddleware();
+		VerifyOOBUtil.verifyResourceAnalyticsMiddleware(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -1494,7 +1494,7 @@ public class VerifyOOB extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, "Resource Analytics: Middleware");
 
 		//verify Resource Analytics Middleware
-		VerifyOOBUtil.verifyResourceAnalyticsMiddleware();
+		VerifyOOBUtil.verifyResourceAnalyticsMiddleware(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -1515,8 +1515,8 @@ public class VerifyOOB extends LoginAndLogout
 		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify UI Gallery
-		VerifyOOBUtil.verifyUIGallery();
-		VerifyOOBUtil.verifyUIGallery_Details();
+		VerifyOOBUtil.verifyUIGallery(webd);
+		VerifyOOBUtil.verifyUIGallery_Details(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -1537,7 +1537,7 @@ public class VerifyOOB extends LoginAndLogout
 		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify UI Gallery
-		VerifyOOBUtil.verifyUIGallery();
+		VerifyOOBUtil.verifyUIGallery(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -1562,7 +1562,7 @@ public class VerifyOOB extends LoginAndLogout
 		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify UI Gallery
-		VerifyOOBUtil.verifyUIGallery();
+		VerifyOOBUtil.verifyUIGallery(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -1587,6 +1587,6 @@ public class VerifyOOB extends LoginAndLogout
 		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify UI Gallery
-		VerifyOOBUtil.verifyUIGallery();
+		VerifyOOBUtil.verifyUIGallery(webd);
 	}
 }
