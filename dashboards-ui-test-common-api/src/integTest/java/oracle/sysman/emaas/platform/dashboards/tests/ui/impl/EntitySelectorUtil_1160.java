@@ -21,6 +21,7 @@ import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -179,18 +180,7 @@ public class EntitySelectorUtil_1160 extends EntitySelectorUtil_1150
 		//Wait until the results are displayed
                 logger.log(Level.INFO, "Waiting for results to be displayed for text ''{0}''", entityName);
                 WaitUtil.waitForPageFullyLoaded(driver);
-                
-                final WebDriver finalDriver = driver;
-                final Logger finalLogger = logger;
-                wait.until(new ExpectedCondition<Boolean>() {
-                    
-                    @Override
-                    public Boolean apply(org.openqa.selenium.WebDriver driver) {
-                        int index = getTypeAheadIndex(finalDriver, finalLogger, category, entityName, entityType);
-                        return (index > -1 || index == -99);
-                    }
-                    
-                });
+                waitForSuggestionsRefreshed(driver, logger, entityName, entityType, category);
                 
 		driver.takeScreenShot();
 		logger.log(Level.INFO, "Results for ''{0}'' are available", entityName);
@@ -280,7 +270,7 @@ public class EntitySelectorUtil_1160 extends EntitySelectorUtil_1150
                 //Click on the suggestion that matches the search parameters
                 final int prevCount = getNumberOfPills(driver, logger);
                 logger.log(Level.INFO, "Click on matching suggestion");
-                WebElement element = getMatchingSuggestion(driver, logger, category, entityName, entityType);
+                WebElement element = getMatchingSuggestion(driver, logger, entityName, entityType, category);
 		element.click();
                 driver.takeScreenShot();
                 driver.savePageToFile();
@@ -367,51 +357,63 @@ public class EntitySelectorUtil_1160 extends EntitySelectorUtil_1150
                 return correct;
         }
         
-        private int getTypeAheadIndex(WebDriver driver, Logger logger, String category, String entityName, String entityType) {
-                String xpath = category.equals(CATEGORY_COMPOSITE) ? MessageFormat.format(DashBoardPageId.EntSelSuggestionByCompositeCategory,
+        private void waitForSuggestionsRefreshed(WebDriver driver, Logger logger, String entityName, String entityType, String category) {
+                final String xpath = category.equals(CATEGORY_COMPOSITE) ? MessageFormat.format(DashBoardPageId.EntSelSuggestionByCompositeCategory,
                                     entityType) : MessageFormat.format(DashBoardPageId.EntSelSuggestionByEntitiesCategory, entityType);
-                List<WebElement> suggestions = driver.getWebDriver().findElements(By.xpath(xpath));
-                if (suggestions.isEmpty()) {
-                    return -99;
-                } else {
-                    WebElement elem = getMatchingSuggestion(driver, logger, category, entityName, entityType);
-                    return elem == null ? -1 : suggestions.indexOf(elem);
-                }
+                final String trimmed = entityName.replaceAll(" +", "");
+                
+                logger.log(Level.INFO, "Looking for value in typeahead: {0}", trimmed);
+                driver.savePageToFile();
+                driver.takeScreenShot();
+                
+                final Logger finalLogger = logger;
+                WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), UNTIL_TIMEOUT);
+                // wait until suggest popup has been refreshed with new text
+                // note that even after desired entry is found, check the remaining
+                // entries just to make sure there are no stale elements because if
+                // there are, then the popup is still in the process of being 
+                // refreshed with the new entries
+                wait.until(new ExpectedCondition<Boolean>() {
+                    @Override
+                    public Boolean apply(org.openqa.selenium.WebDriver webdriver) {
+                        List<WebElement> elements = webdriver.findElements(By.xpath(xpath));
+                        boolean found = false;
+                        for (WebElement elem : elements) {
+                            try {
+                                String value = elem.getText().replaceAll(" +", "").split("\n")[0];
+                                finalLogger.log(Level.INFO, "Typeahead popup entry is: {0}", value);
+                                if (value.contains(trimmed)) {
+                                    finalLogger.log(Level.INFO, "Found {0} on typeahead popup (contains)", trimmed);
+                                    found = true;
+                                }
+                            } catch (StaleElementReferenceException e) {
+                                finalLogger.info("Element was stale, return false");
+                                return false;
+                            }
+                        }
+                        return found;
+                    }
+                });
         }
         
-        private WebElement getMatchingSuggestion(WebDriver driver, Logger logger, String category, String entityName, String entityType) {
+        private WebElement getMatchingSuggestion(WebDriver driver, Logger logger, String entityName, String entityType, String category) {
                 String xpath = category.equals(CATEGORY_COMPOSITE) ? MessageFormat.format(DashBoardPageId.EntSelSuggestionByCompositeCategory,
                                     entityType) : MessageFormat.format(DashBoardPageId.EntSelSuggestionByEntitiesCategory, entityType);
                 List<WebElement> suggestions = driver.getWebDriver().findElements(By.xpath(xpath));
-                
                 String trimmed = entityName.replaceAll(" +", "");
-                logger.log(Level.INFO, "Looking for value in typeahead: {0}", trimmed);
+                logger.log(Level.INFO, "Select value in typeahead: {0}", trimmed);
+                
                 if (!suggestions.isEmpty()) {
-                    logger.log(Level.INFO, "Check first for exact match in list.");
-                    for (int i = 0; i < suggestions.size(); i++) {
-                        WebElement suggestion = suggestions.get(i);
+                    logger.log(Level.INFO, "Check first for match in suggestions list.");
+                    for (WebElement suggestion : suggestions) {
                         String value = suggestion.getText().replaceAll(" +", "").split("\n")[0];
-                        logger.log(Level.INFO, value);
-                        if (value.equals(trimmed)) {
-                            logger.log(Level.INFO, "Exact match found at index: {0}", i);
-                            return suggestion;
-                        }
-                    }
-                    logger.log(Level.INFO, "No match found, check if string is contained.");
-                    for (int i = 0; i < suggestions.size(); i++) {
-                        WebElement suggestion = suggestions.get(i);
-                        String value = suggestion.getText().replaceAll(" +", "").split("\n")[0];
-                        logger.log(Level.INFO, value);
                         if (value.contains(trimmed)) {
-                            logger.log(Level.INFO, "Text contained at index: {0}", i);
+                            logger.log(Level.INFO, "Match found at index: {0}", suggestions.indexOf(suggestion));
                             return suggestion;
-                        }
+                        }                
                     }
-                } else {
-                    logger.log(Level.INFO, "No results for: {0}", trimmed);
-                    return null;
                 }
-                logger.log(Level.INFO, "String not found, suggestions might not have refreshed.");
+                logger.log(Level.INFO, "No results for: {0}", trimmed);
                 return null;
         }
 
