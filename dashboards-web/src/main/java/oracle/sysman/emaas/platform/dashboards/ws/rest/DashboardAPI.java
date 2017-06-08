@@ -16,7 +16,6 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -822,66 +821,11 @@ public class DashboardAPI extends APIBase
 			if(ed == null){
 				throw new DashboardNotFoundException();
 			}
-			List<EmsDashboardTile> tileList = ed.getDashboardTileList();
-//            LOGGER.info("origin tile list size is {}",tileList.size());
-			EmsDashboardTile newTile = new EmsDashboardTile();
-            newTile.setTileId(IdGenerator.getTileId(ZDTContext.getRequestId(), 1));//confirm
-			newTile.setTitle(searchModel.getName());
-			newTile.setWidgetUniqueId(searchModel.getId().toString());
-            newTile.setWidgetName(searchModel.getName());
-            newTile.setWidgetDescription(searchModel.getDescription());
-            newTile.setWidgetOwner(searchModel.getOwner());
-			newTile.setWidgetCreationTime(searchModel.getCreationDate().toString());
-			newTile.setOwner(searchModel.getOwner());
-            newTile.setCreationDate(searchModel.getCreationDate());
-			newTile.setDashboard(ed);
-			newTile.setIsMaximized(0);
-			newTile.setPosition(0);//if dashboard contains no widget, set it to 0
-			newTile.setWidgetHistogram("");//confirm
-			newTile.setWidgetDeleted(0);//confirm
-			newTile.setDeleted(false);
-
-			newTile.setWidgetSupportTimeControl(1);//TODO confirm
-			if(searchModel.getParameters()!=null && !searchModel.getParameters().isEmpty()){
-				for(ParameterModel p : searchModel.getParameters()){
-					if("WIDGET_KOC_NAME".equals(p.getName())){
-						newTile.setWidgetKocName(p.getValue());
-					}
-					if("WIDGET_VIEWMODEL".equals(p.getName())){
-						newTile.setWidgetViewmode(p.getValue());
-					}
-					if("WIDGET_TEMPLATE".equals(p.getName())){
-						newTile.setWidgetTemplate(p.getValue());
-					}
-				}
-			}
-			//TODO WIDGET_SCREENSHOT_HREF
-
-          	newTile.setWidgetGroupName(categoryModel.getName());
-			newTile.setProviderAssetRoot(categoryModel.getProviderAssetRoot());
-            newTile.setProviderName(categoryModel.getProviderName());
-            newTile.setProviderVersion(categoryModel.getProviderVersion());
-            newTile.setColumn(0);//if dashboard contains no widget, set it to 0
-            newTile.setRow(0);//if dashboard contains no widget, set it to 0
-            newTile.setWidth(12);
-            newTile.setHeight(2);
-            newTile.setWidgetSource(1);
-//                newTile.setType();//Confirm
-			//dashboard is empty
-			if(tileList == null | tileList.isEmpty()){
-				tileList = new ArrayList<>();
-                tileList.add(newTile);
-			}else{
-				//calculate the widget position
-				int row = calculateWidgetPosition(tileList).getRow();
-				LOGGER.info("Calculated row number is {}", row);
-				newTile.setRow(row);
-				tileList.add(newTile);
-				DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
-				dsf.mergeEmsDashboard(ed);
-                LOGGER.info("new tile list size is {}",ed.getDashboardTileList().size());
-				dbd = Dashboard.valueOf(ed, dbd, true, true, true);
-			}
+			addNewTile(searchModel, categoryModel, ed);
+			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+			dsf.mergeEmsDashboard(ed);
+			LOGGER.info("new tile list size is {}",ed.getDashboardTileList().size());
+			dbd = Dashboard.valueOf(ed, dbd, true, true, true);
 
 		} catch (DashboardNotFoundException e) {
 			LOGGER.error(e);
@@ -891,16 +835,85 @@ public class DashboardAPI extends APIBase
 
 	}
 
+	private void addNewTile(SearchModel searchModel, CategoryModel categoryModel, EmsDashboard ed) {
+		List<EmsDashboardTile> tileList = ed.getDashboardTileList();
+//            LOGGER.info("origin tile list size is {}",tileList.size());
+		EmsDashboardTile newTile = new EmsDashboardTile();
+		newTile.setTileId(IdGenerator.getTileId(ZDTContext.getRequestId(), 1));//confirm
+		newTile.setTitle(searchModel.getName());
+		newTile.setWidgetUniqueId(searchModel.getId().toString());
+		newTile.setWidgetName(searchModel.getName());
+		newTile.setWidgetDescription(searchModel.getDescription());
+		newTile.setWidgetOwner(searchModel.getOwner());
+		newTile.setWidgetCreationTime(searchModel.getCreationDate().toString());//format
+		newTile.setOwner(searchModel.getOwner());
+		newTile.setCreationDate(searchModel.getCreationDate());//format
+		newTile.setDashboard(ed);
+		newTile.setIsMaximized(0);// default is not maximized
+		newTile.setPosition(0);//if dashboard contains no widget, set it to 0
+		newTile.setWidgetDeleted(0);
+		newTile.setDeleted(false);
+
+		newTile.setWidgetSupportTimeControl(1);//TODO confirm
+		if(searchModel.getParameters()!=null && !searchModel.getParameters().isEmpty()){
+            for(ParameterModel p : searchModel.getParameters()){
+                if("WIDGET_KOC_NAME".equals(p.getName())){
+                    newTile.setWidgetKocName(p.getValue());
+                }
+                if("WIDGET_VIEWMODEL".equals(p.getName())){
+                    newTile.setWidgetViewmode(p.getValue());
+                }
+                if("WIDGET_TEMPLATE".equals(p.getName())){
+                    newTile.setWidgetTemplate(p.getValue());
+                }
+                if("WIDGET_SOURCE".equals(p.getName())){
+					newTile.setWidgetSource(Integer.valueOf(p.getValue()));
+				}
+				if("WIDGET_ICON".equals(p.getName())){
+					newTile.setWidgetIcon(p.getValue());
+				}
+            }
+        }
+		//TODO WIDGET_SCREENSHOT_HREF
+
+		newTile.setWidgetGroupName(categoryModel.getName());
+		newTile.setProviderAssetRoot(categoryModel.getProviderAssetRoot());
+		newTile.setProviderName(categoryModel.getProviderName());
+		newTile.setProviderVersion(categoryModel.getProviderVersion());
+		newTile.setColumn(0);//if dashboard contains no widget, set it to 0
+		newTile.setRow(0);//if dashboard contains no widget, set it to 0
+		newTile.setWidth(12);
+		newTile.setHeight(2);
+//		newTile.setWidgetSource(1);
+		newTile.setType(0); //DEFAULT
+		//dashboard is empty
+		if(tileList == null | tileList.isEmpty()){
+            tileList = new ArrayList<>();
+			tileList.add(newTile);
+        }else{
+            //calculate the widget position
+            int row = calculateWidgetRowColumn(tileList).getRow();
+            int position = calculateWidgetPosition(tileList);
+            LOGGER.info("Calculated row number is {}", row);
+			LOGGER.info("Calculated position number is {}", position);
+            newTile.setRow(row);
+            newTile.setPosition(position);
+            tileList.add(newTile);
+        }
+	}
+
 	/**
 	 * calculate the column and row value(put new widget at the bottom)
 	 * @param tileList
 	 * @return
 	 */
-	private Tile calculateWidgetPosition(List<EmsDashboardTile> tileList){
+	private Tile calculateWidgetRowColumn(List<EmsDashboardTile> tileList){
 		Tile t = new Tile();
+		t.setRow(0);
+//		t.setColumn(0);
 		if(tileList == null || tileList.isEmpty()){
 			LOGGER.warn("Tile list is null empty!");
-			return null;
+			return t;
 		}
 		int maxRow = 0;
 		int maxHeight = 0;
@@ -912,9 +925,28 @@ public class DashboardAPI extends APIBase
 				maxHeight = tile.getHeight();
 			}
 		}
-		t.setRow(maxRow + maxHeight);
+		t.setRow(maxRow + maxHeight);// put new widget at the bottom
 //		t.setColumn(col);
 		return t;
+	}
+
+	/**
+	 * calculate widget position
+	 * @param tileList
+	 * @return
+	 */
+	private int calculateWidgetPosition(List<EmsDashboardTile> tileList){
+		int maxPosition = 0;
+		if(tileList == null || tileList.isEmpty()){
+			LOGGER.warn("Tile list is null empty!");
+			return maxPosition;
+		}
+		for(EmsDashboardTile tile : tileList){
+			if(tile.getPosition() > maxPosition){
+				maxPosition = tile.getPosition();
+			}
+		}
+		return maxPosition;
 	}
 
 	@GET
