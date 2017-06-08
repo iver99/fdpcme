@@ -80,10 +80,11 @@ public class LinkedHashMapCache extends AbstractCache{
                    LOGGER.debug("#2 Returning a unmodifiableSet for key = {}", key);
                    return Collections.unmodifiableSet((Set)obj);
                }
-               if(obj instanceof Map){
-                   LOGGER.debug("#3 Returning a unmodifiableMap for key = {}", key);
-                   return Collections.unmodifiableMap((Map)obj);
-               }
+           }
+           // Map is not a Collection
+           if(obj instanceof Map){
+               LOGGER.debug("#3 Returning a unmodifiableMap for key = {}", key);
+               return Collections.unmodifiableMap((Map)obj);
            }
            return obj;
        }
