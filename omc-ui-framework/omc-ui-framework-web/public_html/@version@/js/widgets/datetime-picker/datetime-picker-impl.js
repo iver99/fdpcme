@@ -1174,6 +1174,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 }
 
                 if(ko.isObservable(params.showBadge)) {
+                    self.showBadge = params.showBadge;
                     params.showBadge.subscribe(function(value) {
                         if(value === true) {
                            var defaultTP = formalizeTimePeriod(ko.unwrap(self.defaultTimePeriod));
@@ -1184,6 +1185,8 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                             self.badgeTimePeriod(null);
                         }
                     });
+                }else {
+                    self.showBadge = ko.observable(params.showBadge);
                 }
 
                 if(self.getParam(params.showBadge)){
@@ -3379,6 +3382,10 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     var _endTime;
                     
                     self.badgeMsgTitle(msgUtil.formatMessage(nls.DATETIME_PICKER_BADGE_MESSAGE_TITLE, self.getTranslatedTimePeriod(self.badgeTimePeriod())));
+                    
+                    if(!self.badgeTimePeriod()) {
+                        return;
+                    }
                     
                     if(self.badgeTimePeriod() === ctxUtil.OMCTimeConstants.QUICK_PICK.CUSTOM) {
                         _time = {
