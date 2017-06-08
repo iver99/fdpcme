@@ -10,10 +10,17 @@
 
 package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -33,27 +40,17 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.StreamingOutput;
 
-import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
-import oracle.sysman.emaas.platform.dashboards.core.exception.resource.UserOptionsNotFoundException;
-import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.codehaus.jettison.json.JSONObject;
-
-import com.sun.jersey.core.util.Base64;
-
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardConstants;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardManager;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardsFilter;
 import oracle.sysman.emaas.platform.dashboards.core.UserOptionsManager;
-import oracle.sysman.emaas.platform.dashboards.core.cache.Tenant;
-import oracle.sysman.emaas.platform.dashboards.core.cache.screenshot.ScreenshotCacheManager;
-import oracle.sysman.emaas.platform.dashboards.core.cache.screenshot.ScreenshotData;
-import oracle.sysman.emaas.platform.dashboards.core.cache.screenshot.ScreenshotElement;
-import oracle.sysman.emaas.platform.dashboards.core.cache.screenshot.ScreenshotPathGenerator;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.functional.DashboardSameNameException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DatabaseDependencyUnavailableException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.resource.UserOptionsNotFoundException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.DeleteSystemDashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
@@ -62,12 +59,53 @@ import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableEntity
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableTimeRangeState;
 import oracle.sysman.emaas.platform.dashboards.core.model.PaginatedDashboards;
 import oracle.sysman.emaas.platform.dashboards.core.model.UserOptions;
+import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
+import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
+import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
+import oracle.sysman.emaas.platform.dashboards.core.model.subscription2.TenantSubscriptionInfo;
+import oracle.sysman.emaas.platform.dashboards.core.util.*;
+import oracle.sysman.emaas.platform.dashboards.webutils.ParallelThreadPool;
 import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
+import oracle.sysman.emaas.platform.dashboards.webutils.ParallelThreadPool;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.model.RegistrationEntity;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.model.UserInfoEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.DashboardAPIUtil;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.util.PrivilegeChecker;
+import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
+import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Binary;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.DefaultKeyGenerator;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.ScreenshotData;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.ScreenshotElement;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
+import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
+import oracle.sysman.emaas.platform.emcpdf.cache.util.ScreenshotPathGenerator;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+
+import com.sun.jersey.core.util.Base64;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.CacheControl;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.StreamingOutput;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
+import java.util.List;
+import java.util.concurrent.*;
 
 /**
  * @author wenjzhu
@@ -111,7 +149,11 @@ public class DashboardAPI extends APIBase
 			return buildErrorResponse(error);
 		}
 		catch (DashboardException e) {
-			LOGGER.error(e.getLocalizedMessage(), e);
+			if(e instanceof DashboardSameNameException){
+				LOGGER.warn("Dashboard with the same name exists already!");
+			}else{
+				LOGGER.error(e.getLocalizedMessage(), e);
+			}
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (BasicServiceMalfunctionException e) {
@@ -231,6 +273,7 @@ public class DashboardAPI extends APIBase
 			@PathParam("id") BigInteger dashboardId, @PathParam("serviceVersion") String serviceVersion,
 			@PathParam("fileName") String fileName)
 	{
+		ICacheManager scm= CacheManagers.getInstance().build(CacheConstants.LRU_SCREENSHOT_MANAGER);
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer,
 				"Service call to [GET] /v1/dashboards/{}/screenshot/{}/images/{}", dashboardId, serviceVersion, fileName);
 
@@ -249,13 +292,21 @@ public class DashboardAPI extends APIBase
 			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
-		ScreenshotCacheManager scm = ScreenshotCacheManager.getInstance();
+//		ScreenshotCacheManager scm = ScreenshotCacheManager.getInstance();
 		Tenant cacheTenant = new Tenant(tenantId, TenantContext.getCurrentTenant());
 		CacheControl cc = new CacheControl();
 		cc.setMaxAge(2592000); //browser side keeps screenshot image in cache for 30 days
 		//try to get from cache
 		try {
-			final ScreenshotElement se = scm.getScreenshotFromCache(cacheTenant, dashboardId, fileName);
+//			final ScreenshotElement se = scm.getScreenshotFromCache(cacheTenant, dashboardId, fileName);
+			if (dashboardId == null || dashboardId.compareTo(BigInteger.ZERO) <= 0) {
+				LOGGER.warn("Unexpected dashboard id to get screenshot from cache for tenant={}, dashboard id={}, fileName={}",
+						cacheTenant, dashboardId, fileName);
+			}
+			if (StringUtil.isEmpty(fileName)) {
+				LOGGER.warn("Unexpected empty screenshot file name for tenant={}, dashboard id={}", cacheTenant, dashboardId);
+			}
+			final ScreenshotElement se = (ScreenshotElement) scm.getCache(CacheConstants.CACHES_SCREENSHOT_CACHE).get(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(dashboardId)));
 			if (se != null) {
 				if (fileName.equals(se.getFileName())) {
 					return Response.ok(new StreamingOutput() {
@@ -298,14 +349,29 @@ public class DashboardAPI extends APIBase
 				LOGGER.error("Does not retrieved base64 screenshot data");
 				return Response.status(Status.NOT_FOUND).build();
 			}
-			final ScreenshotElement se = scm.storeBase64ScreenshotToCache(cacheTenant, dashboardId, ss);
-			if (se == null || se.getBuffer() == null) {
+//			final ScreenshotElement se = scm.storeBase64ScreenshotToCache(cacheTenant, dashboardId, ss);
+			String newFileName = ScreenshotPathGenerator.getInstance().generateFileName(dashboardId, ss.getCreationDate(), ss.getModificationDate());
+			byte[] decoded = null;
+			if (ss.getScreenshot().startsWith(DashboardManager.SCREENSHOT_BASE64_PNG_PREFIX)) {
+				decoded = Base64.decode(ss.getScreenshot().substring(DashboardManager.SCREENSHOT_BASE64_PNG_PREFIX.length()));
+			}
+			else if (ss.getScreenshot().startsWith(DashboardManager.SCREENSHOT_BASE64_JPG_PREFIX)) {
+				decoded = Base64.decode(ss.getScreenshot().substring(DashboardManager.SCREENSHOT_BASE64_JPG_PREFIX.length()));
+			}
+			else {
+				LOGGER.debug("Failed to retrieve screenshot decoded bytes as the previs isn't supported");
+				decoded=null;
+			}
+			Binary bin = new Binary(decoded);
+			ScreenshotElement nse = new ScreenshotElement(newFileName, bin);
+			scm.getCache(CacheConstants.CACHES_SCREENSHOT_CACHE).put(DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(dashboardId)),nse);
+			if (nse == null || nse.getBuffer() == null) {
 				LOGGER.debug("Does not retrieved base64 screenshot data after store to cache. return 404 then");
 				return Response.status(Status.NOT_FOUND).build();
 			}
-			if (!fileName.equals(se.getFileName())) {
+			if (!fileName.equals(nse.getFileName())) {
 				LOGGER.error("The requested screenshot file name {} for tenant={}, dashboard id={} does not exist", fileName,
-						TenantContext.getCurrentTenant(), dashboardId, se.getFileName());
+						TenantContext.getCurrentTenant(), dashboardId, nse.getFileName());
 				return Response.status(Status.NOT_FOUND).build();
 			}
 			LOGGER.debug(
@@ -372,6 +438,14 @@ public class DashboardAPI extends APIBase
 			Long tenantId = getTenantId(tenantIdParam);
 			initializeUserContext(tenantIdParam, userTenant);
 			UserOptions options = userOptionsManager.getOptionsById(dashboardId, tenantId);
+			if (options != null) {
+				boolean validated = options.validateExtendedOptions();
+				if (!validated) { // if extended options is invalid, we simply return an empty extended option so that UI display won't be break
+					LOGGER.error("Extended option for dashboardID={} is {}, it's an invalid json string, so use empty extended option instead",
+							dashboardId, options.getExtendedOptions());
+					options.setExtendedOptions(null);
+				}
+			}
 			return Response.ok(getJsonUtil().toJson(options)).build();
 		}
 		catch (UserOptionsNotFoundException e){
@@ -397,7 +471,8 @@ public class DashboardAPI extends APIBase
 
 	@GET
 	@Path("{id: [1-9][0-9]*}")
-	@Produces(MediaType.APPLICATION_JSON)
+	//@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public Response queryDashboardById(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
 			@PathParam("id") BigInteger dashboardId)
@@ -436,6 +511,244 @@ public class DashboardAPI extends APIBase
 	}
 
 	@GET
+	@Path("{id: [1-9][0-9]*}/combinedData")
+	@Produces(MediaType.TEXT_PLAIN)
+	public Response queryCombinedData(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") final String tenantIdParam,
+			@HeaderParam(value = "X-REMOTE-USER") final String userTenant, @HeaderParam(value = "Referer") String referer,
+			@PathParam("id") final BigInteger dashboardId,@HeaderParam(value = "SESSION_EXP") final String sessionExpiryTime)
+	{
+		/*final long TIMEOUT=30000;
+		Long begin=System.currentTimeMillis();
+		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [GET] /v1/dashboards/{}", dashboardId);
+		final DashboardManager dm = DashboardManager.getInstance();
+		StringBuilder sb=new StringBuilder();
+		ExecutorService pool = ParallelThreadPool.getThreadPool();
+
+		Dashboard dbd =null;
+		Future<Dashboard> futureDashboard=null;
+		Future<String> futureUserInfo =null;
+		Future<String> futureReg =null;
+		Future<String> futureSubscried =null;
+		Future<String> futureSubscried2 =null;*/
+		try {
+			final long TIMEOUT=30000;
+			Long begin=System.currentTimeMillis();
+			initializeUserContext(tenantIdParam, userTenant);
+			final String curTenant = TenantContext.getCurrentTenant();
+			final String curUser = UserContext.getCurrentUser();
+			infoInteractionLogAPIIncomingCall(curTenant, referer, "Service call to [GET] /v1/dashboards/{}/combinedData", dashboardId);
+			final DashboardManager dm = DashboardManager.getInstance();
+			StringBuilder sb=new StringBuilder();
+			ExecutorService pool = ParallelThreadPool.getThreadPool();
+
+			//retrieve user info
+			List<String> userInfo = null;
+			final Future<List<String>> futureUserInfo = pool.submit(new Callable<List<String>>() {
+				@Override
+				public List<String> call() throws Exception {
+					try {
+						long startUserRoles = System.currentTimeMillis();
+						LOGGER.info("Parallel request user info...");
+						List<String> userRoles = PrivilegeChecker.getUserRoles(curTenant, curUser);
+						long endUserRoles = System.currentTimeMillis();
+						LOGGER.info("Time to get user roles: {}ms, user roles are: {}", (endUserRoles - startUserRoles), userRoles);
+						return userRoles;
+					} catch (Exception e) {
+						LOGGER.error("Error occurred when retrieving userInfo data using parallel request!");
+						LOGGER.error(e);
+						throw e;
+					} finally {
+						clearUserContext();
+					}
+				}
+			});
+
+			//retrieve subscribedapps API and subscribedapps2 API info
+			List<String> subscribedApps = null;
+			String subscribedApps2=null;
+			final TenantSubscriptionInfo tenantSubscriptionInfo = new TenantSubscriptionInfo();
+			final Future<List<String>> futureSubscried = pool.submit(new Callable<List<String>>() {
+				@Override
+				public List<String> call() throws Exception {
+					try {
+						long startApps = System.currentTimeMillis();
+						LOGGER.info("Parallel request subscribed apps info...");
+						List<String> apps = TenantSubscriptionUtil.getTenantSubscribedServices(curTenant, tenantSubscriptionInfo);
+						long endApps = System.currentTimeMillis();
+						LOGGER.info("Time to get subscribed apps: {}ms, subscribed apps are: {}", (endApps - startApps), apps);
+						return apps;
+					} catch (Exception e) {
+						LOGGER.error("Error occurred when retrieving subscribed data using parallel request!");
+						LOGGER.error(e);
+						throw e;
+
+					} finally {
+						clearUserContext();
+					}
+				}
+			});
+
+			Future<Dashboard> futureDashboard = null;
+			try {
+				if (!DependencyStatus.getInstance().isDatabaseUp()) {
+					LOGGER.error("Error to call [GET] /v1/dashboards/{}/combinedData: database is down", dashboardId);
+					//throw new DatabaseDependencyUnavailableException(); // incase db is down, just log error and don't query dashboard data then
+				} else {
+					if (futureSubscried != null) {
+						subscribedApps = futureSubscried.get(TIMEOUT, TimeUnit.MILLISECONDS); // retrieve dashboard data after subscribed app thread is done
+						if (subscribedApps != null) {
+							final List<String> fSubscribedApps = subscribedApps;
+							logkeyHeaders("combinedData()", userTenant, curTenant);
+
+							futureDashboard = pool.submit(new Callable<Dashboard>() {
+								@Override
+								public Dashboard call() throws Exception {
+									try {
+										long startDash = System.currentTimeMillis();
+										LOGGER.info("2nd round parallel thread to request dashboard data info after thread for subscribed apps thread is completed...");
+										Long tenantId = getTenantId(curTenant);
+										initializeUserContext(curTenant, userTenant);
+										String userName = UserContext.getCurrentUser();
+										// put through subscribed apps to avoid to lookup this data again
+										Dashboard dashboard = dm.getCombinedDashboardById(dashboardId, tenantId, userName, fSubscribedApps);
+										long endDash = System.currentTimeMillis();
+										LOGGER.info("Time to retrieve dashboard meta data: {}ms, dashboard meta data are: {}", (endDash - startDash), dashboard);
+										return dashboard;
+									} catch (Exception e) {
+										LOGGER.error("Error occurred when retrieving dashboard meta data using parallel request!");
+										LOGGER.error(e);
+										throw e;
+									} finally {
+										clearUserContext();
+									}
+								}
+							});
+						} else {
+							LOGGER.warn("Failed to get subscribed app data, won't continue to start dashboard data thread");
+						}
+					}
+				}
+		} catch (InterruptedException e) {
+			LOGGER.error(e);
+		} catch (ExecutionException e) {
+			LOGGER.error(e.getCause() == null ? e : e.getCause());
+		} catch (TimeoutException e) {
+			LOGGER.error(e);
+		}
+
+			Future<String> futureReg = null;
+			//retrieve registration info
+			String regEntity = null;
+			try {
+				if (futureUserInfo != null) {
+					final List<String> fUserInfo = userInfo = futureUserInfo.get(TIMEOUT, TimeUnit.MILLISECONDS); // retrieve reg info after user info thread is done
+					if (userInfo != null) {
+						futureReg = pool.submit(new Callable<String>() {
+							@Override
+							public String call() throws Exception {
+								try {
+									long startRegInfo = System.currentTimeMillis();
+									LOGGER.info("2 round parallel to request registry info after thread for user info thread is completed...");
+									initializeUserContext(curTenant, userTenant);
+									String reg = JsonUtil.buildNonNullMapper().toJson(new RegistrationEntity(sessionExpiryTime, fUserInfo));
+									long endRegInfo = System.currentTimeMillis();
+									LOGGER.info("Time to get registration info: {}ms, registration info are: {}", (endRegInfo - startRegInfo), reg);
+									return reg;
+								} catch (Exception e) {
+									LOGGER.error("Error occurred when retrieving registration data using parallel request!");
+									LOGGER.error(e);
+									throw e;
+								} finally {
+									clearUserContext();
+								}
+							}
+						});
+					} else {
+						LOGGER.warn("Failed to get futureUserInfo, won't continue to start registry info thread");
+					}
+				}
+			} catch (InterruptedException e) {
+				LOGGER.error(e);
+			} catch (ExecutionException e) {
+				LOGGER.error(e.getCause() == null ? e : e.getCause());
+			} catch (TimeoutException e) {
+				LOGGER.error(e);
+			}
+
+			//get reg data
+			try {
+				if (futureReg != null) {
+					regEntity = futureReg.get(TIMEOUT, TimeUnit.MILLISECONDS);
+					if (regEntity != null && !StringUtils.isEmpty(regEntity)) {
+						sb.append("window._registrationServerCache=");
+						sb.append(regEntity).append(";");
+					}
+					LOGGER.debug("Registration data is " + regEntity);
+				}
+			} catch (InterruptedException e) {
+				LOGGER.error(e);
+			} catch (ExecutionException e) {
+				LOGGER.error(e.getCause() == null ? e : e.getCause());
+			} catch (TimeoutException e) {
+				LOGGER.error(e);
+			}
+
+			sb.append("if(!window._uifwk){window._uifwk={};}if(!window._uifwk.cachedData){window._uifwk.cachedData={};}");
+			if (userInfo != null) {
+				String userInfoRes = JsonUtil.buildNormalMapper().toJson(new UserInfoEntity(userInfo));
+				sb.append("window._uifwk.cachedData.userInfo=");
+				sb.append(userInfoRes).append(";");
+			}
+			LOGGER.debug("User info data is " + regEntity);
+
+			String apps = TenantSubscriptionUtil.getTenantSubscribedServicesString(curTenant, subscribedApps);
+			if (!StringUtils.isEmpty(apps)) {
+				sb.append("window._uifwk.cachedData.subscribedapps=");
+				sb.append(apps).append(";");
+			}
+			LOGGER.debug("Subscribed applications data is " + apps);
+
+			//get subscribedapps2 data
+			subscribedApps2 = tenantSubscriptionInfo.toJson(tenantSubscriptionInfo);
+			if(!StringUtils.isEmpty(subscribedApps2)){
+				sb.append("window._uifwk.cachedData.subscribedapps2=");
+				sb.append(subscribedApps2).append(";");
+			}
+			LOGGER.info("Subscribed applications data2 is " + subscribedApps2);
+
+			//get meta dashboard data
+			Dashboard dbd = null;
+			try {
+				if (futureDashboard != null) {
+					dbd = futureDashboard.get(TIMEOUT, TimeUnit.MILLISECONDS);
+					if (dbd != null) {
+						sb.append("window._dashboardServerCache=");
+						sb.append(getJsonUtil().toJson(dbd)).append(";");
+					}
+					LOGGER.debug("Dashboard data is " + getJsonUtil().toJson(dbd));
+					updateDashboardAllHref(dbd, curTenant);
+				}
+			} catch (ExecutionException e) {
+				LOGGER.error(e.getCause() == null ? e : e.getCause());
+			} catch (InterruptedException e) {
+				LOGGER.error(e);
+			} catch (TimeoutException e) {
+				LOGGER.error(e);
+			}
+
+
+			LOGGER.info("Retrieving combined data cost {}ms", (System.currentTimeMillis() - begin));
+			return Response.ok(sb.toString()).build();
+
+		} catch (DashboardException e) {
+			LOGGER.error(e.getLocalizedMessage(), e);
+			return buildErrorResponse(new ErrorEntity(e));
+		} finally {
+			clearUserContext();
+		}
+	}
+
+	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response queryDashboards(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
@@ -452,7 +765,8 @@ public class DashboardAPI extends APIBase
 		logkeyHeaders("queryDashboards()", userTenant, tenantIdParam);
 		String qs = null;
 		try {
-			qs = queryString == null ? null : java.net.URLDecoder.decode(queryString, "UTF-8");
+			//emcpdf-3012
+			qs = queryString == null ? null : java.net.URLDecoder.decode(queryString.replaceAll("%", "\\%25"), "UTF-8").replace("%", "\\%");
 		}
 		catch (UnsupportedEncodingException e) {
 			LOGGER.error(e.getLocalizedMessage(), e);
@@ -604,6 +918,13 @@ public class DashboardAPI extends APIBase
 		UserOptions userOption;
 		try {
 			userOption = getJsonUtil().fromJson(inputJson.toString(), UserOptions.class);
+			boolean validated = userOption.validateExtendedOptions();
+			if (!validated) {
+				ErrorEntity error = new ErrorEntity(
+						new CommonFunctionalException(
+								MessageUtils.getDefaultBundleString(CommonFunctionalException.USER_OPTIONS_INVALID_EXTENDED_OPTIONS)));
+				return buildErrorResponse(error);
+			}
 		}
 		catch (IOException e) {
 			LOGGER.error(e.getLocalizedMessage(), e);
@@ -697,6 +1018,13 @@ public class DashboardAPI extends APIBase
 		try {
 			userOption = getJsonUtil().fromJson(inputJson.toString(), UserOptions.class);
 			userOption.setDashboardId(dashboardId);
+			boolean validated = userOption.validateExtendedOptions();
+			if (!validated) {
+				ErrorEntity error = new ErrorEntity(
+						new CommonFunctionalException(
+								MessageUtils.getDefaultBundleString(CommonFunctionalException.USER_OPTIONS_INVALID_EXTENDED_OPTIONS)));
+				return buildErrorResponse(error);
+			}
 		}
 		catch (IOException e) {
 			LOGGER.error(e.getLocalizedMessage(), e);
@@ -762,6 +1090,10 @@ public class DashboardAPI extends APIBase
 			clearUserContext();
 		}
 	}
+	
+
+
+	
 
 	private void logkeyHeaders(String api, String x_remote_user, String domain_name)
 	{
@@ -815,4 +1147,7 @@ public class DashboardAPI extends APIBase
 		dbd.setScreenShotHref(screenShotUrl);
 		return dbd;
 	}
+	
+	
+
 }

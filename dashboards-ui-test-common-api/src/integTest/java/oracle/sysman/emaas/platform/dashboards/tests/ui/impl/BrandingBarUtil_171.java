@@ -31,7 +31,70 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 {
 
 	private static final Logger LOGGER = LogManager.getLogger(BrandingBarUtil_171.class);
-	private static final String BRANDINGBARSERVICENAMEXPATH = "//div[@id='emaas-appheader-bar']/div[@class='emaas-appheader-logo']/div[@class='emaas-appheader-appname emaas-appheader-appname-twoline']/span";
+	static final String BRANDINGBARSERVICENAMEXPATH = "//div[@id='emaas-appheader-bar']/div[@class='emaas-appheader-logo']/div[@class='emaas-appheader-appname emaas-appheader-appname-twoline']/span";
+
+	/* (non-Javadoc)
+	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IBrandingBarUtil#clickHierarchicalMenu(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
+	 */
+	@Override
+	public void clickHierarchicalMenu(WebDriver driver, String menuitem)
+	{
+		Assert.assertTrue(false, "This method is not available in the current version");
+		driver.getLogger().info("Method not available in the current version");
+	}
+
+	/* (non-Javadoc)
+	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IBrandingBarUtil#clickMenuItem(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
+	 */
+	@Override
+	public void clickMenuItem(WebDriver driver, String menuitem)
+	{
+		Assert.assertTrue(false, "This method is not available in the current version");
+		driver.getLogger().info("Method not available in the current version");
+	}
+
+	/**
+	 * @param driver
+	 * @param menuitem
+	 */
+	@Override
+	public void expandSubMenu(WebDriver driver, String menuitem)
+	{
+		Assert.assertTrue(false, "This method is not available in the current version");
+		driver.getLogger().info("Method not available in the current version");
+	}
+
+	/* (non-Javadoc)
+	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IBrandingBarUtil#getCurrentMenuHeader(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
+	 */
+	@Override
+	public String getCurrentMenuHeader(WebDriver driver)
+	{
+		Assert.assertTrue(false, "This method is not available in the current version");
+		driver.getLogger().info("Method not available in the current version");
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IBrandingBarUtil#clickPreviousLink(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
+	 */
+	@Override
+	public void goBackToParentMenu(WebDriver driver)
+	{
+		Assert.assertTrue(false, "This method is not available in the current version");
+		driver.getLogger().info("Method not available in the current version");
+	}
+
+	/* (non-Javadoc)
+	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IBrandingBarUtil#hasSubMenu(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
+	 */
+	@Override
+	public boolean hasSubMenu(WebDriver driver, String menuitem)
+	{
+		Assert.assertTrue(false, "This method is not available in the current version");
+		driver.getLogger().info("Method not available in the current version");
+		return false;
+	}
 
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IBrandingBarUtil#isAdmin(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
@@ -118,6 +181,17 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 	}
 
 	/* (non-Javadoc)
+	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IBrandingBarUtil#isHamburgerMenuDisplayed(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
+	 */
+	@Override
+	public boolean isHamburgerMenuDisplayed(WebDriver driver)
+	{
+		Assert.assertTrue(false, "This method is not available in the current version");
+		driver.getLogger().info("Method not available in the current version");
+		return false;
+	}
+
+	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IBrandingBarUtil#isHomeLinkExisted(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
 	@Override
@@ -129,6 +203,28 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 		isExisted = isApplicationLinkExisted(driver, "home", homeLinkName);
 		driver.getLogger().info("Existence check for home link is completed. Result: " + isExisted);
 		return isExisted;
+	}
+
+	/* (non-Javadoc)
+	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IBrandingBarUtil#isMenuItemEnabled(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
+	 */
+	@Override
+	public boolean isMenuItemEnabled(WebDriver driver, String menuitem)
+	{
+		Assert.assertTrue(false, "This method is not available in the current version");
+		driver.getLogger().info("Method not available in the current version");
+		return false;
+	}
+
+	/* (non-Javadoc)
+	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IBrandingBarUtil#isMenuItemExisted(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
+	 */
+	@Override
+	public boolean isMenuItemExisted(WebDriver driver, String menuitem)
+	{
+		Assert.assertTrue(false, "This method is not available in the current version");
+		driver.getLogger().info("Method not available in the current version");
+		return false;
 	}
 
 	/* (non-Javadoc)
@@ -186,6 +282,17 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 		isExisted = isApplicationLinkExisted(driver, locator);
 		driver.getLogger().info("Existence check for 'Welcome' link is completed. Result: " + isExisted);
 		return isExisted;
+	}
+
+	/* (non-Javadoc)
+	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IBrandingBarUtil#toggleHambugerMenu(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
+	 */
+	@Override
+	public boolean toggleHamburgerMenu(WebDriver driver)
+	{
+		Assert.assertTrue(false, "This method is not available in the current version");
+		driver.getLogger().info("Method not available in the current version");
+		return false;
 	}
 
 	/* (non-Javadoc)
@@ -373,53 +480,6 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 	}
 
 	/**
-	 * Check if the specified link is exited or not
-	 *
-	 * @param driver
-	 *            WebDriver instance
-	 * @param locator
-	 *            Locator of the link
-	 * @return
-	 */
-	private boolean isApplicationLinkExisted(WebDriver driver, String locator)
-	{
-		Validator.notEmptyString("locator in [isApplicationLinkExisted]", locator);
-		boolean isExisted = false;
-		//Check if navigation bar is already displayed or not
-		boolean isNavBarDisplayed = isNavigationBarDisplayed(driver);
-		//If not, open the navigation bar, if yes, just keep it as it is
-		openNavigationBar(driver);
-		//Wait until the links menu is displayed
-		checkLinksMenuVisibility(driver, true);
-		isExisted = driver.isDisplayed(locator);
-		//Recover the navigation bar to the original status
-		if (!isNavBarDisplayed) {
-			driver.click("id=" + DashBoardPageId.LINKID);
-		}
-		driver.takeScreenShot();
-		return isExisted;
-	}
-
-	/**
-	 * Check if the specified link is exited or not
-	 *
-	 * @param driver
-	 *            WebDriver instance
-	 * @param linkType
-	 *            Type of the link, should be one of "home", "cs", "va", "admin"
-	 * @param linkName
-	 *            Name of the link
-	 * @return
-	 */
-	private boolean isApplicationLinkExisted(WebDriver driver, String linkType, String linkName)
-	{
-		String parentId = getApplicationLinkParentId(linkType);
-		//Find link element by parent id and link name
-		String xpath = "//div[@id='" + parentId + "']/descendant::a[text()='" + linkName + "']";
-		return isApplicationLinkExisted(driver, xpath);
-	}
-
-	/**
 	 * Check if a element is stale or not
 	 *
 	 * @param element
@@ -454,13 +514,60 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 	}
 
 	/**
+	 * Check if the specified link is exited or not
+	 *
+	 * @param driver
+	 *            WebDriver instance
+	 * @param locator
+	 *            Locator of the link
+	 * @return
+	 */
+	protected boolean isApplicationLinkExisted(WebDriver driver, String locator)
+	{
+		Validator.notEmptyString("locator in [isApplicationLinkExisted]", locator);
+		boolean isExisted = false;
+		//Check if navigation bar is already displayed or not
+		boolean isNavBarDisplayed = isNavigationBarDisplayed(driver);
+		//If not, open the navigation bar, if yes, just keep it as it is
+		openNavigationBar(driver);
+		//Wait until the links menu is displayed
+		checkLinksMenuVisibility(driver, true);
+		isExisted = driver.isDisplayed(locator);
+		//Recover the navigation bar to the original status
+		if (!isNavBarDisplayed) {
+			driver.click("id=" + DashBoardPageId.LINKID);
+		}
+		driver.takeScreenShot();
+		return isExisted;
+	}
+
+	/**
+	 * Check if the specified link is exited or not
+	 *
+	 * @param driver
+	 *            WebDriver instance
+	 * @param linkType
+	 *            Type of the link, should be one of "home", "cs", "va", "admin"
+	 * @param linkName
+	 *            Name of the link
+	 * @return
+	 */
+	protected boolean isApplicationLinkExisted(WebDriver driver, String linkType, String linkName)
+	{
+		String parentId = getApplicationLinkParentId(linkType);
+		//Find link element by parent id and link name
+		String xpath = "//div[@id='" + parentId + "']/descendant::a[text()='" + linkName + "']";
+		return isApplicationLinkExisted(driver, xpath);
+	}
+
+	/**
 	 * Open the navigation bar
 	 *
 	 * @param driver
 	 *            WebDriver instance
 	 * @return
 	 */
-	private void openNavigationBar(WebDriver driver)
+	protected void openNavigationBar(WebDriver driver)
 	{
 		//Open the navigation bar if it's not displayed
 		if (!isNavigationBarDisplayed(driver)) {
@@ -481,7 +588,7 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 	 *            Locator the link
 	 * @return
 	 */
-	private void visitApplicationLink(WebDriver driver, final String locator)
+	protected void visitApplicationLink(WebDriver driver, final String locator)
 	{
 		Validator.notEmptyString("locator in [visitApplicationLink]", locator);
 		// Open navigation bar if it's not displayed
@@ -523,7 +630,7 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 	 *            Name of the link
 	 * @return
 	 */
-	private void visitApplicationLink(WebDriver driver, String linkType, String linkName)
+	protected void visitApplicationLink(WebDriver driver, String linkType, String linkName)
 	{
 		String parentId = getApplicationLinkParentId(linkType);
 		//Find link element by parent id and link name

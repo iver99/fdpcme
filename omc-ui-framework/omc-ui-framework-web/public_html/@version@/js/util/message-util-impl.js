@@ -64,6 +64,18 @@ define(['knockout', 'jquery'],
                     window.postMessage(messageObj, window.location.href);
                 }
             };
+            
+            /**
+             * Remove all messages
+             *
+             * @param
+             *
+             * @returns
+             */
+            self.clearAllMessages = function() {
+                var messageObj = {tag: 'EMAAS_SHOW_PAGE_LEVEL_MESSAGE', action: 'clear'};
+                window.postMessage(messageObj, window.location.href);
+            };
 
             /**
              * Format a message by replacing the placeholds inside the message string with parameters passed in
@@ -79,6 +91,29 @@ define(['knockout', 'jquery'],
                     message=message.replace("{"+(i-1)+"}",arguments[i++]);
                 }
                 return message;
+            };
+            
+            /**
+             * Add event change listener for message in the branding bar when it is created or destroyed
+             *
+             * @param {Function} callback Callback function for the listener
+             *
+             * @returns
+             */
+            self.subscribeMessageChangeEvent = function(callback) {
+                function onMessageChange(event) {
+                    if (event.origin !== window.location.protocol + '//' + window.location.host) {
+                        return;
+                    }
+                    var data = event.data;
+                    //Only handle received message when message in the branding bar is created or destroyed
+                    if (data && data.tag && data.tag === 'EMAAS_OMC_PAGE_LEVEL_MESSAGE_UPDATED') {
+                        if ($.isFunction(callback)) {
+                            callback(data);
+                        }
+                    }
+                };
+                window.addEventListener("message", onMessageChange, false);
             };
         }
 

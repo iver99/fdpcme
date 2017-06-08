@@ -1,52 +1,105 @@
 package oracle.sysman.emaas.platform.dashboards.tests.ui.impl;
 
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_190;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_1120;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_1150;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_190;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.*;
-import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
-import org.openqa.selenium.*;
-import org.openqa.selenium.interactions.Actions;
-import org.testng.Assert;
 
-public class DashboardBuilderUtil_1150 extends DashboardBuilderUtil_1120  {
-    @Override
-    public void removeWidget(WebDriver driver, String widgetName)
-    {
-        removeWidget(driver, widgetName, 0);
-    }
+/**
+ * Created by xiadai on 2016/10/12.
+ */
+public class DashboardBuilderUtil_1150 extends DashboardBuilderUtil_1100
+{
+	@Override
+	public boolean respectGCForEntity(WebDriver driver)
+	{
+		driver.getLogger().info("DashboardBuilderUtil.respectGCForEntity started");
+		driver.waitForElementPresent("css=" + DashBoardPageId_190.BUILDEROPTIONSMENULOCATOR);
+		WaitUtil.waitForPageFullyLoaded(driver);
 
-    @Override
-    public void removeWidget(WebDriver driver, String widgetName, int index)
-    {
-        driver.getLogger().info(
-                "DashboardBuilderUtil.removeWidget started for name=\"" + widgetName + "\"");
-        Validator.notEmptyString("widgetName", widgetName);
-        Validator.equalOrLargerThan0("index", index);
+		openFiltersInRightPanel(driver);
 
-        WebElement widgetEl = null;
-        try {
-            widgetEl = getWidgetByName(driver, widgetName, index);
-        }
-        catch (InterruptedException e) {
-            driver.getLogger().info("context "+ e);
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+		driver.waitForElementPresent("css=" + DashBoardPageId_1150.RIGHTDRAWEREDITDBENABLEGCENTITYCSS);
+		driver.click("css=" + DashBoardPageId_1150.RIGHTDRAWEREDITDBENABLEGCENTITYCSS);
+		driver.takeScreenShot();
+		driver.getLogger().info("DashboardBuilderUtil show entity filter finished!!!");
+		return true;
+	}
 
-        focusOnWidgetHeader(driver, widgetEl);
-        driver.takeScreenShot();
+	@Override
+	public boolean respectGCForTimeRange(WebDriver driver)
+	{
+		driver.getLogger().info("DashboardBuilderUtil.respectGCForTimeRange started");
+		driver.waitForElementPresent("css=" + DashBoardPageId_190.BUILDEROPTIONSMENULOCATOR);
+		WaitUtil.waitForPageFullyLoaded(driver);
 
-        widgetEl.findElement(By.cssSelector(DashBoardPageId_190.CONFIGTILECSS)).click();
-        driver.click("css=" + DashBoardPageId_1150.EDITTILECSS);
-        driver.waitForElementPresent("css=" + DashBoardPageId_1150.REMOVETILECSS);
-        driver.click("css=" + DashBoardPageId_1150.REMOVETILECSS);
-        driver.getLogger().info("Remove the widget");
-        driver.takeScreenShot();
-    }
+		openFiltersInRightPanel(driver);
+
+		driver.waitForElementPresent("css=" + DashBoardPageId_1150.RIGHTDRAWEREDITDBENABLEGCTIMERANGECSS);
+		driver.click("css=" + DashBoardPageId_1150.RIGHTDRAWEREDITDBENABLEGCTIMERANGECSS);
+		driver.takeScreenShot();
+		driver.getLogger().info("DashboardBuilderUtil show time range finished!!!");
+		return true;
+	}
+
+	@Override
+	public boolean verifyDashboard(WebDriver driver, String dashboardName, String description, boolean showTimeSelector)
+	{
+		driver.getLogger().info(
+				"DashboardBuilderUtil.verifyDashboard started for name=\"" + dashboardName + "\", description=\"" + description
+						+ "\", showTimeSelector=\"" + showTimeSelector + "\"");
+		Validator.notEmptyString("dashboardName", dashboardName);
+
+		driver.waitForElementPresent(DashBoardPageId_190.BUILDERNAMETEXTLOCATOR);
+		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(DashBoardPageId_190.BUILDERNAMETEXTLOCATOR)));
+		WaitUtil.waitForPageFullyLoaded(driver);
+
+		driver.waitForElementPresent(DashBoardPageId_190.BUILDERNAMETEXTLOCATOR);
+		driver.click(DashBoardPageId_190.BUILDERNAMETEXTLOCATOR);
+		driver.takeScreenShot();
+		String realName = driver.getElement(DashBoardPageId_190.BUILDERNAMETEXTLOCATOR).getAttribute("title");
+		if (!dashboardName.equals(realName)) {
+			driver.getLogger().info(
+					"DashboardBuilderUtil.verifyDashboard compelted and returns false. Expected dashboard name is "
+							+ dashboardName + ", actual dashboard name is " + realName);
+			return false;
+		}
+
+		driver.waitForElementPresent(DashBoardPageId_1120.BUILDERDESCRIPTIONTEXTLOCATOR);
+		String realDesc = driver.getElement(DashBoardPageId_1120.BUILDERDESCRIPTIONTEXTLOCATOR).getAttribute("title");
+		if (description == null || "".equals(description)) {
+			if (realDesc != null && !"".equals(realDesc.trim())) {
+				driver.getLogger().info(
+						"DashboardBuilderUtil.verifyDashboard compelted and returns false. Expected description is "
+								+ description + ", actual dashboard description is " + realDesc);
+				return false;
+			}
+		}
+		else {
+			if (!description.equals(realDesc)) {
+				driver.getLogger().info(
+						"DashboardBuilderUtil.verifyDashboard compelted and returns false. Expected description is "
+								+ description + ", actual dashboard description is " + realDesc);
+				return false;
+			}
+		}
+
+		boolean actualTimeSelectorShown = driver.isDisplayed(DashBoardPageId_1150.BUILDERDATETIMEPICKERLOCATOR);
+		if (actualTimeSelectorShown != showTimeSelector) {
+			driver.getLogger().info(
+					"DashboardBuilderUtil.verifyDashboard compelted and returns false. Expected showTimeSelector is "
+							+ showTimeSelector + ", actual dashboard showTimeSelector is " + actualTimeSelectorShown);
+			return false;
+		}
+
+		driver.getLogger().info("DashboardBuilderUtil.verifyDashboard compelted and returns true");
+		return true;
+	}
 }

@@ -173,6 +173,15 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
             return null;
         };
         self.exploreDataLinkList = ko.observableArray(dfu.discoverVisualAnalyzerLinks());
+        self.exploreDataLinkList().forEach(function(ele){
+        if(ele.serviceName === "LogAnalyticsUI"){
+            ele.name = getNlsString("LANDING_HOME_LOG_EXPLORER");
+        }else if(ele.serviceName === "TargetAnalytics"){
+            ele.name = getNlsString("LANDING_HOME_DATA_EXPLORER")
+        }});
+        self.exploreDataLinkList.sort(function(left,right){
+            return left.name<=right.name?-1:1;
+        });
 
         //welcome
         self.prefUtil = new pfu(PREFERENCES_REST_URL, dfu.getDashboardsRequestHeader());
@@ -212,11 +221,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
             localStorage.deleteHomeDbd = false;
         }
         self.dataExploreBtnVisible = function(){
-              var _i = 0;
-              $.each(self.subscription, function(i, _item) {
-                  if( _item === 'LogAnalytics' || _item === 'ITAnalytics') _i++;
-              });
-              return _i === 2;
+            return self.exploreDataLinkList().length > 0;
         };
         self.subscription = predata&&predata.sApplications ? predata.sApplications['applications'] : [];
         self.showTilesMsg = ko.observable(false);
@@ -607,6 +612,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
                             }
                             else
                             {
+                                self.sortBy(__sortui.header + (__sortui.direction === 'descending' ? '_dsc' : '_asc'));
                                 _ts.handleEvent(oj.TableDataSource.EventType['SORT'], __sortui);
                             }
                     }
@@ -843,18 +849,15 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
         };
 
         self.loadSubscribedApplications = function() {
-            return $.ajax({
-                        url: SUBSCIBED_APPS_REST_URL,
-                        type: 'GET',
-                        headers: dfu.getDashboardsRequestHeader(),
-                        success: function (result) {
-                            self.sApplications = result;
-                        },
-                        error: function (jqXHR, textStatus, errorThrown) {
-                            oj.Logger.error("Error when load subscribed applications. " + (jqXHR ? jqXHR.responseText : ""));
-                        }
-                    });
-        };
+            dfu.getSubscribedApps2WithEdition(
+                function(subscribedapps) {
+                    self.sApplications = subscribedapps;
+                },
+                function(jqXHR, textStatus, errorThrown) {
+                    oj.Logger.error("Error when load subscribed applications. " + (jqXHR ? jqXHR.responseText : ""));
+                }
+            );
+        }
 
         self.loadAll = function() {
             return $.when(self.loadPreferences(), self.loadSubscribedApplications());

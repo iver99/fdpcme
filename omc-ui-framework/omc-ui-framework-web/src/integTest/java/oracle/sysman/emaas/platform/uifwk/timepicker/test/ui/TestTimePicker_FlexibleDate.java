@@ -42,6 +42,9 @@ public class TestTimePicker_FlexibleDate extends CommonUIUtils
 		String strTimePickerText = driver.getWebDriver().findElements(By.cssSelector(UIControls.TIMERANGEBTN_CSS)).get(index - 1)
 				.getText();
 
+		driver.getLogger().info("TimePickerLabel: " + strTimePickerText);
+		Assert.assertEquals(strTimePickerText, TimeSelectorUtil.getTimeRangeLabel(driver, index));
+
 		String timeRange = "";
 
 		if (!strTimePickerText.equals("") && strTimePickerText != null) {
@@ -162,22 +165,34 @@ public class TestTimePicker_FlexibleDate extends CommonUIUtils
 			case "month":
 				Assert.assertEquals(calEnd.get(Calendar.YEAR) * 12 + calEnd.get(Calendar.MONTH) - calStart.get(Calendar.YEAR)
 						* 12 - calStart.get(Calendar.MONTH), 1);
-				Assert.assertEquals(calStart.get(Calendar.DAY_OF_MONTH), calEnd.get(Calendar.DAY_OF_MONTH));
+				//below assertion not always true
+				//e.g. Last 1 Month, Now is March 31, 2017, the start time is Feb 28, 2017 (there is no 31 in Feb, 2017)
+				//TODO calculate correct start date separately and compare
+				//Assert.assertEquals(calStart.get(Calendar.DAY_OF_MONTH), calEnd.get(Calendar.DAY_OF_MONTH));
 				break;
 			case "months":
 				Assert.assertEquals(calEnd.get(Calendar.YEAR) * 12 + calEnd.get(Calendar.MONTH) - calStart.get(Calendar.YEAR)
 						* 12 - calStart.get(Calendar.MONTH), i);
-				Assert.assertEquals(calStart.get(Calendar.DAY_OF_MONTH), calEnd.get(Calendar.DAY_OF_MONTH));
+				//below assertion not always true
+				//e.g. Last 11 Months, Now is March 31, 2017, the start time is Feb 29, 2016 (there is no 31 in Feb, 2016)
+				//TODO calculate correct start date separately and compare
+				//Assert.assertEquals(calStart.get(Calendar.DAY_OF_MONTH), calEnd.get(Calendar.DAY_OF_MONTH));
 				break;
 			case "year":
 				Assert.assertEquals(calStart.get(Calendar.YEAR) + 1, calEnd.get(Calendar.YEAR));
 				Assert.assertEquals(calStart.get(Calendar.MONTH), calEnd.get(Calendar.MONTH));
-				Assert.assertEquals(calStart.get(Calendar.DAY_OF_MONTH), calEnd.get(Calendar.DAY_OF_MONTH));
+				//below assertion not always true
+				//e.g. Last 1 Year, Now is Feb 29, 2016, the start time is Feb 28, 2015 (there is no 29 in Feb, 2015)
+				//TODO calculate correct start date separately and compare
+				//Assert.assertEquals(calStart.get(Calendar.DAY_OF_MONTH), calEnd.get(Calendar.DAY_OF_MONTH));
 				break;
 			case "years":
 				Assert.assertEquals(calStart.get(Calendar.YEAR) + i, calEnd.get(Calendar.YEAR));
 				Assert.assertEquals(calStart.get(Calendar.MONTH), calEnd.get(Calendar.MONTH));
-				Assert.assertEquals(calStart.get(Calendar.DAY_OF_MONTH), calEnd.get(Calendar.DAY_OF_MONTH));
+				//below assertion not always true
+				//e.g. Last 2 Years, Now is Feb 29, 2016, the start time is Feb 28, 2014 (there is no 29 in Feb, 2014)
+				//TODO calculate correct start date separately and compare
+				//Assert.assertEquals(calStart.get(Calendar.DAY_OF_MONTH), calEnd.get(Calendar.DAY_OF_MONTH));
 				break;
 			default:
 				break;

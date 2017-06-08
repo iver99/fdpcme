@@ -12,14 +12,16 @@ import mockit.Expectations;
 import mockit.Mocked;
 import mockit.NonStrictExpectations;
 import mockit.Verifications;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter;
-import oracle.sysman.emaas.platform.dashboards.ui.webutils.json.DomainsEntity;
-import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.TenantSubscriptionUtil.RestClient;
-
+import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.RegistryLookupUtil.VersionedLink;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.subscription.SubscribedAppCacheUtil;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.subscription.SubscribedApps;
+import oracle.sysman.emaas.platform.emcpdf.cache.api.ICache;
+import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
+import oracle.sysman.emaas.platform.emcpdf.cache.exception.ExecutionException;
+import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
+import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -333,24 +335,25 @@ public class TenantSubscriptionUtilTest
 	// @formatter:off
 
 	@Test(groups = { "s2" })
-	public void testGetTenantSubscribedServicesIOExceptionS2(@Mocked final SubscribedAppCacheUtil cacheUtil, @Mocked RegistryLookupUtil anyUtil,
-			@Mocked final RestClient anyClient, @Mocked final JsonUtil anyJsonUtil) throws IOException
-	{
-		final Link link = new Link();
-
+	public void testGetTenantSubscribedServicesIOExceptionS2(@Mocked final CacheManagers anyCacheManagers, @Mocked final ICacheManager anyCacheManager,
+															 @Mocked final ICache anyCache, @Mocked RegistryLookupUtil anyUtil,
+															 @Mocked final RestClient anyClient, @Mocked final JsonUtil anyJsonUtil) throws IOException, ExecutionException {
+		final VersionedLink link = new VersionedLink();
 		link.withHref("http://slc04pgi.us.oracle.com:7019/emcpdf/api/v1/subscribedapps");
 		link.withRel("");
 		new Expectations() {
 			{
-				SubscribedAppCacheUtil.getInstance();
-				result = cacheUtil;
-				cacheUtil.get(anyString);
+				CacheManagers.getInstance().build();
+				result = anyCacheManager;
+				anyCacheManager.getCache(anyString);
+				result = anyCache;
+				anyCache.get(any);
 				result = null;
 
 				RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, anyString);
 				result = link;
 
-				anyClient.get(anyString, anyString);
+				anyClient.get(anyString, anyString, anyString);
 				JsonUtil.buildNormalMapper();
 				result = anyJsonUtil;
 				anyJsonUtil.fromJson(anyString, SubscribedApps.class);
@@ -371,16 +374,19 @@ public class TenantSubscriptionUtilTest
 	}
 
 	@Test(groups = {"s2"})
-	public void testGetTenantSubscribedServicesFromCache(@Mocked final SubscribedAppCacheUtil cacheUtil) {
+	public void testGetTenantSubscribedServicesFromCache(@Mocked final CacheManagers anyCacheManagers, @Mocked final ICacheManager anyCacheManager,
+														 @Mocked final ICache anyCache) throws ExecutionException {
 		String tenant = "tenant";
 		final List<String> apps = Arrays.asList("ITA", "APM");
 		SubscribedAppCacheUtil sacu = SubscribedAppCacheUtil.getInstance();
 		sacu.put(tenant, apps);
 		new Expectations() {
 			{
-				SubscribedAppCacheUtil.getInstance();
-				result = cacheUtil;
-				cacheUtil.get(anyString);
+				CacheManagers.getInstance().build();
+				result = anyCacheManager;
+				anyCacheManager.getCache(anyString);
+				result = anyCache;
+				anyCache.get(any);
 				result = apps;
 			}
 		};
@@ -389,24 +395,25 @@ public class TenantSubscriptionUtilTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testGetTenantSubscribedServicesS2(@Mocked final SubscribedAppCacheUtil cacheUtil, @Mocked RegistryLookupUtil anyUtil,
-												  @Mocked final RestClient anyClient)
-	{
-		final Link link = new Link();
-
+	public void testGetTenantSubscribedServicesS2(@Mocked final CacheManagers anyCacheManagers, @Mocked final ICacheManager anyCacheManager,
+												  @Mocked final ICache anyCache, @Mocked RegistryLookupUtil anyUtil,
+												  @Mocked final RestClient anyClient) throws ExecutionException {
+		final VersionedLink link = new VersionedLink();
 		link.withHref("http://slc04pgi.us.oracle.com:7019/emcpdf/api/v1/subscribedapps");
 		link.withRel("");
 		new Expectations() {
 			{
-				SubscribedAppCacheUtil.getInstance();
-				result = cacheUtil;
-				cacheUtil.get(anyString);
+				CacheManagers.getInstance().build();
+				result = anyCacheManager;
+				anyCacheManager.getCache(anyString);
+				result = anyCache;
+				anyCache.get(any);
 				result = null;
 
 				RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, anyString);
 				result = link;
 
-				anyClient.get(anyString, anyString);
+				anyClient.get(anyString, anyString, anyString);
 				result = SUBSCRIBED_APPS;
 			}
 		};
@@ -438,14 +445,13 @@ public class TenantSubscriptionUtilTest
 	@Test(groups = { "s2" })
 	public void testRestClientGetNull()
 	{
-		String res = new TenantSubscriptionUtil.RestClient().get(null, null);
+		String res = new RestClient().get(null, null, null);
 		Assert.assertNull(res);
 	}
 
 	@Test(groups = { "s2" })
 	public void testRestClientGetNullAuthS2(@Mocked final DefaultClientConfig anyClientConfig, @Mocked final Client anyClient,
-			@Mocked final RegistrationManager anyRegistrationManager, @Mocked final URI anyUri,
-			@Mocked final UriBuilder anyUriBuilder, @Mocked final MediaType anyMediaType,
+			@Mocked final URI anyUri, @Mocked final UriBuilder anyUriBuilder, @Mocked final MediaType anyMediaType,
 			@Mocked final com.sun.jersey.api.client.WebResource.Builder anyBuilder, @Mocked final StringUtil anyStringUtil)
 			throws Exception
 	{
@@ -457,10 +463,9 @@ public class TenantSubscriptionUtilTest
 				result = false;
 			}
 		};
-		new TenantSubscriptionUtil.RestClient().get("http://test.link.com", "emaastesttenant1");
+		new RestClient().get("http://test.link.com", "emaastesttenant1", "auth");
 		new Verifications() {
 			{
-				RegistrationManager.getInstance().getAuthorizationToken();
 				UriBuilder.fromUri(anyString).build();
 				anyClient.resource(anyUri).header(anyString, any);
 				anyBuilder.get(String.class);
@@ -470,8 +475,7 @@ public class TenantSubscriptionUtilTest
 
 	@Test(groups = { "s2" })
 	public void testRestClientGetS2(@Mocked final DefaultClientConfig anyClientConfig, @Mocked final Client anyClient,
-			@Mocked final RegistrationManager anyRegistrationManager, @Mocked final URI anyUri,
-			@Mocked final UriBuilder anyUriBuilder, @Mocked final MediaType anyMediaType,
+			@Mocked final URI anyUri, @Mocked final UriBuilder anyUriBuilder, @Mocked final MediaType anyMediaType,
 			@Mocked final com.sun.jersey.api.client.WebResource.Builder anyBuilder) throws Exception
 	{
 		new NonStrictExpectations() {
@@ -480,10 +484,9 @@ public class TenantSubscriptionUtilTest
 				Client.create(anyClientConfig);
 			}
 		};
-		new TenantSubscriptionUtil.RestClient().get("http://test.link.com", "emaastesttenant1");
+		new RestClient().get("http://test.link.com", "emaastesttenant1", null);
 		new Verifications() {
 			{
-				RegistrationManager.getInstance().getAuthorizationToken();
 				UriBuilder.fromUri(anyString).build();
 				anyClient.resource(anyUri).header(anyString, any);
 				anyBuilder.get(String.class);

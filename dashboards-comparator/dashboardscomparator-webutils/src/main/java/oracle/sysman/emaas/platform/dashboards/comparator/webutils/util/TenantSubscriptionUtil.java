@@ -10,13 +10,15 @@
 
 package oracle.sysman.emaas.platform.dashboards.comparator.webutils.util;
 
-import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
+
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
+import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter;
+import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.LogUtil.InteractionLogDirection;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -27,27 +29,22 @@ import com.sun.jersey.api.client.WebResource.Builder;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
-import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter;
-import oracle.sysman.emaas.platform.dashboards.comparator.webutils.json.AppMappingCollection;
-import oracle.sysman.emaas.platform.dashboards.comparator.webutils.json.AppMappingEntity;
-import oracle.sysman.emaas.platform.dashboards.comparator.webutils.json.DomainEntity;
-import oracle.sysman.emaas.platform.dashboards.comparator.webutils.json.DomainsEntity;
-import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.LogUtil.InteractionLogDirection;
-
 /**
  * @author guobaochen
  */
 public class TenantSubscriptionUtil
 {
+	
+	private static Logger logger = LogManager.getLogger(TenantSubscriptionUtil.class);
+	private static Logger itrLogger = LogUtil.getInteractionLogger();
+	
 	public static class RestClient
 	{
 		public RestClient()
 		{
 		}
 
-		public String get(String url, String tenant)
+		public String get(String url, String tenant, String userTenant)
 		{
 			if (StringUtils.isEmpty(url)) {
 				return null;
@@ -65,8 +62,17 @@ public class TenantSubscriptionUtil
 				itrLogger.info(
 						"RestClient is connecting to get response after getting authorization token from registration manager.");
 			}
-			Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
-					.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
+			Builder builder = null;
+			if (userTenant != null && tenant != null) {
+				builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
+						.header("X-USER-IDENTITY-DOMAIN-NAME", tenant)
+						.header("X-REMOTE-USER", userTenant)
+						.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
+			} else {
+				builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
+						.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
+			}
+			
 			return builder.get(String.class);
 		}
 
@@ -79,8 +85,9 @@ public class TenantSubscriptionUtil
 		 * @param tenant
 		 * @return
 		 */
-		public String put(String url, Object requestEntity, String tenant)
+		public String put(String url, Object requestEntity, String tenant, String userTenant)
 		{
+			logger.info("start to call sync web service!");
 			if (StringUtils.isEmpty(url)) {
 				logger.error("Unable to put to an empty URL");
 				return null;
@@ -102,15 +109,30 @@ public class TenantSubscriptionUtil
 				itrLogger.info(
 						"RestClient is connecting to get response after getting authorization token from registration manager.");
 			}
-			Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
-					.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
-			return builder.put(String.class, requestEntity);
+			Builder builder = null;
+			if (tenant != null && userTenant != null) {
+				builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
+						.header("X-USER-IDENTITY-DOMAIN-NAME", tenant)
+						.header("X-REMOTE-USER", userTenant)
+						.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
+			} else {
+				builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
+						.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
+			}
+			String response = null;
+			try {
+				 response = builder.put(String.class, requestEntity);
+			} catch (Exception e) {
+				logger.warn(e.getLocalizedMessage());
+			}
+		    
+			
+			
+			return response;
 		}
 	}
-
-	private static Logger logger = LogManager.getLogger(TenantSubscriptionUtil.class);
-	private static Logger itrLogger = LogUtil.getInteractionLogger();
-
+	
+/*
 	public static List<String> getTenantSubscribedServices(String tenant)
 	{
 		if (tenant == null) {
@@ -124,8 +146,8 @@ public class TenantSubscriptionUtil
 		}
 		logger.info("Checking tenant (" + tenant + ") subscriptions. The entity naming href is " + domainLink.getHref());
 		String domainHref = domainLink.getHref();
-		RestClient rc = new RestClient();
-		String domainsResponse = rc.get(domainHref, tenant);
+		RestClient rc = RestClientProxy.getRestClient();
+		String domainsResponse = rc.get(domainHref, tenant, ((VersionedLink)domainLink).getAuthToken());
 		logger.info("Checking tenant (" + tenant + ") subscriptions. Domains list response is " + domainsResponse);
 		JsonUtil ju = JsonUtil.buildNormalMapper();
 		try {
@@ -149,7 +171,7 @@ public class TenantSubscriptionUtil
 			String appMappingUrl = tenantAppUrl + "/lookups?opcTenantId=" + tenant;
 			logger.info(
 					"Checking tenant (" + tenant + ") subscriptions. tenant application mapping lookup URL is " + appMappingUrl);
-			String appMappingJson = rc.get(appMappingUrl, tenant);
+			String appMappingJson = rc.get(appMappingUrl, tenant, null);
 			logger.info("Checking tenant (" + tenant + ") subscriptions. application lookup response json is " + appMappingJson);
 			if (appMappingJson == null || "".equals(appMappingJson)) {
 				return null;
@@ -198,7 +220,7 @@ public class TenantSubscriptionUtil
 			return null;
 		}
 	}
-
+*/
 	public static boolean isAPMServiceOnly(List<String> services)
 	{
 		if (services == null || services.size() != 1) {
@@ -229,5 +251,39 @@ public class TenantSubscriptionUtil
 		}
 		return false;
 	}
+/*
+	public static class VersionedLink extends Link {
+		private String authToken;
+
+		public VersionedLink() {
+
+		}
+
+		public VersionedLink(Link link, String authToken) {
+			withHref(link.getHref());
+			withOverrideTypes(link.getOverrideTypes());
+			withRel(link.getRel());
+			withTypesStr(link.getTypesStr());
+			this.authToken = authToken;
+		}
+
+		/**
+		 * @return the authToken
+		 
+		public String getAuthToken()
+		{
+			return authToken;
+		}
+
+		/**
+		 * @param authToken
+		 *            the authToken to set
+		 
+		public void setAuthToken(String authToken)
+		{
+			this.authToken = authToken;
+		}
+		
+	} */
 
 }

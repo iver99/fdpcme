@@ -193,7 +193,35 @@ public class RegistryLookup
 			Assert.assertTrue(res.getStatusCode() == 200);
 			Assert.assertEquals(res.jsonPath().get("rel"), "sso.home");
 			Assert.assertNotNull(res.jsonPath().get("href"));
-
+			// auth token shouldn't be sent to UI
+			Assert.assertNull(res.jsonPath().get("authToken"));
+		}
+		catch (Exception e) {
+			LOGGER.info("context",e);
+			Assert.fail(e.getLocalizedMessage());
+		}
+	}
+	@Test
+	public void serviceAPI()
+	{
+		try {
+			RestAssured.baseURI = "http://" + HOSTNAME + ":" + "7004";
+			RestAssured.basePath ="/registry/servicemanager/registry/v1/instances";
+			Response res = RestAssured
+					.given()
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).when()
+							.get("?serviceName=Dashboard-API");
+			System.out.println("The response is"+res.getStatusCode());
+			Assert.assertTrue(res.getStatusCode() == 200);
+			System.out.println("The text"+res.jsonPath().get("items.serviceName"));
+			System.out.println("The text"+res.jsonPath().get("items[0].links[0].rel"));
+			Assert.assertEquals(res.jsonPath().get("items[0].links[4].rel"), "serviceapi/dashboards.service");
+			Assert.assertEquals(res.jsonPath().get("items[0].links[9].rel"), "serviceapi/dashboards.subscribedapps");
+			Assert.assertEquals(res.jsonPath().get("items[0].links[12].rel"), "serviceapi/dashboards.subscribedapps2");
+			Assert.assertEquals(res.jsonPath().get("items[0].links[15].rel"), "serviceapi/dashboards.logging");
 		}
 		catch (Exception e) {
 			LOGGER.info("context",e);

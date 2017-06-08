@@ -1,5 +1,26 @@
+    <script id="omc-hamburger-menu-template" type="text/html">
+        <div id="omcHamburgerMenu" style="width:250px;" class="oj-contrast-marker oj-web-applayout-offcanvas oj-offcanvas-start">
+            <div data-bind="component: {
+                name: 'omc-uifwk-hamburger-menu',
+                params: menuParams
+                }">
+            </div>
+        </div>
+    </script>
+    <div class="emaas-brandingbar">
         <div class="emaas-appheader">
-            <div id="emaas-appheader-bar" data-testapiversion="1.13.0" class="oj-row emaas-appheader-lite" style="max-width: 1920px;padding-left: 10px">
+            <!-- ko if: hamburgerMenuEnabled -->
+            <!-- hamburger menu button-->
+            <div>
+                <button id="hamburgerButton" class="oj-button-half-chrome emaas-appheader-hamburger-button emaas-appheader-toolbar-button" 
+                    data-bind="ojComponent: {component:'ojButton', display:'icons', chroming: 'half',
+                                label: hamburgerBtnLabel, 
+                                icons: {start: 'fa-icon-font fa-bars'}}, 
+                    click: toggleHamburgerMenu, attr: {title: hamburgerBtnLabel}" role="button" tabindex="0">
+                </button>
+            </div>
+            <!-- /ko -->
+            <div id="emaas-appheader-bar" data-testapiversion="1.18.0" class="oj-row emaas-appheader-lite" style="max-width: 1920px;padding-left: 10px">
 
                 <!-- logo -->  
                 <div class="emaas-appheader-logo" data-bind="attr: {'aria-label': textOracle}">
@@ -62,22 +83,26 @@
                 </div>
             </div>
             
-            <!-- About box -->
+            <!-- About box -->    
+            <!-- ko if: aboutBoxImmediateLoading -->
             <div data-bind="component: {
                     name: 'df-oracle-about-box',
                     params: aboutBoxKocParams
                 }">
             </div>
+            <!-- /ko -->
             <!-- End of about box -->
-            
+               
             <!-- ko if: navLinksVisible -->
             <!--Navigation Menu: Quick Links/Favorites/Recent Dashboards etc.-->
             <div class="oj-component-initnode" id="links_menu">
+                <!-- ko if: navLinksImmediateLoading -->
                 <div data-bind="component: {
                     name: 'df-oracle-nav-links',
                     params: navLinksKocParams
                     }">
                 </div>
+                <!-- /ko -->
             </div>
             <!-- /ko -->
         </div>  
@@ -107,7 +132,8 @@
                 }">
             </div>  
             
-            <span style="float: left;padding-top:3px;margin-right:6px;">
+            <!-- ko if: showEntitySelector() -->
+            <span style="float: left;padding-top:5px;padding-bottom: 5px;margin-right:6px;">
             <div id="topologyButtonWrapper" data-bind="ojComponent: {component: 'ojButtonset', checked: isTopologyButtonChecked}" style="height:32px; background-color: white; border-radius: 2px;">
             <label for="buttonShowTopology"></label>
             <input type="checkbox" id="buttonShowTopology" value="buttonShowTopology" class="oj-button-half-chrome emaas-appheader-toolbar-button" role="button"
@@ -120,52 +146,77 @@
                }" style="height:29px; margin-bottom:0px"/>
             </div>
             </span>
-            <!-- ko if: showEntityContextSelector() -->
-            <div id="emcta-ctxtSel" class="animated_transitions" style="flex: auto" data-bind="component:{name:'emcta-context-selector',
+            <!-- ko if: showEntityContextSelector() && isEntityContextLoaded() -->
+            <div id="emcta-ctxtSel" class="emaas-appheader-flexbox-auto emaas-appheader-emcta-ctxtSel animated_transitions" style="flex: auto;" data-bind="component:{name:'emcta-context-selector',
                 params:{id: 'emcta-ctxtSel', entityContextParams: entityContextParams}}">
             </div>
             <!-- /ko -->
             <!-- ko if: !showEntityContextSelector() -->
-            <div class="ude-sdk emaas-appheader-inline-flexbox emaas-appheader-flexbox-auto animated_transitions" style="padding-bottom: 10px; padding-top: 3px; height: 32px; display: flex;">
+            <div class="ude-sdk emaas-appheader-inline-flexbox emaas-appheader-flexbox-auto animated_transitions" style="padding-bottom: 5px; padding-top: 5px; height: 32px; display: flex; min-width:200px;">
             <div class="ude-sdk emcta_panel_border flexBoxNoShrink flexBoxColumn flexBoxAuto animated_transitions" id="globalBar_wrapper"
-                 style="padding:2px;">
+                 style="padding:2px; overflow: hidden;">
                 <!-- ko if: compositeCxtText() -->
                 <div class="ude-sdk pill filterpill_value filterpill_with_value" style="margin-bottom: auto; margin-top: auto;height: 20px; 
                      padding-left: 8px; padding-right:8px; font-size: 14px; padding-top: 3px;padding-bottom: 1px;margin-left:0px; font-weight: normal; cursor: default;"
                      id="globalBar_pillWrapper">
-                     <span style="white-space: pre-wrap;"
-                           data-bind="text:compositeCxtText, attr:{title:cxtCompositeName}" class="ude-sdk"></span>
+                    <span style="white-space: nowrap; vertical-align: super;"
+                          data-bind="text:compositeCxtText, attr:{title:cxtCompositeName}" class="ude-sdk">
+                    </span>
+                    <!-- ko if: showReadOnlyPillRemove -->
+                        <!-- ko ifnot: compositeCxtText() == gcAllEntities -->
+                         <a href="#" data-bind="click: removeROCompositePill, attr:{id:'globalBar_pillWrapper' + '_remove'}" style="display: inline-block">
+                            <div aria-hidden="true" role="button" class="pill_remove_gc" data-bind="attr: {title:removePillTitle}"></div>
+                         </a>
+                        <!-- /ko -->
+                    <!-- /ko -->
                 </div>
                 <!-- /ko -->
                 <!-- ko foreach: entitiesList() -->
-                <div class="ude-sdk pill filterpill_value filterpill_with_value" style="margin-bottom: auto; margin-top: auto;height: 20px;
-                     padding-left: 8px; padding-right:8px; font-size: 14px; padding-top: 3px;padding-bottom: 1px;margin-left:0px; font-weight: normal; cursor: default;"
-                     data-bind="attr: {id: 'globalBar_pillWrapper_' + $index()}"
-                     >
-                     <span style="white-space: pre-wrap;"
-                           data-bind="text:$data.displayName, attr:{title:$data.entityName}" class="ude-sdk"></span>
+                <div class="ude-sdk pill filterpill_value filterpill_with_value"
+                     style="margin-bottom: auto; margin-top: auto; margin-left: 0px;
+                            padding-left: 8px; padding-right: 8px; padding-top: 3px;padding-bottom: 1px;
+                            height: 20px; font-size: 14px; font-weight: normal; cursor: default;"
+                     data-bind="attr: {id: 'globalBar_pillWrapper_' + $index()}">
+                    <span style="white-space: nowrap; vertical-align: super;"
+                        data-bind="text:$data.displayName, attr:{title:$data.entityName}" class="ude-sdk">
+                    </span>
+                    <!-- ko if: showReadOnlyPillRemove -->
+                        <a href="#" data-bind="click: $parent.removeROEntityPill, attr:{id:'globalBar_pillWrapper_' + $index() + '_remove'}" style="display: inline-block">
+                            <div aria-hidden="true" role="button" class="pill_remove_gc" data-bind="attr: {title:$parent.removePillTitle}"></div>
+                        </a>
+                    <!-- /ko -->
                 </div>
                 <!-- /ko -->
             </div>
             </div>
             <!-- /ko -->
+            <!-- /ko -->
             <!-- ko if: showTimeSelector() === true -->
-                <div id ="emaas-appheader-timecxt" class="emaas-appheader-time-context" data-bind="component: {name: 'df-datetime-picker', params: timeSelectorParams}" style="padding-top: 3px">
+                <!-- ko if: showEntitySelector() === false -->
+                    <div class="ude-sdk emaas-appheader-inline-flexbox emaas-appheader-flexbox-auto animated_transitions" style="padding-bottom: 5px; padding-top: 5px; height: 32px; display: flex;">
+                        <div class="ude-sdk emcta_panel_border flexBoxNoShrink flexBoxColumn flexBoxAuto animated_transitions" id="globalBar_wrapper"
+                            style="padding:2px;">
+                        </div>
+                    </div>
+                <!-- /ko -->
+                <div id ="emaas-appheader-timecxt" class="emaas-appheader-time-context" data-bind="component: {name: 'df-datetime-picker', params: timeSelectorParams}" style="padding-top: 5px">
                 </div>
             <!-- /ko -->
         </div>
 
+        
+        <!-- ko if: showEntitySelector() -->
         <!-- topology --->
         <!-- ko if: isTopologyCompRegistered() !== false -->
-        <div id="ude-topology-div" style="overflow-y:auto; height:auto; background-color:white; display: flex;"
+        <div id="ude-topology-div" style="overflow-y:auto; height:auto; display: flex; padding-left: 10px; padding-right: 10px; padding-bottom: 5px;"
              data-bind="visible: isTopologyDisplayed, event: {mouseover: showTopologyMaxIcon, mouseout: hideTopologyMaxIcon}" class="ude-sdk">
             <!-- ko if: topologyHeight() > 201 -->
-            <div id="ude-topology-title" style="display: flex; position: absolute; right: 20px; z-index: 1">
+            <div id="ude-topology-title" style="display: flex; position: absolute; z-index: 1" data-bind="style: {right: maxIconToRight}">
                     <button data-bind="attr: {'id': 'maxMinTopology', title: isMaximized() ? topologyRestoreLabel : topologyMaximizeLabel}, click: maxMinTopologyToggle,
                                     style: {display: 'none'},
                                     ojComponent: {
                                         component: 'ojButton', chroming: 'half',
-                                        icons: {start: isMaximized() ? 'fa-icon-font fa-icon-font-16 emaas-appheader-restore-icon' : 'fa-icon-font fa-icon-font-16 emaas-appheader-maximize-icon'},
+                                        icons: {start: isMaximized() ? 'fa-icon-font icon-font-16 emaas-appheader-restore-icon' : 'fa-icon-font icon-font-16 emaas-appheader-maximize-icon'},
                                         label: ''
                                     }" >
                     </button>
@@ -173,8 +224,10 @@
             <!-- /ko -->
             
             <!--<div data-bind="attr: {style: topologyStyle}" style="margin: 0 auto">test div</div>-->
-            
-        <div class="ude-topology ude-topology-in-brandingbar" data-bind="component:{name:'emctas-topology', 
+        <div style="overflow-y: auto; height: auto; display: flex;
+            border-width: 1px; border-color: #d6dfe6; border-style: solid; background-color: white;">
+        <div class="ude-topology ude-topology-in-brandingbar" data-bind="attr: {style: topologyStyle},
+           component:{name:'emctas-topology', 
             params:{
                    entityQueryVars: queryVars(),
                    entities: entities(),
@@ -183,17 +236,22 @@
                    customNodeDataLoader: customNodeDataLoader(),
                    customEventHandler: customEventHandler(),
                    miniEntityCardActions: miniEntityCardActions(),
+                   highlightedEntities: highlightedEntities,
+                   updateGlobalContextByTopologySelection: updateGlobalContextByTopologySelection,
                    enableCache: true,
-                   topologySize: topologySize
+                   topologySize: topologySize,
+                   topologyData: topologyData
                 }
-            },
-            attr: {style: topologyStyle}">
-        </div>      
+            }">
+        </div>
+        </div>
         </div>
         <!-- /ko -->
         <!-- End of topology -->
+        <!-- /ko -->
 
         <!-- /ko -->  <!-- End of Global Context Banner -->
+    </div>  <!--End of emaas-brandingbar-->
 
         <!-- ko if: hasMessages -->
         <div>

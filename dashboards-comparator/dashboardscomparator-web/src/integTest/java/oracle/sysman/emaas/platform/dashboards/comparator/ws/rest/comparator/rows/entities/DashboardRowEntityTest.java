@@ -2,6 +2,7 @@ package oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.ro
 
 import java.math.BigInteger;
 
+import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.counts.CountsEntity;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 @Test(groups = { "s1" })
@@ -13,8 +14,8 @@ public class DashboardRowEntityTest
 		DashboardRowEntity dre1 = new DashboardRowEntity();
 		DashboardRowEntity dre2 = new DashboardRowEntity();
 		Assert.assertEquals(dre1, dre2);
-		dre1.setDashboardId(BigInteger.ONE);
-		dre2.setDashboardId(BigInteger.ONE);
+		dre1.setDashboardId("1");
+		dre2.setDashboardId("1");
 		Assert.assertEquals(dre1, dre2);
 		dre1.setName("dashboard1");
 		dre2.setName("dashboard1");
@@ -43,8 +44,8 @@ public class DashboardRowEntityTest
 		dre1.setScreenShot("screenshot");
 		dre2.setScreenShot("screenshot");
 		Assert.assertEquals(dre1, dre2);
-		dre1.setDeleted(BigInteger.ONE);
-		dre2.setDeleted(BigInteger.ONE);
+		dre1.setDeleted("1");
+		dre2.setDeleted("1");
 		Assert.assertEquals(dre1, dre2);
 		dre1.setTenantId(1L);
 		dre2.setTenantId(1L);
@@ -65,9 +66,9 @@ public class DashboardRowEntityTest
 		dre2.setExtendedOptions("options");
 		Assert.assertEquals(dre1, dre2);
 
-		dre2.setDashboardId(new BigInteger("2"));
+		dre2.setDashboardId("2");
 		Assert.assertNotEquals(dre1, dre2);
-		dre2.setDashboardId(BigInteger.ONE);
+		dre2.setDashboardId("1");
 		dre2.setName("dashboard2");
 		Assert.assertNotEquals(dre1, dre2);
 		dre2.setName("dashboard1");
@@ -95,9 +96,9 @@ public class DashboardRowEntityTest
 		dre2.setScreenShot("screenshot1");
 		Assert.assertNotEquals(dre1, dre2);
 		dre2.setScreenShot("screenshot");
-		dre2.setDeleted(BigInteger.ZERO);
+		dre2.setDeleted("0");
 		Assert.assertNotEquals(dre1, dre2);
-		dre2.setDeleted(BigInteger.ONE);
+		dre2.setDeleted("1");
 		dre2.setTenantId(2L);
 		Assert.assertNotEquals(dre1, dre2);
 		dre2.setTenantId(1L);
@@ -125,8 +126,8 @@ public class DashboardRowEntityTest
 		DashboardRowEntity dre1 = new DashboardRowEntity();
 		DashboardRowEntity dre2 = new DashboardRowEntity();
 		Assert.assertEquals(dre1.hashCode(), dre2.hashCode());
-		dre1.setDashboardId(BigInteger.ONE);
-		dre2.setDashboardId(BigInteger.ONE);
+		dre1.setDashboardId("1");
+		dre2.setDashboardId("1");
 		Assert.assertEquals(dre1.hashCode(), dre2.hashCode());
 		dre1.setName("dashboard1");
 		dre2.setName("dashboard1");
@@ -155,8 +156,8 @@ public class DashboardRowEntityTest
 		dre1.setScreenShot("screenshot");
 		dre2.setScreenShot("screenshot");
 		Assert.assertEquals(dre1.hashCode(), dre2.hashCode());
-		dre1.setDeleted(BigInteger.ONE);
-		dre2.setDeleted(BigInteger.ONE);
+		dre1.setDeleted("1");
+		dre2.setDeleted("1");
 		Assert.assertEquals(dre1.hashCode(), dre2.hashCode());
 		dre1.setTenantId(1L);
 		dre2.setTenantId(1L);
@@ -177,9 +178,9 @@ public class DashboardRowEntityTest
 		dre2.setExtendedOptions("options");
 		Assert.assertEquals(dre1.hashCode(), dre2.hashCode());
 
-		dre2.setDashboardId(new BigInteger("2"));
+		dre2.setDashboardId("2");
 		Assert.assertNotEquals(dre1.hashCode(), dre2.hashCode());
-		dre2.setDashboardId(BigInteger.ONE);
+		dre2.setDashboardId("1");
 		dre2.setName("dashboard2");
 		Assert.assertNotEquals(dre1.hashCode(), dre2.hashCode());
 		dre2.setName("dashboard1");
@@ -207,9 +208,9 @@ public class DashboardRowEntityTest
 		dre2.setScreenShot("screenshot1");
 		Assert.assertNotEquals(dre1.hashCode(), dre2.hashCode());
 		dre2.setScreenShot("screenshot");
-		dre2.setDeleted(BigInteger.ZERO);
+		dre2.setDeleted("0");
 		Assert.assertNotEquals(dre1.hashCode(), dre2.hashCode());
-		dre2.setDeleted(BigInteger.ONE);
+		dre2.setDeleted("1");
 		dre2.setTenantId(2L);
 		Assert.assertNotEquals(dre1.hashCode(), dre2.hashCode());
 		dre2.setTenantId(1L);
@@ -229,5 +230,17 @@ public class DashboardRowEntityTest
 		Assert.assertNotEquals(dre1.hashCode(), dre2.hashCode());
 		dre2.setExtendedOptions("options");
 		Assert.assertEquals(dre1.hashCode(), dre2.hashCode());
+	}
+	private CountsEntity countsEntity;
+	@Test
+	public void testCountsEntity(){
+		countsEntity = new CountsEntity(1L,1L,1L);
+		countsEntity.setCountOfDashboards(1L);
+		countsEntity.setCountOfUserOptions(1L);
+		countsEntity.setCountOfPreference(1L);
+
+		countsEntity.getCountOfDashboards();
+		countsEntity.getCountOfUserOptions();
+		countsEntity.getCountOfPreference();
 	}
 }

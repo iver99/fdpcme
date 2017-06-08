@@ -777,6 +777,14 @@ body, html {
             color:#878c90;
         }
     }
+    
+    .dbd-right-bottom-arrow-icon {
+        right:1px;
+        bottom:0px;
+        > span {
+            color:#878c90;
+        }
+    }
     .cursor-resize-right-bottom{
         cursor:se-resize;
     }
@@ -919,7 +927,6 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
     }
     
   .dbd-left-panel {
-    height: 1000px;
     right: 0;
     border-left: 1px solid #d6dfe6;
     background: #fff;

@@ -15,13 +15,14 @@ function (ko, $, oj, dfu, mbu, uiutil) {
         self.isMobileDevice = self.modeType.editable === true ? 'false' : 'true';
         self.dashboardEditDisabled = ko.observable(self.$b().getToolBarModel&&self.$b().getToolBarModel() ? self.$b().getToolBarModel().editDisabled() : true);
         self.showRightPanelToggler = ko.observable(self.isMobileDevice !== 'true');
+        self.initializeRightPanel= ko.observable(false);
         self.showRightPanel = ko.observable(false);
         self.rightPanelIcon = ko.observable(self.$b().getToolBarModel && self.$b().getToolBarModel() && $b.getDashboardTilesViewModel().isEmpty() ? "wrench" : "none");
         self.completelyHidden = ko.observable(false);
         self.editPanelContent = ko.observable("settings");
         self.scrollbarWidth = uiutil.getScrollbarWidth();
         self.lastHighlightWigetIndex=null;
-        
+
         self.expandDBEditor = function (target, isToExpand) {
             if ("singleDashboard-edit" === target) {
                 $('.dbd-right-panel-editdashboard-general').ojCollapsible("option", "expanded", isToExpand);
@@ -41,7 +42,7 @@ function (ko, $, oj, dfu, mbu, uiutil) {
             } else if (target === "editcontent") {
                 panelTarget = "editcontent";
             }
-            
+
             self.rightPanelIcon(highlightIcon);
             if (!self.showRightPanel()) {
                 self.toggleLeftPanel();
@@ -57,7 +58,7 @@ function (ko, $, oj, dfu, mbu, uiutil) {
                 $('.dbd-right-panel-editcontent-title').ojCollapsible("option", "expanded", true);
                 selectedContent && selectedContent(param);
             }
-            
+
             self.$b().triggerBuilderResizeEvent('resize right panel');
         };
 
@@ -69,15 +70,15 @@ function (ko, $, oj, dfu, mbu, uiutil) {
                 clickedIcon = "wrench";
             }
             resetTileHighlighted();
-            
+
             var _changeRightPanelTab=self.showRightPanel() && clickedIcon !== self.rightPanelIcon();
             var _closeRightPanel=self.showRightPanel();
-            
+
             if (_changeRightPanelTab) {
                 self.rightPanelIcon(clickedIcon);
                 if(clickedIcon === "pencil" && self.editPanelContent() === "editcontent"){
-                    setTileHightlighted(self.lastHighlightWigetIndex); 
-                } 
+                    setTileHightlighted(self.lastHighlightWigetIndex);
+                }
             } else if (_closeRightPanel) {
                 self.rightPanelIcon("none");
                 self.toggleLeftPanel();
@@ -88,7 +89,7 @@ function (ko, $, oj, dfu, mbu, uiutil) {
                 self.rightPanelIcon(clickedIcon);
                 self.toggleLeftPanel();
                 if(clickedIcon === "pencil" && self.editPanelContent() === "editcontent"){
-                    setTileHightlighted(self.lastHighlightWigetIndex); 
+                    setTileHightlighted(self.lastHighlightWigetIndex);
                 }
             }
         };
@@ -98,6 +99,7 @@ function (ko, $, oj, dfu, mbu, uiutil) {
                 $(".dbd-left-panel").animate({width: "320px"}, "normal");
                 $(".right-panel-toggler").animate({right: (323 + self.scrollbarWidth) + 'px'}, 'normal', function () {
                     self.showRightPanel(true);
+                    self.initializeRightPanel(true);
                     $(".dashboard-picker-container:visible").addClass("df-collaps");
                     self.$b().triggerBuilderResizeEvent('show right panel');
                 });
@@ -129,17 +131,17 @@ function (ko, $, oj, dfu, mbu, uiutil) {
             }
             self.$b().triggerBuilderResizeEvent('OOB dashboard detected and hide left panel');
         };
-        
+
         self.editPanelContent.subscribe(function () {
             if (self.editPanelContent() !== "editcontent") {
                resetTileHighlighted();
             }
         });
-        
+
         self.completelyHidden.subscribe(function () {
             resetTileHighlighted();
         });
-        
+
         function resetTileHighlighted() {
             if(self.$b && self.$b().dashboard && self.$b().dashboard.tiles){
                 var tilesArray = self.$b().dashboard.tiles();
@@ -151,7 +153,7 @@ function (ko, $, oj, dfu, mbu, uiutil) {
                 });
             }
         }
-        
+
         function setTileHightlighted(targetIndex) {
             var tilesArray = self.$b().dashboard.tiles();
             tilesArray.forEach(function resetObject(element, index) {
@@ -160,17 +162,20 @@ function (ko, $, oj, dfu, mbu, uiutil) {
                 }
             });
         }
-        
+
 
         function rightPanelChange(status,param) {
             if(status==="complete-hidden-rightpanel"){
                 self.completelyHidden(true);
                 self.$b().triggerBuilderResizeEvent('hide right panel');
             }else{
+                if (!self.initializeRightPanel()) {
+                    self.initializeRightPanel(true);
+                }
                 self.editRightpanelLinkage(status,param);
             }          
         }
-                
+        
         Builder.registerFunction(rightPanelChange, 'rightPanelChange');
         
         self.initDraggable = function() {
@@ -191,60 +196,62 @@ function (ko, $, oj, dfu, mbu, uiutil) {
                     self.$b().triggerEvent(self.$b().EVENT_NEW_WIDGET_STOP_DRAGGING, null, e, t);
                 }
             });
-        };    
+        };
 
-        $('.dbd-right-panel-editdashboard-filters').ojCollapsible({"expanded": false});
-        $('.dbd-right-panel-editdashboard-share').ojCollapsible({"expanded": false});
-        $('.dbd-right-panel-editdashboard-general').ojCollapsible({"expanded": false});
+        self.initializeCollapsible = function(){
+            $('.dbd-right-panel-editdashboard-filters').ojCollapsible({"expanded": false});
+            $('.dbd-right-panel-editdashboard-share').ojCollapsible({"expanded": false});
+            $('.dbd-right-panel-editdashboard-general').ojCollapsible({"expanded": false});
 
-        $('.dbd-right-panel-editdashboard-general').on({
-            "ojexpand": function (event, ui) {
-                $('.dbd-right-panel-editdashboard-filters').ojCollapsible("option", "expanded", false);
-                $('.dbd-right-panel-editdashboard-share').ojCollapsible("option", "expanded", false);
-            }
-        });
+            $('.dbd-right-panel-editdashboard-general').on({
+                "ojexpand": function (event, ui) {
+                    $('.dbd-right-panel-editdashboard-filters').ojCollapsible("option", "expanded", false);
+                    $('.dbd-right-panel-editdashboard-share').ojCollapsible("option", "expanded", false);
+                }
+            });
 
-        $('.dbd-right-panel-editdashboard-set-general').on({
-            "ojexpand": function (event, ui) {
-                $('.dbd-right-panel-editdashboard-set-share').ojCollapsible("option", "expanded", false);
-            }
-        });
+            $('.dbd-right-panel-editdashboard-set-general').on({
+                "ojexpand": function (event, ui) {
+                    $('.dbd-right-panel-editdashboard-set-share').ojCollapsible("option", "expanded", false);
+                }
+            });
 
-        $('.dbd-right-panel-editdashboard-filters').on({
-            "ojexpand": function (event, ui) {
-                $('.dbd-right-panel-editdashboard-general').ojCollapsible("option", "expanded", false);
-                $('.dbd-right-panel-editdashboard-share').ojCollapsible("option", "expanded", false);
-            }
-        });
+            $('.dbd-right-panel-editdashboard-filters').on({
+                "ojexpand": function (event, ui) {
+                    $('.dbd-right-panel-editdashboard-general').ojCollapsible("option", "expanded", false);
+                    $('.dbd-right-panel-editdashboard-share').ojCollapsible("option", "expanded", false);
+                }
+            });
 
-        $('.dbd-right-panel-editdashboard-share').on({
-            "ojexpand": function (event, ui) {
-                $('.dbd-right-panel-editdashboard-filters').ojCollapsible("option", "expanded", false);
-                $('.dbd-right-panel-editdashboard-general').ojCollapsible("option", "expanded", false);
-            }
-        });
+            $('.dbd-right-panel-editdashboard-share').on({
+                "ojexpand": function (event, ui) {
+                    $('.dbd-right-panel-editdashboard-filters').ojCollapsible("option", "expanded", false);
+                    $('.dbd-right-panel-editdashboard-general').ojCollapsible("option", "expanded", false);
+                }
+            });
 
         $('.dbd-right-panel-editdashboard-set-share').on({
             "ojexpand": function (event, ui) {
                 $('.dbd-right-panel-editdashboard-set-general').ojCollapsible("option", "expanded", false);
             }
         });
-        
+
         $('.dbd-right-panel-editcontent-title').ojCollapsible({"expanded": false});
         $('.dbd-right-panel-editcontent-filters').ojCollapsible({"expanded": false});
-        
+
         $('.dbd-right-panel-editcontent-filters').on({
             "ojexpand": function (event, ui) {
                 $('.dbd-right-panel-editcontent-title').ojCollapsible("option", "expanded", false);
             }
         });
-        
+
         $('.dbd-right-panel-editcontent-title').on({
             "ojexpand": function (event, ui) {
                 $('.dbd-right-panel-editcontent-filters').ojCollapsible("option", "expanded", false);
             }
         });
 
+        };
     }
     return {"rightPanelControl": rightPanelControl};
 }

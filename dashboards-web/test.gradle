@@ -32,6 +32,7 @@ dependencies {
 	testConfig getProjectArtifact('registry-lookup-client')   
 	testConfig getProjectArtifact('jmockit')   
 	testConfig getProjectArtifact('jersey-servlet')   
-	testConfig getProjectArtifact('jersey-server')   
+	testConfig getProjectArtifact('jersey-server')  
+	testConfig getProjectArtifact('omctfSetupTestSDK') 
 }
 build.dependsOn integTestJar

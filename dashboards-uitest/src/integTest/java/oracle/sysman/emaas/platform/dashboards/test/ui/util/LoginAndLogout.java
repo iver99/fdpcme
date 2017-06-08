@@ -5,6 +5,7 @@ import oracle.sysman.emsaas.login.PageUtils;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriverUtils;
 
+import org.openqa.selenium.JavascriptExecutor;
 import org.testng.annotations.AfterMethod;
 
 public class LoginAndLogout
@@ -15,14 +16,15 @@ public class LoginAndLogout
 	public static void logoutMethod()
 	{
 		if (webd != null) {
+			((JavascriptExecutor) webd.getWebDriver()).executeScript("scroll(0,0)");
 			LoginUtils.doLogout(webd);
-			try {
-				webd.shutdownBrowser(true);
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-				webd.getLogger().warning("Failed to shutdown browser" + e.getMessage());
-			}
+//			try {
+//				webd.shutdownBrowser(true);
+//			}
+//			catch (Exception e) {
+//				e.printStackTrace();
+//				webd.getLogger().warning("Failed to shutdown browser" + e.getMessage());
+//			}
 		}
 	}
 
@@ -40,6 +42,24 @@ public class LoginAndLogout
 		login(testName, username, "Welcome1!", tenantID, "home", "Dashboard-UI");
 
 	}
+
+	//added by Iris begin
+	public void customlogin(String testName, String customUser, String newTenantID)
+	{
+		String tenantID = null, username = null;
+		try {
+			tenantID = newTenantID;
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			tenantID = "emaastesttenant1";
+		}
+		username = customUser;
+		login(testName, username, "Welcome1!", tenantID, "home", "Dashboard-UI");
+
+	}
+
+	//added by Iris end
 
 	public void login(String testName)
 	{
@@ -87,7 +107,8 @@ public class LoginAndLogout
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-			url = oracle.sysman.emsaas.login.utils.Utils.getProperty("OMCS_DASHBOARD_URL");
+//			url = oracle.sysman.emsaas.login.utils.Utils.getProperty("OMCS_DASHBOARD_URL");
+			url = oracle.sysman.emsaas.login.utils.Utils.getProperty("OHS_URL")+"/emsaasui/emcpdfui/home.html";
 		}
 
 		String testPropertiesFile = System.getenv("EMAAS_PROPERTIES_FILE");

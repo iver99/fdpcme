@@ -3,8 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-define(['jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk/@version@/js/util/df-util-impl'],
-    function ($, oj, ajaxUtilModel, dfumodel)
+define(['knockout', 'jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk/@version@/js/util/df-util-impl'],
+    function (ko, $, oj, ajaxUtilModel, dfumodel)
     {
         function DashboardFrameworkUserTenantUtility() {
             var self = this;
@@ -54,8 +54,8 @@ define(['jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk
                         }
                     }
 
-                    if (window._userInfoServerCache) {
-                        doneCallback(window._userInfoServerCache);
+                    if (window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.userInfo) {
+                        doneCallback(window._uifwk.cachedData.userInfo);
                     }
                     else {
                         ajaxUtil.ajaxWithRetry({
@@ -123,14 +123,15 @@ define(['jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk
                 return userTenant && userTenant.tenant ? userTenant.tenant : null;
             };
             
-            
-            
-            
-            
             self.getUserRoles = function(callback,sendAsync) {
                 var serviceUrl = "/sso.static/dashboards.configurations/userInfo";
                 if (dfu.isDevMode()){
-                    callback(["APM Administrator","APM User","IT Analytics Administrator","Log Analytics Administrator","Log Analytics User","IT Analytics User"]);
+                    if (dfu.getDevData() && dfu.getDevData().userRoles) {
+                        callback(dfu.getDevData().userRoles.roleNames);
+                    }
+                    else {
+                        callback(["APM Administrator","APM User","IT Analytics Administrator","Log Analytics Administrator","Log Analytics User","IT Analytics User"]);
+                    }
                     return;
                 }
                 if(window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.roles){
@@ -153,8 +154,8 @@ define(['jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk
                             callback(data["userRoles"]);
                         }
                     }
-                    if (window._userInfoServerCache) {
-                        doneCallback(window._userInfoServerCache);
+                    if (window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.userInfo) {
+                        doneCallback(window._uifwk.cachedData.userInfo);
                     }
                     else {
                         ajaxUtil.ajaxWithRetry({
@@ -166,6 +167,9 @@ define(['jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk
                         .done(
                             function (data) {
                                 doneCallback(data);
+                            })
+                        .fail(function() {
+                                callback(null);
                             });
                     }
                 }
@@ -181,6 +185,8 @@ define(['jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk
             self.ADMIN_ROLE_NAME_SECURITY = "Security Analytics Administrator";
             self.ADMIN_ROLE_NAME_COMPLIANCE = "Compliance Administrator";
             self.ADMIN_ROLE_NAME_ORCHESTRATION = "Orchestration Administrator";
+            self.ADMIN_ROLE_NAME_OMC = "OMC Administrator";
+            
             self.userHasRole = function(role){
                 self.getUserRoles(function(data){
                     self.userRoles = data; 
@@ -191,9 +197,83 @@ define(['jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk
                     return true;
                 }
             };
+            
+            self.isAdminUser = function() {
+                if (self.userHasRole(self.ADMIN_ROLE_NAME_OMC) || 
+                    self.userHasRole(self.ADMIN_ROLE_NAME_APM) ||
+                    self.userHasRole(self.ADMIN_ROLE_NAME_ITA) ||
+                    self.userHasRole(self.ADMIN_ROLE_NAME_LA) ||
+                    self.userHasRole(self.ADMIN_ROLE_NAME_MONITORING) ||
+                    self.userHasRole(self.ADMIN_ROLE_NAME_SECURITY) ||
+                    self.userHasRole(self.ADMIN_ROLE_NAME_COMPLIANCE) ||
+                    self.userHasRole(self.ADMIN_ROLE_NAME_ORCHESTRATION)) {
+                    return true;
+                }
+                return false;
+            };
+            
+            /**
+             * Get user granted privileges
+             *
+             * @param {Function} callback Callback function to be invoked when result is fetched. 
+             * The input for the callback function will be a String of privilege names separated by comma e.g. 
+             * "ADMINISTER_LOG_TYPE,RUN_AWR_VIEWER_APP,USE_TARGET_ANALYTICS,ADMIN_ITA_WAREHOUSE"
+             * 
+             * @returns
+             */
+            self.getUserGrants = function(callback) {
+                if (self.devMode) {
+                    callback(dfu.getDevData().userGrants);
+                    return;
+                }
+                var serviceUrl = '/sso.static/getUserGrants?granteeUser=' + self.getTenantName() + '.' + self.getUserName();
+                if (window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.userGrants &&
+                        ($.isFunction(window._uifwk.cachedData.userGrants) ? window._uifwk.cachedData.userGrants() : true)) {
+                    callback($.isFunction(window._uifwk.cachedData.userGrants) ? window._uifwk.cachedData.userGrants() :
+                            window._uifwk.cachedData.userGrants);
+                } else {
+                    if (!window._uifwk) {
+                        window._uifwk = {};
+                    }
+                    if (!window._uifwk.cachedData) {
+                        window._uifwk.cachedData = {};
+                    }
+                    if (!window._uifwk.cachedData.isFetchingUserGrants) {
+                        window._uifwk.cachedData.isFetchingUserGrants = true;
+                        if (!window._uifwk.cachedData.userGrants) {
+                            window._uifwk.cachedData.userGrants = ko.observable();
+                        }
+
+                        function doneCallback(data) {
+                            window._uifwk.cachedData.userGrants(data);
+                            window._uifwk.cachedData.isFetchingUserGrants = false;
+                            callback(data);
+                        }
+                        ajaxUtil.ajaxWithRetry({
+                            url: serviceUrl,
+                            async: true,
+                            headers: dfu.getDefaultHeader()
+                        })
+                        .done(function(data) {
+                            doneCallback(data);
+                        })
+                        .fail(function() {
+                            console.log('Failed to get user granted privileges!');
+                            window._uifwk.cachedData.isFetchingUserGrants = false;
+                            callback(null);
+                        });
+                    } 
+                    else {
+                        window._uifwk.cachedData.userGrants.subscribe(function(data) {
+                            callback(data);
+                        });
+                    }
+                }
+            };
         }
 
         return DashboardFrameworkUserTenantUtility;
     }
 );
+
 

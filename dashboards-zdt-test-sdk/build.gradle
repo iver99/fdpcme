@@ -1,26 +1,6 @@
-apply from:'test.gradle'
+apply from: 'test.gradle'
 //Security client version
-ext.emaasSecurityClientVersion = getDependentSdkVersion('com.oracle.emaas.emcpsf.sdk', 'security-client', '1.1+')
-publishing {
-    publications {
-     integTest(MavenPublication) {
-                setArtifactId(project.name)
-                setGroupId(project.zdtTasksGroup)
-                artifact integTestJar.archivePath
-		pom.withXml customPomDefinition
-        }
-    
-        zdtTasksPub(MavenPublication) {
-            // The group name of the artifact should start as com.oracle.emaas.emcpdf.testsdk (where repoName is the name of the git  repository where the plugin source exist)
-            setGroupId(project.zdtTasksGroup)
-            setVersion(project.zdtTasksVersion + '-' + project.buildTimestamp)
-            setArtifactId("emcpdf_zdtTasksSdk")
-            artifact("gradle-sdk/emcpdf_zdtTasksSdk.gradle"){
-                extension "gradle"
-            }
-        }
-    }
-}
+ext.emaasSecurityClientVersion = getDependentSdkVersion('com.oracle.emaas.emcpsf.sdk', 'security-client', '1.+')
 
 ext.customPomDefinition = {
     def dependencies = asNode().appendNode('dependencies')
@@ -35,6 +15,25 @@ ext.customPomDefinition = {
 }
 
 
+project.publishing.publications {
+     integTest(MavenPublication) {
+				setArtifactId(project.name + '-' + integTestJar.appendix)
+                setGroupId(project.publishGroup)
+                artifact integTestJar.archivePath
+				pom.withXml customPomDefinition
+        }
+    
+        zdtTasksPub(MavenPublication) {
+            // The group name of the artifact should start as com.oracle.emaas.emcpdf.testsdk (where repoName is the name of the git  repository where the plugin source exist)
+            setGroupId(project.zdtTasksGroup)
+            setVersion(project.zdtTasksVersion + '-' + project.buildTimestamp)
+            setArtifactId("emcpdf_zdtTasksSdk")
+            artifact("gradle-sdk/emcpdf_zdtTasksSdk.gradle"){
+                extension "gradle"
+            }
+        }
+	}
+
 
 
 artifactoryPublish{
@@ -42,5 +41,25 @@ artifactoryPublish{
      publications('integTest')
 }
 
-check.dependsOn integTestJar
 
+
+dependencies {
+    testConfig project(path: ':dashboards-ui-test-common-api', configuration: 'integTestOutput')  
+    testConfig getProjectArtifact('jmockit')   	
+	testConfig getProjectArtifact('log4j-api')   	
+	testConfig getProjectArtifact('log4j-core')   	
+	testConfig getProjectArtifact('log4j-slf4j-impl')   
+}
+
+
+
+
+
+eclipse {
+    classpath {
+        plusConfigurations += configurations.testConfig //avoid building error in Eclipse
+        plusConfigurations += configurations.testNG //avoid building error in Eclipse
+    }
+}
+check.dependsOn integTestJar
+build.dependsOn integTestJar

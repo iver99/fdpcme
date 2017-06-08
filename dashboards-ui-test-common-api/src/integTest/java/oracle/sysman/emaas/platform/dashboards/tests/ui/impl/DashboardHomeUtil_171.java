@@ -84,8 +84,13 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 		else if (DASHBOARDSET.equalsIgnoreCase(type)) {
 			driver.check(convertID(DashBoardPageId.DASHBOARDTYPE_SET));
 		}
-		driver.takeScreenShot();
+ 
+		boolean isDisplayed = driver.isDisplayed(convertID(DashBoardPageId.DASHOKBUTTONID));
+		driver.getLogger().info("isDisplayed:" +isDisplayed);
 		driver.click(convertID(DashBoardPageId.DASHOKBUTTONID));
+		driver.setPageLoadDetector(BuildPageLoadDetector.class);
+		driver.waitForServer(); 
+		driver.setPageLoadDetector(null);
 
 	}
 
@@ -282,13 +287,16 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	@Override
 	public List<String> listDashboardNames(WebDriver driver) 
 	{
+		driver.waitForServer();
 		List<String> names = new ArrayList<String>();
 		List<WebElement> eles = driver.getWebDriver().findElements(By.xpath(DashBoardPageId.DASHBOARDNAMECONTAINERS));
 		for (int i = 1; i <= eles.size(); i++) {
-			driver.getLogger().info("Get dahsbord name for: "
-					+ DashBoardPageId.DASHBOARDNAMEINDEXLOCATOR.replaceFirst("_index_", String.valueOf(i)));
-			WebElement ele = driver
-					.getElement(DashBoardPageId.DASHBOARDNAMEINDEXLOCATOR.replaceFirst("_index_", String.valueOf(i)));
+			String locator = DashBoardPageId.DASHBOARDNAMEINDEXLOCATOR.replaceFirst("_index_", String.valueOf(i));
+			driver.getLogger().info("Get dahsbord name for: "+ locator);
+			driver.waitForElementPresent(locator);
+			driver.waitForServer();
+			WebElement ele = driver.getElement(locator);
+			driver.waitForServer();
 			String name = getElementAttribtue(ele, "aria-label");
 			if (name == null) {
 				name = ele.getText();
@@ -392,7 +400,13 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 		if (!driver.isElementPresent(indicator)) {
 			throw new NoSuchElementException("Dashboard not exists. Name: " + dashboardName);
 		}
+
+		boolean isDisplayed=driver.isDisplayed(indicator);
+		driver.getLogger().info("isDisplayed:"+ isDisplayed);
 		driver.click(indicator);
+		driver.setPageLoadDetector(BuildPageLoadDetector.class);
+		driver.waitForServer(); 
+		driver.setPageLoadDetector(null);
 	}
 
 	/* (non-Javadoc)
@@ -553,15 +567,16 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 		Actions actions = new Actions(driver.getWebDriver());
 		driver.getLogger().info("Focus to the table header");
 		actions.moveToElement(tableHeader).build().perform();
+		
+		driver.waitForServer();
 		driver.takeScreenShot();
 
 		driver.getLogger().info("Click Sort icon");
 		actions.moveToElement(tableSort).click().perform();
-
+		
+		driver.waitForServer();	
 		driver.takeScreenShot();
 
-		WaitUtil.waitForPageFullyLoaded(driver);
-		driver.takeScreenShot();
 	}
 
 	/* (non-Javadoc)

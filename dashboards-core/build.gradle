@@ -4,7 +4,7 @@ import java.util.Date
 
 apply from:'test.gradle'
 
-dfversion = project.ext.getServiceVersion('DashboardService-API')
+def dfversion = project.ext.getServiceVersion('DashboardService-API')
 def versionPathElement = dfversion + "-"+ new SimpleDateFormat("yyMMdd.HHmmss").format(new Date())
 
 publishing.publications {
@@ -71,9 +71,3 @@ dependencies {
 	compile getProjectArtifact('jersey-json') 
 }
 
-processResources {
-    from('src/main/resources') {
-        include '*.properties', '*.xml'
-        filter(ReplaceTokens, tokens: [version : versionPathElement])
-    }
-}

@@ -1,5 +1,13 @@
 package oracle.sysman.emaas.platform.dashboards.core;
 
+import static oracle.sysman.emaas.platform.dashboards.core.model.DashboardApplicationType.APM;
+import static oracle.sysman.emaas.platform.dashboards.core.model.DashboardApplicationType.Compliance;
+import static oracle.sysman.emaas.platform.dashboards.core.model.DashboardApplicationType.ITAnalytics;
+import static oracle.sysman.emaas.platform.dashboards.core.model.DashboardApplicationType.LogAnalytics;
+import static oracle.sysman.emaas.platform.dashboards.core.model.DashboardApplicationType.Monitoring;
+import static oracle.sysman.emaas.platform.dashboards.core.model.DashboardApplicationType.Orchestration;
+import static oracle.sysman.emaas.platform.dashboards.core.model.DashboardApplicationType.SecurityAnalytics;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -15,10 +23,10 @@ import javax.persistence.Query;
 import mockit.Expectations;
 import mockit.Mocked;
 import mockit.NonStrictExpectations;
-import oracle.sysman.emaas.platform.dashboards.core.cache.screenshot.ScreenshotData;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.resource.TenantWithoutSubscriptionException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableDescriptionState;
@@ -27,13 +35,20 @@ import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableTimeRa
 import oracle.sysman.emaas.platform.dashboards.core.model.DashboardApplicationType;
 import oracle.sysman.emaas.platform.dashboards.core.model.Tile;
 import oracle.sysman.emaas.platform.dashboards.core.model.TileParam;
+import oracle.sysman.emaas.platform.dashboards.core.model.subscription2.TenantSubscriptionInfo;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.MockDashboardServiceFacade;
+import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
+import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil.VersionedLink;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
-
+import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsPreference;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.ScreenshotData;
+import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.testng.Assert;
@@ -244,7 +259,7 @@ public class DashboardManagerTest_S2 extends BaseTest
 				result = ed;
 				TenantContext.getCurrentTenant();
 				result = "opcTenantId";
-				TenantSubscriptionUtil.getTenantSubscribedServices(anyString);
+				TenantSubscriptionUtil.getTenantSubscribedServices(anyString, (TenantSubscriptionInfo)any);
 				result = Arrays.asList(new String[] { "APM", "ITAnalytics" });
 			}
 		};
@@ -583,7 +598,7 @@ public class DashboardManagerTest_S2 extends BaseTest
 		dbd1.setName(name1);
 		dbd1.setDescription("dashboard 1: system dashboard");
 		dbd1.setIsSystem(true);
-		dbd1.setAppicationType(DashboardApplicationType.APM);
+		dbd1.setAppicationType(APM);
 		dm.saveNewDashboard(dbd1, tenantId1);
 		Dashboard queried = dm.getDashboardById(dbd1.getDashboardId(), tenantId1);
 		Assert.assertNotNull(queried);
@@ -658,7 +673,7 @@ public class DashboardManagerTest_S2 extends BaseTest
 		dbd4.setName(name4);
 		dbd4.setDescription("dashboard 4: system dashboard");
 		dbd4.setIsSystem(true);
-		dbd4.setAppicationType(DashboardApplicationType.APM);
+		dbd4.setAppicationType(APM);
 		dm.saveNewDashboard(dbd4, tenantId1);
 		queried = dm.getDashboardById(dbd4.getDashboardId(), tenantId1);
 		Assert.assertNotNull(queried);
@@ -939,7 +954,7 @@ public class DashboardManagerTest_S2 extends BaseTest
 		Long tenantId1 = 11L;
 		Dashboard dbd1 = new Dashboard();
 		dbd1.setName(name1);
-		dbd1.setAppicationType(DashboardApplicationType.APM);
+		dbd1.setAppicationType(APM);
 		dbd1 = dm.saveNewDashboard(dbd1, tenantId1);
 		Dashboard queried = dm.getDashboardById(dbd1.getDashboardId(), tenantId1);
 		Assert.assertNotNull(queried);
@@ -948,7 +963,7 @@ public class DashboardManagerTest_S2 extends BaseTest
 		Dashboard dbd2 = new Dashboard();
 		dbd2.setName("name2" + System.currentTimeMillis());
 		dbd2.setIsSystem(true);
-		dbd2.setAppicationType(DashboardApplicationType.APM);
+		dbd2.setAppicationType(APM);
 		dbd2 = dm.saveNewDashboard(dbd2, tenantId1);
 		queried = dm.getDashboardById(dbd2.getDashboardId(), tenantId1);
 		Assert.assertNotNull(queried);
@@ -1203,5 +1218,76 @@ public class DashboardManagerTest_S2 extends BaseTest
 		tile.setWidgetTemplate("widgetTemplate");
 		tile.setWidgetUniqueId("widgetUniqueId");
 		tile.setWidgetViewmode("widgetViewmode");
+	}
+	@Test(groups = {"s2"})
+	public void testDeleteDashboards(@Mocked final DashboardServiceFacade dashboardServiceFacade,
+										@Mocked final EntityManager entityManager) throws DashboardException {
+		DashboardManager dashboardManager = DashboardManager.getInstance();
+		new Expectations(){
+			{
+				dashboardServiceFacade.getEntityManager();
+				result = entityManager;
+				dashboardServiceFacade.removeDashboardsByTenant(anyBoolean, anyLong);
+				dashboardServiceFacade.removeDashboardSetsByTenant(anyBoolean, anyLong);
+				dashboardServiceFacade.removeDashboardTilesByTenant(anyBoolean, anyLong);
+				dashboardServiceFacade.removeDashboardTileParamsByTenant(anyBoolean, anyLong);
+				dashboardServiceFacade.removeDashboardPreferenceByTenant(anyBoolean, anyLong);
+				dashboardServiceFacade.removeUserOptionsByTenant(anyBoolean, anyLong);
+			}
+		};
+		dashboardManager.deleteDashboards(1L);
+		dashboardManager.deleteDashboards(null);
+	}
+
+	@SuppressWarnings("unchecked")
+    @Test(groups = {"s2"})
+	public void testGetCombinedDashboardById(@Mocked final DashboardServiceFacade dashboardServiceFacade,
+											 @Mocked final EntityManager entityManager,
+											 @Mocked final DashboardApplicationType dashboardApplicationType,
+											 @Mocked final RegistryLookupUtil registryLookupUtil,
+											 @Mocked final VersionedLink tenantsLink,
+											 @Mocked final TenantContext tenantContext,
+	@Mocked final RestClient restClient) throws DashboardNotFoundException, TenantWithoutSubscriptionException {
+		final DashboardManager dashboardManager = DashboardManager.getInstance();
+		final List<DashboardApplicationType> datList =  Arrays.asList(APM, ITAnalytics, LogAnalytics, Monitoring, SecurityAnalytics, Orchestration, Compliance);
+		List<EmsDashboardTile> edbdtList = new ArrayList<>();
+		EmsDashboardTile emsDashboardTile = new EmsDashboardTile();
+		edbdtList.add(emsDashboardTile);
+		final EmsDashboard emsDashboard = new EmsDashboard();
+		emsDashboard.setDeleted(new BigInteger("0"));
+		emsDashboard.setSharePublic(1);
+		emsDashboard.setIsSystem(0);
+		emsDashboard.setType(2);
+		emsDashboard.setDashboardTileList(edbdtList);
+		final EmsPreference emsPreference = new EmsPreference();
+		final EmsUserOptions emsUserOptions = new EmsUserOptions();
+		emsUserOptions.setAutoRefreshInterval(1L);
+		emsUserOptions.setUserName("userName");
+		emsUserOptions.setDashboardId(new BigInteger("1"));
+		emsUserOptions.setExtendedOptions("{'extended':1}");
+		new Expectations(){
+			{
+				dashboardServiceFacade.getEntityManager();
+				result = entityManager;
+				dashboardServiceFacade.getEmsDashboardById((BigInteger)any);
+				result = emsDashboard;
+				dashboardServiceFacade.getEmsPreference(anyString,anyString);
+				result = emsPreference;
+				dashboardServiceFacade.getEmsUserOptions(anyString, (BigInteger)any);
+				result = emsUserOptions;
+				DashboardApplicationType.getBasicServiceList((ArrayList<DashboardApplicationType>)any);
+				result = datList;
+				RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, anyString);
+				result = tenantsLink;
+				tenantsLink.getHref();
+				result = "href";
+				TenantContext.getCurrentTenant();
+				result = "tenant";
+				restClient.put(anyString, anyString, anyString, anyString);
+				result = "response";
+			}
+		};
+		dashboardManager.getCombinedDashboardById(new BigInteger("1"), 1L, "username");
+
 	}
 }

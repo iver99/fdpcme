@@ -128,7 +128,13 @@ public class DashboardServiceFacade
 		for (int i = 1; i <= params.length; i++) {
 			query.setParameter(i, params[i - 1]);
 		}
-		return (EmsDashboard) query.getSingleResult();
+		List results = query.getResultList();
+		EmsDashboard emsDashboard=null;
+		if(results!=null && !results.isEmpty()){
+			// ignores multiple results
+			emsDashboard = (EmsDashboard)results.get(0);
+		}
+		return emsDashboard;
 	}
 
 	//	public EmsDashboardFavorite getEmsDashboardFavoriteByPK(Long dashboardId, String username)

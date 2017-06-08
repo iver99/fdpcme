@@ -36,7 +36,7 @@ define(['knockout',
             self.toolBarGuid = Builder.getGuid();
             self.isUnderSet = ko.dataFor($("#dbd-set-tabs")[0]).isDashboardSet();
             self.isInOOBDashboardSet=ko.dataFor($("#dbd-set-tabs")[0]).isOobDashboardset();
-            self.duplicateInSet = ko.observable(false);
+            self.duplicateInSet = ko.observable(false); 
             var zdtUtil = new zdtUtilModel();
             self.zdtStatus = ko.observable(false);
             self.notZdtStatus = ko.observable(true);
@@ -189,7 +189,7 @@ define(['knockout',
                             if (self.isHomeDashboard) {                                
                                 localStorage.deleteHomeDbd=true;
                             }
-                            window.location = cxtUtil.appendOMCContext( document.location.protocol + '//' + document.location.host + '/emsaasui/emcpdfui/home.html');
+                            window.location = cxtUtil.appendOMCContext( document.location.protocol + '//' + document.location.host + '/emsaasui/emcpdfui/home.html', true, true, true);
                         }     
                     },
                     error: function(jqXHR, textStatus, errorThrown) {}
@@ -207,7 +207,7 @@ define(['knockout',
             
             self.handleUnshareDashboardCancelled = function() {
                 // revert change
-                var dashboardSharing = ko.dataFor($(".share-settings")[0]).dashboardSharing;
+                var dashboardSharing = ko.dataFor($(".share-settings")[0]) && ko.dataFor($(".share-settings")[0]).rightPanelEdit && ko.dataFor($(".share-settings")[0]).rightPanelEdit.dashboardSharing;
                 dashboardSharing("shared");
                 $('#share-dashboard').ojDialog( "close" );
             };
@@ -424,15 +424,21 @@ define(['knockout',
                 Builder.rightPanelChange(changeEvent);
             };
             
+            self.notifyBindingPopupDialog = function () {
+                Builder.startBindingPopupDialog();
+            };
+            
             self.openDashboardDuplicateDialog = function() {
                 $('#duplicateDsbDialog').ojDialog('open');
             };
             self.openDashboardDeleteConfirmDialog = function() {
+                self.notifyBindingPopupDialog();
                 self.isDeletingDbd(true);
                 $('#delete-dashboard').ojDialog( "open" );
                 $('#delete-dashboard').focus();
             };
             self.openDashboardUnshareConfirmDialog = function() {
+                self.notifyBindingPopupDialog();
                 $('#share-dashboard').ojDialog( "open" );
                 $('#share-dashboard').focus();
             };
@@ -637,6 +643,7 @@ define(['knockout',
             self.optionMenuItemSelect = function (event,data) {
                 var $clickTarget=data.item;
                 var clickTargetName = $clickTarget.attr('data-singledb-option');
+                self.notifyBindingPopupDialog();
                 switch (clickTargetName) {
                     case "Edit":
                         self.editDisabled() === true ? "" : self.openDashboardEditDialog();

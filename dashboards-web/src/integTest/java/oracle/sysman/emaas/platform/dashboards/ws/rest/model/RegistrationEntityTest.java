@@ -1,8 +1,16 @@
 package oracle.sysman.emaas.platform.dashboards.ws.rest.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import oracle.sysman.emaas.platform.dashboards.core.model.subscription2.TenantSubscriptionInfo;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.util.PrivilegeChecker;
+import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.DefaultKeyGenerator;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
+import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -18,8 +26,6 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Sanitized
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter;
-import oracle.sysman.emaas.platform.dashboards.core.cache.CacheManager;
-import oracle.sysman.emaas.platform.dashboards.core.cache.Tenant;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
@@ -75,7 +81,7 @@ public class RegistrationEntityTest
 				apps.add(COMPLIANCE_SERVICENAME);
 				apps.add(SECURITY_SERVICE_NAME);
 
-				TenantSubscriptionUtil.getTenantSubscribedServices(anyString);
+				TenantSubscriptionUtil.getTenantSubscribedServices(anyString, (TenantSubscriptionInfo)any);
 				result = apps;
 			}
 		};
@@ -150,8 +156,7 @@ public class RegistrationEntityTest
 
 			}
 		};
-		CacheManager.getInstance().removeCacheable(new Tenant(TenantContext.getCurrentTenant()), CacheManager.CACHES_HOME_LINK_CACHE,
-				CacheManager.LOOKUP_CACHE_KEY_HOME_LINKS);
+		CacheManagers.getInstance().build().getCache(CacheConstants.CACHES_HOME_LINK_CACHE).evict(DefaultKeyGenerator.getInstance().generate(new Tenant(TenantContext.getCurrentTenant()),new Keys(CacheConstants.LOOKUP_CACHE_KEY_HOME_LINKS)));
 		Assert.assertTrue(CollectionUtils.hasElements(registrationEntity.getHomeLinks()));
 
 	}
@@ -160,10 +165,32 @@ public class RegistrationEntityTest
 	public void testGetSessionExpiryTime() 
 	{
 		Assert.assertNull(registrationEntity.getSessionExpiryTime());
-		registrationEntity = new RegistrationEntity("201217");
+		registrationEntity = new RegistrationEntity("201217", null);
 
 		Assert.assertEquals(registrationEntity.getSessionExpiryTime(), "201217");
 	}
+
+    @Test(groups = { "s2" })
+    public void testGetAdminLinkWithUserRoles(@Mocked final PrivilegeChecker anyPrivilegeChecker)
+    {
+        Assert.assertNull(Deencapsulation.getField(registrationEntity, "userRoles"));
+        final List<String> userRoles = Arrays.asList(PrivilegeChecker.ADMIN_ROLE_NAME_ITA, PrivilegeChecker.ADMIN_ROLE_NAME_APM);
+        new Expectations() {
+            {
+                PrivilegeChecker.getUserRoles(anyString, anyString);
+                result = userRoles;
+            }
+        };
+        registrationEntity.getAdminLinks();
+
+        new Expectations() {
+            {
+                PrivilegeChecker.getUserRoles(anyString, anyString);
+                times = 0;
+            }
+        };
+        registrationEntity.getAdminLinks();
+    }
 
 	@Test
 	public void testGetVisualAnalyzers() 

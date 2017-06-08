@@ -9,7 +9,7 @@ ext.restDocRootDir = "${buildDir}/restdoc"
 ext.restDocOutputDir = "${restDocRootDir}"
 
 //Security client version
-//ext.emaasSecurityClientVersion = getDependentSdkVersion('com.oracle.emaas.emcpsf.sdk', 'security-client', '1.1+')
+//ext.emaasSecurityClientVersion = getDependentSdkVersion('com.oracle.emaas.emcpsf.sdk', 'security-client', '1.+')
 
 
 tasks.withType(JavaCompile) {
@@ -108,9 +108,10 @@ test {
 
 
 dependencies {
-	providedCompile project(':dashboards-entities')  
-	providedCompile project(':dashboards-core')  
-    providedCompile project(':dashboards-webutils')   
+    providedCompile project(':dashboards-entities')  
+    providedCompile project(':dashboards-core')  
+    providedCompile project(':dashboards-webutils')
+    providedCompile project(':dashboards-sdk')
     providedCompile getProjectArtifact('servlet-api')   
     providedCompile getProjectArtifact('jersey-client')   
     providedCompile getProjectArtifact('jersey-core')   
@@ -130,12 +131,12 @@ dependencies {
     providedCompile getProjectArtifact('httpmime')   
     providedCompile getProjectArtifact('groovy-all')   
     providedCompile getProjectArtifact('registry-lookup-client')   
-    providedCompile getProjectArtifact('emaas-platform-tenant-sdk')   
+    providedCompile getProjectArtifact('emaas-platform-tenant-sdk')  
+    providedCompile getProjectArtifact('omctfSetupTestSDK')
+ 
     compile getProjectArtifact('security-client')   
-
-
-	
-	ftpAntTask('org.apache.ant:ant-commons-net:12.1.2-0-0') {
+     
+    ftpAntTask('org.apache.ant:ant-commons-net:12.1.2-0-0') {
 			module('commons-net:commons-net:1.4.1') {
 				dependencies 'oro:oro:2.0.8:jar'
 			}

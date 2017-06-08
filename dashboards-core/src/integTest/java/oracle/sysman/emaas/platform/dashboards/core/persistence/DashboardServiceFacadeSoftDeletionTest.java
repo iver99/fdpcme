@@ -308,7 +308,11 @@ public class DashboardServiceFacadeSoftDeletionTest
 			em = dashboardServiceFacade.getEntityManager();
 			Query query = em.createNativeQuery(sql);
 			initializeQueryParams(query, params);
-			Object result = query.getSingleResult();
+			Object result = null;
+			List results = query.getResultList();
+			if(results != null && results.size() >0){
+				result = results.get(0);
+			}
 			final EntityTransaction entityTransaction = em.getTransaction();
 			if (!entityTransaction.isActive()) {
 				entityTransaction.begin();

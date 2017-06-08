@@ -6,7 +6,7 @@
 requirejs.config({
     bundles: ((window.DEV_MODE !==null && typeof window.DEV_MODE ==="object") ||
                 (window.gradleDevMode !==null && typeof window.gradleDevMode ==="boolean")) ? undefined : {
-        'uifwk/js/uifwk-partition': 
+        'uifwk/@version@/js/uifwk-impl-partition-cached': 
             [
             'uifwk/js/util/ajax-util',
             'uifwk/js/util/df-util',
@@ -212,7 +212,10 @@ require(['ojs/ojcore',
                             self.start(self.dateTimeConverter1.format(appliedStart));
                             self.end(self.dateTimeConverter1.format(appliedEnd));
                         }
-                        var eles = $('div').filter(function(){return this.id.match(/tfInfo_.*\d$/);});
+                        var eles = $('span').filter(function() {return this.id.match(/tfInfoIndicator_.*\d$/);});
+                        $(eles[0]).click();
+                        $(eles[0]).click();
+                        eles = $('div').filter(function(){return this.id.match(/tfInfo_.*\d$/);});
                         self.filterInfo($(eles[0]).find("span").text());
                         self.generateData(start, end);
                     },
@@ -239,9 +242,12 @@ require(['ojs/ojcore',
                             self.start3(self.dateTimeConverter1.format(appliedStart));
                             self.end3(self.dateTimeConverter1.format(appliedEnd));
                         }
-                        var eles = $('div').filter(function(){return this.id.match(/tfInfo_.*\d$/);});
-                        console.log($(eles[1]).find("span").text());
-                        self.filterInfo3($(eles[1]).find("span").text());
+                        var eles = $('span').filter(function() {return this.id.match(/tfInfoIndicator_.*\d$/);});
+                        $(eles[0]).click();
+                        $(eles[0]).click();
+                        eles = $('div').filter(function(){return this.id.match(/tfInfo_.*\d$/);});
+                        console.log($(eles[0]).find("span").text());
+                        self.filterInfo3($(eles[0]).find("span").text());
                     }
                 };
 
@@ -360,8 +366,66 @@ require(['ojs/ojcore',
                         self.end2(self.dateConverter.format(appliedEnd));
                     }
                 };
-
+                
+                self.start4 = ko.observable(self.dateTimeConverter1.format(oj.IntlConverterUtils.dateToLocalIso(new Date(end-60*60*1000))));
+                self.end4 = ko.observable(self.dateTimeConverter1.format(oj.IntlConverterUtils.dateToLocalIso(end)));
+                
                 self.timeParams4 = {
+                    hideMainLabel: true,
+                    dtpickerPosition: self.floatPosition1,
+                    timePeriodsSet: "SHORT_TERM",
+                    enableLatestOnCustomPanel: true,
+                    callbackAfterApply: function (start, end, tp, tf, relTimeVal, relTimeUnit) {
+                        var appliedStart = oj.IntlConverterUtils.dateToLocalIso(start);
+                        var appliedEnd = oj.IntlConverterUtils.dateToLocalIso(end);
+                        if((self.isTimePeriodLessThan1day(tp) || relTimeUnit==="SECOND" || relTimeUnit==="MINUTE" || relTimeUnit === "HOUR") && (start.getTimezoneOffset() !== end.getTimezoneOffset())) {
+                            self.start4(self.dateTimeConverter1.format(appliedStart)+" ("+self.getGMTTimezone(start)+")");
+                            self.end4(self.dateTimeConverter1.format(appliedEnd)+" ("+self.getGMTTimezone(end)+")");
+                        }else {
+                            self.start4(self.dateTimeConverter1.format(appliedStart));
+                            self.end4(self.dateTimeConverter1.format(appliedEnd));
+                        }
+                    }
+                };
+                
+                
+                self.start5 = ko.observable(self.dateTimeConverter1.format(oj.IntlConverterUtils.dateToLocalIso(new Date(end-30*24*60*60*1000))));
+                self.end5 = ko.observable(self.dateTimeConverter1.format(oj.IntlConverterUtils.dateToLocalIso(end)));
+                self.timeParams5 = {
+                    hideMainLabel: true,
+                    dtpickerPosition: self.floatPosition1,
+                    timePeriodsSet: "LONG_TERM",
+                    enableLatestOnCustomPanel: true,
+                    callbackAfterApply: function (start, end, tp, tf, relTimeVal, relTimeUnit) {
+                        var appliedStart = oj.IntlConverterUtils.dateToLocalIso(start);
+                        var appliedEnd = oj.IntlConverterUtils.dateToLocalIso(end);
+                        if((self.isTimePeriodLessThan1day(tp) || relTimeUnit==="SECOND" || relTimeUnit==="MINUTE" || relTimeUnit === "HOUR") && (start.getTimezoneOffset() !== end.getTimezoneOffset())) {
+                            self.start5(self.dateTimeConverter1.format(appliedStart)+" ("+self.getGMTTimezone(start)+")");
+                            self.end5(self.dateTimeConverter1.format(appliedEnd)+" ("+self.getGMTTimezone(end)+")");
+                        }else {
+                            self.start5(self.dateTimeConverter1.format(appliedStart));
+                            self.end5(self.dateTimeConverter1.format(appliedEnd));
+                        }
+                    }
+                };
+                
+                self.start6 = ko.observable(self.dateConverter.format(oj.IntlConverterUtils.dateToLocalIso(new Date(end-30*24*60*60*1000))));
+                self.end6 = ko.observable(self.dateConverter.format(oj.IntlConverterUtils.dateToLocalIso(end)));
+                self.timeParams6 = {
+                    hideMainLabel: true,
+                    dtpickerPosition: self.floatPosition1,
+                    timePeriodsSet: "LONG_TERM",
+                    enableLatestOnCustomPanel: true,
+                    hideTimeSelection: true,
+                    callbackAfterApply: function (start, end, tp, tf, relTimeVal, relTimeUnit) {
+                        var appliedStart = oj.IntlConverterUtils.dateToLocalIso(start);
+                        var appliedEnd = oj.IntlConverterUtils.dateToLocalIso(end);
+                        self.start6(self.dateConverter.format(appliedStart));
+                        self.end6(self.dateConverter.format(appliedEnd));
+                    }
+                };
+
+                self.timeParams = {
 //                    startDateTime: "2015-05-17T00:00:00",
 //                    endDateTime: "2015-05-16T13:00:00"
                       startDateTime: new Date(new Date() - 24 * 60 * 60 * 1000),

@@ -24,6 +24,7 @@ import oracle.sysman.emaas.platform.uifwk.timepicker.test.ui.util.UIControls;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriverUtils;
 
+import org.openqa.selenium.By;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -41,8 +42,13 @@ public class TestTimePicker_FixDate extends CommonUIUtils
 	private static void verifyResult(WebDriver driver, String returnDate, TimeRange option, String StartLabelLocator,
 			String EndLabelLocator, boolean DateOnly) throws ParseException
 	{
-
 		WaitUtil.waitForPageFullyLoaded(driver);
+
+		String strTimePickerText = driver.getWebDriver().findElement(By.cssSelector(UIControls.TIMERANGEBTN_CSS)).getText();
+
+		driver.getLogger().info("TimePickerLabel: " + strTimePickerText);
+		Assert.assertEquals(strTimePickerText, TimeSelectorUtil.getTimeRangeLabel(driver));
+
 		String timeRange = option.getRangeOption();
 
 		String sTmpStartDateTime = driver.getText(StartLabelLocator);
@@ -117,6 +123,23 @@ public class TestTimePicker_FixDate extends CommonUIUtils
 				break;
 			case "Last day":
 				Assert.assertEquals(lTimeRange / (24 * 60 * 60 * 1000), 1);
+				break;
+			case "Last 24 hours":
+				Assert.assertEquals(lTimeRange / (60 * 60 * 1000), 24);
+				break;
+			case "Last 12 months":
+				Assert.assertEquals(calStart.get(Calendar.YEAR) + 1, calEnd.get(Calendar.YEAR));
+				Assert.assertEquals(calStart.get(Calendar.MONTH), calEnd.get(Calendar.MONTH));
+				Assert.assertEquals(calStart.get(Calendar.DAY_OF_MONTH), calEnd.get(Calendar.DAY_OF_MONTH));
+				break;
+			case "Last 8 hours":
+				Assert.assertEquals(lTimeRange / (60 * 60 * 1000), 8);
+				break;
+			case "Last 7 days":
+				Assert.assertEquals(lTimeRange / (24 * 60 * 60 * 1000), 7);
+				break;
+			case "Last 60 mins":
+				Assert.assertEquals(lTimeRange / (60 * 1000), 60);
 				break;
 			case "Last week":
 				Assert.assertEquals(lTimeRange / (24 * 60 * 60 * 1000), 7);
@@ -570,6 +593,32 @@ public class TestTimePicker_FixDate extends CommonUIUtils
 	}
 
 	@Test
+	public void testTimePicker_DateOnly_Last12Months() throws ParseException
+	{
+
+		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
+
+		String testName = this.getClass().getName() + ".testTimePicker_DateOnly_Last12Months";
+		WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
+
+		//login
+		Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver);
+		webdriver.getLogger().info("Assert that common UI login was successfuly");
+		Assert.assertTrue(bLoginSuccessful);
+
+		//set time range
+		webdriver.getLogger().info("set timerange as Last 12 Months");
+		String returnDate = TimeSelectorUtil.setTimeRangeWithDateOnly(webdriver, 6, TimeRange.Last12Months);
+
+		//verify the result
+		webdriver.getLogger().info("verify the time range is set correctly");
+		TestTimePicker_FixDate.verifyResult(webdriver, returnDate, TimeRange.Last12Months, UIControls.SSTARTTEXT6,
+				UIControls.SENDTEXT6, true);
+
+		webdriver.shutdownBrowser(true);
+	}
+
+	@Test
 	public void testTimePicker_DateOnly_Last14Days() throws ParseException
 	{
 
@@ -648,6 +697,32 @@ public class TestTimePicker_FixDate extends CommonUIUtils
 	}
 
 	@Test
+	public void testTimePicker_DateOnly_Last24Hours() throws ParseException
+	{
+
+		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
+
+		String testName = this.getClass().getName() + ".testTimePicker_DateOnly_Last24Hours";
+		WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
+
+		//login
+		Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver);
+		webdriver.getLogger().info("Assert that common UI login was successfuly");
+		Assert.assertTrue(bLoginSuccessful);
+
+		//set time range
+		webdriver.getLogger().info("set timerange as Last 24 Hours");
+		String returnDate = TimeSelectorUtil.setTimeRangeWithDateOnly(webdriver, 6, TimeRange.Last24Hours);
+
+		//verify the result
+		webdriver.getLogger().info("verify the time range is set correctly");
+		TestTimePicker_FixDate.verifyResult(webdriver, returnDate, TimeRange.Last24Hours, UIControls.SSTARTTEXT6,
+				UIControls.SENDTEXT6, true);
+
+		webdriver.shutdownBrowser(true);
+	}
+
+	@Test
 	public void testTimePicker_DateOnly_Last30Days() throws ParseException
 	{
 
@@ -695,6 +770,31 @@ public class TestTimePicker_FixDate extends CommonUIUtils
 		webdriver.getLogger().info("verify the time range is set correctly");
 		TestTimePicker_FixDate.verifyResult(webdriver, returnDate, TimeRange.Last7Days, UIControls.SSTARTTEXT_DATEONLY,
 				UIControls.SENDTEXT_DATEONLY, true);
+
+		webdriver.shutdownBrowser(true);
+	}
+
+	public void testTimePicker_DateOnly_Last8Hours() throws ParseException
+	{
+
+		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
+
+		String testName = this.getClass().getName() + ".testTimePicker_DateOnly_Last 8 Hours";
+		WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
+
+		//login
+		Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver);
+		webdriver.getLogger().info("Assert that common UI login was successfuly");
+		Assert.assertTrue(bLoginSuccessful);
+
+		//set time range
+		webdriver.getLogger().info("set timerange as Last 8 Hours");
+		String returnDate = TimeSelectorUtil.setTimeRangeWithDateOnly(webdriver, 4, TimeRange.Last8Hours);
+
+		//verify the result
+		webdriver.getLogger().info("verify the time range is set correctly");
+		TestTimePicker_FixDate.verifyResult(webdriver, returnDate, TimeRange.Last8Hours, UIControls.SSTARTTEXT4,
+				UIControls.SENDTEXT4, true);
 
 		webdriver.shutdownBrowser(true);
 	}
@@ -747,6 +847,109 @@ public class TestTimePicker_FixDate extends CommonUIUtils
 		webdriver.getLogger().info("verify the time range is set correctly");
 		TestTimePicker_FixDate.verifyResult(webdriver, returnDate, TimeRange.Latest, UIControls.SSTARTTEXT_DATEONLY,
 				UIControls.SENDTEXT_DATEONLY, true);
+
+		webdriver.shutdownBrowser(true);
+	}
+
+	@Test
+	public void testTimePicker_DateOnly_LatestNew() throws ParseException
+	{
+
+		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
+
+		String testName = this.getClass().getName() + ".testTimePicker_DateOnly_Latest";
+		WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
+
+		//login
+		Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver);
+		webdriver.getLogger().info("Assert that common UI login was successfuly");
+		Assert.assertTrue(bLoginSuccessful);
+
+		//set time range
+		webdriver.getLogger().info("set timerange as Latest");
+		String returnDate = TimeSelectorUtil.setTimeRangeWithDateOnly(webdriver, 6, TimeRange.Latest);
+
+		//verify the result
+		webdriver.getLogger().info("verify the time range is set correctly");
+		TestTimePicker_FixDate.verifyResult(webdriver, returnDate, TimeRange.Latest, UIControls.SSTARTTEXT6,
+				UIControls.SENDTEXT6, true);
+
+		webdriver.shutdownBrowser(true);
+	}
+
+	public void testTimePicker_DateOnly_NewLast60Mins() throws ParseException
+	{
+
+		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
+
+		String testName = this.getClass().getName() + ".testTimePicker_DateOnly_New Last 60 Mins";
+		WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
+
+		//login
+		Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver);
+		webdriver.getLogger().info("Assert that common UI login was successfuly");
+		Assert.assertTrue(bLoginSuccessful);
+
+		//set time range
+		webdriver.getLogger().info("set timerange as New Last 60 Mins");
+		String returnDate = TimeSelectorUtil.setTimeRangeWithDateOnly(webdriver, 4, TimeRange.NewLast60Mins);
+
+		//verify the result
+		webdriver.getLogger().info("verify the time range is set correctly");
+		TestTimePicker_FixDate.verifyResult(webdriver, returnDate, TimeRange.NewLast60Mins, UIControls.SSTARTTEXT4,
+				UIControls.SENDTEXT4, true);
+
+		webdriver.shutdownBrowser(true);
+	}
+
+	@Test
+	public void testTimePicker_DateOnly_NewLast7Days() throws ParseException
+	{
+
+		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
+
+		String testName = this.getClass().getName() + ".testTimePicker_DateOnly_NewLast7Days";
+		WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
+
+		//login
+		Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver);
+		webdriver.getLogger().info("Assert that common UI login was successfuly");
+		Assert.assertTrue(bLoginSuccessful);
+
+		//set time range
+		webdriver.getLogger().info("set timerange as New Last7 Days");
+		String returnDate = TimeSelectorUtil.setTimeRangeWithDateOnly(webdriver, 6, TimeRange.NewLast7Days);
+
+		//verify the result
+		webdriver.getLogger().info("verify the time range is set correctly");
+		TestTimePicker_FixDate.verifyResult(webdriver, returnDate, TimeRange.NewLast7Days, UIControls.SSTARTTEXT6,
+				UIControls.SENDTEXT6, true);
+
+		webdriver.shutdownBrowser(true);
+	}
+
+	@Test
+	public void testTimePicker_Last12Months() throws ParseException
+	{
+
+		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
+
+		String testName = this.getClass().getName() + ".testTimePicker_Last12Months";
+		WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
+
+		//login
+		Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver);
+		webdriver.getLogger().info("Assert that common UI login was successfuly");
+		Assert.assertTrue(bLoginSuccessful);
+
+		//set time range
+		webdriver.getLogger().info("set timerange as Last 12 Months");
+		String returnDate = TimeSelectorUtil.setTimeRange(webdriver, 5, TimeRange.Last12Months);
+
+		//verify the result
+		webdriver.getLogger().info("verify the time range is set correctly");
+		TestTimePicker_FixDate.verifyResult(webdriver, returnDate, TimeRange.Last12Months, UIControls.SSTARTTEXT5,
+				UIControls.SENDTEXT5);
 
 		webdriver.shutdownBrowser(true);
 	}
@@ -969,6 +1172,32 @@ public class TestTimePicker_FixDate extends CommonUIUtils
 
 		TestTimePicker_FixDate.verifyResult(webdriver, returnDate, TimeRange.Last1Year, UIControls.SSTARTTEXT_COMPACT,
 				UIControls.SENDTEXT_COMPACT);
+
+		webdriver.shutdownBrowser(true);
+	}
+
+	@Test
+	public void testTimePicker_Last24Hours() throws ParseException
+	{
+
+		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
+
+		String testName = this.getClass().getName() + ".testTimePicker_Last24Hours";
+		WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
+
+		//login
+		Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver);
+		webdriver.getLogger().info("Assert that common UI login was successfuly");
+		Assert.assertTrue(bLoginSuccessful);
+
+		//set time range
+		webdriver.getLogger().info("set timerange as Last 24 hours");
+		String returnDate = TimeSelectorUtil.setTimeRange(webdriver, 4, TimeRange.Last24Hours);
+
+		//verify the result
+		webdriver.getLogger().info("verify the time range is set correctly");
+		TestTimePicker_FixDate.verifyResult(webdriver, returnDate, TimeRange.Last24Hours, UIControls.SSTARTTEXT4,
+				UIControls.SENDTEXT4);
 
 		webdriver.shutdownBrowser(true);
 	}
@@ -1296,6 +1525,32 @@ public class TestTimePicker_FixDate extends CommonUIUtils
 	}
 
 	@Test
+	public void testTimePicker_Last8Hours() throws ParseException
+	{
+
+		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
+
+		String testName = this.getClass().getName() + ".testTimePicker_Last8Hours";
+		WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
+
+		//login
+		Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver);
+		webdriver.getLogger().info("Assert that common UI login was successfuly");
+		Assert.assertTrue(bLoginSuccessful);
+
+		//set time range
+		webdriver.getLogger().info("set timerange as Last 8 hours");
+		String returnDate = TimeSelectorUtil.setTimeRange(webdriver, 4, TimeRange.Last8Hours);
+
+		//verify the result
+		webdriver.getLogger().info("verify the time range is set correctly");
+		TestTimePicker_FixDate.verifyResult(webdriver, returnDate, TimeRange.Last8Hours, UIControls.SSTARTTEXT4,
+				UIControls.SENDTEXT4);
+
+		webdriver.shutdownBrowser(true);
+	}
+
+	@Test
 	public void testTimePicker_Last90Days() throws ParseException
 	{
 		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
@@ -1391,6 +1646,83 @@ public class TestTimePicker_FixDate extends CommonUIUtils
 
 		TestTimePicker_FixDate.verifyResult(webdriver, returnDate, TimeRange.Latest, UIControls.SSTARTTEXT_COMPACT,
 				UIControls.SENDTEXT_COMPACT);
+
+		webdriver.shutdownBrowser(true);
+	}
+
+	@Test
+	public void testTimePicker_LatestNew() throws ParseException
+	{
+		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
+
+		String testName = this.getClass().getName() + ".testTimePicker_Latest";
+		WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
+
+		//login
+		Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver);
+		webdriver.getLogger().info("Assert that common UI login was successfuly");
+		Assert.assertTrue(bLoginSuccessful);
+
+		//set time range
+		webdriver.getLogger().info("set timerange as Latest");
+		String returnDate = TimeSelectorUtil.setTimeRange(webdriver, 4, TimeRange.Latest);
+
+		//verify the result
+		webdriver.getLogger().info("verify the time range is set correctly");
+		TestTimePicker_FixDate
+				.verifyResult(webdriver, returnDate, TimeRange.Latest, UIControls.SSTARTTEXT4, UIControls.SENDTEXT4);
+
+		webdriver.shutdownBrowser(true);
+	}
+
+	@Test
+	public void testTimePicker_NewLast60Mins() throws ParseException
+	{
+
+		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
+
+		String testName = this.getClass().getName() + ".testTimePicker_NewLast60Mins";
+		WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
+
+		//login
+		Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver);
+		webdriver.getLogger().info("Assert that common UI login was successfuly");
+		Assert.assertTrue(bLoginSuccessful);
+
+		//set time range
+		webdriver.getLogger().info("set timerange as Last 60 minutes");
+		String returnDate = TimeSelectorUtil.setTimeRange(webdriver, 4, TimeRange.NewLast60Mins);
+
+		//verify the result
+		webdriver.getLogger().info("verify the time range is set correctly");
+		TestTimePicker_FixDate.verifyResult(webdriver, returnDate, TimeRange.NewLast60Mins, UIControls.SSTARTTEXT4,
+				UIControls.SENDTEXT4);
+
+		webdriver.shutdownBrowser(true);
+	}
+
+	@Test
+	public void testTimePicker_NewLast7Days() throws ParseException
+	{
+
+		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
+
+		String testName = this.getClass().getName() + ".testTimePicker_Last7Days";
+		WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
+
+		//login
+		Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver);
+		webdriver.getLogger().info("Assert that common UI login was successfuly");
+		Assert.assertTrue(bLoginSuccessful);
+
+		//set time range
+		webdriver.getLogger().info("set timerange as new Last 7 days");
+		String returnDate = TimeSelectorUtil.setTimeRange(webdriver, 5, TimeRange.NewLast7Days);
+
+		//verify the result
+		webdriver.getLogger().info("verify the time range is set correctly");
+		TestTimePicker_FixDate.verifyResult(webdriver, returnDate, TimeRange.NewLast7Days, UIControls.SSTARTTEXT5,
+				UIControls.SENDTEXT5);
 
 		webdriver.shutdownBrowser(true);
 	}

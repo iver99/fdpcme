@@ -30,7 +30,7 @@ public class VerifyOOB extends LoginAndLogout
 		DashboardHomeUtil.resetFilterOptions(webd);
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyAPM_GridView()
 	{
 		//initTest
@@ -48,7 +48,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyAPM();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyAPM_ListView()
 	{
 		//initTest
@@ -66,7 +66,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyAPM();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyAPM_withFilter_GridView()
 	{
 		//initTest
@@ -89,7 +89,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyAPM();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyAPM_withFilter_ListView()
 	{
 		//initTest
@@ -112,7 +112,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyAPM();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyApplicationPerfAnalytics_GridView()
 	{
 		//initTest
@@ -131,7 +131,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyApplicationPerfAnalytics();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyApplicationPerfAnalytics_ListView()
 	{
 		//initTest
@@ -150,7 +150,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyApplicationPerfAnalytics();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyApplicationPerfAnalytics_withFilter_GridView()
 	{
 		//initTest
@@ -173,7 +173,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyApplicationPerfAnalytics();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyApplicationPerfAnalytics_withFilter_ListView()
 	{
 		//initTest
@@ -196,7 +196,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyApplicationPerfAnalytics();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyAvailabilityAnalytics_GridView()
 	{
 		//initTest
@@ -215,7 +215,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyAvailabilityAnalytics();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyAvailabilityAnalytics_ListView()
 	{
 		//initTest
@@ -234,7 +234,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyAvailabilityAnalytics();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyAvailabilityAnalytics_WithFilter_GridView()
 	{
 		//initTest
@@ -257,7 +257,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyAvailabilityAnalytics();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyAvailabilityAnalytics_WithFilter_ListView()
 	{
 		//initTest
@@ -280,7 +280,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyAvailabilityAnalytics();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyDatabaseOperations_GridView()
 	{
 		//initTest
@@ -302,7 +302,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyDatabaseOperations_Details();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyDatabaseOperations_ListView()
 	{
 		//initTest
@@ -323,7 +323,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyDatabaseOperations();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyDatabaseOperations_WithFilter_GridView()
 	{
 		//initTest
@@ -348,7 +348,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyDatabaseOperations();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyDatabaseOperations_WithFilter_ListView()
 	{
 		//initTest
@@ -373,7 +373,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyDatabaseOperations();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyEnterpriseHealth_GridView()
 	{
 		//initTest
@@ -395,7 +395,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyEnterpriseHealth_Details();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyEnterpriseHealth_ListView()
 	{
 		//initTest
@@ -416,7 +416,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyEnterpriseHealth();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyEnterpriseHealth_WithFilter_GridView()
 	{
 		//initTest
@@ -441,7 +441,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyEnterpriseHealth();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyEnterpriseHealth_WithFilter_ListView()
 	{
 		//initTest
@@ -466,7 +466,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyEnterpriseHealth();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyExadataHealth_GridView()
 	{
 		//initTest
@@ -488,7 +488,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyExadataHealth_Details();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyExadataHealth_ListView()
 	{
 		//initTest
@@ -509,7 +509,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyExadataHealth();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyExadataHealth_WithFilter_GridView()
 	{
 		//initTest
@@ -534,7 +534,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyExadataHealth();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyExadataHealth_WithFilter_ListView()
 	{
 		//initTest
@@ -559,7 +559,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyExadataHealth();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyHostOperations_GridView()
 	{
 		//initTest
@@ -581,7 +581,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyHostOperations_Details();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyHostOperations_ListView()
 	{
 		//initTest
@@ -602,7 +602,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyHostOperations();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyHostOperations_WithFilter_GridView()
 	{
 		//initTest
@@ -627,7 +627,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyHostOperations();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyHostOperations_WithFilter_ListView()
 	{
 		//initTest
@@ -652,7 +652,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyHostOperations();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyMiddlewareOperations_GridView()
 	{
 		//initTest
@@ -674,7 +674,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyMiddlewareOperations_Details();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyMiddlewareOperations_ListView()
 	{
 		//initTest
@@ -695,7 +695,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyMiddlewareOperations();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyMiddlewareOperations_WithFilter_GridView()
 	{
 		//initTest
@@ -720,7 +720,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyMiddlewareOperations();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyMiddlewareOperations_WithFilter_ListView()
 	{
 		//initTest
@@ -745,7 +745,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyMiddlewareOperations();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyPerfAnalyticsApplication_GridView()
 	{
 		//initTest
@@ -764,7 +764,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyPerfAnalyticsApplication();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyPerfAnalyticsApplication_ListView()
 	{
 		//initTest
@@ -783,7 +783,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyPerfAnalyticsApplication();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyPerfAnalyticsApplication_WithFilter_GridView()
 	{
 		//initTest
@@ -806,7 +806,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyPerfAnalyticsApplication();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyPerfAnalyticsApplication_WithFilter_ListView()
 	{
 		//initTest
@@ -829,7 +829,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyPerfAnalyticsApplication();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyPerfAnalyticsDatabase_GridView()
 	{
 		//initTest
@@ -848,7 +848,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyPerfAnalyticsDatabase();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyPerfAnalyticsDatabase_ListView()
 	{
 		//initTest
@@ -867,7 +867,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyPerfAnalyticsDatabase();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyPerfAnalyticsDatabase_WithFilter_GridView()
 	{
 		//initTest
@@ -890,7 +890,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyPerfAnalyticsDatabase();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyPerfAnalyticsDatabase_WithFilter_ListView()
 	{
 		//initTest
@@ -913,7 +913,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyPerfAnalyticsDatabase();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyResourceAnalyticsDatabase_GridView()
 	{
 		//initTest
@@ -932,7 +932,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyResourceAnalyticsDatabase();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyResourceAnalyticsDatabase_ListView()
 	{
 		//initTest
@@ -951,7 +951,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyResourceAnalyticsDatabase();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyResourceAnalyticsDatabase_WithFilter_GridView()
 	{
 		//initTest
@@ -974,7 +974,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyResourceAnalyticsDatabase();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyResourceAnalyticsDatabase_WithFilter_ListView()
 	{
 		//initTest
@@ -997,7 +997,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyResourceAnalyticsDatabase();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyResourceAnalyticsHost_GridView()
 	{
 		//initTest
@@ -1016,7 +1016,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyResourceAnalyticsHost();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyResourceAnalyticsHost_ListView()
 	{
 		//initTest
@@ -1035,7 +1035,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyResourceAnalyticsHost();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyResourceAnalyticsHost_WithFilter_GridView()
 	{
 		//initTest
@@ -1058,7 +1058,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyResourceAnalyticsHost();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyResourceAnalyticsHost_WithFilter_ListView()
 	{
 		//initTest
@@ -1081,7 +1081,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyResourceAnalyticsHost();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyResourceAnalyticsMiddleware_GridView()
 	{
 		//initTest
@@ -1100,7 +1100,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyResourceAnalyticsMiddleware();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyResourceAnalyticsMiddleware_ListView()
 	{
 		//initTest
@@ -1119,7 +1119,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyResourceAnalyticsMiddleware();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyResourceAnalyticsMiddleware_WithFilter_GridView()
 	{
 		//initTest
@@ -1142,7 +1142,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyResourceAnalyticsMiddleware();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyResourceAnalyticsMiddleware_WithFilter_ListView()
 	{
 		//initTest
@@ -1165,7 +1165,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyResourceAnalyticsMiddleware();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyUIGallery_GridView()
 	{
 		//initTest
@@ -1187,7 +1187,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyUIGallery_Details();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyUIGallery_ListView()
 	{
 		//initTest
@@ -1208,7 +1208,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyUIGallery();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyUIGallery_WithFilter_GridView()
 	{
 		//initTest
@@ -1233,7 +1233,7 @@ public class VerifyOOB extends LoginAndLogout
 		verifyUIGallery();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void verifyUIGallery_WithFilter_ListView()
 	{
 		//initTest
@@ -1257,7 +1257,109 @@ public class VerifyOOB extends LoginAndLogout
 		//verify UI Gallery
 		verifyUIGallery();
 	}
+	
+	@Test(alwaysRun = true)
+	public void verifyOrchestration_GridView()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test in verifyOrchestration_GridView");
 
+		//click on Grid View
+		webd.getLogger().info("Click on Grid View icon");
+		DashboardHomeUtil.gridView(webd);
+
+		//Open the OOB dashboard---Orchestration Workflows
+		webd.getLogger().info("Open the OOB dashboard---Orchestration Workflows");
+		DashboardHomeUtil.selectDashboard(webd, "Orchestration Workflows");
+
+		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
+
+		//verify Orchestration Workflows
+		verifyOrchestration();
+	}
+	@Test(alwaysRun = true)
+	public void verifyOrchestration_ListView()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test in verifyOrchestration_ListView");
+
+		//click on List View
+		webd.getLogger().info("Click on List View icon");
+		DashboardHomeUtil.listView(webd);
+
+		//Open the OOB dashboard---Orchestration Workflows
+		webd.getLogger().info("Open the OOB dashboard---Orchestration Workflows");
+		DashboardHomeUtil.selectDashboard(webd, "Orchestration Workflows");
+
+		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
+
+		//verify Orchestration Workflows
+		verifyOrchestration();
+	}
+	@Test(alwaysRun = true)
+	public void verifyOrchestration_WithFilter_GridView()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test in verifyOrchestration_GridView");
+
+		//click Filter-orchestration
+		webd.getLogger().info("Click Cloud Services - orchestration");
+		DashboardHomeUtil.filterOptions(webd, "orchestration");
+
+		//click on Grid View
+		webd.getLogger().info("Click on Grid View icon");
+		DashboardHomeUtil.gridView(webd);
+
+		//Open the OOB dashboard---Orchestration Workflows
+		webd.getLogger().info("Open the OOB dashboard---Orchestration Workflows");
+		DashboardHomeUtil.selectDashboard(webd, "Orchestration Workflows");
+
+		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
+
+		//verify Orchestration Workflows
+		verifyOrchestration();
+	}
+	@Test(alwaysRun = true)
+	public void verifyOrchestration_WithFilter_ListView()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test in verifyOrchestration_ListView");
+
+		//click Filter-orchestration
+		webd.getLogger().info("Click Cloud Services - orchestration");
+		DashboardHomeUtil.filterOptions(webd, "orchestration");
+
+		//click on List View
+		webd.getLogger().info("Click on List View icon");
+		DashboardHomeUtil.listView(webd);
+
+		//Open the OOB dashboard---Orchestration Workflows
+		webd.getLogger().info("Open the OOB dashboard---Orchestration Workflows");
+		DashboardHomeUtil.selectDashboard(webd, "Orchestration Workflows");
+
+		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
+
+		//verify Orchestration Workflows
+		verifyOrchestration();
+	}
+	private void verifyOrchestration()
+	{
+		webd.getLogger().info("Start to verify the OOB Dashboard");
+		//verify the current url
+		webd.getLogger().info("Verify the current url");
+
+		//verify the url of opened page
+		DashBoardUtils.verifyURL_WithPara(webd, "emcpdfui/builder.html?dashboardId=37");
+	
+		DashboardBuilderUtil.verifyWidget(webd, "Overview");
+		DashboardBuilderUtil.verifyWidget(webd, "Execution Details");
+
+		webd.getLogger().info("Verification end...");
+	}
 	private void verifyAPM()
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
@@ -1343,24 +1445,20 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Verification end...");
 	}
 
-	private void verifyCategorical()
+	private void verifyCategoricalBasic()
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
 
 		//verify the dashboard open correctly
-		webd.getLogger().info("Start to verify the OOB Dashboard - Categorical opened correctly");
+		webd.getLogger().info("Start to verify the OOB Dashboard - Categorical - Basic opened correctly");
 
 		//verify all the widgets displayed
 		webd.getLogger().info("Verify all the widgets in dashboard");
 		DashboardBuilderUtil.verifyWidget(webd, "Donut");
-		DashboardBuilderUtil.verifyWidget(webd, "Analytics Line - Categorical");
-		DashboardBuilderUtil.verifyWidget(webd, "Histogram");
 		DashboardBuilderUtil.verifyWidget(webd, "Treemap");
+		DashboardBuilderUtil.verifyWidget(webd, "Histogram");
+		DashboardBuilderUtil.verifyWidget(webd, "Analytics Line - Categorical");
 		DashboardBuilderUtil.verifyWidget(webd, "Bar Chart");
-		DashboardBuilderUtil.verifyWidget(webd, "Pareto Chart");
-		DashboardBuilderUtil.verifyWidget(webd, "Bar Chart with Top N");
-		DashboardBuilderUtil.verifyWidget(webd, "Bar Chart with Color option");
-		DashboardBuilderUtil.verifyWidget(webd, "Bar Chart with Color and Group by option");
 		DashboardBuilderUtil.verifyWidget(webd, "Stacked Bar Chart");
 
 		webd.getLogger().info("Verify the icon in OOB");
@@ -1368,15 +1466,58 @@ public class VerifyOOB extends LoginAndLogout
 
 		webd.getLogger().info("Verify the icon in widget");
 		verifyIconInWidget(webd, "Donut");
-		verifyIconInWidget(webd, "Analytics Line - Categorical");
-		verifyIconInWidget(webd, "Histogram");
 		verifyIconInWidget(webd, "Treemap");
+		verifyIconInWidget(webd, "Histogram");
+		verifyIconInWidget(webd, "Analytics Line - Categorical");
 		verifyIconInWidget(webd, "Bar Chart");
-		verifyIconInWidget(webd, "Pareto Chart");
-		verifyIconInWidget(webd, "Bar Chart with Top N");
-		verifyIconInWidget(webd, "Bar Chart with Color option");
-		verifyIconInWidget(webd, "Bar Chart with Color and Group by option");
 		verifyIconInWidget(webd, "Stacked Bar Chart");
+
+		webd.getLogger().info("Verification end...");
+	}
+
+	private void verifyCategoricalAdvanced()
+	{
+		webd.getLogger().info("Start to verify the OOB Dashboard");
+
+		//verify the dashboard open correctly
+		webd.getLogger().info("Start to verify the OOB Dashboard - Categorical - Advanced opened correctly");
+
+		//verify all the widgets displayed
+		webd.getLogger().info("Verify all the widgets in dashboard");
+		DashboardBuilderUtil.verifyWidget(webd, "Bar Chart with Top N");
+		DashboardBuilderUtil.verifyWidget(webd, "Bar Chart with Color and Group by option");
+		DashboardBuilderUtil.verifyWidget(webd, "Bar Chart with Color option");
+		DashboardBuilderUtil.verifyWidget(webd, "Pareto Chart");
+
+		webd.getLogger().info("Verify the icon in OOB");
+		verifyIconInOobDashboard();
+
+		webd.getLogger().info("Verify the icon in widget");
+		verifyIconInWidget(webd, "Bar Chart with Top N");
+		verifyIconInWidget(webd, "Bar Chart with Color and Group by option");
+		verifyIconInWidget(webd, "Bar Chart with Color option");
+		verifyIconInWidget(webd, "Pareto Chart");
+
+		webd.getLogger().info("Verification end...");
+	}
+
+	private void verifyTrendAndForecasting()
+	{
+		webd.getLogger().info("Start to verify the OOB Dashboard");
+
+		//verify the dashboard open correctly
+		webd.getLogger().info("Start to verify the OOB Dashboard -Trend and Forecasting opened correctly");
+
+		//verify all the widgets displayed
+		webd.getLogger().info("Verify all the widgets in dashboard");
+		DashboardBuilderUtil.verifyWidget(webd, "Analytics Line with Trend and Forecasting");
+		DashboardBuilderUtil.verifyWidget(webd, "Line Chart with Trend and Forecasting");
+		webd.getLogger().info("Verify the icon in OOB");
+		verifyIconInOobDashboard();
+
+		webd.getLogger().info("Verify the icon in widget");
+		verifyIconInWidget(webd, "Analytics Line with Trend and Forecasting");
+		verifyIconInWidget(webd, "Line Chart with Trend and Forecasting");
 
 		webd.getLogger().info("Verification end...");
 	}
@@ -1922,47 +2063,79 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Verification end...");
 	}
 
-	private void verifyTimeseries()
+	private void verifyTimeseriesLineBasic()
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
 
 		//verify the dashboard open correctly
-		webd.getLogger().info("Start to verify the OOB Dashboard - Timeseries opened correctly");
+		webd.getLogger().info("Start to verify the OOB Dashboard - Timeseries - Line Basic opened correctly");
+
+		webd.getLogger().info("Verify all the widgets in dashboard");
+		DashboardBuilderUtil.verifyWidget(webd, "Line Chart");
+		DashboardBuilderUtil.verifyWidget(webd, "Analytics Line");
+		DashboardBuilderUtil.verifyWidget(webd, "Line Chart with Shared Y-axis");
+		DashboardBuilderUtil.verifyWidget(webd, "Line Chart with Reference Line");
+
+
+		webd.getLogger().info("Verify the icon in OOB");
+		verifyIconInOobDashboard();
+
+		webd.getLogger().info("Verify the icon in widget");
+		verifyIconInWidget(webd, "Line Chart");
+		verifyIconInWidget(webd, "Analytics Line");
+		verifyIconInWidget(webd, "Line Chart with Shared Y-axis");
+		verifyIconInWidget(webd, "Line Chart with Reference Line");
+
+		webd.getLogger().info("the verification end...");
+	}
+
+	private void verifyTimeseriesLineAdvanced()
+	{
+		webd.getLogger().info("Start to verify the OOB Dashboard");
+
+		//verify the dashboard open correctly
+		webd.getLogger().info("Start to verify the OOB Dashboard - Timeseries - Line Advanced opened correctly");
+
+		webd.getLogger().info("Verify all the widgets in dashboard");
+		DashboardBuilderUtil.verifyWidget(webd, "Line Chart with Color");
+		DashboardBuilderUtil.verifyWidget(webd, "Stacked Line Chart with Group By");
+		DashboardBuilderUtil.verifyWidget(webd, "Stacked Line Chart with Color and Group by");
+
+
+		webd.getLogger().info("Verify the icon in OOB");
+		verifyIconInOobDashboard();
+
+		webd.getLogger().info("Verify the icon in widget");
+		verifyIconInWidget(webd, "Line Chart with Color");
+		verifyIconInWidget(webd, "Stacked Line Chart with Group By");
+		verifyIconInWidget(webd, "Stacked Line Chart with Color and Group by");
+
+		webd.getLogger().info("the verification end...");
+	}
+
+	private void verifyTimeseriesArea()
+	{
+		webd.getLogger().info("Start to verify the OOB Dashboard");
+
+		//verify the dashboard open correctly
+		webd.getLogger().info("Start to verify the OOB Dashboard - Timeseries - Area opened correctly");
 
 		webd.getLogger().info("Verify all the widgets in dashboard");
 		DashboardBuilderUtil.verifyWidget(webd, "Area Chart");
-		DashboardBuilderUtil.verifyWidget(webd, "Line Chart");
 		DashboardBuilderUtil.verifyWidget(webd, "Stacked Area Chart");
-		DashboardBuilderUtil.verifyWidget(webd, "Line Chart with Shared Y-axis");
 		DashboardBuilderUtil.verifyWidget(webd, "Stacked Area Chart with Group By");
-		DashboardBuilderUtil.verifyWidget(webd, "Line Chart with Color");
-		DashboardBuilderUtil.verifyWidget(webd, "Line Chart with Trend and Forecasting");
-		DashboardBuilderUtil.verifyWidget(webd, "Stacked Line Chart with Group By");
-		DashboardBuilderUtil.verifyWidget(webd, "Analytics Line");
-		DashboardBuilderUtil.verifyWidget(webd, "Stacked Line with Color and Group by");
-		DashboardBuilderUtil.verifyWidget(webd, "Analytics Line with Trend and Forecasting");
-		DashboardBuilderUtil.verifyWidget(webd, "Line Chart with Reference Line");
+
 
 		webd.getLogger().info("Verify the icon in OOB");
 		verifyIconInOobDashboard();
 
 		webd.getLogger().info("Verify the icon in widget");
 		verifyIconInWidget(webd, "Area Chart");
-		verifyIconInWidget(webd, "Line Chart");
 		verifyIconInWidget(webd, "Stacked Area Chart");
-		verifyIconInWidget(webd, "Line Chart with Shared Y-axis");
 		verifyIconInWidget(webd, "Stacked Area Chart with Group By");
-		verifyIconInWidget(webd, "Line Chart with Color");
-		verifyIconInWidget(webd, "Line Chart with Trend and Forecasting");
-		verifyIconInWidget(webd, "Stacked Line Chart with Group By");
-		verifyIconInWidget(webd, "Analytics Line");
-		verifyIconInWidget(webd, "Stacked Line with Color and Group by");
-		verifyIconInWidget(webd, "Analytics Line with Trend and Forecasting");
-		verifyIconInWidget(webd, "Line Chart with Reference Line");
 
 		webd.getLogger().info("the verification end...");
 	}
-
 	private void verifyUIGallery()
 	{
 		webd.getLogger().info("Start to verify the OOB Dashboard");
@@ -1984,19 +2157,38 @@ public class VerifyOOB extends LoginAndLogout
 
 		//verify the dashboards in set
 		webd.getLogger().info("Verify the dashboards in set");
-		DashboardBuilderUtil.verifyDashboardInsideSet(webd, "Timeseries");
-		DashboardBuilderUtil.verifyDashboardInsideSet(webd, "Categorical");
+		DashboardBuilderUtil.verifyDashboardInsideSet(webd, "Timeseries - Line Basic");
+		DashboardBuilderUtil.verifyDashboardInsideSet(webd, "Timeseries - Line Advanced");
+		DashboardBuilderUtil.verifyDashboardInsideSet(webd, "Timeseries - Area");
+		DashboardBuilderUtil.verifyDashboardInsideSet(webd, "Categorical - Basic");
+		DashboardBuilderUtil.verifyDashboardInsideSet(webd, "Categorical - Advanced");
+		DashboardBuilderUtil.verifyDashboardInsideSet(webd, "Trend and Forecasting");
 		//		DashboardBuilderUtil.verifyDashboardInsideSet(webd, "Others");
 
 		//verify each dashboard
-		webd.getLogger().info("Verify Dashboard <Timeseries> in set");
-		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Timeseries");
-		verifyTimeseries();
+		webd.getLogger().info("Verify Dashboard <Timeseries - Line Basic> in set");
+		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Timeseries - Line Basic");
+		verifyTimeseriesLineBasic();
 
-		webd.getLogger().info("Verify Dashboard <Categorical> in set");
-		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Categorical");
-		verifyCategorical();
+		webd.getLogger().info("Verify Dashboard <Timeseries - Line Advanced> in set");
+		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Timeseries - Line Advanced");
+		verifyTimeseriesLineAdvanced();
 
+		webd.getLogger().info("Verify Dashboard <Timeseries - Area> in set");
+		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Timeseries - Area");
+		verifyTimeseriesArea();
+
+		webd.getLogger().info("Verify Dashboard <Categorical - Basic> in set");
+		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Categorical - Basic");
+		verifyCategoricalBasic();
+
+		webd.getLogger().info("Verify Dashboard <Categorical - Advanced> in set");
+		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Categorical - Advanced");
+		verifyCategoricalAdvanced();
+
+		webd.getLogger().info("Verify Dashboard <Trend and Forecasting> in set");
+		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Trend and Forecasting");
+		verifyTrendAndForecasting();
 		//		webd.getLogger().info("Verify Dashboard <Others> in set");
 		//		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Others");
 		//		verifyOthers();

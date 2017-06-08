@@ -81,7 +81,8 @@ define([
                 return self.dashboardsetName() + self.dashboardsetDescription() + self.dashboardsetShare();
             });
             dsbSetSaveDelay.extend({rateLimit: {method: "notifyWhenChangesStop", timeout: 800}});
-
+            
+            self.saveMessageId = null;
             //todo called when refresh page
             dsbSetSaveDelay.subscribe(function () {
                 if(prevSharePublic !== self.dashboardsetShare() && self.dashboardsetShare()==="on") {
@@ -98,6 +99,10 @@ define([
                             "sharePublic": self.dashboardsetShare() === "on" ? true : false
                         },
                 function (result) {
+//                    dfu.showMessage({type: 'correct'});
+                    if (self.saveMessageId) {
+                        dfu.removeMessage(self.saveMessageId);
+                    }
                     var sharePublic = result.sharePublic() === true ? "on" : "off";
                     if (sharePublic !== prevSharePublic) {
                         var shareMsgKey = result.sharePublic() ? 'DBS_BUILDER_DASHBOARD_SET_SHARE_SUCCESS' : 'DBS_BUILDER_DASHBOARD_SET_SHARE_ERROR';
@@ -116,14 +121,16 @@ define([
                     self.notifyDashboardsetToolBarChange("dashboardsetDes",result.description());
                 }, 
                 function (jqXHR, textStatus, errorThrown) {
+                    if (self.saveMessageId) {
+                        dfu.removeMessage(self.saveMessageId);
+                    }
             		if (jqXHR.errorCode() === 10001)
             		{
             			_m = getNlsString('COMMON_DASHBAORD_SAME_NAME_ERROR');
             			_mdetail = getNlsString('COMMON_DASHBAORD_SAME_NAME_ERROR_DETAIL');
-            			dfu.showMessage({type: 'error', summary: _m, detail: _mdetail, removeDelayTime: 5000});
+            			self.saveMessageId = dfu.showMessage({type: 'error', summary: _m, detail: _mdetail});
             		} else {
-            			 dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING'), detail: '', 
-removeDelayTime: 5000});                             
+            			self.saveMessageId = dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING'), detail: ''});                             
             		}
                          }
                 );

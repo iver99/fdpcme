@@ -1564,7 +1564,7 @@ public class DashboardCRUD
 			Response res7 = RestAssured.given().redirects().follow(false).contentType(ContentType.JSON).log().everything()
 					.headers("OAM_REMOTE_USER", tenantid + "abc." + remoteuser, "Authorization", authToken).when()
 					.get("/dashboards");
-			Assert.assertTrue(res7.getStatusCode() == 302);
+			Assert.assertEquals(res7.getStatusCode(), 401);
 			
 		}
 		catch (Exception e) {
@@ -1596,16 +1596,16 @@ public class DashboardCRUD
 			Response res2 = RestAssured.given().redirects().follow(false).contentType(ContentType.JSON).log().everything()
 					.headers("OAM_REMOTE_USER", tenantid + ".userA", "Authorization", authToken).when()
 					.get("/dashboards/" + dashboard_id);
-			Assert.assertTrue(res2.getStatusCode() == 302);
+			Assert.assertEquals(res2.getStatusCode(), 401);
 			String jsonString2 = "{ \"name\":\"Test_Dashboard_multitenant\"}";
 			Response res3 = RestAssured.given().redirects().follow(false).contentType(ContentType.JSON).log().everything()
 					.headers("OAM_REMOTE_USER", tenantid + ".userA", "Authorization", authToken).body(jsonString2).when()
 					.put("/dashboards/" + dashboard_id);
-			Assert.assertTrue(res3.getStatusCode() == 302);
+			Assert.assertEquals(res3.getStatusCode(), 401);
 			Response res4 = RestAssured.given().redirects().follow(false).contentType(ContentType.JSON).log().everything()
 					.headers("OAM_REMOTE_USER", tenantid + ".userA", "Authorization", authToken).when()
 					.delete("/dashboards/" + dashboard_id);
-			Assert.assertTrue(res4.getStatusCode() == 302);
+			Assert.assertEquals(res4.getStatusCode(), 401);
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());

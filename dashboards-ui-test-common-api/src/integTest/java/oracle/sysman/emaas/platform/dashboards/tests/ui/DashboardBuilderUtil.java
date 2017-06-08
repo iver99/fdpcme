@@ -248,6 +248,18 @@ public class DashboardBuilderUtil
 		dbu.resizeWidget(driver, widgetName, resizeOptions);
 	}
 
+	public static boolean respectGCForEntity(WebDriver driver)
+	{
+		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		return dbu.respectGCForEntity(driver);
+	}
+
+	public static boolean respectGCForTimeRange(WebDriver driver)
+	{
+		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		return dbu.respectGCForTimeRange(driver);
+	}
+
 	public static void restoreWidget(WebDriver driver, String widgetName, int index)
 	{
 		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);

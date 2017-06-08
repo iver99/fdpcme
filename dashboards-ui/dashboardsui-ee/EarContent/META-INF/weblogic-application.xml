@@ -8,18 +8,17 @@
     <wls:listener>
         <wls:listener-class>oracle.sysman.emaas.platform.dashboards.ui.webutils.services.DashboardUiLifecycleService</wls:listener-class>
     </wls:listener>
-	<wls:security>
-		<wls:security-role-assignment>
-	    	<wls:role-name>valid-users</wls:role-name>
-	    	<wls:principal-name>users</wls:principal-name>
-    	</wls:security-role-assignment>
-	</wls:security> 
-        <wls:session-descriptor>
-            <wls:cookie-secure>true</wls:cookie-secure>
-            <wls:cookie-name>EMCSDFUI_JSESSIONID</wls:cookie-name>
-            <wls:cookie-path>/emsaasui/emcpdfui</wls:cookie-path>
-            <wls:timeout-secs>60</wls:timeout-secs>
-            <wls:cookie-max-age-secs>10</wls:cookie-max-age-secs>
-        </wls:session-descriptor>
-
+    <wls:security>
+      <wls:security-role-assignment>
+      <wls:role-name>valid-users</wls:role-name>
+      <wls:principal-name>users</wls:principal-name>
+      </wls:security-role-assignment>
+    </wls:security>
+    <wls:session-descriptor>
+      <wls:cookie-secure>true</wls:cookie-secure>
+      <wls:cookie-name>EMCSDFUI_JSESSIONID</wls:cookie-name>
+      <wls:cookie-path>/emsaasui/emcpdfui</wls:cookie-path>
+      <wls:timeout-secs>60</wls:timeout-secs>
+      <wls:cookie-max-age-secs>10</wls:cookie-max-age-secs>
+    </wls:session-descriptor>
 </wls:weblogic-application>

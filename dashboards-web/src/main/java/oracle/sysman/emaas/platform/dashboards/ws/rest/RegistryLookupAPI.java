@@ -10,6 +10,9 @@
 
 package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
@@ -22,7 +25,6 @@ import javax.ws.rs.core.Response.Status;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardErrorConstants;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
-import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DatabaseDependencyUnavailableException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.EntityNamingDependencyUnavailableException;
 import oracle.sysman.emaas.platform.dashboards.core.util.EndpointEntity;
 import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
@@ -44,6 +46,58 @@ public class RegistryLookupAPI extends APIBase
 {
 	private static Logger LOGGER = LogManager.getLogger(RegistryLookupAPI.class);
 
+	@Path("/lookup/baseVanityUrls")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getBaseVanityUrls(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
+			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer)
+	{
+		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [GET] /v1/registry/lookup/baseVanityUrls");
+		try {
+			if (!DependencyStatus.getInstance().isEntityNamingUp()) {
+				LOGGER.error("Error to call [GET] /v1/registry/lookup/baseVanityUrls: EntityNaming service is down");
+				throw new EntityNamingDependencyUnavailableException();
+			}
+			initializeUserContext(tenantIdParam, userTenant);
+			Map<String, String> baseVanityUrls = RegistryLookupUtil.getVanityBaseURLs(tenantIdParam);
+//			EMCPDF-4115 modify cache content under multi-thread env
+			Map<String, String> copyBaseVanityUrls = new HashMap<>();
+			if (baseVanityUrls != null) {
+				//Remove tenant name from url if it's inserted already
+				for (Map.Entry<String, String> entry : baseVanityUrls.entrySet()) {
+					String url = entry.getValue();//https://emaastesttenant1.apm.management.omclrg.oraclecorp.com
+					if (url != null && url.indexOf("://") != -1) {
+						String[] splittedUrl = url.split("://");
+						if (splittedUrl.length == 2 && splittedUrl[1].startsWith(tenantIdParam + ".")) {
+							StringBuilder sb = new StringBuilder();
+							sb.append(splittedUrl[0]);
+							sb.append("://");
+							sb.append(splittedUrl[1].substring(tenantIdParam.length() + 1));
+							url = sb.toString();
+						}
+
+					}
+					copyBaseVanityUrls.put(entry.getKey(), url);
+				}
+			}
+
+			if (!copyBaseVanityUrls.isEmpty()) {
+				return Response.status(Status.OK).entity(JsonUtil.buildNormalMapper().toJson(copyBaseVanityUrls)).build();
+			}
+			else {
+				ErrorEntity error = new ErrorEntity(DashboardErrorConstants.REGISTRY_LOOKUP_VANITY_URL_NOT_FOUND_ERROR_CODE,
+						MessageUtils.getDefaultBundleString("REGISTRY_LOOKUP_VANITY_URL_NOT_FOUND_ERROR"));
+				return Response.status(Status.NOT_FOUND).entity(JsonUtil.buildNormalMapper().toJson(error)).build();
+			}
+		}
+		catch (Exception e) {
+			LOGGER.error(e.getLocalizedMessage(), e);
+			ErrorEntity error = new ErrorEntity(DashboardErrorConstants.UNKNOWN_ERROR_CODE, MessageUtils.getDefaultBundleString(
+					"UNKNOWN_ERROR", e.getLocalizedMessage()));
+			return Response.status(Status.SERVICE_UNAVAILABLE).entity(JsonUtil.buildNormalMapper().toJson(error)).build();
+		}
+	}
+
 	@Path("/lookup/endpoint")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -54,8 +108,10 @@ public class RegistryLookupAPI extends APIBase
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer,
 				"Service call to [GET] /v1/registry/lookup/endpoint?serviceName={}&version={}", serviceName, version);
 		try {
-			if (!DependencyStatus.getInstance().isEntityNamingUp())  {
-				LOGGER.error("Error to call [GET] /v1/registry/lookup/endpoint?serviceName={}&version={}: EntityNaming service is down", serviceName, version);
+			if (!DependencyStatus.getInstance().isEntityNamingUp()) {
+				LOGGER.error(
+						"Error to call [GET] /v1/registry/lookup/endpoint?serviceName={}&version={}: EntityNaming service is down",
+						serviceName, version);
 				throw new EntityNamingDependencyUnavailableException();
 			}
 			initializeUserContext(tenantIdParam, userTenant);
@@ -71,13 +127,13 @@ public class RegistryLookupAPI extends APIBase
 			}
 			else {
 				String msg = null;
-				if(version!=null) {
-					msg=MessageUtils.getDefaultBundleString("REGISTRY_LOOKUP_ENDPOINT_NOT_FOUND_ERROR",
-								getSafeOutputString(serviceName), getSafeOutputString(version));
+				if (version != null) {
+					msg = MessageUtils.getDefaultBundleString("REGISTRY_LOOKUP_ENDPOINT_NOT_FOUND_ERROR",
+							getSafeOutputString(serviceName), getSafeOutputString(version));
 				}
 				else {
-					msg=MessageUtils.getDefaultBundleString("REGISTRY_LOOKUP_ENDPOINT_NOT_FOUND_ERROR_NO_VERSION",
-								getSafeOutputString(serviceName));
+					msg = MessageUtils.getDefaultBundleString("REGISTRY_LOOKUP_ENDPOINT_NOT_FOUND_ERROR_NO_VERSION",
+							getSafeOutputString(serviceName));
 				}
 				ErrorEntity error = new ErrorEntity(DashboardErrorConstants.REGISTRY_LOOKUP_ENDPOINT_NOT_FOUND_ERROR_CODE, msg);
 				return Response.status(Status.NOT_FOUND).entity(JsonUtil.buildNormalMapper().toJson(error)).build();
@@ -106,8 +162,10 @@ public class RegistryLookupAPI extends APIBase
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer,
 				"Service call to [GET] /v1/registry/lookup/link?serviceName={}&version={}", serviceName, version);
 		try {
-			if (!DependencyStatus.getInstance().isEntityNamingUp())  {
-				LOGGER.error("Error to call [GET] /v1/registry/lookup/link?serviceName={}&version={}: EntityNaming service is down", serviceName, version);
+			if (!DependencyStatus.getInstance().isEntityNamingUp()) {
+				LOGGER.error(
+						"Error to call [GET] /v1/registry/lookup/link?serviceName={}&version={}: EntityNaming service is down",
+						serviceName, version);
 				throw new EntityNamingDependencyUnavailableException();
 			}
 			initializeUserContext(tenantIdParam, userTenant);
@@ -154,8 +212,10 @@ public class RegistryLookupAPI extends APIBase
 				"Service call to [GET] /v1/registry/lookup/linkWithRelPrefix?serviceName={}&version={}&rel={}", serviceName,
 				version, rel);
 		try {
-			if (!DependencyStatus.getInstance().isEntityNamingUp())  {
-				LOGGER.error("Error to call [GET] /v1/registry/lookup/linkWithRelPrefix?serviceName={}&version={}&rel={}: EntityNaming service is down", serviceName, version, rel);
+			if (!DependencyStatus.getInstance().isEntityNamingUp()) {
+				LOGGER.error(
+						"Error to call [GET] /v1/registry/lookup/linkWithRelPrefix?serviceName={}&version={}&rel={}: EntityNaming service is down",
+						serviceName, version, rel);
 				throw new EntityNamingDependencyUnavailableException();
 			}
 			initializeUserContext(tenantIdParam, userTenant);

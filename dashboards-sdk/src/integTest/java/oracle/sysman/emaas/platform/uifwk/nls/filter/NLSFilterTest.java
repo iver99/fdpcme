@@ -22,6 +22,7 @@ import mockit.Mocked;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
+import java.util.Locale;
 
 /**
  * @author reliang
@@ -38,25 +39,30 @@ public class NLSFilterTest {
     HttpServletRequest request;
     @Mocked
     ServletOutputStream servletOutputStream;
+    @Test
     public void testDoFilter() throws IOException, ServletException {
         final NLSFilter filter = new NLSFilter();
         new Expectations() {
             {
-                request.getHeader(anyString);
-                result = "en";
+                //request.getHeader(anyString);
+                //result = "en";
+                request.getLocale();
+                result = Locale.CHINA;
             }
         };
         filter.doFilter(request, response, chain);
     }
     @Mocked
     IOException ioException;
-    @Test(expectedExceptions = {AssertionError.class})
+    @Test
     public void testGetResponseText() throws IOException, ServletException {
         final NLSFilter filter = new NLSFilter();
         new Expectations() {
             {
-                request.getHeader(anyString);
-                result = "en";
+                //request.getHeader(anyString);
+                //result = "en";
+                request.getLocale();
+                result = Locale.CHINA;
                 servletOutputStream.flush();
                 result = ioException;
             }

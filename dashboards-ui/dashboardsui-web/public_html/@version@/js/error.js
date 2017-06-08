@@ -3,10 +3,14 @@
  * All rights reserved.
  */
 requirejs.config({
-    bundles: ((window.DEV_MODE !==null && typeof window.DEV_MODE ==="object") ||
-                (window.gradleDevMode !==null && typeof window.gradleDevMode ==="boolean")) ? undefined : {
-        'uifwk/js/uifwk-partition':
-            [
+    bundles: function() {
+        if ((window.DEV_MODE !==null && typeof window.DEV_MODE ==="object") ||
+                (window.gradleDevMode !==null && typeof window.gradleDevMode ==="boolean")) {
+            return {};
+	}
+        var versionedUifwkPartition = window.getSDKVersionFile ? window.getSDKVersionFile("emsaasui/uifwk/js/uifwk-partition") : "uifwk/js/uifwk-partition";
+        var bundles = {};
+        bundles[versionedUifwkPartition] = [
             'uifwk/js/util/ajax-util',
             'uifwk/js/util/df-util',
             'uifwk/js/util/logging-util',
@@ -18,6 +22,7 @@ requirejs.config({
             'uifwk/js/util/usertenant-util',
             'uifwk/js/util/zdt-util',
             'uifwk/js/sdk/context-util',
+            'uifwk/js/sdk/menu-util',
             'uifwk/js/widgets/aboutbox/js/aboutbox',
             'uifwk/js/widgets/brandingbar/js/brandingbar',
             'uifwk/js/widgets/datetime-picker/js/datetime-picker',
@@ -28,8 +33,9 @@ requirejs.config({
             'text!uifwk/js/widgets/brandingbar/html/brandingbar.html',
             'text!uifwk/js/widgets/timeFilter/html/timeFilter.html',
             'text!uifwk/js/widgets/datetime-picker/html/datetime-picker.html'
-            ]
-    },
+            ];
+        return bundles;
+    }(),
     // Path mappings for the logical module names
     paths: {
         'knockout': '../../libs/@version@/js/oraclejet/js/libs/knockout/knockout-3.4.0',
@@ -122,7 +128,8 @@ function(ko, $, dfu, dfumodel, _emJETCustomLogger, oj, cxtModel)
             tenantName: self.tenantName,
             appId: self.appId,
             isAdmin: false,
-            showGlobalContextBanner: false
+            showGlobalContextBanner: false,
+            omcHamburgerMenuOptIn: true
         };
         }
         function checkParams(msgKey, serviceid, serviceName) {

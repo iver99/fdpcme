@@ -12,9 +12,12 @@ package oracle.sysman.emaas.platform.uifwk.ui.webutils.util;
 
 import mockit.Expectations;
 import mockit.Mocked;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
+import oracle.sysman.emaas.platform.uifwk.ui.webutils.util.RegistryLookupUtil.VersionedLink;
 
+import oracle.sysman.emaas.platform.emcpdf.cache.api.ICache;
+import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
+import oracle.sysman.emaas.platform.emcpdf.cache.exception.ExecutionException;
+import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -26,11 +29,14 @@ import com.sun.jersey.api.client.WebResource.Builder;
 public class DataFetcherTest
 {
 	@Test(groups = { "s2" })
-	public void testGetRegistrationFromCache(@Mocked final StringCacheUtil cacheUtil)
-	{
+	public void testGetRegistrationFromCache(@Mocked final CacheManagers cms, @Mocked final ICacheManager cm, @Mocked final ICache cacheUtil) throws ExecutionException {
 		new Expectations() {
 			{
-				cacheUtil.get(anyString);
+				CacheManagers.getInstance().build();
+				result = cm;
+				cm.getCache(anyString);
+				result = cacheUtil;
+				cacheUtil.get(any);
 				result = "{registrationData}";
 			}
 		};
@@ -39,8 +45,7 @@ public class DataFetcherTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testGetRegistrationFromService(@Mocked final RegistryLookupUtil registryUtil,
-			@Mocked final RegistrationManager rm, @Mocked final Builder builder)
+	public void testGetRegistrationFromService(@Mocked final RegistryLookupUtil registryUtil, @Mocked final Builder builder)
 	{
 		new Expectations() {
 			{
@@ -54,9 +59,7 @@ public class DataFetcherTest
 		new Expectations() {
 			{
 				RegistryLookupUtil.getServiceInternalLink("Dashboard-API", "1.0+", "static/dashboards.configurations", null);
-				result = new Link();
-				RegistrationManager.getInstance().getAuthorizationToken();
-				result = "Basic Auth".toCharArray();
+				result = new VersionedLink();
 				builder.get(String.class);
 				result = "{registrationData}";
 			}
@@ -64,7 +67,7 @@ public class DataFetcherTest
 		registration = DataFetcher.getRegistrationData("tenant", "tenant.user", "referer", "12345678");
 		Assert.assertNull(registration);
 
-		final Link lk = new Link();
+		final VersionedLink lk = new VersionedLink();
 		lk.withHref("http://hostname:7019/emcpdf/api/v1/configurations/registration");
 		new Expectations() {
 			{

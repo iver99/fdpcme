@@ -1,8 +1,22 @@
+import java.nio.file.*
+import java.security.MessageDigest
+import java.util.regex.Pattern
+import org.apache.tools.ant.filters.ReplaceTokens
+
 apply from:'test.gradle'
+
+def jsversion = project.ext.getServiceVersion('OMC-UI-Framework')
+def versionPathElement = jsversion + "-"+ rootProject.ext.get("appTimeStamp")
 
 jar {
         from('src/main/java') {
+            if (!project.hasProperty("devMode")) {
+	         filesMatching("**/*.properties") {
+                     filter(ReplaceTokens, tokens: [version: versionPathElement])
+                }	
+            }
                 include '**/*.xml'
+                include '**/*.properties'
         }
 }
 
@@ -24,7 +38,8 @@ artifactoryPublish {
         publications('thisJarPublication')
 }
  
-dependencies { 
+dependencies {
+        compile project(':dashboards-sdk')
         compile getProjectArtifact('log4j-core')   
         compile getProjectArtifact('log4j-api')   
         compile getProjectArtifact('wls-api')   

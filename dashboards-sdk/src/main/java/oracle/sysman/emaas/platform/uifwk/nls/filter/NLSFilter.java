@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -24,15 +25,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.logging.log4j.LogManager;
 
 public class NLSFilter implements Filter
 {
 
-    private static final Pattern pattern = Pattern.compile("lang=\"en(-US)?\"");
+    private static final Pattern pattern = Pattern.compile("lang=\"en(-US|-us)?\"");
     private static final String defaultLocale = "en-US";
     private static final String[] supportedLanguages = new String[]{"en", "fr", "ko", "zh-Hans", "zh-Hant", "zh"};
-
+    private static org.apache.logging.log4j.Logger LOGGER = LogManager.getLogger(NLSFilter.class);
     @Override
     public void init(FilterConfig filterConfig) throws ServletException
     {
@@ -42,30 +43,43 @@ public class NLSFilter implements Filter
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
             ServletException
     {
-        assert (request instanceof HttpServletRequest);
+        if (!(request instanceof HttpServletRequest) || !(response instanceof HttpServletResponse)) {
+            LOGGER.error("Error occurred in NLS filter!");
+        }
         final HttpServletRequest httpRequest = (HttpServletRequest) request;
-        assert (response instanceof HttpServletResponse);
         final HttpServletResponse httpResponse = (HttpServletResponse) response;
 
         // Chains with a wrapper which captures the response text
         final CaptureWrapper wrapper = new CaptureWrapper(httpResponse);
         chain.doFilter(request, wrapper);
+        final String langAttr = NLSFilter.getLangAttr(httpRequest);
 
-        // get the accept-language header
-        String alh = StringEscapeUtils.escapeHtml4(httpRequest.getHeader("Accept-Language"));
-        // calculate the UI locale
-        String locale = getSupportedLocale(alh);
 
-        // Replaces lang="en-US" by lang="xx" in response text
-        final String langAttr = "lang=\"" + locale + "\"";
         final String responseText = wrapper.getResponseText();
-        assert (responseText != null);
+        if(responseText == null){
+            LOGGER.error("Response Text is null in NLS filter!");
+            return;
+        }
         final String newResponseText = pattern.matcher(responseText).replaceFirst(langAttr);
 
         // Writes the updated response text to the response object
-        try (PrintWriter writer = new PrintWriter(response.getOutputStream())) {
+        try (PrintWriter writer = response.getWriter()) {
             writer.println(newResponseText);
         }
+    }
+
+    public static String getLangAttr(HttpServletRequest httpRequest) {
+        if (httpRequest == null) {
+            return null;
+        }
+        // get the accept-language header
+        //String alh = StringEscapeUtils.escapeHtml4(httpRequest.getHeader("Accept-Language"));
+        Locale alh = httpRequest.getLocale();
+        // calculate the UI locale
+        String locale = getSupportedLocale(alh.toLanguageTag());
+
+        // Replaces lang="en-US" by lang="xx" in response text
+        return "lang=\"" + locale + "\"";
     }
 
     @Override
@@ -73,12 +87,12 @@ public class NLSFilter implements Filter
     {
     }
     
-    private String getSupportedLocale(String alh)
+    private static String getSupportedLocale(String alh)
     {
         if (alh != null && !alh.isEmpty()) {
             String locale = alh.split(",")[0].split(";")[0];
             for (String lang : supportedLanguages) {
-                if (locale.matches("^" + lang + "(-[A-Z]{2})?$")) {
+                if (locale.matches("^" + lang + "(-[A-Za-z]{2})?$")) {
                     return locale;
                 }
             }
