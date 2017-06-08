@@ -64,12 +64,10 @@ public class DashBoardUtils
 			webdriver.getLogger().info("Click Compass icon to display menu of branding bar");
 			webdriver.getWebDriver().findElement(By.xpath(PageId.COMPASSICON)).click();
 			WebDriverWait wait = new WebDriverWait(webdriver.getWebDriver(), 900L);
-			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(PageId.DASHBOARDLINK)));
-			webdriver.takeScreenShot();
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(PageId.DASHBOARDLINK)));			
 			webdriver.getLogger().info("Click Dashboard link to back to dashboard home page");
 			webdriver.getWebDriver().findElement(By.xpath(PageId.DASHBOARDLINK)).click();
 		}
-
 	}
 
 	public static void closeOverviewPage()
@@ -121,10 +119,9 @@ public class DashBoardUtils
 		//Accepting alert.
 		webdriver.getLogger().info("foucus on the alert");
 		alert = webdriver.getWebDriver().switchTo().alert();
-		//webdriver.takeScreenShot();
+		
 		webdriver.getLogger().info("click button on the dialog, should navigate to the home page");
-		alert.accept();
-		//webdriver.takeScreenShot();
+		alert.accept();		
 	}
 
 	/**
@@ -434,13 +431,11 @@ public class DashBoardUtils
 		driver.getLogger().info("Click Edit icon");
 		driver.waitForElementPresent("css=" + PageId.DASHBOARDSETOPTIONSEDIT_CSS);
 		driver.click("css=" + PageId.DASHBOARDSETOPTIONSEDIT_CSS);
-		driver.takeScreenShot();
-
+		
 		driver.getLogger().info("Expand Share options");
 		driver.waitForElementPresent("css=" + PageId.RIGHTDRAWEREDITSINGLEDBSHARE_CSS);
 		driver.click("css=" + PageId.RIGHTDRAWEREDITSINGLEDBSHARE_CSS);
-		driver.takeScreenShot();
-
+		
 		driver.getLogger().info("Verify the options are disabled or not");
 		WebElement ShareOption = driver.getWebDriver().findElement(By.cssSelector(PageId.DASHBOARDSETSHARE_CSS));
 		WebElement NotShareOption = driver.getWebDriver().findElement(By.cssSelector(PageId.DASHBOARDSETNOTSHARE_CSS));
@@ -907,8 +902,7 @@ public class DashBoardUtils
 		//find the widget
 		driver.waitForElementPresent(DashBoardPageId_190.BUILDERTILESEDITAREA);
 		driver.click(DashBoardPageId_190.BUILDERTILESEDITAREA);
-		driver.takeScreenShot();
-
+		
 		String titleTitlesLocator = String.format(DashBoardPageId_190.BUILDERTILETITLELOCATOR, widgetName);
 		List<WebElement> tileTitles = driver.getWebDriver().findElements(By.xpath(titleTitlesLocator));
 		if (tileTitles == null || tileTitles.size() < index) {
@@ -962,34 +956,20 @@ public class DashBoardUtils
 
 	public static void verifyURL(WebDriver webdriver, String url)
 	{
-		webdriver.takeScreenShot();
-
 		String currurl = webdriver.getWebDriver().getCurrentUrl();
-
 		webdriver.getLogger().info("the origin url = " + currurl);
-
 		String tmpurl = DashBoardUtils.trimUrlParameters(currurl.substring(currurl.indexOf("emsaasui") + 9));
-
 		webdriver.getLogger().info("the url without para = " + tmpurl);
-
 		Assert.assertEquals(tmpurl, url);
-
 	}
 
 	public static void verifyURL_WithPara(WebDriver webdriver, String url)
 	{
-		webdriver.takeScreenShot();
-
 		webdriver.getLogger().info("the expected relative url = " + url);
-
 		String currurl = webdriver.getWebDriver().getCurrentUrl();
-
 		webdriver.getLogger().info("the current url = " + currurl);
-
 		String tmpurl = currurl.substring(currurl.indexOf("emsaasui") + 9);
-
 		webdriver.getLogger().info("the relative url to compare = " + tmpurl);
-
 		Assert.assertTrue(tmpurl.contains(url), tmpurl + " does NOT contain " + url);
 	}
 

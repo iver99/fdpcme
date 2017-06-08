@@ -43,7 +43,6 @@ public class TestSuiteLicensing_OMCSE extends LoginAndLogout
 	private String dsbsetName = "DASHBOARDSET_GLOBALTESTING";	
 	private String dbName_WithGC = "TestDashboardWithGC";		
 	private String dbName_ude = "";
-	private String dbName_la = "";
 	private String dbName_willDelete = "";
 	private String dbSetName_willDelete = "";
 	private String dbName_inSet = "";
@@ -91,6 +90,8 @@ public class TestSuiteLicensing_OMCSE extends LoginAndLogout
 		DashBoardUtils.deleteDashboard(webd, dbName_ude);
 		DashBoardUtils.deleteDashboard(webd, dbName_willDelete);
 		DashBoardUtils.deleteDashboard(webd, dbName_tailsTest);
+		DashBoardUtils.deleteDashboard(webd, dbName_WithGC);
+		DashBoardUtils.deleteDashboard(webd, dbName_inSet);
 
 		webd.getLogger().info("All test data have been removed");
 
@@ -101,6 +102,9 @@ public class TestSuiteLicensing_OMCSE extends LoginAndLogout
 	{
 		customlogin(this.getClass().getName() + "." + testName, customUser, tenantname);
 		DashBoardUtils.loadWebDriver(webd);
+		
+		//reset all the checkboxes
+		DashboardHomeUtil.resetFilterOptions(webd);
 	}
 
 	@Test(alwaysRun = true)

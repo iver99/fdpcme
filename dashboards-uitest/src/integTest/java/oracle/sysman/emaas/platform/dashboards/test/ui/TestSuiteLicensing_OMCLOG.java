@@ -101,6 +101,9 @@ public class TestSuiteLicensing_OMCLOG extends LoginAndLogout
 	{
 		customlogin(this.getClass().getName() + "." + testName, customUser, tenantname);
 		DashBoardUtils.loadWebDriver(webd);
+		
+		//reset all the checkboxes
+		DashboardHomeUtil.resetFilterOptions(webd);
 	}
 
 	@Test(alwaysRun = true)
