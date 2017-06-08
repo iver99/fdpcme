@@ -288,7 +288,6 @@ public class DashBoardUtils
 
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Entities"));
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Summary"));
-
 	}
 
 	public static void itaOobNotExist_v2v3()
