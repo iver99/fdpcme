@@ -1175,16 +1175,10 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
 
                 if(ko.isObservable(params.showBadge)) {
                     self.showBadge = params.showBadge;
-                    params.showBadge.subscribe(function(value) {
-                        if(value === true) {
-                           var defaultTP = formalizeTimePeriod(ko.unwrap(self.defaultTimePeriod));
-                            if(self.timePeriodsNlsObject[defaultTP] || isValidFlexRelTimePeriod(defaultTP)) {
-                                self.badgeTimePeriod = self.defaultTimePeriod;
-                            }
-                        }else if(value === false){
-                            self.badgeTimePeriod(null);
-                        }
-                    });
+                    var defaultTP = formalizeTimePeriod(ko.unwrap(self.defaultTimePeriod));
+                    if (self.timePeriodsNlsObject[defaultTP] || isValidFlexRelTimePeriod(defaultTP)) {
+                        self.badgeTimePeriod = self.defaultTimePeriod;
+                    }
                 }else {
                     self.showBadge = ko.observable(params.showBadge);
                 }
