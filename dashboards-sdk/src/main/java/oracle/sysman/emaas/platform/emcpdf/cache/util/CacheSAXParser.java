@@ -36,7 +36,7 @@ public class CacheSAXParser extends DefaultHandler {
 
     @Override
     public void startDocument() throws SAXException {
-        LOGGER.info("…………Begin to parse cache configuration file…………");
+        LOGGER.info(".........Begin to parse cache configuration file.........");
     }
 
     @Override

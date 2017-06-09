@@ -37,9 +37,11 @@ public abstract class AbstractCache implements ICache {
         cacheCounter.recordRequest(1L);
         if (value != null) {
             if (isExpired(value)) {
+                LOGGER.debug("AbstractCache: Evicting cached item key = {} value = {}", key, value);
                 evict(key);
             } else {
                 cacheCounter.recordHit(1L);
+                LOGGER.debug("AbstractCache: Returning cached item key = {} value = {}", key, value);
                 return value.getValue();
             }
         }
@@ -56,6 +58,7 @@ public abstract class AbstractCache implements ICache {
                 throw new ExecutionException(e);
             }
         }
+        LOGGER.debug("AbstractCache: Returning key = {}, value = {} from cache..", key, valueFromFactory);
         return valueFromFactory;
     }
 

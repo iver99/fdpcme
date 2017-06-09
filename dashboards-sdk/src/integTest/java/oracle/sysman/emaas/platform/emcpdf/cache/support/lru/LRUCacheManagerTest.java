@@ -188,7 +188,7 @@ public class LRUCacheManagerTest {
     @Test(expectedExceptions = UnsupportedOperationException.class)
     public void testUnModifiableCache1() throws ExecutionException {
         ICacheManager cm=LRUCacheManager.getInstance();
-        ICache cache = cm.getCache("testCache1",100,2L);
+        ICache cache = cm.getCache("testCache1",100,0L);
         Tenant tenant=new Tenant("tenant1");
         Object key = DefaultKeyGenerator.getInstance().generate(tenant,new Keys("keys1"));
         List<String> cachedList = new ArrayList<>();
@@ -205,9 +205,9 @@ public class LRUCacheManagerTest {
     @Test(expectedExceptions = UnsupportedOperationException.class)
     public void testUnModifiableCache2() throws ExecutionException {
         ICacheManager cm=LRUCacheManager.getInstance();
-        ICache cache = cm.getCache("testCache1",100,2L);
-        Tenant tenant=new Tenant("tenant1");
-        Object key = DefaultKeyGenerator.getInstance().generate(tenant,new Keys("keys1"));
+        ICache cache = cm.getCache("testCache2",100,0L);
+        Tenant tenant=new Tenant("tenant2");
+        Object key = DefaultKeyGenerator.getInstance().generate(tenant,new Keys("keys2"));
         Map<String,Object> cachedMap = new HashMap<>();
         cachedMap.put("one", new Object());
         cachedMap.put("two", new Object());
