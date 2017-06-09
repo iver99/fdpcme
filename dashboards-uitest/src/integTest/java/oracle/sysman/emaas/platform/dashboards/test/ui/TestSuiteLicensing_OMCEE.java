@@ -863,7 +863,7 @@ public class TestSuiteLicensing_OMCEE extends LoginAndLogout
 		VerifyOOBUtil.verifyPerfAnalyticsDatabase(webd);
 	}
 
-	@Test(alwaysRun = true)
+	//@Test(alwaysRun = true)
 	public void verifyResourceAnalyticsDatabase_GridView_OMCEE()
 	{
 		//initTest
@@ -882,7 +882,7 @@ public class TestSuiteLicensing_OMCEE extends LoginAndLogout
 		VerifyOOBUtil.verifyResourceAnalyticsDatabase(webd);
 	}
 
-	@Test(alwaysRun = true)
+	//@Test(alwaysRun = true)
 	public void verifyResourceAnalyticsDatabase_ListView_OMCEE()
 	{
 		//initTest
@@ -901,7 +901,7 @@ public class TestSuiteLicensing_OMCEE extends LoginAndLogout
 		VerifyOOBUtil.verifyResourceAnalyticsDatabase(webd);
 	}
 
-	@Test(alwaysRun = true)
+	//@Test(alwaysRun = true)
 	public void verifyResourceAnalyticsDatabase_WithFilter_GridView_OMCEE()
 	{
 		//initTest
@@ -924,7 +924,7 @@ public class TestSuiteLicensing_OMCEE extends LoginAndLogout
 		VerifyOOBUtil.verifyResourceAnalyticsDatabase(webd);
 	}
 
-	@Test(alwaysRun = true)
+	//@Test(alwaysRun = true)
 	public void verifyResourceAnalyticsDatabase_WithFilter_ListView_OMCEE()
 	{
 		//initTest
@@ -1315,7 +1315,7 @@ public class TestSuiteLicensing_OMCEE extends LoginAndLogout
 		TestGlobalContextUtil.visitITAWithGC(webd, "resourceAnalyticsHost", gccontent);
 		TestGlobalContextUtil.visitITAWithGC(webd, "applicationPerformanceAnalytic", gccontent);
 		TestGlobalContextUtil.visitITAWithGC(webd, "availabilityAnalytics", gccontent);
-		TestGlobalContextUtil.visitITAWithGC(webd, "dataExplorer", gccontent);
+		//TestGlobalContextUtil.visitITAWithGC(webd, "dataExplorer", gccontent);
 	}
 	
 	@Test(alwaysRun = true)
