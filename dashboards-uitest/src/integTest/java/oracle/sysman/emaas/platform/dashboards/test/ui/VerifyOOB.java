@@ -3,6 +3,7 @@ package oracle.sysman.emaas.platform.dashboards.test.ui;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.DashBoardUtils;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.LoginAndLogout;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.PageId;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
@@ -1549,6 +1550,12 @@ public class VerifyOOB extends LoginAndLogout
 
 		webd.getLogger().info("Verify the icon in OOB");
 		verifyIconInOobDashboard();
+		
+		//Verify if enabled hamburger menu
+		if(DashBoardUtils.isHamburgerMenuEnabled(webd))
+		{
+			BrandingBarUtil.toggleHamburgerMenu(webd);
+		}
 
 		webd.getLogger().info("Verify the icon in widget");
 		verifyIconInWidget(webd, "Database Log Trends");
@@ -1626,6 +1633,12 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Verify Dashboard <Summary> in set");
 		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Summary");
 		verifySummary();
+		
+		//Verify if enabled hamburger menu
+		if(DashBoardUtils.isHamburgerMenuEnabled(webd))
+		{
+			BrandingBarUtil.toggleHamburgerMenu(webd);
+		}
 
 		webd.getLogger().info("Verify Dashboard <Hosts> in set");
 		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Hosts");
@@ -1634,6 +1647,12 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Verify Dashboard <Databases> in set");
 		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Databases");
 		verifyDatabases();
+		
+		//Verify if enabled hamburger menu
+		if(DashBoardUtils.isHamburgerMenuEnabled(webd))
+		{
+			BrandingBarUtil.toggleHamburgerMenu(webd);
+		}
 
 		webd.getLogger().info("Verify Dashboard <Application Servers> in set");
 		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Application Servers");
@@ -1694,6 +1713,12 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Verify Dashboard <Overview> in set");
 		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Overview");
 		verifyOverview();
+		
+		//Verify if enabled hamburger menu
+		if(DashBoardUtils.isHamburgerMenuEnabled(webd))
+		{
+			BrandingBarUtil.toggleHamburgerMenu(webd);
+		}
 
 		webd.getLogger().info("Verify Dashboard <Performance> in set");
 		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Performance");
@@ -1730,6 +1755,11 @@ public class VerifyOOB extends LoginAndLogout
 
 		webd.getLogger().info("Verify the icon in OOB");
 		verifyIconInOobDashboard();
+		
+		if(DashBoardUtils.isHamburgerMenuEnabled(webd))
+		{
+			BrandingBarUtil.toggleHamburgerMenu(webd);
+		}		
 
 		webd.getLogger().info("Verify the icon in widget");
 		verifyIconInWidget(webd, "Host Logs Trend");
@@ -1854,6 +1884,11 @@ public class VerifyOOB extends LoginAndLogout
 
 		webd.getLogger().info("Verify the icon in OOB");
 		verifyIconInOobDashboard();
+		
+		if(DashBoardUtils.isHamburgerMenuEnabled(webd))
+		{
+			BrandingBarUtil.toggleHamburgerMenu(webd);
+		}		
 
 		webd.getLogger().info("Verify the icon in widget");
 		verifyIconInWidget(webd, "Middleware Logs Trend");
@@ -2174,6 +2209,11 @@ public class VerifyOOB extends LoginAndLogout
 		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Timeseries - Line Advanced");
 		verifyTimeseriesLineAdvanced();
 
+		if(DashBoardUtils.isHamburgerMenuEnabled(webd))
+		{
+			BrandingBarUtil.toggleHamburgerMenu(webd);
+		}
+
 		webd.getLogger().info("Verify Dashboard <Timeseries - Area> in set");
 		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Timeseries - Area");
 		verifyTimeseriesArea();
@@ -2181,6 +2221,11 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Verify Dashboard <Categorical - Basic> in set");
 		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Categorical - Basic");
 		verifyCategoricalBasic();
+		
+		if(DashBoardUtils.isHamburgerMenuEnabled(webd))
+		{
+			BrandingBarUtil.toggleHamburgerMenu(webd);
+		}		
 
 		webd.getLogger().info("Verify Dashboard <Categorical - Advanced> in set");
 		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Categorical - Advanced");
