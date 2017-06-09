@@ -1,6 +1,5 @@
 package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
-import oracle.sysman.emaas.platform.dashboards.ws.rest.model.CacheGrpModel;
 import org.apache.commons.lang3.StringUtils;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICache;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.AbstractCache;
@@ -29,45 +28,6 @@ import java.util.LinkedHashMap;
 @Path("/v1/cache")
 public class CacheAPI extends APIBase{
     private static final Logger LOGGER = LogManager.getLogger(CacheAPI.class);
-
-    /**
-     * this is not enabled yet.
-     * @param cacheGroup
-     * @return
-     */
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/cachedItem/{cacheGroup}")
-    @Deprecated
-    public Response getCacheGroupCachedItem(@PathParam("cacheGroup") String cacheGroup){
-        LOGGER.info("Service to call [GET] /v1/cache/cachedItem/{}:", cacheGroup);
-        if(StringUtils.isEmpty(cacheGroup)){
-            LOGGER.warn("cache group name is null or empty!");
-            return Response.status(Response.Status.NOT_FOUND).entity(new MsgModel(false, "Cache group name is null or empty!")).build();
-        }
-        LinkedHashMapCache cache = null;
-        ConcurrentMap<String, ICache> map = null;
-        if(CacheConstants.CACHES_SCREENSHOT_CACHE.equals(cacheGroup)){
-            AbstractCacheManager screenshotCacheManager = LRUScreenshotCacheManager.getInstance();
-             map = screenshotCacheManager.getCacheMap();
-        }else{
-            AbstractCacheManager lruCacheManager = LRUCacheManager.getInstance();
-            map = lruCacheManager.getCacheMap();
-        }
-        cache = (LinkedHashMapCache) map.get(cacheGroup);
-        LinkedHashMap map1 = new LinkedHashMap(cache.getCacheMap());
-        CacheGrpModel cm = new CacheGrpModel(map1);
-        LOGGER.info("cache grp size is {}",map1.size());
-//        JsonUtil ju = JsonUtil.buildNormalMapper();
-//        ju.
-        if(cache == null){
-            LOGGER.error("Cache group named {} is not existed!", cacheGroup);
-            return Response.status(Response.Status.NOT_FOUND).entity(new MsgModel(false, "Cache group name is not existed!")).build();
-        }else{
-//            return Response.status(Response.Status.OK).entity(getJsonUtil().toJson(map1)).build();
-            return Response.ok(getJsonUtil().toJson(cm)).build();
-        }
-    }
 
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
