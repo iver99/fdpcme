@@ -262,8 +262,8 @@ public class VerifyOOBUtil
 		VerifyOOBUtil.verifyIconInWidget(webd, "Top 10 Oracle DBs with Sensitive Object Accesses");
 		VerifyOOBUtil.verifyIconInWidget(webd, "Top 10 Oracle DBs by Startups / Shutdowns");
 		VerifyOOBUtil.verifyIconInWidget(webd, "Top 10 Oracle DBs with Account Modifications");
-		VerifyOOBUtil.verifyIconInWidget(webd, "Top 10 Oracle DBs with Schema Changes");
-		VerifyOOBUtil.verifyIconInWidget(webd, "Top 10 Oracle DBs with Anomalies");
+		VerifyOOBUtil.verifyIconInWidget(webd, "Top 10 Oracle DBs with Schema Changes");	
+		VerifyOOBUtil.verifyIconInWidget(webd, "Top 10 Oracle DBs by Anomalies");
 
 		webd.getLogger().info("Verification end...");
 	}
