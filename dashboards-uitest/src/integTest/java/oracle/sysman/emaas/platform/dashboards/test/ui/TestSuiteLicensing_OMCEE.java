@@ -69,7 +69,9 @@ public class TestSuiteLicensing_OMCEE extends LoginAndLogout
 		DashboardBuilderUtil.verifyDashboard(webd, dbName_WithGC, null, false);
 		
 		webd.getLogger().info("Respect GC");
-		DashboardBuilderUtil.respectGCForEntity(webd);		
+		DashboardBuilderUtil.respectGCForEntity(webd);
+		
+		LoginAndLogout.logoutMethod();
 	}
 		
 	@AfterClass
