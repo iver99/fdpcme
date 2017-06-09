@@ -31,6 +31,7 @@ import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 /**
  * @author miao
@@ -40,6 +41,7 @@ public class RegistryLookupUtil
 	public static class VersionedLink extends Link
 	{
 		private String version;
+		@JsonIgnore
 		private String authToken;
 
 		/**
