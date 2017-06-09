@@ -33,6 +33,7 @@ import oracle.sysman.emaas.platform.emcpdf.registry.model.EndpointEntity;
 import oracle.sysman.emaas.platform.uifwk.util.LogUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 /**
  * @author aduan
