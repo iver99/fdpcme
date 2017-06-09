@@ -77,7 +77,7 @@ public class CacheSAXParser extends DefaultHandler {
      */
     @Override
     public void endDocument() throws SAXException {
-        LOGGER.info("…………End to parse cache configuration file…………");
+        LOGGER.info(".........End to parse cache configuration file.........");
         super.endDocument();
     }
 

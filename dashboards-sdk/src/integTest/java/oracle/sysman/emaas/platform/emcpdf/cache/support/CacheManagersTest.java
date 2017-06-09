@@ -15,8 +15,5 @@ public class CacheManagersTest {
     public void testCacheManagers(){
         ICacheManager cm1=CacheManagers.getInstance().build();
         Assert.assertNotNull(cm1);
-
-        ICacheManager cm2= CacheManagers.getInstance().build(CacheConstants.LRU_SCREENSHOT_MANAGER);
-        Assert.assertNotNull(cm2);
     }
 }

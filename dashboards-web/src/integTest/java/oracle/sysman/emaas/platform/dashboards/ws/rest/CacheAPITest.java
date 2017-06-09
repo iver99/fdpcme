@@ -10,7 +10,6 @@ import oracle.sysman.emaas.platform.dashboards.ws.rest.model.AppsInfoWeb;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICache;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.lru.LRUCacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.lru.LinkedHashMapCache;
-import oracle.sysman.emaas.platform.emcpdf.cache.support.screenshot.LRUScreenshotCacheManager;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
@@ -29,8 +28,6 @@ public class CacheAPITest {
     @Mocked
     LRUCacheManager lruCacheManager;
     @Mocked
-    LRUScreenshotCacheManager lruScreenshotCacheManager;
-    @Mocked
     ICache iCache;
 
     @Test(groups = {"s2"})
@@ -43,10 +40,6 @@ public class CacheAPITest {
                 LRUCacheManager.getInstance();
                 result = lruCacheManager;
                 lruCacheManager.getCacheMap();
-                result = map;
-                lruScreenshotCacheManager.getInstance();
-                result = lruScreenshotCacheManager;
-                lruScreenshotCacheManager.getCacheMap();
                 result = map;
             }
         };
@@ -64,10 +57,6 @@ public class CacheAPITest {
                 result = lruCacheManager;
                 lruCacheManager.getCacheMap();
                 result = map;
-                lruScreenshotCacheManager.getInstance();
-                result = lruScreenshotCacheManager;
-                lruScreenshotCacheManager.getCacheMap();
-                result = map;
             }
         };
         cacheAPI.startCache();
@@ -83,10 +72,6 @@ public class CacheAPITest {
                 LRUCacheManager.getInstance();
                 result = lruCacheManager;
                 lruCacheManager.getCacheMap();
-                result = map;
-                lruScreenshotCacheManager.getInstance();
-                result = lruScreenshotCacheManager;
-                lruScreenshotCacheManager.getCacheMap();
                 result = map;
             }
         };
@@ -104,10 +89,6 @@ public class CacheAPITest {
                 result = lruCacheManager;
                 lruCacheManager.getCacheMap();
                 result = map;
-                lruScreenshotCacheManager.getInstance();
-                result = lruScreenshotCacheManager;
-                lruScreenshotCacheManager.getCacheMap();
-                result = map;
             }
         };
         cacheAPI.resumeCache();
@@ -124,10 +105,6 @@ public class CacheAPITest {
                 LRUCacheManager.getInstance();
                 result = lruCacheManager;
                 lruCacheManager.getCacheMap();
-                result = null;
-                lruScreenshotCacheManager.getInstance();
-                result = lruScreenshotCacheManager;
-                lruScreenshotCacheManager.getCacheMap();
                 result = null;
             }
         };
