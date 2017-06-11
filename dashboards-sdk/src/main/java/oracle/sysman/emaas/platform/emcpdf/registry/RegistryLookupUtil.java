@@ -804,6 +804,7 @@ public class RegistryLookupUtil
 	
     public static class VersionedLink extends Link {
         private String authToken;
+        @JsonIgnore
 		private String version;
 
         public VersionedLink() {
