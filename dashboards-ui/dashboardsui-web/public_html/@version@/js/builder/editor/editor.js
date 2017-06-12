@@ -717,20 +717,38 @@ define(['knockout',
                 widget.height = widget.WIDGET_DEFAULT_HEIGHT ? widget.WIDGET_DEFAULT_HEIGHT: height;
                 widget.column = null;
                 widget.row = null;
-                widget.type = "DEFAULT";
+                if(widget.type !== "TEXT_WIDGET") {
+                    widget.type = "DEFAULT";
+                }
                     if (widget_source===null || widget_source===undefined){
                         widget_source=1;
                     }
 
                     if (koc_name && viewmodel && template) {
-                        if (widget_source===1){
+                        if(widget_source === Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK) {
+                            Builder.registerComponent(koc_name, viewmodel, template);
+                            oj.Logger.log("widget: " + koc_name + " is registered");
+                            oj.Logger.log("widget template: " + template);
+                            oj.Logger.log("widget viewmodel:: " + viewmodel);
+
+                            newTile = new Builder.DashboardTile(self.mode, $b.dashboard, koc_name, name, description, widget, timeSelectorModel, targets, loadImmediately, dashboardInst);
+                            var tileCell;
+                            if (!(self.tiles && self.tiles().length > 0)) {
+                                tileCell = new Builder.Cell(0, 0);
+                            } else {
+                                tileCell = self.calAvailablePositionForTile(newTile, 0, 0);
+                            }
+                            newTile.row(tileCell.row);
+                            newTile.column(tileCell.column);
+                            self.tilesGrid.registerTileToGrid(newTile);
+                        }else if (widget_source===1){
                              if (!ko.components.isRegistered(koc_name)) {
                                 var assetRoot = dfu.getAssetRootUrl(provider_name, true);
                                 if (assetRoot===null){
                                     oj.Logger.error("Unable to find asset root: PROVIDER_NAME=["+provider_name+"], PROVIDER_VERSION=["+provider_version+"], PROVIDER_ASSET_ROOT=["+provider_asset_root+"]");
                                 }
                                 
-                                var assetRootForVerisonedFile = assetRoot.substring(1);
+                                var assetRootForVerisonedFile = assetRoot && assetRoot.substring(1);
                                 var versionedViewModel = window.getSDKVersionFile ? 
                                     window.getSDKVersionFile(assetRootForVerisonedFile + viewmodel) : null;
                                 viewmodel = versionedViewModel ? (versionedViewModel.lastIndexOf('.js') ===  versionedViewModel.length - 3 ? 

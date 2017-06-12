@@ -527,7 +527,7 @@ define(['knockout',
                 return;
             }
             var assetRoot = dfu.getAssetRootUrl(tile.PROVIDER_NAME(), true);
-            var assetRootForVerisonedFile = assetRoot.substring(1);
+            var assetRootForVerisonedFile = assetRoot && assetRoot.substring(1);
             var kocVM = tile.WIDGET_VIEWMODEL();
             if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
                 var versionedViewModel = window.getSDKVersionFile ? 

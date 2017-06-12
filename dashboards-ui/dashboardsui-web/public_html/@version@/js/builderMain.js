@@ -45,7 +45,8 @@ requirejs.config({
 //        'emcta': '/emsaasui/emcta/ta/@version@/js', //for DEV_MODE
         'emcla':'/emsaasui/emlacore/js',
         'emcsutl': '/emsaasui/uifwk/emcsDependencies/uifwk/js/util', // why we need this?
-        'uifwk': '/emsaasui/uifwk'
+        'uifwk': '/emsaasui/uifwk',
+        ckeditor: '../../libs/@version@/js/ckeditor/ckeditor'
     },
     bundles: function() {
         if ((window.DEV_MODE !==null && typeof window.DEV_MODE ==="object") ||

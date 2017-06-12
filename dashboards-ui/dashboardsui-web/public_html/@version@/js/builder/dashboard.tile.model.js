@@ -574,9 +574,9 @@ define(['knockout',
 
                 var dragStartRow = self.editor.mode.getModeRow(tile);
                 var cell = self.editor.getCellFromPosition(widgetAreaWidth, ui.helper.position());
-                if(tile.content) {
-                    cell.column = 0;
-                }
+//                if(tile.content) {
+//                    cell.column = 0;
+//                }
 
                 $b.findEl('.tile-dragging-placeholder').css({
                     left: tile.left() - 5,
@@ -637,9 +637,9 @@ define(['knockout',
                 }
                 var tile = ko.dataFor(ui.helper[0]);
                 var cell = self.editor.getCellFromPosition(widgetAreaWidth, ui.helper.position());
-                if(tile.content) {
-                    cell.column = 0;
-                }
+//                if(tile.content) {
+//                    cell.column = 0;
+//                }
                 ui.helper.css({left:tile.left(), top:tile.top()});
 
                 $(ui.helper).css("opacity", 1);

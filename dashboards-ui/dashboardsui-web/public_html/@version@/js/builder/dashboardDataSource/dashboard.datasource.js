@@ -341,7 +341,16 @@ define(['knockout',
                 }
             }
 
-
+//            if(data.tiles) {
+//                for(var i in data.tiles) {
+//                    if(data.tiles[i].type === "TEXT_WIDGET") {
+//                        data.tiles[i].WIDGET_TEMPLATE = "/emsaasui/emcpdfui/@version@/js/widgets/textwidget/textwidgetdemo.html";
+//                        data.tiles[i].WIDGET_VIEWMODEL = "/emsaasui/emcpdfui/@version@/js/widgets/textwidget/js/textwidgetdemo.js";
+//                        data.tiles[i].content = Builder.decodeHtml("&lt;b&gt;This is a text widget&lt;/b&gt;");
+//                    }
+//                }
+//            }
+            
             var mapping = {
                 "tiles": {
                     "create": function (options) {

@@ -10,7 +10,7 @@
 
         <script type="text/javascript">
                 ////ADDITIONALDATA////
-        </script>
+        </script> 
         <script data-main="@version@/js/builderMain" src="libs/@version@/js/oraclejet/js/libs/require/require.js"></script>
 
     </head>
@@ -230,7 +230,6 @@
                         <div class="tiles-wrapper fit-size df-computed-content-width" style="width: 80%; float: left; position: relative; height: auto;">
                             <div class="tile-dragging-placeholder"></div>
                             <div class="widget-area" data-bind="foreach: editor.tiles" style="margin-top: 50px; margin-left: 5px; margin-right: 5px; height: auto;">
-                                <!-- ko if: type() === 'DEFAULT' -->
                                 <div class="dbd-widget" data-bind="attr: {style: cssStyle, id: 'tile'+clientGuid, ismobile: $root.isMobileDevice,'data-tile-name':WIDGET_NAME}, css: tileDisplayClass(), 
                                                                     event: {mouseover: function(data, event) {$root.showPullRightBtn(clientGuid, data, event)}, mouseout: function(data, event) {$root.hidePullRightBtn(clientGuid, data, event)}}">
                                     <div class="dbd-tile-container" role="presentation" tabindex="0" data-bind="event: {focus: function(data, event) {$root.focusOnTile(clientGuid, data, event)}}">
@@ -429,14 +428,6 @@
                                         </div> -->
                                     </div>
                                 </div>
-                                <!-- /ko -->
-                                <!-- ko if: type() === 'TEXT_WIDGET' -->
-<!--                                <div class="dbd-widget" style="height: auto;" data-bind="attr: {style: tileDisplayClass, id: 'tile'+clientGuid}">
-                                    <div class="tile-drag-handle" style=" cursor: move;">
-                                        <div data-bind="component: {name: 'DF_V1_WIDGET_TEXT', params: params}"></div>
-                                    </div>
-                                </div>-->
-                                <!-- /ko -->                                
                                 </div>
                             </div>
                         </div>
