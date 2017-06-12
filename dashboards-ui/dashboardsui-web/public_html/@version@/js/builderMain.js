@@ -276,29 +276,6 @@ require(['knockout',
                     {
                         var logger = new _emJETCustomLogger();
                         var menuUtil = new menuModel();
-                        menuUtil.subscribeServiceMenuLoadedEvent(function(){
-                            var $b;
-                            $("#omcMenuNavList").addClass("df-computed-content-width");
-                            var $visibleHeaderBar = $(".dashboard-content:visible .head-bar-container");
-                            var $visibleRightDrawer = $(".dbd-left-panel:visible");
-                            if ($visibleHeaderBar.length > 0 && ko.dataFor($visibleHeaderBar[0])) {
-                                $b = ko.dataFor($visibleHeaderBar[0]).$b;
-                                $b && $b.triggerBuilderResizeEvent('hamburger menu show/hide status changed');
-                            }else if ($visibleRightDrawer.length > 0 && ko.dataFor($visibleRightDrawer[0])) {
-                                $b = ko.dataFor($visibleRightDrawer[0]).$b;
-                                $b && $b.triggerBuilderResizeEvent('hamburger menu show/hide status changed');
-                            }
-                            $("#omcHamburgerMenu").on("ojopen", function(event, offcanvas) {
-                                setTimeout(function(){
-                                    $b && $b.triggerBuilderResizeEvent('hamburger menu show/hide status changed');
-                                }, 100);
-                            });
-                            $("#omcHamburgerMenu").on("ojclose", function (event, offcanvas) {
-                                setTimeout(function(){
-                                    $b && $b.triggerBuilderResizeEvent('hamburger menu show/hide status changed');
-                                }, 100);
-                            });
-                        });
                         var logReceiver = dfu.getLogUrl();
                         //require(['emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils'], function(TargetSelectorUtils) {
                         //TargetSelectorUtils.registerComponents();
