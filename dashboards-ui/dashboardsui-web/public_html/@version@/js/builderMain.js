@@ -276,9 +276,6 @@ require(['knockout',
                     {
                         var logger = new _emJETCustomLogger();
                         var menuUtil = new menuModel();
-                        menuUtil.subscribeServiceMenuLoadedEvent(function(){
-                            $(window).trigger('resize');    //initialize content page width when hamburger menu enabled
-                        });
                         var logReceiver = dfu.getLogUrl();
                         //require(['emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils'], function(TargetSelectorUtils) {
                         //TargetSelectorUtils.registerComponents();
@@ -353,7 +350,8 @@ require(['knockout',
 				},
 				showEntitySelector: ko.observable(false),
 				entityContextParams: {
-				    readOnly: false
+				    readOnly: false,
+                                    onlyComposites: true
 				}
 			    };
 
