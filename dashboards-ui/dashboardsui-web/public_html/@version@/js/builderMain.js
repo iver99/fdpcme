@@ -256,18 +256,15 @@ require(['knockout',
                         location.href = "./error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_NO_SUBS_MSG";
                     }
                 });
-
                 Builder.initializeFromCookie();
                 new Builder.DashboardDataSource().loadDashboardData(dsbId, function (kodb) {
                     dashboard = kodb;
                     var isUnderSet = ko.unwrap(dashboard.type) === "SET" ? true : false;;
                     normalMode = new Builder.NormalEditorMode();
                     tabletMode = new Builder.TabletEditorMode();
-
                     mode = Builder.isSmallMediaQuery() ? tabletMode : normalMode;
                     timeSelectorModel = new Builder.TimeSelectorModel();
                     Builder.eagerLoadDahshboardTilesAtPageLoad(dfu, ko, normalMode, tabletMode, mode, isUnderSet, timeSelectorModel, targets);
-
                     require(['uifwk/js/util/df-util',
                         'uifwk/js/util/logging-util',
                         'uifwk/js/sdk/menu-util',
@@ -285,7 +282,27 @@ require(['knockout',
                             var logger = new _emJETCustomLogger();
                             var menuUtil = new menuModel();
                             menuUtil.subscribeServiceMenuLoadedEvent(function(){
-                                $(window).trigger('resize');    //initialize content page width when hamburger menu enabled
+                                var $b;
+                                $("#omcMenuNavList").addClass("df-computed-content-width");
+                                var $visibleHeaderBar = $(".dashboard-content:visible .head-bar-container");
+                                var $visibleRightDrawer = $(".dbd-left-panel:visible");
+                                if ($visibleHeaderBar.length > 0 && ko.dataFor($visibleHeaderBar[0])) {
+                                    $b = ko.dataFor($visibleHeaderBar[0]).$b;
+                                    $b && $b.triggerBuilderResizeEvent('hamburger menu show/hide status changed');
+                                }else if ($visibleRightDrawer.length > 0 && ko.dataFor($visibleRightDrawer[0])) {
+                                    $b = ko.dataFor($visibleRightDrawer[0]).$b;
+                                    $b && $b.triggerBuilderResizeEvent('hamburger menu show/hide status changed');
+                                }
+                                $("#omcHamburgerMenu").on("ojopen", function(event, offcanvas) {
+                                    setTimeout(function(){
+                                        $b && $b.triggerBuilderResizeEvent('hamburger menu show/hide status changed');
+                                    }, 100);
+                                });
+                                $("#omcHamburgerMenu").on("ojclose", function (event, offcanvas) {
+                                    setTimeout(function(){
+                                        $b && $b.triggerBuilderResizeEvent('hamburger menu show/hide status changed');
+                                    }, 100);
+                                });
                             });
                             var logReceiver = dfu.getLogUrl();
                             //require(['emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils'], function(TargetSelectorUtils) {
@@ -294,7 +311,6 @@ require(['knockout',
                             // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
                             // If you comment the line below, our current log calls will not be output!
                             logger.setLogLevel(oj.Logger.LEVEL_WARN);
-
                             window.onerror = function (msg, url, lineNo, columnNo, error)
                             {
                                 var msg = "Accessing " + url + " failed. " + "Error message: " + msg + ". Line: " + lineNo + ". Column: " + columnNo;
@@ -302,10 +318,8 @@ require(['knockout',
                                     msg = msg + ". Error: " + JSON.stringify(error.stack);
                                 }
                                 oj.Logger.error(msg, true);
-
                                 return false;
                             }
-
                             if (!ko.components.isRegistered('df-oracle-branding-bar')) {
                                 ko.components.register("df-oracle-branding-bar",{
                                     viewModel:{require:'uifwk/js/widgets/brandingbar/js/brandingbar'},
@@ -322,50 +336,45 @@ require(['knockout',
                                 viewModel: textwidget,
                                 template: {require: 'text!./widgets/textwidget/textwidget.html'}
                             });*/
-
                             if (!ko.components.isRegistered('df-oracle-dashboard-list')) {
                                 ko.components.register("df-oracle-dashboard-list",{
                                     viewModel:dashboardhome_impl,
                                     template:{require:'text!/emsaasui/emcpdfui/@version@/html/dashboardhome.html'}
                                 });
                             }
-
                             function DashboardTitleModel(dashboard) {
                                 var self = this;
                                 var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
                                 self.builderTitle = dfu_model.generateWindowTitle(dashboard.name(), null, null, getNlsString("DBS_HOME_TITLE_DASHBOARDS"));
                             }
-
-			function DashboardsetHeaderViewModel() {
-			    var self = this;
-			    self.userName = dfu.getUserName();
-			    self.tenantName = dfu.getTenantName();
-			    self.appId = "Dashboard";
-			    self.brandingbarParams = {
-				userName: self.userName,
-				tenantName: self.tenantName,
-				appId: self.appId,
-				isAdmin:true,
-				showGlobalContextBanner: ko.observable(false),
-                                omcHamburgerMenuOptIn: true,
-                                omcCurrentMenuId: menuUtil.OMCMenuConstants.GLOBAL_DASHBOARDS,
-                                showTimeSelector: ko.observable(false),
-				timeSelectorParams: {
-				    startDateTime: ko.observable(null),
-				    endDateTime: ko.observable(null),
-				    timePeriod: ko.observable("LAST_14_DAY"),
-                                    timePeriodsSet: "SHORT_TERM",
-                                    enableLatestOnCustomPanel: ko.observable(true),
-				    hideMainLabel: true,
-				    callbackAfterApply: null
-				},
-				showEntitySelector: ko.observable(false),
-				entityContextParams: {
-				    readOnly: false,
-                                    onlyComposites: true
-				}
-			    };
-
+                            function DashboardsetHeaderViewModel() {
+                                var self = this;
+                                self.userName = dfu.getUserName();
+                                self.tenantName = dfu.getTenantName();
+                                self.appId = "Dashboard";
+                                self.brandingbarParams = {
+                                    userName: self.userName,
+                                    tenantName: self.tenantName,
+                                    appId: self.appId,
+                                    isAdmin:true,
+                                    showGlobalContextBanner: ko.observable(false),
+                                    omcHamburgerMenuOptIn: true,
+                                    omcCurrentMenuId: menuUtil.OMCMenuConstants.GLOBAL_DASHBOARDS,
+                                    showTimeSelector: ko.observable(false),
+                                    timeSelectorParams: {
+                                        startDateTime: ko.observable(null),
+                                        endDateTime: ko.observable(null),
+                                        timePeriod: ko.observable("LAST_14_DAY"),
+                                        timePeriodsSet: "SHORT_TERM",
+                                        enableLatestOnCustomPanel: ko.observable(true),
+                                        hideMainLabel: true,
+                                        callbackAfterApply: null
+                                    },
+                                    showEntitySelector: ko.observable(false),
+                                    entityContextParams: {
+                                        readOnly: false
+                                    }
+                                };
                                 $("#headerWrapper").on("DOMSubtreeModified", function() {
                                     var height = $("#headerWrapper").height();
                                     if (!self.headerHeight){
@@ -387,30 +396,24 @@ require(['knockout',
                                     self.headerHeight = height;
                                 });
                             };
-
                             var dsbId = dfu.getUrlParam("dashboardId");
                             console.warn("TODO: validate valid dashboard id format");
-
                             ko.bindingHandlers.stopDataBinding = {
                                 init: function(elem, valueAccessor) {
                                         var value = ko.unwrap(valueAccessor());
                                         return {controlsDescendantBindings: value};
                                 }
                             };
-
                             //Builder.initializeFromCookie();
-
                             //$(document).ready(function () {
                                 //Check if uifwk css file has been loaded already or not, if not then load it
                                 if (!$('#dashboardMainCss').length) {
                                     //Append uifwk css file into document head
                                     $('head').append('<link id="dashboardMainCss" rel="stylesheet" href="/emsaasui/emcpdfui/@version@/css/dashboards-main.css" type="text/css"/>');
                                 }
-
                                 var headerViewModel = new DashboardsetHeaderViewModel();
                                 ko.applyBindings({}, $('#loading')[0]);  //to make text binding on loading work
                                 ko.applyBindings(headerViewModel, $('#headerWrapper')[0]);
-
                                 //new Builder.DashboardDataSource().loadDashboardData(dsbId, function (dashboard) {
                                     var targetSelectorNeeded;
                                     if(dashboard.enableEntityFilter&&(dashboard.enableEntityFilter()==="TRUE" || dashboard.enableEntityFilter()==="GC")) {
@@ -429,39 +432,8 @@ require(['knockout',
                                         ko.applyBindings(dashboardsetToolBarModel, document.getElementById('dbd-set-tabs'));
                                         dashboardsetToolBarModel.initializeDashboardset();
                                         //Builder.attachEagerLoadedDahshboardTilesAtPageLoad();
-
                                         $("#loading").hide();
-                                        $('#globalBody').show(function(){
-                                            if(!$("#hamburgerButton")[0]){
-                                                return; //hamburger menu disabled
-                                            }
-                                            var triggerBuilderResize = function(delayTime){
-                                                var $b;
-                                                if(!delayTime){
-                                                    delayTime = 100;
-                                                }
-                                                $("#omcMenuNavList").addClass("df-computed-content-width");
-                                                var $visibleHeaderBar = $(".dashboard-content:visible .head-bar-container");
-                                                var $visibleRightDrawer = $(".dbd-left-panel:visible");
-                                                if ($visibleHeaderBar.length > 0 && ko.dataFor($visibleHeaderBar[0])) {
-                                                    $b = ko.dataFor($visibleHeaderBar[0]).$b;
-                                                    $b && $b.triggerBuilderResizeEvent('hamburger menu show/hide status changed');
-                                                }else if ($visibleRightDrawer.length > 0 && ko.dataFor($visibleRightDrawer[0])) {
-                                                    $b = ko.dataFor($visibleRightDrawer[0]).$b;
-                                                    $b && $b.triggerBuilderResizeEvent('hamburger menu show/hide status changed');
-                                                }
-                                                setTimeout(function(){
-                                                    $b && $b.triggerBuilderResizeEvent('hamburger menu show/hide status changed');
-                                                }, delayTime);
-                                            };
-                                            $("#omcHamburgerMenu").on("ojopen", function(event, offcanvas) {
-                                                triggerBuilderResize();
-                                            });
-                                            $("#omcHamburgerMenu").on("ojclose", function (event, offcanvas) {
-                                                triggerBuilderResize();
-                                            });
-                                            $(window).trigger('resize');    //initialize content page width when hamburger menu enabled
-                                        });
+                                        $('#globalBody').show();
                                     });
                                 /*}, function(e) {
                                     console.log(e.errorMessage());
@@ -474,7 +446,6 @@ require(['knockout',
                             //});
                         }
                     );
-
                 }, function(e) {
                     console.log(e.errorMessage());
                     if (e.errorCode && e.errorCode() === 20001) {
