@@ -770,7 +770,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 $("#links_menu").slideToggle('normal');
                 item.stopImmediatePropagation();
             };
-
+            
             function injectHamburgerMenuComponent() {
                 //Check if hamburger menu has been created or not, if not create it
                 if (!$('#omcHamburgerMenu').length) {
@@ -779,15 +779,28 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     ko.applyBindings(self, hamburgerDiv[0]);
                 }
             }
-
+            
+            function triggerDashboardResizeEvent(message) {
+                if (window.selectedDashboardInst && window.selectedDashboardInst() && window.selectedDashboardInst().$b) {
+                    window.selectedDashboardInst().$b.triggerBuilderResizeEvent(message);
+                }
+                else if ($(".right-panel-toggler")[0] && ko.dataFor($(".right-panel-toggler")[0])) {
+                    var $b = ko.dataFor($(".right-panel-toggler")[0]).$b;
+                    $b && $b.triggerBuilderResizeEvent(message);
+                }
+                else {
+                    $(window).trigger('resize');
+                }
+            }
+            
             self.hamburgerMenuEnabled = omcHamburgerMenuOptIn ? true : false;
             self.isHamburgerMenuRegistered = ko.observable(false);
             if (omcHamburgerMenuOptIn) {
                 self.hamburgerBtnLabel = nls.BRANDING_BAR_HAMBURGER_BTN_LABEL;
                 self.menuParams = {'appId': self.appId, 'userName': self.userName, 'tenantName': self.tenantName, 'omcCurrentMenuId': params.omcCurrentMenuId};
                 if (!self.isHamburgerMenuRegistered()) {
-                    require(['ojs/ojnavigationlist', 'ojs/ojjsontreedatasource'], function () {
-                        //Register a Knockout component for hamburger menu
+                    require(['ojs/ojnavigationlist','ojs/ojjsontreedatasource'], function () {
+                    //Register a Knockout component for hamburger menu
                         var hamburgerVMPath = "uifwk/js/widgets/hamburger-menu/js/hamburger-menu";
                         var hamburgerTemplatePath = "uifwk/js/widgets/hamburger-menu/html/hamburger-menu.html";
                         if (!ko.components.isRegistered('omc-uifwk-hamburger-menu')) {
@@ -796,7 +809,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                                 template: {require: 'text!' + hamburgerTemplatePath}
                             });
                             self.isHamburgerMenuRegistered(true);
-                        }
+                        }     
                         injectHamburgerMenuComponent();
                     });
                 }
@@ -804,53 +817,111 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     self.isHamburgerMenuRegistered(true);
                     injectHamburgerMenuComponent();
                 }
+                
+                function resetCurrentHamburgerMenu() {
+                    //Show composite menu if it's called before hamburger menu finished loading
+                    if (window._uifwk && window._uifwk.compositeMenuName && window._uifwk.compositeMenuJson 
+                            && window._uifwk.stayInComposite && !window._uifwk.isCompositeMenuShown) {
+                        menuUtil.showCompositeObjectMenu(window._uifwk.compositeMenuParentId,
+                                                        window._uifwk.compositeMenuName, 
+                                                        window._uifwk.compositeMenuJson, 
+                                                        window._uifwk.compositeMenuCollapseCallback);
+                    }
+                    //Set current menu item if specified by API call
+                    if (window._uifwk && window._uifwk.currentOmcMenuItemId) {
+                        menuUtil.setCurrentMenuItem(window._uifwk.currentOmcMenuItemId, window._uifwk.underOmcAdmin);
+                    }
+                    else {
+                        //Set current menu item if specified from branding bar params
+                        var selectedMenuId = params.omcCurrentMenuId;
+                        if (selectedMenuId) {
+                            menuUtil.setCurrentMenuItem(selectedMenuId);
+                        }
+                    }
+                }
+                
+                (function() {
+                    if (!window._uifwk) {
+                        window._uifwk = {};
+                    }
+                    var beforePrint = function() {
+                        window._uifwk.isUnderPrint = true;
+                    };
 
+                    var afterPrint = function() {
+                        window._uifwk.isUnderPrint = false;
+                    };
+
+                    if (window.matchMedia) {
+                        var mediaQueryList = window.matchMedia('print');
+                        mediaQueryList.addListener(function(mql) {
+                            if (mql.matches) {
+                                beforePrint();
+                            } else {
+                                afterPrint();
+                            }
+                        });
+                    }
+
+                    window.onbeforeprint = beforePrint;
+                    window.onafterprint = afterPrint;
+
+                }());
+                
                 self.xlargeScreen = oj.ResponsiveKnockoutUtils.createMediaQueryObservable('(min-width: 1440px)');
 
-                self.xlargeScreen.subscribe(function (isXlarge) {
-                    if (!isXlarge) {
-                        if ($("#omcHamburgerMenu").hasClass("oj-offcanvas-open")) {
+                self.xlargeScreen.subscribe(function(isXlarge){
+                    if (window._uifwk && (window._uifwk.isUnderPrint || window._uifwk.resizeTriggeredByPrint)) {
+                        return;
+                    }
+                    if(!isXlarge){
+                        if($("#omcHamburgerMenu").hasClass("oj-offcanvas-open")){
                             oj.OffcanvasUtils.close({
-                                "edge": "start",
-                                "displayMode": "push",
-                                "selector": "#omcHamburgerMenu"
-                            });
+                                    "edge": "start",
+                                    "displayMode": "push",
+                                    "selector": "#omcHamburgerMenu"
+                                });
                         }
-                    } else {
-                        if (!$("#omcHamburgerMenu").hasClass("oj-offcanvas-open")) {
+                    }else{
+                        if(!$("#omcHamburgerMenu").hasClass("oj-offcanvas-open")){
                             oj.OffcanvasUtils.toggle({
-                                "edge": "start",
-                                "displayMode": "push",
-                                "selector": "#omcHamburgerMenu",
-                                "autoDismiss": "none"
-                            });
-                        } else if ($("#omcHamburgerMenu").hasClass("oj-offcanvas-overlay")) {
-                            oj.OffcanvasUtils.close({
-                                "edge": "start",
-                                "displayMode": "overlay",
-                                "selector": "#omcHamburgerMenu",
-                                "autoDismiss": "focusLoss"
-                            });
-                            setTimeout(function () {
-                                oj.OffcanvasUtils.open({
                                     "edge": "start",
                                     "displayMode": "push",
                                     "selector": "#omcHamburgerMenu",
                                     "autoDismiss": "none"
                                 });
-                            }, 500);
+                            resetCurrentHamburgerMenu();
+                        }else if($("#omcHamburgerMenu").hasClass("oj-offcanvas-overlay")){
+                                oj.OffcanvasUtils.close({
+                                    "edge": "start",
+                                    "displayMode": "overlay",
+                                    "selector": "#omcHamburgerMenu",
+                                    "autoDismiss": "focusLoss"
+                                });
+                                setTimeout(function(){
+                                        oj.OffcanvasUtils.open({
+                                            "edge": "start",
+                                            "displayMode": "push",
+                                            "selector": "#omcHamburgerMenu",
+                                            "autoDismiss": "none"
+                                        });
+                                        resetCurrentHamburgerMenu();
+                                },500);
                         }
                     }
                 });
 
-                self.toggleHamburgerMenu = function () {
-                    return oj.OffcanvasUtils.toggle({
-                        "edge": "start",
-                        "displayMode": self.xlargeScreen() ? "push" : "overlay",
-                        //                      "content": "#main-container",
-                        "selector": "#omcHamburgerMenu",
-                        "autoDismiss": self.xlargeScreen() ? "none" : "focusLoss"
-                    });
+                self.toggleHamburgerMenu = function() {
+                    oj.OffcanvasUtils.toggle({
+                            "edge": "start",
+                            "displayMode": self.xlargeScreen() ? "push" : "overlay",
+    //                      "content": "#main-container",
+                            "selector": "#omcHamburgerMenu",
+                            "autoDismiss": self.xlargeScreen() ? "none" : "focusLoss"
+                        });
+                    if($("#omcHamburgerMenu").hasClass("oj-offcanvas-open")) {
+                        resetCurrentHamburgerMenu();
+                    }
                 };
 
                 var menuUtil = new menuModel();
@@ -858,57 +929,67 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     window._uifwk = {};
                 }
                 if (!window._uifwk.obbMenuLoadedListenerRegistered) {
-                    menuUtil.subscribeServiceMenuLoadedEvent(function () {
-                        $("#omcHamburgerMenu").on("ojopen", function (event, offcanvas) {
-                            if (offcanvas.displayMode === "push")
-                                $("#offcanvasInnerContainer").width(document.body.clientWidth - 250);
-                        });
-                        $("#omcHamburgerMenu").on("ojclose", function (event, offcanvas) {
+                menuUtil.subscribeServiceMenuLoadedEvent(function(){
+                    $("#omcHamburgerMenu").on("ojopen", function(event, offcanvas) {
+                        if(offcanvas.displayMode === "push") {
+                            $("#offcanvasInnerContainer").width(document.body.clientWidth-250);
+                            triggerDashboardResizeEvent('Hamburger menu opened.');
+                        }});
+                        
+                    $("#omcHamburgerMenu").on("ojclose", function(event, offcanvas) {
+                        $("#offcanvasInnerContainer").width(document.body.clientWidth);
+                        triggerDashboardResizeEvent('Hamburger menu closed.');
+                    });
+                    $(window).resize(function() {
+                        if (window._uifwk.isUnderPrint) {
+                            window._uifwk.resizeTriggeredByPrint = true;
+                        }
+                        else {
+                            window._uifwk.resizeTriggeredByPrint = false;
+                        }
+                        if ($("#omcHamburgerMenu").hasClass("oj-offcanvas-open") && !$("#omcHamburgerMenu").hasClass("oj-offcanvas-overlay")) {
+                            $("#offcanvasInnerContainer").width(document.body.clientWidth - 250);
+                        } else {
                             $("#offcanvasInnerContainer").width(document.body.clientWidth);
-                        });
-                        $(window).resize(function () {
-                            if ($("#omcHamburgerMenu").hasClass("oj-offcanvas-open") && !$("#omcHamburgerMenu").hasClass("oj-offcanvas-overlay")) {
-                                $("#offcanvasInnerContainer").width(document.body.clientWidth - 250);
-                            } else {
-                                $("#offcanvasInnerContainer").width(document.body.clientWidth);
-                            }
-                        });
+                        }
+                    });
 
-                        if (self.xlargeScreen()) {
-                            $((function () {
-                                oj.OffcanvasUtils.open({
+                    if(self.xlargeScreen()){
+                        $((function(){
+                            oj.OffcanvasUtils.open({
                                     "edge": "start",
                                     "displayMode": "push",
                                     "selector": "#omcHamburgerMenu",
                                     "autoDismiss": "none"
                                 });
-                            })());
+                            triggerDashboardResizeEvent('Hamburger menu opened.');
+                        })());
+                    }
+                    
+                    //Show composite menu if it's called before hamburger menu finished loading
+                    if (window._uifwk && window._uifwk.compositeMenuName && window._uifwk.compositeMenuJson) {
+                        menuUtil.showCompositeObjectMenu(window._uifwk.compositeMenuParentId,
+                                                        window._uifwk.compositeMenuName, 
+                                                        window._uifwk.compositeMenuJson, 
+                                                        window._uifwk.compositeMenuCollapseCallback);
+                    }
+                    
+                    //Set current menu item if specified by API call
+                    if (window._uifwk && window._uifwk.currentOmcMenuItemId) {
+                        menuUtil.setCurrentMenuItem(window._uifwk.currentOmcMenuItemId, window._uifwk.underOmcAdmin);
+                    }
+                    else {
+                        //Set current menu item if specified from branding bar params
+                        var selectedMenuId = params.omcCurrentMenuId;
+                        if (selectedMenuId) {
+                            menuUtil.setCurrentMenuItem(selectedMenuId);
                         }
-
-                        //Show composite menu if it's called before hamburger menu finished loading
-                        if (window._uifwk && window._uifwk.compositeMenuName && window._uifwk.compositeMenuJson) {
-                            menuUtil.showCompositeObjectMenu(window._uifwk.compositeMenuParentId,
-                                window._uifwk.compositeMenuName,
-                                window._uifwk.compositeMenuJson,
-                                window._uifwk.compositeMenuCollapseCallback);
-                        }
-
-                        //Set current menu item if specified by API call
-                        if (window._uifwk && window._uifwk.currentOmcMenuItemId) {
-                            menuUtil.setCurrentMenuItem(window._uifwk.currentOmcMenuItemId, window._uifwk.underOmcAdmin);
-                        }
-                        else {
-                            //Set current menu item if specified from branding bar params
-                            var selectedMenuId = params.omcCurrentMenuId;
-                            if (selectedMenuId) {
-                                menuUtil.setCurrentMenuItem(selectedMenuId);
-                            }
-                        }
-                    });
+                    }
+                });
                     window._uifwk.obbMenuLoadedListenerRegistered = true;
                 }
             }
-
+            
             /**
              * Notifications button click handler
              */
@@ -1135,7 +1216,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                             }
                             else {
                                 displayMessages.unshift(message);
-                                hiddenMessages.unshift(displayMessages.pop());
+                                hiddenMessages.unshift(displayMessages.pop()); 
                             }
                         }
                     }
