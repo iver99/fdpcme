@@ -8,7 +8,7 @@ import java.util.List;
  * Created by chehao on 6/4/2017 10:08 PM.
  */
 public class SearchModel {
-    private Date creationDate;
+    private String creationDate;
     private BigInteger id;
     private String description;
     private String owner;
@@ -40,11 +40,11 @@ public class SearchModel {
         this.name = name;
     }
 
-    public Date getCreationDate() {
+    public String getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(Date creationDate) {
+    public void setCreationDate(String creationDate) {
         this.creationDate = creationDate;
     }
 

@@ -782,6 +782,7 @@ public class DashboardAPI extends APIBase
 			String categoryHref = categoryLink.getHref() + "/" + searchModel.getCategory().getId();
 			categoryResponse = rc.get(categoryHref, tenantName,((RegistryLookupUtil.VersionedLink) searchLink).getAuthToken());
 			categoryModel = ju.fromJson(categoryResponse, CategoryModel.class);
+			LOGGER.info("Retrieved from SSF API category data is {}", categoryResponse);
 			LOGGER.info("It takes {}ms to retrieve category data from SavedSearch API", (System.currentTimeMillis()- start2));
 			if(categoryResponse == null || categoryModel == null){
 				LOGGER.error("categoryResponse or categoryModel is empty or null!!");
@@ -831,13 +832,14 @@ public class DashboardAPI extends APIBase
 			LOGGER.error(e);
 		}
 		LOGGER.info("Add new Widget into dashboard api tooks {}ms", (System.currentTimeMillis()-start));
-		return Response.ok(dbd.toString()).build();
+		return Response.ok(getJsonUtil().toJson(dbd)).build();
 
 	}
 
 	private void addNewTile(SearchModel searchModel, CategoryModel categoryModel, EmsDashboard ed) {
 		List<EmsDashboardTile> tileList = ed.getDashboardTileList();
-//            LOGGER.info("origin tile list size is {}",tileList.size());
+		LOGGER.info("#1 origin tile list size is {}",tileList.size());
+		LOGGER.info("#2 origin tile list size is {}",ed.getDashboardTileList().size());
 		EmsDashboardTile newTile = new EmsDashboardTile();
 		newTile.setTileId(IdGenerator.getTileId(ZDTContext.getRequestId(), 1));//confirm
 		newTile.setTitle(searchModel.getName());
@@ -845,9 +847,10 @@ public class DashboardAPI extends APIBase
 		newTile.setWidgetName(searchModel.getName());
 		newTile.setWidgetDescription(searchModel.getDescription());
 		newTile.setWidgetOwner(searchModel.getOwner());
-		newTile.setWidgetCreationTime(searchModel.getCreationDate().toString());//format
+		LOGGER.info("creation date is {}",searchModel.getCreationDate());
+		newTile.setWidgetCreationTime(String.valueOf(searchModel.getCreationDate()));//format
 		newTile.setOwner(searchModel.getOwner());
-		newTile.setCreationDate(searchModel.getCreationDate());//format
+		newTile.setCreationDate(DateUtil.getGatewayTime());//format
 		newTile.setDashboard(ed);
 		newTile.setIsMaximized(0);// default is not maximized
 		newTile.setPosition(0);//if dashboard contains no widget, set it to 0
@@ -884,12 +887,14 @@ public class DashboardAPI extends APIBase
 		newTile.setRow(0);//if dashboard contains no widget, set it to 0
 		newTile.setWidth(12);
 		newTile.setHeight(2);
-//		newTile.setWidgetSource(1);
+		newTile.setWidgetSource(1);
 		newTile.setType(0); //DEFAULT
 		//dashboard is empty
 		if(tileList == null | tileList.isEmpty()){
             tileList = new ArrayList<>();
 			tileList.add(newTile);
+			ed.setDashboardTileList(tileList);
+			LOGGER.info("Adding the only one tile into tile list..");
         }else{
             //calculate the widget position
             int row = calculateWidgetRowColumn(tileList).getRow();
@@ -900,6 +905,8 @@ public class DashboardAPI extends APIBase
             newTile.setPosition(position);
             tileList.add(newTile);
         }
+		LOGGER.info("#1 After handling tile list size is {}", tileList.size());
+		LOGGER.info("#2 After handling tile list size is {}", ed.getDashboardTileList().size());
 	}
 
 	/**
