@@ -10,9 +10,8 @@ ext.restDocOutputDir = "${restDocRootDir}"
 
 //Security client version
 ext.emaasSecurityClientVersion = getDependentSdkVersion('com.oracle.emaas.emcpsf.sdk', 'security-client', '1.+')
-ext.emaasAPIGWVersion = getDependentSdkVersion('com.oracle.emaas.emcpgw.sdk', 'gateway-client', '1.+')
 ext.emaasRegistryLookupClientVersion = getDependentSdkVersion('com.oracle.emaas.emcpsm', 'registry-lookup-client', '1.+');
-
+ext.emaasGatewayClientVersion = getDependentSdkVersion('com.oracle.emaas.emcpgw.sdk', 'gateway-client', '1.+');
 tasks.withType(JavaCompile) {
         options.compilerArgs << "-Xlint:unchecked"
     }
@@ -134,7 +133,7 @@ dependencies {
 	
 	providedCompile(group: 'com.oracle.emaas.emcpsm', name:'registry-lookup-client', version:"${emaasRegistryLookupClientVersion}") { transitive = false }
 	providedCompile(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2') { transitive = false }
-	providedCompile (group: 'com.oracle.emaas.emcpgw.sdk', name: 'gateway-client', version: "${emaasAPIGWVersion}"){ transitive = false }
+	providedCompile (group: 'com.oracle.emaas.emcpgw.sdk', name: 'gateway-client', version: "${emaasGatewayClientVersion}") { transitive = false }
 
 	compile(group: 'com.oracle.emaas.emcpsf.sdk', name: 'security-client', version: "${emaasSecurityClientVersion}") { transitive = false }
 
