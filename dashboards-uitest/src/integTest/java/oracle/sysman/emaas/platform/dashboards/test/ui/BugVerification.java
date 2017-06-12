@@ -335,5 +335,69 @@ public class BugVerification extends LoginAndLogout
 		//verify the Explore Data menu is disabled
 		webd.getLogger().info("Verify the Explore Data menu is not diplayed in the page");
 		Assert.assertFalse(webd.isDisplayed("id=" + DashBoardPageId.EXPLOREDATABTNID), "Explore Data menu is displayed in dashboard");
-        }        
+        }  
+    
+    @Test(alwaysRun = true)
+    public void testEMCPDF_4039()
+    {
+    	//Initialize the test
+    	initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+    	webd.getLogger().info("Start the test case: testEMCPDF_4039");
+    		
+    	//reset the home page
+    	webd.getLogger().info("Reset all filter options in the home page");
+    	DashboardHomeUtil.resetFilterOptions(webd);
+
+    	//switch to Grid View
+    	webd.getLogger().info("Switch to grid view");
+    	DashboardHomeUtil.gridView(webd);
+    		
+    	//check if hamburger menu enabled
+    	if(DashBoardUtils.isHamburgerMenuEnabled(webd))
+    	{
+    		//expand sub menu for Administrator
+    		webd.getLogger().info("Expand submenu of Admin");
+    		BrandingBarUtil.expandSubMenu(webd, BrandingBarUtil.ROOT_MENU_ADMIN);
+    		String currenMenuHeader = BrandingBarUtil.getCurrentMenuHeader(webd);
+    		Assert.assertEquals(currenMenuHeader.trim(), "Administration");
+    			
+    		//below to verify the fix for EMCPDF-4039
+    		webd.getLogger().info("Hide the hamburger menu");
+    		Assert.assertFalse(BrandingBarUtil.toggleHamburgerMenu(webd) , "Hamburger menu should be hidden");
+    		webd.getLogger().info("Display the hamburger menu");
+    		Assert.assertTrue(BrandingBarUtil.toggleHamburgerMenu(webd) , "Hamburger menu should be displayed");
+    		webd.getLogger().info("Check the current hamburger menu");
+    		currenMenuHeader = BrandingBarUtil.getCurrentMenuHeader(webd);
+    		Assert.assertEquals(currenMenuHeader.trim(), BrandingBarUtil.ROOT_MENU_TITLE);
+    			
+    		//back to the dashboard home page
+    		webd.getLogger().info("Navigate to Dashboard Home page");
+    		BrandingBarUtil.clickMenuItem(webd, BrandingBarUtil.ROOT_MENU_DASHBOARDS);
+    			
+    		//open APM oob dashboard
+    		webd.getLogger().info("Open APM oob dashboard");
+    		DashboardHomeUtil.selectDashboard(webd, "Application Performance Monitoring");
+
+			if(DashBoardUtils.isHamburgerMenuEnabled(webd))
+			{
+				webd.getLogger().info("Verify in APM page");    			
+		    		//below to verify the fix for EMCPDF-4039
+		    		webd.getLogger().info("Hide the hamburger menu");
+		    		Assert.assertFalse(BrandingBarUtil.toggleHamburgerMenu(webd) , "Hamburger menu should be hidden");
+		    		webd.getLogger().info("Display the hamburger menu");
+		    		Assert.assertTrue(BrandingBarUtil.toggleHamburgerMenu(webd) , "Hamburger menu should be displayed");
+		    		webd.getLogger().info("Check the current hamburger menu");
+		    		currenMenuHeader = BrandingBarUtil.getCurrentMenuHeader(webd);
+		    		Assert.assertEquals(currenMenuHeader.trim(), "APM");
+			}
+			else
+			{
+				webd.getLogger().info("Hamburger menu is not enabled in APM, do need to verify the fix for EMCPDF-4039");
+			}		
+    	}
+    	else
+    	{
+    		webd.getLogger().info("Hamburger menu is not enabled, do need to verify the fix for EMCPDF-4039");
+    	}
+    }
 }
