@@ -4,11 +4,9 @@ import oracle.sysman.emaas.platform.dashboards.test.ui.util.DashBoardUtils;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.LoginAndLogout;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.PageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_190;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.GlobalContextUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.WelcomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
@@ -67,7 +65,7 @@ public class BugVerification extends LoginAndLogout
 		LoginAndLogout.logoutMethod();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testEMCPDF_2040()
 	{
 		//Initialize the test
@@ -238,7 +236,7 @@ public class BugVerification extends LoginAndLogout
 				"It is NOT the home page!");
 	}*/
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testEMPCDF_2970()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -259,7 +257,7 @@ public class BugVerification extends LoginAndLogout
 		webd.getLogger().info("complete testing in testEMPCDF_2970");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testEMPCDF_812_1()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -295,7 +293,7 @@ public class BugVerification extends LoginAndLogout
 
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testEMPCDF_832_1()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -325,22 +323,21 @@ public class BugVerification extends LoginAndLogout
 		webd.getLogger().info("complete testing in testEMPCDF_832");
 	}
 
-        @Test
-        public void testEMCPDF_3120()
-        {
-                //Initialize the test
-                //login the dashboard with emaastesttenantnoita and onboard OCS Service only
-                initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emcsadmin", "emaastesttenantnoita");
-                WaitUtil.waitForPageFullyLoaded(webd);
+	@Test(alwaysRun = true)
+    public void testEMCPDF_3120()
+    {
+		//Initialize the test
+		//login the dashboard with emaastesttenantnoita and onboard OCS Service only
+		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emcsadmin", "emaastesttenantnoita");
+		WaitUtil.waitForPageFullyLoaded(webd);
 		webd.getLogger().info("Start the test case: testEMCPDF_3120");
                 
 		//verify the Explore Data menu is disabled
 		webd.getLogger().info("Verify the Explore Data menu is not diplayed in the page");
 		Assert.assertFalse(webd.isDisplayed("id=" + DashBoardPageId.EXPLOREDATABTNID), "Explore Data menu is displayed in dashboard");
-        }        
+	}   
 
-
-	@Test
+	@Test(alwaysRun = true)
 	public void testEMCPDF_3660() throws Exception
 	{
 		int newdsb_idx = 1;
@@ -454,13 +451,16 @@ public class BugVerification extends LoginAndLogout
 			{
 				webd.getLogger().info("Verify in APM page");    			
 		    		//below to verify the fix for EMCPDF-4039
+				if(BrandingBarUtil.isHamburgerMenuDisplayed(webd))
+				{
 		    		webd.getLogger().info("Hide the hamburger menu");
 		    		Assert.assertFalse(BrandingBarUtil.toggleHamburgerMenu(webd) , "Hamburger menu should be hidden");
-		    		webd.getLogger().info("Display the hamburger menu");
-		    		Assert.assertTrue(BrandingBarUtil.toggleHamburgerMenu(webd) , "Hamburger menu should be displayed");
-		    		webd.getLogger().info("Check the current hamburger menu");
-		    		currenMenuHeader = BrandingBarUtil.getCurrentMenuHeader(webd);
-		    		Assert.assertEquals(currenMenuHeader.trim(), "APM");
+				}
+		    	webd.getLogger().info("Display the hamburger menu");
+		    	Assert.assertTrue(BrandingBarUtil.toggleHamburgerMenu(webd) , "Hamburger menu should be displayed");
+		    	webd.getLogger().info("Check the current hamburger menu");
+		    	currenMenuHeader = BrandingBarUtil.getCurrentMenuHeader(webd);
+		    	Assert.assertEquals(currenMenuHeader.trim(), "APM");
 			}
 			else
 			{
