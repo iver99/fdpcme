@@ -483,6 +483,7 @@ public class DashBoardPageId
         public static final String ENTSEL_ENTITY_PILL_BYTEXT = "//div[@id=\"emaas-appheader-globalcxt\"]//pill//span[text()=\"{0}\"]";
         public static final String ENTSEL_PILL_BYCONTAINSTEXT = "//div[@id=\"emaas-appheader-globalcxt\"]//pill//span[contains(text(),\"{0}\")]";
         public static final String ENTSEL_PILL_CONTAINSTEXT_BYINDEX = "(//div[@id=\"emaas-appheader-globalcxt\"]//pill)[{0}]//span[contains(text(),\"{1}\")]";
+        public static final String ENTSEL_SUGGESTIONLIST = "//div[@id='emcta-ctxtSel_suggestPopup']//li[contains(@class,\"oj-listbox-result-selectable\")]/div[@role='option']";
 
 	private DashBoardPageId()
 	{

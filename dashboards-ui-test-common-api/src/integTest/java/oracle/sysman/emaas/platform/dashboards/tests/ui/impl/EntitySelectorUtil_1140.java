@@ -138,7 +138,7 @@ public class EntitySelectorUtil_1140 extends EntitySelectorUtil_Version implemen
                 pill.click();
                 
                 //Write the new entity name
-                searchText(driver, logger, entityName, entityType, category);
+                searchText(driver, logger, entityName);
                 
                 //Select first option matching entity name, type and category
                 selectFirstSuggestionByCategory(driver, logger, category, entityName, entityType, true);
@@ -150,7 +150,7 @@ public class EntitySelectorUtil_1140 extends EntitySelectorUtil_Version implemen
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IEntitySelectorUtil#searchText(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
 	@Override
-	public void searchText(WebDriver driver, Logger logger, final String entityName, final String entityType, final String category)
+	public void searchText(WebDriver driver, Logger logger, final String entityName)
 	{
 		//Write text in entity selector
 		logger.log(Level.INFO, "Waiting for Entity Selector input to be clickable");
@@ -186,6 +186,13 @@ public class EntitySelectorUtil_1140 extends EntitySelectorUtil_Version implemen
 		logger.log(Level.INFO, "Results for ''{0}'' are available", entityName);
 
 	}
+        
+        @Override
+	public void searchText(WebDriver driver, Logger logger, final String entityName, final String entityType, final String category)
+        {
+                Assert.assertTrue(false, "This method is not available in the current version");
+                logger.info("Method not available in the current version");
+        }
 
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IEntitySelectorUtil#selectCompositeEntity(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
@@ -194,7 +201,7 @@ public class EntitySelectorUtil_1140 extends EntitySelectorUtil_Version implemen
 	public void selectCompositeEntity(WebDriver driver, Logger logger, String entityName, String entityType)
 	{
 		//search text in entity selector
-		searchText(driver, logger, entityName, entityType, CATEGORY_COMPOSITE);
+		searchText(driver, logger, entityName);
 
 		//select the composite entity found with that description
 		selectFirstSuggestionByCategory(driver, logger, CATEGORY_COMPOSITE, entityName, entityType, false);
@@ -208,7 +215,7 @@ public class EntitySelectorUtil_1140 extends EntitySelectorUtil_Version implemen
 	public void selectEntity(WebDriver driver, Logger logger, String entityName, String entityType)
 	{
 		//search text in entity selector
-		searchText(driver, logger, entityName, entityType, CATEGORY_ENTITIES);
+		searchText(driver, logger, entityName);
 
 		//select the entity found with that description
 		selectFirstSuggestionByCategory(driver, logger, CATEGORY_ENTITIES, entityName, entityType, false);

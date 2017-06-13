@@ -158,6 +158,12 @@ public class EntitySelectorUtil_1160 extends EntitySelectorUtil_1150
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IEntitySelectorUtil#searchText(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
+        @Override
+	public void searchText(WebDriver driver, Logger logger, final String entityName)
+        {
+            searchText(driver, logger, entityName, null, null);
+        }
+        
 	@Override
 	public void searchText(WebDriver driver, Logger logger, final String entityName, final String entityType, final String category)
 	{
@@ -166,7 +172,15 @@ public class EntitySelectorUtil_1160 extends EntitySelectorUtil_1150
 		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), UNTIL_TIMEOUT);
 		WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By
 				.xpath(DashBoardPageId.EntSelTypeAheadFieldInput)));
-		logger.log(Level.INFO, "Searching value ''{0}'' in Entity Selector", entityName);
+                String suggestionsXpath = DashBoardPageId.ENTSEL_SUGGESTIONLIST;
+                if (entityType != null && category != null) {
+                    logger.log(Level.INFO, "Searching name ''{0}'' of type ''{0}'' in Entity Selector", new Object[]{entityName, entityType});
+                    suggestionsXpath = category.equals(CATEGORY_COMPOSITE) ? MessageFormat.format(DashBoardPageId.EntSelSuggestionByCompositeCategory,
+                                    entityType) : MessageFormat.format(DashBoardPageId.EntSelSuggestionByEntitiesCategory, entityType);
+                } else {
+                    logger.log(Level.INFO, "Searching value ''{0}'' in Entity Selector", entityName);
+                }
+                
 		element.click();
                 //Wait until suggestions are displayed before typing the text to avoid timing issues
                 wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(DashBoardPageId.EntSelSuggestionPopup)));
@@ -180,7 +194,7 @@ public class EntitySelectorUtil_1160 extends EntitySelectorUtil_1150
 		//Wait until the results are displayed
                 logger.log(Level.INFO, "Waiting for results to be displayed for text ''{0}''", entityName);
                 WaitUtil.waitForPageFullyLoaded(driver);
-                waitForSuggestionsRefreshed(driver, logger, entityName, entityType, category);
+                waitForSuggestionsRefreshed(driver, logger, entityName, suggestionsXpath);
                 
 		driver.takeScreenShot();
 		logger.log(Level.INFO, "Results for ''{0}'' are available", entityName);
@@ -357,9 +371,7 @@ public class EntitySelectorUtil_1160 extends EntitySelectorUtil_1150
                 return correct;
         }
         
-        private void waitForSuggestionsRefreshed(WebDriver driver, Logger logger, String entityName, String entityType, String category) {
-                final String xpath = category.equals(CATEGORY_COMPOSITE) ? MessageFormat.format(DashBoardPageId.EntSelSuggestionByCompositeCategory,
-                                    entityType) : MessageFormat.format(DashBoardPageId.EntSelSuggestionByEntitiesCategory, entityType);
+        private void waitForSuggestionsRefreshed(WebDriver driver, Logger logger, String entityName, final String xpath) {
                 final String trimmed = entityName.replaceAll(" +", "");
                 
                 logger.log(Level.INFO, "Looking for value in typeahead: {0}", trimmed);
