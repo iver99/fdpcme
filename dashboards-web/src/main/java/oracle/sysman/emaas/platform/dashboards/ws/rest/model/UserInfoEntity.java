@@ -14,12 +14,14 @@ public class UserInfoEntity implements Serializable {
     private static final long serialVersionUID = 7643686542659781331L;
 
     private List<String> userRoles;
+    private String userGrants;
 
     public UserInfoEntity() {
     }
 
-    public UserInfoEntity(List<String> userRoles) {
-        this.userRoles = userRoles;
+    public UserInfoEntity(List<String> userRoles, String userGrants) {
+    	this.userRoles = userRoles;
+        this.userGrants = userGrants;
     }
 
     public String getCurrentUser(){
@@ -31,5 +33,12 @@ public class UserInfoEntity implements Serializable {
             userRoles = PrivilegeChecker.getUserRoles(TenantContext.getCurrentTenant(), UserContext.getCurrentUser());
         }
         return userRoles;
+    }
+    
+    public String getUserGrants() {
+        if (userGrants == null) { 
+        	userGrants = PrivilegeChecker.getUserGrants(TenantContext.getCurrentTenant(), UserContext.getCurrentUser());
+        }
+        return userGrants;
     }
 }

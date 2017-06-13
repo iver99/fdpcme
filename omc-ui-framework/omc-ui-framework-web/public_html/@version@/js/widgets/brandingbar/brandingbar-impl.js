@@ -760,6 +760,19 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 }
             }
             
+            function triggerDashboardResizeEvent(message) {
+                if (window.selectedDashboardInst && window.selectedDashboardInst() && window.selectedDashboardInst().$b) {
+                    window.selectedDashboardInst().$b.triggerBuilderResizeEvent(message);
+                }
+                else if ($(".right-panel-toggler")[0] && ko.dataFor($(".right-panel-toggler")[0])) {
+                    var $b = ko.dataFor($(".right-panel-toggler")[0]).$b;
+                    $b && $b.triggerBuilderResizeEvent(message);
+                }
+                else {
+                    $(window).trigger('resize');
+                }
+            }
+            
             self.hamburgerMenuEnabled = omcHamburgerMenuOptIn ? true : false;
             self.isHamburgerMenuRegistered = ko.observable(false);
             if (omcHamburgerMenuOptIn) {
@@ -785,9 +798,62 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     injectHamburgerMenuComponent();
                 }
                 
+                function resetCurrentHamburgerMenu() {
+                    //Show composite menu if it's called before hamburger menu finished loading
+                    if (window._uifwk && window._uifwk.compositeMenuName && window._uifwk.compositeMenuJson 
+                            && window._uifwk.stayInComposite && !window._uifwk.isCompositeMenuShown) {
+                        menuUtil.showCompositeObjectMenu(window._uifwk.compositeMenuParentId,
+                                                        window._uifwk.compositeMenuName, 
+                                                        window._uifwk.compositeMenuJson, 
+                                                        window._uifwk.compositeMenuCollapseCallback);
+                    }
+                    //Set current menu item if specified by API call
+                    if (window._uifwk && window._uifwk.currentOmcMenuItemId) {
+                        menuUtil.setCurrentMenuItem(window._uifwk.currentOmcMenuItemId, window._uifwk.underOmcAdmin);
+                    }
+                    else {
+                        //Set current menu item if specified from branding bar params
+                        var selectedMenuId = params.omcCurrentMenuId;
+                        if (selectedMenuId) {
+                            menuUtil.setCurrentMenuItem(selectedMenuId);
+                        }
+                    }
+                }
+                
+                (function() {
+                    if (!window._uifwk) {
+                        window._uifwk = {};
+                    }
+                    var beforePrint = function() {
+                        window._uifwk.isUnderPrint = true;
+                    };
+
+                    var afterPrint = function() {
+                        window._uifwk.isUnderPrint = false;
+                    };
+
+                    if (window.matchMedia) {
+                        var mediaQueryList = window.matchMedia('print');
+                        mediaQueryList.addListener(function(mql) {
+                            if (mql.matches) {
+                                beforePrint();
+                            } else {
+                                afterPrint();
+                            }
+                        });
+                    }
+
+                    window.onbeforeprint = beforePrint;
+                    window.onafterprint = afterPrint;
+
+                }());
+                
                 self.xlargeScreen = oj.ResponsiveKnockoutUtils.createMediaQueryObservable('(min-width: 1440px)');
 
                 self.xlargeScreen.subscribe(function(isXlarge){
+                    if (window._uifwk && (window._uifwk.isUnderPrint || window._uifwk.resizeTriggeredByPrint)) {
+                        return;
+                    }
                     if(!isXlarge){
                         if($("#omcHamburgerMenu").hasClass("oj-offcanvas-open")){
                             oj.OffcanvasUtils.close({
@@ -795,8 +861,6 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                                     "displayMode": "push",
                                     "selector": "#omcHamburgerMenu"
                                 });
-                            var $b = $(".right-panel-toggler:visible")[0] && ko.dataFor($(".right-panel-toggler:visible")[0]).$b;
-                            $b && $b.triggerBuilderResizeEvent('Hamburger menu is closed.');
                         }
                     }else{
                         if(!$("#omcHamburgerMenu").hasClass("oj-offcanvas-open")){
@@ -806,8 +870,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                                     "selector": "#omcHamburgerMenu",
                                     "autoDismiss": "none"
                                 });
-                            var $b = $(".right-panel-toggler:visible")[0] && ko.dataFor($(".right-panel-toggler:visible")[0]).$b;
-                            $b && $b.triggerBuilderResizeEvent('Hamburger menu is opened.');
+                            resetCurrentHamburgerMenu();
                         }else if($("#omcHamburgerMenu").hasClass("oj-offcanvas-overlay")){
                                 oj.OffcanvasUtils.close({
                                     "edge": "start",
@@ -822,8 +885,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                                             "selector": "#omcHamburgerMenu",
                                             "autoDismiss": "none"
                                         });
-                                        var $b = $(".right-panel-toggler:visible")[0] && ko.dataFor($(".right-panel-toggler:visible")[0]).$b;
-                                        $b && $b.triggerBuilderResizeEvent('Hamburger menu is opened.');
+                                        resetCurrentHamburgerMenu();
                                 },500);
                         }
                     }
@@ -837,6 +899,9 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                             "selector": "#omcHamburgerMenu",
                             "autoDismiss": self.xlargeScreen() ? "none" : "focusLoss"
                         });
+                    if($("#omcHamburgerMenu").hasClass("oj-offcanvas-open")) {
+                        resetCurrentHamburgerMenu();
+                    }
                 };
 
                 var menuUtil = new menuModel();
@@ -846,17 +911,22 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 if (!window._uifwk.obbMenuLoadedListenerRegistered) {
                 menuUtil.subscribeServiceMenuLoadedEvent(function(){
                     $("#omcHamburgerMenu").on("ojopen", function(event, offcanvas) {
-                        if(offcanvas.displayMode === "push")
+                        if(offcanvas.displayMode === "push") {
                             $("#offcanvasInnerContainer").width(document.body.clientWidth-250);
-                            var $b = $(".right-panel-toggler:visible")[0] && ko.dataFor($(".right-panel-toggler:visible")[0]).$b;
-                            $b && $b.triggerBuilderResizeEvent('Hamburger menu is opened.');
-                        });
+                            triggerDashboardResizeEvent('Hamburger menu opened.');
+                        }});
+                        
                     $("#omcHamburgerMenu").on("ojclose", function(event, offcanvas) {
                         $("#offcanvasInnerContainer").width(document.body.clientWidth);
-                        var $b = $(".right-panel-toggler:visible")[0] && ko.dataFor($(".right-panel-toggler:visible")[0]).$b;
-                        $b && $b.triggerBuilderResizeEvent('Hamburger menu is closed.');
+                        triggerDashboardResizeEvent('Hamburger menu closed.');
                     });
                     $(window).resize(function() {
+                        if (window._uifwk.isUnderPrint) {
+                            window._uifwk.resizeTriggeredByPrint = true;
+                        }
+                        else {
+                            window._uifwk.resizeTriggeredByPrint = false;
+                        }
                         if ($("#omcHamburgerMenu").hasClass("oj-offcanvas-open") && !$("#omcHamburgerMenu").hasClass("oj-offcanvas-overlay")) {
                             $("#offcanvasInnerContainer").width(document.body.clientWidth - 250);
                         } else {
@@ -872,9 +942,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                                     "selector": "#omcHamburgerMenu",
                                     "autoDismiss": "none"
                                 });
+                            triggerDashboardResizeEvent('Hamburger menu opened.');
                         })());
-                        var $b = $(".right-panel-toggler:visible")[0] && ko.dataFor($(".right-panel-toggler:visible")[0]).$b;
-                        $b && $b.triggerBuilderResizeEvent('Hamburger menu is opened.');
                     }
                     
                     //Show composite menu if it's called before hamburger menu finished loading
