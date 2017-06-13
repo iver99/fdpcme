@@ -248,13 +248,15 @@ public class ZDTAPI
             @HeaderParam(value = "X-REMOTE-USER") String userTenant, @QueryParam("type") @DefaultValue("incremental")  String compareType,
             @QueryParam("before") int skipMinutes) {
 		logger.info("incoming call from zdt comparator to do row comparing");
+	//	logger.info("tenantIDParam="+tenantIdParam);
+	//	logger.info("userTenant="+userTenant);
 		String message = "";
 		int status = 200;
 		if (compareType == null) {
 			compareType = "incremental";
 		}
 		if (skipMinutes <= 0) {
-			skipMinutes = 5;    // to check: what is the accurate default skipping time for comparator?
+			skipMinutes = 30;    // to check: what is the accurate default skipping time for comparator?
 		}
 		String maxComparedDate = null;
 		if (skipMinutes > 0) {
@@ -271,7 +273,11 @@ public class ZDTAPI
 				logger.info("comparedNum={}",comparedDataNum);
 				int totalRow = result.getInstance1().getTotalRowNum() + result.getInstance2().getTotalRowNum();
 				logger.info("totalRow={}",totalRow);
-				double percen = (double)comparedDataNum/(double)totalRow;
+				double percen = 0;
+				if (comparedDataNum != 0) {
+					percen = (double)comparedDataNum/(double)totalRow;
+				}
+				
 				DecimalFormat df = new DecimalFormat("#.######");
 				double percentage = Double.parseDouble(df.format(percen));
 				Date currentUtcDate = getCurrentUTCTime();

@@ -31,10 +31,12 @@ public class DataManagerTest
     @Test
     public void testGetALLDashboardsCount(@Mocked final PersistenceManager persistenceManager, 
 			@Mocked final EntityManager entityManager, @Mocked final Query query){
+    	final List<Object> data = new ArrayList<Object>();
+		data.add(123);
         new Expectations(){
             {
-                query.getSingleResult();
-                result = 1;
+                query.getResultList();
+                result = data;
             }
         };
         dataManager.getAllDashboardsCount(entityManager, null);
@@ -44,10 +46,12 @@ public class DataManagerTest
     @Test
     public void testGetAllFavouriteCount(@Mocked final PersistenceManager persistenceManager, 
 			@Mocked final EntityManager entityManager, @Mocked final Query query){
+    	final List<Object> data = new ArrayList<Object>();
+		data.add(123);
         new Expectations(){
             {
-                query.getSingleResult();
-                result = 1;
+                query.getResultList();
+                result = data;
             }
         };
          dataManager.getAllUserOptionsCount(entityManager, null);
@@ -57,10 +61,12 @@ public class DataManagerTest
     @Test
     public void testGetAllPreferencessCount(@Mocked final PersistenceManager persistenceManager, 
 			@Mocked final EntityManager entityManager, @Mocked final Query query){
+    	final List<Object> data = new ArrayList<Object>();
+		data.add(123);
         new Expectations(){
             {
-                query.getSingleResult();
-                result = 1;
+                query.getResultList();
+                result = data;
             }
         };
         dataManager.getAllPreferencessCount(entityManager, null);
@@ -70,10 +76,12 @@ public class DataManagerTest
     @Test
     public void testGetAllDashboardSetCount(@Mocked final PersistenceManager persistenceManager, 
 			@Mocked final EntityManager entityManager, @Mocked final Query query){
+    	final List<Object> data = new ArrayList<Object>();
+		data.add(123);
         new Expectations(){
             {
-                query.getSingleResult();
-                result = 1;
+                query.getResultList();
+                result = data;
             }
         };
         dataManager.getAllDashboardSetCount(entityManager, null);
@@ -83,10 +91,12 @@ public class DataManagerTest
     @Test
     public void testGetAllTileCount(@Mocked final PersistenceManager persistenceManager, 
 			@Mocked final EntityManager entityManager, @Mocked final Query query){
+    	final List<Object> data = new ArrayList<Object>();
+		data.add(123);
         new Expectations(){
             {
-                query.getSingleResult();
-                result = 1;
+                query.getResultList();
+                result = data;
             }
         };
         dataManager.getAllTileCount(entityManager, null);
@@ -96,10 +106,12 @@ public class DataManagerTest
     @Test
     public void testGetAllTileParamCount(@Mocked final PersistenceManager persistenceManager, 
 			@Mocked final EntityManager entityManager, @Mocked final Query query){
+    	final List<Object> data = new ArrayList<Object>();
+		data.add(123);
         new Expectations(){
             {
-                query.getSingleResult();
-                result = 1;
+                query.getResultList();
+                result = data;
             }
         };
         dataManager.getAllTileParamsCount(entityManager, null);

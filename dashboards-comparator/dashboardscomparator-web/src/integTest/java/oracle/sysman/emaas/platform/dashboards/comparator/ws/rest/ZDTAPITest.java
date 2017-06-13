@@ -120,7 +120,7 @@ public class ZDTAPITest {
         instancesComapredCounts.setInstance1(counts);
         instancesComapredCounts.setInstance2(counts);
     }
-    
+   
     @Test
     public void testCompareRows1() {
     	
@@ -162,7 +162,7 @@ public class ZDTAPITest {
     	
     	zdtapi.compareRows(tenant, userTenant,"full", 30);
     }
-  
+ 
     
     @Test
     public void testGetCurrentTime() {

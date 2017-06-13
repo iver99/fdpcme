@@ -125,7 +125,7 @@ public class ZDTAPI extends APIBase
 					dashboardSetCount,tileCount,tileParamCount);
 		
 		} catch (Exception e) {
-			logger.error("error while getting count of tables");
+			logger.error("error while getting count of tables:",e);
 		} finally {
 			if (em != null) {
 				em.close();

@@ -298,6 +298,7 @@ public class DashboardRowsComparator extends AbstractComparator
 			logger.warn("Checking dashboard OMC instance table rows: null/empty entity retrieved.");
 			throw new ZDTException(ZDTErrorConstants.NULL_TABLE_ROWS_ERROR_CODE, ZDTErrorConstants.NULL_TABLE_ROWS_ERROR_MESSAGE);
 		}
+		logger.info(tre.getEmsDashboard()==null?"nullRows":tre.getEmsDashboard().size());
 		return tre;
 	}
 	
@@ -314,8 +315,10 @@ public class DashboardRowsComparator extends AbstractComparator
 		rc.setHeader(RestClient.X_REMOTE_USER,userTenant);
 		
 		char[] authToken = LookupManager.getInstance().getAuthorizationToken();
+		logger.info("start to get counts data");
 		//String response = rc.get(lk.getHref(),tenantId,new String(authToken));
 		String response = rc.get(url,tenantId,new String(authToken));
+		logger.info("get counts data:"+response);
 		JsonUtil ju = JsonUtil.buildNormalMapper();
 		CountsEntity ze = ju.fromJson(response, CountsEntity.class);
 		if (ze == null) {
