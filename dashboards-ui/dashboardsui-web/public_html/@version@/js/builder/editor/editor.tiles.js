@@ -19,7 +19,11 @@ define(['knockout',
             self.top = ko.observable(0);
             self.cssWidth = ko.observable(10);
             self.cssHeight = ko.observable(45);
-            self.hideTitle = ko.observable("false");
+            if(data.type && data.type === "TEXT_WIDGET") {
+                self.hideTitle = ko.observable("true");
+            }else {
+                self.hideTitle = ko.observable("false");
+            }
             self.cssStyle = ko.computed(function() {
                 return "position: absolute; left: " + self.left() + "px; top: " + self.top() + "px; width: " + self.cssWidth() + "px; height: " + self.cssHeight() + "px;";
             });

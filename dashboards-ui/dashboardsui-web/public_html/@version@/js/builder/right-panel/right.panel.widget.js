@@ -24,7 +24,7 @@ function (ko, $, oj, dfu) {
                             var textWidget = {
                                     WIDGET_UNIQUE_ID: Builder.getGuid(),
                                     WIDGET_NAME: "Text Widget",
-                                    WIDGET_DESCRIPTION: "Text Widget Demo",
+                                    WIDGET_DESCRIPTION: "",
                                     WIDGET_OWNER: "ORACLE",
                                     WIDGET_CREATION_TIME: "2017-05-07T09:44:14:123Z",
                                     WIDGET_SOURCE: 0,
@@ -39,7 +39,7 @@ function (ko, $, oj, dfu) {
                                     PROVIDER_ASSET_ROOT: "assetRoot",
                                     WIDGET_EDITABLE: "true",
                                     content: "<b>Sample text</b>",
-                                    type: "TEXT_WIDGET",
+                                    type: "TEXT_WIDGET"
                                 };
                             widgets.push(textWidget);
                             self.widgets([]);
