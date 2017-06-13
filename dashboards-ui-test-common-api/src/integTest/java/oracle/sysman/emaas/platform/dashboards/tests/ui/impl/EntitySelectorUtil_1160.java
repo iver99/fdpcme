@@ -293,10 +293,10 @@ public class EntitySelectorUtil_1160 extends EntitySelectorUtil_1150
         {
                 logger.log(Level.INFO, "Waiting for the type ahead input to disappear");
                 //Wait for typeahead input to dissappear
-                driver.waitForNotElementPresent("xpath=" + DashBoardPageId.EntSelTypeAheadFieldInput);
+                WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), UNTIL_TIMEOUT);
+                wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath(DashBoardPageId.EntSelTypeAheadFieldInput)));
                 
                 logger.log(Level.INFO, "Waiting for the edited pill to be updated");
-                WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), UNTIL_TIMEOUT);
                 final WebDriver finalDriver = driver;
                 final Logger finalLogger = logger;
                 //make sure the amount of pills didn't change
