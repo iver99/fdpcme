@@ -992,8 +992,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 		wait.until(ExpectedConditions.visibilityOf(dashboardSetContainer));
 		WaitUtil.waitForPageFullyLoaded(driver);
-		driver.takeScreenShot();
-
+		
 		List<WebElement> navs = driver.getWebDriver().findElements(By.cssSelector(DashBoardPageId_190.DASHBOARDSETNAVSCSS));
 		if (navs == null || navs.isEmpty()) {
 			throw new NoSuchElementException(
@@ -1007,8 +1006,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 				nav.click();
 				break;
 			}
-		}
-		driver.takeScreenShot();
+		}		
 		driver.getLogger().info("DashboardBuilderUtil.selectDashboardInsideSet completed");
 	}
 
