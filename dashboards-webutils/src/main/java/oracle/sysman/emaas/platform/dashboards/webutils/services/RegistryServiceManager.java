@@ -211,6 +211,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	private static final String NAV_STATIC_OMCSTATUS = NAV_API_BASE + "omcstatus";
 	private static final String NAV_WIDGET_NOTIFY = NAV_API_BASE + "widgetnotification";
 	private static final String NAV_SSF_LIFECYCLE = NAV_API_BASE + "ssflifecycle.ntf";
+	private static final String NAV_CACHE = NAV_API_BASE + "cache";
 
 	public static final ObjectName WLS_RUNTIME_SERVICE_NAME;
 
@@ -472,6 +473,9 @@ public class RegistryServiceManager implements ApplicationServiceManager
 			}
 			if (applicationUrlHttps != null) {
 				links.add(new Link().withRel("ssf.lifecycle.notify").withHref(applicationUrlHttps + NAV_SSF_LIFECYCLE));
+			}
+			if (applicationUrlHttp != null) {
+				links.add(new Link().withRel("dashboards.cache").withHref(applicationUrlHttp + NAV_CACHE));
 			}
 			InfoManager.getInstance().getInfo().setLinks(links);
 
