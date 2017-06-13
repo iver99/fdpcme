@@ -339,6 +339,30 @@ define(['knockout',
                     errorCallback && errorCallback(error);
                 });
             };
+            
+                self.handleAddTextWidget = function () {
+                    var textWidget = {
+                        WIDGET_UNIQUE_ID: Builder.getGuid(),
+                        WIDGET_NAME: "Text Widget",
+                        WIDGET_DESCRIPTION: "",
+                        WIDGET_OWNER: "ORACLE",
+                        WIDGET_CREATION_TIME: "2017-05-07T09:44:14:123Z",
+                        WIDGET_SOURCE: 0,
+                        WIDGET_GROUP_NAME: "Dashboard",
+                        WIDGET_SCREENSHOT_HREF: null,
+                        WIDGET_SUPPORT_TIME_CONTROL: 1,
+                        WIDGET_KOC_NAME: "text-widget",
+                        WIDGET_TEMPLATE: "/emsaasui/emcpdfui/@version@/js/widgets/textwidget/textwidgetdemo.html",
+                        WIDGET_VIEWMODEL: "/emsaasui/emcpdfui/@version@/js/widgets/textwidget/js/textwidgetdemo.js",
+                        PROVIDER_NAME: "Dashboard",
+                        PROVIDER_VERSION: "1.0",
+                        PROVIDER_ASSET_ROOT: "assetRoot",
+                        WIDGET_EDITABLE: "true",
+                        content: '<span style="color:#D3D3D3"><span style="font-size:14px"><em><span style="font-family:arial,helvetica,sans-serif"><strong>Start typing...</strong></span></em></span></span>', //"<b>Sample text</b>",
+                        type: "TEXT_WIDGET"
+                    };
+                    self.tilesViewModel.appendNewTile(textWidget.WIDGEET_NAME, textWidget.WIDGEET_DESCRIPTION, 4, 2, ko.toJS(textWidget));
+                }
                   
             var prefUtil = new pfu(dfu.getPreferencesUrl(), dfu.getDashboardsRequestHeader());
             var addFavoriteLabel = getNlsString('DBS_BUILDER_BTN_FAVORITES_ADD');

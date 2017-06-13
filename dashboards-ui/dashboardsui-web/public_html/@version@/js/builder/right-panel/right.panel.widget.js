@@ -21,27 +21,6 @@ function (ko, $, oj, dfu) {
                 widgetDS.loadWidgetData(
                         req && (typeof req.term === "string") ? req.term : self.keyword(),
                         function (widgets) {
-                            var textWidget = {
-                                    WIDGET_UNIQUE_ID: Builder.getGuid(),
-                                    WIDGET_NAME: "Text Widget",
-                                    WIDGET_DESCRIPTION: "",
-                                    WIDGET_OWNER: "ORACLE",
-                                    WIDGET_CREATION_TIME: "2017-05-07T09:44:14:123Z",
-                                    WIDGET_SOURCE: 0,
-                                    WIDGET_GROUP_NAME: "Dashboard",
-                                    WIDGET_SCREENSHOT_HREF: null,
-                                    WIDGET_SUPPORT_TIME_CONTROL: 1,
-                                    WIDGET_KOC_NAME: "text-widget",
-                                    WIDGET_TEMPLATE: "/emsaasui/emcpdfui/@version@/js/widgets/textwidget/textwidgetdemo.html",
-                                    WIDGET_VIEWMODEL: "/emsaasui/emcpdfui/@version@/js/widgets/textwidget/js/textwidgetdemo.js",
-                                    PROVIDER_NAME: "Dashboard",
-                                    PROVIDER_VERSION: "1.0",
-                                    PROVIDER_ASSET_ROOT: "assetRoot",
-                                    WIDGET_EDITABLE: "true",
-                                    content: "<b>Sample text</b>",
-                                    type: "TEXT_WIDGET"
-                                };
-                            widgets.push(textWidget);
                             self.widgets([]);
                             if (widgets && widgets.length > 0) {
                                 for (var i = 0; i < widgets.length; i++) {

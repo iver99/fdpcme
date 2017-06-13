@@ -145,6 +145,15 @@ body, html {
             margin: 8px 8px 8px 8px;
             vertical-align: top;
         }
+        
+        .dashboardTextBtn{
+            .dbd-toolbar-icon-text{
+                height: 30px;
+                &:before{
+                    height: 30px;
+                }
+            }
+        }
 
 
         .df-date-time-picker {
@@ -305,6 +314,10 @@ body, html {
 
 .dbd-toolbar-icon-options:before {
   content: url(../images/func_gear_16_ena.png);
+}
+
+.dbd-toolbar-icon-text:before {
+  content: "\f031";
 }
 
 .dbd-toolbar-icon-edit:before,.fa-pencil-df:before {
