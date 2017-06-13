@@ -113,6 +113,11 @@ public class ZDTAPI extends APIBase
 		try {
 			DashboardServiceFacade dsf = new DashboardServiceFacade();
 			em = dsf.getEntityManager();
+		/*	if (maxComparedData == null) {
+				Date currentDate = new Date();
+				SimpleDateFormat format = new SimpleDateFormat("YYYY-MM-DD hh:mm:ss");
+				maxComparedData = format.format(currentDate);
+			}*/
 			long dashboardCount = DataManager.getInstance().getAllDashboardsCount(em,maxComparedData);
 			long userOptionsCount = DataManager.getInstance().getAllUserOptionsCount(em,maxComparedData);
 			long preferenceCount = DataManager.getInstance().getAllPreferencessCount(em,maxComparedData);
