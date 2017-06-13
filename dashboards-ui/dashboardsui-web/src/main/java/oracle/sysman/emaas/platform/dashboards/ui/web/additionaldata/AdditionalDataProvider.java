@@ -105,7 +105,7 @@ public class AdditionalDataProvider
 
 			final String dashboardIdStr = httpReq.getParameter("dashboardId");
 			BigInteger dashboardId = new BigInteger(dashboardIdStr);
-			return DashboardDataAccessUtil.getCombinedData(tenant, userTenant, httpReq.getHeader("referer"), sesExp, dashboardId);
+			return DashboardDataAccessUtil.getCombinedData(tenant, userTenant, httpReq, sesExp, dashboardId);
 		}
 		return null;
 	}

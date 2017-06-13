@@ -18,6 +18,7 @@ import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonF
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil.VersionedLink;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsResourceBundle;
 import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
 
 import org.testng.Assert;
@@ -29,6 +30,11 @@ import org.testng.annotations.Test;
  */
 public class MetadataRetrieverTest
 {
+    private static final String MOCK_OOB_NLS = "[{"
+            + "\"languageCode\": \"en\","
+            + "\"propertiesFile\": \"UI\\\\ Gallery=Hello My Gallery\\nLine\\\\ Chart=Hello My Chart\\n\","
+            + "\"lastModificationDate\": 1497251485787"
+            + "}]";
     private static final String MOCK_OOB_DB = "[{" + 
             "    \"id\": \"1000\"," + 
             "    \"name\": \"PERFORMANCE_ANALYTICS_DATABASE_NAME\"," + 
@@ -110,6 +116,28 @@ public class MetadataRetrieverTest
         Assert.assertEquals(oob.getTileList().get(0).getParameters().size(), 1);
         Assert.assertEquals(oob.getSubDashboards().size(), 1);
         Assert.assertEquals(oob.getSubDashboards().get(0).getDashboardId().toString(), "10001");
+    }
+
+    @Test(groups = { "s1" })
+    public void testGetResourceBundleByService(@Mocked final RegistryLookupUtil rlu, 
+            @Mocked final VersionedLink link, @Mocked final RestClient rc) throws CommonFunctionalException {
+        new Expectations() {
+            {
+                RegistryLookupUtil.getServiceInternalLink(anyString, anyString);
+                result = link;
+                link.getHref();
+                result = "http";
+                rc.get(anyString, null, anyString);
+                result = MOCK_OOB_NLS;
+                
+            }
+        };
+        
+        MetadataRetriever retriever = new MetadataRetriever();
+        List<EmsResourceBundle> nlsList = retriever.getResourceBundleByService("TargetAnalytics");
+        Assert.assertNotNull(nlsList);
+        Assert.assertNotNull(nlsList.get(0));
+        Assert.assertEquals(nlsList.get(0).getLanguageCode(), "en");
     }
 
 }

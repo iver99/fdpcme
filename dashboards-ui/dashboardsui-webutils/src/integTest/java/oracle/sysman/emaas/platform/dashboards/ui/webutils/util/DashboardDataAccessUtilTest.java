@@ -2,6 +2,8 @@ package oracle.sysman.emaas.platform.dashboards.ui.webutils.util;
 
 import java.math.BigInteger;
 
+import javax.servlet.http.HttpServletRequest;
+
 import mockit.Expectations;
 import mockit.Mocked;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.RegistryLookupUtil.VersionedLink;
@@ -16,7 +18,7 @@ import org.testng.annotations.Test;
 public class DashboardDataAccessUtilTest {
     @Test(groups = { "s2" })
     public void testGetDashboardData(@Mocked final RegistryLookupUtil anyRegistryLookupUtil, @Mocked final VersionedLink anyLink,
-                                     @Mocked final RestClient anyRestClient) {
+                                     @Mocked final RestClient anyRestClient, @Mocked final HttpServletRequest anyRequest) {
         final String dashboard = "{dashboardId: 1, name: 'test'}";
         new Expectations() {
             {
@@ -26,9 +28,11 @@ public class DashboardDataAccessUtilTest {
                 result = "http://test";
                 anyRestClient.get(anyString, anyString, anyString);
                 result = dashboard;
+                anyRequest.getHeader(anyString);
+                result = "something";
             }
         };
-        String dsb = DashboardDataAccessUtil.getCombinedData("tenant", "tenant.user", null, null, BigInteger.ONE);
+        String dsb = DashboardDataAccessUtil.getCombinedData("tenant", "tenant.user", anyRequest, null, BigInteger.ONE);
         Assert.assertEquals(dsb, dashboard);
     }
 

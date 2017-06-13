@@ -2,6 +2,7 @@ package oracle.sysman.emaas.platform.dashboards.ui.webutils.util;
 
 import java.math.BigInteger;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.MediaType;
 
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
@@ -19,7 +20,7 @@ public class DashboardDataAccessUtil {
     private static final Logger LOGGER = LogManager.getLogger(DashboardDataAccessUtil.class);
 
     public static String getCombinedData(String tenantIdParam,
-            String userTenant, String referer, String sessionExp,BigInteger dashboardId) {
+            String userTenant, HttpServletRequest httpReq, String sessionExp,BigInteger dashboardId) {
     	long start = System.currentTimeMillis();
         Link dashboardsLink = RegistryLookupUtil.getServiceInternalLink("Dashboard-API", "1.0+", "static/dashboards.service", null);
         if (dashboardsLink == null || StringUtils.isEmpty(dashboardsLink.getHref())) {
@@ -34,7 +35,10 @@ public class DashboardDataAccessUtil {
         rc.setHeader(RestClient.SESSION_EXP, sessionExp);
         //EMCPDF-3448, FEB20: 3 admin link dif found in farm jobs
         rc.setHeader(RestClient.OAM_REMOTE_USER, userTenant);
-        rc.setHeader(RestClient.REFERER, referer);
+        rc.setHeader(RestClient.REFERER, httpReq.getHeader("referer"));
+        // support NLS
+        rc.setHeader("Accept-Language", httpReq.getHeader("Accept-Language"));
+        
         rc.setAccept(MediaType.TEXT_PLAIN);
         try{
         	String response = rc.get(dashboardHref, tenantIdParam, ((VersionedLink) dashboardsLink).getAuthToken());

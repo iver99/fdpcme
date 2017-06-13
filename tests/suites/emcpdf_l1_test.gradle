@@ -139,6 +139,7 @@ task DEVTest_ws(type:EMTest){
     include "oracle/sysman/emaas/platform/dashboards/ws/rest/SSFLifeCycleNotificationAPITest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/CacheAPITest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/OMCStatusAPITest.class"
+	include "oracle/sysman/emaas/platform/dashboards/ws/rest/MetadataRefreshAPITest.class"
 	
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/zdt/*.class"
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/loggingconfig/*.class"
@@ -160,6 +161,7 @@ task DEVTest_ws(type:EMTest){
 
 task DEVTest(type:EMTest,dependsOn: DEVTest_ws){
 	//***************below are dashboards-core project test cases***************//
+	include "oracle/sysman/emaas/platform/dashboards/core/ResourceBundleManagerTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/DashboardExcepionsTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/DashboardManagerTest_S2.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/DBConnectionManagerTest.class"
@@ -199,7 +201,7 @@ task DEVUiTest(type:EMTest,dependsOn: DEVTest){
 	include "oracle/sysman/emaas/platform/dashboards/webutils/services/*.class"
 	include "oracle/sysman/emaas/platform/dashboards/targetmodel/services/*.class"
 	include "oracle/sysman/emaas/platform/dashboards/webutils/timer/*.class"
-
+	include "oracle/sysman/emaas/platform/dashboards/webutils/metadata/*.class"
 
  	useRestAssured=true
 	ext.set("testType", "unit")

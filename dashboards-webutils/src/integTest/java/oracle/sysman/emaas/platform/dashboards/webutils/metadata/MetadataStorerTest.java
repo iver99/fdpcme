@@ -19,12 +19,13 @@ import javax.persistence.EntityManager;
 
 import mockit.Expectations;
 import mockit.Mocked;
+import oracle.sysman.emaas.platform.dashboards.core.ResourceBundleManager;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.core.model.DashboardApplicationType;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsResourceBundle;
 
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 /**
@@ -33,10 +34,21 @@ import org.testng.annotations.Test;
  */
 public class MetadataStorerTest
 {
-    List<Dashboard> oobList = new ArrayList<Dashboard>();
+    private List<EmsResourceBundle> initNls() {
+        List<EmsResourceBundle> nlsList = new ArrayList<EmsResourceBundle>();
+        EmsResourceBundle rb1 = new EmsResourceBundle();
+        nlsList.add(rb1);
+        rb1.setLanguageCode("en");
+        rb1.setCountryCode("US");
+        rb1.setLastModificationDate(new Date());
+        rb1.setServiceName("serviceName");
+        rb1.setServiceVersion("1.0+");
+        rb1.setPropertiesFile("something");
+        return nlsList;
+    }
     
-    @BeforeMethod
-    public void initTest() {
+    private List<Dashboard> initOOBDashboards() {
+        List<Dashboard> oobList = new ArrayList<Dashboard>();
         Dashboard oobDashboard1 = new Dashboard();
         oobList.add(oobDashboard1);
         oobDashboard1.setDashboardId(new BigInteger("2"));
@@ -59,6 +71,7 @@ public class MetadataStorerTest
         List<Dashboard> subDashboards = new ArrayList<Dashboard>();
         subDashboards.add(oobDashboard1);
         oobDashboard2.setSubDashboards(subDashboards);
+        return oobList;
     }
     
     @Test(groups = { "s1" })
@@ -74,8 +87,21 @@ public class MetadataStorerTest
                 result = null;
             }
         };
-        initTest();
         MetadataStorer storer = new MetadataStorer();
-        storer.storeOobDashboards(oobList);
+        storer.storeOobDashboards(initOOBDashboards());
+    }
+    
+    @Test(groups = { "s1" })
+    public void testStoreResourceBundle(@Mocked final ResourceBundleManager rbm, @Mocked final DashboardServiceFacade dsf,
+            @Mocked final EntityManager em)
+    {
+        new Expectations() {
+            {
+                ResourceBundleManager.getInstance();
+                result = rbm;
+            }
+        };
+        MetadataStorer storer = new MetadataStorer();
+        storer.storeResourceBundle(initNls());
     }
 }

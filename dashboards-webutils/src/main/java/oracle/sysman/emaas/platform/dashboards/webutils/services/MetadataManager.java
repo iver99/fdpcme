@@ -17,6 +17,7 @@ import java.util.List;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsResourceBundle;
 import oracle.sysman.emaas.platform.dashboards.webutils.metadata.MetadataRetriever;
 import oracle.sysman.emaas.platform.dashboards.webutils.metadata.MetadataStorer;
 import oracle.sysman.emaas.platform.dashboards.webutils.wls.lifecycle.ApplicationServiceManager;
@@ -34,16 +35,16 @@ public class MetadataManager implements ApplicationServiceManager
 {
     private static final Logger LOGGER = LogManager.getLogger(MetadataManager.class);
     //TODO fetch all services by rel name
-    private static final List<String> oobProvider = 
-            Arrays.asList("TargetAnalytics", "LogAnalyticsProcessor", "ApmDataServer", "CosFacadeService");
+    private static final List<String> oobProvider = Arrays.asList(MetadataRetriever.SERVICENAME_APM,
+            MetadataRetriever.SERVICENAME_ITA, MetadataRetriever.SERVICENAME_LA, MetadataRetriever.SERVICENAME_ORCHESTRATION,
+            MetadataRetriever.SERVICENAME_SECURITY_ANALYTICS, MetadataRetriever.SERVICENAME_UDE);
     /* (non-Javadoc)
      * @see oracle.sysman.emaas.platform.dashboards.webutils.wls.lifecycle.ApplicationServiceManager#getName()
      */
     @Override
     public String getName()
     {
-        // TODO Auto-generated method stub
-        return null;
+        return "Metadata Manager Service";
     }
 
     /* (non-Javadoc)
@@ -53,26 +54,32 @@ public class MetadataManager implements ApplicationServiceManager
     public void postStart(ApplicationLifecycleEvent evt) throws Exception
     {
         LOGGER.info("Entry: MetadataManager.postStart");
+        MetadataRetriever metadataRetriever = new MetadataRetriever();
+        MetadataStorer metadataStorer = new MetadataStorer();
+        
         for(String serviceName : oobProvider) {
             // Load OOB Dashboard from other services
             List<Dashboard> oobList = new ArrayList<Dashboard>();
-            
-            MetadataRetriever oobRetriever = new MetadataRetriever();
             try {
-                oobList = oobRetriever.getOobDashboardsByService(serviceName);
+                oobList = metadataRetriever.getOobDashboardsByService(serviceName);
             } catch (CommonFunctionalException e) {
                 LOGGER.error("Error when retrieving OOB from " + serviceName + " : " + e.getLocalizedMessage());
             }
             
-            MetadataStorer oobStorer = new MetadataStorer();
             try {
-                oobStorer.storeOobDashboards(oobList);
+                metadataStorer.storeOobDashboards(oobList);
             } catch (DashboardException e) {
                 LOGGER.error("Error when storing OOB into database for " + serviceName + " : " + e.getLocalizedMessage());
             }
             
             // Load resource bundle for OOB metadata from other services
-            // TODO api.refreshNLS(serviceName);
+            List<EmsResourceBundle> rbList = new ArrayList<EmsResourceBundle>();
+            try {
+                rbList = metadataRetriever.getResourceBundleByService(serviceName);
+            } catch (CommonFunctionalException e) {
+                LOGGER.error("Error when retrieving resource bundles from " + serviceName + " : " + e.getLocalizedMessage());
+            }
+            metadataStorer.storeResourceBundle(rbList);
         }
     }
 

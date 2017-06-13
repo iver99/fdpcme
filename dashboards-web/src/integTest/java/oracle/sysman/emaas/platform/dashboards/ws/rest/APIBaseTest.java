@@ -1,6 +1,7 @@
 package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
 import java.math.BigInteger;
+import java.util.Locale;
 
 import mockit.Expectations;
 import mockit.Mocked;
@@ -28,7 +29,6 @@ public class APIBaseTest {
 
     APIBase apiBase;
 
-    @SuppressWarnings("unused")
     @Mocked TenantIdProcessor tenantIdProcessor;
 
     @BeforeMethod
@@ -48,10 +48,10 @@ public class APIBaseTest {
     }
 
     @Test
-    public void testClearUserContext(@SuppressWarnings("unused") @Mocked final UserContext userCtx, @SuppressWarnings("unused")@Mocked final TenantContext tenantCtx) throws Exception {
+    public void testClearUserContext(@Mocked final UserContext userCtx, @Mocked final TenantContext tenantCtx) throws Exception {
         new Expectations() {
             {
-                UserContext.clearCurrentUser();
+                UserContext.clear();
                 TenantContext.clearCurrentUser();
             }
         };
@@ -136,7 +136,12 @@ public class APIBaseTest {
     public void testInitializeUserContextCorrect() throws Exception {
         apiBase.initializeUserContext("tenantopc01", "tenant01.emcsadmin");
     }
-
+    
+    @Test
+    public void testInitializeUserContext() throws Exception {
+        apiBase.initializeUserContext("tenantopc01", "tenant01.emcsadmin", Locale.CHINA);
+        assertEquals(UserContext.getLocale(), Locale.CHINA);
+    }
 
     @Test
     public void testInfoInteractionLogAPIIncomingCall() throws Exception {
@@ -154,7 +159,7 @@ public class APIBaseTest {
     }
 
     @Test
-    public void testUpdateDashboardHrefCorrect(@SuppressWarnings("unused")@Mocked final DashboardAPIUtil dashboardAPIUtil) throws Exception {
+    public void testUpdateDashboardHrefCorrect(@Mocked final DashboardAPIUtil dashboardAPIUtil) throws Exception {
         Dashboard dbd = new Dashboard();
         dbd.setDashboardId(BigInteger.valueOf(87654L));
         new Expectations() {

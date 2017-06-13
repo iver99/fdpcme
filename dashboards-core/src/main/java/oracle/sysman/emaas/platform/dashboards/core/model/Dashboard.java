@@ -13,6 +13,7 @@ import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.CommonResourceException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
+import oracle.sysman.emaas.platform.dashboards.core.nls.DatabaseResourceBundleUtil;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
 import oracle.sysman.emaas.platform.dashboards.core.util.BigIntegerSerializer;
 import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
@@ -258,13 +259,13 @@ public class Dashboard
 		to.setApplicationType(from.getApplicationType());
 		
 		// translate OOB data
-//		if(to.isSystem) {
-//		    to.setName(DatabaseResourceBundleUtil.getTranslatedString(DashboardApplicationType.fromValue(from.getApplicationType()), from.getName()));
-//		    to.setDescription(DatabaseResourceBundleUtil.getTranslatedString(DashboardApplicationType.fromValue(from.getApplicationType()), from.getDescription()));
-//		} else {
+		if(to.isSystem) {
+		    to.setName(DatabaseResourceBundleUtil.getTranslatedString(DashboardApplicationType.fromValue(from.getApplicationType()), from.getName()));
+		    to.setDescription(DatabaseResourceBundleUtil.getTranslatedString(DashboardApplicationType.fromValue(from.getApplicationType()), from.getDescription()));
+		} else {
 		    to.setName(from.getName());
 		    to.setDescription(from.getDescription());
-//		}
+		}
 		
 		if (from.getType().equals(DASHBOARD_TYPE_CODE_SET)) {
 			to.setEnableTimeRange(null);

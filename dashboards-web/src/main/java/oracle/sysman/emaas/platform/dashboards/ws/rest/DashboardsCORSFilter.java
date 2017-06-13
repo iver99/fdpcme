@@ -12,6 +12,7 @@ package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.Locale;
 import java.util.UUID;
 import java.util.Vector;
 
@@ -25,8 +26,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
+import oracle.sysman.emaas.platform.dashboards.core.nls.DatabaseResourceBundleUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
+import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.ZDTContext;
+import oracle.sysman.emaas.platform.uifwk.nls.filter.NLSFilter;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -173,6 +177,11 @@ public class DashboardsCORSFilter implements Filter
 			Long time = Long.valueOf(requestTimeHeader);
 			ZDTContext.setRequestTime(time);
 		}
+		
+		UserContext.clearLocale();
+		String langAttr = NLSFilter.getLangAttr(hReq).split("\"")[1]; // sample: lang="en-US"
+		Locale locale = DatabaseResourceBundleUtil.generateLocale(langAttr);
+		UserContext.setLocale(locale);
 
 		// Only add CORS headers if the developer mode is enabled to add them
 		if (!new java.io.File("/var/opt/ORCLemaas/DEVELOPER_MODE-ENABLE_CORS_HEADERS").exists()) {

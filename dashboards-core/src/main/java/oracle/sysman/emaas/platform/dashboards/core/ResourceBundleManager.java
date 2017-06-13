@@ -1,0 +1,52 @@
+/*
+ * Copyright (C) 2017 Oracle
+ * All rights reserved.
+ *
+ * $$File: $$
+ * $$DateTime: $$
+ * $$Author: $$
+ * $$Revision: $$
+ */
+ 
+package oracle.sysman.emaas.platform.dashboards.core;
+
+import java.util.List;
+
+import javax.persistence.EntityManager;
+
+import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsResourceBundle;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+/**
+ * @author reliang
+ *
+ */
+public class ResourceBundleManager {
+    private static final Logger LOGGER = LogManager.getLogger(ResourceBundleManager.class);
+    private static final ResourceBundleManager instance = new ResourceBundleManager();
+
+    public static ResourceBundleManager getInstance() {
+        return instance;
+    }
+    
+    /**
+     * 1. delete all resource bundles by serviceName
+     * 2. insert rbList as new resource bundles
+     * @param serviceName
+     * @param rbList
+     */
+    public void refreshResourceBundleByService(String serviceName, List<EmsResourceBundle> rbList) {
+        LOGGER.info("Refresh resource bundles for service : {}", serviceName);
+        DashboardServiceFacade dsf = new DashboardServiceFacade();
+        dsf.cleanResourceBundleByService(serviceName);
+        dsf.persistEmsResourceBundles(rbList);
+        
+        EntityManager em = dsf.getEntityManager();
+        if (em != null) {
+            em.close();
+        }
+    }
+}

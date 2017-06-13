@@ -16,6 +16,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 
 import oracle.sysman.emaas.platform.dashboards.ws.rest.thread.MetadataRefreshRunnable;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.thread.NlsRefreshRunnable;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.thread.OobRefreshRunnable;
 
 import org.apache.logging.log4j.LogManager;
@@ -44,6 +45,11 @@ public class MetadataRefreshAPI extends APIBase
     @PUT
     @Path("nls/{serviceName}")
     public Response refreshNLS(@PathParam("serviceName") String serviceName) {
+        LOGGER.info("Starting a new thread for fresh {} resource bundles.", serviceName);
+        MetadataRefreshRunnable nlsRunnable = new NlsRefreshRunnable();
+        nlsRunnable.setServiceName(serviceName);
+        Thread thread = new Thread(nlsRunnable, "Refresh " + serviceName + " resource bundles.");
+        thread.start();
         return Response.ok().build();
     }
 

@@ -3,14 +3,11 @@ package oracle.sysman.emaas.platform.dashboards.ui.web.additionaldata;
 import java.math.BigInteger;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import mockit.Expectations;
 import mockit.Mocked;
-import oracle.sysman.emaas.platform.dashboards.ui.web.AdditionalDataFilter;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.DashboardDataAccessUtil;
 import oracle.sysman.emaas.platform.uifwk.bootstrap.HtmlBootstrapJsUtil;
-import oracle.sysman.emaas.platform.uifwk.util.DataAccessUtil;
 
 import org.testng.annotations.Test;
 
@@ -19,8 +16,6 @@ import org.testng.annotations.Test;
  */
 public class AdditionalDataProviderTest
 {
-
-    private AdditionalDataProvider additionalDataProvider = new AdditionalDataProvider();
     @Mocked
     HttpServletRequest httpServletRequest;
     @Mocked
@@ -39,7 +34,7 @@ public class AdditionalDataProviderTest
                 result = "37";
                 HtmlBootstrapJsUtil.getSDKVersionJS();
                 result = "2.3.0";
-                DashboardDataAccessUtil.getCombinedData(anyString,anyString,anyString, anyString,(BigInteger)any);
+                DashboardDataAccessUtil.getCombinedData(anyString, anyString, (HttpServletRequest) any, anyString, (BigInteger) any);
                 result = "data";
             }
         };

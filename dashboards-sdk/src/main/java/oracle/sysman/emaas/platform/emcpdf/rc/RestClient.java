@@ -31,6 +31,7 @@ public class RestClient {
     public static final String REFERER = "Referer";
     public static final String SESSION_EXP = "SESSION_EXP";
     public static final String X_OMC_SERVICE_TRACE = "X-OMC-SERVICE-TRACE";
+    public static final String ACCEPT_LANGUAGE = "Accept-Language";
 
     //timeout milli-seconds
     private static final Integer DEFAULT_TIMEOUT = 30000;

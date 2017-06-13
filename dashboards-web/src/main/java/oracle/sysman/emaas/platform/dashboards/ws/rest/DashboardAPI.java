@@ -15,6 +15,7 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -520,6 +521,7 @@ public class DashboardAPI extends APIBase
 			initializeUserContext(tenantIdParam, userTenant);
 			final String curTenant = TenantContext.getCurrentTenant();
 			final String curUser = UserContext.getCurrentUser();
+			final Locale curUserLocale = UserContext.getLocale();
 			infoInteractionLogAPIIncomingCall(curTenant, referer, "Service call to [GET] /v1/dashboards/{}/combinedData", dashboardId);
 			final DashboardManager dm = DashboardManager.getInstance();
 			StringBuilder sb=new StringBuilder();
@@ -591,7 +593,7 @@ public class DashboardAPI extends APIBase
 										long startDash = System.currentTimeMillis();
 										LOGGER.info("2nd round parallel thread to request dashboard data info after thread for subscribed apps thread is completed...");
 										Long tenantId = getTenantId(curTenant);
-										initializeUserContext(curTenant, userTenant);
+										initializeUserContext(curTenant, userTenant, curUserLocale);
 										String userName = UserContext.getCurrentUser();
 										// put through subscribed apps to avoid to lookup this data again
 										Dashboard dashboard = dm.getCombinedDashboardById(dashboardId, tenantId, userName, fSubscribedApps);

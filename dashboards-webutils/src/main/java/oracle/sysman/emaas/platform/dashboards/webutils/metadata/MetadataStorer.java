@@ -10,22 +10,14 @@
  
 package oracle.sysman.emaas.platform.dashboards.webutils.metadata;
 
-import java.math.BigInteger;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import oracle.sysman.emaas.platform.dashboards.core.DashboardManager;
+import oracle.sysman.emaas.platform.dashboards.core.ResourceBundleManager;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.CommonResourceException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
-import oracle.sysman.emaas.platform.emcpdf.cache.api.ICache;
-import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
-import oracle.sysman.emaas.platform.emcpdf.cache.exception.ExecutionException;
-import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
-import oracle.sysman.emaas.platform.emcpdf.cache.tool.DefaultKeyGenerator;
-import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
-import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsResourceBundle;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,6 +29,16 @@ import org.apache.logging.log4j.Logger;
 public class MetadataStorer
 {
     private static final Logger LOGGER = LogManager.getLogger(MetadataStorer.class);
+    
+    public void storeResourceBundle(List<EmsResourceBundle> rbList) {
+        if(rbList == null || rbList.isEmpty()) {
+            return;
+        }
+        
+        ResourceBundleManager manager = ResourceBundleManager.getInstance();
+        String serviceName = rbList.get(0).getServiceName();
+        manager.refreshResourceBundleByService(serviceName, rbList);
+    }
     
     /**
      * store OOB dashboards into database which are all provided by one service
@@ -79,7 +81,7 @@ public class MetadataStorer
      *     |----CacheValue:Map<DashboardId, Dashboard>
      * @param oobList
      */
-    @SuppressWarnings("unchecked")
+/*    @SuppressWarnings("unchecked")
     public void cacheOobDashboards(List<Dashboard> oobList) {
         if(oobList == null || oobList.isEmpty()) {
             return;
@@ -102,7 +104,7 @@ public class MetadataStorer
                 LOGGER.error("Error when cacheOobDashboards: " + e.getLocalizedMessage());
             }
         }
-    }
+    }*/
     
     /**
      * generate cache's key by application type
@@ -110,7 +112,7 @@ public class MetadataStorer
      * @param dashboardId
      * @return
      */
-    static public Object getCacheKey(Integer applicationType) {
+/*    static public Object getCacheKey(Integer applicationType) {
         return DefaultKeyGenerator.getInstance().generate(null, new Keys(applicationType));
-    }
+    }*/
 }

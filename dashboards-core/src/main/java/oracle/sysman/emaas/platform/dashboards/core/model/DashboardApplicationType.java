@@ -11,7 +11,6 @@
 package oracle.sysman.emaas.platform.dashboards.core.model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -65,6 +64,7 @@ public enum DashboardApplicationType
 	public static final String SECURITY_ANALYTICS_STRING = "SecurityAnalytics";
 	public static final String ORCHESTRATION_STRING = "Orchestration";
 	public static final String COMPLIANCE_STRING = "Compliance";
+	public static final String UDE_STRING = "UDE";
 	public static final String OMCSE_STRING = "OMCSE";
 	public static final String OMCEE_STRING = "OMCEE";
 	public static final String OMCLOG_STRING = "OMCLOG";
@@ -99,6 +99,9 @@ public enum DashboardApplicationType
 		}
         if (COMPLIANCE_STRING.equals(value)) {
             return Compliance;
+        }
+        if (UDE_STRING.equals(value)) {
+            return UDE;
         }
 		if (OMC_STRING.equals(value)) {
 			return OMC;
@@ -166,6 +169,9 @@ public enum DashboardApplicationType
 		}
         if (value == Compliance.value) {
         	return COMPLIANCE_STRING;
+        }
+        if (value == UDE.value) {
+            return UDE_STRING;
         }
 		if (value == OMC.value) {
 			return OMC_STRING;

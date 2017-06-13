@@ -25,6 +25,7 @@ import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTileParams;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsPreference;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsPreferencePK;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsResourceBundle;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsSubDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptionsPK;
@@ -644,6 +645,29 @@ public class DashboardServiceFacade
         LOGGER.info("End cleanDashboardsPermanentById : {} tile params, {} tiles, {} user options, {} dashboard sets "
                 + "and {} dashboards have been deleted!", deletedTileParamsCount, deletedTileCount, deletedUserOptionCount, 
                 deletedDashboardSetCount, deletedDashboardCount);
+        commitTransaction();
+    }
+    
+    public void cleanResourceBundleByService(String serviceName) {
+        if (!getEntityManager().getTransaction().isActive()) {
+            getEntityManager().getTransaction().begin();
+        }
+        
+        LOGGER.info("Start clean up resource bundle for service : {} ", serviceName);
+        int deletedCount = em.createNamedQuery("EmsResourceBundle.deleteByServiceName").setParameter("serviceName", serviceName)
+                .executeUpdate();
+        LOGGER.info("End clean up resource bundle for service : {}. And {} resource bundle files have been purged.", serviceName,
+                deletedCount);
+        
+        commitTransaction();
+    }
+    
+    public void persistEmsResourceBundles(List<EmsResourceBundle> emsResourceBundles) {
+        if(emsResourceBundles != null && !emsResourceBundles.isEmpty()) {
+            for(EmsResourceBundle rb : emsResourceBundles) {
+                em.persist(rb);
+            }
+        }
         commitTransaction();
     }
 
