@@ -36,7 +36,7 @@ public class DashBoardUtils
 	public static final String OMCTrail = "OMCTrail";
 	public static final String OSMACCTrail = "OSMACCTrail";
 
-	public static void apmOobExist()
+	public static void apmOobExist(WebDriver driver)
 	{
 		driver.getLogger().info("Wait for dashboards loading...");
 		DashboardHomeUtil.waitForDashboardPresent(driver, "Application Performance Monitoring");
@@ -45,7 +45,7 @@ public class DashBoardUtils
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Application Performance Monitoring"));
 	}
 
-	public static void apmOobNotExist()
+	public static void apmOobNotExist(WebDriver driver)
 	{
 		driver.getLogger().info("Verify below APM OOB don't exist...");
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Application Performance Monitoring"));
@@ -64,12 +64,10 @@ public class DashBoardUtils
 			webdriver.getLogger().info("Click Compass icon to display menu of branding bar");
 			webdriver.getWebDriver().findElement(By.xpath(PageId.COMPASSICON)).click();
 			WebDriverWait wait = new WebDriverWait(webdriver.getWebDriver(), 900L);
-			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(PageId.DASHBOARDLINK)));
-			webdriver.takeScreenShot();
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(PageId.DASHBOARDLINK)));			
 			webdriver.getLogger().info("Click Dashboard link to back to dashboard home page");
 			webdriver.getWebDriver().findElement(By.xpath(PageId.DASHBOARDLINK)).click();
 		}
-
 	}
 
 	public static void closeOverviewPage()
@@ -121,10 +119,9 @@ public class DashBoardUtils
 		//Accepting alert.
 		webdriver.getLogger().info("foucus on the alert");
 		alert = webdriver.getWebDriver().switchTo().alert();
-		//webdriver.takeScreenShot();
+		
 		webdriver.getLogger().info("click button on the dialog, should navigate to the home page");
-		alert.accept();
-		//webdriver.takeScreenShot();
+		alert.accept();		
 	}
 
 	/**
@@ -246,7 +243,7 @@ public class DashBoardUtils
 		return false;
 	}
 
-	public static void itaOobExist()
+	public static void itaOobExist(WebDriver driver)
 	{
 		driver.getLogger().info("Wait for dashboards loading...");
 		DashboardHomeUtil.waitForDashboardPresent(driver, "Performance Analytics: Database");
@@ -265,7 +262,7 @@ public class DashBoardUtils
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Resource Analytics: Middleware"));
 	}
 
-	public static void itaOobNotExist()
+	public static void itaOobNotExist(WebDriver driver)
 	{
 		driver.getLogger().info("Verify below IT Analytics OOB dashboard Set and Dashboards don't exist...");
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Exadata Health"));
@@ -280,18 +277,17 @@ public class DashBoardUtils
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Resource Analytics: Host"));
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Resource Analytics: Middleware"));
 
-		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Categorical"));
-		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Others"));
-		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Overview"));
-		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Performance"));
-		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Timeseries"));
-
-		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Entities"));
-		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Summary"));
-
+//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Categorical"));
+//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Others"));
+//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Overview"));
+//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Performance"));
+//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Timeseries"));
+//
+//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Entities"));
+//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Summary"));
 	}
 
-	public static void itaOobNotExist_v2v3()
+	public static void itaOobNotExist_v2v3(WebDriver driver)
 	{
 		driver.getLogger().info("Verify below IT Analytics OOB dashboard Set and Dashboards don't exist...");
 
@@ -303,18 +299,18 @@ public class DashBoardUtils
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Resource Analytics: Database"));
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Resource Analytics: Host"));
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Resource Analytics: Middleware"));
-
-		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Categorical"));
-		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Others"));
-		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Overview"));
-		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Performance"));
-		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Timeseries"));
-
-		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Entities"));
-		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Summary"));
+//
+//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Categorical"));
+//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Others"));
+//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Overview"));
+//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Performance"));
+//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Timeseries"));
+//
+//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Entities"));
+//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Summary"));
 	}
 
-	public static void laOobExist()
+	public static void laOobExist(WebDriver driver)
 	{
 		driver.getLogger().info("Wait for dashboards loading...");
 		DashboardHomeUtil.waitForDashboardPresent(driver, "Database Operations");
@@ -325,7 +321,7 @@ public class DashBoardUtils
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Middleware Operations"));
 	}
 
-	public static void laOobNotExist()
+	public static void laOobNotExist(WebDriver driver)
 	{
 		driver.getLogger().info("Verify below Log Analytics OOB don't exist...");
 
@@ -352,19 +348,19 @@ public class DashBoardUtils
 		driver = webDriver;
 	}
 
-	public static void noOOBCheck()
+	public static void noOOBCheck(WebDriver driver)
 	{
 		//verify all the oob dashboard not exsit
 		driver.getLogger().info("verify all the oob dashboard not exsit");
-		DashBoardUtils.apmOobNotExist();
-		DashBoardUtils.itaOobNotExist();
-		DashBoardUtils.laOobNotExist();
-		DashBoardUtils.orchestrationOobNotExist();
-		DashBoardUtils.securityOobNotExist();
-		DashBoardUtils.outDateOob();
+		DashBoardUtils.apmOobNotExist(driver);
+		DashBoardUtils.itaOobNotExist(driver);
+		DashBoardUtils.laOobNotExist(driver);
+		DashBoardUtils.orchestrationOobNotExist(driver);
+		DashBoardUtils.securityOobNotExist(driver);
+		DashBoardUtils.outDateOob(driver);
 	}
 
-	public static void orchestrationOobExist()
+	public static void orchestrationOobExist(WebDriver driver)
 	{
 		driver.getLogger().info("Wait for dashboards loading...");
 		DashboardHomeUtil.waitForDashboardPresent(driver, "Orchestration Workflows");
@@ -373,29 +369,29 @@ public class DashBoardUtils
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Orchestration Workflows"));
 	}
 
-	public static void orchestrationOobNotExist()
+	public static void orchestrationOobNotExist(WebDriver driver)
 	{
 		driver.getLogger().info("Verify below Orchestration OOB don't exist...");
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Orchestration Workflows"));
 	}
 
-	public static void outDateOob()
+	public static void outDateOob(WebDriver driver)
 	{
 		driver.getLogger().info("Verify below IT Analytics OOB don't exist...");
-		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Database Configuration and Storage By Version"));
-		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Enterprise Overview"));
-		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Host Inventory by Platform"));
-		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Top 25 Databases by Resource Consumption"));
-		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Top 25 WebLogic Servers by Heap Usage"));
-		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Top 25 WebLogic Servers by Load"));
-		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "WebLogic Servers by JDK Version"));
-
-		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Database Health Summary"));
-		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Host Health Summary"));
-		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "WebLogic Health Summary"));
+//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Database Configuration and Storage By Version"));
+//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Enterprise Overview"));
+//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Host Inventory by Platform"));
+//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Top 25 Databases by Resource Consumption"));
+//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Top 25 WebLogic Servers by Heap Usage"));
+//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Top 25 WebLogic Servers by Load"));
+//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "WebLogic Servers by JDK Version"));
+//
+//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Database Health Summary"));
+//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Host Health Summary"));
+//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "WebLogic Health Summary"));
 	}
 
-	public static void securityOobExist()
+	public static void securityOobExist(WebDriver driver)
 	{
 		driver.getLogger().info("Wait for dashboards loading...");
 		DashboardHomeUtil.waitForDashboardPresent(driver, "DNS");
@@ -406,7 +402,7 @@ public class DashBoardUtils
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Oracle Database Security"));
 	}
 
-	public static void securityOobNotExist()
+	public static void securityOobNotExist(WebDriver driver)
 	{
 		driver.getLogger().info("Verify below Security OOB dashboards do not exist...");
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "DNS"));
@@ -414,7 +410,7 @@ public class DashBoardUtils
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Oracle Database Security"));
 	}
 
-	public static void udeOobExist()
+	public static void udeOobExist(WebDriver driver)
 	{
 		driver.getLogger().info("Wait for dashboards loading...");
 		DashboardHomeUtil.waitForDashboardPresent(driver, "Exadata Health");
@@ -435,13 +431,11 @@ public class DashBoardUtils
 		driver.getLogger().info("Click Edit icon");
 		driver.waitForElementPresent("css=" + PageId.DASHBOARDSETOPTIONSEDIT_CSS);
 		driver.click("css=" + PageId.DASHBOARDSETOPTIONSEDIT_CSS);
-		driver.takeScreenShot();
-
+		
 		driver.getLogger().info("Expand Share options");
 		driver.waitForElementPresent("css=" + PageId.RIGHTDRAWEREDITSINGLEDBSHARE_CSS);
 		driver.click("css=" + PageId.RIGHTDRAWEREDITSINGLEDBSHARE_CSS);
-		driver.takeScreenShot();
-
+		
 		driver.getLogger().info("Verify the options are disabled or not");
 		WebElement ShareOption = driver.getWebDriver().findElement(By.cssSelector(PageId.DASHBOARDSETSHARE_CSS));
 		WebElement NotShareOption = driver.getWebDriver().findElement(By.cssSelector(PageId.DASHBOARDSETNOTSHARE_CSS));
@@ -838,57 +832,57 @@ public class DashBoardUtils
 
 		switch (tenantType) {
 			case OMCEE:
-				DashBoardUtils.apmOobExist();
-				DashBoardUtils.itaOobExist();
-				DashBoardUtils.orchestrationOobExist();
-				DashBoardUtils.laOobNotExist();
-				DashBoardUtils.securityOobNotExist();
+				DashBoardUtils.apmOobExist(webdriver);
+				DashBoardUtils.itaOobExist(webdriver);
+				DashBoardUtils.orchestrationOobExist(webdriver);
+				DashBoardUtils.laOobNotExist(webdriver);
+				DashBoardUtils.securityOobNotExist(webdriver);
 				break;
 			case OMCSE:
-				DashBoardUtils.apmOobExist();
-				DashBoardUtils.udeOobExist();
-				DashBoardUtils.itaOobNotExist_v2v3();
-				DashBoardUtils.orchestrationOobNotExist();
-				DashBoardUtils.laOobNotExist();
-				DashBoardUtils.securityOobNotExist();
+				DashBoardUtils.apmOobExist(webdriver);
+				DashBoardUtils.udeOobExist(webdriver);
+				DashBoardUtils.itaOobNotExist_v2v3(webdriver);
+				DashBoardUtils.orchestrationOobNotExist(webdriver);
+				DashBoardUtils.laOobNotExist(webdriver);
+				DashBoardUtils.securityOobNotExist(webdriver);
 				break;
 			case OMCLOG:
-				DashBoardUtils.apmOobNotExist();
-				DashBoardUtils.itaOobNotExist_v2v3();
-				DashBoardUtils.orchestrationOobNotExist();
-				DashBoardUtils.laOobExist();
-				DashBoardUtils.securityOobNotExist();
+				DashBoardUtils.apmOobNotExist(webdriver);
+				DashBoardUtils.itaOobNotExist_v2v3(webdriver);
+				DashBoardUtils.orchestrationOobNotExist(webdriver);
+				DashBoardUtils.laOobExist(webdriver);
+				DashBoardUtils.securityOobNotExist(webdriver);
 				break;
 			case SECSE:
-				DashBoardUtils.securityOobNotExist();
-				DashBoardUtils.apmOobNotExist();
-				DashBoardUtils.itaOobNotExist_v2v3();
-				DashBoardUtils.orchestrationOobNotExist();
-				DashBoardUtils.laOobNotExist();
-				DashBoardUtils.udeOobExist();
+				DashBoardUtils.securityOobNotExist(webdriver);
+				DashBoardUtils.apmOobNotExist(webdriver);
+				DashBoardUtils.itaOobNotExist_v2v3(webdriver);
+				DashBoardUtils.orchestrationOobNotExist(webdriver);
+				DashBoardUtils.laOobNotExist(webdriver);
+				DashBoardUtils.udeOobExist(webdriver);
 				break;
 			case SECSMA:
-				DashBoardUtils.apmOobNotExist();
-				DashBoardUtils.itaOobNotExist_v2v3();
-				DashBoardUtils.orchestrationOobNotExist();
-				DashBoardUtils.laOobNotExist();
-				DashBoardUtils.udeOobExist();
-				DashBoardUtils.securityOobExist();
+				DashBoardUtils.apmOobNotExist(webdriver);
+				DashBoardUtils.itaOobNotExist_v2v3(webdriver);
+				DashBoardUtils.orchestrationOobNotExist(webdriver);
+				DashBoardUtils.laOobNotExist(webdriver);
+				DashBoardUtils.udeOobExist(webdriver);
+				DashBoardUtils.securityOobExist(webdriver);
 				break;
 			case OMCTrail:
-				DashBoardUtils.apmOobExist();
-				DashBoardUtils.itaOobExist();
-				DashBoardUtils.orchestrationOobExist();
-				DashBoardUtils.laOobExist();
-				DashBoardUtils.securityOobNotExist();
+				DashBoardUtils.apmOobExist(webdriver);
+				DashBoardUtils.itaOobExist(webdriver);
+				DashBoardUtils.orchestrationOobExist(webdriver);
+				DashBoardUtils.laOobExist(webdriver);
+				DashBoardUtils.securityOobNotExist(webdriver);
 				break;
 			case OSMACCTrail:
-				DashBoardUtils.apmOobNotExist();
-				DashBoardUtils.itaOobNotExist_v2v3();
-				DashBoardUtils.orchestrationOobNotExist();
-				DashBoardUtils.laOobNotExist();
-				DashBoardUtils.udeOobExist();
-				DashBoardUtils.securityOobExist();
+				DashBoardUtils.apmOobNotExist(webdriver);
+				DashBoardUtils.itaOobNotExist_v2v3(webdriver);
+				DashBoardUtils.orchestrationOobNotExist(webdriver);
+				DashBoardUtils.laOobNotExist(webdriver);
+				DashBoardUtils.udeOobExist(webdriver);
+				DashBoardUtils.securityOobExist(webdriver);
 				break;
 			default:
 				webdriver.getLogger().info("The tenantType is: " + tenantType);
@@ -908,8 +902,7 @@ public class DashBoardUtils
 		//find the widget
 		driver.waitForElementPresent(DashBoardPageId_190.BUILDERTILESEDITAREA);
 		driver.click(DashBoardPageId_190.BUILDERTILESEDITAREA);
-		driver.takeScreenShot();
-
+		
 		String titleTitlesLocator = String.format(DashBoardPageId_190.BUILDERTILETITLELOCATOR, widgetName);
 		List<WebElement> tileTitles = driver.getWebDriver().findElements(By.xpath(titleTitlesLocator));
 		if (tileTitles == null || tileTitles.size() < index) {
@@ -963,34 +956,20 @@ public class DashBoardUtils
 
 	public static void verifyURL(WebDriver webdriver, String url)
 	{
-		webdriver.takeScreenShot();
-
 		String currurl = webdriver.getWebDriver().getCurrentUrl();
-
 		webdriver.getLogger().info("the origin url = " + currurl);
-
 		String tmpurl = DashBoardUtils.trimUrlParameters(currurl.substring(currurl.indexOf("emsaasui") + 9));
-
 		webdriver.getLogger().info("the url without para = " + tmpurl);
-
 		Assert.assertEquals(tmpurl, url);
-
 	}
 
 	public static void verifyURL_WithPara(WebDriver webdriver, String url)
 	{
-		webdriver.takeScreenShot();
-
 		webdriver.getLogger().info("the expected relative url = " + url);
-
 		String currurl = webdriver.getWebDriver().getCurrentUrl();
-
 		webdriver.getLogger().info("the current url = " + currurl);
-
 		String tmpurl = currurl.substring(currurl.indexOf("emsaasui") + 9);
-
 		webdriver.getLogger().info("the relative url to compare = " + tmpurl);
-
 		Assert.assertTrue(tmpurl.contains(url), tmpurl + " does NOT contain " + url);
 	}
 

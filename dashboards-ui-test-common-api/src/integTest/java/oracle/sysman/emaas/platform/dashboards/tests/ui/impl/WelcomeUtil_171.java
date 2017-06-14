@@ -171,7 +171,6 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 		driver.getLogger().info("Visiting 'Learn More-Service Offerings' from Welcome Page...");
 		WaitUtil.waitForPageFullyLoaded(driver);
 		driver.click("id=" + DashBoardPageId.WELCOME_LEARNMORE_SERVICEOFFERING);
-
 	}
 
 	/* (non-Javadoc)
@@ -183,7 +182,6 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 		driver.getLogger().info("Visiting 'Learn More-Videos' from Welcome Page...");
 		WaitUtil.waitForPageFullyLoaded(driver);
 		driver.click("id=" + DashBoardPageId.WELCOME_LEARNMORE_VIDEOS);
-		driver.takeScreenShot();
 	}
 
 	/* (non-Javadoc)
@@ -195,7 +193,6 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 		driver.getLogger().info("Visit APM from Welcome Page...");
 		WaitUtil.waitForPageFullyLoaded(driver);
 		driver.click("id=" + DashBoardPageId.WELCOME_APMLINKCSS);
-		driver.takeScreenShot();
 	}
 
 	/* (non-Javadoc)
@@ -205,7 +202,6 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 	public void visitCompliance(WebDriver driver)
 	{
 		driver.getLogger().warning("Visit Compliance from Welcome Page is not supported in 1.7.1");
-
 	}
 
 	/* (non-Javadoc)
@@ -217,7 +213,6 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 		driver.getLogger().info("Visit Dashboards from Welcome Page...");
 		WaitUtil.waitForPageFullyLoaded(driver);
 		driver.click("id=" + DashBoardPageId.WELCOME_DASHBOARDSLINKID);
-		driver.takeScreenShot();
 	}
 
 	/* (non-Javadoc)
@@ -244,9 +239,8 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 		WaitUtil.waitForPageFullyLoaded(driver);
 
 		if (ITA_DEFAULT.equals(selection)) {
-
-			driver.click("id=" + DashBoardPageId.WELCOME_ITALINKID);
-
+			driver.waitForElementPresent("id=" + DashBoardPageId.WELCOME_ITALINKID);
+			driver.click("id=" + DashBoardPageId.WELCOME_ITALINKID);			
 		}
 		else {
 			String eleXpath = null;
@@ -277,8 +271,7 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 				default:
 					break;
 			}
-			driver.click(eleXpath);
-			driver.takeScreenShot();
+			driver.click(eleXpath);			
 		}
 	}
 
@@ -292,7 +285,6 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 		WaitUtil.waitForPageFullyLoaded(driver);
 
 		driver.click("id=" + DashBoardPageId.WELCOME_LALINKCSS);
-
 	}
 
 	/* (non-Javadoc)

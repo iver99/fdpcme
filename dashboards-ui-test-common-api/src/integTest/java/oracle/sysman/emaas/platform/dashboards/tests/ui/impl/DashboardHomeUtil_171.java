@@ -227,8 +227,7 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call gridView");
 		driver.waitForElementPresent(DashBoardPageId.DASHBOARDSGRIDVIEWLOCATOR);
-		driver.takeScreenShot();
-		driver.savePageToFile();
+
 		driver.click(DashBoardPageId.DASHBOARDSGRIDVIEWLOCATOR);
 	}
 
@@ -325,8 +324,7 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call listView");
 		driver.waitForElementPresent(DashBoardPageId.DASHBOARDSLISTVIEWLOCATOR);
-		driver.takeScreenShot();
-		driver.savePageToFile();
+
 		driver.click(DashBoardPageId.DASHBOARDSLISTVIEWLOCATOR);
 	}
 
@@ -514,15 +512,13 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 
 		Actions actions = new Actions(driver.getWebDriver());
 		driver.getLogger().info("Focus to the table header");
-		actions.moveToElement(tableHeader).build().perform();
-		driver.takeScreenShot();
-		driver.savePageToFile();
+		actions.moveToElement(tableHeader).build().perform();		
 		driver.getLogger().info("Click Sort icon");
 		actions.moveToElement(tableSort).click().perform();
-		WaitUtil.waitForPageFullyLoaded(driver);
-		driver.takeScreenShot();
-		driver.savePageToFile();
 
+		driver.takeScreenShot();
+
+		WaitUtil.waitForPageFullyLoaded(driver);		
 	}
 
 	/* (non-Javadoc)
@@ -541,13 +537,9 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 		Actions actions = new Actions(driver.getWebDriver());
 		driver.getLogger().info("Focus to the table header");
 		actions.moveToElement(tableHeader).build().perform();
-		driver.takeScreenShot();
-		driver.savePageToFile();
 		driver.getLogger().info("Click Sort icon");
 		actions.moveToElement(tableSort).click().perform();
 		WaitUtil.waitForPageFullyLoaded(driver);
-		driver.takeScreenShot();
-		driver.savePageToFile();
 	}
 
 	/* (non-Javadoc)
@@ -565,16 +557,12 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 		Actions actions = new Actions(driver.getWebDriver());
 		driver.getLogger().info("Focus to the table header");
 		actions.moveToElement(tableHeader).build().perform();
-
-		driver.waitForServer();
-		driver.takeScreenShot();
-		driver.savePageToFile();
+		
 		driver.getLogger().info("Click Sort icon");
 		actions.moveToElement(tableSort).click().perform();
-
-		driver.waitForServer();
-		driver.takeScreenShot();
-		driver.savePageToFile();
+		driver.takeScreenShot();		
+		
+		driver.waitForServer();	
 	}
 
 	/* (non-Javadoc)

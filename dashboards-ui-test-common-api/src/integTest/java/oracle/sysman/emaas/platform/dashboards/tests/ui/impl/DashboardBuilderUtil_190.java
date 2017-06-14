@@ -966,8 +966,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 		//		wait.until(ExpectedConditions.visibilityOf(dashboardSetContainer));
 		driver.waitForElementVisible("css=" + DashBoardPageId_190.DASHBOARDSETNAVSCONTAINERCSS);
 		WaitUtil.waitForPageFullyLoaded(driver);
-		driver.takeScreenShot();
-		driver.savePageToFile();
+
 		List<WebElement> navs = driver.getWebDriver().findElements(By.cssSelector(DashBoardPageId_190.DASHBOARDSETNAVSCSS));
 		if (navs == null || navs.isEmpty()) {
 			throw new NoSuchElementException(
@@ -981,8 +980,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 				nav.click();
 				break;
 			}
-		}
-		driver.takeScreenShot();
+		}		
 		driver.getLogger().info("DashboardBuilderUtil.selectDashboardInsideSet completed");
 	}
 
