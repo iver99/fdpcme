@@ -390,24 +390,24 @@ public class TestDashBoard_SimpleCRUD extends LoginAndLogout
 
 		//widget operation
 		webd.getLogger().info("hide/show the widget title");
+		DashboardBuilderUtil.showWidgetTitle(webd, WidgetName_1, true);
 		DashboardBuilderUtil.showWidgetTitle(webd, WidgetName_1, false);
-		DashboardBuilderUtil.showWidgetTitle(webd, WidgetName_2, true);
 
 		webd.getLogger().info("Resize the widge");
 		DashboardBuilderUtil.resizeWidget(webd, WidgetName_1, DashboardBuilderUtil.TILE_WIDER);
 		DashboardBuilderUtil.resizeWidget(webd, WidgetName_1, DashboardBuilderUtil.TILE_NARROWER);
-		DashboardBuilderUtil.resizeWidget(webd, WidgetName_2, DashboardBuilderUtil.TILE_TALLER);
-		DashboardBuilderUtil.resizeWidget(webd, WidgetName_2, DashboardBuilderUtil.TILE_SHORTER);
+		DashboardBuilderUtil.resizeWidget(webd, WidgetName_1, DashboardBuilderUtil.TILE_TALLER);
+		DashboardBuilderUtil.resizeWidget(webd, WidgetName_1, DashboardBuilderUtil.TILE_SHORTER);
 
 		webd.getLogger().info("Move the widget");
 		DashboardBuilderUtil.moveWidget(webd, WidgetName_1, DashboardBuilderUtil.TILE_RIGHT);
 		DashboardBuilderUtil.moveWidget(webd, WidgetName_1, DashboardBuilderUtil.TILE_LEFT);
-		DashboardBuilderUtil.moveWidget(webd, WidgetName_2, DashboardBuilderUtil.TILE_DOWN);
-		DashboardBuilderUtil.moveWidget(webd, WidgetName_2, DashboardBuilderUtil.TILE_UP);
+		DashboardBuilderUtil.moveWidget(webd, WidgetName_1, DashboardBuilderUtil.TILE_DOWN);
+		DashboardBuilderUtil.moveWidget(webd, WidgetName_1, DashboardBuilderUtil.TILE_UP);
 
 		webd.getLogger().info("Remove the widget");
 		DashboardBuilderUtil.removeWidget(webd, WidgetName_1);
-		DashboardBuilderUtil.removeWidget(webd, WidgetName_2);
+		DashboardBuilderUtil.removeWidget(webd, WidgetName_1);
 
 		//save the dashboard
 		webd.getLogger().info("Save the dashboard");
