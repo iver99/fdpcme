@@ -121,7 +121,7 @@ public class HamburgerMenu_RegisterServiceMenu extends LoginAndLogout
 
 		//check the current header
 		webd.getLogger().info("Check the Menu Header");
-		Assert.assertEquals(BrandingBarUtil.getCurrentMenuHeader(webd), "OMC Management Cloud");
+		Assert.assertEquals(BrandingBarUtil.getCurrentMenuHeader(webd), BrandingBarUtil.ROOT_MENU_TITLE);
 
 		//expand sub menu
 		webd.getLogger().info("Click Compliance to expand sub menu");
@@ -153,11 +153,11 @@ public class HamburgerMenu_RegisterServiceMenu extends LoginAndLogout
 
 		//Click Hierarchical to back to root menu
 		webd.getLogger().info("Click Hierarchical to back to root menu");
-		BrandingBarUtil.clickHierarchicalMenu(webd, "OMC Management Cloud");
+		BrandingBarUtil.clickHierarchicalMenu(webd, BrandingBarUtil.ROOT_MENU_TITLE);
 
 		//check the current header
 		webd.getLogger().info("Check the Menu Header");
-		Assert.assertEquals(BrandingBarUtil.getCurrentMenuHeader(webd), "OMC Management Cloud");
+		Assert.assertEquals(BrandingBarUtil.getCurrentMenuHeader(webd), BrandingBarUtil.ROOT_MENU_TITLE);
 
 		//click Adminitration
 		BrandingBarUtil.expandSubMenu(webd, BrandingBarUtil.ROOT_MENU_ADMIN);

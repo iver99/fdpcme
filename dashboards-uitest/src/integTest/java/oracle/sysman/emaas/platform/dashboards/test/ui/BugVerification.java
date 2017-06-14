@@ -368,7 +368,7 @@ public class BugVerification extends LoginAndLogout
     		Assert.assertTrue(BrandingBarUtil.toggleHamburgerMenu(webd) , "Hamburger menu should be displayed");
     		webd.getLogger().info("Check the current hamburger menu");
     		currenMenuHeader = BrandingBarUtil.getCurrentMenuHeader(webd);
-    		Assert.assertEquals(currenMenuHeader.trim(), "OMC Management Cloud");
+    		Assert.assertEquals(currenMenuHeader.trim(), BrandingBarUtil.ROOT_MENU_TITLE);
     			
     		//back to the dashboard home page
     		webd.getLogger().info("Navigate to Dashboard Home page");
@@ -382,13 +382,16 @@ public class BugVerification extends LoginAndLogout
 			{
 				webd.getLogger().info("Verify in APM page");    			
 		    		//below to verify the fix for EMCPDF-4039
+				if(BrandingBarUtil.isHamburgerMenuDisplayed(webd))
+				{
 		    		webd.getLogger().info("Hide the hamburger menu");
 		    		Assert.assertFalse(BrandingBarUtil.toggleHamburgerMenu(webd) , "Hamburger menu should be hidden");
-		    		webd.getLogger().info("Display the hamburger menu");
-		    		Assert.assertTrue(BrandingBarUtil.toggleHamburgerMenu(webd) , "Hamburger menu should be displayed");
-		    		webd.getLogger().info("Check the current hamburger menu");
-		    		currenMenuHeader = BrandingBarUtil.getCurrentMenuHeader(webd);
-		    		Assert.assertEquals(currenMenuHeader.trim(), "APM");
+				}
+		    	webd.getLogger().info("Display the hamburger menu");
+		    	Assert.assertTrue(BrandingBarUtil.toggleHamburgerMenu(webd) , "Hamburger menu should be displayed");
+		    	webd.getLogger().info("Check the current hamburger menu");
+		    	currenMenuHeader = BrandingBarUtil.getCurrentMenuHeader(webd);
+		    	Assert.assertEquals(currenMenuHeader.trim(), "APM");
 			}
 			else
 			{
