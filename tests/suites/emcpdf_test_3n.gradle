@@ -145,7 +145,7 @@ task onboardAllTenants(dependsOn:[omcOnboardTenants(testTenants_v3)]){
 }
 
 //Task added from "emcpdf_qa_test_3n"
-task QATest(type:EMTest,dependsOn:[onboardAllTenants]) {
+task QATest(type:EMTest,dependsOn:[omcSetup]) {
         include "oracle/sysman/emaas/platform/dashboards/test/dashboard/*"
 	include "oracle/sysman/emaas/platform/dashboards/test/common/*"
 	include "oracle/sysman/emaas/platform/dashboards/logging/*"
@@ -153,7 +153,7 @@ task QATest(type:EMTest,dependsOn:[onboardAllTenants]) {
 	include "oracle/sysman/emaas/platform/dashboards/test/RegistryLookup/*"
 	include "oracle/sysman/emaas/platform/dashboards/test/preference/*"
 	include "oracle/sysman/emaas/platform/dashboards/test/screenshot/*"
-	include "oracle/sysman/emaas/platform/dashboards/test/TenantSubscriptions/*" 
+	include "oracle/sysman/emaas/platform/dashboards/test/TenantSubscriptions/TenantSubscriptions.class" 
 
 	useRestAssured=true
 	ext.set("testType", "integration")
@@ -243,7 +243,7 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n','parallel':
     useRestAssured = true
 }
 
-QATest.mustRunAfter([omcSetup])
+//QATest.mustRunAfter([omcSetup])
 
 task emcpdf_test_3n (dependsOn:[QATest,DEVUiTest,QATest1,DEVTest,DEVTest2,e2e, omcTeardown]) {
     e2e.mustRunAfter([QATest1])

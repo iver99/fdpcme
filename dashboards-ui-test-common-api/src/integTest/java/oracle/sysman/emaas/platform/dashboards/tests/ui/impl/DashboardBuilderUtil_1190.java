@@ -22,7 +22,7 @@ public class DashboardBuilderUtil_1190 extends DashboardBuilderUtil_1150
 
 		driver.waitForElementPresent(DashBoardPageId_190.BUILDERNAMETEXTLOCATOR);
 		driver.click(DashBoardPageId_190.BUILDERNAMETEXTLOCATOR);
-		driver.takeScreenShot();
+		
 		String realName = driver.getElement(DashBoardPageId_190.BUILDERNAMETEXTLOCATOR).getAttribute("title");
 		if (!dashboardName.equals(realName)) {
 			driver.getLogger().info(
