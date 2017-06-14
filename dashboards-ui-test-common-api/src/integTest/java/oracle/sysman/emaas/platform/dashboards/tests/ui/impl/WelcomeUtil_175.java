@@ -43,13 +43,11 @@ public class WelcomeUtil_175 extends WelcomeUtil_171
 		if (ITA_DEFAULT.equals(selection)) {
 			driver.waitForElementPresent("id=" + DashBoardPageId.WELCOME_ITALINKID);
 			driver.click("id=" + DashBoardPageId.WELCOME_ITALINKID);
-			driver.takeScreenShot();
 		}
 		else {
 			String eleXpath = null;
 			driver.waitForElementPresent("id=oj-select-choice-" + DashBoardPageId.WELCOME_ITA_SELECTID);
 			driver.click("id=oj-select-choice-" + DashBoardPageId.WELCOME_ITA_SELECTID);
-			driver.takeScreenShot();
 			switch (selection) {
 				case ITA_PERFORMANCE_ANALYTICS_DATABASE:
 					eleXpath = getOptionXpath(driver, DashBoardPageId.WELCOME_ITA_SELECTID,
@@ -84,7 +82,6 @@ public class WelcomeUtil_175 extends WelcomeUtil_171
 					break;
 			}
 			driver.click(eleXpath);
-			driver.takeScreenShot();
 		}
 	}
 	
@@ -102,7 +99,6 @@ public class WelcomeUtil_175 extends WelcomeUtil_171
 		
 		driver.waitForElementPresent("id=" + DashBoardPageId.WELCOME_INFRAMONITORINGID);
 		driver.click("id=" + DashBoardPageId.WELCOME_INFRAMONITORINGID);
-		driver.takeScreenShot();
 	}
 	
 	/* (non-Javadoc)
@@ -116,8 +112,6 @@ public class WelcomeUtil_175 extends WelcomeUtil_171
 
 		driver.waitForElementPresent("id=" + DashBoardPageId.WELCOME_COMPLIANCEID);
 		driver.click("id=" + DashBoardPageId.WELCOME_COMPLIANCEID);
-		driver.takeScreenShot();
-
 	}
 
 	/* (non-Javadoc)
@@ -131,8 +125,6 @@ public class WelcomeUtil_175 extends WelcomeUtil_171
 
 		driver.waitForElementPresent("id=" + DashBoardPageId.WELCOME_ORCHESTRATIONID);
 		driver.click("id=" + DashBoardPageId.WELCOME_ORCHESTRATIONID);
-		driver.takeScreenShot();
-
 	}
 
 	/* (non-Javadoc)
@@ -146,8 +138,6 @@ public class WelcomeUtil_175 extends WelcomeUtil_171
 
 		driver.waitForElementPresent("id=" + DashBoardPageId.WELCOME_SECURITYANALYTICSID);
 		driver.click("id=" + DashBoardPageId.WELCOME_SECURITYANALYTICSID);
-		driver.takeScreenShot();
-
 	}	
 
 	@Override
