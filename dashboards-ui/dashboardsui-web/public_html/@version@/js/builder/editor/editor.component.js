@@ -304,7 +304,7 @@ define(['knockout',
             };
 
             tile.fireDashboardItemChangeEvent = function(dashboardItemChangeEvent){
-                tile.dashboard.fireDashboardItemChangeEvent(dashboardItemChangeEvent);
+                Builder.fireDashboardItemChangeEvent(dashboard.tiles(), dashboardItemChangeEvent);
             };
             
             tile.getWigetDataFromCache = function (wigetId,sccessCallback,failureCallback) {
