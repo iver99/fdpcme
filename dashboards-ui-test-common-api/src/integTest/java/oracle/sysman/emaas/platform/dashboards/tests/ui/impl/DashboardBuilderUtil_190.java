@@ -1634,8 +1634,12 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
         String titleXpath;
 
 		driver.waitForElementPresent(DashBoardPageId_190.BUILDERTILESEDITAREA);
-		driver.getWebDriver().findElement(By.id(DashBoardPageId_190.BUILDERTILESEDITAREA)).click();
-		driver.waitForServer();
+		//driver.getWebDriver().findElement(By.id(DashBoardPageId_190.BUILDERTILESEDITAREA)).click();
+ 	        //WebElement element = driver.getElement("//button[contains(@id,'rightpanel-pencil')]");
+        	//element.click();
+                //JavascriptExecutor jse =(JavascriptExecutor)driver.getWebDriver();
+                //jse.executeScript("arguments[0].click();", element);
+                driver.waitForServer();
 		driver.takeScreenShot();
 		//driver.click(DashBoardPageId_190.BUILDERTILESEDITAREA);
 
@@ -1646,8 +1650,9 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 		}
         //tileTitles.get(index).click();
         titleXpath = tileTitles.get(index).toString();
-        ((JavascriptExecutor) openDriver).executeScript("arguments[0].click();", openDriver.findElement(By.xpath(titleXpath)));
-		driver.waitForServer();
+        //((JavascriptExecutor) openDriver).executeScript("arguments[0].click();", tileTitles.get(index));
+        new Actions(driver.getWebDriver()).moveToElement(tileTitles.get(index)).perform();	
+    	driver.waitForServer();
 		driver.takeScreenShot();
 		return tileTitles.get(index);
 	}
