@@ -1,16 +1,18 @@
-define(['knockout',
+define('uifwk/@version@/js/util/zdt-util-impl', ['knockout',
     'jquery',
     'ojs/ojcore',
     'uifwk/@version@/js/util/df-util-impl',
+    'uifwk/@version@/js/util/message-util-impl', 
     'uifwk/@version@/js/util/ajax-util-impl'
 ],
-    function(ko, $, oj, dfuModel, ajaxUtilModel)
+    function(ko, $, oj, dfuModel, msgUtilModel, ajaxUtilModel)
     {
         function DashboardFrameworkZdtUtil() {
             var self = this;
             var downtimeDetectUrl = "/sso.static/dashboards.omcstatus";
             var dfu = new dfuModel();
             var ajaxUtil = new ajaxUtilModel();
+            var messageUtil = new msgUtilModel();
             
             /**
              * Check if OMC is under planned downtime or not.
@@ -53,13 +55,13 @@ define(['knockout',
              * @param {Function} callback
              * @returns 
              */ 
-            self.detectPlannedDowntime = function(callback) {
+            self.detectPlannedDowntime = function(callback, doNotUseCache) {
                 if (typeof(callback) !== 'function') {
                     oj.Logger.error("Error: Failed to detect OMC's planned downtime. callback should be defined as a function.");
                     return;
                 }
                 
-                if (window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.isPlannedDowntime && 
+                if (!doNotUseCache && window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.isPlannedDowntime && 
                         ($.isFunction(window._uifwk.cachedData.isPlannedDowntime) && window._uifwk.cachedData.isPlannedDowntime()!== undefined)) {
                     callback(window._uifwk.cachedData.isPlannedDowntime());
                 }else{
@@ -88,6 +90,7 @@ define(['knockout',
                         .done(function() {
                             window._uifwk.cachedData.isPlannedDowntime(false);
                             window._uifwk.cachedData.isFetchingOMCStatus = false;
+                            messageUtil.removeMessageByCategory("omc_planned_downtime");
                             callback(false);
                         })
                         .fail(function(jqXHR, textStatus, errorThrown) {
@@ -100,6 +103,7 @@ define(['knockout',
                             else {
                                 window._uifwk.cachedData.isPlannedDowntime(false);
                                 window._uifwk.cachedData.isFetchingOMCStatus = false;
+                                messageUtil.removeMessageByCategory("omc_planned_downtime");
                                 callback(false);
                             }
                         });

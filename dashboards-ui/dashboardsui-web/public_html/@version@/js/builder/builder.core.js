@@ -119,6 +119,8 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
         
         self.EVENT_DASHBOARD_CLEANUP_DELETED_WIDGETS = "EVENT_DASHBOARD_CLEANUP_DELETED_WIDGETS";
         
+        self.EVENT_DASHBOARD_OPTION_MENU_RENDERED = "EVENT_DASHBOARD_OPTION_MENU_RENDERED";
+        
         self.dispatcher = new dsp.Dispatcher();
         self.addEventListener = function(event, listener) {
             self.dispatcher.registerEventHandler(event, listener);
@@ -145,18 +147,19 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
         self.triggerBuilderResizeEvent = function(message) {
             var height = $(window).height()/* - $('#headerWrapper').outerHeight()
                     - $('#head-bar-container').outerHeight()*/;
-            var width = $(window).width();
+            var width = $("#omcHamburgerMenu:visible").not(".oj-offcanvas-overlay")[0]?$(window).width()-$("#omcHamburgerMenu").width():$(window).width();
             var $visibleDashboard = $("#dashboards-tabs-contents .dashboard-content:visible");
             var $rightPanelToggler = $('.right-panel-toggler');
             var $dbdLeftPanel = $('.dbd-left-panel');
-            var panelWidth = $dbdLeftPanel.is(":visible") ? $dbdLeftPanel.width() : 0;
-            var togglerWidth = $rightPanelToggler.is(":visible") ? $rightPanelToggler.outerWidth() : 0;
+            var panelWidth = $dbdLeftPanel.is(":visible") ? Math.min(320, $dbdLeftPanel.width()) : 0;
+            var togglerWidth = $rightPanelToggler.is(":visible") ? Math.min(35, $rightPanelToggler.outerWidth()) : 0;
             var leftWidth = panelWidth + togglerWidth;
             var $dbdSetTabs = $('#dbd-set-tabs');
             var tabSetHeight = $dbdSetTabs.is(":visible") ? $dbdSetTabs.height() : 0;
             var topHeight = $('#headerWrapper').outerHeight() +
                     tabSetHeight +
                     $visibleDashboard.find('.head-bar-container:visible').outerHeight();
+            console.log("******width:"+width+", panelWidth:" + panelWidth + ", togglerWidth:" + togglerWidth);
             self.triggerEvent(self.EVENT_BUILDER_RESIZE, message, width, height, leftWidth, topHeight);
             if (previousWidth && width >= NORMAL_MIN_WIDTH && previousWidth < NORMAL_MIN_WIDTH){
                 self.triggerEvent(self.EVENT_ENTER_NORMAL_MODE, null, width, height, leftWidth, topHeight);

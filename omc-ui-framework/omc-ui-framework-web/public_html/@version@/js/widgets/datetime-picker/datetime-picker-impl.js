@@ -111,6 +111,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 var omcContext = ctxUtil.getOMCContext();
                 var eventSourceTimeSelector = ctxUtil.OMCEventSourceConstants.GLOBAL_TIME_SELECTOR;
                 self.badgeTimePeriod = ko.observable();
+                self.badgeMsgTitle = ko.observable();
                 console.log("Initialize date time picker! The params are: ");
                 if(ko.mapping && ko.mapping.toJS) {
                     console.log(ko.mapping.toJS(params));
@@ -465,6 +466,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 self.startTimeError = ko.observable(false);
                 self.endTimeError = ko.observable(false);
                 self.timeValidateError = ko.observable(false);
+                self.timeValidateFutureError = ko.observable(false);
                 self.beyondWindowLimitError = ko.observable(false);
                 self.flexRelTimeValError = ko.observable(false);
 
@@ -475,14 +477,18 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 self.showTimeValidateErrorMsg = ko.computed(function() {
                     return !self.showErrorMsg() && self.timeValidateError();
                 }, self);
+                
+                self.showTimeValidateFutureErrorMsg = ko.computed(function() {
+                    return !self.showErrorMsg() && !self.showTimeValidateErrorMsg() && self.timeValidateFutureError();
+                }, self);
 
                 self.showBeyondWindowLimitError = ko.computed(function() {
-                    return !self.showErrorMsg() && !self.showTimeValidateErrorMsg() && self.beyondWindowLimitError();
+                    return !self.showErrorMsg() && !self.showTimeValidateErrorMsg() && !self.showTimeValidateFutureErrorMsg() && self.beyondWindowLimitError();
                 }, self);
 
                 self.applyButtonDisable = ko.computed(function() {
                     return self.startDateError() || self.endDateError() || self.startTimeError() || self.endTimeError() ||
-                            self.timeValidateError() || self.beyondWindowLimitError() || self.showTimeFilterError() || self.flexRelTimeValError();
+                            self.timeValidateError() || self.timeValidateFutureError() || self.beyondWindowLimitError() || self.showTimeFilterError() || self.flexRelTimeValError();
                 }, self);
                 
                 self.lrCtrlVal.subscribe(function(value) {
@@ -586,6 +592,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 self.errorMsg = nls.DATETIME_PICKER_ERROR;
                 self.formatErrorMsg = nls.DATETIME_PICKER_FORMAT_ERROR_MSG;
                 self.timeValidateErrorMsg = nls.DATETIME_PICKER_TIME_VALIDATE_ERROR_MSG;
+                self.timeValidateFutureErrorMsg = nls.DATETIME_PICKER_TIME_VALIDATE_FUTURE_ERROR_MSG;
                 self.beyondWindowLimitErrorMsg = nls.DATETIME_PICKER_BEYOND_WINDOW_LIMIT_ERROR_MSG;
                 self.felRelTimeValError = nls.DATETIME_PICKER_FLEX_REL_TIME_VALUE_ERROR_MSG;
                 self.timeRangeMsg = nls.DATETIME_PICKER_TIME_RANGE;
@@ -1183,6 +1190,8 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         self.badgeTimePeriod(defaultTP);
                     }
                 }
+                
+                self.badgeMsgTitle(msgUtil.formatMessage(nls.DATETIME_PICKER_BADGE_MESSAGE_TITLE, self.timePeriodsNlsObject[self.badgeTimePeriod()]));
 
                 if(!ko.components.isRegistered("time-filter")) {
                     ko.components.register("time-filter", {
@@ -1423,62 +1432,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 };
                 
                 self.getFlexTimePeriod = function(num, opt) {
-                    var optLabel;
-                    switch(opt) {
-                        case ctxUtil.OMCTimeConstants.TIME_UNIT.SECOND:
-                            if(num === 1) {
-                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_SECOND;
-                            }else {
-                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_SECONDS;
-                            }                            
-                            break;
-                        case ctxUtil.OMCTimeConstants.TIME_UNIT.MINUTE:
-                            if(num === 1) {
-                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_MINUTE;
-                            }else {
-                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_MINUTES;
-                            }                            
-                            break;
-                        case ctxUtil.OMCTimeConstants.TIME_UNIT.HOUR:
-                            if(num === 1) {
-                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_HOUR;
-                            }else {
-                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_HOURS;
-                            }                            
-                            break;
-                        case ctxUtil.OMCTimeConstants.TIME_UNIT.DAY:
-                            if(num === 1) {
-                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_DAY;
-                            }else {
-                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_DAYS;
-                            }                            
-                            break;
-                        case ctxUtil.OMCTimeConstants.TIME_UNIT.WEEK:
-                            if(num === 1) {
-                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_WEEK;
-                            }else {
-                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_WEEKS;
-                            }                            
-                            break;
-                        case ctxUtil.OMCTimeConstants.TIME_UNIT.MONTH:
-                            if(num === 1) {
-                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_MONTH;
-                            }else {
-                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_MONTHS;
-                            }                            
-                            break;
-                        case ctxUtil.OMCTimeConstants.TIME_UNIT.YEAR:
-                            if(num === 1) {
-                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_YEAR;
-                            }else {
-                                optLabel = nls.DATETIME_PICKER_FLEX_REL_TIME_OPTION_YEARS;
-                            }                            
-                            break;
-                        default:
-                            throw new Error("error in getting flexible relative time period: flexible relative time option-" + opt + " is invalid.");
-                    }
-                    
-                    return nls.DATETIME_PICKER_FLEX_REL_TIME_LAST + " " + num + " " + optLabel;
+                    return ctxUtil.getFlexTimePeriod(num, opt);
                 }
 
                 /**
@@ -2336,6 +2290,18 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     }else {
                         self.timeValidateError(false);
                     }
+                    
+                    var endDate = oj.IntlConverterUtils.dateToLocalIso(new Date(self.endDate())).slice(0, 10);
+                    if(!params.hideTimeSelection) {
+                        endDate = endDate + self.endTime();
+                    }
+                    
+                    var current = oj.IntlConverterUtils.dateToLocalIso(new Date());
+                    if(endDate > current) {
+                        self.timeValidateFutureError(true);
+                    }else {
+                        self.timeValidateFutureError(false);
+                    }
                 }
 
                 self.setErrorBorderForTime = function (target) {
@@ -2881,16 +2847,16 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                 console.log("start: "+new Date(start));
                                 console.log("end: "+new Date(end));
                                 if(flexRelTimePeriodId) {
-                                    console.log("time period: "+flexRelTimePeriodId);
+                                    console.log("time period: " + flexRelTimePeriodId);
                                 }else {
-                                    console.log("time period: "+informalizeTimePeriod(timePeriod));
+                                    console.log("time period: " + timePeriod);
                                 }
                                 console.log("time filter: "+JSON.stringify(self.timeFilter()));
                                 console.log("flexible relative time value: "+flexRelTimeVal+", option: "+flexRelTimeOpt);
                                 if(flexRelTimePeriodId) {
                                     self.callbackAfterApply(newDateWithMilliseconds(start), newDateWithMilliseconds(end), flexRelTimePeriodId, self.timeFilter(), flexRelTimeVal, flexRelTimeOpt);
                                 }else {
-                                    self.callbackAfterApply(newDateWithMilliseconds(start), newDateWithMilliseconds(end), informalizeTimePeriod(timePeriod), self.timeFilter(), flexRelTimeVal, flexRelTimeOpt);
+                                    self.callbackAfterApply(newDateWithMilliseconds(start), newDateWithMilliseconds(end), timePeriod, self.timeFilter(), flexRelTimeVal, flexRelTimeOpt);
                                 }
                             },
                             error: function () {

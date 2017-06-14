@@ -14,7 +14,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 /**
  * Created by xiadai on 2016/10/12.
  */
-public class DashboardBuilderUtil_1150 extends DashboardBuilderUtil_1100
+public class DashboardBuilderUtil_1150 extends DashboardBuilderUtil_1120
 {
 	@Override
 	public boolean respectGCForEntity(WebDriver driver)

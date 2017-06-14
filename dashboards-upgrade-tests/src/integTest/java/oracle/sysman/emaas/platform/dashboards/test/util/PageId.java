@@ -39,6 +39,22 @@ public class PageId
 	public static final String HOST_OPERATIONS_ID = "//div[@aria-dashboard='16']";
 	public static final String MIDDLEWARE_OPERATIONS_ID = "//div[@aria-dashboard='17']";
 
+	//dashboard page button
+	public static final String DASHBOARDEDITBUTTON = "//button[@title='Edit Settings']";
+	public static final String DASHBOARDNAME = ".//*[@id='dbd-edit-settings-container']/span[2]";
+	public static final String DASHBOARDNAME_CSS = ".edit-setting-link.edit-dsb-link";
+	public static final String DASHBOARDFILTERS = "//span[contains(text(),'Dashboard Filters')]";
+	public static final String DASHBOARDENTITIES = "//label[text()='Entities']";
+	
+	public static final String ENABLEGCTIMERANGE = "//*[@id='enableGCTimeRange']";
+	public static final String ENABLETIMERANGE = "//*[@id='enableTimeRange']";
+	public static final String ENABLEENTITYFILTER = "//*[@id='enableEntityFilter']";
+	public static final String ENABLEGCENTITYFILTER = "//*[@id='enableGCEntities']";
+	public static final String DISABLEENTITYFILTER = "//*[@id='disableEntityFilter']";
+	public static final String ENTITYBUTTON = "//*[@id='emcta_tgtSel0_dropDown']";
+	public static final String SELECTBUTTON = "//*[@id='emcta_tgtSel0_ok']";
+	public static final String CANCELBUTTON = "//*[@id='emcta_tgtSel0_cancel']";
+	
 	//check box
 	public static final String ITA_BOXID = "itaopt";
 

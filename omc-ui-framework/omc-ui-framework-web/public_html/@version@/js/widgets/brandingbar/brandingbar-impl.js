@@ -29,6 +29,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.entitiesList = ko.observableArray();
             self.timeCxtText = ko.observable();
 
+            self.renderEmaasAppheaderGlobalNavMenu = ko.observable(false);
 
             self.userName = $.isFunction(params.userName) ? params.userName() : params.userName;
             self.tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
@@ -390,7 +391,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.removePillTitle = nls.PILL_REMOVE_TITLE;
             self.appName = ko.observable();
 
-            self.hasMessages = ko.observable(true);
+            self.hasMessages = ko.observable(false);
             self.messageList = ko.observableArray();
             self.clearMessageIcon = "/emsaasui/uifwk/@version@/images/widgets/clearEntry_ena.png";
             var errorMessageIcon = "/emsaasui/uifwk/@version@/images/widgets/stat_error_16.png";
@@ -535,6 +536,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.sessionTimeoutBtnOK = nls.BRANDING_BAR_SESSION_TIMEOUT_DIALOG_BTN_OK;
             self.sessionTimeoutWarnDialogId = 'sessionTimeoutWarnDialog';
             self.sessionTimeoutWarnIcon = warnMessageIcon;
+            self.renderSessionTimeoutDialog = ko.observable(false);
 
             //Fetch and set sso logout url and session expiry time
             dfu.getRegistrations(function (data) {
@@ -690,11 +692,13 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 }
             };
 
-            $("#emaasAppheaderGlobalNavMenuId").ojMenu({
-                "beforeOpen": function (event, ui) {
+            self.emaasAppheaderGlobalNavMenuBeforeOpen = function(){
+                if(!self.renderEmaasAppheaderGlobalNavMenu()){
+                    self.renderEmaasAppheaderGlobalNavMenu(true);
+                    $('#emaasAppheaderGlobalNavMenuId').ojMenu("refresh");
                     self.aboutBoxImmediateLoading(true);
                 }
-            });
+            };
 
             var templatePath = "uifwk/js/widgets/navlinks/html/navigation-links.html";
             var vmPath = "uifwk/js/widgets/navlinks/js/navigation-links";
@@ -1116,6 +1120,10 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         refreshOMCContext();
                     }
                 }
+                else if (data && data.tag && data.tag === 'EMAAS_OMC_SESSION_TIME_OUT') {
+                    self.renderSessionTimeoutDialog(true);
+                    dfu.showSessionTimeoutWarningDialog(self.sessionTimeoutWarnDialogId);
+                }
             }
 
             function fireTopologyStatusChangeEvent(actionType) {
@@ -1259,6 +1267,25 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                             var newMsg = hiddenMessages[0];
                             displayMessages.push(newMsg);
                             hiddenMessages = removeItemByPropertyValue(hiddenMessages, 'id', newMsg.id);
+                            displayMessageCount++;
+                        }
+                    }
+                    if (data.category === catRetryFail) {
+                        currentRetryFailMsgId = null;
+                    }
+                    if (data.category === catPlannedDowntime) {
+                        currentPlannedDowntimeMsgId = null;
+                    }
+                }else if(data && data.category){
+                    var originDispMsgCnt = displayMessages.length;
+                    hiddenMessages = removeItemByPropertyValue(hiddenMessages, 'category', data.category);
+                    displayMessages = removeItemByPropertyValue(displayMessages, 'category', data.category);
+                    if (originDispMsgCnt > displayMessages.length) {
+                        displayMessageCount--;
+                        if (hiddenMessages.length > 0) {
+                            var newMsg = hiddenMessages[0];
+                            displayMessages.push(newMsg);
+                            hiddenMessages = removeItemByPropertyValue(hiddenMessages, 'category', newMsg.category);
                             displayMessageCount++;
                         }
                     }

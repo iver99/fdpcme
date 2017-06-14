@@ -16,9 +16,9 @@ import mockit.Expectations;
 import mockit.Mocked;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emaas.platform.dashboards.core.DBConnectionManager;
-import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
-import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil.VersionedLink;
 import oracle.sysman.emaas.platform.dashboards.targetmodel.services.GlobalStatus;
+import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
+import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil.VersionedLink;
 import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
 import oracle.sysman.emaas.platform.dashboards.webutils.services.RegistryServiceManager;
 
@@ -59,7 +59,7 @@ public class AvailabilityNotificationTest
 				result = Boolean.TRUE;
 				anyDcm.isDatabaseConnectionAvailable();
 				result = true;
-				RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, false, null,false);
+				RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString,null);
 				result = new VersionedLink(new Link().withRel("collection/domains").withHref(
 						"http://den00zyr.us.oracle.com:7007/naming/entitynaming/v1/domains"), null, null);
 			}
@@ -86,7 +86,7 @@ public class AvailabilityNotificationTest
 				result = Boolean.TRUE;
 				anyDcm.isDatabaseConnectionAvailable();
 				result = true;
-				RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString,false, null,false);
+				RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString,null);
 				result = null;
 //				anyRsm.markOutOfService((List<InstanceInfo>) any, (List<NonServiceResource>) any, (List<String>) any);
 			}
@@ -114,7 +114,7 @@ public class AvailabilityNotificationTest
 				result = Boolean.TRUE;
 				anyDcm.isDatabaseConnectionAvailable();
 				result = true;
-				RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, false, null, false);
+				RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, null);
 				result = new Exception();
 //				anyRsm.markOutOfService((List<InstanceInfo>) any, (List<NonServiceResource>) any, (List<String>) any);
 			}

@@ -47,7 +47,7 @@ public class UserOptionsManagerTest_S2
 		uo.setAutoRefreshInterval(0L);
 		uo.setUserName("t");
 		UserOptions uo1 = new UserOptions();
-		uo1.setDashboardId(BigInteger.valueOf(-1L));
+		uo1.setDashboardId("-1");
 		uo1.setAutoRefreshInterval(0L);
 		uo1.setUserName("t");
 
@@ -89,7 +89,7 @@ public class UserOptionsManagerTest_S2
 		catch (DashboardNotFoundException e) {
 			LOGGER.info("context",e);
 		}
-		uo1.setDashboardId(BigInteger.valueOf(1L));
+		uo1.setDashboardId("1");
 		try {
 			dbcm.saveOrUpdateUserOptions(uo1, 1L);
 		}
