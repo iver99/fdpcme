@@ -39,7 +39,7 @@ import org.apache.logging.log4j.Logger;
 public class MetadataRetriever
 {
     public static final String DEFAULT_OOB_REL = "oob/dashboards";
-    public static final String DEFAULT_NLS_REL = "resource_bundle";
+    public static final String DEFAULT_NLS_REL = "oob/resource_bundle";
     
     //private static final String[] supportedLanguages = new String[]{"en", "fr", "ko", "zh-Hans", "zh-Hant", "zh"};
     
