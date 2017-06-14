@@ -647,7 +647,7 @@
             </div>
 
             <!-- ko ifnot: rightPanelControl.completelyHidden -->
-            <div class="df-right-panel no-print" data-bind="stopDataBinding:isDashboardSet ? isOobDashboardset() : ($b.dashboard.systemDashboard&&$b.dashboard.systemDashboard()),style:{top:isDashboardSet() ?'100px':'91px'}">
+            <div class="df-right-panel no-print" data-bind="stopDataBinding:isDashboardSet ? isOobDashboardset() : ($b.dashboard.systemDashboard&&$b.dashboard.systemDashboard()),style:{display: rightPanelControl.completelyHidden()?'none':'block', top:isDashboardSet() ?'100px':'91px'}">
                 <!-- ko if: rightPanelControl.showRightPanelToggler -->
                 <div class="right-panel-toggler no-print fit-size" style="max-width: 30px;" data-bind="
                         style: {
@@ -1039,8 +1039,7 @@
                             </div>
                         </div>
                         <!--/ko-->
-                        <!-- ko if: rightPanelControl.rightPanelIcon()=='wrench' -->
-                        <div class="dbd-right-panel-wrench">
+                        <div class="dbd-right-panel-wrench" data-bind="style:{'display': rightPanelControl.rightPanelIcon()=='wrench'?'block':'none'}">
                             <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title fit-size-vertical-sibling" data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_BUILD_TITLE')"></div>
                             <div class="dbd-right-panel-build-container" style="padding:0">
                                 <div class="dbd-left-panel-header fit-size-vertical-sibling">
@@ -1112,7 +1111,6 @@
                                 -->
                             </div>
                         </div>
-                        <!--/ko-->
                     </div>
                     <!-- /ko -->
                 </div> 
