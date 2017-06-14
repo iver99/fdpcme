@@ -1607,6 +1607,7 @@ public class DashboardManagerTest extends BaseTest
 		set3.setDashboardId(BigInteger.valueOf(12000L+id++));
 		set3.setIsSystem(true);
 		set3.setName("set3-"+System.currentTimeMillis());
+		set3.setAppicationType(DashboardApplicationType.APM);
 		List<Dashboard> list3=new ArrayList<Dashboard>();
 		list3.add(dbd3);
 		set3.setSubDashboards(list3);
