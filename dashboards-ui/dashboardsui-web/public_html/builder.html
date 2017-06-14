@@ -279,6 +279,15 @@
                                                         data-bind="attr: {'id': 'tileMenu' + clientGuid, title: getNlsString('DBS_BUILDER_TILE_ACTIONS')}, 
                                                         event: {mouseover: function(data, event) {$root.showPullRightBtn(clientGuid, data, event)}, mouseout: function(data, event) {$root.hidePullRightBtn(clientGuid, data, event)}},
                                                         ojComponent: {component: 'ojMenu', select: $root.menuItemSelect, open: $root.widgetMenuOpen, openOptions: {position: {'my': 'left center', 'at': 'right center'} } }">
+                                                        <li data-option="showhide-title">
+                                                            <a href="#" data-bind="attr: {'data-show-hide-title': hideTitle() === 'true' ? 'show' : 'hide'}">
+                                                                <span class="oj-menu-item-icon demo-icon-font">
+                                                                    <i class="fa-icon-font fa-icon-font-16" data-bind="css: hideTitle() === 'true' ? 'dbd-icon-eye':'dbd-icon-eye-slash'"></i>
+                                                                </span>
+                                                                <span data-bind="text: hideTitle() === 'true' ? getNlsString('DBS_BUILDER_TILE_SHOW'):getNlsString('DBS_BUILDER_TILE_HIDE')"></span>
+                                                            </a>
+                                                        </li>
+                                                        <li data-option="divider"></li>
                                                         <!-- EMCPDF-1131: this should be changed in next sprint
                                                         <li data-option="resize">
                                                             <a href="#">
@@ -1004,16 +1013,6 @@
                                     <span class="dbd-right-panel-editdashboard-innertitle" data-bind="text: getNlsString('DBS_BUILDER_EDIT_CONTENT_TITLE')"></span>
                                     <div class="cDsbDialog oj-form-layout">
                                         <div class="oj-form">
-                                            <div class="oj-flex">
-                                                <div class="oj-flex-item">
-                                                    <div data-bind="ojComponent: {component: 'ojCheckboxset', value: rightPanelEditContent.hideTitle}" >
-                                                        <span class="oj-choice-row">
-                                                            <input id="hideTitle" type="checkbox" value="hideTitle">
-                                                            <label for="hideTitle" data-bind="text: getNlsString('DBS_BUILDER_EDIT_CONTENT_TITLE_HIDE')"></label>
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </div>
                                             <div class="oj-flex">
                                                 <div class="oj-flex-item" style="overflow: hidden;margin-top: 10px;">
                                                     <span data-bind="css:{'dbd-right-panel-collapsible-disabled': rightPanelEditContent.hideTitle().indexOf('hideTitle')>-1},text: getNlsString('DBS_BUILDER_EDIT_CONTENT_ADD_LINK_TO_TITLE')"></span>

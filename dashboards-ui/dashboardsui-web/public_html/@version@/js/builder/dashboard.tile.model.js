@@ -229,6 +229,11 @@ define(['knockout',
                     return;
                 }
                 switch (ui.item.data("option")) {
+                    case "showhide-title":
+                        self.editor.showHideTitle(tile);
+                        self.show();
+                        self.notifyTileChange(tile, new Builder.TileChange("POST_HIDE_TITLE"));
+                        break;
                     case "wider":
                         self.editor.broadenTile(tile);
                         self.show();

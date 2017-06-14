@@ -49,10 +49,14 @@ define(['dashboards/dbsmodel',
 
         self.addToTitleAbled = ko.observable(false);
         self.selectedContent = selectedContent;
-//        self.hideTitle = self.selectedContent()?ko.observable(("true" === self.selectedContent().hideTitle()||true === self.selectedContent().hideTitle())? ["hideTitle"]:[]):ko.observable([]);
-        self.hideTitle = ko.observable([]);
+        self.hideTitle = self.selectedContent()?ko.observable(("true" === self.selectedContent().hideTitle()||true === self.selectedContent().hideTitle())? ["hideTitle"]:[]):ko.observable([]);
+//        self.hideTitle = ko.observable([]);
+        self.prevContentHideTitleSubscription = null;
         self.hasLinkedToTitle = ko.observable(false);
         self.selectedContent.subscribe(function(tile){
+            if(self.prevContentHideTitleSubscription){
+                self.prevContentHideTitleSubscription.dispose();
+            }
             if(!tile){
                 return;
             }
@@ -61,6 +65,15 @@ define(['dashboards/dbsmodel',
 //            self.hideTitle("true" === tile.hideTitle()?["hideTitle"]:[]);
             self.hideTitle([]);
             tile.hideTitle("false");
+            self.prevContentHideTitleSubscription = tile.hideTitle.subscribe(function(val){
+                if(val === "true"){
+                    self.hideTitle(["hideTitle"]);
+                    resetAddLinkToTitle(true);
+                }else if(val === "false"){
+                    self.hideTitle([]);
+                    $("input.dashboard-search-input").ojInputText({"disabled": false});
+                }
+            });
             tile.outlineHightlight(true);
             if(tile.WIDGET_LINKED_DASHBOARD && tile.WIDGET_LINKED_DASHBOARD()){
                 self.selectedDashboardId(tile.WIDGET_LINKED_DASHBOARD());
@@ -72,20 +85,7 @@ define(['dashboards/dbsmodel',
                 });
             }
         });
-        self.hideTitle.subscribe(function(val){
-            var tile = self.selectedContent();
-            var checkboxVal2tileVal = val.indexOf("hideTitle")>-1? "true":"false";
-            if(checkboxVal2tileVal !== self.selectedContent().hideTitle()){
-                self.dashboardTilesViewModel.editor.showHideTitle(tile);
-                self.dashboardTilesViewModel.show();
-                self.dashboardTilesViewModel.notifyTileChange(tile, new Builder.TileChange("POST_HIDE_TITLE"));
-            }
-            if(val.indexOf("hideTitle")>-1){
-                resetAddLinkToTitle(true);
-            }else{
-                $("input.dashboard-search-input").ojInputText({"disabled": false});
-            }
-        });
+
         self.removeContentClicked = function () {
             var tile = self.selectedContent();
             self.dashboardTilesViewModel.editor.deleteTile(tile);
