@@ -48,6 +48,11 @@ define(['knockout',
             widgetAreaContainer = $b.findEl('.widget-area');
 
             self.dashboard = $b.dashboard;
+            //only show vertical separator after text widget add icon when entity selector or time selector show up in dashboard toolbar
+            self.shouldShowSeparator = ko.computed(function() {
+                return (self.dashboard.enableEntityFilter && ((self.dashboard.enableEntityFilter() === 'TRUE') || (self.isUnderSet && self.dashboard.enableEntityFilter() === 'GC')))
+                       || self.isUnderSet && self.dashboard.enableTimeRange && (self.dashboard.enableTimeRange() === 'TRUE' || self.dashboard.enableTimeRange() === 'GC')
+            });
             var ddsDashboard = new Builder.DashboardDataSource().dataSource[self.dashboard.id()];
             var eagerCreated = ddsDashboard.eagerCreated ? ddsDashboard.eagerCreated : null;
             self.normalMode = (eagerCreated && eagerCreated.normalMode) ? eagerCreated.normalMode : new Builder.NormalEditorMode();
