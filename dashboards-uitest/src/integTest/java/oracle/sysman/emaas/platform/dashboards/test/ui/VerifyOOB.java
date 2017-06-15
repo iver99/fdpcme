@@ -1846,11 +1846,12 @@ public class VerifyOOB extends LoginAndLogout
 		String titleTitlesLocator = String.format(DashBoardPageId.BUILDERTILETITLELOCATOR, widgetname);
 		WebElement tileTitle = driver.getWebDriver().findElement(By.xpath(titleTitlesLocator));
 
-		tileTitle.click();
-		driver.takeScreenShot();
+//		tileTitle.click();
+
 
 		Actions builder = new Actions(driver.getWebDriver());
 		builder.moveToElement(tileTitle).perform();
+		driver.waitForServer();
 		driver.takeScreenShot();
 
 		//verify the config icon not exist
