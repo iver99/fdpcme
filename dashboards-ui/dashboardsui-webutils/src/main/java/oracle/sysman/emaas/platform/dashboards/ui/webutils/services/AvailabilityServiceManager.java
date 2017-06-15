@@ -17,6 +17,7 @@ import javax.management.InstanceNotFoundException;
 import javax.management.Notification;
 import javax.management.NotificationListener;
 
+import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -25,7 +26,6 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceQ
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emaas.platform.dashboards.ui.targetmodel.services.GlobalStatus;
-import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.StringUtil;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.wls.lifecycle.ApplicationServiceManager;
 import weblogic.application.ApplicationLifecycleEvent;

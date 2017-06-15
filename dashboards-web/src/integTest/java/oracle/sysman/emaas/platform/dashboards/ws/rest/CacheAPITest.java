@@ -2,23 +2,20 @@ package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
 import mockit.Expectations;
 import mockit.Mocked;
-import oracle.sysman.emaas.platform.dashboards.core.model.subscription2.AppsInfo;
-import oracle.sysman.emaas.platform.dashboards.core.model.subscription2.TenantSubscriptionInfo;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
-import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.model.AppsInfoWeb;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICache;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.lru.LRUCacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.lru.LinkedHashMapCache;
+import oracle.sysman.emaas.platform.emcpdf.tenant.TenantSubscriptionUtil;
+import oracle.sysman.emaas.platform.emcpdf.tenant.subscription2.AppsInfo;
+import oracle.sysman.emaas.platform.emcpdf.tenant.subscription2.TenantSubscriptionInfo;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-
-import static org.testng.Assert.*;
 
 /**
  * Created by xiadai on 2017/4/7.
@@ -35,7 +32,7 @@ public class CacheAPITest {
         cacheAPI = new CacheAPI();
         final ConcurrentMap<String, ICache> map = new ConcurrentHashMap<String, ICache>();
         map.put("key", new LinkedHashMapCache("name", 1, 1L));
-        new Expectations(){
+        new Expectations() {
             {
                 LRUCacheManager.getInstance();
                 result = lruCacheManager;
@@ -51,7 +48,7 @@ public class CacheAPITest {
         cacheAPI = new CacheAPI();
         final ConcurrentMap<String, ICache> map = new ConcurrentHashMap<String, ICache>();
         map.put("key", new LinkedHashMapCache("name", 1, 1L));
-        new Expectations(){
+        new Expectations() {
             {
                 LRUCacheManager.getInstance();
                 result = lruCacheManager;
@@ -67,7 +64,7 @@ public class CacheAPITest {
         cacheAPI = new CacheAPI();
         final ConcurrentMap<String, ICache> map = new ConcurrentHashMap<String, ICache>();
         map.put("key", new LinkedHashMapCache("name", 1, 1L));
-        new Expectations(){
+        new Expectations() {
             {
                 LRUCacheManager.getInstance();
                 result = lruCacheManager;
@@ -83,7 +80,7 @@ public class CacheAPITest {
         cacheAPI = new CacheAPI();
         final ConcurrentMap<String, ICache> map = new ConcurrentHashMap<String, ICache>();
         map.put("key", new LinkedHashMapCache("name", 1, 1L));
-        new Expectations(){
+        new Expectations() {
             {
                 LRUCacheManager.getInstance();
                 result = lruCacheManager;
@@ -100,7 +97,7 @@ public class CacheAPITest {
         cacheAPI = new CacheAPI();
         final ConcurrentMap<String, ICache> map = new ConcurrentHashMap<String, ICache>();
         map.put("key", new LinkedHashMapCache("name", 1, 1L));
-        new Expectations(){
+        new Expectations() {
             {
                 LRUCacheManager.getInstance();
                 result = lruCacheManager;
@@ -127,25 +124,26 @@ public class CacheAPITest {
     TenantSubscriptionUtil tenantSubscriptionUtil;
     @Mocked
     TenantSubscriptionInfo tenantSubscriptionInfo;
+
     @Test(groups = {"s2"})
     public void testTenantSubscriptionsAPIv2() throws Exception {
         final List<AppsInfo> appsInfoList = new ArrayList<>();
-        appsInfoList.add(new AppsInfo("", "",null));
+        appsInfoList.add(new AppsInfo("", "", null));
         TenantSubscriptionsAPIv2 tenantSubscriptionsAPIv2 = new TenantSubscriptionsAPIv2();
-        tenantSubscriptionsAPIv2.getSubscribedApplications("1","emaastesttenant1.emcsadmin","");
-        new Expectations(){
+        tenantSubscriptionsAPIv2.getSubscribedApplications("1", "emaastesttenant1.emcsadmin", "");
+        new Expectations() {
             {
                 TenantContext.getCurrentTenant();
                 result = "tenant";
-                TenantSubscriptionUtil.getTenantSubscribedServices(anyString, (TenantSubscriptionInfo)any);
+                TenantSubscriptionUtil.getTenantSubscribedServices(anyString, (TenantSubscriptionInfo) any);
                 tenantSubscriptionInfo.getAppsInfoList();
                 result = new ArrayList<>();
                 tenantSubscriptionInfo.getAppsInfoList();
                 result = appsInfoList;
             }
         };
-        tenantSubscriptionsAPIv2.getSubscribedApplications("1","emaastesttenant1.emcsadmin","");
-        tenantSubscriptionsAPIv2.getSubscribedApplications("","","");
+        tenantSubscriptionsAPIv2.getSubscribedApplications("1", "emaastesttenant1.emcsadmin", "");
+        tenantSubscriptionsAPIv2.getSubscribedApplications("", "", "");
 
     }
 

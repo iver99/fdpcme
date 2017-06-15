@@ -3,14 +3,25 @@ package oracle.sysman.emaas.platform.dashboards.test.ui;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.DashBoardUtils;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.LoginAndLogout;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.PageId;
+import oracle.sysman.emaas.platform.dashboards.test.ui.util.TestGlobalContextUtil;
+import oracle.sysman.emaas.platform.dashboards.test.ui.util.VerifyOOBUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.GlobalContextUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_190;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.GlobalContextUtil;
+import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 /**
@@ -26,22 +37,73 @@ public class TestSuiteLicensing_SECSMA extends LoginAndLogout
 	private final String UDEWidget = "Analytics Line";
 	private String dbName_Security = "";
 
-	public static final String GLBCTXTID = "emaas-appheader-globalcxt";
-	public static final String GLBCTXTFILTERPILL = "globalBar_pillWrapper";
-	public static final String GLBCTXTBUTTON = "buttonShowTopology";
-	public static final String DSBNAME = "DASHBOARD_GLOBALTESTING";
-	public static final String DSBSETNAME = "DASHBOARDSET_GLOBALTESTING";
-	
+	private String dsbName = "DASHBOARD_GLOBALTESTING";
+	private String dsbsetName = "DASHBOARDSET_GLOBALTESTING";	
+	private String dbName_WithGC = "TestDashboardWithGC";		
 	private String dbName_ude = "";
-
 	private String dbName_willDelete = "";
 	private String dbSetName_willDelete = "";
-
+	private String dbName_inSet = "";
 	private String dbName_tailsTest = "";
+	
+	private String gccontent = "Composite: /SOA1213_base_domain/base_domain/soa_server1/soa-infra_System";
+	
+	@BeforeClass 
+	public void CreateTestData()
+	{
+		dbName_WithGC = dbName_WithGC + DashBoardUtils.generateTimeStamp();
+		//Initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_SECSMA);
+		webd.getLogger().info("Start to create test data");
+
+		//switch to grid view
+		webd.getLogger().info("Switch to grid view");
+		DashboardHomeUtil.gridView(webd);
+
+		webd.getLogger().info("Start to create the test data...");
+		
+		DashboardHomeUtil.createDashboard(webd, dbName_WithGC, null, DashboardHomeUtil.DASHBOARD);		
+		DashboardBuilderUtil.verifyDashboard(webd, dbName_WithGC, null, false);
+		
+		webd.getLogger().info("Respect GC");
+		DashboardBuilderUtil.respectGCForEntity(webd);
+		
+		LoginAndLogout.logoutMethod();
+	}	
+
+	@AfterClass
+	public void RemoveDashboard()
+	{
+		//Initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_SECSMA);
+		webd.getLogger().info("Start to remove test data");
+
+		//delete dashboard
+		webd.getLogger().info("Switch to grid view");
+		DashboardHomeUtil.gridView(webd);
+
+		webd.getLogger().info("Start to remove the test data...");
+
+		DashBoardUtils.deleteDashboard(webd, dsbName);
+		DashBoardUtils.deleteDashboard(webd, dsbsetName);
+		DashBoardUtils.deleteDashboard(webd, dbName_ude);
+		DashBoardUtils.deleteDashboard(webd, dbName_willDelete);
+		DashBoardUtils.deleteDashboard(webd, dbName_tailsTest);
+		DashBoardUtils.deleteDashboard(webd, dbName_WithGC);
+		DashBoardUtils.deleteDashboard(webd, dbName_inSet);
+
+		webd.getLogger().info("All test data have been removed");
+
+		LoginAndLogout.logoutMethod();
+	}
+	
 	public void initTest(String testName, String customUser, String tenantname)
 	{
 		customlogin(this.getClass().getName() + "." + testName, customUser, tenantname);
 		DashBoardUtils.loadWebDriver(webd);
+		
+		//reset all the checkboxes
+		DashboardHomeUtil.resetFilterOptions(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -104,125 +166,599 @@ public class TestSuiteLicensing_SECSMA extends LoginAndLogout
 		DashBoardUtils.verifyWelcomePageWithTenant(webd, DashBoardUtils.SECSMA);
 	}
 	
-	@AfterClass
-	public void RemoveDashboard()
+	@Test(alwaysRun = true)
+	public void verifyDatabaseSecurity_GridView_SECSMA()
 	{
-		//Initialize the test
+		//initTest
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_SECSMA);
-		webd.getLogger().info("Start to remove test data");
+		webd.getLogger().info("start to test in verifyDatabaseSecurity_GridView_SECSMA");
 
-		//delete dashboard
-		webd.getLogger().info("Switch to grid view");
+		//click on Grid View
+		webd.getLogger().info("Click on Grid View icon");
 		DashboardHomeUtil.gridView(webd);
 
-		webd.getLogger().info("Start to remove the test data...");
+		//open Oracle Database Security
+		webd.getLogger().info("Open the OOB dashboard---Oracle Database Security");
+		DashboardHomeUtil.selectDashboard(webd, "Oracle Database Security");
 
-		DashBoardUtils.deleteDashboard(webd, DSBNAME);
-		DashBoardUtils.deleteDashboard(webd, DSBSETNAME);
-		DashBoardUtils.deleteDashboard(webd, dbName_ude);
-		DashBoardUtils.deleteDashboard(webd, dbName_willDelete);
-		DashBoardUtils.deleteDashboard(webd, dbName_tailsTest);
-
-		webd.getLogger().info("All test data have been removed");
-
-		LoginAndLogout.logoutMethod();
+		//verify Database Security
+		VerifyOOBUtil.verifyDatabaseSecurity(webd);
 	}
 
 	@Test(alwaysRun = true)
+	public void verifyDatabaseSecurity_ListView_SECSMA()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_SECSMA);
+		webd.getLogger().info("start to test in verifyDatabaseSecurity_ListView_SECSMA()");
+
+		//click on Grid View
+		webd.getLogger().info("Click on List View icon");
+		DashboardHomeUtil.listView(webd);
+
+		//open Oracle Database Security
+		webd.getLogger().info("Open the OOB dashboard---Oracle Database Security");
+		DashboardHomeUtil.selectDashboard(webd, "Oracle Database Security");
+
+		//verify Database Security
+		VerifyOOBUtil.verifyDatabaseSecurity(webd);
+	}
+
+	@Test(alwaysRun = true)
+	public void verifyDatabaseSecurity_WithFilter_GridView_SECSMA()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_SECSMA);
+		webd.getLogger().info("start to test in verifyDatabaseSecurity_WithFilter_GridView_SECSMA()");
+
+		//click Filter-Application Servers
+		webd.getLogger().info("Click Cloud Services - Security Analytics");
+		DashboardHomeUtil.filterOptions(webd, "security");
+
+		//click on Grid View
+		webd.getLogger().info("Click on Grid View icon");
+		DashboardHomeUtil.gridView(webd);
+
+		//open Oracle Database Security
+		webd.getLogger().info("Open the OOB dashboard---Oracle Database Security");
+		DashboardHomeUtil.selectDashboard(webd, "Oracle Database Security");
+
+		//verify Database Security
+		VerifyOOBUtil.verifyDatabaseSecurity(webd);
+	}
+
+	@Test(alwaysRun = true)
+	public void verifyDatabaseSecurity_WithFilter_ListView_SECSMA()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_SECSMA);
+		webd.getLogger().info("start to test in verifyDatabaseSecurity_WithFilter_ListView_SECSMA()");
+
+		//click Filter-Application Servers
+		webd.getLogger().info("Click Cloud Services - Security Analytics");
+		DashboardHomeUtil.filterOptions(webd, "security");
+
+		//click on Grid View
+		webd.getLogger().info("Click on List View icon");
+		DashboardHomeUtil.listView(webd);
+
+		//open Oracle Database Security
+		webd.getLogger().info("Open the OOB dashboard---Oracle Database Security");
+		DashboardHomeUtil.selectDashboard(webd, "Oracle Database Security");
+
+		//verify Database Security
+		VerifyOOBUtil.verifyDatabaseSecurity(webd);
+	}
+	
+	@Test(alwaysRun = true)
+	public void verifyDNS_GridView_SECSMA()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_SECSMA);
+		webd.getLogger().info("start to test in verifyDNS_GridView_SECSMA()");
+
+		//click on Grid View
+		webd.getLogger().info("Click on Grid View icon");
+		DashboardHomeUtil.gridView(webd);
+
+		//open Resource Analytics: Host
+		webd.getLogger().info("Open the OOB dashboard---DNS");
+		DashboardHomeUtil.selectDashboard(webd, "DNS");
+
+		//verify DNS
+		VerifyOOBUtil.verifyDNS(webd);
+	}
+
+	@Test(alwaysRun = true)
+	public void verifyDNS_ListView_SECSMA()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_SECSMA);
+		webd.getLogger().info("start to test in verifyDNS_ListView_SECSMA()");
+
+		//click on Grid View
+		webd.getLogger().info("Click on List View icon");
+		DashboardHomeUtil.listView(webd);
+
+		//open Resource Analytics: Host
+		webd.getLogger().info("Open the OOB dashboard---DNS");
+		DashboardHomeUtil.selectDashboard(webd, "DNS");
+
+		//verify DNS
+		VerifyOOBUtil.verifyDNS(webd);
+	}
+
+	@Test(alwaysRun = true)
+	public void verifyDNS_WithFilter_GridView_SECSMA()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_SECSMA);
+		webd.getLogger().info("start to test in verifyDNS_WithFilter_GridView_SECSMA()");
+
+		//click Filter-Application Servers
+		webd.getLogger().info("Click Cloud Services - Security Analytics");
+		DashboardHomeUtil.filterOptions(webd, "security");
+
+		//click on Grid View
+		webd.getLogger().info("Click on Grid View icon");
+		DashboardHomeUtil.gridView(webd);
+
+		//open Resource Analytics: Host
+		webd.getLogger().info("Open the OOB dashboard---DNS");
+		DashboardHomeUtil.selectDashboard(webd, "DNS");
+
+		//verify DNS
+		VerifyOOBUtil.verifyDNS(webd);
+	}
+
+	@Test(alwaysRun = true)
+	public void verifyDNS_WithFilter_ListView_SECSMA()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_SECSMA);
+		webd.getLogger().info("start to test in verifyDNS_WithFilter_ListView_SECSMA()");
+
+		//click Filter-Application Servers
+		webd.getLogger().info("Click Cloud Services - Security Analytics");
+		DashboardHomeUtil.filterOptions(webd, "security");
+
+		//click on Grid View
+		webd.getLogger().info("Click on List View icon");
+		DashboardHomeUtil.listView(webd);
+
+		//open Resource Analytics: Host
+		webd.getLogger().info("Open the OOB dashboard---DNS");
+		DashboardHomeUtil.selectDashboard(webd, "DNS");
+
+		//verify DNS
+		VerifyOOBUtil.verifyDNS(webd);
+	}
+	
+	@Test(alwaysRun = true)
+	public void verifyFirewall_GridView_SECSMA()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_SECSMA);
+		webd.getLogger().info("start to test in verifyFirewall_GridView_SECSMA()");
+
+		//click on Grid View
+		webd.getLogger().info("Click on Grid View icon");
+		DashboardHomeUtil.gridView(webd);
+
+		//open Resource Analytics: Host
+		webd.getLogger().info("Open the OOB dashboard---Firewall");
+		DashboardHomeUtil.selectDashboard(webd, "Firewall");
+
+		//verify Firewall
+		VerifyOOBUtil.verifyFirewall(webd);
+	}
+
+	@Test(alwaysRun = true)
+	public void verifyFirewall_ListView_SECSMA()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_SECSMA);
+		webd.getLogger().info("start to test in verifyFirewall_ListView_SECSMA()");
+
+		//click on Grid View
+		webd.getLogger().info("Click on List View icon");
+		DashboardHomeUtil.listView(webd);
+
+		//open Resource Analytics: Host
+		webd.getLogger().info("Open the OOB dashboard---Firewall");
+		DashboardHomeUtil.selectDashboard(webd, "Firewall");
+
+		//verify Firewall
+		VerifyOOBUtil.verifyFirewall(webd);
+	}
+
+	@Test(alwaysRun = true)
+	public void verifyFirewall_WithFilter_GridView_SECSMA()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_SECSMA);
+		webd.getLogger().info("start to test in verifyFirewall_WithFilter_GridView_SECSMA()");
+
+		//click Filter-Application Servers
+		webd.getLogger().info("Click Cloud Services - Security Analytics");
+		DashboardHomeUtil.filterOptions(webd, "security");
+
+		//click on Grid View
+		webd.getLogger().info("Click on Grid View icon");
+		DashboardHomeUtil.gridView(webd);
+
+		//open Resource Analytics: Host
+		webd.getLogger().info("Open the OOB dashboard---Firewall");
+		DashboardHomeUtil.selectDashboard(webd, "Firewall");
+
+		//verify Firewall
+		VerifyOOBUtil.verifyFirewall(webd);
+	}
+
+	@Test(alwaysRun = true)
+	public void verifyFirewall_WithFilter_ListView_SECSMA()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_SECSMA);
+		webd.getLogger().info("start to test in verifyFirewall_WithFilter_ListView_SECSMA()");
+
+		//click Filter-Application Servers
+		webd.getLogger().info("Click Cloud Services - Security Analytics");
+		DashboardHomeUtil.filterOptions(webd, "security");
+
+		//click on Grid View
+		webd.getLogger().info("Click on List View icon");
+		DashboardHomeUtil.listView(webd);
+
+		//open Resource Analytics: Host
+		webd.getLogger().info("Open the OOB dashboard---Firewall");
+		DashboardHomeUtil.selectDashboard(webd, "Firewall");
+
+		//verify Firewall
+		VerifyOOBUtil.verifyFirewall(webd);
+	}
+
+
+	@Test(alwaysRun = true)
+	public void verifyEnterpriseHealth_GridView_SECSMA()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_SECSMA);
+		webd.getLogger().info("Start the test in verifyEnterpriseHealth_GridView_SECSMA()");
+
+		//click on Grid View
+		webd.getLogger().info("Click on Grid View icon");
+		DashboardHomeUtil.gridView(webd);
+
+		//Open the OOB dashboard---Enterprise Health
+		webd.getLogger().info("Open the OOB dashboard---Enterprise Health");
+		DashboardHomeUtil.selectDashboard(webd, "Enterprise Health");
+
+		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
+
+		//verify Enterprise Health
+		VerifyOOBUtil.verifyEnterpriseHealth(webd);
+		VerifyOOBUtil.verifyEnterpriseHealth_Details(webd);
+	}
+
+	@Test(alwaysRun = true)
+	public void verifyEnterpriseHealth_ListView_SECSMA()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_SECSMA);
+		webd.getLogger().info("Start the test in verifyEnterpriseHealth_ListView_SECSMA()");
+
+		//click on List View
+		webd.getLogger().info("Click on List View icon");
+		DashboardHomeUtil.listView(webd);
+
+		//Open the OOB dashboard---Enterprise Health
+		webd.getLogger().info("Open the OOB dashboard---Enterprise Health");
+		DashboardHomeUtil.selectDashboard(webd, "Enterprise Health");
+
+		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
+		
+		//verify Enterprise Health
+		VerifyOOBUtil.verifyEnterpriseHealth(webd);
+	}
+	
+	@Test(alwaysRun = true)
+	public void verifyEnterpriseHealth_WithFilter_GridView_SECSMA()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_SECSMA);
+		webd.getLogger().info("Start the test in verifyEnterpriseHealth_WithFilter_GridView_SECSMA()");
+
+		//click Filter-Application PerfAnalytics
+		webd.getLogger().info("Click Cloud Services - Security Analytics");
+		DashboardHomeUtil.filterOptions(webd, "security");
+
+		//click on Grid View
+		webd.getLogger().info("Click on Grid View icon");
+		DashboardHomeUtil.gridView(webd);
+
+		//Open the OOB dashboard---Enterprise Health
+		webd.getLogger().info("Open the OOB dashboard---Enterprise Health");
+		DashboardHomeUtil.selectDashboard(webd, "Enterprise Health");
+
+		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
+
+		//verify Enterprise Health
+		VerifyOOBUtil.verifyEnterpriseHealth(webd);
+	}
+
+	@Test(alwaysRun = true)
+	public void verifyEnterpriseHealth_WithFilter_ListView_SECSMA()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_SECSMA);
+		webd.getLogger().info("Start the test in verifyEnterpriseHealth_WithFilter_ListView_SECSMA()");
+
+		//click Filter-Application PerfAnalytics
+		webd.getLogger().info("Click Cloud Services - Security Analytics");
+		DashboardHomeUtil.filterOptions(webd, "security");
+		
+		//click on List View
+		webd.getLogger().info("Click on List View icon");
+		DashboardHomeUtil.listView(webd);
+
+		//Open the OOB dashboard---Enterprise Health
+		webd.getLogger().info("Open the OOB dashboard---Enterprise Health");
+		DashboardHomeUtil.selectDashboard(webd, "Enterprise Health");
+
+		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
+
+		//verify Enterprise Health
+		VerifyOOBUtil.verifyEnterpriseHealth(webd);
+	}
+
+	@Test(alwaysRun = true)
+	public void verifyExadataHealth_GridView_SECSMA()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_SECSMA);
+		webd.getLogger().info("Start the test in verifyExadataHealth_GridView_SECSMA()");
+
+		//click on Grid View
+		webd.getLogger().info("Click on Grid View icon");
+		DashboardHomeUtil.gridView(webd);
+
+		//Open the OOB dashboard---Exadata Health
+		webd.getLogger().info("Open the OOB dashboard---Exadata Health");
+		DashboardHomeUtil.selectDashboard(webd, "Exadata Health");
+
+		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
+
+		//verify Exadata Health
+		VerifyOOBUtil.verifyExadataHealth(webd);
+		VerifyOOBUtil.verifyExadataHealth_Details(webd);
+	}
+
+	@Test(alwaysRun = true)
+	public void verifyExadataHealth_ListView_SECSMA()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_SECSMA);
+		webd.getLogger().info("Start the test in verifyExadataHealth_ListView_SECSMA()");
+
+		//click on List View
+		webd.getLogger().info("Click on List View icon");
+		DashboardHomeUtil.listView(webd);
+
+		//Open the OOB dashboard---Exadata Health
+		webd.getLogger().info("Open the OOB dashboard---Exadata Health");
+		DashboardHomeUtil.selectDashboard(webd, "Exadata Health");
+
+		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
+
+		//verify Exadata Health
+		VerifyOOBUtil.verifyExadataHealth(webd);
+	}
+	
+	@Test(alwaysRun = true)
+	public void verifyExadataHealth_WithFilter_GridView_SECSMA()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_SECSMA);
+		webd.getLogger().info("Start the test in verifyExadataHealth_WithFilter_GridView_SECSMA()");
+
+		//click Filter-Application PerfAnalytics
+		webd.getLogger().info("Click Cloud Services - Security Analytics");
+		DashboardHomeUtil.filterOptions(webd, "security");
+
+		//click on Grid View
+		webd.getLogger().info("Click on Grid View icon");
+		DashboardHomeUtil.gridView(webd);
+
+		//Open the OOB dashboard---Exadata Health
+		webd.getLogger().info("Open the OOB dashboard---Exadata Health");
+		DashboardHomeUtil.selectDashboard(webd, "Exadata Health");
+
+		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
+
+		//verify Exadata Health
+		VerifyOOBUtil.verifyExadataHealth(webd);
+	}
+
+	@Test(alwaysRun = true)
+	public void verifyExadataHealth_WithFilter_ListView_SECSMA()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_SECSMA);
+		webd.getLogger().info("Start the test in verifyExadataHealth_WithFilter_ListView_SECSMA()");
+
+		//click Filter-Application PerfAnalytics
+		webd.getLogger().info("Click Cloud Services - Security Analytics");
+		DashboardHomeUtil.filterOptions(webd, "security");
+
+		//click on List View
+		webd.getLogger().info("Click on List View icon");
+		DashboardHomeUtil.listView(webd);
+
+		//Open the OOB dashboard---Exadata Health
+		webd.getLogger().info("Open the OOB dashboard---Exadata Health");
+		DashboardHomeUtil.selectDashboard(webd, "Exadata Health");
+
+		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
+
+		//verify Exadata Health
+		VerifyOOBUtil.verifyExadataHealth(webd);
+	}
+
+	@Test(alwaysRun = true)
+	public void verifyUIGallery_GridView_SECSMA()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_SECSMA);
+		webd.getLogger().info("Start the test in verifyUIGallery_GridView_SECSMA()");
+
+		//click on Grid View
+		webd.getLogger().info("Click on Grid View icon");
+		DashboardHomeUtil.gridView(webd);
+
+		//Open the OOB dashboard---UI Gallery
+		webd.getLogger().info("Open the OOB dashboard---UI Gallery");
+		DashboardHomeUtil.selectDashboard(webd, "UI Gallery");
+
+		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
+
+		//verify UI Gallery
+		VerifyOOBUtil.verifyUIGallery(webd);
+		VerifyOOBUtil.verifyUIGallery_Details(webd);
+	}
+
+	@Test(alwaysRun = true)
+	public void verifyUIGallery_ListView_SECSMA()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_SECSMA);
+		webd.getLogger().info("Start the test in verifyUIGallery_ListView_SECSMA()");
+
+		//click on List View
+		webd.getLogger().info("Click on List View icon");
+		DashboardHomeUtil.listView(webd);
+
+		//Open the OOB dashboard---UI Gallery
+		webd.getLogger().info("Open the OOB dashboard---UI Gallery");
+		DashboardHomeUtil.selectDashboard(webd, "UI Gallery");
+
+		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
+
+		//verify UI Gallery
+		VerifyOOBUtil.verifyUIGallery(webd);
+	}
+	
+	@Test(alwaysRun = true)
+	public void verifyUIGallery_WithFilter_GridView_SECSMA()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_SECSMA);
+		webd.getLogger().info("Start the test in verifyUIGallery_WithFilter_GridView_SECSMA()");
+
+		//click Filter-Application PerfAnalytics
+		webd.getLogger().info("Click Cloud Services - Security Analytics");
+		DashboardHomeUtil.filterOptions(webd, "security");
+
+		//click on Grid View
+		webd.getLogger().info("Click on Grid View icon");
+		DashboardHomeUtil.gridView(webd);
+
+		//Open the OOB dashboard---UI Gallery
+		webd.getLogger().info("Open the OOB dashboard---UI Gallery");
+		DashboardHomeUtil.selectDashboard(webd, "UI Gallery");
+
+		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
+
+		//verify UI Gallery
+		VerifyOOBUtil.verifyUIGallery(webd);
+	}
+
+	@Test(alwaysRun = true)
+	public void verifyUIGallery_WithFilter_ListView_SECSMA()
+	{
+		//initTest
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_SECSMA);
+		webd.getLogger().info("Start the test in verifyUIGallery_WithFilter_ListView_SECSMA");
+
+		//click Filter-Application PerfAnalytics
+		webd.getLogger().info("Click Cloud Services - Security Analytics");
+		DashboardHomeUtil.filterOptions(webd, "security");
+
+		//click on List View
+		webd.getLogger().info("Click on List View icon");
+		DashboardHomeUtil.listView(webd);
+
+		//Open the OOB dashboard---UI Gallery
+		webd.getLogger().info("Open the OOB dashboard---UI Gallery");
+		DashboardHomeUtil.selectDashboard(webd, "UI Gallery");
+
+		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
+
+		//verify UI Gallery
+		VerifyOOBUtil.verifyUIGallery(webd);
+	}
+	
+	@Test(alwaysRun = true)
 	public void testGlobalContextCreateDashboard()
 	{
-
 		//Initialize the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_SECSMA);
 		webd.getLogger().info("Start the test case: testGlobalContextCreateDashboard");
 
-		//visit home page
-		BrandingBarUtil.visitDashboardHome(webd);
-		DashboardHomeUtil.gridView(webd);
-		DashboardHomeUtil.createDashboard(webd, DSBNAME, null);
-		DashboardBuilderUtil.verifyDashboard(webd, DSBNAME, null, false);
-		Assert.assertFalse(GlobalContextUtil.isGlobalContextExisted(webd), "The global context exists in builder Page");
-		//Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd),"/SOA1213_base_domain/base_domain/soa_server1/soa-infra_System");
+		TestGlobalContextUtil.CreateDashboardWithGC(webd, dsbName, gccontent,DashboardHomeUtil.DASHBOARD);
 	}
 
 	@Test(alwaysRun = true)
 	public void testGlobalContextCreateDashboardSet()
 	{
-
 		//Initialize the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_SECSMA);
 		webd.getLogger().info("Start the test case: testGlobalContextCreateDashboardSet");
 
-		//visit home page
-		BrandingBarUtil.visitDashboardHome(webd);
-		DashboardHomeUtil.gridView(webd);
-		DashboardHomeUtil.createDashboardSet(webd, DSBSETNAME, null);
-		DashboardBuilderUtil.verifyDashboardSet(webd, DSBSETNAME);
-		Assert.assertFalse(GlobalContextUtil.isGlobalContextExisted(webd), "The global context exists in builder Page");
-		//Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd),"/SOA1213_base_domain/base_domain/soa_server1/soa-infra_System");
+		TestGlobalContextUtil.CreateDashboardWithGC(webd, dsbsetName, gccontent,DashboardHomeUtil.DASHBOARDSET);
 	}
 
 	@Test(alwaysRun = true)
 	public void testGlobalContextDashboardHome()
 	{
-
 		//Initialize the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_SECSMA);
 		webd.getLogger().info("Start the test case: testGlobalContextDashboardHome");
 
-		//visit home page
-		BrandingBarUtil.visitDashboardHome(webd);
-		Assert.assertFalse(GlobalContextUtil.isGlobalContextExisted(webd), "The global context doesn't exist in DashboardHome");
-
+		TestGlobalContextUtil.visitDashboardPageWithGC(webd, "dashboards");
 	}
 
 	@Test(alwaysRun = true)
 	public void testGlobalContextOOBDashboardSet()
 	{
-
 		//Initialize the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_SECSMA);
 		webd.getLogger().info("Start the test case: testGlobalContextOOBDashboardSet");
 
-		//visit home page
-
-		BrandingBarUtil.visitDashboardHome(webd);
-		DashboardHomeUtil.gridView(webd);
-		DashboardHomeUtil.selectDashboard(webd, "Enterprise Health");
-		Assert.assertFalse(GlobalContextUtil.isGlobalContextExisted(webd), "The global context exists in OOBDashboard Set");
-		//Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd),"/SOA1213_base_domain/base_domain/soa_server1/soa-infra_System");
+		TestGlobalContextUtil.visitOOBWithGC(webd, "Enterprise Health", gccontent);
 	}
 
 	@Test(alwaysRun = true)
 	public void testGlobalContextUDE()
 	{
-
 		//Initialize the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_SECSMA);
 		webd.getLogger().info("Start the test case: testGlobalContextUDE");
 
-		BrandingBarUtil.visitApplicationVisualAnalyzer(webd, "Search");
-
-		Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(webd), "The global context exists in UDE Page");
-		//Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd),"/SOA1213_base_domain/base_domain/soa_server1/soa-infra_System");
+		TestGlobalContextUtil.visitApplicationVisualAnalyzer(webd, BrandingBarUtil.NAV_LINK_TEXT_DATAEXPLORER, gccontent);
 	}
 
 	@Test(alwaysRun = true)
 	public void testGlobalContextWelcomePage()
 	{
-
 		//Initialize the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_SECSMA);
 		webd.getLogger().info("Start the test case: testWelcomePage");
 
-		//visit welcome page
-		webd.getLogger().info("Visit Welcome Page");
-		BrandingBarUtil.visitWelcome(webd);
-		Assert.assertFalse(GlobalContextUtil.isGlobalContextExisted(webd), "The global context exists in Welcome Page");
-
+		TestGlobalContextUtil.visitDashboardPageWithGC(webd, "welcome");
 	}	
 
-	@Test(groups = "test_omcCtx")
+	@Test(alwaysRun = true)
 	public void testomcCtx_OpenITAWidget()
 	{
 		dbName_ude = "selfDb-" + DashBoardUtils.generateTimeStamp();
@@ -231,28 +767,10 @@ public class TestSuiteLicensing_SECSMA extends LoginAndLogout
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_SECSMA);
 		webd.getLogger().info("Start the test case: testomcCtx_OpenITAWidget");
 	
-		//visit home page
-		BrandingBarUtil.visitDashboardHome(webd);
-		DashboardHomeUtil.gridView(webd);
-		DashboardHomeUtil.createDashboard(webd, dbName_ude, null);
-		DashboardBuilderUtil.verifyDashboard(webd, dbName_ude, null, false);
-		
-		DashboardBuilderUtil.addWidgetToDashboard(webd, "Analytics Line");
-		DashboardBuilderUtil.saveDashboard(webd);	
-		DashboardBuilderUtil.openWidget(webd, "Analytics Line");
-		
-		webd.switchToWindow();
-		webd.getLogger().info("Wait for the widget loading....");
-		//wait1.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id='save_widget_btn']")));
-		webd.waitForElementPresent(PageId.SAVEBUTTON_UDE, WaitUtil.WAIT_TIMEOUT);
-		
-		//verify the open url
-		DashBoardUtils.verifyURL_WithPara(webd, "omcCtx=");	
-		Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(webd),"The global context isn't exists in ITA widget");
-		//Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd),"All Entities");
+		TestGlobalContextUtil.openWidgetWithGC(webd, dbName_ude, "Analytics Line", gccontent);
 	}
 	
-	@Test(groups = "test_omcCtx")
+	@Test(alwaysRun = true)
 	public void testomcCtx_DeleteDashboard()
 	{
 		dbName_willDelete = "selfDb-" + DashBoardUtils.generateTimeStamp();
@@ -261,59 +779,20 @@ public class TestSuiteLicensing_SECSMA extends LoginAndLogout
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_SECSMA);
 		webd.getLogger().info("Start the test case: testGlobalContextDeleteDashboard");
 
-		//visit home page
-		BrandingBarUtil.visitDashboardHome(webd);
-		DashboardHomeUtil.gridView(webd);
-		DashboardHomeUtil.createDashboard(webd, dbName_willDelete, null);
-		DashboardBuilderUtil.verifyDashboard(webd, dbName_willDelete, null, false);
-		
-		DashboardBuilderUtil.deleteDashboard(webd);
-
-		//verify omcCtx exist in the url
-		String url1 = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("start to verify omcCtx exist in the dashboard home url");
-		Assert.assertTrue(url1.contains("omcCtx="), "The global context infomation in URL is lost");
-		
-		//open the dashboard, eg: Host Operations in the home page, then verify omcCtx exist in the url
-		webd.getLogger().info("open the OOB dashboard");
-		DashboardHomeUtil.selectDashboard(webd, "Enterprise Health");		
-		
-		String url2 = webd.getWebDriver().getCurrentUrl();		
-		webd.getLogger().info("start to verify omcCtx exist in the OOB dashboard url");	
-		Assert.assertTrue(url2.contains("omcCtx="), "The global context infomation in URL is lost in OOB dashboard page");		
+		TestGlobalContextUtil.deleteDashboardWithGC(webd, dbName_willDelete, dbName_WithGC,gccontent);			
 	}
 
-	@Test(groups = "test_omcCtx", dependsOnMethods = { "testomcCtx_DeleteDashboard" })
+	@Test(alwaysRun = true)
 	public void testomcCtx_DeleteDashboardSet()
 	{
 		dbSetName_willDelete = "selfDbSet-" + DashBoardUtils.generateTimeStamp();
+		dbName_inSet = "inDbSet-" + DashBoardUtils.generateTimeStamp();
 
 		//Initialize the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_SECSMA);
 		webd.getLogger().info("Start the test case: testGlobalContextDeleteDashboard");
 
-		//visit home page
-		BrandingBarUtil.visitDashboardHome(webd);
-		DashboardHomeUtil.gridView(webd);
-		DashboardHomeUtil.createDashboardSet(webd, dbSetName_willDelete, null);
-		DashboardBuilderUtil.verifyDashboardSet(webd, dbSetName_willDelete);
-		
-		DashboardBuilderUtil.createDashboardInsideSet(webd, dbName_willDelete, null);
-		
-		DashboardBuilderUtil.deleteDashboardSet(webd);
-	
-		//verify omcCtx exist in the url
-		String url1 = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("start to verify omcCtx exist in the dashboard home url");
-		Assert.assertTrue(url1.contains("omcCtx="), "The global context infomation in URL is lost");
-		
-		//open the dashboard, eg: Host Operations in the home page, then verify omcCtx exist in the url
-		webd.getLogger().info("open the OOB dashboard");
-		DashboardHomeUtil.selectDashboard(webd, "Enterprise Health");		
-		
-		String url2 = webd.getWebDriver().getCurrentUrl();		
-		webd.getLogger().info("start to verify omcCtx exist in the OOB dashboard url");	
-		Assert.assertTrue(url2.contains("omcCtx="), "The global context infomation in URL is lost in OOB dashboard page");		
+		TestGlobalContextUtil.deleteDashboardSetWithGC(webd, dbSetName_willDelete, dbName_inSet, gccontent);
 	}
 
 	@Test(alwaysRun = true)
@@ -325,33 +804,6 @@ public class TestSuiteLicensing_SECSMA extends LoginAndLogout
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), tenant_username, tenant_SECSMA);
 		webd.getLogger().info("Start the test case: testomcCtx_OpenITAWidget");
 
-		//visit home page
-		BrandingBarUtil.visitDashboardHome(webd);
-		DashboardHomeUtil.gridView(webd);
-		DashboardHomeUtil.createDashboard(webd, dbName_tailsTest, null);
-		DashboardBuilderUtil.verifyDashboard(webd, dbName_tailsTest, null, false);
-		
-		DashboardBuilderUtil.addWidgetToDashboard(webd, "Analytics Line");
-		DashboardBuilderUtil.saveDashboard(webd);	
-		
-		//select "GC entities" radio button
-		DashboardBuilderUtil.respectGCForEntity(webd);		
-		
-		Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(webd), "The global context isn't exists when select GC entities filter");
-		//Assert.assertTrue(webd.isDisplayed(PageId.ENTITYBUTTON),"All Entities button isn't display on the top-left cornor, when select GC entities filter");	
-		
-		//find "Use dashboard entities" radio button, then select it
-		DashboardBuilderUtil.showEntityFilter(webd, true);	
-		
-		webd.waitForElementPresent(PageId.ENTITYBUTTON);
-		
-		Assert.assertFalse(GlobalContextUtil.isGlobalContextExisted(webd),"The global context isn't exists when select dashboard entities filter");
-		Assert.assertTrue(webd.isDisplayed(PageId.ENTITYBUTTON),"All Entities button isn't display on the top-left cornor, when select dashboard entities");
-		
-		//find "Use entities defined by content" radio button, then select it
-		DashboardBuilderUtil.showEntityFilter(webd, false);
-		
-		Assert.assertFalse(GlobalContextUtil.isGlobalContextExisted(webd),"The global context isn't exists when select disable entities filter");
-		Assert.assertFalse(webd.isDisplayed(PageId.ENTITYBUTTON), "All Entities button is present on the top-left cornor, when select disable entities fileter");
+		TestGlobalContextUtil.switchEntity(webd, dbName_tailsTest, gccontent);
 	}
 }

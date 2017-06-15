@@ -66,7 +66,10 @@ public class LinkedHashMapCache extends AbstractCache{
     @Override
     public Object get(Object key, CacheLoader factory) throws ExecutionException {
 
-        if (checkCacheStatusNotAvailable()) return null;
+        if (checkCacheStatusNotAvailable()){
+            LOGGER.debug("Get returns null for key {} as cache status is not available", key);
+            return null;
+        }
         Object obj=super.get(key, factory);
        if(obj!=null){
            LOGGER.debug("CachedItem with key {} and value {} is [retrieved] from cache group {}",key,obj,name);
@@ -85,19 +88,26 @@ public class LinkedHashMapCache extends AbstractCache{
            }
            return obj;
        }
+        LOGGER.debug("Get returns null for key {} as object null is got", key);
        return null;
 }
 
     @Override
     public void put(Object key, Object value) {
-        if (checkCacheStatusNotAvailable()) return;
+        if (checkCacheStatusNotAvailable()){
+            LOGGER.debug("Put action for key {} will not executed as cache status is not available", key);
+            return;
+        }
         cacheMap.put(key, new CachedItem(key,value));
         LOGGER.debug("CachedItem with key {} and value {} is [cached] into cache group {}",key,value,name);
     }
 
     @Override
     public void evict(Object key) {
-        if (checkCacheStatusNotAvailable()) return;
+        if (checkCacheStatusNotAvailable()) {
+            LOGGER.debug("Evict action will not executed from cache for key {} as cache status is not available", key);
+            return;
+        }
         super.evict(key);
         cacheMap.remove(key);
         LOGGER.debug("Cached Item with key {} is [evicted] from cache group {}",key,name);

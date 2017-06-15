@@ -1,8 +1,10 @@
 define([
-    'ojs/ojcore'    
-    ], function(oj) {
+    'ojs/ojcore',
+    'uifwk/js/sdk/context-util'
+    ], function(oj, contextModel) {
         function RightPanelUtil() {
             var self = this;
+            var ctxUtil = new contextModel();
             //Convert persisted time range to make them easier to read
             self.dateConverter = oj.Validation.converterFactory("dateTime").createConverter({formatType: "date", dateFormat: "medium"});
             self.timeConverter = oj.Validation.converterFactory("dateTime").createConverter({formatType: "time", timeFormat: "short"});
@@ -82,6 +84,19 @@ define([
                 }
                 return null;
             };
+            
+            self.getFlexTimePeriod = function(timePeriod) {
+                if(timePeriod === "CUSTOM") {
+                    return getNlsString("DATETIME_PICKER_TIME_PERIOD_OPTION_CUSTOM");
+                }
+                if(timePeriod === "LATEST") {
+                    return getNlsString("DATETIME_PICKER_TIME_PERIOD_OPTION_LATEST");
+                }
+                var parsedTp = ctxUtil.parseTimePeriodToUnitAndDuration(timePeriod);
+                if(parsedTp) {
+                    return ctxUtil.getFlexTimePeriod(parsedTp.duration, parsedTp.unit);
+                }
+            }
         }
         
         return {"RightPanelUtil": RightPanelUtil}; //new RightPanelUtil();

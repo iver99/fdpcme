@@ -2,9 +2,12 @@ package oracle.sysman.emaas.platform.dashboards.test.DPdashboard;
 
 import oracle.sysman.emaas.platform.dashboards.test.util.DashBoardUtils;
 import oracle.sysman.emaas.platform.dashboards.test.util.LoginAndLogout;
+import oracle.sysman.emaas.platform.dashboards.test.util.PageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -22,6 +25,7 @@ public class TestDashBoard extends LoginAndLogout
 	public static String dbName_DisableEntitiesTime = "Test Entities and Time Selector Disabled";
 	public static String WidgetName_LA = "Database Errors Trend";
 	public static String WidgetName_UDE = "Area Chart";
+	public static String dbName_GCenabled = "dbGCenabled";
 
 	@Test
 	public void createTestDashboard()
@@ -245,6 +249,44 @@ public class TestDashBoard extends LoginAndLogout
 
 	}
 
+	@Test
+    public void createDashboard_GCenabled()
+	{
+		String dbDesc = "Dashboard with GC enabled";
+
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test in createTestDashboard");
+
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//create dashboard
+		webd.getLogger().info("Start to create dashboard in grid view");
+		DashboardHomeUtil.gridView(webd);
+		DashboardHomeUtil.createDashboard(webd, dbName_GCenabled, dbDesc, DashboardHomeUtil.DASHBOARD);
+
+		//verify dashboard in builder page
+		webd.getLogger().info("Verify the dashboard created Successfully");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_GCenabled, dbDesc, true), "Create dashboard failed!");
+
+		//add widget
+		webd.getLogger().info("Start to add Widget into the dashboard");
+		DashboardBuilderUtil.addWidgetToDashboard(webd, WidgetName_LA);
+		webd.getLogger().info("Add widget finished");
+
+		//verify if the widget added successfully
+		Assert.assertTrue(DashboardBuilderUtil.verifyWidget(webd, WidgetName_LA), "Widget '" + WidgetName_LA + "' not found");
+
+		//save dashboard
+		webd.getLogger().info("save the dashboard");
+		DashboardBuilderUtil.saveDashboard(webd);	
+		
+		//Enable the GC 
+		DashboardBuilderUtil.respectGCForEntity(webd);
+		DashboardBuilderUtil.respectGCForTimeRange(webd);						
+	}
+	
 	private String generateTimeStamp()
 	{
 		return String.valueOf(System.currentTimeMillis());
