@@ -853,7 +853,7 @@ public class Tile
 		// text tile does not support time control
 		Integer supportTimeControl = 0;
 		// whatever the input title is, text tile use the default title
-		//title = TEXT_WIDGET_TITLE;
+		title = TEXT_WIDGET_TITLE;
 		if (to == null) { // newly created tile
 			to = new EmsDashboardTile(creationDate, null, tileType, row, column, height, 0, lastModificationDate, lastModifiedBy,
 					owner, providerAssetRoot, providerName, providerVersion, tileId, title, widgetCreationTime, widgetDescription,

@@ -24,7 +24,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore", "ckeditor"],
                     uiColor: "#FFFFFF",
                     linkShowAdvancedTab: false,
                     linkShowTargetTab: false,
-                    enterMode: CKEDITOR.ENTER_BR,
+                    enterMode: CKEDITOR.ENTER_BR
 
                 };
 //                CKEDITOR.disableAutoInline = true;
