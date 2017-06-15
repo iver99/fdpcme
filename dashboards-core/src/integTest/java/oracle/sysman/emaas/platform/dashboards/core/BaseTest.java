@@ -13,8 +13,8 @@ package oracle.sysman.emaas.platform.dashboards.core;
 import java.util.Properties;
 
 import oracle.sysman.emaas.platform.dashboards.core.persistence.PersistenceManager;
-import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
+import oracle.sysman.emaas.platform.emcpdf.tenant.TenantSubscriptionUtil;
 
 /**
  * @author reliang

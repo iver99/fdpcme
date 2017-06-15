@@ -13,9 +13,9 @@ package oracle.sysman.emaas.platform.uifwk.timepicker.test.ui;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.ITimeSelectorUtil.TimeRange;
 import oracle.sysman.emaas.platform.uifwk.timepicker.test.ui.util.CommonUIUtils;
+import oracle.sysman.emaas.platform.uifwk.timepicker.test.ui.util.LoginAndLogout;
 import oracle.sysman.emaas.platform.uifwk.timepicker.test.ui.util.UIControls;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
-import oracle.sysman.qatool.uifwk.webdriver.WebDriverUtils;
 
 import org.openqa.selenium.By;
 import org.testng.Assert;
@@ -24,157 +24,141 @@ import org.testng.annotations.Test;
 /**
  * @author shangwan
  */
-public class TestTimePicker_RecentUseOption extends CommonUIUtils
+public class TestTimePicker_RecentUseOption extends LoginAndLogout
 {
+	public void initTest(String testName)
+	{
+		login(this.getClass().getName() + "." + testName, "datetimePickerIndex.html");
+		CommonUIUtils.loadWebDriver(webd);
+	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testInCompactMode()
 	{
-		CommonUIUtils.commonUITestLog("This is to test TimePicker Component");
-
-		String testName = this.getClass().getName() + ".testInCompactMode";
-		WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
-
-		//login
-		Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver);
-		webdriver.getLogger().info("Assert that common UI login was successfuly");
-		Assert.assertTrue(bLoginSuccessful);
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test case: testInCompactMode");
 
 		//click the time picker and verify that there is no Recent Use option
-		webdriver.getLogger().info("Click TimePicker");
-		clickTimePicker(webdriver, 2);
-		webdriver.getLogger().info("Verify no Recent Use");
-		Assert.assertFalse(verifyRecentUseExist(webdriver, 1), "Recent Use Option should not be displayed");
+		webd.getLogger().info("Click TimePicker");
+		clickTimePicker(webd, 2);
+		webd.getLogger().info("Verify no Recent Use");
+		Assert.assertFalse(verifyRecentUseExist(webd, 1), "Recent Use Option should not be displayed");
 
-		clickTimePicker(webdriver, 2);
+		clickTimePicker(webd, 2);
 
 		//set time range
-		webdriver.getLogger().info("set timerange as Last 7 days");
-		String returnDate = TimeSelectorUtil.setTimeRange(webdriver, 2, TimeRange.Last7Days);
+		webd.getLogger().info("set timerange as Last 7 days");
+		String returnDate = TimeSelectorUtil.setTimeRange(webd, 2, TimeRange.Last7Days);
 
-		webdriver.getLogger().info("Verify that the newly selected time range has been added into Recent Use");
+		webd.getLogger().info("Verify that the newly selected time range has been added into Recent Use");
 
 		//click the time picker and verify that there is Recent Use option
-		webdriver.getLogger().info("Click TimePicker");
-		clickTimePicker(webdriver, 2);
-		webdriver.getLogger().info("Verify has Recent Use");
-		Assert.assertTrue(verifyRecentUseExist(webdriver, 1), "Recent Use Option should be displayed");
-		String[] context = verifyRecentUseContent(webdriver, 1);
+		webd.getLogger().info("Click TimePicker");
+		clickTimePicker(webd, 2);
+		webd.getLogger().info("Verify has Recent Use");
+		Assert.assertTrue(verifyRecentUseExist(webd, 1), "Recent Use Option should be displayed");
+		String[] context = verifyRecentUseContent(webd, 1);
 		Assert.assertEquals(context[0], "Last week");
 		;
 
 		//add more time range to the Recent Use and verify them
-		clickTimePicker(webdriver, 2);
-		webdriver.getLogger().info("set timerange as Last 2 hours");
-		TimeSelectorUtil.setTimeRange(webdriver, 2, TimeRange.Last2Hours);
+		clickTimePicker(webd, 2);
+		webd.getLogger().info("set timerange as Last 2 hours");
+		TimeSelectorUtil.setTimeRange(webd, 2, TimeRange.Last2Hours);
 
-		webdriver.getLogger().info("Verify the context in Recent Use");
-		clickTimePicker(webdriver, 2);
-		context = verifyRecentUseContent(webdriver, 1);
+		webd.getLogger().info("Verify the context in Recent Use");
+		clickTimePicker(webd, 2);
+		context = verifyRecentUseContent(webd, 1);
 		Assert.assertEquals(context[1], "Last week");
 		Assert.assertEquals(context[0], "Last 2 hours");
 
-		webdriver.shutdownBrowser(true);
+		webd.shutdownBrowser(true);
 
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testInDateOnly()
 	{
-		CommonUIUtils.commonUITestLog("This is to test TimePicker Component");
-
-		String testName = this.getClass().getName() + ".testInDateOnly";
-		WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
-
-		//login
-		Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver);
-		webdriver.getLogger().info("Assert that common UI login was successfuly");
-		Assert.assertTrue(bLoginSuccessful);
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test case: testInDateOnly");
 
 		//click the time picker and verify that there is no Recent Use option
-		webdriver.getLogger().info("Click TimePicker");
-		clickTimePicker(webdriver, 3);
-		webdriver.getLogger().info("Verify no Recent Use");
-		Assert.assertFalse(verifyRecentUseExist(webdriver, 1), "Recent Use Option should not be displayed");
+		webd.getLogger().info("Click TimePicker");
+		clickTimePicker(webd, 3);
+		webd.getLogger().info("Verify no Recent Use");
+		Assert.assertFalse(verifyRecentUseExist(webd, 1), "Recent Use Option should not be displayed");
 
-		clickTimePicker(webdriver, 3);
+		clickTimePicker(webd, 3);
 
 		//set time range
-		webdriver.getLogger().info("set timerange as Last 14 days");
-		String returnDate = TimeSelectorUtil.setTimeRangeWithDateOnly(webdriver, 3, TimeRange.Last1Year);
+		webd.getLogger().info("set timerange as Last 14 days");
+		String returnDate = TimeSelectorUtil.setTimeRangeWithDateOnly(webd, 3, TimeRange.Last1Year);
 
-		webdriver.getLogger().info("Verify that the newly selected time range has been added into Recent Use");
+		webd.getLogger().info("Verify that the newly selected time range has been added into Recent Use");
 
 		//click the time picker and verify that there is Recent Use option
-		webdriver.getLogger().info("Click TimePicker");
-		clickTimePicker(webdriver, 3);
-		webdriver.getLogger().info("Verify has Recent Use");
-		Assert.assertTrue(verifyRecentUseExist(webdriver, 1), "Recent Use Option should be displayed");
-		String[] context = verifyRecentUseContent(webdriver, 1);
+		webd.getLogger().info("Click TimePicker");
+		clickTimePicker(webd, 3);
+		webd.getLogger().info("Verify has Recent Use");
+		Assert.assertTrue(verifyRecentUseExist(webd, 1), "Recent Use Option should be displayed");
+		String[] context = verifyRecentUseContent(webd, 1);
 		Assert.assertEquals(context[0], "Last year");
 
 		//add more time range to the Recent Use and verify them
-		clickTimePicker(webdriver, 3);
-		webdriver.getLogger().info("set timerange as Last 30 days");
-		TimeSelectorUtil.setTimeRangeWithDateOnly(webdriver, 3, TimeRange.Last30Days);
+		clickTimePicker(webd, 3);
+		webd.getLogger().info("set timerange as Last 30 days");
+		TimeSelectorUtil.setTimeRangeWithDateOnly(webd, 3, TimeRange.Last30Days);
 
-		webdriver.getLogger().info("Verify the context in Recent Use");
-		clickTimePicker(webdriver, 3);
-		context = verifyRecentUseContent(webdriver, 1);
+		webd.getLogger().info("Verify the context in Recent Use");
+		clickTimePicker(webd, 3);
+		context = verifyRecentUseContent(webd, 1);
 		Assert.assertEquals(context[1], "Last year");
 		Assert.assertEquals(context[0], "Last 30 days");
 
-		webdriver.shutdownBrowser(true);
+		webd.shutdownBrowser(true);
 
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testInNormalMode()
 	{
-		CommonUIUtils.commonUITestLog("This is to test TimePicker Component");
-
-		String testName = this.getClass().getName() + ".testInNormalMode";
-		WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
-
-		//login
-		Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver);
-		webdriver.getLogger().info("Assert that common UI login was successfuly");
-		Assert.assertTrue(bLoginSuccessful);
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test case: testInNormalMode");
 
 		//click the time picker and verify that there is no Recent Use option
-		webdriver.getLogger().info("Click TimePicker");
-		clickTimePicker(webdriver, 1);
-		webdriver.getLogger().info("Verify no Recent Use");
-		Assert.assertFalse(verifyRecentUseExist(webdriver, 1), "Recent Use Option should not be displayed");
+		webd.getLogger().info("Click TimePicker");
+		clickTimePicker(webd, 1);
+		webd.getLogger().info("Verify no Recent Use");
+		Assert.assertFalse(verifyRecentUseExist(webd, 1), "Recent Use Option should not be displayed");
 
-		clickTimePicker(webdriver, 1);
+		clickTimePicker(webd, 1);
 
 		//set time range
-		webdriver.getLogger().info("set timerange as Last 14 days");
-		String returnDate = TimeSelectorUtil.setTimeRange(webdriver, TimeRange.Last14Days);
+		webd.getLogger().info("set timerange as Last 14 days");
+		String returnDate = TimeSelectorUtil.setTimeRange(webd, TimeRange.Last14Days);
 
-		webdriver.getLogger().info("Verify that the newly selected time range has been added into Recent Use");
+		webd.getLogger().info("Verify that the newly selected time range has been added into Recent Use");
 
 		//click the time picker and verify that there is Recent Use option
-		webdriver.getLogger().info("Click TimePicker");
-		clickTimePicker(webdriver, 1);
-		webdriver.getLogger().info("Verify has Recent Use");
-		Assert.assertTrue(verifyRecentUseExist(webdriver, 1), "Recent Use Option should be displayed");
-		String[] context = verifyRecentUseContent(webdriver, 1);
+		webd.getLogger().info("Click TimePicker");
+		clickTimePicker(webd, 1);
+		webd.getLogger().info("Verify has Recent Use");
+		Assert.assertTrue(verifyRecentUseExist(webd, 1), "Recent Use Option should be displayed");
+		String[] context = verifyRecentUseContent(webd, 1);
 		Assert.assertEquals(context[0], "Last 14 days");
 
 		//add more time range to the Recent Use and verify them
-		clickTimePicker(webdriver, 1);
-		webdriver.getLogger().info("set timerange as Last 15 minutes");
-		TimeSelectorUtil.setTimeRange(webdriver, 1, TimeRange.Last15Mins);
+		clickTimePicker(webd, 1);
+		webd.getLogger().info("set timerange as Last 15 minutes");
+		TimeSelectorUtil.setTimeRange(webd, 1, TimeRange.Last15Mins);
 
-		webdriver.getLogger().info("Verify the context in Recent Use");
-		clickTimePicker(webdriver, 1);
-		context = verifyRecentUseContent(webdriver, 1);
+		webd.getLogger().info("Verify the context in Recent Use");
+		clickTimePicker(webd, 1);
+		context = verifyRecentUseContent(webd, 1);
 		Assert.assertEquals(context[1], "Last 14 days");
 		Assert.assertEquals(context[0], "Last 15 mins");
 
-		webdriver.shutdownBrowser(true);
+		webd.shutdownBrowser(true);
 	}
 
 	private void clickTimePicker(WebDriver webd, int Index)

@@ -28,6 +28,7 @@ import org.apache.logging.log4j.Logger;
 /**
  * @author miao
  */
+@Deprecated
 public class RegistryLookupUtil
 {
 	private static final Logger logger = LogManager.getLogger(RegistryLookupUtil.class);

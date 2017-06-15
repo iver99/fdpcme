@@ -14,10 +14,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emaas.platform.dashboards.ui.web.context.GlobalContextUtil;
-import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.StringUtil;
-import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.TenantSubscriptionUtil;
+import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
 
+import oracle.sysman.emaas.platform.emcpdf.tenant.TenantSubscriptionUtil;
+import oracle.sysman.emaas.platform.emcpdf.tenant.subscription2.TenantSubscriptionInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -118,7 +119,7 @@ public class DashboardsUiCORSFilter implements Filter
 			String user = userTenant.substring(pos + 1);
 			if (!StringUtil.isEmpty(userTenant) && userTenant.indexOf(".") > 0) {
 				if (!StringUtil.isEmpty(hReq.getRequestURI()) && hReq.getRequestURI().toLowerCase().contains("emsaasui/emcpdfui/home.html")) {
-					List<String> apps = TenantSubscriptionUtil.getTenantSubscribedServices(opcTenantId, user);
+					List<String> apps = TenantSubscriptionUtil.getTenantSubscribedServices(opcTenantId, new TenantSubscriptionInfo());
 					if (apps == null || apps.isEmpty()) {
 						LOGGER.error("Tenant (" + opcTenantId
 								+ ") does not subscribe to any service. Redirect dashboard home to error page");

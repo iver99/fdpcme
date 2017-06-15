@@ -78,6 +78,20 @@ define(['knockout', 'jquery'],
             };
 
             /**
+             * Remove a message by given message category
+             *
+             * @param {String} messageId message category of the message to be removed.
+             *
+             * @returns
+             */
+            self.removeMessageByCategory = function(category) {
+                if (category) {
+                    var messageObj = {category: category, tag: 'EMAAS_SHOW_PAGE_LEVEL_MESSAGE', action: 'remove'};
+                    window.postMessage(messageObj, window.location.href);
+                }
+            };
+
+            /**
              * Format a message by replacing the placeholds inside the message string with parameters passed in
              *
              * @param {String} message message to be formatted.

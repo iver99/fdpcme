@@ -30,6 +30,7 @@ public abstract class AbstractCacheManager implements ICacheManager{
     public ICache getCache(String name, Integer capacity, Long timeToLive){
         ICache cache = this.cacheMap.get(name);
         if (cache != null) {
+            LOGGER.debug("getCache got a non-null cache for name {}, capacity {} and timeToLive {}", name, capacity, timeToLive);
             return cache;
         }
         else {
@@ -38,11 +39,14 @@ public abstract class AbstractCacheManager implements ICacheManager{
                 cache = this.cacheMap.get(name);
                 if (cache == null) {
                     if(capacity == null && timeToLive == null){
+                        LOGGER.debug("Creating a cache for name {}, capacity and timeToLive with default size.", name, capacity, timeToLive);
                         cache = createNewCache(name);
                     }else{
+                        LOGGER.debug("Creating a cache for name {}, capacity {} and timeToLive {}.", name, capacity, timeToLive);
                         cache = createNewCache(name,capacity,timeToLive);
                     }
                     if (cache != null) {
+                        LOGGER.debug("AbstractCacheManager.getCache: after creating a cache for name {}, capacity {} and timeToLive {}, put it to cacheMap", name, capacity, timeToLive);
                         this.cacheMap.put(name, cache);
                     }
                 }

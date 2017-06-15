@@ -202,7 +202,7 @@ define(['knockout', 'jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-i
             };
             
             self.isAdminUser = function() {
-                if (self.userHasRole(self.ADMIN_ROLE_NAME_OMC) || 
+                if (self.userHasRole(self.ADMIN_ROLE_NAME_OMC) ||
                     self.userHasRole(self.ADMIN_ROLE_NAME_APM) ||
                     self.userHasRole(self.ADMIN_ROLE_NAME_ITA) ||
                     self.userHasRole(self.ADMIN_ROLE_NAME_LA) ||
@@ -214,7 +214,7 @@ define(['knockout', 'jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-i
                 }
                 return false;
             };
-            
+
             /**
              * Get user granted privileges
              *
@@ -278,5 +278,4 @@ define(['knockout', 'jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-i
         return DashboardFrameworkUserTenantUtility;
     }
 );
-
 
