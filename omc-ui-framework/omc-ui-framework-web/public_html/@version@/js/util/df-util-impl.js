@@ -815,7 +815,7 @@ define(['knockout',
                     var waitTimeBeforeWarning = utcSessionExpiry - now - 60 * 1000;
                     //Show warning dialog when session expired
                     setTimeout(function () {
-                        showSessionTimeoutWarningDialog(warningDialogId);
+                        window.postMessage({'tag': 'EMAAS_OMC_SESSION_TIME_OUT'}, window.location.href);
                     }, waitTimeBeforeWarning);
                 }
             };
@@ -880,7 +880,7 @@ define(['knockout',
                 };
             };
 
-            function showSessionTimeoutWarningDialog(warningDialogId) {
+            self.showSessionTimeoutWarningDialog = function(warningDialogId) {
                 //Clear interval for extending user session
                 /* globals clearInterval */
                 if (window.intervalToExtendCurrentUserSession) {

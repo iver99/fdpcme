@@ -84,7 +84,7 @@ public class TenantSubscriptions
 		}
 	}
 
-	@Test
+	//@Test
 	public void getSubscribedapps_license()
 	{
 		try {

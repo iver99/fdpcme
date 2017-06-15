@@ -139,7 +139,7 @@ define(['knockout', 'jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-i
                     callback(window._uifwk.cachedData.roles);
                 }else{
                     function doneCallback(data) {
-                        self.userRoles = data;
+                        self.userRoles = data && data["userRoles"] ? data["userRoles"] : null;
                         if(!window._uifwk){
                             window._uifwk = {};
                         }
@@ -152,6 +152,9 @@ define(['knockout', 'jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-i
                         if(data && data["userRoles"]){
                             window._uifwk.cachedData.roles = data["userRoles"];
                             callback(data["userRoles"]);
+                        }
+                        else {
+                            callback(null);
                         }
                     }
                     if (window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.userInfo) {
@@ -199,7 +202,7 @@ define(['knockout', 'jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-i
             };
             
             self.isAdminUser = function() {
-                if (self.userHasRole(self.ADMIN_ROLE_NAME_OMC) || 
+                if (self.userHasRole(self.ADMIN_ROLE_NAME_OMC) ||
                     self.userHasRole(self.ADMIN_ROLE_NAME_APM) ||
                     self.userHasRole(self.ADMIN_ROLE_NAME_ITA) ||
                     self.userHasRole(self.ADMIN_ROLE_NAME_LA) ||
@@ -211,7 +214,7 @@ define(['knockout', 'jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-i
                 }
                 return false;
             };
-            
+
             /**
              * Get user granted privileges
              *
@@ -275,5 +278,4 @@ define(['knockout', 'jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-i
         return DashboardFrameworkUserTenantUtility;
     }
 );
-
 

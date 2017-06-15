@@ -10,6 +10,7 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.EntitySelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.GlobalContextUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.ITimeSelectorUtil.TimeRange;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.ITimeSelectorUtil.TimeUnit;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 
 import org.openqa.selenium.JavascriptExecutor;
@@ -129,7 +130,7 @@ public class TestRightPanel_DashboardFilters extends LoginAndLogout
 
 		//change the time range, verify the url will be changed
 		webd.getLogger().info("Change the time range, verify the url will be changed");
-		GlobalContextUtil.setTimeRange(webd, TimeRange.Last90Days);
+		GlobalContextUtil.setFlexibleRelativeTimeRange(webd, 90, TimeUnit.Day);
 
 		//save the dashboard
 		webd.getLogger().info("Save the dashboard");
@@ -264,7 +265,7 @@ public class TestRightPanel_DashboardFilters extends LoginAndLogout
 
 		//change the time range, verify the url will be changed
 		webd.getLogger().info("Change the time range, verify the url will be changed");
-		GlobalContextUtil.setTimeRange(webd, TimeRange.Last90Days);
+		GlobalContextUtil.setFlexibleRelativeTimeRange(webd, 90, TimeUnit.Day);
 
 		//save the dashboard
 		webd.getLogger().info("Save the dashboard");
@@ -372,6 +373,6 @@ public class TestRightPanel_DashboardFilters extends LoginAndLogout
 						"return window._contextPassedToWidgetsAtPageLoad && window._contextPassedToWidgetsAtPageLoad.timeSelector && window._contextPassedToWidgetsAtPageLoad.timeSelector.viewTimePeriod()")
 				.toString();
 		webd.getLogger().info(timerange);
-		Assert.assertEquals(timerange, "LAST_1_WEEK");
+		Assert.assertEquals(timerange, "LAST_7_DAY");
 	}
 }

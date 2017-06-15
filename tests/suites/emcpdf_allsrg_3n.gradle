@@ -148,8 +148,8 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
     useRestAssured = true	
 }
 
-suiteLicensingTest.mustRunAfter([omcSetup])
-task emcpdf_allsrg_3n (dependsOn:[suiteLicensingTest, e2e, omcTeardown]) {
-    omcTeardown.mustRunAfter(suiteLicensingTest,e2e)
+//suiteLicensingTest.mustRunAfter([omcSetup])
+task emcpdf_allsrg_3n (dependsOn:[e2e, omcTeardown]) {
+    omcTeardown.mustRunAfter(e2e)
     apply from: getAbsoluteFilePath(configurations.omctfConfig,"omctf_taskprocessor")
 }

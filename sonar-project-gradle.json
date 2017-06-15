@@ -1,0 +1,7 @@
+{  
+  "exclusions" : [
+    "**/js/d3/**,",
+    "**/js/jquery/**"
+
+  ]  
+}

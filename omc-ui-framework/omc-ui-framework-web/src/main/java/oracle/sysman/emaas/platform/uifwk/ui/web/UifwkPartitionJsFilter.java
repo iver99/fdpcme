@@ -24,10 +24,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
+import oracle.sysman.emaas.platform.emcpdf.tenant.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.uifwk.ui.webutils.util.DataFetcher;
 import oracle.sysman.emaas.platform.uifwk.ui.webutils.util.StringUtil;
 
-import oracle.sysman.emaas.platform.uifwk.ui.webutils.util.TenantSubscriptionUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -111,7 +111,7 @@ public class UifwkPartitionJsFilter implements Filter
 				sb.append(registrationData);
 			}
 
-			String apps = TenantSubscriptionUtil.getTenantSubscribedServices(tenant, user);
+			String apps = TenantSubscriptionUtil.getTenantSubscribedServicesString(tenant);
 			if (!StringUtil.isEmpty(apps)) {
 				if (!StringUtil.isEmpty(registrationData)) {
 					sb.append(",");
