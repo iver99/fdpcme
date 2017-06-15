@@ -194,7 +194,7 @@ define(['knockout',
                 }
             };
             self.openInDataExplorer = function (event, ui) {
-		        if (!self.dashboard.systemDashboard()){
+		if (!self.dashboard.systemDashboard() && self.isCreator){
                 	$b.getToolBarModel().handleDashboardSave();
                 }
                 var iId = setInterval(function() {
