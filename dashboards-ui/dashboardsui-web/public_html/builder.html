@@ -388,6 +388,17 @@
                                                             </ul>
                                                         </li>
                                                         -->
+                                                        <li></li>
+                                                        <!-- ko if: editDisabled() !== true -->
+                                                        <li data-option="remove" data-bind="css: { 'oj-disabled': editDisabled()}">
+                                                            <a href="#">
+                                                                <span class="oj-menu-item-icon demo-icon-font">
+                                                                    <i class="fa-icon-font fa-icon-font-16 dbd-icon-remove"></i>
+                                                                </span>
+                                                                <span data-bind="text: getNlsString('DBS_BUILDER_TILE_REMOVE')"></span>
+                                                            </a>
+                                                        </li>
+                                                        <!-- /ko -->
                                                     </ul>
                                                 </div>
                                             </div>
@@ -1103,9 +1114,6 @@
                                     </div>
                                 </div>
                                 <hr/>
-                                <div>
-                                    <button style="margin-top:10px;" data-option="remove-tile" class="dbd-right-panel-editcontent-remove-content" data-bind="click: rightPanelEditContent.removeContentClicked, ojComponent: { component: 'ojButton', label: getNlsString('DBS_BUILDER_LEFT_PANEL_EDIT_CONTENT_REMOVE') }"></button>
-                                </div>
                             </div>
                         </div>
 

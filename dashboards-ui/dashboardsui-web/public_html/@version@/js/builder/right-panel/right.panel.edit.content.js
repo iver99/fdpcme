@@ -86,16 +86,6 @@ define(['dashboards/dbsmodel',
             }
         });
 
-        self.removeContentClicked = function () {
-            var tile = self.selectedContent();
-            self.dashboardTilesViewModel.editor.deleteTile(tile);
-            self.dashboardTilesViewModel.show();
-            self.dashboardTilesViewModel.notifyTileChange(tile, new Builder.TileChange("POST_DELETE"));
-            $b.triggerEvent($b.EVENT_TILE_RESTORED, 'triggerred by tile deletion', tile);
-            $b.triggerEvent($b.EVENT_TILE_DELETED, null, tile);
-            self.dashboardTilesViewModel.triggerTileTimeControlSupportEvent();
-            $(".back-to-edit-settings").click();
-        };
 
 
 

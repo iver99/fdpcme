@@ -234,6 +234,13 @@ define(['knockout',
                         self.show();
                         self.notifyTileChange(tile, new Builder.TileChange("POST_HIDE_TITLE"));
                         break;
+                    case "remove":
+                        self.editor.deleteTile(tile);
+                        self.show();
+                        self.notifyTileChange(tile, new Builder.TileChange("POST_DELETE"));
+                        $b.triggerEvent($b.EVENT_TILE_RESTORED, 'triggerred by tile deletion', tile);
+                        $b.triggerEvent($b.EVENT_TILE_DELETED, null, tile);
+                        break;
                     case "wider":
                         self.editor.broadenTile(tile);
                         self.show();
