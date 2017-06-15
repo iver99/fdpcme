@@ -533,6 +533,28 @@ public class DashboardAPI extends APIBase
 					}
 				}
 			});
+			
+			//retrieve user granted privileges
+			String userGrants = null;
+			final Future<String> futureUserGrants = pool.submit(new Callable<String>() {
+				@Override
+				public String call() throws Exception {
+					try {
+						long startUserGrants = System.currentTimeMillis();
+						LOGGER.info("Parallel request to get user grants...");
+						String userGrants = PrivilegeChecker.getUserGrants(curTenant, curUser);
+						long endUserGrants = System.currentTimeMillis();
+						LOGGER.info("Time to get user grants: {}ms, user grants are: {}", (endUserGrants - startUserGrants), userGrants);
+						return userGrants;
+					} catch (Exception e) {
+						LOGGER.error("Error occurred when retrieving user granted privileges using parallel request!");
+						LOGGER.error(e);
+						throw e;
+					} finally {
+						clearUserContext();
+					}
+				}
+			});
 
 			//retrieve subscribedapps API and subscribedapps2 API info
 			List<String> subscribedApps = null;
@@ -669,14 +691,30 @@ public class DashboardAPI extends APIBase
 			futureReg.cancel(true);
 			LOGGER.error(e);
 		}
+			
+			//get user grants
+			try {
+				if (futureUserGrants != null) {
+					userGrants = futureUserGrants.get(TIMEOUT, TimeUnit.MILLISECONDS);
+					LOGGER.debug("Retrieved user grants are: " + userGrants);
+				}
+			}catch (InterruptedException e) {
+				LOGGER.error(e);
+			} catch (ExecutionException e) {
+				LOGGER.error(e.getCause());
+			}catch(TimeoutException e){
+				//if timeout, and the task is still running, attempt to stop the task
+				futureUserGrants.cancel(true);
+				LOGGER.error(e);
+			}
 
 			sb.append("if(!window._uifwk){window._uifwk={};}if(!window._uifwk.cachedData){window._uifwk.cachedData={};}");
-			if (userInfo != null) {
-				String userInfoRes = JsonUtil.buildNormalMapper().toJson(new UserInfoEntity(userInfo));
+			if (userInfo != null || userGrants != null) {
+				String userInfoRes = JsonUtil.buildNormalMapper().toJson(new UserInfoEntity(userInfo, userGrants));
 				sb.append("window._uifwk.cachedData.userInfo=");
 				sb.append(userInfoRes).append(";");
 			}
-			LOGGER.debug("User info data is " + regEntity);
+			LOGGER.debug("User roles are: " + userInfo + ". User grants are: " + userGrants);
 
 			String apps = TenantSubscriptionUtil.getTenantSubscribedServicesString(curTenant);
 			if (!StringUtils.isEmpty(apps)) {
