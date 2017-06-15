@@ -2869,9 +2869,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     }
 
                     if (self.callbackAfterApply) {
-                        $.ajax({
-                            url: "/emsaasui/uifwk/@version@/html/empty.html",
-                            success: function () {
+                        setTimeout(function () {
                                 console.log("Returned values from date/time picker are: ");
                                 console.log("start: "+new Date(start));
                                 console.log("end: "+new Date(end));
@@ -2887,11 +2885,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                 }else {
                                     self.callbackAfterApply(newDateWithMilliseconds(start), newDateWithMilliseconds(end), timePeriod, self.timeFilter(), flexRelTimeVal, flexRelTimeOpt);
                                 }
-                            },
-                            error: function () {
-                                console.log(self.errorMsg);
-                            }
-                        });
+                        },0);
                     }
                     return false;
                 };
@@ -2899,15 +2893,9 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 self.cancelClick = function () {
                     self.closeAllPopups();
                     if(self.callbackAfterCancel) {
-                        $.ajax({
-                            url: "/emsaasui/uifwk/@version@/html/empty.html",
-                            success: function () {
+                        setTimeout(function () {
                                 self.callbackAfterCancel();
-                            },
-                            error: function () {
-                                console.log(self.errorMsg);
-                            }
-                        });
+                        },0);
                     }
                     return false;
                 };

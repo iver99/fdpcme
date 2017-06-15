@@ -49,7 +49,13 @@ define([
         dsbSaveDelay.subscribe(function () {
             if (!self.dashboard().systemDashboard || !self.dashboard().systemDashboard()) {
                 if (!self.isChangeDbdInSet()) {
-                    self.editDashboardDialogModel() && self.editDashboardDialogModel().save();
+                    if(self.editDashboardDialogModel()){
+                        if(self.editDashboardDialogModel().name() && self.editDashboardDialogModel().name().trim()){
+                            self.editDashboardDialogModel().save();
+                        }else{
+                            $("#dbsHNameIn:visible").ojInputText('validate');
+                        }
+                    }
                 } else {
                     self.isChangeDbdInSet(false);
                 }
@@ -90,6 +96,10 @@ define([
                         self.dashboardsetToolBarModel.dashboardInst.extendedOptions = ko.observable();
                     }
                     self.dashboardsetToolBarModel.dashboardInst.extendedOptions(JSON.stringify(option));
+                }
+                if(!self.dashboardsetName() || !(self.dashboardsetName().trim())){
+                    $("#dbsSetHNameIn:visible").ojInputText('validate');
+                    return;
                 }
                 self.dashboardsetToolBarModel.saveDashboardSet(
                         {
