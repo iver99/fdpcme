@@ -1164,34 +1164,47 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 }
                 if(params.defaultTimePeriod) {
                     var defaultTP = formalizeTimePeriod(ko.unwrap(params.defaultTimePeriod));
-                    if(defaultTP !== ctxUtil.OMCTimeConstants.QUICK_PICK.CUSTOM) {
-                        if(self.timePeriodsNlsObject[defaultTP] || isValidFlexRelTimePeriod(defaultTP)) {
+                    if(self.timePeriodsNlsObject[defaultTP] || isValidFlexRelTimePeriod(defaultTP)) {
+                        if(ko.isObservable(params.defaultTimePeriod)) {
+                            self.defaultTimePeriod = params.defaultTimePeriod;
+                        }else {
                             self.defaultTimePeriod(defaultTP);
                         }
                     }
                 }
 
                 if(ko.isObservable(params.showBadge)) {
-                    params.showBadge.subscribe(function(value) {
-                        if(value === true) {
-                           var defaultTP = formalizeTimePeriod(ko.unwrap(self.defaultTimePeriod));
-                            if(self.timePeriodsNlsObject[defaultTP] || isValidFlexRelTimePeriod(defaultTP)) {
-                                self.badgeTimePeriod(defaultTP);
-                            }
-                        }else if(value === false){
-                            self.badgeTimePeriod(null);
-                        }
-                    });
+                    self.showBadge = params.showBadge;
+                    var defaultTP = formalizeTimePeriod(ko.unwrap(self.defaultTimePeriod));
+                    if (self.timePeriodsNlsObject[defaultTP] || isValidFlexRelTimePeriod(defaultTP)) {
+                        self.badgeTimePeriod = self.defaultTimePeriod;
+                    }
+                }else {
+                    self.showBadge = ko.observable(params.showBadge);
                 }
 
                 if(self.getParam(params.showBadge)){
                     var defaultTP = formalizeTimePeriod(ko.unwrap(self.defaultTimePeriod));
                     if(self.timePeriodsNlsObject[defaultTP] || isValidFlexRelTimePeriod(defaultTP)) {
-                        self.badgeTimePeriod(defaultTP);
+                        self.badgeTimePeriod = self.defaultTimePeriod;
                     }
                 }
                 
-                self.badgeMsgTitle(msgUtil.formatMessage(nls.DATETIME_PICKER_BADGE_MESSAGE_TITLE, self.timePeriodsNlsObject[self.badgeTimePeriod()]));
+                //TODO: need to update this when EMCPDF-3845 is merged
+                self.getTranslatedTimePeriod = function(tpId) {
+                    if(self.timePeriodsNlsObject[self.badgeTimePeriod()]) {
+                        return self.timePeriodsNlsObject[self.badgeTimePeriod()];
+                    }
+                    var parsedTp = ctxUtil.parseTimePeriodToUnitAndDuration(tpId);
+                    if(parsedTp) {
+                        return ctxUtil.getFlexTimePeriod(parsedTp.duration, parsedTp.unit);
+                    }else {
+                        console.error("Error! Can't get translated time period for invalid time period: " + tpId);
+                        return null;
+                    }
+                };
+                
+                self.badgeMsgTitle(msgUtil.formatMessage(nls.DATETIME_PICKER_BADGE_MESSAGE_TITLE, self.getTranslatedTimePeriod(self.badgeTimePeriod())));
 
                 if(!ko.components.isRegistered("time-filter")) {
                     ko.components.register("time-filter", {
@@ -1797,7 +1810,18 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                         self.setTimePeriodChosen(tp);
                                         self.setTimePeriodToLastX(tp, start, end, 1);
                                     }
-                                }else {
+                                }else if(tp === self.timePeriodCustom) {
+                                    if(params.defaultStartDateTime && params.defaultEndDateTime) {
+                                        sdt = self.getParam(params.defaultStartDateTime);
+                                        edt = self.getParam(params.defaultEndDateTime);
+                                        start = newDateWithMilliseconds(sdt);
+                                        end = newDateWithMilliseconds(edt);
+                                        customClick(0);
+                                    }else {
+                                        console.error("Error: set defaultTimePeriod to 'Custom' without time range specified");
+                                        return;
+                                    }
+                                } else {
                                     self.lrCtrlVal("flexRelTimeCtrl");
 
                                     parsedTp = ctxUtil.parseTimePeriodToUnitAndDuration(convertTPIdForQuickPick(formalizeTimePeriod(self.defaultTimePeriod()), !params.timePeriodsSet));
@@ -1820,7 +1844,12 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                 }
                                 
                                 //update url with default time period when there is no global time context in url
-                                ctxUtil.setTimePeriod(self.defaultTimePeriod(), eventSourceTimeSelector);
+                                if(tp === self.timePeriodCustom) {
+                                    //update url with default time period when there is no global time context in url
+                                    ctxUtil.setStartAndEndTime(start.getTime(), end.getTime(), eventSourceTimeSelector);
+                                }else {
+                                    ctxUtil.setTimePeriod(self.defaultTimePeriod(), eventSourceTimeSelector);
+                                }
                             }else if(isValidFlexRelTimePeriod(self.defaultTimePeriod())){ //for flexible relative time
                                 self.lrCtrlVal("flexRelTimeCtrl");
                                 
@@ -3340,23 +3369,37 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     }
                 }
 
-                self.badgeStartTime = ko.observable();
-                self.badgeEndTime = ko.observable();
+                self.badgeTimeInfo = ko.observable();
                 self.badgeMouseOverHandler = function (widget, event) {
-                    var _time = self.getTimeRangeForFlexRelTime(self.badgeTimePeriod());
-                    var _startTime,_endTime;
+                    var _time;
+                    var _startTime;
+                    var _endTime;
+                    
+                    self.badgeMsgTitle(msgUtil.formatMessage(nls.DATETIME_PICKER_BADGE_MESSAGE_TITLE, self.getTranslatedTimePeriod(self.badgeTimePeriod())));
+                    
+                    if(!self.badgeTimePeriod()) {
+                        return;
+                    }
+                    
+                    if(self.badgeTimePeriod() === ctxUtil.OMCTimeConstants.QUICK_PICK.CUSTOM) {
+                        _time = {
+                            start: oj.IntlConverterUtils.dateToLocalIso(newDateWithMilliseconds(ko.unwrap(params.defaultStartDateTime))),
+                            end: oj.IntlConverterUtils.dateToLocalIso(newDateWithMilliseconds(ko.unwrap(params.defaultEndDateTime)))
+                        };
+                    }else {
+                        _time = self.getTimeRangeForFlexRelTime(self.badgeTimePeriod());
+                    }
 
                     _startTime = _time.start.slice(10);
                     _endTime = _time.end.slice(10);
 
                     var _timeDisplay = self.timeDisplay;    //change self.timeDisplay temporary to get right time rage info
                     self.timeDisplay = ko.observable("long");
-                    var _timeInfoStr = self.getDateTimeInfo(_time.start.slice(0, 10), _time.end.slice(0, 10), _startTime, _endTime, self.timePeriodsNlsObject[self.badgeTimePeriod()]);
+                    var _timeInfoStr = self.getDateTimeInfo(_time.start.slice(0, 10), _time.end.slice(0, 10), _startTime, _endTime);
                     self.timeDisplay = _timeDisplay;
 
                     var _timeInfoNode = $("<div>" + _timeInfoStr + "</div>")[0];
-                    self.badgeStartTime(_timeInfoNode.childNodes[1].nodeValue);
-                    self.badgeEndTime(_timeInfoNode.childNodes[3].nodeValue);
+                    self.badgeTimeInfo($(_timeInfoNode).text());
 
                     var popupContent = $('.badge-popup-message');
                     popupContent.ojPopup("close");
