@@ -88,7 +88,9 @@ define(['knockout',
                 var names = [];
                 if (self.dashboard.tiles && self.dashboard.tiles()) {
                     for (var i = 0; i < self.dashboard.tiles().length; i++) {
-                        names.push({'WIDGET_NAME': ko.observable(self.dashboard.tiles()[i].WIDGET_NAME())});
+                        if(self.dashboard.tiles()[i].type() !== "TEXT_WIDGET") {
+                            names.push({'WIDGET_NAME': ko.observable(self.dashboard.tiles()[i].WIDGET_NAME())});
+                        }
                     }
                     names.sort(function(tile1, tile2) {
                         return tile1.WIDGET_NAME() > tile2.WIDGET_NAME() ? 1 : (tile1.WIDGET_NAME() < tile2.WIDGET_NAME() ? -1 : 0);
