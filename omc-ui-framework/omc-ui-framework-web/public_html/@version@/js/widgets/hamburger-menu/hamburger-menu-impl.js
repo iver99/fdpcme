@@ -8,11 +8,12 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
     'uifwk/@version@/js/sdk/context-util-impl',
     'uifwk/@version@/js/sdk/menu-util-impl',
     'uifwk/@version@/js/sdk/SessionCacheUtil',
-    'uifwk/@version@/js/util/usertenant-util-impl'
+    'uifwk/@version@/js/util/usertenant-util-impl',
+    'uifwk/@version@/js/util/message-util-impl'
     //'ojs/ojnavigationlist',
     //'ojs/ojjsontreedatasource'
     ],
-        function ($, oj, ko, nls, dfumodel, pfumodel, ctxmodel, menumodel, sessionCacheModel, utModel) {
+        function ($, oj, ko, nls, dfumodel, pfumodel, ctxmodel, menumodel, sessionCacheModel, utModel, msgModel) {
             function HamburgerMenuViewModel(params) {
                 var self = this;
                 var userName = params.userName;
@@ -248,6 +249,8 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 self.dataSource = ko.observable();
                 var omcMenus = [];
                 var globalMenuIdHrefMapping = null;
+                var msgUtil = new msgModel();
+                var hitErrorsWhenLoading = false;
                 
                 //Get role names for current user
                 function getUserRoles() {
@@ -256,6 +259,10 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                         userTenantUtil.getUserRoles(function(data) {
                             if (data) {
                                 self.userRoles = data;
+                            }
+                            else {
+                                hitErrorsWhenLoading = true;
+                                oj.Logger.error("Failed to get user roles during hamburger menu loading.");
                             }
                             dfdGetUserRoles.resolve();
                         }, true);
@@ -273,6 +280,10 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     var host = window.location.host;
                     if (host.indexOf(tenantName + '.') === 0) {
                         menuUtil.getServiceBaseVanityUrls(function(data){
+                            if (!data) {
+                                hitErrorsWhenLoading = true;
+                                oj.Logger.error("Failed to get base vanity URLs during hamburger menu loading.");
+                            }
                             self.baseVanityUrls = data;
                             dfdFetchBaseVanityUrls.resolve();
                         });
@@ -308,6 +319,8 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                                 dfdLoadServiceMenus.resolve();
                             }
                         }, true, function(){
+                            hitErrorsWhenLoading = true;
+                            oj.Logger.error("Failed to get registration data during hamburger menu loading.");
                             dfdLoadServiceMenus.resolve();
                         });
                     return dfdLoadServiceMenus;
@@ -318,6 +331,10 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     var dfdGetUserGrants = $.Deferred();
                     if (!self.privilegeList) {
                         function userGrantsCallback(data) {
+                            if (!data) {
+                                hitErrorsWhenLoading = true;
+                                oj.Logger.error("Failed to get user granted privileges during hamburger menu loading.");
+                            }
                             self.privilegeList = data;
                             dfdGetUserGrants.resolve();
                         }
@@ -342,7 +359,10 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                                 dfdGetSubscribedApps.resolve();
                             }
                         }
-                        dfu.getSubscribedApps2WithEdition(subscribedAppsCallback, function(){dfdGetSubscribedApps.resolve();});
+                        dfu.getSubscribedApps2WithEdition(subscribedAppsCallback, function(){
+                            hitErrorsWhenLoading = true;
+                            oj.Logger.error("Failed to get user subscribed applications during hamburger menu loading.");
+                            dfdGetSubscribedApps.resolve();});
                     }
                     else {
                         dfdGetSubscribedApps.resolve();
@@ -380,6 +400,8 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                                     serviceItem.serviceAdminMenus = data.serviceAdminMenus;
                                     url = data.serviceMenuMsgBundle;
                                     if (!url){
+                                        hitErrorsWhenLoading = true;
+                                        oj.Logger.error("No message file is defined in the service menu json file. Service name: " + serviceItem.serviceName);
                                         self.loadedServiceCnt(self.loadedServiceCnt() + 1);
                                         return;
                                     }
@@ -394,12 +416,15 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                                         self.loadedServiceCnt(self.loadedServiceCnt() + 1);
                                     }, 
                                     function() {
+                                        hitErrorsWhenLoading = true;
+                                        oj.Logger.error("Failed to load message file for service menus. Service name: " + serviceItem.serviceName);
                                         self.loadedServiceCnt(self.loadedServiceCnt() + 1);
                                     });
                                 },
                                 error: function (xhr, textStatus, errorThrown) {
                                     self.loadedServiceCnt(self.loadedServiceCnt() + 1);
-                                    oj.Logger.error("Failed to load service menus due to error: " + textStatus);
+                                    hitErrorsWhenLoading = true;
+                                    oj.Logger.error("Failed to load service menu json file due to error: " + textStatus + ". Service name: " + serviceItem.serviceName);
                                 }
                             });
                         });
@@ -442,6 +467,15 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 //otherwise, get all service menus from service registries
                 else {
                     $.when(/*checkDashboardAsHomeSettings(), */loadServiceMenus(), getUserGrants(), getSubscribedApps(), fetchBaseVanityUrls(), getUserRoles()).done(function() {
+                        if (hitErrorsWhenLoading) {
+                            //Show error message to warn user
+                            msgUtil.showMessage({
+                                "type": "warn",
+                                "summary": nls.BRANDING_BAR_HAMBURGER_MENU_ERR_LOADING_SUMMARY,
+                                "detail": nls.BRANDING_BAR_HAMBURGER_MENU_ERR_LOADING_DETAIL
+                            });
+                        }
+                        
                         fetchGlobalMenuLinks(self.registration);
                         for (var k = 0; k < rootMenuData.length; ++k) {
 //                            rootMenuData[k].externalUrl = globalMenuIdHrefMapping[rootMenuData[k].id] ? globalMenuIdHrefMapping[rootMenuData[k].id] : '#';
