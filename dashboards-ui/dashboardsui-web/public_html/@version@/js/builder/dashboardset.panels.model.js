@@ -328,6 +328,7 @@ define([
                     if (dashboardsetToolBarModel.isDashboardSet()) {
                         $b.findEl('.head-bar-container').css("border-bottom", "0");
 
+                        $b.addEventListener($b.EVENT_DASHBOARD_OPTION_MENU_RENDERED, function(){
                         //hide some drop-down menu options
                         $b.findEl('.dropdown-menu>li').each(function (index, element) {
                             if (($(element).attr('data-singledb-option') !== 'Edit') && ($(element).attr('data-singledb-option') !== 'Print') && ($(element).attr('data-singledb-option') !== 'Duplicate')) {
@@ -345,6 +346,7 @@ define([
                         if (allMenusHidden) {
                             $b.findEl(".dashboardOptsBtn").hide();
                         }
+                    });
                     }
 
                     tilesView.enableDraggable();

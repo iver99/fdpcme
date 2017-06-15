@@ -21,6 +21,8 @@ define(['knockout',
         // dashboard type to keep the same with return data from REST API
         var SINGLEPAGE_TYPE = "SINGLEPAGE";
         var DEFAULT_AUTO_REFRESH_INTERVAL = 300000;
+        var cxtUtil = new cxtModel();
+        var omcTimeConstants = cxtUtil.OMCTimeConstants;
 
         function ToolBarModel($b,dashboardSetOptions) {
             var self = this;
@@ -40,6 +42,16 @@ define(['knockout',
             var zdtUtil = new zdtUtilModel();
             self.zdtStatus = ko.observable(false);
             self.notZdtStatus = ko.observable(true);
+            self.renderDashboardOptsMenu = ko.observable(false);
+            var dashboardOptsMenuInitialized = false;
+            self.onDashboardOptsMenuClicked = function(){   //trigger event to dashboardset.panels.model to hide some menu items
+                if(dashboardOptsMenuInitialized){
+                    return;
+                }
+                $b.triggerEvent($b.EVENT_DASHBOARD_OPTION_MENU_RENDERED);
+                dashboardOptsMenuInitialized = true;
+            };
+            
             zdtUtil.detectPlannedDowntime(function (isUnderPlannedDowntime) {
 //                 self.zdtStatus(true);
 //                 self.notZdtStatus(false);
@@ -140,7 +152,7 @@ define(['knockout',
                                 }, function () {
                             console.log("update dashboard name && description  failed !");
                         });
-                        if($b.getDashboardTilesViewModel().timePeriod()!=="Custom") {
+                        if($b.getDashboardTilesViewModel().timePeriod()!==omcTimeConstants.QUICK_PICK.CUSTOM) {
                             $b.getDashboardTilesViewModel().initEnd(new Date());
                         }
                         if($("#dtpicker_"+self.dashboardId).children().get(0)) {
@@ -170,7 +182,6 @@ define(['knockout',
             };
 
             self.handleDeleteDashboardClicked = function() {
-               var cxtUtil = new cxtModel();
 		 var _url="/sso.static/dashboards.service/";
                 if (dfu.isDevMode()){
                     _url=dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"dashboards/");
@@ -723,6 +734,14 @@ define(['knockout',
                         break;
                     default:
                         break;
+                }
+            };
+            
+            self.dashboardOptsMenuBeforeOpen = function(event, ui){
+                if(!self.renderDashboardOptsMenu()){
+                    self.renderDashboardOptsMenu(true);
+                    self.onDashboardOptsMenuClicked();
+                    $('#dashboardOptsMenu'+self.toolBarGuid).ojMenu("refresh");
                 }
             };
 

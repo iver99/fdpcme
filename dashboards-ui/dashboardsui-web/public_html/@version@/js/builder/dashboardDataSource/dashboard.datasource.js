@@ -164,6 +164,9 @@ define(['knockout',
                 }
             });
             if (!self.dataSource.savedSearchData || !foundSsDataInCache) {
+                if(!self.dataSource.savedSearchData) {
+                    self.dataSource.savedSearchData = [];
+                }
                 //post request to savedsearch
                 var url = '/sso.static/savedsearch.search';
                 if (dfu.isDevMode()) {
