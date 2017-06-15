@@ -72,6 +72,7 @@ function (ko, $, oj, dfu, mbu, uiutil) {
                 self.rightPanelIcon(clickedIcon);
                 self.toggleLeftPanel();
             }
+            $b.triggerBuilderResizeEvent('show right panel');
         };
 
         self.toggleLeftPanel = function () {

@@ -32,6 +32,7 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
 /**
  * @author guobaochen
  */
+@Deprecated
 public class TenantSubscriptionUtil
 {
 	

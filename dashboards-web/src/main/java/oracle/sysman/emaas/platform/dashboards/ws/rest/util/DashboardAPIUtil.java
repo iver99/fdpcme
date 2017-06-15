@@ -11,8 +11,7 @@
 package oracle.sysman.emaas.platform.dashboards.ws.rest.util;
 
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
-import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
-
+import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
 /**
  * @author miao
  */
