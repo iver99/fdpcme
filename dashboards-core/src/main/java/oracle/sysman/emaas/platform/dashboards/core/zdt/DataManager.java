@@ -938,6 +938,7 @@ public class DataManager
 		@SuppressWarnings("unchecked")
 		List<Map<String, Object>> result = query.getResultList();
 		return result;
+
 	}
 
 	private List<Map<String, Object>> getLastAccessDateForDashboardTile(EntityManager entityManager, String tileId, Long tenantId) {
@@ -950,6 +951,7 @@ public class DataManager
 		@SuppressWarnings("unchecked")
 		List<Map<String, Object>> result = query.getResultList();
 		return result;
+
 	}
 
 	private List<Map<String, Object>> getLastAccessDateForDashboardTileParam(EntityManager entityManager, String tileId, String paramName, Long tenantId) {

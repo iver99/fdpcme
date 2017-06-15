@@ -815,7 +815,7 @@ define(['knockout',
                     var waitTimeBeforeWarning = utcSessionExpiry - now - 60 * 1000;
                     //Show warning dialog when session expired
                     setTimeout(function () {
-                        showSessionTimeoutWarningDialog(warningDialogId);
+                        window.postMessage({'tag': 'EMAAS_OMC_SESSION_TIME_OUT'}, window.location.href);
                     }, waitTimeBeforeWarning);
                 }
             };
@@ -880,7 +880,7 @@ define(['knockout',
                 };
             };
 
-            function showSessionTimeoutWarningDialog(warningDialogId) {
+            self.showSessionTimeoutWarningDialog = function(warningDialogId) {
                 //Clear interval for extending user session
                 /* globals clearInterval */
                 if (window.intervalToExtendCurrentUserSession) {
@@ -1061,6 +1061,12 @@ define(['knockout',
                         if (!window._uifwk.cachedData.registrations) {
                             window._uifwk.cachedData.registrations = ko.observable();
                         }
+                        if (!window._uifwk.cachedData.errGetRegistration) {
+                            window._uifwk.cachedData.errGetRegistration = ko.observable(false);
+                        }
+                        else {
+                            window._uifwk.cachedData.errGetRegistration(false);
+                        }
 
                         function doneCallback(data, textStatus, jqXHR) {
                             window._uifwk.cachedData.registrations(data);
@@ -1081,6 +1087,7 @@ define(['knockout',
                                 error: function (jqXHR, textStatus, errorThrown) {
                                     console.log('Failed to get registration info!');
                                     window._uifwk.cachedData.isFetchingRegistrations = false;
+                                    window._uifwk.cachedData.errGetRegistration(true);
                                     if (errorCallback) {
                                         errorCallback(jqXHR, textStatus, errorThrown);
                                     }
@@ -1091,6 +1098,11 @@ define(['knockout',
                         window._uifwk.cachedData.registrations.subscribe(function (data) {
                             if (data) {
                                 successCallback(data);
+                            }
+                        });
+                        window._uifwk.cachedData.errGetRegistration.subscribe(function (data) {
+                            if (data && errorCallback) {
+                                errorCallback();
                             }
                         });
                     }

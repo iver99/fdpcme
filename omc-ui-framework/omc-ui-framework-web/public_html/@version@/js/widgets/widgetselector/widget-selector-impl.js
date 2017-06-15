@@ -10,9 +10,10 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-impl',[
     'ojs/ojinputtext',
     'ojs/ojbutton'
     ],
-        function (ko, $, dfumodel, oj, nls) {
+        function (ko, $, dfumodel, oj, nls, typeaheadsearch) {
             function WidgetSelectorViewModel(params) {
                 var self = this;
+                new typeaheadsearch(); //Initialize typeahead search
 
                 // Get input parameters and set UI strings
                 var affirmativeTxt = $.isFunction(params.affirmativeButtonLabel) ? params.affirmativeButtonLabel() : params.affirmativeButtonLabel;

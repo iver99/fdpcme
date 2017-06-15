@@ -409,7 +409,9 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 			driver.uncheck("css=" + DashBoardPageId_190.BUILDEROPTIONSEDITSHOWDESCRIPTIONCSS);
 		}
 
-		driver.takeScreenShot();
+		//driver.takeScreenShot();
+		//add wait to fix EMCPDF-4112
+		driver.waitForServer();
 		driver.getLogger().info("DashboardBuilderUtil.edit complete");
 	}
 
@@ -990,8 +992,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 		wait.until(ExpectedConditions.visibilityOf(dashboardSetContainer));
 		WaitUtil.waitForPageFullyLoaded(driver);
-		driver.takeScreenShot();
-
+		
 		List<WebElement> navs = driver.getWebDriver().findElements(By.cssSelector(DashBoardPageId_190.DASHBOARDSETNAVSCSS));
 		if (navs == null || navs.isEmpty()) {
 			throw new NoSuchElementException(
@@ -1005,8 +1006,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 				nav.click();
 				break;
 			}
-		}
-		driver.takeScreenShot();
+		}		
 		driver.getLogger().info("DashboardBuilderUtil.selectDashboardInsideSet completed");
 	}
 

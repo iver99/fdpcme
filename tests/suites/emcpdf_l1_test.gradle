@@ -39,6 +39,7 @@ def emcpsmRegClientVer = getDependentSdkVersion('com.oracle.emaas.emcpsm', 'regi
 def emcpsmRegLookupClientVer = getDependentSdkVersion('com.oracle.emaas.emcpsm', 'registry-lookup-client', '1.+')
 def emcpdfDashboardSdkVer = getDependentSdkVersion('com.oracle.emaas.emcpdf', 'dashboards-sdk', '1.+')
 def emcpsfSdkVer =  getDependentSdkVersion('com.oracle.emaas.emcpsf.sdk', 'security-client', '1.+')
+def emcpsrvsPlatformSdkVer = getDependentSdkVersion('com.oracle.emaas.emcpsrvs.sdk', 'emaas-platform-tenant-sdk', '2.0.+')
 
 dependencies {
 	testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-web-integ-tests', version: "${REPO_BID}") {
@@ -79,7 +80,7 @@ dependencies {
 	testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'omc-ui-framework-web', version:"${REPO_BID}") {transitive=false}
     testConfig(group: 'com.oracle.emaas.emcpdf', name: 'dashboards-sdk', version:emcpdfDashboardSdkVer) {transitive=false}
     
-    testConfig(group: 'com.oracle.emaas.emcpsrvs.sdk', name:'emaas-platform-tenant-sdk', version:'2.0.+') { transitive = false }
+    testConfig(group: 'com.oracle.emaas.emcpsrvs.sdk', name:'emaas-platform-tenant-sdk', version: emcpsrvsPlatformSdkVer) { transitive = false }
     testConfig(group: 'com.oracle.emaas.emcpsm', name: 'registry-lookup-client', version: emcpsmRegLookupClientVer){ transitive = false }
     testConfig(group: 'com.oracle.emaas.emcpsm', name: 'registry-client', version: emcpsmRegClientVer){ transitive = false }
     
@@ -146,7 +147,8 @@ task DEVTest_ws(type:EMTest){
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/util/*.class"
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/subappedition/*.class"
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/zdt/tablerows/*.class"
-	include "oracle/sysman/emaas/platform/dashboards/ws/rest/ssfnotification/*.class"
+	include "oracle/sysman/emaas/platform/dashboards/ws/rest/ssfnotification/*.class"	
+	include "oracle/sysman/emaas/platform/dashboards/ws/rest/ssfDatautil/*.class"
 
 	//***************below are dashboardscomparator-web project test cases***************//
 	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/comparator/rows/*.class"
@@ -170,7 +172,6 @@ task DEVTest(type:EMTest,dependsOn: DEVTest_ws){
 	include "oracle/sysman/emaas/platform/dashboards/core/model/*.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/model/combined/*.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/model/subscription2/*.class"
-	include "oracle/sysman/emaas/platform/dashboards/core/restclient/*.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/util/*.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/wls/management/AppLoggingManageMXBeanTest_S2.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/zdt/DataManagerTest.class"
@@ -179,17 +180,21 @@ task DEVTest(type:EMTest,dependsOn: DEVTest_ws){
 	include "oracle/sysman/emaas/platform/dashboards/comparator/targetmodel/services/*.class"
 	include "oracle/sysman/emaas/platform/dashboards/comparator/webutils/**/*.class"
 
-	//below are sdk project test cases
+	//below are dashboard-sdk project test cases
 	include "oracle/sysman/emaas/platform/emcpdf/cache/screenshot/*.class"
 	include "oracle/sysman/emaas/platform/emcpdf/cache/exception/*.class"
 	include "oracle/sysman/emaas/platform/emcpdf/cache/support/**/*.class"
 	include "oracle/sysman/emaas/platform/emcpdf/cache/tool/*.class"
 	include "oracle/sysman/emaas/platform/emcpdf/cache/util/*.class"
+	include "oracle/sysman/emaas/platform/emcpdf/rc/*.class"
+	include "oracle/sysman/emaas/platform/emcpdf/registry/*.class"
+	include "oracle/sysman/emaas/platform/emcpdf/tenant/subscription2/*.class"
+	include "oracle/sysman/emaas/platform/emcpdf/tenant/model/*.class"
+	include "oracle/sysman/emaas/platform/emcpdf/util/*.class"
 	include "oracle/sysman/emaas/platform/uifwk/nls/filter/NLSFilterTest.class"
         include "oracle/sysman/emaas/platform/uifwk/bootstrap/HtmlBootstrapJsUtilTest.class"
         include "oracle/sysman/emaas/platform/uifwk/util/DataAccessUtilTest.class"
-        include "oracle/sysman/emaas/platform/uifwk/util/RegistryLookupUtilTest.class"
-	
+
 	useRestAssured=true
 	ext.set("testType", "unit")
 }
@@ -220,7 +225,6 @@ task DEVUIWebUtilTest(type:EMTest,dependsOn: DEVUiWebTest){
 	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/services/*.class"
 	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/*.class"
 	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/wls/management/AppLoggingManageMXBeanTest_S2.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/json/*.class"
 }
 
 task DEVUiFWKTest(type:EMTest,dependsOn: DEVUIWebUtilTest){
@@ -231,8 +235,8 @@ task DEVUiFWKTest(type:EMTest,dependsOn: DEVUIWebUtilTest){
 //	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/util/DataFetcherTest.class"
 	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/util/LogUtilTest.class"
 	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/util/StringUtilTest.class"
-	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/util/RegistryLookupUtilTest.class"
 	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/util/StringCacheUtilTest.class"
+	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/util/RestClientProxyTest.class"
 
 	//***************below are omc-ui-framework-web project test cases***************//
 	include "oracle/sysman/emaas/platform/uifwk/ui/web/UifwkPartitionJsFilterTest.class"

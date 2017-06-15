@@ -66,19 +66,7 @@ public class TestDashboard extends LoginAndLogout
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName, null, true),
 				"Create dashboard failed!");
 		
-		DashboardBuilderUtil.respectGCForEntity(webd);
-		
-		((JavascriptExecutor) webd.getWebDriver()).executeScript("scroll(0,0)");
-		
-		//find "All Entities " button and click it
-		WebElement entitiesBtn = webd.getWebDriver().findElement(By.xpath(PageId.ENTITYBUTTON));
-		Assert.assertTrue(entitiesBtn.isDisplayed(), "'All Entities' button isn't displayed in self dashboard");
-		webd.click(PageId.ENTITYBUTTON);		
-		
-		//find Select button and click it
-		WebElement selectButton = webd.getWebDriver().findElement(By.xpath(PageId.SELECTBUTTON));
-		Assert.assertTrue(selectButton.isDisplayed(), "Select button isn't displayed in Select Entities dialog");
-		webd.click(PageId.SELECTBUTTON);
+		DashboardBuilderUtil.respectGCForEntity(webd);			
 	}
 	
 
