@@ -46,6 +46,7 @@ public class DashboardErrorConstants
 	public static final Integer DASHBOARD_NOT_FOUND_ERROR_CODE = 20001;
 	public static final Integer TENANT_NO_SUBSCRIPTION_ERROR_CODE = 20002;
 	public static final Integer USER_OPTIONS_NOT_FOUND_ERROR_CODE = 20003;
+	public static final Integer WIDGET_NOT_EXISTED_EXCEPTION_CODE = 20004;
 	
 	public static final Integer DEPENDENCY_UNAVAILABLE_ERROR_CODE = 20006;
 	public static final Integer ENTITY_NAMING_DEPENDENCY_UNAVAILABLE_ERROR_CODE = DEPENDENCY_UNAVAILABLE_ERROR_CODE;
