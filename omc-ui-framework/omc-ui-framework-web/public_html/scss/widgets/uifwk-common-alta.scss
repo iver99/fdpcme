@@ -493,3 +493,8 @@ a:hover {
 #offcanvasInnerContainer .oj-web-applayout-scrollable {
     overflow-y:auto;
 }
+
+html:not([dir="ltr"]) .oj-navigationlist-hierarchical-menu .oj-menu-item-icon {
+    -webkit-transform: none;
+    transform: none;
+}
