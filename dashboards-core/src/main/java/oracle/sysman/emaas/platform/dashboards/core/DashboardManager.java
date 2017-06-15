@@ -922,9 +922,9 @@ public class DashboardManager
 		sb.append(" and ((p.is_system=0 ");
 		if (filter != null) {
 			if (filter.getIncludedWidgetGroupsString(tenantVersionModel) != null && !filter.getIncludedWidgetGroupsString(tenantVersionModel).isEmpty()) {
-				sb.append(" and (p.dashboard_id in (select t.dashboard_Id from Ems_Dashboard_Tile t where t.WIDGET_GROUP_NAME in ("
+				sb.append(" and (p.dashboard_id in (select t.dashboard_Id from Ems_Dashboard_Tile t where t.TENANT_ID = ?" + index++ + " and t.WIDGET_GROUP_NAME in ("
 						+ filter.getIncludedWidgetGroupsString(tenantVersionModel) + " ))) ");
-
+				paramList.add(tenantId);
 			}
 		}
 		sb.append(") or (p.is_system=1 ");
@@ -935,7 +935,7 @@ public class DashboardManager
 
 		if (queryString != null && !"".equals(queryString)) {
 			Locale locale = AppContext.getInstance().getLocale();
-			index=concatQueryString(queryString, ic, sb, index, paramList, locale);
+			index=concatQueryString(queryString, ic, sb, index, paramList, locale, tenantId);
 		}
 		sb.append(")");
 
@@ -949,8 +949,9 @@ public class DashboardManager
 		sb1.append(" and ( (p.is_system=0 ");
 		if (filter != null) {
 			if (filter.getIncludedWidgetGroupsString(tenantVersionModel) != null && !filter.getIncludedWidgetGroupsString(tenantVersionModel).isEmpty()) {
-				sb1.append(" and p.DASHBOARD_ID in (SELECT p2.DASHBOARD_SET_ID FROM EMS_DASHBOARD_SET p2 WHERE p2.SUB_DASHBOARD_ID IN (SELECT t.dashboard_Id FROM Ems_Dashboard_Tile t WHERE t.WIDGET_GROUP_NAME IN ("
+				sb1.append(" and p.DASHBOARD_ID in (SELECT p2.DASHBOARD_SET_ID FROM EMS_DASHBOARD_SET p2 WHERE p2.SUB_DASHBOARD_ID IN (SELECT t.dashboard_Id FROM Ems_Dashboard_Tile t WHERE t.TENANT_ID = ?" + index++ + " and t.WIDGET_GROUP_NAME IN ("
 						+ filter.getIncludedWidgetGroupsString(tenantVersionModel)+ ")))");
+				paramList.add(tenantId);
 			}
 		}
 		sb1.append(") or (p.is_system=1 ");
@@ -963,7 +964,7 @@ public class DashboardManager
 		if (queryString != null && !"".equals(queryString)) {
 			Locale locale = AppContext.getInstance().getLocale();
 
-			index=concatQueryString(queryString, ic, sb1, index, paramList, locale);
+			index=concatQueryString(queryString, ic, sb1, index, paramList, locale, tenantId);
 		}
 		sb1.append("))");
 		if (sb1.length() > 0) {
@@ -1584,7 +1585,7 @@ public class DashboardManager
 	 * @param locale
 	 */
 	private int concatQueryString(String queryString, boolean ic, StringBuilder sb, int index, List<Object> paramList,
-			Locale locale)
+			Locale locale, Long tenantId)
 	{
 		if (!ic) {
 			sb.append(" and (p.name LIKE ?" + index++ +" escape '\\' ");
@@ -1614,13 +1615,15 @@ public class DashboardManager
 		}
 
 		if (!ic) {
-			sb.append(" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where t.type <> 1 and t.title like ?"
-					+ index++ +" escape '\\' " + " )) ");
+			sb.append(" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where t.TENANT_ID = ?" + index++ + " and t.type <> 1 and t.title like ?"
+					+ index++ + " escape '\\' " + " )) ");
+			paramList.add(tenantId);
 			paramList.add("%" + queryString + "%");
 		}
 		else {
-			sb.append(" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where t.type <> 1 and lower(t.title) like ?"
-					+ index++ +" escape '\\' " + " )) ");
+			sb.append(" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where t.TENANT_ID = ?" + index++ + " and t.type <> 1 and lower(t.title) like ?"
+					+ index++ + " escape '\\' " + " )) ");
+			paramList.add(tenantId);
 			paramList.add("%" + queryString.toLowerCase(locale) + "%");
 		}
 		return index;
