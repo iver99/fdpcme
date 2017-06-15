@@ -35,6 +35,7 @@ define(['knockout',
             var widgetAreaWidth = 0;
             var widgetAreaContainer = null;
             var ctxUtil = new contextModel();
+            var omcTimeConstants = ctxUtil.OMCTimeConstants;
             var omcContext = ctxUtil.getOMCContext();
 
             var dragStartRow = null;
@@ -64,7 +65,7 @@ define(['knockout',
 
             self.targets = eagerCreated ? eagerCreated.targets : ko.observable(null);
             self.timeSelectorModel = eagerCreated ? eagerCreated.timeSelector : null;
-
+            
             self.tilesView = $b.getDashboardTilesView();
             self.isOnePageType = (self.dashboard.type() === Builder.SINGLEPAGE_TYPE);
 
@@ -135,7 +136,7 @@ define(['knockout',
             self.appendNewTile = function(name, description, width, height, widget) {
                 if (widget) {
                     var newTile = self.editor.createNewTile(name, description, width, height, widget, self.timeSelectorModel, self.targets, true, dashboardInst);
-                    Builder.eagerLoadDahshboardSingleTileAtPageLoad(dfu, ko, newTile);
+                    Builder.eagerLoadDahshboardSingleTileAtPageLoad(dfu, ko, newTile);                    
                     if (newTile){
                        self.editor.tiles.push(newTile);
                        self.show();
@@ -169,7 +170,9 @@ define(['knockout',
                 self.show();
             };
 
+            self.initTileKoRightBtnsResizeHdls = ko.observable(false);
             self.showPullRightBtn = function(clientGuid, data, event) {
+                self.initTileKoRightBtnsResizeHdls(true);
                 $("#tile"+clientGuid+" .dbd-btn-group").css("display", "inline-block");
                 $("#tile"+clientGuid+" .dbd-btn-editor").css("display", "flex");
                 $("#tile"+clientGuid+" .dbd-btn-maxminToggle").css("display", "flex");
@@ -808,7 +811,7 @@ define(['knockout',
                 self.previousDragCell = null;
                 Builder.getTileConfigure(self.editor.mode, self.dashboard, tile, self.timeSelectorModel, self.targets, dashboardInst);
             };
-
+           
             self.dashboardTimeRangeChangedHandler = function() {
                 self.showTimeRange(self.dashboard.enableTimeRange() === 'TRUE');
             };
@@ -924,7 +927,7 @@ define(['knockout',
                     initTargets && self.targets(initTargets);
                 });
             }
-
+            
             function callbackForOmcCtxChange(ctxChangeEvent) {
                 //handle entity context changed by selecting GC entity selector
                 if(!ctxChangeEvent || !ctxChangeEvent.contextName) {
@@ -934,7 +937,7 @@ define(['knockout',
                     console.log("***callbackForOmcCtxChange: contextName is " + ctxChangeEvent.contextName + ". It is not entity context change, so return***");
                     return;
                 }
-
+                
                 Builder.requireTargetSelectorUtils(true, function(TargetSelectorUtils) {
                     if (TargetSelectorUtils) {
                         TargetSelectorUtils.registerComponents();
@@ -944,10 +947,10 @@ define(['knockout',
                         //save users' selection of entity context by GC entity selector
                         self.returnFromPageTsel(entityContext);
                     });
-                });
-
+                }); 
+                    
             }
-
+            
             ctxUtil.subscribeOMCContextChangeEvent(callbackForOmcCtxChange);
             
             if(!self.timeSelectorModel) {
@@ -959,7 +962,7 @@ define(['knockout',
                 var current = new Date();
 
                 if(ctxUtil.formalizeTimePeriod(timePeriod)) {
-                    if(ctxUtil.formalizeTimePeriod(timePeriod) !== "CUSTOM") { //get start and end time for relative time period
+                    if(ctxUtil.formalizeTimePeriod(timePeriod) !== omcTimeConstants.QUICK_PICK.CUSTOM) { //get start and end time for relative time period
                         var tmp = ctxUtil.getStartEndTimeFromTimePeriod(ctxUtil.formalizeTimePeriod(timePeriod));
                         if(tmp) {
                             initStart = tmp.start;
@@ -990,13 +993,15 @@ define(['knockout',
                     self.timeSelectorModel.timeRangeChange(false);
                 }
             });
-
+         
             self.initStart = ko.observable(self.timeSelectorModel.viewStart());
             self.initEnd = ko.observable(self.timeSelectorModel.viewEnd());
             self.timePeriod = ko.observable(self.timeSelectorModel.viewTimePeriod());
-
+           
             var dashboardExdedOpt = self.dashboard.extendedOptions && JSON.parse(ko.unwrap(self.dashboard.extendedOptions()));
             dashboardExdedOpt && dashboardExdedOpt.timePeriodNotShow ? self.timePeriodsNotToShow = dashboardExdedOpt.timePeriodNotShow :self.timePeriodsNotToShow = [];
+            //whether to enable "Latest" on custom panel
+            var enableLatestOnCustomPanel = ($.inArray(ctxUtil.OMCTimeConstants.QUICK_PICK.LATEST, self.timePeriodsNotToShow) >=0) ? false : true;
 
             if(self.isUnderSet) {
                 self.datetimePickerParams = {
@@ -1004,9 +1009,10 @@ define(['knockout',
                     endDateTime: self.initEnd,
                     timePeriod: self.timePeriod,
                     hideMainLabel: true,
-                    timePeriodsNotToShow:self.timePeriodsNotToShow,
+                    timePeriodsSet: ctxUtil.OMCTimeConstants.timePeriodsSet.SHORT_TERM,
+                    enableLatestOnCustomPanel: enableLatestOnCustomPanel,
                     callbackAfterApply: function(start, end, tp) {
-                        callbackAfterApply(start, end, tp);
+                        callbackAfterApply(start, end, tp);   
                     }
                 };
             }else {
@@ -1017,18 +1023,18 @@ define(['knockout',
                     headerViewModel.brandingbarParams.timeSelectorParams.startDateTime(ko.unwrap(self.initStart));
                     headerViewModel.brandingbarParams.timeSelectorParams.endDateTime(ko.unwrap(self.initEnd));
                     headerViewModel.brandingbarParams.timeSelectorParams.timePeriod(ko.unwrap(self.timePeriod));
-                    headerViewModel.brandingbarParams.timeSelectorParams.timePeriodsNotToShow(ko.unwrap(self.timePeriodsNotToShow));
+                    headerViewModel.brandingbarParams.timeSelectorParams.enableLatestOnCustomPanel(enableLatestOnCustomPanel);
                     headerViewModel.brandingbarParams.timeSelectorParams.callbackAfterApply = function(start, end, tp) {
                         callbackAfterApply(start, end, tp);
                     }
                 }
             }
-
+            
             function callbackAfterApply(start, end, tp) {
                 self.timeSelectorModel.viewStart(start);
                 self.timeSelectorModel.viewEnd(end);
                 self.timeSelectorModel.viewTimePeriod(tp);
-                if (tp === "Custom") {
+                if (tp === omcTimeConstants.QUICK_PICK.CUSTOM) {
                     self.initStart(start);
                     self.initEnd(end);
                     self.timePeriod(tp);

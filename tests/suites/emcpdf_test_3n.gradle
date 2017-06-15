@@ -119,7 +119,10 @@ dependencies{
     testConfig(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2') { transitive = false }
 }
 
-project.ext.omctf_omcCloudSetup_additionalParam = "-skipagents -skipomr"
+//project.ext.omctf_omcCloudSetup_additionalParam = "-skipagents -skipomr"
+omcCloudSetup {
+    environment "OMR_REPOS_VERSION", "PS3"
+}
 
 // depends on OMCTF-977
 //def testTenants_v2 = [:]
@@ -142,7 +145,7 @@ task onboardAllTenants(dependsOn:[omcOnboardTenants(testTenants_v3)]){
 }
 
 //Task added from "emcpdf_qa_test_3n"
-task QATest(type:EMTest,dependsOn:[onboardAllTenants]) {
+task QATest(type:EMTest,dependsOn:[omcSetup]) {
         include "oracle/sysman/emaas/platform/dashboards/test/dashboard/*"
 	include "oracle/sysman/emaas/platform/dashboards/test/common/*"
 	include "oracle/sysman/emaas/platform/dashboards/logging/*"
@@ -150,7 +153,7 @@ task QATest(type:EMTest,dependsOn:[onboardAllTenants]) {
 	include "oracle/sysman/emaas/platform/dashboards/test/RegistryLookup/*"
 	include "oracle/sysman/emaas/platform/dashboards/test/preference/*"
 	include "oracle/sysman/emaas/platform/dashboards/test/screenshot/*"
-	include "oracle/sysman/emaas/platform/dashboards/test/TenantSubscriptions/*" 
+	include "oracle/sysman/emaas/platform/dashboards/test/TenantSubscriptions/TenantSubscriptions.class"
 
 	useRestAssured=true
 	ext.set("testType", "integration")
@@ -166,7 +169,7 @@ task DEVUiTest(type:EMTest,dependsOn:omcSetup){
 //Setup gradle to onboard a new tenant
 apply from: 'onboard_tenant.gradle'
 
-task QATest1(type:EMTest,dependsOn:[omcSetup, onboardNewTenant]){
+task QATest1(type:EMTest,dependsOn:[omcSetup, onboardNewTenant]){ 
 
         environment "WEBDRIVER_WAIT_TIMEOUT", "300000"
 	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/BrandingBar_TestAnalyzerPage.class"
@@ -179,6 +182,9 @@ task QATest1(type:EMTest,dependsOn:[omcSetup, onboardNewTenant]){
 	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_FixDate.class"
 	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_FlexibleDate.class"
 	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_RecentUseOption.class"
+	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_MillionSeconds.class"
+	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_DateOnly.class"
+	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_ErrorMsg.class"
         useWebdriver = true
 	useRestAssured=true
 }
@@ -198,7 +204,7 @@ task DEVTest(type:EMTest,dependsOn:omcSetup){
 //Task is added from "emcpdf_uifwk_dev_test_3n"
 task DEVTest2(type:EMTest,dependsOn:omcSetup){
 	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/util/StringUtilTest.class"
-	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/wls/management/AppLoggingManageMXBeanTest.class"
+	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/wls/management/AppLoggingManageMXBeanTest.class"	
 	useRestAssured=true
 	ext.set("testType", "unit")
 }
@@ -219,6 +225,7 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n','parallel':
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet_DuplicateDashboard')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboard_NegativeCases')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestRightPanel_DashboardFilters')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboard')
             }
 	}
 	test('name': 'DashboardUITest_testDashboardSet_SetHome', 'preserve-order':'true'){
@@ -236,7 +243,7 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n','parallel':
     useRestAssured = true
 }
 
-QATest.mustRunAfter([omcSetup])
+//QATest.mustRunAfter([omcSetup])
 
 task emcpdf_test_3n (dependsOn:[QATest,DEVUiTest,QATest1,DEVTest,DEVTest2,e2e, omcTeardown]) {
     e2e.mustRunAfter([QATest1])

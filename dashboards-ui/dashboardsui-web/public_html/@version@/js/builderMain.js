@@ -348,14 +348,15 @@ require(['knockout',
 				    startDateTime: ko.observable(null),
 				    endDateTime: ko.observable(null),
 				    timePeriod: ko.observable("LAST_14_DAY"),
-				    timePeriodsNotToShow: ko.observable([]),
+                                    timePeriodsSet: "SHORT_TERM",
+                                    enableLatestOnCustomPanel: ko.observable(true),
 				    hideMainLabel: true,
 				    callbackAfterApply: null
 				},
 				showEntitySelector: ko.observable(false),
 				entityContextParams: {
 				    readOnly: false,
-				    onlyComposites: true
+                                    onlyComposites: true
 				}
 			    };
 

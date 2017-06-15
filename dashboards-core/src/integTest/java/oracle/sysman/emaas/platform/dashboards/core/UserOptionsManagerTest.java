@@ -89,7 +89,7 @@ public class UserOptionsManagerTest extends BaseTest {
 		}
 
         UserOptions userOptions = new UserOptions();
-        userOptions.setDashboardId(BigInteger.valueOf(1001L));
+        userOptions.setDashboardId("1001L");
         userOptions.setAutoRefreshInterval(3000L);
         try {
 			userOptionsManager.saveOrUpdateUserOptions(userOptions,1001L);
@@ -119,7 +119,7 @@ public class UserOptionsManagerTest extends BaseTest {
     public void testSaveOrUpdateUserOptionsWithInvalidId() {
         UserOptionsManager userOptionsManager = UserOptionsManager.getInstance();
         UserOptions userOptions = new UserOptions();
-        userOptions.setDashboardId(BigInteger.valueOf(1001L));
+        userOptions.setDashboardId("1001L");
         userOptions.setAutoRefreshInterval(3000L);
         try {
 			userOptionsManager.saveOrUpdateUserOptions(userOptions,1001L);
