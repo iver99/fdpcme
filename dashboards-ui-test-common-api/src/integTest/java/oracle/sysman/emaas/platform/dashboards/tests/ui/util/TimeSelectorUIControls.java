@@ -21,10 +21,10 @@ public class TimeSelectorUIControls
 	// End: Text
 
 	// Begin: InputText
-	public static final String sStartDateInput = "input[id^='inputStartDate_'].oj-inputtext-input";
+	public static final String sStartDateInput = "input[id^='inputStartDate_']";
 
 	public static final String sStartTimeInput = "input[id^='inputStartTime_'].oj-inputdatetime-input";
-	public static final String sEndDateInput = "input[id^='inputEndDate_'].oj-inputtext-input";
+	public static final String sEndDateInput = "input[id^='inputEndDate_']";
 	public static final String sEndTimeInput = "input[id^='inputEndTime_'].oj-inputdatetime-input";
 	//public static final String sTimeExcludedInput = "input.oj-col.oj-sm-10.oj-md-10.oj-inputtext-input";
 	// End: InputText

@@ -24,7 +24,6 @@ import javax.ws.rs.core.Response.Status;
 
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.EntityNamingDependencyUnavailableException;
-import oracle.sysman.emaas.platform.dashboards.core.model.subscription2.TenantSubscriptionInfo;
 import oracle.sysman.emaas.platform.dashboards.core.util.*;
 import oracle.sysman.emaas.platform.dashboards.webutils.ParallelThreadPool;
 import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
@@ -33,6 +32,8 @@ import oracle.sysman.emaas.platform.dashboards.ws.rest.model.RegistrationEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.model.UserInfoEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.TenantSubscriptionsAPI.SubscribedAppsEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.PrivilegeChecker;
+import oracle.sysman.emaas.platform.emcpdf.tenant.TenantSubscriptionUtil;
+import oracle.sysman.emaas.platform.emcpdf.tenant.subscription2.TenantSubscriptionInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -255,6 +256,8 @@ public class ConfigurationAPI extends APIBase
             } catch (ExecutionException e) {
                 _LOGGER.error(e.getCause() == null ? e : e.getCause());
             }catch(TimeoutException e){
+				//if timeout, and the task is still running, attempt to stop the task
+				futureSubscribedApps.cancel(true);
                 _LOGGER.error(e);
             }
             //get subscribapps2 API data
@@ -271,6 +274,8 @@ public class ConfigurationAPI extends APIBase
             } catch (ExecutionException e) {
                 _LOGGER.error(e.getCause() == null ? e : e.getCause());
             }catch(TimeoutException e){
+				//if timeout, and the task is still running, attempt to stop the task
+				futureUserRoles.cancel(true);
                 _LOGGER.error(e);
             }
 
