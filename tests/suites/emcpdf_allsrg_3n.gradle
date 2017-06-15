@@ -80,6 +80,8 @@ task onboardAllTenants(dependsOn:[omcOnboardTenants(testTenants_v3)]){
 
 task suiteLicensingTest(type: EMTest, dependsOn:[onboardAllTenants]){
 options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
+
+     	environment "WEBDRIVER_WAIT_TIMEOUT", "300000"   
 	test('name': 'suiteLicensingTest') {
 	    classes([:]) {
 //		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestSuiteLicensing_OMC')
@@ -102,6 +104,7 @@ apply from: 'onboard_tenant.gradle'
 //Task is for dashboard UI Test
 task e2e (type: EMTest, dependsOn:[omcSetup, onboardTenant] ){
 options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
+        environment "WEBDRIVER_WAIT_TIMEOUT", "300000"
         test('name': 'DashboardUITest') {
             classes([:]) {
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestHomePage_BasicTest')
@@ -121,7 +124,7 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
 
 task preProdTests(type: EMTest ){
 options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
-environment "OMC_PROXYHOST", "www-proxy.us.oracle.com"
+        environment "OMC_PROXYHOST", "www-proxy.us.oracle.com"
 	environment "OMC_PROXYPORT", "80"
 	environment "OMC_PROXYUSER", "oracle"
 	environment "OMC_PROXYPWD", "welcome"
@@ -130,7 +133,7 @@ environment "OMC_PROXYHOST", "www-proxy.us.oracle.com"
 	environment "WEBDRIVER_PROXY_PORT", "80"
 	environment "SKIP_OMCSETUP", "true"
 	environment "SKIP_OMCTEARDOWN", "1"
-	
+	environment "WEBDRIVER_WAIT_TIMEOUT", "300000"
         test('name': 'DashboardUITest') {
             classes([:]) {
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestWelcomePage')
@@ -143,8 +146,8 @@ environment "OMC_PROXYHOST", "www-proxy.us.oracle.com"
     useRestAssured = true	
 }
 
-suiteLicensingTest.mustRunAfter([omcSetup])
-task emcpdf_allsrg_3n (dependsOn:[suiteLicensingTest, e2e, omcTeardown]) {
-    omcTeardown.mustRunAfter(suiteLicensingTest,e2e)
+//suiteLicensingTest.mustRunAfter([omcSetup])
+task emcpdf_allsrg_3n (dependsOn:[e2e, omcTeardown]) {
+    omcTeardown.mustRunAfter(e2e)
     apply from: getAbsoluteFilePath(configurations.omctfConfig,"omctf_taskprocessor")
 }

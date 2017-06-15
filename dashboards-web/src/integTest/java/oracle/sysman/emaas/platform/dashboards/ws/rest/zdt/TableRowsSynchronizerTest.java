@@ -172,8 +172,7 @@ public class TableRowsSynchronizerTest {
                 result = 1;
             }
         };
-        tableRowsSynchronizer.sync(em,tableRowsEntity);
-
+        tableRowsSynchronizer.sync(em, tableRowsEntity);
         tableRowsSynchronizer.sync(em,null);
         tableRowsEntity.setEmsDashboard(dashboardRowEntities);
         tableRowsEntity.setEmsDashboardSet(dashboardSetRowEntities);
@@ -181,7 +180,7 @@ public class TableRowsSynchronizerTest {
         tableRowsEntity.setEmsDashboardTileParams(dashboardTileParamsRowEntities);
         tableRowsEntity.setEmsDashboardUserOptions(dashboardUserOptionsRowEntities);
         tableRowsEntity.setEmsPreference(preferenceRowEntities);
-        tableRowsSynchronizer.sync(em,tableRowsEntity);
+        tableRowsSynchronizer.sync(em, tableRowsEntity);
 
     }
 

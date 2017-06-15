@@ -18,8 +18,8 @@ import org.apache.logging.log4j.Logger;
 
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emaas.platform.dashboards.core.DBConnectionManager;
-import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
+import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.targetmodel.services.GlobalStatus;
 import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
 import oracle.sysman.emaas.platform.dashboards.webutils.services.RegistryServiceManager;
@@ -128,7 +128,7 @@ public class AvailabilityNotification implements NotificationListener
 	{
 		//when checking entity naming  we don't use cache to make sure check is reliable
 		Link lk = RegistryLookupUtil.getServiceInternalLink(ENTITY_NAMING_SERVICE_NAME, ENTITY_NAMING_SERVICE_VERSION,
-				ENTITY_NAMING_SERVICE_REL, false, null);
+				ENTITY_NAMING_SERVICE_REL, null);
 		return lk != null && !StringUtil.isEmpty(lk.getHref());
 	}
 

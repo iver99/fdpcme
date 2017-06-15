@@ -18,13 +18,13 @@ public class LoginAndLogout
 		if (webd != null) {
 			((JavascriptExecutor) webd.getWebDriver()).executeScript("scroll(0,0)");
 			LoginUtils.doLogout(webd);
-//			try {
-//				webd.shutdownBrowser(true);
-//			}
-//			catch (Exception e) {
-//				e.printStackTrace();
-//				webd.getLogger().warning("Failed to shutdown browser" + e.getMessage());
-//			}
+			//			try {
+			//				webd.shutdownBrowser(true);
+			//			}
+			//			catch (Exception e) {
+			//				e.printStackTrace();
+			//				webd.getLogger().warning("Failed to shutdown browser" + e.getMessage());
+			//			}
 		}
 	}
 
@@ -107,8 +107,8 @@ public class LoginAndLogout
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-//			url = oracle.sysman.emsaas.login.utils.Utils.getProperty("OMCS_DASHBOARD_URL");
-			url = oracle.sysman.emsaas.login.utils.Utils.getProperty("OHS_URL")+"/emsaasui/emcpdfui/home.html";
+			//			url = oracle.sysman.emsaas.login.utils.Utils.getProperty("OMCS_DASHBOARD_URL");
+			url = oracle.sysman.emsaas.login.utils.Utils.getProperty("OHS_URL") + "/emsaasui/emcpdfui/home.html";
 		}
 
 		String testPropertiesFile = System.getenv("EMAAS_PROPERTIES_FILE");
@@ -121,7 +121,7 @@ public class LoginAndLogout
 			if (!url.contains("omcCtx=")) {
 				url = url
 						+ (url.indexOf("?") > 0 ? "&" : "?")
-						+ "omcCtx=compositeType%3DSystem%2520%28Generic%29%26compositeName%3D%252FSOA1213_base_domain%252Fbase_domain%252Fsoa_server1%252Fsoa-infra_System%26compositeMEID%3D8426448730BDF663A9806A69AA2C445B";
+						+ "omcCtx=compositeType%3Domc_generic_system%26compositeName%3D%252FSOA1213_base_domain%252Fbase_domain%252Fsoa_server1%252Fsoa-infra_System%26compositeMEID%3D8426448730BDF663A9806A69AA2C445B%26entityMEIDs%3D132DBDE75046DEBC18DDC79CFCB04729";
 				webd.getLogger().info("New url with OMC global context appended is: " + url);
 			}
 			LoginUtils.doLogin(webd, username, password, tenantId, url);

@@ -359,8 +359,10 @@ public class TestDashboardSet_OtherFeatures extends LoginAndLogout
 		DashboardBuilderUtil.restoreWidget(webd, "Application Server Status", 0);
 
 		//verify the add button not displayed in the page
-		WebElement addButton1 = webd.getWebDriver().findElement(By.xpath("//button[@title='Add Content']"));
-		Assert.assertFalse(addButton1.isDisplayed(), "Add button be displayed in system dashboard set");
+		//WebElement addButton1 = webd.getWebDriver().findElement(By.xpath("//button[@title='Add Content']"));
+		//Assert.assertFalse(addButton1.isDisplayed(), "Add button be displayed in system dashboard set");
+		Assert.assertFalse(webd.isElementPresent("//button[@title='Add Content']"),
+				"Add button be displayed in system dashboard set");
 
 		//verify the edit button displayed in the page
 		WebElement editButton1 = webd.getWebDriver().findElement(By.xpath("//button[@title='Edit Settings']"));
