@@ -232,6 +232,7 @@ define(['knockout',
                     case "showhide-title":
                         self.editor.showHideTitle(tile);
                         self.show();
+                        self.editor.editTile(tile, true);
                         self.notifyTileChange(tile, new Builder.TileChange("POST_HIDE_TITLE"));
                         break;
                     case "remove":

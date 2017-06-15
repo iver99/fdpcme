@@ -31,7 +31,12 @@ function (ko, $, oj, dfu, mbu, uiutil) {
             }
         };
 
-        self.editRightpanelLinkage = function (target,param) {
+        self.editRightpanelLinkage = function (target,param,isShowHideTitleChange) {
+            if(isShowHideTitleChange){
+                resetTileHighlighted();
+                self.editPanelContent()==='editcontent' && selectedContent && selectedContent(param);
+                return;
+            }
             var highlightIcon = "pencil";
             self.completelyHidden(false);
             var panelTarget;
@@ -165,15 +170,15 @@ function (ko, $, oj, dfu, mbu, uiutil) {
         }
 
 
-        function rightPanelChange(status,param) {
+        function rightPanelChange(status,param,isShowHideTitleChange) {
             if(status==="complete-hidden-rightpanel"){
                 self.completelyHidden(true);
                 self.$b().triggerBuilderResizeEvent('hide right panel');
             }else{
-                if (!self.initializeRightPanel()) {
+                if (!self.initializeRightPanel() && !isShowHideTitleChange) {
                     self.initializeRightPanel(true);
                 }
-                self.editRightpanelLinkage(status,param);
+                self.editRightpanelLinkage(status,param,isShowHideTitleChange);
             }          
         }
         

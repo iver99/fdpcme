@@ -63,8 +63,7 @@ define(['dashboards/dbsmodel',
             self.dashboardTilesViewModel = ko.dataFor($(".tiles-wrapper:visible")[0]);
             resetAddLinkToTitle();
 //            self.hideTitle("true" === tile.hideTitle()?["hideTitle"]:[]);
-            self.hideTitle([]);
-            tile.hideTitle("false");
+            self.hideTitle(("true" === self.selectedContent().hideTitle()||true === self.selectedContent().hideTitle())? ["hideTitle"]:[]);
             self.prevContentHideTitleSubscription = tile.hideTitle.subscribe(function(val){
                 if(val === "true"){
                     self.hideTitle(["hideTitle"]);
