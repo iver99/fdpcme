@@ -240,7 +240,7 @@ public class DashboardAPI extends APIBase
 			@PathParam("id") BigInteger dashboardId, @PathParam("serviceVersion") String serviceVersion,
 			@PathParam("fileName") String fileName)
 	{
-		ICacheManager scm= CacheManagers.getInstance().build(CacheConstants.LRU_SCREENSHOT_MANAGER);
+		ICacheManager scm= CacheManagers.getInstance().build();
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer,
 				"Service call to [GET] /v1/dashboards/{}/screenshot/{}/images/{}", dashboardId, serviceVersion, fileName);
 
@@ -259,13 +259,11 @@ public class DashboardAPI extends APIBase
 			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
-//		ScreenshotCacheManager scm = ScreenshotCacheManager.getInstance();
 		Tenant cacheTenant = new Tenant(tenantId, TenantContext.getCurrentTenant());
 		CacheControl cc = new CacheControl();
 		cc.setMaxAge(2592000); //browser side keeps screenshot image in cache for 30 days
 		//try to get from cache
 		try {
-//			final ScreenshotElement se = scm.getScreenshotFromCache(cacheTenant, dashboardId, fileName);
 			if (dashboardId == null || dashboardId.compareTo(BigInteger.ZERO) <= 0) {
 				LOGGER.warn("Unexpected dashboard id to get screenshot from cache for tenant={}, dashboard id={}, fileName={}",
 						cacheTenant, dashboardId, fileName);

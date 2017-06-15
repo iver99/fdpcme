@@ -41,20 +41,8 @@ public class CacheConstants {
 	public static final String LOOKUP_CACHE_KEY_SERVICE_MENU = "serviceMenus";
 //    public static final String LOOKUP_CACHE_KEY_TENANT_SUBSCRIPTION_INFO = "tenantSubscriptionInfo";
 
-	//below are cache status related message
-	public static final String NO_NEED_TO_CHANGE_CACHE_STATUS = "No need to change cache status.";
-	public static final String CAN_NOT_CHANGE_CACHE_STATUS = "Can not change cache status.";
-	public static final String CHANGE_CACHE_STATUS_SUCCESSFULLY = "Change cache status successfully.";
-	public static final String CHANGE_CACHE_STATUS_FAILED = "Change cache status failed.";
-
 	public static final String SCREENSHOT_BASE64_PNG_PREFIX = "data:image/png;base64,";
 	public static final String SCREENSHOT_BASE64_JPG_PREFIX = "data:image/jpeg;base64,";
-
-	public static final String ZERO_PERCENTAGE = "0.0%";
-	public static final String ONE_HUNDRED_PERCENTAGE = "100%";
-
-	public static final String LRU_CACHE_MANAGER = "LRUCacheManager";
-	public static final String LRU_SCREENSHOT_MANAGER = "LRUScreenshotCacheManager";
 
 	//log cache status time interval
 	public static final Long LOG_INTERVAL = 300000L;
