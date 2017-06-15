@@ -6,6 +6,7 @@ import oracle.sysman.emaas.platform.dashboards.test.util.LoginAndLogout;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.EntitySelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.GlobalContextUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.WelcomeUtil;
@@ -298,7 +299,7 @@ public class TestDashBoard extends LoginAndLogout
 
 	}
 
-	@Test
+	//@Test
 	public void testDashboard_GCenabled() 
 	{						
 		//init test
@@ -333,14 +334,17 @@ public class TestDashBoard extends LoginAndLogout
 		//Verify dashboard when url without omcCtx
 		newUrl2 = newUrl1.split("&")[0];
 		webd.open(newUrl2);
-		
-		Assert.assertTrue(webd.isDisplayed("//*[@id='emcta-ctxtSel_entCount']"), "Entities in GC isn't displayed in dashboard page");
+			
+		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
+		wait1.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//span[text()='Start typing entity name(s)...']")));
+	
+		Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(webd), "Global Context bar isn't displayed in dashboard page");
 		
 		//Verify dashboard when url having composite
 		newUrl3 = GlobalContextUtil.generateUrlWithGlobalContext(webd, baseUrl, "8426448730BDF663A9806A69AA2C445B", "LAST_5_MINUTE", null, null, null);
 		webd.open(newUrl3);
 		
-		Assert.assertTrue(webd.isDisplayed("//span[text()='Composite: /SOA1213_base_domain/base_domain/soa_server1/soa-infra_System']"), "The composite isn't displayed in GC bar");
+		EntitySelectorUtil.verifyCompositePillContent(webd, webd.getLogger(), "/SOA1213_base_domain/base_domain/soa_server1/soa-infra_System");		
 	} 
 	
 	private String generateTimeStamp()

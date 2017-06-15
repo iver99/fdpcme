@@ -227,7 +227,7 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call gridView");
 		driver.waitForElementPresent(DashBoardPageId.DASHBOARDSGRIDVIEWLOCATOR);
-		driver.takeScreenShot();
+		
 		driver.click(DashBoardPageId.DASHBOARDSGRIDVIEWLOCATOR);
 	}
 
@@ -324,7 +324,7 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call listView");
 		driver.waitForElementPresent(DashBoardPageId.DASHBOARDSLISTVIEWLOCATOR);
-		driver.takeScreenShot();
+		
 		driver.click(DashBoardPageId.DASHBOARDSLISTVIEWLOCATOR);
 	}
 
@@ -514,15 +514,13 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 		Actions actions = new Actions(driver.getWebDriver());
 		driver.getLogger().info("Focus to the table header");
 		actions.moveToElement(tableHeader).build().perform();
-		driver.takeScreenShot();
-
+		
 		driver.getLogger().info("Click Sort icon");
 		actions.moveToElement(tableSort).click().perform();
 
 		driver.takeScreenShot();
 
-		WaitUtil.waitForPageFullyLoaded(driver);
-		driver.takeScreenShot();
+		WaitUtil.waitForPageFullyLoaded(driver);		
 	}
 
 	/* (non-Javadoc)
@@ -541,15 +539,13 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 		Actions actions = new Actions(driver.getWebDriver());
 		driver.getLogger().info("Focus to the table header");
 		actions.moveToElement(tableHeader).build().perform();
-		driver.takeScreenShot();
-
+		
 		driver.getLogger().info("Click Sort icon");
 		actions.moveToElement(tableSort).click().perform();
 
 		driver.takeScreenShot();
 
 		WaitUtil.waitForPageFullyLoaded(driver);
-		driver.takeScreenShot();
 	}
 
 	/* (non-Javadoc)
@@ -568,15 +564,11 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 		driver.getLogger().info("Focus to the table header");
 		actions.moveToElement(tableHeader).build().perform();
 		
-		driver.waitForServer();
-		driver.takeScreenShot();
-
 		driver.getLogger().info("Click Sort icon");
 		actions.moveToElement(tableSort).click().perform();
+		driver.takeScreenShot();		
 		
 		driver.waitForServer();	
-		driver.takeScreenShot();
-
 	}
 
 	/* (non-Javadoc)

@@ -35,14 +35,17 @@ public abstract class AbstractCache implements ICache {
 
     @Override
     public Object get(Object key, CacheLoader factory) throws ExecutionException {
+        LOGGER.debug("AbstractCache.get is called for key {} and CacheLoader {}!", key, factory);
         checkNotNull(key);
         CachedItem value = lookup(key);
         Object valueFromFactory = null;
         cacheCounter.recordRequest(1L);
         if (value != null) {
             if (isExpired(value)) {
+                LOGGER.debug("AbstractCache.get is called for key {}. Value is not null but is expired, so evict the key!", key);
                 evict(key);
             } else {
+                LOGGER.debug("AbstractCache.get is called for key {}. Value isnot null or expired, so return the value {}!", key, value.getValue());
                 cacheCounter.recordHit(1L);
                 return value.getValue();
             }
@@ -51,6 +54,7 @@ public abstract class AbstractCache implements ICache {
         if (factory != null) {
             try {
                 valueFromFactory = factory.load(key);
+                LOGGER.debug("AbstractCache.get is called for key {}. Value is {}, factory is {}, valueFromFactory is {}", key, value, factory, valueFromFactory);
                 if (valueFromFactory != null) {
                     put(key, valueFromFactory);
                 }
@@ -90,7 +94,7 @@ public abstract class AbstractCache implements ICache {
 
     @Override
     public void clear() {
-        LOGGER.debug("All Cache status data is reset!");
+        LOGGER.info("All Cache status data is reset!");
         cacheCounter.reset();
     }
 
