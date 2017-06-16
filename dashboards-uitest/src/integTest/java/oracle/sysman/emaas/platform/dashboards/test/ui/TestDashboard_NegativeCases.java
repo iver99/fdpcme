@@ -121,6 +121,7 @@ public class TestDashboard_NegativeCases extends LoginAndLogout
 			Assert.assertTrue(webd.isDisplayed("css=" + PageId.DASHBOARD_HOME_ERRMSG_CSS));
 			Assert.assertEquals(webd.getText("css=" + PageId.DASHBOARD_HOME_ERRMSG_CSS),
 					"Name already exists.Provide a unique name.");
+			 webd.click("css="+PageId.DASHBOARD_CREATE_DIALOG_CANCEL_CSS);
 		}
 		else {
 			Assert.fail("Test: testCreateDashboardWithSameNameDesc failed due to dashbord created successfully!");
@@ -177,6 +178,7 @@ public class TestDashboard_NegativeCases extends LoginAndLogout
 			Assert.assertTrue(webd.isDisplayed("css=" + PageId.DASHBOARD_HOME_ERRMSG_CSS));
 			Assert.assertEquals(webd.getText("css=" + PageId.DASHBOARD_HOME_ERRMSG_CSS),
 					"Name already exists.Provide a unique name.");
+			webd.click("css="+PageId.DASHBOARD_CREATE_DIALOG_CANCEL_CSS);
 		}
 		else {
 			Assert.fail("Test: testCreateDashboardWithSameNameDesc failed due to dashbord created successfully!");
