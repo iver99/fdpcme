@@ -295,8 +295,9 @@ define(['knockout',
                     default:
                         break;
                 }
-
-                $b.triggerEvent($b.EVENT_TILE_RESIZED, null, tile);
+                if(ui.item.data("option") !== 'edit'){
+                    $b.triggerEvent($b.EVENT_TILE_RESIZED, null, tile);
+                }
             };
 
 
