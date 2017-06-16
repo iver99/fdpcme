@@ -135,7 +135,9 @@ public abstract class DashboardBuilderUtil_175 extends DashboardBuilderUtil_171
 		if (tileTitles == null || tileTitles.size() <= index) {
 			throw new NoSuchElementException("Tile with title=" + widgetName + ", index=" + index + " is not found");
 		}
-		tileTitles.get(index).click();
+		
+		new Actions(driver.getWebDriver()).moveToElement(tileTitles.get(index)).perform();
+	//	tileTitles.get(index).click();
 		driver.takeScreenShot();
 		return tileTitles.get(index);
 	}
