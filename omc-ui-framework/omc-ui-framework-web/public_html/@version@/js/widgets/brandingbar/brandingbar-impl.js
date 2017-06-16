@@ -140,6 +140,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 //enable enterpriseTopology
                 self.udeEnterPriseTopologyLanded = true;
                 self.topologyDisabled(false);
+                restoreTopologyDisplayStatus();
             };
 
             if (self.showGlobalContextBanner() === true) {
@@ -1479,7 +1480,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         }
                         if (self.udeEnterPriseTopologyLanded && self.showEnterpriseTopology) { // set queryvar with   non-empty for enterprise topology
                             self.layout("LINEAR");
-                            self.queryVars({entityName: "test", entityType: " test"});
+                            self.queryVars({entityName: "All Entities", entityType: "Enterprise Topology"});
                         }
                         else {
                             self.layout("TIERED");
