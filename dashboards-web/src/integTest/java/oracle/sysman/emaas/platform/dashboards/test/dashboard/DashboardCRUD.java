@@ -974,14 +974,32 @@ public class DashboardCRUD
 			Assert.assertEquals(res4.jsonPath().get("tiles.tileParameters[0].name[0]"), "WIDGET_CREATED_BY");
 			Assert.assertEquals(res4.jsonPath().get("tiles.tileParameters[0].type[0]"), "STRING");
 			Assert.assertEquals(res4.jsonPath().get("tiles.tileParameters[0].systemParameter[0]"), false);
+			
+			//add a widget to dashboard
+			Response res5 =  RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).body(jsonString4).when().put("/dashboards/" + dashboard_id + "/addWidget/2001");
+			
+			Assert.assertTrue(res5.getStatusCode() == 200);
+			tile_newid = res5.jsonPath().get("tiles.tileId[1]").toString();
+			
+			Assert.assertEquals(res5.jsonPath().get("name"), "Test_Update_Dashboard_Edit_NewTile");
+			Assert.assertNotEquals(res5.jsonPath().get("createOn"), res5.jsonPath().get("lastModifiedOn"));
+			Assert.assertEquals(res5.jsonPath().get("tiles.title[1]"), "All Logs Trend");
+			Assert.assertNotEquals(tile_newid, tile_id);
+			Assert.assertEquals(res5.jsonPath().get("tiles.WIDGET_UNIQUE_ID[1]"), "2001");
+			Assert.assertEquals(res5.jsonPath().get("tiles.WIDGET_NAME[1]"), "All Logs Trend");
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
 			LOGGER.info("context",e);
 		}
 		finally {
-			if (!("").equals(dashboard_id)) {
-				
+			if (!("").equals(dashboard_id)) {				
 				Response res5 = RestAssured
 						.given()
 						.contentType(ContentType.JSON)
@@ -991,10 +1009,8 @@ public class DashboardCRUD
 								"Authorization", authToken).when().delete("/dashboards/" + dashboard_id);
 			
 				Assert.assertTrue(res5.getStatusCode() == 204);
-			}
-		
+			}		
 		}
-
 	}
 
 	@Test
@@ -1244,13 +1260,88 @@ public class DashboardCRUD
 			Assert.assertEquals(res.jsonPath().getString("errorCode"), "20001");
 			Assert.assertEquals(res.jsonPath().getString("errorMessage"), "Specified dashboard is not found");
 			
+			//verify api /dashboards/<id>/addWidget/<widgetid>
+			Response res1 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).body(jsonString).when().put("/dashboards/999999999/addWidget/2001");
 
+			Assert.assertTrue(res1.getStatusCode() == 404);
+
+			Assert.assertEquals(res1.jsonPath().getString("errorCode"), "20001");
+			Assert.assertEquals(res1.jsonPath().getString("errorMessage"), "Specified dashboard is not found");
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
 			LOGGER.info("context",e);
 		}
+	}
+	
+	@Test
+	public void dashboardUpdateInvalidWidgetId()
+	{
+		String dashboard_id = "";
+		try {
+			String jsonString = "{ \"name\":\"Test_Long_Dashboard\"}";
+			Response res = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).body(jsonString).when().post("/dashboards");
+			
+			Assert.assertTrue(res.getStatusCode() == 201);
 
+			dashboard_id = res.jsonPath().getString("id");
+			
+			Response res1 =  RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).body(jsonString).when().put("/dashboards/" + dashboard_id + "/addWidget/99999");
+			
+			Assert.assertTrue(res1.getStatusCode() == 404);
+
+			Assert.assertEquals(res1.jsonPath().getString("errorCode"), "20001");
+			Assert.assertEquals(res1.jsonPath().getString("errorMessage"), "Specified dashboard is not found");
+			
+			Response res2 =  RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).body(jsonString).when().put("/dashboards/" + dashboard_id + "/addWidget/0");
+			
+			Assert.assertTrue(res2.getStatusCode() == 404);
+
+			Assert.assertEquals(res2.jsonPath().getString("errorCode"), "20001");
+			Assert.assertEquals(res2.jsonPath().getString("errorMessage"), "Specified dashboard is not found");
+			
+		}
+		catch (Exception e) {
+			Assert.fail(e.getLocalizedMessage());
+			LOGGER.info("context",e);
+		}
+		finally{
+			if (!("").equals(dashboard_id)) {				
+				Response res5 = RestAssured
+						.given()
+						.contentType(ContentType.JSON)
+						.log()
+						.everything()
+						.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+								"Authorization", authToken).when().delete("/dashboards/" + dashboard_id);
+			
+				Assert.assertTrue(res5.getStatusCode() == 204);
+			}			
+		}		
 	}
 
 	@Test
