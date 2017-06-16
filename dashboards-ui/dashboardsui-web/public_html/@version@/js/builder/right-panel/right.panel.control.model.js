@@ -61,6 +61,7 @@ function (ko, $, oj, dfu, mbu, uiutil) {
 
             if (panelTarget === "editcontent") {
                 $('.dbd-right-panel-editcontent-title').ojCollapsible("option", "expanded", true);
+                resetTileHighlighted();
                 selectedContent && selectedContent(param);
             }
 
