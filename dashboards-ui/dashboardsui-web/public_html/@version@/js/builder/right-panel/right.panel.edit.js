@@ -24,6 +24,7 @@ define([
         });
 
         self.deleteDashboardClicked = function () {
+            self.dashboardsetToolBarModel.renderDeletionDialogs(true);
             queryDashboardSetsBySubId(self.dashboard().id(), function (resp) {
                 window.selectedDashboardInst().dashboardSets && window.selectedDashboardInst().dashboardSets(resp.dashboardSets || []);
                 window.selectedDashboardInst().linkedDashboardList && window.selectedDashboardInst().linkedDashboardList(resp.linkedDashboardList);
@@ -36,6 +37,7 @@ define([
         });
 
         self.deleteDashboardSetClicked = function () {
+            self.dashboardsetToolBarModel.renderDeletionDialogs(true);
             $('#deleteDashboardset').ojDialog("open");
         };
 
