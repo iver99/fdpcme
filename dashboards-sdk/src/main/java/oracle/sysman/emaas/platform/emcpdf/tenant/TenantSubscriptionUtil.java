@@ -136,7 +136,7 @@ public class TenantSubscriptionUtil {
                 }
                 String responseLog = appsResponse.length()>=120 ? appsResponse.substring(0,120) : appsResponse;
                 //print part of the response, if cannot get the right information we need, then we print full response later.
-                LOGGER.info("Retrieved data for tenant ({}) from serviceRequest API. URL is {}, query response is {}. It took {}ms", tenant, queryHref, appsResponse, (System.currentTimeMillis() - subappQueryStart));
+                LOGGER.info("Retrieved data for tenant ({}) from serviceRequest API. URL is {}, query response is {}. It took {}ms", tenant, queryHref, responseLog, (System.currentTimeMillis() - subappQueryStart));
                 JsonUtil ju = JsonUtil.buildNormalMapper();
                 try {
                     List<ServiceRequestCollection> src = ju.fromJsonToList(appsResponse, ServiceRequestCollection.class);
