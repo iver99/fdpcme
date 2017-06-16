@@ -45,7 +45,7 @@ public class AdditionalDataFilterTest {
                 result = true;
                 NLSFilter.getLangAttr((HttpServletRequest)any);
                 result = "langAttr";
-                AdditionalDataProvider.getAdditionalDataForRequest((HttpServletRequest)any);
+                AdditionalDataProvider.getPreloadDataForRequest((HttpServletRequest)any);
                 result = "newResponseText";
                 htmlFragmentCache.getCachedElementsForRequest(anyString);
                 result = cachedHtml;
