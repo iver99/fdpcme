@@ -3,6 +3,15 @@ define(["require", "knockout", "jquery", "ojs/ojcore", "ckeditor"],
             function textWidgetViewModel(params) {
                 var self = this;
                 self.content = params.tile.content;
+                self.emptyContent = ko.computed(function() {
+                    var content = $("<div/>").html(self.content()).text().trim();
+                    if(content) {
+                        return false;
+                    }else {
+                        self.content(content);
+                        return true;
+                    }
+                });
                 self.textWidgetId = params.tile.tileId ? ko.unwrap(params.tile.tileId) : params.tile.clientGuid;
                 var lang;
                 try {
@@ -27,17 +36,37 @@ define(["require", "knockout", "jquery", "ojs/ojcore", "ckeditor"],
                     enterMode: CKEDITOR.ENTER_BR
 
                 };
-//                CKEDITOR.disableAutoInline = true;
-                $("#editor1").attr("id", "editor1_" + self.textWidgetId);
-                var editor = CKEDITOR.inline("editor1_" + self.textWidgetId, configOptions);
+
+                var editor;
+                self.loadTextEditor = function () {
+                    $("#textEditor").attr("id", "textEditor_" + self.textWidgetId);
+                    $("#textEditor_" + self.textWidgetId).attr("contenteditable", "true");
+                    editor = CKEDITOR.inline("textEditor_" + self.textWidgetId, configOptions);
+                        
+                    editor.on("instanceReady", function () {
+                        this.setData(self.content());
+                        $('#textEditorWrapper_'+self.textWidgetId).hide();
+                        $("#textEditor_" + self.textWidgetId).focus();
+                    });
+
+                    editor.on("blur", function () {
+                        self.content(this.getData());
+                        $('#textContentWrapper_'+self.textWidgetId).show();
+                        $('#textEditorWrapper_'+self.textWidgetId).hide();
+                    });
+                    
+                    editor.on("focus", function() {
+                       this.setData(self.content()); 
+                    });
+                };
                 
-                editor.on("instanceReady", function () {
-                    this.setData(self.content());
-                });
+                self.showTextEditor = function() {
+                    $('#textContentWrapper_'+self.textWidgetId).hide();
+                    $('#textEditorWrapper_'+self.textWidgetId).show();
+                    $("#textEditor_" + self.textWidgetId).focus();
+                };
                 
-                editor.on("blur", function () {
-                    self.content(this.getData());
-                });
+                self.loadTextEditor();
             }
             return textWidgetViewModel;
         });

@@ -363,13 +363,13 @@ define(['knockout',
                         WIDGET_SCREENSHOT_HREF: null,
                         WIDGET_SUPPORT_TIME_CONTROL: 0,
                         WIDGET_KOC_NAME: "df-text-widget",
-                        WIDGET_TEMPLATE: "../../@version@/js/widgets/textwidget/textwidgetdemo.html",
-                        WIDGET_VIEWMODEL: "../../@version@/js/widgets/textwidget/js/textwidgetdemo.js",
+                        WIDGET_TEMPLATE: "/emsaasui/emcpdfui/@version@/js/widgets/textwidget/textwidgetdemo.html",
+                        WIDGET_VIEWMODEL: "/emsaasui/emcpdfui/@version@/js/widgets/textwidget/js/textwidgetdemo.js",
                         PROVIDER_NAME: "Dashboard",
                         PROVIDER_VERSION: "1.0",
                         PROVIDER_ASSET_ROOT: "assetRoot",
 //                        WIDGET_EDITABLE: "true",
-                        content: '<span style="color:#D3D3D3"><span style="font-size:14px"><em><span style="font-family:arial,helvetica,sans-serif"><strong>Start typing...</strong></span></em></span></span>', //"<b>Sample text</b>",
+                        content: null,
                         type: "TEXT_WIDGET"
                     };
                     self.tilesViewModel.appendNewTile(textWidget.WIDGEET_NAME, textWidget.WIDGEET_DESCRIPTION, 4, 2, ko.toJS(textWidget));
