@@ -1,15 +1,15 @@
-<div style='padding: 10px; width: 90%; height: 90%; margin: 0 auto;'>
-        <div  style="width: 100%; height: 100%;">
-            <div data-bind="attr: {id: 'textContentWrapper_'+textWidgetId}, click: showTextEditor" style="width: 100%; height: 100%;">
-                <!-- ko if: emptyContent -->
-                <div style="font-style: italic; color: grey;" data-bind="text: getNlsString('DBS_BUILDER_TEXT_WIDGET_PROMPT_STRING')"></div>
-                <!-- /ko -->
-                <!-- ko ifnot: emptyContent -->
-                <div data-bind="html: content()"></div>
-                <!-- /ko -->
-            </div>
-            <div data-bind="attr: {id: 'textEditorWrapper_'+textWidgetId}" style="width: 100%; height: 100%; display: none;">
-                <div id="textEditor" style="width: 100%; height: 100%;"></div>
-            </div>
+<div style='width: 100%; height: 100%;'>
+    <div class="textWidgetWrapper">
+        <div data-bind="attr: {id: 'textContentWrapper_'+textWidgetId}, click: showTextEditor" style="width: 100%; height: 100%;">
+            <!-- ko if: emptyContent -->
+            <div style="font-style: italic; color: grey;" data-bind="text: getNlsString('DBS_BUILDER_TEXT_WIDGET_PROMPT_STRING')"></div>
+            <!-- /ko -->
+            <!-- ko ifnot: emptyContent -->
+            <div data-bind="html: content()"></div>
+            <!-- /ko -->
         </div>
+        <div data-bind="attr: {id: 'textEditorWrapper_'+textWidgetId}" style="width: 100%; height: 100%; display: none;">
+            <div id="textEditor" style="width: 100%; height: 100%;"></div>
+        </div>
+    </div>
 </div>

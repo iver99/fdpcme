@@ -23,7 +23,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore", "ckeditor"],
                     language: lang,
                     toolbar: [
                         {name: 'styles', items: ['Font', 'FontSize']},
-                        {name: 'basicStyles', items: ['Bold', 'Italic', 'Underline']},
+                        {name: 'basicStyles', items: ['Bold', 'Italic']},
                         {name: 'colors', items: ['TextColor']},
                         {name: 'paragraph', items: ['JustifyLeft', 'JustifyCenter', 'JustifyRight']},
                         {name: 'links', items: ['Link']}
