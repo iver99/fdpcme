@@ -91,7 +91,7 @@ public class SubscriptionAppsUtil {
             LOGGER.info("Editions information  is {}", editions);
             // V2 and v4 handling, if edition information number =5, it is a v4 tenant, otherwise is a v2 tenant.
             if (OMC_SERVICE_TYPE.equals(subscriptionApps.getServiceType()) && !isV4Tenant) {
-                LOGGER.info("V2 handling, Service Type is []", OMC_SERVICE_TYPE);
+                LOGGER.info("V2 handling, Service Type is {}", OMC_SERVICE_TYPE);
                 AppsInfo appsInfo = new AppsInfo(OMC_SERVICE_TYPE, V2_TENANT, editions);
                 appsInfoList.add(appsInfo);
                 appSet.add(OMC_SERVICE_TYPE);
@@ -288,7 +288,7 @@ public class SubscriptionAppsUtil {
 
             //v4 handling
             if(OMC_SERVICE_TYPE.equals(subscriptionApps.getServiceType()) && isV4Tenant){
-                LOGGER.info("V4 handling, Service Type is []", OMC_SERVICE_TYPE);
+                LOGGER.info("V4 handling, Service Type is {}", OMC_SERVICE_TYPE);
                 AppsInfo appsInfo = new AppsInfo(OMC_SERVICE_TYPE, V4_TENANT, editions);
                 appsInfoList.add(appsInfo);
                 appSet.add(OMC_SERVICE_TYPE);
