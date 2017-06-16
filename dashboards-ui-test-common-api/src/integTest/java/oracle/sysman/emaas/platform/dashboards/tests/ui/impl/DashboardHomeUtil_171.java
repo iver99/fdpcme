@@ -29,6 +29,7 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardHomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
+import org.openqa.selenium.JavascriptExecutor;
 
 public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements IDashboardHomeUtil
 {
@@ -377,7 +378,10 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	 */
 	@Override
 	public void search(WebDriver driver, String searchString) 
-	{
+    {
+        org.openqa.selenium.WebDriver openDriver;
+        openDriver = driver.getWebDriver();
+
 		driver.getLogger().info("[DashboardHomeUtil] call search searchString: " + searchString);
 		Validator.notEmptyString("searchString", searchString);
 		driver.getLogger().info("[DashboardHomeUtil] call search");
@@ -385,7 +389,9 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 		driver.getElement(DashBoardPageId.SEARCHDASHBOARDINPUTLOCATOR).clear();
 		driver.click(DashBoardPageId.SEARCHDASHBOARDINPUTLOCATOR);
 		driver.sendKeys(DashBoardPageId.SEARCHDASHBOARDINPUTLOCATOR, searchString);
-		driver.click(DashBoardPageId.SEARCHDASHBOARDSEARCHBTNLOCATOR);
+        //driver.click(DashBoardPageId.SEARCHDASHBOARDSEARCHBTNLOCATOR);
+		driver.waitForServer();
+        ((JavascriptExecutor) openDriver).executeScript("arguments[0].click();", openDriver.findElement(By.xpath(DashBoardPageId.SEARCHDASHBOARDSEARCHBTNLOCATOR)));
 		WaitUtil.waitForPageFullyLoaded(driver);
 	}
 
