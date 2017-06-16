@@ -86,16 +86,29 @@ public class EntitySelectorUtil
 		IEntitySelectorUtil esu = new UtilLoader<IEntitySelectorUtil>().loadUtil(driver, IEntitySelectorUtil.class);
                 esu.replacePillSelection(driver, logger, pillIndex, entityName, entityType, category);
         }
+        
+        /**
+	 * @param driver
+	 * @param logger
+	 * @param entityName
+	 */
+	public static void searchText(WebDriver driver, Logger logger, String entityName)
+	{
+		IEntitySelectorUtil esu = new UtilLoader<IEntitySelectorUtil>().loadUtil(driver, IEntitySelectorUtil.class);
+		esu.searchText(driver, logger, entityName);
+	}
 
 	/**
 	 * @param driver
 	 * @param logger
-	 * @param text
+	 * @param entityName
+         * @param entityType
+         * @param category
 	 */
-	public static void searchText(WebDriver driver, Logger logger, String text)
+	public static void searchText(WebDriver driver, Logger logger, String entityName, String entityType, String category)
 	{
 		IEntitySelectorUtil esu = new UtilLoader<IEntitySelectorUtil>().loadUtil(driver, IEntitySelectorUtil.class);
-		esu.searchText(driver, logger, text);
+		esu.searchText(driver, logger, entityName, entityType, category);
 	}
 
 	/**
