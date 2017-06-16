@@ -171,7 +171,6 @@ public class SubscriptionAppsUtil {
                 }
                 LOGGER.info("Service type is {} and subscribed apps is {}", OMC_SERVICE_TYPE, appSet);
                 appList.addAll(appSet);
-                continue;
             }
             if (OSMACC_SERVICE_TYPE.equals(subscriptionApps.getServiceType())) {
                 LOGGER.info("V2 handling Service type is {}", OSMACC_SERVICE_TYPE);
@@ -195,21 +194,18 @@ public class SubscriptionAppsUtil {
                                 appSet.add(COMPLIANCE_SERVICE_TYPE);
                                 AppsInfo appsInfo1 = new AppsInfo(COMPLIANCE_SERVICE_TYPE, V2_TENANT, editions);
                                 appsInfoList.add(appsInfo1);
-                                continue;
                             }
                             if (e.getEdition().contains(SECURITY_MONITORING_ANALYTICS_EDITION)) {
                                 LOGGER.info("Service suite {} is {} edition", OSMACC_SERVICE_TYPE, CONFIGURATION_COMPLIANCE_EDITION);
                                 appSet.add(SECURITYSERVICE_SERVICE_TYPE);
                                 AppsInfo appsInfo1 = new AppsInfo(SECURITYSERVICE_SERVICE_TYPE, V2_TENANT, editions);
                                 appsInfoList.add(appsInfo1);
-                                continue;
                             }
                         }
                     }
                 }
                 LOGGER.info("Service type is {} and after mapping subscribed apps is {}", OSMACC_SERVICE_TYPE, appSet);
                 appList.addAll(appSet);
-                continue;
             }
             //V3 handling
             if (OMCSE_SERVICE_TYPE.equals(subscriptionApps.getServiceType())) {
@@ -334,7 +330,6 @@ public class SubscriptionAppsUtil {
                 }
                 LOGGER.info("Service type is {} and subscribed apps is {}", OMC_SERVICE_TYPE, appSet);
                 appList.addAll(appSet);
-                continue;
             }
         }
         LOGGER.debug("After Editions info is {}", appsInfoList);
