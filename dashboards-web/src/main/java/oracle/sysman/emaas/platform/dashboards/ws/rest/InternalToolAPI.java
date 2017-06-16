@@ -21,7 +21,6 @@ import javax.ws.rs.core.Response;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardManager;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
-import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DatabaseDependencyUnavailableException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
@@ -58,11 +57,6 @@ public class InternalToolAPI extends APIBase {
             Dashboard dbd = dm.getDashboardByName(dashboardName, tenantId);
             String dbJson = NewOobExporter.exportDashboard(dbd);
             return Response.ok(dbJson).build();
-        }
-        catch(DashboardNotFoundException e){
-            //suppress error information in log file
-            LOGGER.warn("Specific dashboard not found for name {}", dashboardName);
-            return buildErrorResponse(new ErrorEntity(e));
         }
         catch (DashboardException e) {
             LOGGER.error(e.getLocalizedMessage(), e);
