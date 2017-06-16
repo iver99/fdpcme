@@ -30,7 +30,7 @@ dependencies
 {
 	deploy (project(path:':dashboards-comparator:dashboardscomparator-web', configuration:'archives')) {transitive = false}
 	earlib (project(':dashboards-comparator:dashboardscomparator-webutils')){transitive = false} 
-	
+	earlib (project(':dashboards-comparator:dashboardscomparator-web')){transitive = false} 
 	earlib getProjectArtifact('jersey-servlet')
 	earlib getProjectArtifact('security-client')
 	earlib getProjectArtifact('log4j-core')   

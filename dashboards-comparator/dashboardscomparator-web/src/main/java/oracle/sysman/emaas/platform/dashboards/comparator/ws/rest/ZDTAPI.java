@@ -217,6 +217,8 @@ public class ZDTAPI
 	public Response getSyncStatus(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
             @HeaderParam(value = "X-REMOTE-USER") String userTenant) {
 		logger.info("incoming call from zdt comparator to get sync status");
+		logger.info("tenantIdParam="+tenantIdParam);
+		logger.info("userTenant="+userTenant);
 		DashboardRowsComparator dcc = null;
 		String response = null;
 		try {

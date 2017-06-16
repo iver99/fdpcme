@@ -445,8 +445,11 @@ public class DashboardRowsComparator extends AbstractComparator
 		} else {
 			url = lk.getHref() + "?comparisonType="+comparisonType+"&maxComparedDate="+URLEncoder.encode(maxComparedDate, "UTF-8");
 		}
+
 		//String response = new TenantSubscriptionUtil.RestClient().get(url, tenantId,userTenant);
-		
+
+		logger.info("get table data URL is "+url);
+
 		RestClient rc = RestClientProxy.getRestClient();
 		rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME, tenantId);
 		rc.setHeader(RestClient.X_REMOTE_USER, userTenant);
