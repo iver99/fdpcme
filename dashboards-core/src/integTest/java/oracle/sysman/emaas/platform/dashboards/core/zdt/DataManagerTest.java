@@ -129,8 +129,8 @@ public class DataManagerTest
 				result = list;
 			}
 		};
-		dataManager.getDashboardSetTableData(entityManager,"full","2017-05-12 11:21:23","2017-05-12 11:21:23");
-		dataManager.getDashboardSetTableData(entityManager,"full",null, null);
+		dataManager.getDashboardSetTableData(entityManager,"full","2017-05-12 11:21:23","2017-05-12 11:21:23", null);
+		dataManager.getDashboardSetTableData(entityManager,"full",null, null, "tenant");
 
 	}
 	@Test
@@ -143,7 +143,7 @@ public class DataManagerTest
 				result = list;
 			}
 		};
-		dataManager.getDashboardTableData(entityManager,"full","2017-05-12 11:21:23","2017-05-12 11:21:23");
+		dataManager.getDashboardTableData(entityManager,"full","2017-05-12 11:21:23","2017-05-12 11:21:23", "");
 	}
 
 	@Test
@@ -156,7 +156,7 @@ public class DataManagerTest
 				result = list;
 			}
 		};
-		dataManager.getDashboardTileParamsTableData(entityManager,"full","2017-05-12 11:21:23","2017-05-12 11:21:23");
+		dataManager.getDashboardTileParamsTableData(entityManager,"full","2017-05-12 11:21:23","2017-05-12 11:21:23", "");
 	}
 	@Test
 	public void testGetDahboardTileTableData(@Mocked final PersistenceManager persistenceManager, 
@@ -168,7 +168,7 @@ public class DataManagerTest
 				result = list;
 			}
 		};
-		dataManager.getDashboardTileTableData(entityManager,"full","2017-05-12 11:21:23","2017-05-12 11:21:23");
+		dataManager.getDashboardTileTableData(entityManager,"full","2017-05-12 11:21:23","2017-05-12 11:21:23", "");
 	}
 
 	@Test
@@ -181,7 +181,7 @@ public class DataManagerTest
 				result = list;
 			}
 		};
-		dataManager.getDashboardUserOptionsTableData(entityManager,"full","2017-05-12 11:21:23","2017-05-12 11:21:23");
+		dataManager.getDashboardUserOptionsTableData(entityManager,"full","2017-05-12 11:21:23","2017-05-12 11:21:23","");
 	}
 	
 	@Test
@@ -294,7 +294,7 @@ public class DataManagerTest
 				result = list;
 			}
 		};
-		dataManager.getPreferenceTableData(entityManager,"full","2017-05-12 11:21:23","2017-05-12 11:21:23");
+		dataManager.getPreferenceTableData(entityManager,"full","2017-05-12 11:21:23","2017-05-12 11:21:23","");
 	}
 
 	@Test

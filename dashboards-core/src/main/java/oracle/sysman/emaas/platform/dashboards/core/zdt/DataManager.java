@@ -53,6 +53,7 @@ public class DataManager
 	
 	private static final String SQL_GET_COMPARED_DATA_TO_SYNC = "SELECT to_char(COMPARISON_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as COMPARISON_DATE, comparison_result from ems_zdt_comparator where comparison_result is not null";
 	
+	private static final String SQL_GET_ALL_TENANTS = "select distinct tenant_id from ems_dashboard where is_system <>1";
 	
 	private static DataManager instance = new DataManager();
 	/**
@@ -63,6 +64,11 @@ public class DataManager
 	public static DataManager getInstance()
 	{
 		return instance;
+	}
+	
+	public List<Object> getAllTenants(EntityManager em) {
+		List<Object> result =  getSingleTableData(em, SQL_GET_ALL_TENANTS);
+		return result;
 	}
 	
 	public int saveToComparatorTable(EntityManager em, String comparisonDate, String nextCompareDate, String comparisonType,
@@ -106,9 +112,9 @@ public class DataManager
 		List<Map<String, Object>> result = null;
 		try {
 			if (date != null) {
-				result = getDatabaseTableData(em,SQL_GET_COMPARED_DATA_TO_SYNC_BY_DATE, date,null);				
+				result = getDatabaseTableData(em,SQL_GET_COMPARED_DATA_TO_SYNC_BY_DATE, date,null,null);				
 			} else {
-				result = getDatabaseTableData(em,SQL_GET_COMPARED_DATA_TO_SYNC,null, null);
+				result = getDatabaseTableData(em,SQL_GET_COMPARED_DATA_TO_SYNC,null, null, null);
 			}
 			
 		}catch(Exception e) {
@@ -135,7 +141,7 @@ public class DataManager
 	
 	public List<Map<String, Object>> getSyncStatus(EntityManager em) {
 		try {
-			List<Map<String, Object>> result = getDatabaseTableData(em, SQL_GET_SYNC_STATUS, null,null);
+			List<Map<String, Object>> result = getDatabaseTableData(em, SQL_GET_SYNC_STATUS, null,null, null);
 			return result;
 		} catch (Exception e) {
 			logger.error(e);
@@ -145,7 +151,7 @@ public class DataManager
  	
 	public List<Map<String, Object>> getComparatorStatus(EntityManager em) {
 		try {
-			List<Map<String, Object>> result = getDatabaseTableData(em, SQL_GET_COMPARISON_STATUS, null, null);
+			List<Map<String, Object>> result = getDatabaseTableData(em, SQL_GET_COMPARISON_STATUS, null, null, null);
 			return result;
 		} catch (Exception e) {
 			logger.error(e);
@@ -308,20 +314,29 @@ public class DataManager
 	 *
 	 * @return
 	 */
-	public List<Map<String, Object>> getDashboardSetTableData(EntityManager em,String type, String date, String maxComparedDate)
+	public List<Map<String, Object>> getDashboardSetTableData(EntityManager em,String type, String date, String maxComparedDate, String tenant)
 	{
 		String sql = "SELECT TO_CHAR(DASHBOARD_SET_ID) AS DASHBOARD_SET_ID, TENANT_ID, TO_CHAR(SUB_DASHBOARD_ID) AS SUB_DASHBOARD_ID, "
 				+ "POSITION, CREATION_DATE, LAST_MODIFICATION_DATE, TO_CHAR(DELETED) AS DELETED"
 				+ " FROM EMS_DASHBOARD_SET where LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')"
 				+ " and dashboard_set_id in (select dashboard_id from ems_dashboard where is_system <>1)";
+		String sqlByTenant = "SELECT TO_CHAR(DASHBOARD_SET_ID) AS DASHBOARD_SET_ID, TENANT_ID, TO_CHAR(SUB_DASHBOARD_ID) AS SUB_DASHBOARD_ID, "
+				+ "POSITION, CREATION_DATE, LAST_MODIFICATION_DATE, TO_CHAR(DELETED) AS DELETED"
+				+ " FROM EMS_DASHBOARD_SET where LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')"
+				+ " and dashboard_set_id in (select dashboard_id from ems_dashboard where is_system <>1) and tenant_Id =?";
 		String sqlByDate = "SELECT TO_CHAR(DASHBOARD_SET_ID) AS DASHBOARD_SET_ID, TENANT_ID, TO_CHAR(SUB_DASHBOARD_ID) AS SUB_DASHBOARD_ID, "
 				+ "POSITION, CREATION_DATE, LAST_MODIFICATION_DATE, TO_CHAR(DELETED) AS DELETED"
 				+ " FROM EMS_DASHBOARD_SET WHERE LAST_MODIFICATION_DATE > to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') and LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')"
 				+ " and dashboard_set_id in (select dashboard_id from ems_dashboard where is_system <>1)";
 		if (type.equals("incremental") && date != null) {
-			return getDatabaseTableData(em,sqlByDate,date,maxComparedDate);
+			return getDatabaseTableData(em,sqlByDate,date,maxComparedDate, null);
 		} else {
-			return getDatabaseTableData(em,sql,null,maxComparedDate);
+			if (tenant != null) {
+				return getDatabaseTableData(em,sqlByTenant,null,maxComparedDate, tenant);
+			} else {
+				return getDatabaseTableData(em,sql,null,maxComparedDate, null);
+			}
+		
 		}
 	}
 
@@ -330,21 +345,30 @@ public class DataManager
 	 *
 	 * @return
 	 */
-	public List<Map<String, Object>> getDashboardTableData(EntityManager em, String type,String date, String maxComparedDate)
+	public List<Map<String, Object>> getDashboardTableData(EntityManager em, String type,String date, String maxComparedDate, String tenant)
 	{
 		String sql = "SELECT  TO_CHAR(DASHBOARD_ID) AS DASHBOARD_ID,  NAME, TYPE, DESCRIPTION, CREATION_DATE, LAST_MODIFICATION_DATE, LAST_MODIFIED_BY,"
 				+ " OWNER, IS_SYSTEM, APPLICATION_TYPE, ENABLE_TIME_RANGE, SCREEN_SHOT, TO_CHAR(DELETED) AS DELETED, TENANT_ID, ENABLE_REFRESH, "
 				+ "SHARE_PUBLIC, ENABLE_ENTITY_FILTER, ENABLE_DESCRIPTION, EXTENDED_OPTIONS, SHOW_INHOME FROM EMS_DASHBOARD where LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')"
 				+ " and  is_system <> 1";
+		String sqlByTenant = "SELECT  TO_CHAR(DASHBOARD_ID) AS DASHBOARD_ID,  NAME, TYPE, DESCRIPTION, CREATION_DATE, LAST_MODIFICATION_DATE, LAST_MODIFIED_BY,"
+				+ " OWNER, IS_SYSTEM, APPLICATION_TYPE, ENABLE_TIME_RANGE, SCREEN_SHOT, TO_CHAR(DELETED) AS DELETED, TENANT_ID, ENABLE_REFRESH, "
+				+ "SHARE_PUBLIC, ENABLE_ENTITY_FILTER, ENABLE_DESCRIPTION, EXTENDED_OPTIONS, SHOW_INHOME FROM EMS_DASHBOARD where LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')"
+				+ " and  is_system <> 1 and tenant_Id = ?";
 		String sqlByDate = "SELECT  TO_CHAR(DASHBOARD_ID) AS DASHBOARD_ID,  NAME, TYPE, DESCRIPTION, CREATION_DATE, LAST_MODIFICATION_DATE, LAST_MODIFIED_BY,"
 				+ " OWNER, IS_SYSTEM, APPLICATION_TYPE, ENABLE_TIME_RANGE, SCREEN_SHOT, TO_CHAR(DELETED) AS DELETED, TENANT_ID, ENABLE_REFRESH, "
 				+ "SHARE_PUBLIC, ENABLE_ENTITY_FILTER, ENABLE_DESCRIPTION, EXTENDED_OPTIONS, SHOW_INHOME FROM EMS_DASHBOARD "
 				+ "WHERE LAST_MODIFICATION_DATE > to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') and LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')"
 				+ " and  is_system <> 1";
 		if (type.equals("incremental") && date != null) {
-			return getDatabaseTableData(em,sqlByDate,date,maxComparedDate);
+			return getDatabaseTableData(em,sqlByDate,date,maxComparedDate, null);
 		} else {
-			return getDatabaseTableData(em,sql,null,maxComparedDate);
+			if (tenant != null) {
+				return getDatabaseTableData(em,sqlByTenant,null,maxComparedDate, tenant);
+			} else {
+				return getDatabaseTableData(em,sql,null,maxComparedDate, null);
+			}
+			
 		}
 	}
 
@@ -353,19 +377,25 @@ public class DataManager
 	 *
 	 * @return
 	 */
-	public List<Map<String, Object>> getDashboardTileParamsTableData(EntityManager em, String type,String date, String maxComparedDate)
+	public List<Map<String, Object>> getDashboardTileParamsTableData(EntityManager em, String type,String date, String maxComparedDate, String tenant)
 	{
 		String sql = "SELECT TILE_ID, PARAM_NAME, TENANT_ID, IS_SYSTEM, PARAM_TYPE, PARAM_VALUE_STR, PARAM_VALUE_NUM, PARAM_VALUE_TIMESTAMP, "
 				+ "CREATION_DATE, LAST_MODIFICATION_DATE, DELETED FROM EMS_DASHBOARD_TILE_PARAMS where LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')"
 				+ " and is_system <>1";
+		String sqlByTenant = "SELECT TILE_ID, PARAM_NAME, TENANT_ID, IS_SYSTEM, PARAM_TYPE, PARAM_VALUE_STR, PARAM_VALUE_NUM, PARAM_VALUE_TIMESTAMP, "
+				+ "CREATION_DATE, LAST_MODIFICATION_DATE, DELETED FROM EMS_DASHBOARD_TILE_PARAMS where LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')"
+				+ " and is_system <>1 and tenant_Id = ?";
 		String sqlByDate = "SELECT TILE_ID, PARAM_NAME, TENANT_ID, IS_SYSTEM, PARAM_TYPE, PARAM_VALUE_STR, PARAM_VALUE_NUM, PARAM_VALUE_TIMESTAMP, "
 				+ "CREATION_DATE, LAST_MODIFICATION_DATE, DELETED FROM EMS_DASHBOARD_TILE_PARAMS "
 				+ "WHERE LAST_MODIFICATION_DATE > to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') and LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')"
 				+ " and is_system <>1";
 		if (type.equals("incremental") && date != null) {
-			return getDatabaseTableData(em,sqlByDate,date,maxComparedDate);
+			return getDatabaseTableData(em,sqlByDate,date,maxComparedDate, null);
 		} else {
-			return getDatabaseTableData(em,sql,null,maxComparedDate);
+			if (tenant != null) {
+				return getDatabaseTableData(em,sqlByTenant,null,maxComparedDate, tenant);
+			}
+			return getDatabaseTableData(em,sql,null,maxComparedDate,null);
 		}
 	}
 
@@ -374,13 +404,18 @@ public class DataManager
 	 *
 	 * @return
 	 */
-	public List<Map<String, Object>> getDashboardTileTableData(EntityManager em,String type, String date, String maxComparedDate)
+	public List<Map<String, Object>> getDashboardTileTableData(EntityManager em,String type, String date, String maxComparedDate, String tenant)
 	{
 		String sql = "SELECT TILE_ID, TO_CHAR(DASHBOARD_ID) AS DASHBOARD_ID, CREATION_DATE, LAST_MODIFICATION_DATE, LAST_MODIFIED_BY, OWNER, TITLE, HEIGHT, WIDTH, IS_MAXIMIZED, POSITION, TENANT_ID,"
 				+ "WIDGET_UNIQUE_ID, WIDGET_NAME, WIDGET_DESCRIPTION, WIDGET_GROUP_NAME, WIDGET_ICON, WIDGET_HISTOGRAM, WIDGET_OWNER, "
 				+ "WIDGET_CREATION_TIME, WIDGET_SOURCE, WIDGET_KOC_NAME, WIDGET_VIEWMODE, WIDGET_TEMPLATE, PROVIDER_NAME, PROVIDER_VERSION, PROVIDER_ASSET_ROOT, "
 				+ "TILE_ROW, TILE_COLUMN, TYPE, WIDGET_SUPPORT_TIME_CONTROL, WIDGET_LINKED_DASHBOARD, WIDGET_DELETED, WIDGET_DELETION_DATE, DELETED FROM EMS_DASHBOARD_TILE where LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')"
 				+ " and dashboard_id in (select dashboard_id from ems_dashboard where is_system <>1)";
+		String sqlByTenant = "SELECT TILE_ID, TO_CHAR(DASHBOARD_ID) AS DASHBOARD_ID, CREATION_DATE, LAST_MODIFICATION_DATE, LAST_MODIFIED_BY, OWNER, TITLE, HEIGHT, WIDTH, IS_MAXIMIZED, POSITION, TENANT_ID,"
+				+ "WIDGET_UNIQUE_ID, WIDGET_NAME, WIDGET_DESCRIPTION, WIDGET_GROUP_NAME, WIDGET_ICON, WIDGET_HISTOGRAM, WIDGET_OWNER, "
+				+ "WIDGET_CREATION_TIME, WIDGET_SOURCE, WIDGET_KOC_NAME, WIDGET_VIEWMODE, WIDGET_TEMPLATE, PROVIDER_NAME, PROVIDER_VERSION, PROVIDER_ASSET_ROOT, "
+				+ "TILE_ROW, TILE_COLUMN, TYPE, WIDGET_SUPPORT_TIME_CONTROL, WIDGET_LINKED_DASHBOARD, WIDGET_DELETED, WIDGET_DELETION_DATE, DELETED FROM EMS_DASHBOARD_TILE where LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')"
+				+ " and dashboard_id in (select dashboard_id from ems_dashboard where is_system <>1) and tenant_Id = ?";
 		String sqlByDate = "SELECT TILE_ID, TO_CHAR(DASHBOARD_ID) AS DASHBOARD_ID, CREATION_DATE, LAST_MODIFICATION_DATE, LAST_MODIFIED_BY, OWNER, TITLE, HEIGHT, WIDTH, IS_MAXIMIZED, POSITION, TENANT_ID,"
 				+ "WIDGET_UNIQUE_ID, WIDGET_NAME, WIDGET_DESCRIPTION, WIDGET_GROUP_NAME, WIDGET_ICON, WIDGET_HISTOGRAM, WIDGET_OWNER, "
 				+ "WIDGET_CREATION_TIME, WIDGET_SOURCE, WIDGET_KOC_NAME, WIDGET_VIEWMODE, WIDGET_TEMPLATE, PROVIDER_NAME, PROVIDER_VERSION, PROVIDER_ASSET_ROOT, "
@@ -388,9 +423,14 @@ public class DataManager
 				+ "WHERE LAST_MODIFICATION_DATE > to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') and LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')"
 				+ " and dashboard_id in (select dashboard_id from ems_dashboard where is_system <>1)";
 		if (type.equals("incremental") && date != null) {
-			return getDatabaseTableData(em,sqlByDate,date,maxComparedDate);
+			return getDatabaseTableData(em,sqlByDate,date,maxComparedDate, null);
 		} else {
-			return getDatabaseTableData(em,sql,null,maxComparedDate);
+			if (tenant != null) {
+				return getDatabaseTableData(em,sqlByTenant,null,maxComparedDate, tenant);
+			} else {
+				return getDatabaseTableData(em,sql,null,maxComparedDate, null);
+			}
+			
 		}
 	}
 
@@ -399,18 +439,24 @@ public class DataManager
 	 *
 	 * @return
 	 */
-	public List<Map<String, Object>> getDashboardUserOptionsTableData(EntityManager em, String type,String date, String maxComparedDate)
+	public List<Map<String, Object>> getDashboardUserOptionsTableData(EntityManager em, String type,String date, String maxComparedDate, String tenant)
 	{
 		String sql = "SELECT USER_NAME, TENANT_ID, TO_CHAR(DASHBOARD_ID) AS DASHBOARD_ID, AUTO_REFRESH_INTERVAL, ACCESS_DATE, IS_FAVORITE, EXTENDED_OPTIONS, CREATION_DATE, LAST_MODIFICATION_DATE,"
 				+ " DELETED FROM EMS_DASHBOARD_USER_OPTIONS where LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')"
 				+ " and  dashboard_id in (select dashboard_Id from ems_dashboard where is_system <>1)";
+		String sqlByTenant = "SELECT USER_NAME, TENANT_ID, TO_CHAR(DASHBOARD_ID) AS DASHBOARD_ID, AUTO_REFRESH_INTERVAL, ACCESS_DATE, IS_FAVORITE, EXTENDED_OPTIONS, CREATION_DATE, LAST_MODIFICATION_DATE,"
+				+ " DELETED FROM EMS_DASHBOARD_USER_OPTIONS where LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')"
+				+ " and  dashboard_id in (select dashboard_Id from ems_dashboard where is_system <>1) and tenant_id = ?";
 		String sqlByDate = "SELECT USER_NAME, TENANT_ID, TO_CHAR(DASHBOARD_ID) AS DASHBOARD_ID, AUTO_REFRESH_INTERVAL, ACCESS_DATE, IS_FAVORITE, EXTENDED_OPTIONS, CREATION_DATE, LAST_MODIFICATION_DATE,"
 				+ " DELETED FROM EMS_DASHBOARD_USER_OPTIONS WHERE LAST_MODIFICATION_DATE > to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') and LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')"
 				+ " and  dashboard_id in (select dashboard_Id from ems_dashboard where is_system <>1)";
 		if (type.equals("incremental") && date != null) {
-			return getDatabaseTableData(em,sqlByDate,date,maxComparedDate);
+			return getDatabaseTableData(em,sqlByDate,date,maxComparedDate, null);
 		} else {
-			return getDatabaseTableData(em,sql,null,maxComparedDate);
+			if (tenant != null) {
+				return getDatabaseTableData(em,sqlByTenant,null,maxComparedDate,tenant);
+			}
+			return getDatabaseTableData(em,sql,null,maxComparedDate, null);
 		}
 	}
 
@@ -419,15 +465,21 @@ public class DataManager
 	 *
 	 * @return
 	 */
-	public List<Map<String, Object>> getPreferenceTableData(EntityManager em,String type, String date, String maxComparedDate)
+	public List<Map<String, Object>> getPreferenceTableData(EntityManager em,String type, String date, String maxComparedDate, String tenant)
 	{
 		String sql = "SELECT USER_NAME, PREF_KEY, PREF_VALUE, TENANT_ID, CREATION_DATE, LAST_MODIFICATION_DATE,DELETED FROM EMS_PREFERENCE where LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')";
+		String sqlByTenant = "SELECT USER_NAME, PREF_KEY, PREF_VALUE, TENANT_ID, CREATION_DATE, LAST_MODIFICATION_DATE,DELETED FROM EMS_PREFERENCE where LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') and tenant_Id=?";		
 		String sqlByDate = "SELECT USER_NAME, PREF_KEY, PREF_VALUE, TENANT_ID, CREATION_DATE, LAST_MODIFICATION_DATE,DELETED FROM EMS_PREFERENCE "
 				+ "WHERE LAST_MODIFICATION_DATE > to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') and LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')";
 		if (type.equals("incremental") && date != null) {
-			return getDatabaseTableData(em,sqlByDate,date,maxComparedDate);
+			return getDatabaseTableData(em,sqlByDate,date,maxComparedDate, null);
 		} else {
-			return getDatabaseTableData(em,sql,null,maxComparedDate);
+			if(tenant != null) {
+				return getDatabaseTableData(em,sqlByTenant,null,maxComparedDate, tenant);
+			} else {
+				return getDatabaseTableData(em,sql,null,maxComparedDate, null);
+			}
+			
 		}
 	}
 
@@ -436,7 +488,7 @@ public class DataManager
 	 *
 	 * @return
 	 */
-	private List<Map<String, Object>> getDatabaseTableData(EntityManager em, String nativeSql, String date, String maxComparedDate)
+	private List<Map<String, Object>> getDatabaseTableData(EntityManager em, String nativeSql, String date, String maxComparedDate, String tenant)
 	{
 		if (StringUtil.isEmpty(nativeSql)) {
 			logger.error("Can't query database table with null or empty SQL statement!");
@@ -454,7 +506,12 @@ public class DataManager
 				
 			} else {
 				if (maxComparedDate != null) {
-					query = em.createNativeQuery(nativeSql).setParameter(1, maxComparedDate);
+					if (tenant != null) {
+						query = em.createNativeQuery(nativeSql).setParameter(1, maxComparedDate).setParameter(2, tenant);
+					} else {
+						query = em.createNativeQuery(nativeSql).setParameter(1, maxComparedDate);
+					}
+					
 				} else {
 					query = em.createNativeQuery(nativeSql);
 				}

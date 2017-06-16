@@ -12,6 +12,7 @@ package oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.ro
 
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -40,6 +41,8 @@ import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONObject;
 
 
 /**
@@ -74,8 +77,46 @@ public class DashboardRowsComparator extends AbstractComparator
 				}
 			}
 	}
+	
+	public TableRowsEntity combineRowEntity(List<TableRowsEntity> rowEntityList){
+		TableRowsEntity finalEntity = new TableRowsEntity();
+		List<DashboardRowEntity> dashboard = new ArrayList<DashboardRowEntity>();
+		List<DashboardSetRowEntity> dashboardSet = new ArrayList<DashboardSetRowEntity>();
+		List<DashboardTileRowEntity> dashboardTile = new ArrayList<DashboardTileRowEntity>();
+		List<DashboardTileParamsRowEntity> dashboardTileParams = new ArrayList<DashboardTileParamsRowEntity>();
+		List<PreferenceRowEntity> preference = new ArrayList<PreferenceRowEntity>();
+		List<DashboardUserOptionsRowEntity> userOptions = new ArrayList<DashboardUserOptionsRowEntity>();
+		for (TableRowsEntity entity : rowEntityList) {
+			if (entity.getEmsDashboard() != null && !entity.getEmsDashboard().isEmpty()) {
+				dashboard.addAll(entity.getEmsDashboard());
+			}
+			if (entity.getEmsDashboardSet()!= null && !entity.getEmsDashboardSet().isEmpty()) {
+				dashboardSet.addAll(entity.getEmsDashboardSet());
+			}
+			if (entity.getEmsDashboardTile() != null && !entity.getEmsDashboardTile().isEmpty()) {
+				dashboardTile.addAll(entity.getEmsDashboardTile());
+			}
+			if (entity.getEmsDashboardTileParams() != null && !entity.getEmsDashboardTileParams().isEmpty()) {
+				dashboardTileParams.addAll(entity.getEmsDashboardTileParams());
+			}
+			if (entity.getEmsPreference() != null && !entity.getEmsPreference().isEmpty()) {
+				preference.addAll(entity.getEmsPreference());
+			}
+			if (entity.getEmsDashboardUserOptions() != null && !entity.getEmsDashboardUserOptions().isEmpty()) {
+				userOptions.addAll(entity.getEmsDashboardUserOptions());
+			}
+		}
+		finalEntity.setEmsDashboard(dashboard);
+		finalEntity.setEmsDashboardSet(dashboardSet);
+		finalEntity.setEmsDashboardTile(dashboardTile);
+		finalEntity.setEmsDashboardTileParams(dashboardTileParams);
+		finalEntity.setEmsPreference(preference);
+		finalEntity.setEmsDashboardUserOptions(userOptions);
+		return finalEntity;
+	}
 
-	public InstancesComparedData<TableRowsEntity> compare(String tenantId, String userTenant, String comparisonType, String maxComparedDate) throws ZDTException
+	public InstancesComparedData<TableRowsEntity> compare(String tenantId, String userTenant, String comparisonType, 
+			String maxComparedDate,boolean iscompared, JSONObject tenantObj) throws ZDTException
 	{
 		try {
 			logger.info("Starts to compare the two DF OMC instances: table by table and row by row");
@@ -84,7 +125,47 @@ public class DashboardRowsComparator extends AbstractComparator
 			
 			//logger.info("key2={}, client1={}",key2, client2.getServiceUrls().get(0).toString());
 			
-			TableRowsEntity tre1 = retrieveRowsForSingleInstance(client1, tenantId, userTenant,comparisonType,maxComparedDate);
+			TableRowsEntity tre1 = null;
+			TableRowsEntity tre2 = null;
+			if (!iscompared || comparisonType == "full") {
+				// for the first time comparing, fetch all table data tenant by tenant
+				// for client1
+				List<TableRowsEntity> allRowEntitisForClient1 = new ArrayList<TableRowsEntity>();
+				JSONArray array1 = tenantObj.getJSONArray("client1");
+				for (int i = 0; i < array1.length(); i++) {
+					String tenant = array1.get(i).toString();
+					TableRowsEntity subTre = retrieveRowsForSingleInstance(client1, tenantId, userTenant, 
+							comparisonType, maxComparedDate,tenant);
+					if (subTre == null) {
+						logger.error("Failed to retrieve ZDT table rows entity for instance {}", key1);
+						logger.info("Completed to compare the two ssf OMC instances");
+						return null;
+					}
+					allRowEntitisForClient1.add(subTre);
+				}
+				tre1 = combineRowEntity(allRowEntitisForClient1);
+				
+				logger.info("tre1 dashboard size = "+tre1.getEmsDashboard().size());
+				logger.info("tre1 dashboard tile size = "+tre1.getEmsDashboardTile().size());
+				// for client2
+				List<TableRowsEntity> allRowEntitisForClient2 = new ArrayList<TableRowsEntity>();
+				JSONArray array2 = tenantObj.getJSONArray("client2");
+				for (int i = 0; i < array2.length(); i++) {
+					String tenant = array2.get(i).toString();
+					TableRowsEntity subTre = retrieveRowsForSingleInstance(client2, tenantId, userTenant, 
+							comparisonType, maxComparedDate,tenant);
+					allRowEntitisForClient2.add(subTre);
+				}
+				tre2 = combineRowEntity(allRowEntitisForClient2);
+				logger.info("tre2 dashboard size = "+tre2.getEmsDashboard().size());
+				logger.info("tre2 dashboard tile size = "+tre2.getEmsDashboardTile().size());
+			} else {
+				tre1 = retrieveRowsForSingleInstance(client1, tenantId, userTenant, 
+						comparisonType, maxComparedDate,null);
+				tre2 = retrieveRowsForSingleInstance(client2, tenantId, userTenant, 
+						comparisonType, maxComparedDate,null);
+			}
+						
 			CountsEntity entity1 = retrieveCountsForSingleInstance(tenantId, userTenant,client1, maxComparedDate);
 			if (entity1 == null) {
 				return null;
@@ -101,7 +182,6 @@ public class DashboardRowsComparator extends AbstractComparator
 				return null;
 			}
 
-			TableRowsEntity tre2 = retrieveRowsForSingleInstance(client2, tenantId, userTenant, comparisonType,maxComparedDate);
 			CountsEntity entity2 = retrieveCountsForSingleInstance(tenantId, userTenant,client2,maxComparedDate);
 			if (entity2 == null) {
 				return null;
@@ -302,6 +382,22 @@ public class DashboardRowsComparator extends AbstractComparator
 		return tre;
 	}
 	
+	public String retrieveTenants(String tenantId, String userTenant, LookupClient client) throws Exception {
+		Link lk = getSingleInstanceUrl(client, "zdt/tenants", "http");
+		if (lk == null) {
+			logger.warn("get a null or empty link for omc instance!");
+			throw new ZDTException(ZDTErrorConstants.NULL_LINK_ERROR_CODE, ZDTErrorConstants.NULL_LINK_ERROR_MESSAGE);
+		}
+		RestClient rc = RestClientProxy.getRestClient();
+		rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME,tenantId);
+		rc.setHeader(RestClient.X_REMOTE_USER,userTenant);
+		
+		char[] authToken = LookupManager.getInstance().getAuthorizationToken();
+		String response = rc.get(lk.getHref(), tenantId, new String(authToken));
+		logger.info("checking tenants list " + response);
+		return response;
+	}
+	
 	private CountsEntity retrieveCountsForSingleInstance(String tenantId, String userTenant,LookupClient lc ,String maxComparedTime) throws Exception, IOException
 	{
 		Link lk = getSingleInstanceUrl(lc, "zdt/counts", "http");
@@ -336,14 +432,19 @@ public class DashboardRowsComparator extends AbstractComparator
 	 * @throws IOException
 	 */
 	private TableRowsEntity retrieveRowsForSingleInstance(LookupClient lc, String tenantId, String userTenant, 
-			String comparisonType, String maxComparedDate) throws Exception, IOException, ZDTException
+			String comparisonType, String maxComparedDate, String tenant) throws Exception, IOException, ZDTException
 	{
 		Link lk = getSingleInstanceUrl(lc, "zdt/tablerows", "http");
 		if (lk == null) {
 			logger.warn("Get a null or empty link for one single instance!");
 			throw new ZDTException(ZDTErrorConstants.NULL_LINK_ERROR_CODE, ZDTErrorConstants.NULL_LINK_ERROR_MESSAGE);
+		}		
+		String url = null;
+		if (tenant != null) {
+			url = lk.getHref() + "?comparisonType="+comparisonType+"&maxComparedDate="+URLEncoder.encode(maxComparedDate, "UTF-8")+"&tenant="+tenant;
+		} else {
+			url = lk.getHref() + "?comparisonType="+comparisonType+"&maxComparedDate="+URLEncoder.encode(maxComparedDate, "UTF-8");
 		}
-		String url = lk.getHref() + "?comparisonType="+comparisonType+"&maxComparedDate="+URLEncoder.encode(maxComparedDate, "UTF-8");
 		//String response = new TenantSubscriptionUtil.RestClient().get(url, tenantId,userTenant);
 		
 		RestClient rc = RestClientProxy.getRestClient();

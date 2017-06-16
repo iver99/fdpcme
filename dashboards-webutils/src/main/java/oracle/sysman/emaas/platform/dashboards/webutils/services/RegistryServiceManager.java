@@ -210,6 +210,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	private static final String NAV_ZDT_COUNTS = NAV_API_BASE + "zdt/counts";
 	private static final String NAV_ZDT_TABLEROWS = NAV_API_BASE + "zdt/tablerows";
 	private static final String NAV_ZDT_SYNC = NAV_API_BASE + "zdt/sync";
+	private static final String NAV_ZDT_TENANTS = NAV_API_BASE + "zdt/tenants";
 	
 	private static final String NAV_ZDT_SYNC_STATUS = NAV_API_BASE + "zdt/sync/status";
 	private static final String NAV_ZDT_COMPARE_STATUS = NAV_API_BASE + "zdt/compare/status";
@@ -489,6 +490,13 @@ public class RegistryServiceManager implements ApplicationServiceManager
 			}
 			if (applicationUrlHttps != null) {
 				links.add(new Link().withRel("zdt/compare/result").withHref(applicationUrlHttps + NAV_ZDT_COMPARE_RESULT));
+			}
+			
+			if (applicationUrlHttp != null) {
+				links.add(new Link().withRel("zdt/tenants").withHref(applicationUrlHttp + NAV_ZDT_TENANTS));
+			}
+			if (applicationUrlHttps != null) {
+				links.add(new Link().withRel("zdt/tenants").withHref(applicationUrlHttps + NAV_ZDT_TENANTS));
 			}
 			
 			if (applicationUrlHttp != null) {

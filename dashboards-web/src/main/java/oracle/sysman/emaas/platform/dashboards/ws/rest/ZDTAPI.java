@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
@@ -61,11 +62,60 @@ public class ZDTAPI extends APIBase
 	{
 		super();
 	}
+	
+	@GET
+	@Path("tenants")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAllTenants() {
+		infoInteractionLogAPIIncomingCall(null, null, "Service call to [GET] /v1/zdt/tenants");
+
+		EntityManager em = null;
+		JSONObject obj = new JSONObject();
+		try {
+			DashboardServiceFacade dsf = new DashboardServiceFacade();
+			em = dsf.getEntityManager();
+			String lastComparisonDate = DataManager.getInstance().getLatestComparisonDateForCompare(em);
+			List<Object> tenants = DataManager.getInstance().getAllTenants(em);
+			JSONArray array = new JSONArray();
+			if (tenants != null) {
+				for (Object tenant:tenants) {
+					array.put(tenant.toString());
+				}
+			}
+			boolean flag = true;
+			if (lastComparisonDate == null) {
+				flag =  false;
+			}
+			obj.put("isCompared", flag);
+			obj.put("tenants", array);
+			return Response.status(Status.OK).entity(obj).build();
+		} catch (Exception e) {
+			logger.error("errors in getting all tenants:"+e.getLocalizedMessage());
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Errors:" + e.getLocalizedMessage()).build();
+		} finally {
+			if (em != null) {
+				em.close();
+			}
+		}
+	}
+	
+
+	public Date getCurrentUTCTime()
+	{
+		Calendar cal = Calendar.getInstance(Locale.getDefault());
+		long localNow = System.currentTimeMillis();
+		long offset = cal.getTimeZone().getOffset(localNow);
+		Date utcDate = new Date(localNow - offset);
+		
+		return utcDate;
+	}
+	
 
 	@GET
 	@Path("tablerows")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getAllTableData(@QueryParam("comparisonType") String type, @QueryParam("maxComparedDate") String maxComparedData)
+	public Response getAllTableData(@QueryParam("comparisonType") String type, @QueryParam("maxComparedDate") String maxComparedDate,
+			@QueryParam("tenant") String tenant)
 	{
 		infoInteractionLogAPIIncomingCall(null, null, "Service call to [GET] /v1/zdt/tablerows?comparisonType=");
 
@@ -74,21 +124,26 @@ public class ZDTAPI extends APIBase
 		if (type == null) {
 			type = "incremental";
 		}
+		
+		if (maxComparedDate == null) {
+			Date date = getCurrentUTCTime();
+			maxComparedDate = getTimeString(date);
+		}
 		try {
 			DashboardServiceFacade dsf = new DashboardServiceFacade();
 			em = dsf.getEntityManager();
 			String lastComparisonDate = DataManager.getInstance().getLatestComparisonDateForCompare(em);
-			JSONArray tableData = getDashboardTableData(em,type, lastComparisonDate,maxComparedData);
+			JSONArray tableData = getDashboardTableData(em,type, lastComparisonDate,maxComparedDate, tenant);
 			obj.put(TABLE_DATA_KEY_DASHBOARD, tableData);
-			tableData = getDashboardSetTableData(em,type, lastComparisonDate,maxComparedData);
+			tableData = getDashboardSetTableData(em,type, lastComparisonDate,maxComparedDate, tenant);
 			obj.put(TABLE_DATA_KEY_DASHBOARD_SET, tableData);
-			tableData = getDashboardTileTableData(em,type, lastComparisonDate,maxComparedData);
+			tableData = getDashboardTileTableData(em,type, lastComparisonDate,maxComparedDate, tenant);
 			obj.put(TABLE_DATA_KEY_DASHBOARD_TILES, tableData);
-			tableData = getDashboardTileParamsTableData(em,type, lastComparisonDate,maxComparedData);
+			tableData = getDashboardTileParamsTableData(em,type, lastComparisonDate,maxComparedDate, tenant);
 			obj.put(TABLE_DATA_KEY_DASHBOARD_TILE_PARAMS, tableData);
-			tableData = getDashboardUserOptionsTableData(em,type, lastComparisonDate,maxComparedData);
+			tableData = getDashboardUserOptionsTableData(em,type, lastComparisonDate,maxComparedDate, tenant);
 			obj.put(TABLE_DATA_KEY_DASHBOARD_USER_OPTIONS, tableData);
-			tableData = getPreferenceTableData(em,type, lastComparisonDate,maxComparedData);
+			tableData = getPreferenceTableData(em,type, lastComparisonDate,maxComparedDate, tenant);
 			obj.put(TABLE_DATA_KEY_DASHBOARD_PREFERENCES, tableData);
 		}
 		catch (JSONException e) {
@@ -358,33 +413,33 @@ public class ZDTAPI extends APIBase
 
 	
 
-	private JSONArray getDashboardSetTableData(EntityManager em, String type, String date, String maxComparedData)
+	private JSONArray getDashboardSetTableData(EntityManager em, String type, String date, String maxComparedData, String tenant)
 	{
-		List<Map<String, Object>> list = DataManager.getInstance().getDashboardSetTableData(em, type,date,maxComparedData);
+		List<Map<String, Object>> list = DataManager.getInstance().getDashboardSetTableData(em, type,date,maxComparedData, tenant);
 		return getJSONArrayForListOfObjects(TABLE_DATA_KEY_DASHBOARD_SET, list);
 	}
 
-	private JSONArray getDashboardTableData(EntityManager em, String type, String date, String maxComparedData)
+	private JSONArray getDashboardTableData(EntityManager em, String type, String date, String maxComparedData, String tenant)
 	{
-		List<Map<String, Object>> list = DataManager.getInstance().getDashboardTableData(em, type,date,maxComparedData);
+		List<Map<String, Object>> list = DataManager.getInstance().getDashboardTableData(em, type,date,maxComparedData, tenant);
 		return getJSONArrayForListOfObjects(TABLE_DATA_KEY_DASHBOARD, list);
 	}
 
-	private JSONArray getDashboardTileParamsTableData(EntityManager em, String type, String date, String maxComparedData)
+	private JSONArray getDashboardTileParamsTableData(EntityManager em, String type, String date, String maxComparedData, String tenant)
 	{
-		List<Map<String, Object>> list = DataManager.getInstance().getDashboardTileParamsTableData(em ,type,date,maxComparedData);
+		List<Map<String, Object>> list = DataManager.getInstance().getDashboardTileParamsTableData(em ,type,date,maxComparedData, tenant);
 		return getJSONArrayForListOfObjects(TABLE_DATA_KEY_DASHBOARD_TILE_PARAMS, list);
 	}
 
-	private JSONArray getDashboardTileTableData(EntityManager em, String type, String date, String maxComparedData)
+	private JSONArray getDashboardTileTableData(EntityManager em, String type, String date, String maxComparedData, String tenant)
 	{
-		List<Map<String, Object>> list = DataManager.getInstance().getDashboardTileTableData(em, type,date,maxComparedData);
+		List<Map<String, Object>> list = DataManager.getInstance().getDashboardTileTableData(em, type,date,maxComparedData, tenant);
 		return getJSONArrayForListOfObjects(TABLE_DATA_KEY_DASHBOARD_TILES, list);
 	}
 
-	private JSONArray getDashboardUserOptionsTableData(EntityManager em, String type, String date, String maxComparedData)
+	private JSONArray getDashboardUserOptionsTableData(EntityManager em, String type, String date, String maxComparedData, String tenant)
 	{
-		List<Map<String, Object>> list = DataManager.getInstance().getDashboardUserOptionsTableData(em, type,date,maxComparedData);
+		List<Map<String, Object>> list = DataManager.getInstance().getDashboardUserOptionsTableData(em, type,date,maxComparedData, tenant);
 		return getJSONArrayForListOfObjects(TABLE_DATA_KEY_DASHBOARD_USER_OPTIONS, list);
 	}
 
@@ -396,7 +451,7 @@ public class ZDTAPI extends APIBase
 	{
 		if (list == null) {
 			logger.warn("Trying to get a JSON object for {} from a null object/list. Returning null JSON object", dataName);
-			return null;
+			return  new JSONArray();
 		}
 		JSONArray array = new JSONArray();
 		for (Map<String, Object> row : list) {
@@ -406,9 +461,9 @@ public class ZDTAPI extends APIBase
 		return array;
 	}
 
-	private JSONArray getPreferenceTableData(EntityManager em, String type, String date, String maxComparedData)
+	private JSONArray getPreferenceTableData(EntityManager em, String type, String date, String maxComparedData, String tenant)
 	{
-		List<Map<String, Object>> list = DataManager.getInstance().getPreferenceTableData(em, type,date,maxComparedData);
+		List<Map<String, Object>> list = DataManager.getInstance().getPreferenceTableData(em, type,date,maxComparedData, tenant);
 		return getJSONArrayForListOfObjects(TABLE_DATA_KEY_DASHBOARD_PREFERENCES, list);
 	}
 }

@@ -30,6 +30,7 @@ import javax.ws.rs.core.Response.Status;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
@@ -266,7 +267,39 @@ public class ZDTAPI
 		
 		try {
 			DashboardRowsComparator dcc = new DashboardRowsComparator();
-			InstancesComparedData<TableRowsEntity> result = dcc.compare(tenantIdParam, userTenant,compareType,maxComparedDate);
+			String tenants1 = dcc.retrieveTenants(tenantIdParam, userTenant,dcc.getClient1());			
+			String tenants2 = dcc.retrieveTenants(tenantIdParam, userTenant,dcc.getClient2());
+			logger.info("tenants1=" + tenants1);
+			logger.info("tenants2=" + tenants2);
+			if (tenants1 == null || tenants2 == null) {
+				return Response.status(400).entity(new ErrorEntity(ZDTErrorConstants.NULL_TABLE_ROWS_ERROR_CODE, ZDTErrorConstants.NULL_TABLE_ROWS_ERROR_MESSAGE)).build();
+			}
+			JSONArray tenantArrayForClient1 = null;
+			
+			JSONObject obj1 = new JSONObject(tenants1);
+			boolean iscomparedForClient1 = obj1.getBoolean("isCompared");
+			logger.info("iscompared1=" + iscomparedForClient1);
+			tenantArrayForClient1 = obj1.getJSONArray("tenants");
+			logger.info("tenantArray size1 = " + tenantArrayForClient1.length());
+			
+			JSONArray tenantArrayForClient2 = null;
+			
+			JSONObject obj2 = new JSONObject(tenants2);
+			boolean iscomparedForClient2 = obj2.getBoolean("isCompared");
+			logger.info("iscompared2=" + iscomparedForClient2);
+			tenantArrayForClient2 = obj2.getJSONArray("tenants");
+			logger.info("tenantArray size2 = " + tenantArrayForClient2.length());
+			
+			boolean iscompared = true;
+			JSONObject tenantObj = new JSONObject();
+			if ((!iscomparedForClient1) || (!iscomparedForClient2)) {
+				// any one of the clouds has not yet been compared, then they should be compared in full mode
+				iscompared = false;				
+				tenantObj.put("client1", tenantArrayForClient1);
+				tenantObj.put("client2", tenantArrayForClient2);
+			}
+			InstancesComparedData<TableRowsEntity> result = dcc.compare(tenantIdParam, userTenant,compareType,maxComparedDate,
+					iscompared, tenantObj);
 			
 			if (result != null) {
 				int comparedDataNum = dcc.countForComparedRows(result.getInstance1().getData()) + dcc.countForComparedRows(result.getInstance2().getData());
