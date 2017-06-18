@@ -47,7 +47,11 @@ public class GlobalContextUtil_1170 extends GlobalContextUtil_1160
 	@Override
 	public String getGlobalContextName(WebDriver driver)
 	{	
-		driver.waitForElementPresent(GLBCTX_CTXSEL);
+	   if(driver.isDisplayed(GLBCTX_CTXSEL)){
 		return driver.getText(GLBCTX_CTXSEL).trim();
+		}
+	   else{
+		return driver.getText(GLBCTXTFILTERPILL);		
+	}
 	}
 }
