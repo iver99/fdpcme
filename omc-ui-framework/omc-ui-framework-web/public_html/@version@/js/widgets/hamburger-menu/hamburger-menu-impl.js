@@ -218,6 +218,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     {'id': 'omc_root_admin', type: 'menu_group', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_ADMIN_LABEL, 'externalUrl': '#', children: [
                             {'id': 'omc_root_admin_divider0', type: 'divider', 'label': '', 'externalUrl': '#'},
                             {'id': 'omc_root_admin_alertrules', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ADMIN_ALERTRULES_LABEL, 'externalUrl': '#'},
+                            {'id': 'omc_root_admin_notificationChannels', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ADMIN_NOTIFICATIONCHANNELS_LABEL, 'externalUrl': '#'},
                             {'id': 'omc_root_admin_agents', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ADMIN_AGENTS_LABEL, 'externalUrl': '#'},
                             {'id': 'omc_root_admin_clouddiscoveryprofiles', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ADMIN_CLOUDDISCOVERYPROFILES_LABEL, 'externalUrl': '#'},
                             {'id': 'omc_root_admin_entitiesconfig', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ADMIN_ENTITIESCONFIG_LABEL, 'externalUrl': '#'},
@@ -235,6 +236,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     'omc_root_dashboards',
                     'omc_root_admin', 
                     'omc_root_admin_alertrules', 
+                    'omc_root_admin_notificationChannels',
                     'omc_root_admin_agents',
 //                    'omc_root_admin_entitiesconfig',
                     rootCompositeMenuid
@@ -1000,18 +1002,20 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     globalMenuIdHrefMapping['omc_root_SecurityAnalytics'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'SecurityAnalyticsUI');
                     globalMenuIdHrefMapping['omc_root_Compliance'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'ComplianceUIService');
 //                    globalMenuIdHrefMapping['omc_root_admin'] = fetchLinkFromRegistrationData(data, 'adminLinks', 'EventUI');
-                    globalMenuIdHrefMapping['omc_root_admin_alertrules'] = fetchLinkFromRegistrationData(data, 'adminLinks', 'EventUI');
+                    globalMenuIdHrefMapping['omc_root_admin_alertrules'] = fetchLinkFromRegistrationData(data, 'adminLinks', 'EventUI', nls.BRANDING_BAR_HAMBURGER_MENU_ADMIN_ALERTRULES_LABEL);
+                    globalMenuIdHrefMapping['omc_root_admin_notificationChannels'] = fetchLinkFromRegistrationData(data, 'adminLinks', 'EventUI', nls.BRANDING_BAR_HAMBURGER_MENU_ADMIN_NOTIFICATIONCHANNELS_LABEL)?fetchLinkFromRegistrationData(data, 'adminLinks', 'EventUI', nls.BRANDING_BAR_HAMBURGER_MENU_ADMIN_NOTIFICATIONCHANNELS_LABEL):'/emsaasui/eventUi/channels/html/channels-dashboard.html';
                     globalMenuIdHrefMapping['omc_root_admin_agents'] = fetchLinkFromRegistrationData(data, 'adminLinks', 'TenantManagementUI');
                     globalMenuIdHrefMapping['omc_root_admin_clouddiscoveryprofiles'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'MonitoringServiceUI')?fetchLinkFromRegistrationData(data, 'cloudServices', 'MonitoringServiceUI')+"?root=cmsCloudProfilesDashboard":null;
                     globalMenuIdHrefMapping['omc_root_admin_entitiesconfig'] = fetchLinkFromRegistrationData(data, 'adminLinks', 'AdminConsoleSaaSUi');
                 }
                 
-                function fetchLinkFromRegistrationData(data, linkType, serviceName) {
+                function fetchLinkFromRegistrationData(data, linkType, serviceName, subServiceName) {
                     if (data) {
                         var links = data[linkType];
                         if (links && links.length > 0) {
                             for (var i = 0; i < links.length; i++) {
-                                if (links[i].serviceName === serviceName) {
+                                if (links[i].serviceName === serviceName && (
+                                                !subServiceName || (subServiceName && links[i].name && links[i].name.indexOf(subServiceName)>-1))) {
                                     return links[i].href;
                                 }
                             }
