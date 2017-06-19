@@ -50,13 +50,16 @@ define(["require", "knockout", "jquery", "ojs/ojcore", "ckeditor"],
                     });
 
                     editor.on("blur", function () {
-                        self.content(this.getData());
+//                        self.content(this.getData());
                         $('#textContentWrapper_'+self.textWidgetId).show();
                         $('#textEditorWrapper_'+self.textWidgetId).hide();
                     });
                     
                     editor.on("focus", function() {
                        this.setData(self.content()); 
+                    });
+                    editor.on("change", function() {
+                        self.content(this.getData());
                     });
                 };
                 

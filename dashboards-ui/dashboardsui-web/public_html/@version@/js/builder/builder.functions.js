@@ -535,12 +535,16 @@ define(['knockout',
                     window.getSDKVersionFile(assetRootForVerisonedFile + kocVM) : null;
                 kocVM = versionedViewModel ? (versionedViewModel.lastIndexOf('.js') ===  versionedViewModel.length - 3 ? 
                             versionedViewModel.substring(0, versionedViewModel.length - 3) : versionedViewModel)  : assetRoot + kocVM;
+            }else {
+                kocVM = "/emsaasui/emcpdfui/@version@/js/widgets/textwidget/js/dashboardTextWidget.js";
             }
             var kocTemplate = tile.WIDGET_TEMPLATE();
             if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
                 var versionedTemplate = window.getSDKVersionFile ? 
                     window.getSDKVersionFile(assetRootForVerisonedFile + kocTemplate) : null;
                 kocTemplate = versionedTemplate ? versionedTemplate : assetRoot + kocTemplate;
+            }else {
+                kocTemplate = "/emsaasui/emcpdfui/@version@/js/widgets/textwidget/dashboardTextWidget.html";
             }
             Builder.registerComponent(tile.WIDGET_KOC_NAME(), kocVM, kocTemplate);
                     ko.applyBindings(tile, wgtelem[0]);

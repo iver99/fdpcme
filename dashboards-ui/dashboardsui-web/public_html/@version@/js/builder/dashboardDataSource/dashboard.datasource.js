@@ -343,22 +343,12 @@ define(['knockout',
                     oj.Logger.error(e);
                 }
             }
-
-            if(data.tiles) {
-                for(var i in data.tiles) {
-                    if(data.tiles[i].type === "TEXT_WIDGET") {
-                        //TODO for text widget
-                        data.tiles[i].WIDGET_TEMPLATE = "/emsaasui/emcpdfui/@version@/js/widgets/textwidget/textwidgetdemo.html";
-                        data.tiles[i].WIDGET_VIEWMODEL = "/emsaasui/emcpdfui/@version@/js/widgets/textwidget/js/textwidgetdemo.js";
-                        
-                        data.tiles[i].content = Builder.decodeHtml(data.tiles[i].content);
-                    }
-                }
-            }
+            
             
             var mapping = {
                 "tiles": {
                     "create": function (options) {
+                        options.data.content && (options.data.content = Builder.decodeHtml(options.data.content));
                         return new Builder.TileItem(options.data);
                     }
                 }
