@@ -1608,7 +1608,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	 * @param driver
 	 * @return current visible dashboard container
 	 */
-	private WebElement getSelectedDashboardEl(WebDriver driver)
+	protected WebElement getSelectedDashboardEl(WebDriver driver)
 	{
 		List<WebElement> dashboardContainers = driver.getWebDriver().findElements(
 				By.cssSelector(DashBoardPageId_190.DASHBOARDSETCONTAINERCSS));

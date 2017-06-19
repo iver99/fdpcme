@@ -26,6 +26,8 @@ public interface IDashboardBuilderUtil extends IUiTestCommonAPI
 	public static final String TILE_RIGHT = "right";
 
 	public void addNewDashboardToSet(WebDriver driver, String dashboardName);
+	
+	public void addTextWidgetToDashboard(WebDriver driver);
 
 	public void addWidgetToDashboard(WebDriver driver, String searchString);
 
@@ -46,6 +48,8 @@ public interface IDashboardBuilderUtil extends IUiTestCommonAPI
 	public void editDashboard(WebDriver driver, String name, String descriptions, Boolean toShowDscptn);
 
 	public void editDashboardSet(WebDriver driver, String name, String descriptions);
+	
+	public void editTextWidgetAddContent(WebDriver driver, int index, String content);
 
 	public Boolean favoriteOption(WebDriver driver);
 

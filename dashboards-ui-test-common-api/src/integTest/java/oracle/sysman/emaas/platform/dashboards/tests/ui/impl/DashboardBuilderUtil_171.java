@@ -96,6 +96,13 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 		driver.getLogger().info("addNewDashboardToSet completed and returns true");
 	}
 
+	@Override
+	public void addTextWidgetToDashboard(WebDriver driver)
+	{
+		Assert.assertTrue(false, "This method is not available in the current version");
+		driver.getLogger().info("Method not available in the current version");
+	}
+	
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#addWidgetToDashboard(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
@@ -417,6 +424,13 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 		driver.waitForElementPresent("id=" + DashBoardPageId.DASHBOARDSETOPTIONSEDITSAVEID);
 		driver.click("id=" + DashBoardPageId.DASHBOARDSETOPTIONSEDITSAVEID);
 		driver.getLogger().info("editDashboardSet complete");
+	}
+	
+	@Override
+	public void editTextWidgetAddContent(WebDriver driver, int index, String content)
+	{
+		Assert.assertTrue(false, "This method is not available in the current version");
+		driver.getLogger().info("Method not available in the current version");
 	}
 
 	/* (non-Javadoc)
