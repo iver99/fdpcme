@@ -1009,13 +1009,13 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     globalMenuIdHrefMapping['omc_root_admin_entitiesconfig'] = fetchLinkFromRegistrationData(data, 'adminLinks', 'AdminConsoleSaaSUi');
                 }
                 
-                function fetchLinkFromRegistrationData(data, linkType, serviceName, subServiceName) {
+                function fetchLinkFromRegistrationData(data, linkType, serviceName, linkName) {
                     if (data) {
                         var links = data[linkType];
                         if (links && links.length > 0) {
                             for (var i = 0; i < links.length; i++) {
                                 if (links[i].serviceName === serviceName && (
-                                                !subServiceName || (subServiceName && links[i].name && links[i].name.indexOf(subServiceName)>-1))) {
+                                                !linkName || (linkName && links[i].name && links[i].name.indexOf(linkName)>-1))) {
                                     return links[i].href;
                                 }
                             }
