@@ -1008,14 +1008,19 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 				driver.getLogger().info("DashboardBuilderUtil.selectDashboardInsideSet has found the corresponding name");
 				while(!nav.isDisplayed())
 				{
-					if(driver.isDisplayed(DASHBOARD_IN_SET_END_ICON_CSS))
+					if(driver.isDisplayed("css="+DASHBOARD_IN_SET_END_ICON_CSS))
 					{
-						driver.click(DASHBOARD_IN_SET_END_ICON_CSS);
+						driver.click("css="+DASHBOARD_IN_SET_END_ICON_CSS);
 					}
-					else if(driver.isDisplayed(DASHBOARD_IN_SET_START_ICON_CSS))
+					else if(driver.isDisplayed("css="+DASHBOARD_IN_SET_START_ICON_CSS))
 					{
-						driver.click(DASHBOARD_IN_SET_START_ICON_CSS);
-					}						
+						driver.click("css="+DASHBOARD_IN_SET_START_ICON_CSS);
+					}
+					else
+					{
+						throw new NoSuchElementException(
+								"DashboardBuilderUtil.selectDashboardInsideSet: the '<' or '>' icon are not found");						
+					}
 				}
 				nav.click();
 								
