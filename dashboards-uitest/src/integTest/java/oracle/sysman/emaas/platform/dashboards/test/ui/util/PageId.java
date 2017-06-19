@@ -108,4 +108,7 @@ public class PageId
 	//LA page
 	public static final String RUNBUTTON_LA = "//*[@id='srchSrch']";
 	public static final String NOTIFICATIONBUTTON_LA = "//*[@id='notificationButton']";
+
+	
+	public static final String DASHBOARD_CREATE_DIALOG_CANCEL_CSS = "#cancelCreateDsb";
 }
