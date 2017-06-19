@@ -574,11 +574,11 @@ public class VerifyOOBUtil
 			Assert.assertTrue(false,"verifyIconInWidget failed: Not find expected widget "+ widgetname);			
 		}
 
-		tileTitle.click();
+		//tileTitle.click();
 		
 		Actions builder = new Actions(driver.getWebDriver());
 		builder.moveToElement(tileTitle).perform();
-		
+		driver.waitForServer();
 		//verify the config icon not exist
 		Assert.assertFalse(driver.isDisplayed(DashBoardPageId.BUILDERTILECONFIGLOCATOR),
 				"widiget configuration icon is displayed");

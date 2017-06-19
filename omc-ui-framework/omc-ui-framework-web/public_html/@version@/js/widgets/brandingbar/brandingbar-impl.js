@@ -110,7 +110,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 self.udeTopologyData = data;
             };
             self.updateGlobalContextByTopologySelection = params.updateGlobalContextByTopologySelection;
-
+            self.showMaxMinButtonInDF = ko.observable(true);
+            self.showEnterpriseTopology = true;
             if (params) {
                 self.associations(params.associations);
                 self.layout(params.layout);
@@ -122,7 +123,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             var dfu = new dfumodel(self.userName, self.tenantName);
             //Append uifwk css file into document head
             dfu.loadUifwkCss();
-
+            //self.udeEnterPriseTopologyLanded = false;
             if (!ko.components.isRegistered('emctas-globalbar'))
             {
                 var versionedTemplate = window.getSDKVersionFile ?
@@ -135,6 +136,12 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     template: {require: 'text!' + template}
                 });
             }
+            window.emctasGlobalBarCallback = function () {
+                //enable enterpriseTopology
+                self.udeEnterPriseTopologyLanded = true;
+                self.topologyDisabled(false);
+                restoreTopologyDisplayStatus();
+            };
 
             if (self.showGlobalContextBanner() === true) {
                 refreshOMCContext();
@@ -289,7 +296,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.topologyHeight = ko.observable();
             self.topologySize.subscribe(function (topoHeight) {
                 var legendHeight = 0;
-                if($("#ude_topology_legend").length > 0) { //Re-set legend height if there is legend.
+                if ($("#ude_topology_legend").length > 0) { //Re-set legend height if there is legend.
                     //TO DO: hard-code legend height for now. Need to get legend height dynamically after UDE support it later.
                     legendHeight = 300;
                 }
@@ -328,21 +335,39 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 $b && $b.triggerBuilderResizeEvent('Topology is restored!');
             };
             self.maxMinTopologyToggle = function () {
-                if (!self.isMaximized()) {
-                    self.maximizeTopology();
-                } else {
-                    self.restoreTopology();
+                if (self.showMaxMinButtonInDF() === true) {
+                    if (!self.isMaximized()) {
+                        self.maximizeTopology();
+                    } else {
+                        self.restoreTopology();
+                    }
                 }
             };
 
             self.topologyCssHeight = ko.observable();
             self.topologyStyle = ko.computed(function () {
-                var height = "100%; max-height: 204px"
-                if (self.topologyCssHeight()) {
-                    height = (self.topologyCssHeight() + 3) + "px";
+                if (self.showMaxMinButtonInDF() === true) {
+                    var height = "100%; max-height: 204px";
+                    if (self.topologyCssHeight()) {
+                        height = (self.topologyCssHeight() + 3) + "px";
+                    }
+                    return "display: flex; float: left; width: 100%; height: " + height + ";";
+                } else {
+                    return "height:100%;width:100%;";
                 }
-                return "display: flex; float: left; width: 100%; height: " + height + ";";
             });
+
+            /*
+             * Called by UDE if topology is maximized or restored
+             */
+            self.topologyResizeCallback = function (isMaximized) {
+                var $b = $(".right-panel-toggler:visible")[0] && ko.dataFor($(".right-panel-toggler:visible")[0]).$b;
+                if (isMaximized) {
+                    $b && $b.triggerBuilderResizeEvent('Topology is maximized!');
+                } else {
+                    $b && $b.triggerBuilderResizeEvent('Topology is restored!');
+                }
+            };
 
             //NLS strings
             self.productName = nls.BRANDING_BAR_MANAGEMENT_CLOUD;
@@ -1446,6 +1471,22 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                             self.miniEntityCardActions(topologyParams.miniEntityCardActions);
                             self.topologyParamsSet = true;
                         }
+                        else {
+                            self.associations(null);
+                            self.customNodeDataLoader(null);
+                            self.customEventHandler(null);
+                            self.miniEntityCardActions(true);
+                            self.topologyParamsSet = true;
+                        }
+                        if (self.udeEnterPriseTopologyLanded && self.showEnterpriseTopology) { // set queryvar with   non-empty for enterprise topology
+                            self.layout("LINEAR");
+                            self.queryVars({entityName: "All Entities", entityType: "Enterprise Topology"});
+                        }
+                        else {
+                            self.layout("TIERED");
+                            self.queryVars(null);
+                        }
+
                         $(".ude-topology-in-brandingbar .oj-diagram").ojDiagram("refresh");
                         if (self.isTopologyDisplayed()) {
                             console.log("***************topology initialied");
@@ -1482,16 +1523,23 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     if (!cxtUtil.getCompositeMeId()) {
                         window.centernodeid_diagram = cxtUtil.getEntities()[0]['meId'];
                     }
+                    self.showEnterpriseTopology = false;
+                    window.globalpillsempty = false;
                 }
                 //When no compositeMEID exists, disable topology button
                 else {
-                    //Hide topology
-
+                    //show enterprise topology
+                    self.showEnterpriseTopology = true;
+                    window.globalpillsempty = true;
                     if (self.isTopologyDisplayed() && !self.topologyDisabled()) {
                         self.showTopology();
                     }
-
-                    self.topologyDisabled(true);
+                    if (self.udeEnterPriseTopologyLanded) {
+                        self.topologyDisabled(false);
+                    }
+                    else {
+                        self.topologyDisabled(true);
+                    }
 
                 }
 
