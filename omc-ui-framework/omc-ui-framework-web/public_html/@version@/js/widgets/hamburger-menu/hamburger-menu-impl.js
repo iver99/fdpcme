@@ -1002,8 +1002,8 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     globalMenuIdHrefMapping['omc_root_SecurityAnalytics'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'SecurityAnalyticsUI');
                     globalMenuIdHrefMapping['omc_root_Compliance'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'ComplianceUIService');
 //                    globalMenuIdHrefMapping['omc_root_admin'] = fetchLinkFromRegistrationData(data, 'adminLinks', 'EventUI');
-                    globalMenuIdHrefMapping['omc_root_admin_alertrules'] = fetchLinkFromRegistrationData(data, 'adminLinks', 'EventUI', nls.BRANDING_BAR_HAMBURGER_MENU_ADMIN_ALERTRULES_LABEL);
-                    globalMenuIdHrefMapping['omc_root_admin_notificationChannels'] = fetchLinkFromRegistrationData(data, 'adminLinks', 'EventUI', nls.BRANDING_BAR_HAMBURGER_MENU_ADMIN_NOTIFICATIONCHANNELS_LABEL)?fetchLinkFromRegistrationData(data, 'adminLinks', 'EventUI', nls.BRANDING_BAR_HAMBURGER_MENU_ADMIN_NOTIFICATIONCHANNELS_LABEL):'/emsaasui/eventUi/channels/html/channels-dashboard.html';
+                    globalMenuIdHrefMapping['omc_root_admin_alertrules'] = fetchLinkFromRegistrationData(data, 'adminLinks', 'EventUI', 'Alert Rules');
+                    globalMenuIdHrefMapping['omc_root_admin_notificationChannels'] = fetchLinkFromRegistrationData(data, 'adminLinks', 'EventUI', 'Notification Channels')?fetchLinkFromRegistrationData(data, 'adminLinks', 'EventUI', 'Notification Channels'):'/emsaasui/eventUi/channels/html/channels-dashboard.html';
                     globalMenuIdHrefMapping['omc_root_admin_agents'] = fetchLinkFromRegistrationData(data, 'adminLinks', 'TenantManagementUI');
                     globalMenuIdHrefMapping['omc_root_admin_clouddiscoveryprofiles'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'MonitoringServiceUI')?fetchLinkFromRegistrationData(data, 'cloudServices', 'MonitoringServiceUI')+"?root=cmsCloudProfilesDashboard":null;
                     globalMenuIdHrefMapping['omc_root_admin_entitiesconfig'] = fetchLinkFromRegistrationData(data, 'adminLinks', 'AdminConsoleSaaSUi');
