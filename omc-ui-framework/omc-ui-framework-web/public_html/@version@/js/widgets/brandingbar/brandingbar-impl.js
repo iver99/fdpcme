@@ -934,10 +934,12 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 });
 
                 self.toggleHamburgerMenu = function() {
-                    if($("#omcHamburgerMenu").hasClass("oj-offcanvas-open")){
-                        storeHamburgerMenuStatus("closed");
-                    }else{
-                        storeHamburgerMenuStatus("opened");
+                    if(self.xlargeScreen()){
+                        if($("#omcHamburgerMenu").hasClass("oj-offcanvas-open")){
+                            storeHamburgerMenuStatus("closed");
+                        }else{
+                            storeHamburgerMenuStatus("opened");
+                        }
                     }
                     oj.OffcanvasUtils.toggle({
                             "edge": "start",
