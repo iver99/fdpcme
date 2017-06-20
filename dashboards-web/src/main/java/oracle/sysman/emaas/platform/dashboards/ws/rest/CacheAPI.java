@@ -25,7 +25,7 @@ import java.util.concurrent.ConcurrentMap;
 public class CacheAPI extends APIBase {
     private static final Logger LOGGER = LogManager.getLogger(CacheAPI.class);
 
-    @PUT
+    /*@PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/stopCacheGroup/{cacheGroup}")
     public Response stopCacheGrp(@PathParam("cacheGroup") String cacheGroup) {
@@ -56,7 +56,7 @@ public class CacheAPI extends APIBase {
         AbstractCacheManager lruCacheManager = LRUCacheManager.getInstance();
         changeCacheGroupStatusByName(lruCacheManager, CacheStatus.AVAILABLE, cacheGroup);
         return Response.ok(getJsonUtil().toJson(new MsgModel(true, "Cache group" + cacheGroup + " is started successfully!"))).build();
-    }
+    }*/
 
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
