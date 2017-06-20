@@ -11,6 +11,48 @@
   </welcome-file-list>
   
   <filter>
+    <filter-name>OMCMultiInstanceBeginFilter</filter-name>
+    <filter-class>oracle.sysman.emInternalSDK.emaas.platform.servicemanager.security.multiInstances.filter.OMCMultiInstanceBeginFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>OMCMultiInstanceBeginFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <!-- ================= BEGIN Multi-Instance Sandwich ======================== -->
+
+  <filter>
+    <filter-name>OWSMSecurityFilter</filter-name>
+    <filter-class>oracle.wsm.agent.handler.servlet.SecurityFilter</filter-class>
+    <init-param>
+          <param-name>servlet-name</param-name>
+          <param-value>jersey</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>OWSMSecurityFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  
+  <filter>
+    <filter-name>SecAuthorizationFilter</filter-name>
+    <filter-class>oracle.sysman.emSDK.emaas.authz.listener.AuthorizationFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>SecAuthorizationFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  
+  <!-- ================= END Multi-Instance Sandwich ======================== -->
+  <filter>
+    <filter-name>OMCMultiInstanceEndFilter</filter-name>
+    <filter-class>oracle.sysman.emInternalSDK.emaas.platform.servicemanager.security.multiInstances.filter.OMCMultiInstanceEndFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>OMCMultiInstanceEndFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+  <filter>
     <filter-name>CORS.filter</filter-name>
     <filter-class>oracle.sysman.emaas.platform.dashboards.ui.web.DashboardsUiCORSFilter</filter-class>
   </filter>
@@ -85,20 +127,4 @@
       <url-pattern>/builder.html</url-pattern>
     </filter-mapping>-->
   
-  <security-constraint>
-    <web-resource-collection>
-      <web-resource-name>secure-pages</web-resource-name>
-      <url-pattern>/*</url-pattern>
-      <http-method-omission>OPTIONS</http-method-omission>
-    </web-resource-collection>
-    <auth-constraint>
-      <role-name>valid-users</role-name>
-    </auth-constraint>
-  </security-constraint>
-  <security-role>
-    <role-name>valid-users</role-name>
-  </security-role>
-  <login-config>
-    <auth-method>CLIENT-CERT,BASIC</auth-method>
-  </login-config>
 </web-app>
