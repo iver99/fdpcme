@@ -908,7 +908,9 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         if (avoidPageResizeOptIn) {
 //                            menuHidden = true;
                             setOverlayHamburgerMenuStyles();
+                            $("#omcHamburgerMenu").show();
                             triggerDashboardResizeEvent('Hamburger menu closed.');
+                            triggerHamburgerMenuToggleEvent('close');
                         }
                         else {
                             if($("#omcHamburgerMenu").hasClass("oj-offcanvas-open")){
@@ -923,7 +925,15 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     }else{
                         if (avoidPageResizeOptIn) {
                             setPinnedHamburgerMenuStyles();
+                            if($("#omcHamburgerMenu").hasClass("oj-offcanvas-open")){
+                                oj.OffcanvasUtils.close({
+                                        "edge": "start",
+                                        "displayMode": "overlay",
+                                        "selector": "#omcHamburgerMenu"
+                                    });
+                            }
                             resetCurrentHamburgerMenu();
+                            triggerHamburgerMenuToggleEvent('open');
                         }
                         else {
                             $("#omcHamburgerMenu").addClass('oj-offcanvas-start');
@@ -977,7 +987,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                             }
                         }
                         else {
-                            oj.OffcanvasUtils.toggle({
+                            oj.OffcanvasUtils.open({
                                 "edge": "start",
                                 "displayMode": "overlay",
         //                      "content": "#main-container",
@@ -1010,17 +1020,22 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 if (!window._uifwk.obbMenuLoadedListenerRegistered) {
                 menuUtil.subscribeServiceMenuLoadedEvent(function(){
                     //$("#omcHamburgerMenu").show();
-                    $("#omcHamburgerMenuInnerComp").show();
-                    $("#omcHamburgerMenu").on("ojopen", function(event, offcanvas) {
-                        if(offcanvas.displayMode === "push") {
-                            $("#offcanvasInnerContainer").width(document.body.clientWidth-250);
-                            triggerDashboardResizeEvent('Hamburger menu opened.');
-                        }});
-                        
-                    $("#omcHamburgerMenu").on("ojclose", function(event, offcanvas) {
-                        $("#offcanvasInnerContainer").width(document.body.clientWidth);
-                        triggerDashboardResizeEvent('Hamburger menu closed.');
-                    });
+                    if (!avoidPageResizeOptIn) {
+                        $("#omcHamburgerMenu").on("ojopen", function(event, offcanvas) {
+                            if(offcanvas.displayMode === "push") {
+                                $("#offcanvasInnerContainer").width(document.body.clientWidth-250);
+                                triggerDashboardResizeEvent('Hamburger menu opened.');
+                            }});
+
+                        $("#omcHamburgerMenu").on("ojclose", function(event, offcanvas) {
+                            $("#offcanvasInnerContainer").width(document.body.clientWidth);
+                            triggerDashboardResizeEvent('Hamburger menu closed.');
+                        });
+                    }
+                    else {
+                        $("#omcHamburgerMenuInnerComp").show();
+                    }
+                    
                     //$("#omcHamburgerMenu").height(document.body.scrollHeight);
                     $(window).resize(function() {
                         if (window._uifwk.isUnderPrint) {
@@ -1029,12 +1044,13 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         else {
                             window._uifwk.resizeTriggeredByPrint = false;
                         }
-                        if ($("#omcHamburgerMenu").hasClass("oj-offcanvas-open") && !$("#omcHamburgerMenu").hasClass("oj-offcanvas-overlay")) {
-                            $("#offcanvasInnerContainer").width(document.body.clientWidth - 250);
-                        } else {
-                            $("#offcanvasInnerContainer").width(document.body.clientWidth);
+                        if (!avoidPageResizeOptIn) {
+                            if ($("#omcHamburgerMenu").hasClass("oj-offcanvas-open") && !$("#omcHamburgerMenu").hasClass("oj-offcanvas-overlay")) {
+                                $("#offcanvasInnerContainer").width(document.body.clientWidth - 250);
+                            } else {
+                                $("#offcanvasInnerContainer").width(document.body.clientWidth);
+                            }
                         }
-                        //$("#omcHamburgerMenu").height(document.body.scrollHeight);
                     });
                     
                     if (!avoidPageResizeOptIn) {
