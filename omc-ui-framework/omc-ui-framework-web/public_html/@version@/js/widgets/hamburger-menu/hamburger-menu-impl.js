@@ -428,6 +428,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 
                 //If omc service menus have been cached in window session storage, get it directly from cache
                 var cachedMenus = sessionCaches[0].retrieveDataFromCache(sessionCacheAllMenusKey);
+                self.hamburgerMenuLoaded = ko.observable(false);
                 if (cachedMenus && cachedMenus[sessionCacheOmcMenusDataKey] && cachedMenus[sessionCacheOmcMenusServiceLinksKey] && cachedMenus[sessionCacheOmcMenusPrivilegeKey] && cachedMenus[sessionCacheOmcMenusSubscribedAppsKey]) {
                     omcMenus = cachedMenus[sessionCacheOmcMenusDataKey];
                     self.subscribedApps = cachedMenus[sessionCacheOmcMenusSubscribedAppsKey];
@@ -437,6 +438,8 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     self.baseVanityUrls = cachedMenus[sessionCacheBaseVanityUrlsKey];
                     self.userRoles = cachedMenus[sessionCacheUserRolesKey];
                     self.dataSource(new oj.JsonTreeDataSource(omcMenus));
+                    self.hamburgerMenuLoaded(true);
+                    //$("#omcHamburgerMenuInnerComp").show();
                     menuUtil.fireServiceMenuLoadedEvent();
                 }
                 //otherwise, get all service menus from service registries
@@ -507,6 +510,8 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                         sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheBaseVanityUrlsKey, self.baseVanityUrls);
                         sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheUserRolesKey, self.userRoles);
                         self.dataSource(new oj.JsonTreeDataSource(omcMenus));
+                        self.hamburgerMenuLoaded(true);
+                        //$("#omcHamburgerMenuInnerComp").show();
                         menuUtil.fireServiceMenuLoadedEvent();
                     });
                 }

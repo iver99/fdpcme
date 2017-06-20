@@ -9,9 +9,9 @@
         <link rel="stylesheet" href="libs/@version@/js/oraclejet/css/libs/oj/v2.0.2/alta/oj-alta-min.css" type="text/css"/>
         <style type="text/css">
             div.dbd-error-area {
-              position: absolute; 
+              /*position: absolute;*/ 
               /*top: 38.2%;*/
-              width:100%;
+              /*width:100%;*/
               text-align:center;
             }
             .dbd-error-area .dbd-error-inner {
@@ -37,8 +37,10 @@
     </head>
     <body>
         <div id="global-body" style="display: none" class="oj-web-applayout-offcanvas-wrapper oj-offcanvas-outer-wrapper">
-            <div id="offcanvasInnerContainer" class="oj-offcanvas-inner-wrapper">
-            <div class="dbd-error-area oj-web-applayout-scrollable oj-web-applayout-page" role="main">
+            <div id="offcanvasInnerContainer" class="oj-offcanvas-inner-wrapper oj-flex oj-flex-items-pad">
+                <div id="uifwkLayoutHbgmenuPlaceHolder" class="oj-flex-item oj-lg-2"></div>
+                <div id="uifwkLayoutMainContainer" class="oj-flex-item oj-lg-10 oj-web-applayout-scrollable">
+            <div class="dbd-error-area" role="main">
                 <!-- Header section which contains the Global Branding, Global Navigation, and Application Navigation code.
                 Template is located in /templates/demoAppHeaderTemplate.html
                 -->
@@ -68,6 +70,7 @@
                     </div>
                 </div>
             </div>
+        </div>
         </div>
         </div>
     </body>

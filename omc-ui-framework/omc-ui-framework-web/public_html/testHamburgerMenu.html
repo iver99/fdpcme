@@ -33,8 +33,10 @@ role value for that section to represent the appropriate content type.
     <body>
         <div class="loadingIndicator" id="loading">Loading</div>
         <div id="globalBody" style="display: none" class="oj-web-applayout-offcanvas-wrapper oj-offcanvas-outer-wrapper">
-            <div id="offcanvasInnerContainer" class="oj-offcanvas-inner-wrapper">
-            <div id="main-container" class="oj-web-applayout-scrollable oj-web-applayout-page">
+            <div id="offcanvasInnerContainer" class="oj-offcanvas-inner-wrapper oj-flex oj-flex-items-pad">
+                <div id="uifwkLayoutHbgmenuPlaceHolder" class="oj-flex-item oj-lg-2"></div>
+                <div id="uifwkLayoutMainContainer" class="oj-flex-item oj-lg-10 oj-web-applayout-scrollable">
+            <div id="main-container">
                 <!-- ko stopBinding -->
                 <header id="headerWrapper" role="banner">
                     <div data-bind="component: {
@@ -95,6 +97,7 @@ role value for that section to represent the appropriate content type.
                     </div>
                     <!-- /ko -->
                 </div>
+            </div>
             </div>
             </div>
         </div>

@@ -89,10 +89,11 @@ require(['knockout',
     'uifwk/js/util/logging-util',    
     'ojs/ojcore',
     'uifwk/js/sdk/context-util',
+    'uifwk/js/sdk/menu-util',
     'ojs/ojknockout',
     'ojs/ojbutton'
 ],
-function(ko, $, dfu, dfumodel, _emJETCustomLogger, oj, cxtModel)
+function(ko, $, dfu, dfumodel, _emJETCustomLogger, oj, cxtModel, menuModel)
 {
     var logger = new _emJETCustomLogger();
     var logReceiver = dfu.getLogUrl();
@@ -229,6 +230,8 @@ function(ko, $, dfu, dfumodel, _emJETCustomLogger, oj, cxtModel)
     }
 
     $(document).ready(function() {
+        var menuUtil = new menuModel();
+        menuUtil.initializeHamburgerMenuLayout();
         var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
         ko.applyBindings(new HeaderViewModel(), $('#headerWrapper')[0]);
         ko.applyBindings(new ErrorPageModel(), $('#errorMain')[0]);

@@ -209,9 +209,9 @@ require(['knockout',
     'jquery',
     'dfutil',
     'knockout.mapping',
+    'uifwk/js/sdk/menu-util',
     'uifwk/js/util/df-util',
     'uifwk/js/util/logging-util',
-    'uifwk/js/sdk/menu-util',
     'ojs/ojcore',
     'builder/builder.functions',
     'builder/builder.jet.partition',
@@ -226,7 +226,7 @@ require(['knockout',
     'builder/dashboardset.panels.model',
     'builder/dashboardDataSource/dashboard.datasource'
 ],
-    function(ko, $, dfu,km) {
+    function(ko, $, dfu,km, menuModel) {
         ko.mapping = km;
         var dsbId = dfu.getUrlParam("dashboardId");
         var dashboard = null;
@@ -236,6 +236,8 @@ require(['knockout',
         var targets = ko.observable({"criteria":"{\"version\":\"1.0\",\"criteriaList\":[]}"});
         
         $(document).ready(function () {
+            var menuUtil = new menuModel();
+            menuUtil.initializeHamburgerMenuLayout();
             dfu.getSubscribedApps2WithEdition(function(apps) {
                 if (apps && (!apps.applications || apps.applications.length == 0)) {
                     oj.Logger.error("Tenant subscribes to no service. Redirect to dashboard error page", true);

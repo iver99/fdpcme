@@ -351,6 +351,89 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
                     callback(targetUrl);
                 }
             };
+            
+            /**
+             * Initialize hamburger menu layout
+             * 
+             * @returns
+             */
+            self.initializeHamburgerMenuLayout = function() {
+                self.xlargeScreen = oj.ResponsiveKnockoutUtils.createMediaQueryObservable('(min-width: 1440px)');
+                function setPinnedHamburgerMenuStyles() {
+                    $("#omcHamburgerMenu").removeClass('oj-offcanvas-start');
+                    //$("#omcHamburgerMenu").addClass('oj-lg-2');
+                    //$("#omcHamburgerMenu").addClass('oj-flex-item');
+                    //$("#uifwkLayoutMainContainer").addClass('oj-lg-10'); 
+                    $("#uifwkLayoutMainContainer").addClass('oj-flex-item'); 
+                    $("#uifwkLayoutMainContainer").removeClass('oj-web-applayout-scrollable');
+                    $("#uifwkLayoutMainContainer").removeClass('oj-web-applayout-page');
+                    $("#offcanvasInnerContainer").addClass('oj-flex');
+                    $("#offcanvasInnerContainer").addClass('oj-flex-items-pad');
+                    if ($("#omcHamburgerMenu").is(':visible')) {
+                        $("#omcHamburgerMenu").addClass('oj-lg-2');
+                        $("#uifwkLayoutMainContainer").removeClass('oj-lg-12');
+                        $("#uifwkLayoutMainContainer").addClass('oj-lg-10');
+                    }
+                    else {
+                        $("#omcHamburgerMenu").removeClass('oj-lg-2');
+                        $("#uifwkLayoutMainContainer").removeClass('oj-lg-10');
+                        $("#uifwkLayoutMainContainer").addClass('oj-lg-12');
+                    }
+                }
+                
+                function setOverlayHamburgerMenuStyles() {
+                    //$("#omcHamburgerMenu").addClass('oj-offcanvas-start');
+                    //$("#omcHamburgerMenu").removeClass('oj-lg-2');
+                    //$("#omcHamburgerMenu").removeClass('oj-flex-item');
+                    $("#uifwkLayoutHbgmenuPlaceHolder").removeClass('oj-lg-2');
+                    $("#uifwkLayoutHbgmenuPlaceHolder").removeClass('oj-flex-item');
+                    $("#uifwkLayoutMainContainer").removeClass('oj-lg-10'); 
+                    $("#uifwkLayoutMainContainer").removeClass('oj-flex-item'); 
+                    $("#uifwkLayoutMainContainer").addClass('oj-web-applayout-scrollable');
+                    $("#uifwkLayoutMainContainer").addClass('oj-web-applayout-page');
+                    $("#offcanvasInnerContainer").removeClass('oj-flex');
+                    $("#offcanvasInnerContainer").removeClass('oj-flex-items-pad');
+                }
+                
+                if(!self.xlargeScreen()) {
+                    setOverlayHamburgerMenuStyles();
+                    //$("#offcanvasInnerContainer").width(document.body.clientWidth);
+                    //$("#uifwkLayoutMainContainer").width(document.body.clientWidth);
+                }
+                else {
+                    //$('#uifwkLayoutHbgmenuPlaceHolder').width(250);
+                    //$('#uifwkLayoutMainContainer').width($('#offcanvasInnerContainer').width() - 250);
+                    //setPinnedHamburgerMenuStyles();
+                    //$('#uifwkLayoutHbgmenuPlaceHolder').width(250);
+                    //$('#uifwkLayoutHbgmenuPlaceHolder').width(250);
+                    //$("#offcanvasInnerContainer").width(document.body.clientWidth);
+                    //$('#uifwkLayoutMainContainer').width(document.body.clientWidth - 290);
+                    //$('#uifwkLayoutMainContainer').width(document.body.clientWidth - 250);
+                }
+            };
+            
+            /**
+             * Add listener when hamburger menu is opened or closed in large screen
+             * 
+             * @param {Function} callback Callback function to be invoked
+             * 
+             * @returns
+             */
+            self.subscribeHamburgerMenuToggleEvent = function(callback) {
+                function onHamburgerMenuToggle(event) {
+                    if (event.origin !== window.location.protocol + '//' + window.location.host) {
+                        return;
+                    }
+                    var eventData = event.data;
+                    //Only handle received message for composite menu display
+                    if (eventData && eventData.tag && eventData.tag === 'EMAAS_OMC_GLOBAL_MENU_TOGGLE_STATUS') {
+                        if ($.isFunction(callback)) {
+                            callback(eventData.toggleType);
+                        }
+                    }
+                };
+                window.addEventListener("message", onHamburgerMenuToggle, false);
+            };
         }
         return UIFWKGlobalMenuUtil;
     }

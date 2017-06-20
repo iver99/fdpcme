@@ -493,3 +493,48 @@ a:hover {
 #offcanvasInnerContainer .oj-web-applayout-scrollable {
     overflow-y:auto;
 }
+/*html:not([dir="rtl"]) .oj-offcanvas-start {
+    -webkit-transform: translate3d(0, 0, 0); 
+    transform: translate3d(0, 0, 0); 
+    left: 0;
+    border-width: 0 1px 0 0;
+}*/
+
+.oj-flex.oj-flex-items-pad>.oj-flex-item {
+    padding-left: 0px; 
+    padding-right: 0px;
+}
+
+.emaas-hamburger-menu-container {
+    display: none;
+}
+
+@media print and (orientation: landscape), screen and (min-width: 1440px) {
+    .emaas-hamburger-menu-container {
+        display: block;
+    }
+}
+@media print and (orientation: landscape), screen and (max-width: 1440px) {
+    .emaas-hamburger-menu-container {
+        display: none;
+    }
+    #omcHamburgerMenu.oj-lg-2 {
+        display: none;
+    }
+}
+
+/*#uifwkLayoutMainContainer.oj-lg-10 {
+        -webkit-flex: 1;
+        flex: 1;
+        max-width: 100%;
+        width: 83.3333333333%;
+}*/
+
+/*@media print and (orientation: landscape), screen and (min-width: 1024px) {
+    .oj-lg-10 {
+        -webkit-flex: 1;
+        flex: 1;
+        max-width: 100%;
+        width: 83.3333333333%;
+    }
+}*/

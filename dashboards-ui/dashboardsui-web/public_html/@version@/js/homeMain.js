@@ -174,17 +174,27 @@ require(['dashboards/dbsmodel',
             else if (filterId === 'ita') {
                 defaultMenuId = menuUtil.OMCMenuConstants.GLOBAL_ITANALYTICS;
             }
-            menuUtil.subscribeServiceMenuLoadedEvent(function(){
-                $("#omcHamburgerMenu").on("ojopen", function(event, offcanvas) {
-                    if(offcanvas.displayMode === "push" && $('.main-content-area')) {
-                        $('.main-content-area').removeClass('dbs-main-large-width');
-                    }});
-
-                $("#omcHamburgerMenu").on("ojclose", function(event, offcanvas) {
+//            menuUtil.subscribeServiceMenuLoadedEvent(function(){
+//                $("#omcHamburgerMenu").on("ojopen", function(event, offcanvas) {
+//                    if(offcanvas.displayMode === "push" && $('.main-content-area')) {
+//                        $('.main-content-area').removeClass('dbs-main-large-width');
+//                    }});
+//
+//                $("#omcHamburgerMenu").on("ojclose", function(event, offcanvas) {
+//                    if ($('.main-content-area')) {
+//                        $('.main-content-area').addClass('dbs-main-large-width');
+//                    }
+//                });
+//            });
+            menuUtil.subscribeHamburgerMenuToggleEvent(function(toggleType) {
+                if (toggleType === 'open') {
+                    $('.main-content-area').removeClass('dbs-main-large-width');
+                }
+                else if (toggleType === 'close') {
                     if ($('.main-content-area')) {
                         $('.main-content-area').addClass('dbs-main-large-width');
                     }
-                });
+                }
             });
             function HeaderViewModel() {
                 var self = this;
@@ -210,6 +220,7 @@ require(['dashboards/dbsmodel',
             var titleVM = new TitleViewModel();
 
             $(document).ready(function() {
+                menuUtil.initializeHamburgerMenuLayout();
                 dfu.getSubscribedApps2WithEdition(function(apps) {
                     if (apps && (!apps.applications || apps.applications.length === 0)) {
                         oj.Logger.error("Tenant subscribes to no service. Redirect to dashboard error page", true);
