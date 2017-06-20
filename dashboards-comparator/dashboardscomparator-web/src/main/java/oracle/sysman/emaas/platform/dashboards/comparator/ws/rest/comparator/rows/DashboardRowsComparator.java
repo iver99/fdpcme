@@ -37,7 +37,6 @@ import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.row
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.TableRowsEntity;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.ZDTComparatorStatusRowEntity;
 import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
-import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
