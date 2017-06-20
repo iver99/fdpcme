@@ -1019,7 +1019,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 }
                 if (!window._uifwk.obbMenuLoadedListenerRegistered) {
                 menuUtil.subscribeServiceMenuLoadedEvent(function(){
-                    //$("#omcHamburgerMenu").show();
+                    $("#omcHamburgerMenuInnerComp").show();
                     if (!avoidPageResizeOptIn) {
                         $("#omcHamburgerMenu").on("ojopen", function(event, offcanvas) {
                             if(offcanvas.displayMode === "push") {
@@ -1031,9 +1031,6 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                             $("#offcanvasInnerContainer").width(document.body.clientWidth);
                             triggerDashboardResizeEvent('Hamburger menu closed.');
                         });
-                    }
-                    else {
-                        $("#omcHamburgerMenuInnerComp").show();
                     }
                     
                     //$("#omcHamburgerMenu").height(document.body.scrollHeight);
