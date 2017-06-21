@@ -43,6 +43,9 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	public static final String DUP_DASHBOARD_NODSUBMENU = "duplicate_noSubMenu";
 	public static final String DUP_DASHBOARD_TOSET = "duplicate_addToSet";
 	public static final String DUP_SHBOARDSET_NOTTOSET = "duplicate_notAddToSet";
+	
+	public static final String DASHBOARD_IN_SET_END_ICON_CSS = ".oj-component-icon.oj-conveyorbelt-overflow-icon.oj-end";
+	public static final String DASHBOARD_IN_SET_START_ICON_CSS = ".oj-component-icon.oj-conveyorbelt-overflow-icon.oj-start";
 
 	@Override
 	public void addNewDashboardToSet(WebDriver driver, String dashboardName)
@@ -1004,7 +1007,24 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 			if (nav.getAttribute("data-dashboard-name-in-set") != null
 					&& nav.getAttribute("data-dashboard-name-in-set").trim().equals(dashboardName)) {
 				driver.getLogger().info("DashboardBuilderUtil.selectDashboardInsideSet has found the corresponding name");
+				while(!nav.isDisplayed())
+				{
+					if(driver.isDisplayed("css="+DASHBOARD_IN_SET_END_ICON_CSS))
+					{
+						driver.click("css="+DASHBOARD_IN_SET_END_ICON_CSS);
+					}
+					else if(driver.isDisplayed("css="+DASHBOARD_IN_SET_START_ICON_CSS))
+					{
+						driver.click("css="+DASHBOARD_IN_SET_START_ICON_CSS);
+					}
+					else
+					{
+						throw new NoSuchElementException(
+								"DashboardBuilderUtil.selectDashboardInsideSet: the '<' or '>' icon are not found");						
+					}
+				}
 				nav.click();
+								
 				break;
 			}
 		}		
