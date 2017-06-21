@@ -1,6 +1,6 @@
 <div style='width: 100%; height: 100%;'>
     <div class="textWidgetWrapper">
-        <div data-bind="attr: {id: 'textContentWrapper_'+textWidgetId}, click: showTextEditor" style="width: 100%; height: 100%;">
+        <div data-bind="attr: {id: 'textContentWrapper_'+textWidgetId}, click: showTextEditor" style="width: 100%; height: 100%; word-wrap: break-word;">
             <!-- ko if: emptyContent -->
             <div style="font-style: italic; color: grey;" data-bind="text: getNlsString('DBS_BUILDER_TEXT_WIDGET_PROMPT_STRING')"></div>
             <!-- /ko -->
@@ -9,7 +9,7 @@
             <!-- /ko -->
         </div>
         <div data-bind="attr: {id: 'textEditorWrapper_'+textWidgetId}" style="width: 100%; height: 100%; display: none;">
-            <div id="textEditor" style="width: 100%; height: 100%;"></div>
+            <div id="textEditor" style="width: 100%; height: auto; min-height: 100%;"></div>
         </div>
     </div>
 </div>
