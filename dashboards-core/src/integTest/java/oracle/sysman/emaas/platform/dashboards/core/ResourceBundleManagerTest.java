@@ -16,6 +16,7 @@ import javax.persistence.EntityManager;
 
 import mockit.Expectations;
 import mockit.Mocked;
+import oracle.sysman.emaas.platform.dashboards.core.exception.resource.CommonResourceException;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsResourceBundle;
 
@@ -30,7 +31,7 @@ public class ResourceBundleManagerTest {
     private ResourceBundleManager manager = new ResourceBundleManager();
     
     @Test
-    public void testRefreshResourceBundleByService(@Mocked final DashboardServiceFacade dsf, @Mocked final EntityManager em) {
+    public void testRefreshResourceBundleByService(@Mocked final DashboardServiceFacade dsf, @Mocked final EntityManager em) throws CommonResourceException {
         new Expectations() {
             {
                 new DashboardServiceFacade();

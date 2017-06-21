@@ -14,6 +14,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
+import oracle.sysman.emaas.platform.dashboards.core.exception.resource.CommonResourceException;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsResourceBundle;
 
@@ -37,12 +38,17 @@ public class ResourceBundleManager {
      * 2. insert rbList as new resource bundles
      * @param serviceName
      * @param rbList
+     * @throws CommonResourceException 
      */
-    public void refreshResourceBundleByService(String serviceName, List<EmsResourceBundle> rbList) {
+    public void refreshResourceBundleByService(String serviceName, List<EmsResourceBundle> rbList) throws CommonResourceException {
         LOGGER.info("Refresh resource bundles for service : {}", serviceName);
         DashboardServiceFacade dsf = new DashboardServiceFacade();
-        dsf.cleanResourceBundleByService(serviceName);
-        dsf.persistEmsResourceBundles(rbList);
+        try {
+            dsf.refreshResourceBundleByService(serviceName, rbList);
+        } catch (Exception e) {
+            LOGGER.error("Error when refreshing resource bundles: {}", e.getLocalizedMessage());
+            throw new CommonResourceException("Error when refreshing resource bundles: " + e.getLocalizedMessage());
+        }
         
         EntityManager em = dsf.getEntityManager();
         if (em != null) {

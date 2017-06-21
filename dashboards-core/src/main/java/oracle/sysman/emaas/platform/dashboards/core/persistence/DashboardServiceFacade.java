@@ -14,6 +14,7 @@ import javax.persistence.Query;
 
 import oracle.sysman.emaas.platform.dashboards.core.DashboardManager;
 import oracle.sysman.emaas.platform.dashboards.core.UserOptionsManager;
+import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.core.model.combined.CombinedDashboard;
 import oracle.sysman.emaas.platform.dashboards.core.util.DateUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.SessionInfoUtil;
@@ -300,8 +301,12 @@ public class DashboardServiceFacade
 		commitTransaction();
 		return entity;
 	}
+	
+	public EmsDashboard persistEmsDashboard(EmsDashboard emsDashboard) {
+	    return persistEmsDashboard(emsDashboard, true);
+	}
 
-	public EmsDashboard persistEmsDashboard(EmsDashboard emsDashboard)
+	public EmsDashboard persistEmsDashboard(EmsDashboard emsDashboard, boolean commitImmediate)
 	{
 	    if(emsDashboard.getCreationDate() == null) {
 	        emsDashboard.setCreationDate(DateUtil.getGatewayTime());
@@ -326,7 +331,9 @@ public class DashboardServiceFacade
 		setTenantIdForDashboard(emsDashboard);
 		
 		em.persist(emsDashboard);
-		commitTransaction();
+		if(commitImmediate) {
+		    commitTransaction();
+		}
 		return emsDashboard;
 	}
 
@@ -661,14 +668,55 @@ public class DashboardServiceFacade
         return dashboardIds;
     }
     
-    public void cleanDashboardsPermanentById(List<BigInteger> ids) {
+    /**
+     * 
+     * @param ids
+     * existing OOB dashboards' ids
+     * @param oobList
+     * new OOB dashboards
+     */
+    public void refreshOobDashboards(List<BigInteger> ids, List<EmsDashboard> oobList) {
         if (!getEntityManager().getTransaction().isActive()) {
             getEntityManager().getTransaction().begin();
         }
-        if(ids == null || ids.isEmpty()) {
-            return;
-        }
-        
+//        UserTransaction utx = null;
+//        try {
+//            InitialContext cx = new InitialContext();
+//            utx = (UserTransaction) cx.lookup("java:comp/UserTransaction"/*"javax.transaction.UserTransaction"*/);
+//            utx.setTransactionTimeout(600);// 600 seconds
+//            utx.begin();
+            // delete existing OOB Dashboards
+            if (ids != null && !ids.isEmpty()) {
+                deleteDashboardsPermanentById(ids);
+            }
+            // store non-set OOB Dashboard first
+            for (EmsDashboard oob : oobList) {
+                if (!Dashboard.DASHBOARD_TYPE_CODE_SET.equals(oob.getType())) {
+                    persistEmsDashboard(oob, false);
+                }
+            }
+            // store OOB Dashboard set
+            for (EmsDashboard oob : oobList) {
+                if (Dashboard.DASHBOARD_TYPE_CODE_SET.equals(oob.getType())) {
+                    persistEmsDashboard(oob, false);
+                }
+            }
+            commitTransaction();
+//            utx.commit();
+//        } catch (Exception e) {
+//            LOGGER.error("Error in refreshOobDashboards(): {}", e.getLocalizedMessage());
+//            try {
+//                utx.rollback();
+//            } catch (Exception ex) {
+//                LOGGER.error("Error in rollback refreshOobDashboards(): {}", e.getLocalizedMessage());
+//            }
+//        }
+    }
+
+    /**
+     * @param ids
+     */
+    private void deleteDashboardsPermanentById(List<BigInteger> ids) {
         LOGGER.info("Start cleanDashboardsPermanentById : " + ids.size() + " dashboards need to be cleaned up!");
         int deletedTileParamsCount = em.createNamedQuery("EmsDashboardTileParams.deleteByDashboardIds").setParameter("ids", ids)
                 .executeUpdate();
@@ -678,7 +726,7 @@ public class DashboardServiceFacade
         int deletedUserOptionCount = 0;
         if (currentUser != null) {
             deletedUserOptionCount = em.createNamedQuery("EmsUserOptions.deleteByUserDashboardIds")
-                    .setParameter("userName", currentUser).setParameter("ids", ids).executeUpdate();
+                    .setParameter("ids", ids).executeUpdate();
         }
         int deletedDashboardSetCount = em.createNamedQuery("EmsSubDashboard.deleteByDashboardIds").setParameter("ids", ids)
                 .executeUpdate();
@@ -687,30 +735,38 @@ public class DashboardServiceFacade
         LOGGER.info("End cleanDashboardsPermanentById : {} tile params, {} tiles, {} user options, {} dashboard sets "
                 + "and {} dashboards have been deleted!", deletedTileParamsCount, deletedTileCount, deletedUserOptionCount, 
                 deletedDashboardSetCount, deletedDashboardCount);
-        commitTransaction();
     }
     
-    public void cleanResourceBundleByService(String serviceName) {
+    public void refreshResourceBundleByService(String serviceName, List<EmsResourceBundle> rbList) {
         if (!getEntityManager().getTransaction().isActive()) {
             getEntityManager().getTransaction().begin();
         }
-        
-        LOGGER.info("Start clean up resource bundle for service : {} ", serviceName);
-        int deletedCount = em.createNamedQuery("EmsResourceBundle.deleteByServiceName").setParameter("serviceName", serviceName)
-                .executeUpdate();
-        LOGGER.info("End clean up resource bundle for service : {}. And {} resource bundle files have been purged.", serviceName,
-                deletedCount);
-        
+        deleteResourceBundleByService(serviceName);
+        persistEmsResourceBundles(rbList);
         commitTransaction();
     }
+
+    /**
+     * @param serviceName
+     */
+    private void deleteResourceBundleByService(String serviceName) {
+        LOGGER.debug("Start clean up resource bundle for service : {} ", serviceName);
+        int deletedCount = em.createNamedQuery("EmsResourceBundle.deleteByServiceName").setParameter("serviceName", serviceName)
+                .executeUpdate();
+        LOGGER.debug("End clean up resource bundle for service : {}. And {} resource bundle files have been purged.", serviceName,
+                deletedCount);
+    }
     
-    public void persistEmsResourceBundles(List<EmsResourceBundle> emsResourceBundles) {
-        if(emsResourceBundles != null && !emsResourceBundles.isEmpty()) {
-            for(EmsResourceBundle rb : emsResourceBundles) {
+    /**
+     * 
+     * @param emsResourceBundles
+     */
+    private void persistEmsResourceBundles(List<EmsResourceBundle> emsResourceBundles) {
+        if (emsResourceBundles != null && !emsResourceBundles.isEmpty()) {
+            for (EmsResourceBundle rb : emsResourceBundles) {
                 em.persist(rb);
             }
         }
-        commitTransaction();
     }
 
 }

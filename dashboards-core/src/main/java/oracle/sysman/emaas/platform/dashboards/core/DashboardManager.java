@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -138,10 +137,10 @@ public class DashboardManager
 		}
 	}
 	
-	public void deleteDashboardByAppType(Integer applicationType, Long tenantId) {
+	public void refreshOobDashboardByAppType(Integer applicationType, Long tenantId, List<EmsDashboard> oobList) {
         DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
         List<BigInteger> ids = dsf.getDashboardIdsByAppType(applicationType);
-        dsf.cleanDashboardsPermanentById(ids);
+        dsf.refreshOobDashboards(ids, oobList);
         EntityManager em = dsf.getEntityManager();
         if (em != null) {
             em.close();

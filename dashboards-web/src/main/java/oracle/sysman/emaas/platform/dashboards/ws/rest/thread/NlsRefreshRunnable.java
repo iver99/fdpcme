@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.resource.CommonResourceException;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsResourceBundle;
 import oracle.sysman.emaas.platform.dashboards.webutils.metadata.MetadataRetriever;
 import oracle.sysman.emaas.platform.dashboards.webutils.metadata.MetadataStorer;
@@ -38,11 +39,15 @@ public class NlsRefreshRunnable extends MetadataRefreshRunnable {
         try {
             rbList = nlsRetriever.getResourceBundleByService(serviceName);
         } catch (CommonFunctionalException e) {
-            LOGGER.error("Error when retrieving resource bundles from " + serviceName + " : " + e.getLocalizedMessage());
+            LOGGER.error("Error when retrieving resource bundles from {} : {}", serviceName, e.getLocalizedMessage());
         }
         
         MetadataStorer nlsStorer = new MetadataStorer();
-        nlsStorer.storeResourceBundle(rbList);
+        try {
+            nlsStorer.storeResourceBundle(rbList);
+        } catch (CommonResourceException e) {
+            LOGGER.error("Error when saving resource bundles for {} :{}", serviceName, e.getLocalizedMessage());
+        }
     }
 
 }

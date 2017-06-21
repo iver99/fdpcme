@@ -21,6 +21,7 @@ import mockit.Expectations;
 import mockit.Mocked;
 import oracle.sysman.emaas.platform.dashboards.core.ResourceBundleManager;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.resource.CommonResourceException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.core.model.DashboardApplicationType;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
@@ -81,19 +82,16 @@ public class MetadataStorerTest
             {
                 new DashboardServiceFacade(anyLong);
                 result = dsf;
-                dsf.getEmsDashboardById((BigInteger) any);
-                result = null;
-                dsf.getEmsDashboardByNameAndDescriptionAndOwner(anyString, anyString, anyString);
-                result = null;
             }
         };
         MetadataStorer storer = new MetadataStorer();
+        storer.storeOobDashboards(null);
         storer.storeOobDashboards(initOOBDashboards());
     }
     
     @Test(groups = { "s1" })
     public void testStoreResourceBundle(@Mocked final ResourceBundleManager rbm, @Mocked final DashboardServiceFacade dsf,
-            @Mocked final EntityManager em)
+            @Mocked final EntityManager em) throws CommonResourceException
     {
         new Expectations() {
             {
@@ -102,6 +100,7 @@ public class MetadataStorerTest
             }
         };
         MetadataStorer storer = new MetadataStorer();
+        storer.storeResourceBundle(null);
         storer.storeResourceBundle(initNls());
     }
 }

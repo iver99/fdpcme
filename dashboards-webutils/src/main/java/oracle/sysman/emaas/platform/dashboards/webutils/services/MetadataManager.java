@@ -15,7 +15,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
-import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsResourceBundle;
 import oracle.sysman.emaas.platform.dashboards.webutils.metadata.MetadataRetriever;
@@ -62,24 +61,30 @@ public class MetadataManager implements ApplicationServiceManager
             List<Dashboard> oobList = new ArrayList<Dashboard>();
             try {
                 oobList = metadataRetriever.getOobDashboardsByService(serviceName);
-            } catch (CommonFunctionalException e) {
-                LOGGER.error("Error when retrieving OOB from " + serviceName + " : " + e.getLocalizedMessage());
+            } catch (DashboardException e) {
+                LOGGER.error("Error when retrieving OOB from {} :{}", serviceName, e.getLocalizedMessage());
             }
             
             try {
                 metadataStorer.storeOobDashboards(oobList);
             } catch (DashboardException e) {
-                LOGGER.error("Error when storing OOB into database for " + serviceName + " : " + e.getLocalizedMessage());
+                LOGGER.error("Error when storing OOB into database for {} : {}", serviceName, e.getLocalizedMessage());
             }
             
             // Load resource bundle for OOB metadata from other services
             List<EmsResourceBundle> rbList = new ArrayList<EmsResourceBundle>();
             try {
                 rbList = metadataRetriever.getResourceBundleByService(serviceName);
-            } catch (CommonFunctionalException e) {
-                LOGGER.error("Error when retrieving resource bundles from " + serviceName + " : " + e.getLocalizedMessage());
+            } catch (DashboardException e) {
+                LOGGER.error("Error when retrieving resource bundles from {} : {}", serviceName, e.getLocalizedMessage());
             }
-            metadataStorer.storeResourceBundle(rbList);
+            
+            try {
+                metadataStorer.storeResourceBundle(rbList);
+            } catch (DashboardException e ) {
+                LOGGER.error("Error when saving resource bundles for {} : {}", serviceName, e.getLocalizedMessage());
+            }
+            
         }
     }
 

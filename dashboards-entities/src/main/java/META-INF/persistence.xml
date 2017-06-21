@@ -2,10 +2,11 @@
 <persistence xmlns="http://java.sun.com/xml/ns/persistence"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
-	<persistence-unit name="DashboardsPU"
-		transaction-type="JTA">
+	<persistence-unit name="DashboardsPU" 
+		transaction-type="RESOURCE_LOCAL"><!-- transaction-type="JTA"-->
 		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-		<jta-data-source>jdbc/emaas_dashboards_ds</jta-data-source>
+<!-- 		<jta-data-source>jdbc/emaas_dashboards_ds</jta-data-source> -->
+		<non-jta-data-source>jdbc/emaas_dashboards_ds</non-jta-data-source>
 		<class>oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile</class>
         <class>oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard</class>
         <class>oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTileParams</class>
@@ -15,6 +16,7 @@
 		<class>oracle.sysman.emaas.platform.dashboards.entity.EmsResourceBundle</class>
 
 		<properties>
+		<property name="javax.persistence.nonJtaDataSource" value="jdbc/emaas_dashboards_ds"/>
 			<property name="eclipselink.logging.exceptions" value="true" />
 			<property name="eclipselink.jdbc.batch-writing" value="Oracle-JDBC" />
 			<property name="eclipselink.jdbc.cache-statements" value="true" />

@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
-import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.webutils.metadata.MetadataRetriever;
 import oracle.sysman.emaas.platform.dashboards.webutils.metadata.MetadataStorer;
@@ -39,15 +38,15 @@ public class OobRefreshRunnable extends MetadataRefreshRunnable {
         MetadataRetriever oobRetriever = new MetadataRetriever();
         try {
             oobList = oobRetriever.getOobDashboardsByService(serviceName);
-        } catch (CommonFunctionalException e) {
-            LOGGER.error("Error when retrieving OOB from " + serviceName + " : " + e.getLocalizedMessage());
+        } catch (DashboardException e) {
+            LOGGER.error("Error when retrieving OOB from {} : {}", serviceName, e.getLocalizedMessage());
         }
         
         MetadataStorer oobStorer = new MetadataStorer();
         try {
             oobStorer.storeOobDashboards(oobList);
         } catch (DashboardException e) {
-            LOGGER.error("Error when storing OOB into database for " + serviceName + " : " + e.getLocalizedMessage());
+            LOGGER.error("Error when storing OOB into database for {} : {}", serviceName, e.getLocalizedMessage());
         }
     }
 
