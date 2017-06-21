@@ -265,6 +265,9 @@
                                             </div>
                                             <!-- /ko -->
                                         </div>
+                                        <div class="dbd-resize-handler-placeholder dbd-resize-handler cursor-resize-right-bottom dbd-resize-handler-right-bottom">
+                                            <span class="oj-fwk-icon-arrow-s-end oj-component-icon"></span>
+                                        </div>
                                     </div>
                                 </div>                             
                                 </div>
@@ -277,178 +280,178 @@
             
             <script id="tile-widget-right-btns-template" type="text/html">
                 <!-- ko stopBinding: true -->
-                                            <!-- ko if: $root.initTileKoRightBtnsResizeHdls -->
-                                          <div class="dbd-pull-right" style="display: flex">
-                                              <div class="dbd-btn-editor">                 
-                                                  <!-- ko if: $root.isMobileDevice !== 'true' && $data.isOpenInExplorerShown -->
-                                                  <button class="oj-button-half-chrome dbd-data-explore" tabindex="0"
-                                                          data-bind="
-                                                             attr:{'id': 'editButton' + $data.clientGuid,title:$data.WIDGET_GROUP_NAME() === getNlsString('SERVICE_NAME_LogAnalytics') ? getNlsString('DBS_BUILDER_MSG_AUTO_OPEN_IN_LOG_EXPLORER'):getNlsString('DBS_BUILDER_MSG_AUTO_OPEN_IN_DATA_EXPLORER')},
-                                                             click:$root.openInDataExplorer,
-                                                             ojComponent: {
-                                                                component:'ojButton', chroming: 'half',
-                                                                icons: {start:'fa-icon-font fa-icon-font-16 dbd-title-edit'},    
-                                                                label: ''
-                                                        }"></button>
-                                                  <!-- /ko -->
-                                              </div>
-                                              <div class="dbd-btn-maxminToggle">
-                                                  <button class="oj-button-half-chrome dbd-tile-maxmin" tabindex="0"
-                                                          data-bind="
-                                                             attr:{'id': 'maxMinButton' + $data.clientGuid,title: $data.maximizeEnabled()?getNlsString('DBS_BUILDER_TILE_MAXIMIZE'):getNlsString('DBS_BUILDER_TILE_RESTORE')},
-                                                             click:$root.maxMinToggle,
-                                                             ojComponent: {
-                                                                component:'ojButton', chroming: 'half',
-                                                                icons: {start:$data.maximizeEnabled()?'fa-icon-font fa-icon-font-16 dbd-title-edit dbd-tile-icon-expand':'fa-icon-font fa-icon-font-16 dbd-title-edit dbd-tile-icon-compress'},
-                                                                label: ''
-                                                        }"></button>
-                                              </div>
-                                                <div class="dbd-btn-group" data-bind="stopDataBinding: $root.dashboard.systemDashboard && $root.dashboard.systemDashboard()==true">
-                                                    <!-- ko if: ($root.dashboard.systemDashboard()===false)&& !(($root.dashboard.sharePublic ===true)&&($root.dashboard.owner()!==$root.loginUser())) &&($root.isMobileDevice !== 'true')&&($root.toolbarModel.notZdtStatus) -->
-                                                    <button class="oj-button-half-chrome dbd-tile-action" tabindex="0"
-                                                            data-bind="attr: {'id': 'actionButton' + $data.clientGuid, title: getNlsString('DBS_BUILDER_TILE_ACTIONS')},
-                                                                       ojComponent: {component: 'ojButton', 
-                                                                                     label: '', chroming: 'half',
-                                                                                     icons: {start:'fa-icon-font fa-icon-font-16 dbd-tile-icon-option'},
-                                                                                     menu: '#tileMenu' + $data.clientGuid}">
-                                                    </button>
-                                                    <!-- /ko -->
-                                                    <!--to be continued: detect if tile can be edited, broaden...-->
-                                                    <ul style="display:none"
-                                                        data-bind="attr: {'id': 'tileMenu' + $data.clientGuid, title: getNlsString('DBS_BUILDER_TILE_ACTIONS')}, 
-                                                        event: {mouseover: function(data, event) {$root.showPullRightBtn($data.clientGuid, data, event)}, mouseout: function(data, event) {$root.hidePullRightBtn($data.clientGuid, data, event)}},
-                                                        ojComponent: {component: 'ojMenu', select: $root.menuItemSelect, open: $root.widgetMenuOpen, openOptions: {position: {'my': 'left center', 'at': 'right center'} } }">
-                                                        <li data-option="showhide-title">
-                                                            <a href="#" data-bind="attr: {'data-show-hide-title': $data.hideTitle() === 'true' ? 'show' : 'hide'}">
-                                                                <span class="oj-menu-item-icon demo-icon-font">
-                                                                    <i class="fa-icon-font fa-icon-font-16" data-bind="css: $data.hideTitle() === 'true' ? 'dbd-icon-eye':'dbd-icon-eye-slash'"></i>
-                                                                </span>
-                                                                <span data-bind="text: $data.hideTitle() === 'true' ? getNlsString('DBS_BUILDER_TILE_SHOW'):getNlsString('DBS_BUILDER_TILE_HIDE')"></span>
-                                                            </a>
-                                                        </li>  
-                                                        <!-- EMCPDF-1131: this should be changed in next sprint
-                                                        <li data-option="resize">
-                                                            <a href="#">
-                                                                <span class="oj-menu-item-icon demo-icon-font">
-                                                                    <i class="fa-icon-font fa-icon-font-16 dbd-icon-resize"></i>
-                                                                </span>
-                                                                <span data-bind="text: getNlsString('DBS_BUILDER_TILE_RESIZE')"></span>
-                                                            </a>
-                                                            <ul>
-                                                        -->
-                                                        <li data-option="divider"></li>
-                                                                <!-- ko if: $data.editDisabled() !== true -->
-                                                                <li data-option="wider" data-bind="css: { 'oj-disabled': (!$data.widerEnabled() || !$data.maximizeEnabled() || $data.editDisabled())}">
-                                                                    <a href="#">
-                                                                        <span class="oj-menu-item-icon demo-icon-font">
-                                                                            <!--func_window_wider_16_ena-->
-                                                                            <img src="@version@/images/imgbackground.png" style="background: url('@version@/images/dfSprite.png') no-repeat 0px -352px;height:16px;" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_WIDER')}, css: { 'dbd-icon-disabled': (!$data.widerEnabled() || !$data.maximizeEnabled() || $data.editDisabled())}"/>
-                                                                        </span>
-                                                                        <span data-bind="text: getNlsString('DBS_BUILDER_TILE_WIDER')"></span>
-                                                                    </a>
-                                                                </li>
-                                                                <!-- /ko -->
-                                                                <!-- ko if: $data.editDisabled() !== true -->
-                                                                <li data-option="narrower" data-bind="css: { 'oj-disabled': !$data.narrowerEnabled() || !$data.maximizeEnabled() || $data.editDisabled()}">
-                                                                    <a href="#">
-                                                                        <span class="oj-menu-item-icon demo-icon-font">
-                                                                            <!--func_window_narrower_16_ena-->
-                                                                            <img src="@version@/images/imgbackground.png" style="background: url('@version@/images/dfSprite.png') no-repeat 0px -368px;height:16px;" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_NARROWER')}, css: { 'dbd-icon-disabled': !$data.narrowerEnabled() || !$data.maximizeEnabled() || $data.editDisabled()}"/>
-                                                                        </span>
-                                                                        <span data-bind="text: getNlsString('DBS_BUILDER_TILE_NARROWER')"></span>
-                                                                    </a>
-                                                                </li>
-                                                                <!-- /ko -->
-                                                                <!-- ko if: $data.editDisabled() !== true -->
-                                                                <li data-option="taller" data-bind="css: {'oj-disabled': !$data.maximizeEnabled() || $data.editDisabled()}">
-                                                                    <a href="#">
-                                                                        <span class="oj-menu-item-icon demo-icon-font">
-                                                                            <!--func_window_taller_16_ena-->
-                                                                            <img src="@version@/images/imgbackground.png" style="background: url('@version@/images/dfSprite.png') no-repeat 0px -256px;height:16px;" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_TALLER')}, css: {'dbd-icon-disabled': !$data.maximizeEnabled() || $data.editDisabled()}"/>
-                                                                        </span>
-                                                                        <span data-bind="text: getNlsString('DBS_BUILDER_TILE_TALLER')"></span>
-                                                                    </a>
-                                                                </li>
-                                                                <!-- /ko -->
-                                                                <!-- ko if: $data.editDisabled() !== true -->
-                                                                <li data-option="shorter" data-bind="css: {'oj-disabled': !$data.shorterEnabled() || !$data.maximizeEnabled() || $data.editDisabled()}">
-                                                                    <a href="#">
-                                                                        <span class="oj-menu-item-icon demo-icon-font">
-                                                                            <!--func_window_shorter_16_ena-->
-                                                                            <img src="@version@/images/imgbackground.png" style="background: url('@version@/images/dfSprite.png') no-repeat 0px -272px;height:16px;" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_SHORTER')}, css: {'dbd-icon-disabled': !$data.shorterEnabled() || !$data.maximizeEnabled() || $data.editDisabled()}"/>
-                                                                        </span>
-                                                                        <span data-bind="text: getNlsString('DBS_BUILDER_TILE_SHORTER')"></span>
-                                                                    </a>
-                                                                </li>
-                                                                <!-- /ko -->
-                                                            <!--
-                                                            </ul>
-                                                        </li>
-                                                        -->
-                                                        <li data-option="divider"></li>
-                                                                <!-- ko if: $data.editDisabled() !== true -->
-                                                                <li data-option="up" data-bind="css: { 'oj-disabled': (!$data.upEnabled() || !$data.maximizeEnabled() || $data.editDisabled())}">
-                                                                    <a href="#">
-                                                                        <span class="oj-menu-item-icon demo-icon-font">
-                                                                            <!--func_window_up_16_ena-->
-                                                                            <img src="@version@/images/imgbackground.png" style="background: url('@version@/images/dfSprite.png') no-repeat 0px -304px;height:16px;" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_UP')}, css: { 'dbd-icon-disabled': (!$data.upEnabled() || !$data.maximizeEnabled() || $data.editDisabled())}"/>
-                                                                        </span>
-                                                                        <span data-bind="text: getNlsString('DBS_BUILDER_TILE_UP')"></span>
-                                                                    </a>
-                                                                </li>
-                                                                <!-- /ko -->
-                                                                <!-- ko if: $data.editDisabled() !== true -->
-                                                                <li data-option="down" data-bind="css: { 'oj-disabled': !$data.maximizeEnabled() || $data.editDisabled()}">
-                                                                    <a href="#">
-                                                                        <span class="oj-menu-item-icon demo-icon-font">
-                                                                            <!--func_window_down_16_ena-->
-                                                                            <img src="@version@/images/imgbackground.png" style="background: url('@version@/images/dfSprite.png') no-repeat 0px -464px;height:16px;" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_DOWN')}, css: { 'dbd-icon-disabled': !$data.maximizeEnabled() || $data.editDisabled()}"/>
-                                                                        </span>
-                                                                        <span data-bind="text: getNlsString('DBS_BUILDER_TILE_DOWN')"></span>
-                                                                    </a>
-                                                                </li>
-                                                                <!-- /ko -->
-                                                                <!-- ko if: $data.editDisabled() !== true -->
-                                                                <li data-option="left" data-bind="css: {'oj-disabled': !$data.leftEnabled() || !$data.maximizeEnabled() || $data.editDisabled()}">
-                                                                    <a href="#">
-                                                                        <span class="oj-menu-item-icon demo-icon-font">
-                                                                            <!--func_window_left_16_ena-->
-                                                                            <img src="@version@/images/imgbackground.png" style="background: url('@version@/images/dfSprite.png') no-repeat 0px -448px;height:16px;" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_LEFT')}, css: {'dbd-icon-disabled': !$data.leftEnabled() || !$data.maximizeEnabled() || $data.editDisabled()}"/>
-                                                                        </span>
-                                                                        <span data-bind="text: getNlsString('DBS_BUILDER_TILE_LEFT')"></span>
-                                                                    </a>
-                                                                </li>
-                                                                <!-- /ko -->
-                                                                <!-- ko if: $data.editDisabled() !== true -->
-                                                                <li data-option="right" data-bind="css: {'oj-disabled': !$data.rightEnabled() || !$data.maximizeEnabled() || $data.editDisabled()}">
-                                                                    <a href="#">
-                                                                        <span class="oj-menu-item-icon demo-icon-font">
-                                                                            <!--func_window_right_16_ena-->
-                                                                            <img src="@version@/images/imgbackground.png" style="background: url('@version@/images/dfSprite.png') no-repeat 0px -288px;height:16px;" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_RIGHT')}, css: {'dbd-icon-disabled': !$data.rightEnabled() || !$data.maximizeEnabled() || $data.editDisabled()}"/>
-                                                                        </span>
-                                                                        <span data-bind="text: getNlsString('DBS_BUILDER_TILE_RIGHT')"></span>
-                                                                    </a>
-                                                                </li>
-                                                                <!-- /ko -->
-                                                            <!--
-                                                            </ul>
-                                                        </li>
-                                                        -->
-                                                        <li></li>
-                                                        <!-- ko if: $data.editDisabled() !== true -->
-                                                        <li data-option="remove" data-bind="css: { 'oj-disabled': $data.editDisabled()}">
-                                                            <a href="#">
-                                                                <span class="oj-menu-item-icon demo-icon-font">
-                                                                    <i class="fa-icon-font fa-icon-font-16 dbd-icon-remove"></i>
-                                                                </span>
-                                                                <span data-bind="text: getNlsString('DBS_BUILDER_TILE_REMOVE')"></span>
-                                                            </a>
-                                                        </li>
-                                                        <!-- /ko -->
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                            <!-- /ko -->
+                    <!-- ko if: $root.initTileKoRightBtnsResizeHdls -->
+                  <div class="dbd-pull-right" style="display: flex">
+                      <div class="dbd-btn-editor">                 
+                          <!-- ko if: $root.isMobileDevice !== 'true' && $data.isOpenInExplorerShown -->
+                          <button class="oj-button-half-chrome dbd-data-explore" tabindex="0"
+                                  data-bind="
+                                     attr:{'id': 'editButton' + $data.clientGuid,title:$data.WIDGET_GROUP_NAME() === getNlsString('SERVICE_NAME_LogAnalytics') ? getNlsString('DBS_BUILDER_MSG_AUTO_OPEN_IN_LOG_EXPLORER'):getNlsString('DBS_BUILDER_MSG_AUTO_OPEN_IN_DATA_EXPLORER')},
+                                     click:$root.openInDataExplorer,
+                                     ojComponent: {
+                                        component:'ojButton', chroming: 'half',
+                                        icons: {start:'fa-icon-font fa-icon-font-16 dbd-title-edit'},    
+                                        label: ''
+                                }"></button>
+                          <!-- /ko -->
+                      </div>
+                      <div class="dbd-btn-maxminToggle">
+                          <button class="oj-button-half-chrome dbd-tile-maxmin" tabindex="0"
+                                  data-bind="
+                                     attr:{'id': 'maxMinButton' + $data.clientGuid,title: $data.maximizeEnabled()?getNlsString('DBS_BUILDER_TILE_MAXIMIZE'):getNlsString('DBS_BUILDER_TILE_RESTORE')},
+                                     click:$root.maxMinToggle,
+                                     ojComponent: {
+                                        component:'ojButton', chroming: 'half',
+                                        icons: {start:$data.maximizeEnabled()?'fa-icon-font fa-icon-font-16 dbd-title-edit dbd-tile-icon-expand':'fa-icon-font fa-icon-font-16 dbd-title-edit dbd-tile-icon-compress'},
+                                        label: ''
+                                }"></button>
+                      </div>
+                        <div class="dbd-btn-group" data-bind="stopDataBinding: $root.dashboard.systemDashboard && $root.dashboard.systemDashboard()==true">
+                            <!-- ko if: ($root.dashboard.systemDashboard()===false)&& !(($root.dashboard.sharePublic ===true)&&($root.dashboard.owner()!==$root.loginUser())) &&($root.isMobileDevice !== 'true')&&($root.toolbarModel.notZdtStatus) -->
+                            <button class="oj-button-half-chrome dbd-tile-action" tabindex="0"
+                                    data-bind="attr: {'id': 'actionButton' + $data.clientGuid, title: getNlsString('DBS_BUILDER_TILE_ACTIONS')},
+                                               ojComponent: {component: 'ojButton', 
+                                                             label: '', chroming: 'half',
+                                                             icons: {start:'fa-icon-font fa-icon-font-16 dbd-tile-icon-option'},
+                                                             menu: '#tileMenu' + $data.clientGuid}">
+                            </button>
+                            <!-- /ko -->
+                            <!--to be continued: detect if tile can be edited, broaden...-->
+                            <ul style="display:none"
+                                data-bind="attr: {'id': 'tileMenu' + $data.clientGuid, title: getNlsString('DBS_BUILDER_TILE_ACTIONS')}, 
+                                event: {mouseover: function(data, event) {$root.showPullRightBtn($data.clientGuid, data, event)}, mouseout: function(data, event) {$root.hidePullRightBtn($data.clientGuid, data, event)}},
+                                ojComponent: {component: 'ojMenu', select: $root.menuItemSelect, open: $root.widgetMenuOpen, openOptions: {position: {'my': 'left center', 'at': 'right center'} } }">
+                                <li data-option="showhide-title">
+                                    <a href="#" data-bind="attr: {'data-show-hide-title': $data.hideTitle() === 'true' ? 'show' : 'hide'}">
+                                        <span class="oj-menu-item-icon demo-icon-font">
+                                            <i class="fa-icon-font fa-icon-font-16" data-bind="css: $data.hideTitle() === 'true' ? 'dbd-icon-eye':'dbd-icon-eye-slash'"></i>
+                                        </span>
+                                        <span data-bind="text: $data.hideTitle() === 'true' ? getNlsString('DBS_BUILDER_TILE_SHOW'):getNlsString('DBS_BUILDER_TILE_HIDE')"></span>
+                                    </a>
+                                </li>  
+                                <!-- EMCPDF-1131: this should be changed in next sprint
+                                <li data-option="resize">
+                                    <a href="#">
+                                        <span class="oj-menu-item-icon demo-icon-font">
+                                            <i class="fa-icon-font fa-icon-font-16 dbd-icon-resize"></i>
+                                        </span>
+                                        <span data-bind="text: getNlsString('DBS_BUILDER_TILE_RESIZE')"></span>
+                                    </a>
+                                    <ul>
+                                -->
+                                <li data-option="divider"></li>
+                                        <!-- ko if: $data.editDisabled() !== true -->
+                                        <li data-option="wider" data-bind="css: { 'oj-disabled': (!$data.widerEnabled() || !$data.maximizeEnabled() || $data.editDisabled())}">
+                                            <a href="#">
+                                                <span class="oj-menu-item-icon demo-icon-font">
+                                                    <!--func_window_wider_16_ena-->
+                                                    <img src="@version@/images/imgbackground.png" style="background: url('@version@/images/dfSprite.png') no-repeat 0px -352px;height:16px;" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_WIDER')}, css: { 'dbd-icon-disabled': (!$data.widerEnabled() || !$data.maximizeEnabled() || $data.editDisabled())}"/>
+                                                </span>
+                                                <span data-bind="text: getNlsString('DBS_BUILDER_TILE_WIDER')"></span>
+                                            </a>
+                                        </li>
+                                        <!-- /ko -->
+                                        <!-- ko if: $data.editDisabled() !== true -->
+                                        <li data-option="narrower" data-bind="css: { 'oj-disabled': !$data.narrowerEnabled() || !$data.maximizeEnabled() || $data.editDisabled()}">
+                                            <a href="#">
+                                                <span class="oj-menu-item-icon demo-icon-font">
+                                                    <!--func_window_narrower_16_ena-->
+                                                    <img src="@version@/images/imgbackground.png" style="background: url('@version@/images/dfSprite.png') no-repeat 0px -368px;height:16px;" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_NARROWER')}, css: { 'dbd-icon-disabled': !$data.narrowerEnabled() || !$data.maximizeEnabled() || $data.editDisabled()}"/>
+                                                </span>
+                                                <span data-bind="text: getNlsString('DBS_BUILDER_TILE_NARROWER')"></span>
+                                            </a>
+                                        </li>
+                                        <!-- /ko -->
+                                        <!-- ko if: $data.editDisabled() !== true -->
+                                        <li data-option="taller" data-bind="css: {'oj-disabled': !$data.maximizeEnabled() || $data.editDisabled()}">
+                                            <a href="#">
+                                                <span class="oj-menu-item-icon demo-icon-font">
+                                                    <!--func_window_taller_16_ena-->
+                                                    <img src="@version@/images/imgbackground.png" style="background: url('@version@/images/dfSprite.png') no-repeat 0px -256px;height:16px;" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_TALLER')}, css: {'dbd-icon-disabled': !$data.maximizeEnabled() || $data.editDisabled()}"/>
+                                                </span>
+                                                <span data-bind="text: getNlsString('DBS_BUILDER_TILE_TALLER')"></span>
+                                            </a>
+                                        </li>
+                                        <!-- /ko -->
+                                        <!-- ko if: $data.editDisabled() !== true -->
+                                        <li data-option="shorter" data-bind="css: {'oj-disabled': !$data.shorterEnabled() || !$data.maximizeEnabled() || $data.editDisabled()}">
+                                            <a href="#">
+                                                <span class="oj-menu-item-icon demo-icon-font">
+                                                    <!--func_window_shorter_16_ena-->
+                                                    <img src="@version@/images/imgbackground.png" style="background: url('@version@/images/dfSprite.png') no-repeat 0px -272px;height:16px;" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_SHORTER')}, css: {'dbd-icon-disabled': !$data.shorterEnabled() || !$data.maximizeEnabled() || $data.editDisabled()}"/>
+                                                </span>
+                                                <span data-bind="text: getNlsString('DBS_BUILDER_TILE_SHORTER')"></span>
+                                            </a>
+                                        </li>
+                                        <!-- /ko -->
+                                    <!--
+                                    </ul>
+                                </li>
+                                -->
+                                <li data-option="divider"></li>
+                                        <!-- ko if: $data.editDisabled() !== true -->
+                                        <li data-option="up" data-bind="css: { 'oj-disabled': (!$data.upEnabled() || !$data.maximizeEnabled() || $data.editDisabled())}">
+                                            <a href="#">
+                                                <span class="oj-menu-item-icon demo-icon-font">
+                                                    <!--func_window_up_16_ena-->
+                                                    <img src="@version@/images/imgbackground.png" style="background: url('@version@/images/dfSprite.png') no-repeat 0px -304px;height:16px;" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_UP')}, css: { 'dbd-icon-disabled': (!$data.upEnabled() || !$data.maximizeEnabled() || $data.editDisabled())}"/>
+                                                </span>
+                                                <span data-bind="text: getNlsString('DBS_BUILDER_TILE_UP')"></span>
+                                            </a>
+                                        </li>
+                                        <!-- /ko -->
+                                        <!-- ko if: $data.editDisabled() !== true -->
+                                        <li data-option="down" data-bind="css: { 'oj-disabled': !$data.maximizeEnabled() || $data.editDisabled()}">
+                                            <a href="#">
+                                                <span class="oj-menu-item-icon demo-icon-font">
+                                                    <!--func_window_down_16_ena-->
+                                                    <img src="@version@/images/imgbackground.png" style="background: url('@version@/images/dfSprite.png') no-repeat 0px -464px;height:16px;" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_DOWN')}, css: { 'dbd-icon-disabled': !$data.maximizeEnabled() || $data.editDisabled()}"/>
+                                                </span>
+                                                <span data-bind="text: getNlsString('DBS_BUILDER_TILE_DOWN')"></span>
+                                            </a>
+                                        </li>
+                                        <!-- /ko -->
+                                        <!-- ko if: $data.editDisabled() !== true -->
+                                        <li data-option="left" data-bind="css: {'oj-disabled': !$data.leftEnabled() || !$data.maximizeEnabled() || $data.editDisabled()}">
+                                            <a href="#">
+                                                <span class="oj-menu-item-icon demo-icon-font">
+                                                    <!--func_window_left_16_ena-->
+                                                    <img src="@version@/images/imgbackground.png" style="background: url('@version@/images/dfSprite.png') no-repeat 0px -448px;height:16px;" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_LEFT')}, css: {'dbd-icon-disabled': !$data.leftEnabled() || !$data.maximizeEnabled() || $data.editDisabled()}"/>
+                                                </span>
+                                                <span data-bind="text: getNlsString('DBS_BUILDER_TILE_LEFT')"></span>
+                                            </a>
+                                        </li>
+                                        <!-- /ko -->
+                                        <!-- ko if: $data.editDisabled() !== true -->
+                                        <li data-option="right" data-bind="css: {'oj-disabled': !$data.rightEnabled() || !$data.maximizeEnabled() || $data.editDisabled()}">
+                                            <a href="#">
+                                                <span class="oj-menu-item-icon demo-icon-font">
+                                                    <!--func_window_right_16_ena-->
+                                                    <img src="@version@/images/imgbackground.png" style="background: url('@version@/images/dfSprite.png') no-repeat 0px -288px;height:16px;" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_RIGHT')}, css: {'dbd-icon-disabled': !$data.rightEnabled() || !$data.maximizeEnabled() || $data.editDisabled()}"/>
+                                                </span>
+                                                <span data-bind="text: getNlsString('DBS_BUILDER_TILE_RIGHT')"></span>
+                                            </a>
+                                        </li>
+                                        <!-- /ko -->
+                                    <!--
+                                    </ul>
+                                </li>
+                                -->
+                                <li></li>
+                                <!-- ko if: $data.editDisabled() !== true -->
+                                <li data-option="remove" data-bind="css: { 'oj-disabled': $data.editDisabled()}">
+                                    <a href="#">
+                                        <span class="oj-menu-item-icon demo-icon-font">
+                                            <i class="fa-icon-font fa-icon-font-16 dbd-icon-remove"></i>
+                                        </span>
+                                        <span data-bind="text: getNlsString('DBS_BUILDER_TILE_REMOVE')"></span>
+                                    </a>
+                                </li>
+                                <!-- /ko -->
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- /ko -->
                 <!-- /ko -->
             </script>
             
@@ -463,7 +466,7 @@
                     </div>
                 <!-- /ko -->
                 <!-- /ko -->
-            </scipt>
+            </script>
             
             <script id="dashboard-tile-widget-template" type="text/html">
                 <div data-bind="component:{name:WIDGET_KOC_NAME, params:{tile:$data }}" style="width: 100%; height: 100%;"></div>

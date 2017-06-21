@@ -172,21 +172,28 @@ define(['knockout',
 
             self.initTileKoRightBtnsResizeHdls = ko.observable(false);
             self.showPullRightBtn = function(clientGuid, data, event) {
+                self.initTileKoRightBtnsResizeHdls(true);
+                
                 var tileRightBtns = $("#tile"+clientGuid).find('.dbd-pull-right');
                 if (!tileRightBtns || !tileRightBtns.length) {
+                    console.debug("initialize tile buttons");
                     var el = $($("#tile-widget-right-btns-template").text());
                     el.appendTo($("#tile"+clientGuid).find('.dbd-tile-header')[0]);
                     ko.applyBindings({$root: self, $data: data}, el[2]);
                 }
                 
-                var resizeHandlers = $("#tile"+clientGuid).find('.dbd-resize-handler-instance');
-                if (!resizeHandlers || !resizeHandlers.length) {
-                    var el = $($("#tile-widget-resize-handlers-template").text());
-                    el.appendTo($("#tile"+clientGuid).find('.dbd-tile-element')[0]);
-                    ko.applyBindings(self, el[2]);
+                if (self.isResizingSupported()) {
+                    var resizeHandlers = $("#tile"+clientGuid).find('.dbd-resize-handler-instance');
+                    if (!resizeHandlers || !resizeHandlers.length) {
+                        console.debug("initialize tile resizing handlers");
+                        var el = $($("#tile-widget-resize-handlers-template").text());
+                        el.appendTo($("#tile"+clientGuid).find('.dbd-tile-element')[0]);
+                        ko.applyBindings(self, el[2]);
+                        $("#tile"+clientGuid).find('.dbd-resize-handler-placeholder').remove();
+                        self.enableTilesResizing();
+                    }
                 }
                 
-                self.initTileKoRightBtnsResizeHdls(true);
                 $("#tile"+clientGuid+" .dbd-btn-group").css("display", "inline-block");
                 $("#tile"+clientGuid+" .dbd-btn-editor").css("display", "flex");
                 $("#tile"+clientGuid+" .dbd-btn-maxminToggle").css("display", "flex");
@@ -397,6 +404,19 @@ define(['knockout',
             self.refreshThisWidget = function(tile) {
                 self.notifyTileChange(tile, new Builder.TileChange("PRE_REFRESH"));
             };
+            
+            self.isResizingSupported = function() {
+                if (self.dashboard.systemDashboard()) {
+                    return false;
+                }
+                if (self.dashboard.sharePublic() && self.dashboard.owner() !== self.loginUser()) {
+                    return false;
+                }
+                if (self.isMobileDevice === true) {
+                    return false;
+                }
+                return true;
+            };
 
             self.show = function() {
                 self.showTiles();
@@ -412,65 +432,7 @@ define(['knockout',
                 $('.dbd-widget').on('drag', self.handleOnDragging);
                 $('.dbd-widget').on('dragstop', self.handleStopDragging);
 
-                $('.dbd-resize-handler').off("mousedown");
-                $('.dbd-resize-handler').on('mousedown', function (event) {
-                    var targetHandler = $(event.currentTarget),resizeMode = null;
-                    if ($(targetHandler).hasClass('dbd-resize-handler-right')) {
-                        resizeMode = self.editor.RESIZE_OPTIONS.EAST;
-                    } else if ($(targetHandler).hasClass('dbd-resize-handler-left')) {
-                        resizeMode = self.editor.RESIZE_OPTIONS.WEST;
-                    } else if ($(targetHandler).hasClass('dbd-resize-handler-bottom')) {
-                        resizeMode = self.editor.RESIZE_OPTIONS.SOUTH;
-                    } else if ($(targetHandler).hasClass('dbd-resize-handler-right-bottom')) {
-                        resizeMode = self.editor.RESIZE_OPTIONS.SOUTH_EAST;
-                    }
-
-                    var isResizing =  resizeMode !== null;
-                    if(isResizing) {
-                        $('#globalBody').addClass('none-user-select');
-                        self.resizingTile(ko.dataFor(targetHandler.closest('.dbd-widget')[0]));
-                        var changedingTarget=targetHandler.closest('.dbd-widget');
-                        self.resizingOptions({mode:resizeMode,containerTop:changedingTarget.offset().top,containerLeft:changedingTarget.offset().left});
-                        self.beforeResizeWidth = self.resizingTile().cssWidth();
-                        self.beforeResizeHeight = self.resizingTile().cssHeight();
-                        self.currentWigedtWidth(self.resizingTile().cssWidth());
-                        self.currentWigedtHeight(self.resizingTile().cssHeight());                  
-                    }
-                    self.tilesView.disableDraggable();
-                });
-
-                $('#globalBody').off("mousemove").off("mouseup");
-                $('#globalBody').on('mousemove', function (event) {
-                    if (self.resizingOptions()) {
-                        if (self.resizingOptions().mode === self.editor.RESIZE_OPTIONS.EAST) {
-                            $(this).css('cursor', 'ew-resize');
-                        } else if (self.resizingOptions().mode === self.editor.RESIZE_OPTIONS.WEST) {
-                            $(this).css('cursor', 'ew-resize');
-                        } else if (self.resizingOptions().mode === self.editor.RESIZE_OPTIONS.SOUTH) {
-                            $(this).css('cursor', 'ns-resize');
-                        } else if (self.resizingOptions().mode === self.editor.RESIZE_OPTIONS.SOUTH_EAST) {
-                            $(this).css('cursor', 'se-resize');
-                        }
-                        var clonedTarget = $.extend(self.resizingOptions(), {left: event.clientX, top: event.clientY});
-                        self.resizingOptions(clonedTarget);
-                    }
-                }).on('mouseup', function (event) {
-                    if (self.resizingOptions() !== null && typeof (self.resizingOptions()) !== 'undefined') {
-                        self.currentWigedtWidth(self.resizingTile().cssWidth());
-                        self.currentWigedtHeight(self.resizingTile().cssHeight());
-                        self.resizingTileCopy = self.resizingTile();
-                        
-                        //set move options enabld/disabled after resizing tile
-                        self.resizingTileCopy.upEnabled(self.editor.mode.getModeRow(self.resizingTileCopy) > 0);
-                        self.resizingTileCopy.leftEnabled(self.editor.mode.getModeColumn(self.resizingTileCopy) > 0);
-                        self.resizingTileCopy.rightEnabled(self.editor.mode.getModeColumn(self.resizingTileCopy)+self.editor.mode.getModeWidth(self.resizingTileCopy) < self.editor.mode.MODE_MAX_COLUMNS);
-                    }
-                    self.resizingTile(null);
-                    self.resizingOptions(null);
-                    $(this).css('cursor', 'default');
-                    $('#globalBody').removeClass('none-user-select');       
-                    self.tilesView.enableDraggable();                 
-                });
+                self.enableTilesResizing();
 
                 //close widget menu if the page is moved up/down by scroll bar
                 $(".tiles-col-container").off("scroll");
@@ -483,6 +445,70 @@ define(['knockout',
                         self.editingWidgetId && self.hidePullRightBtn(self.editingWidgetId.substring(8));
                     }
                 });
+            };
+            
+            self.enableTilesResizing = function() {
+                if (self.isResizingSupported()) {
+                    $('.dbd-resize-handler').off("mousedown");
+                    $('.dbd-resize-handler').on('mousedown', function (event) {
+                        var targetHandler = $(event.currentTarget),resizeMode = null;
+                        if ($(targetHandler).hasClass('dbd-resize-handler-right')) {
+                            resizeMode = self.editor.RESIZE_OPTIONS.EAST;
+                        } else if ($(targetHandler).hasClass('dbd-resize-handler-left')) {
+                            resizeMode = self.editor.RESIZE_OPTIONS.WEST;
+                        } else if ($(targetHandler).hasClass('dbd-resize-handler-bottom')) {
+                            resizeMode = self.editor.RESIZE_OPTIONS.SOUTH;
+                        } else if ($(targetHandler).hasClass('dbd-resize-handler-right-bottom')) {
+                            resizeMode = self.editor.RESIZE_OPTIONS.SOUTH_EAST;
+                        }
+
+                        var isResizing =  resizeMode !== null;
+                        if(isResizing) {
+                            $('#globalBody').addClass('none-user-select');
+                            self.resizingTile(ko.dataFor(targetHandler.closest('.dbd-widget')[0]));
+                            var changedingTarget=targetHandler.closest('.dbd-widget');
+                            self.resizingOptions({mode:resizeMode,containerTop:changedingTarget.offset().top,containerLeft:changedingTarget.offset().left});
+                            self.beforeResizeWidth = self.resizingTile().cssWidth();
+                            self.beforeResizeHeight = self.resizingTile().cssHeight();
+                            self.currentWigedtWidth(self.resizingTile().cssWidth());
+                            self.currentWigedtHeight(self.resizingTile().cssHeight());                  
+                        }
+                        self.tilesView.disableDraggable();
+                    });
+
+                    $('#globalBody').off("mousemove").off("mouseup");
+                    $('#globalBody').on('mousemove', function (event) {
+                        if (self.resizingOptions()) {
+                            if (self.resizingOptions().mode === self.editor.RESIZE_OPTIONS.EAST) {
+                                $(this).css('cursor', 'ew-resize');
+                            } else if (self.resizingOptions().mode === self.editor.RESIZE_OPTIONS.WEST) {
+                                $(this).css('cursor', 'ew-resize');
+                            } else if (self.resizingOptions().mode === self.editor.RESIZE_OPTIONS.SOUTH) {
+                                $(this).css('cursor', 'ns-resize');
+                            } else if (self.resizingOptions().mode === self.editor.RESIZE_OPTIONS.SOUTH_EAST) {
+                                $(this).css('cursor', 'se-resize');
+                            }
+                            var clonedTarget = $.extend(self.resizingOptions(), {left: event.clientX, top: event.clientY});
+                            self.resizingOptions(clonedTarget);
+                        }
+                    }).on('mouseup', function (event) {
+                        if (self.resizingOptions() !== null && typeof (self.resizingOptions()) !== 'undefined') {
+                            self.currentWigedtWidth(self.resizingTile().cssWidth());
+                            self.currentWigedtHeight(self.resizingTile().cssHeight());
+                            self.resizingTileCopy = self.resizingTile();
+
+                            //set move options enabld/disabled after resizing tile
+                            self.resizingTileCopy.upEnabled(self.editor.mode.getModeRow(self.resizingTileCopy) > 0);
+                            self.resizingTileCopy.leftEnabled(self.editor.mode.getModeColumn(self.resizingTileCopy) > 0);
+                            self.resizingTileCopy.rightEnabled(self.editor.mode.getModeColumn(self.resizingTileCopy)+self.editor.mode.getModeWidth(self.resizingTileCopy) < self.editor.mode.MODE_MAX_COLUMNS);
+                        }
+                        self.resizingTile(null);
+                        self.resizingOptions(null);
+                        $(this).css('cursor', 'default');
+                        $('#globalBody').removeClass('none-user-select');       
+                        self.tilesView.enableDraggable();                 
+                    });
+                }
             };
 
             self.isDraggingCellChanged = function(pos) {
