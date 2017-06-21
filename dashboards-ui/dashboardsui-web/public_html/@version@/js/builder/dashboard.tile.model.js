@@ -172,6 +172,20 @@ define(['knockout',
 
             self.initTileKoRightBtnsResizeHdls = ko.observable(false);
             self.showPullRightBtn = function(clientGuid, data, event) {
+                var tileRightBtns = $("#tile"+clientGuid).find('.dbd-pull-right');
+                if (!tileRightBtns || !tileRightBtns.length) {
+                    var el = $($("#tile-widget-right-btns-template").text());
+                    el.appendTo($("#tile"+clientGuid).find('.dbd-tile-header')[0]);
+                    ko.applyBindings({$root: self, $data: data}, el[2]);
+                }
+                
+                var resizeHandlers = $("#tile"+clientGuid).find('.dbd-resize-handler-instance');
+                if (!resizeHandlers || !resizeHandlers.length) {
+                    var el = $($("#tile-widget-resize-handlers-template").text());
+                    el.appendTo($("#tile"+clientGuid).find('.dbd-tile-element')[0]);
+                    ko.applyBindings(self, el[2]);
+                }
+                
                 self.initTileKoRightBtnsResizeHdls(true);
                 $("#tile"+clientGuid+" .dbd-btn-group").css("display", "inline-block");
                 $("#tile"+clientGuid+" .dbd-btn-editor").css("display", "flex");
@@ -194,21 +208,21 @@ define(['knockout',
                 }
             };
             self.openInDataExplorer = function (event, ui) {
-		        if (!self.dashboard.systemDashboard()){
-                	$b.getToolBarModel().handleDashboardSave();
+                if (!self.dashboard.systemDashboard()){
+                    $b.getToolBarModel().handleDashboardSave();
                 }
                 var iId = setInterval(function() {
                     if (!$b.isDashboardUpdated()) {
                         clearInterval(iId);
-                        var tile = ko.dataFor(ui.currentTarget);
+                        var tile = ko.dataFor(ui.currentTarget).$data;
                         self.editor.configure(tile);
                     }
                 }, 300);
             };
 
             self.maxMinToggle = function (event, ui) {
-                var tile = ko.dataFor(ui.currentTarget);
-                if (event.maximizeEnabled()) {
+                var tile = ko.dataFor(ui.currentTarget).$data;
+                if (event.$data.maximizeEnabled()) {
                     self.maximize(tile);
                     self.notifyTileChange(tile, new Builder.TileChange("POST_MAXIMIZE"));
                     $b.triggerEvent($b.EVENT_TILE_MAXIMIZED, null, tile);
@@ -226,7 +240,7 @@ define(['knockout',
             };
 
             self.menuItemSelect = function (event, ui) {
-                var tile = ko.dataFor(ui.item[0]);
+                var tile = ko.dataFor(ui.item[0]).$data;
                 if (!tile) {
                     oj.Logger.error("Error: could not find tile from the ui data");
                     return;
