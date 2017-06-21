@@ -310,6 +310,7 @@
                                                         data-bind="attr: {'id': 'tileMenu' + clientGuid, title: getNlsString('DBS_BUILDER_TILE_ACTIONS')}, 
                                                         event: {mouseover: function(data, event) {$root.showPullRightBtn(clientGuid, data, event)}, mouseout: function(data, event) {$root.hidePullRightBtn(clientGuid, data, event)}},
                                                         ojComponent: {component: 'ojMenu', select: $root.menuItemSelect, open: $root.widgetMenuOpen, openOptions: {position: {'my': 'left center', 'at': 'right center'} } }">
+                                                        <!-- ko if: type() === "DEFAULT"-->
                                                         <li data-option="showhide-title">
                                                             <a href="#" data-bind="attr: {'data-show-hide-title': hideTitle() === 'true' ? 'show' : 'hide'}">
                                                                 <span class="oj-menu-item-icon demo-icon-font">
@@ -317,7 +318,7 @@
                                                                 </span>
                                                                 <span data-bind="text: hideTitle() === 'true' ? getNlsString('DBS_BUILDER_TILE_SHOW'):getNlsString('DBS_BUILDER_TILE_HIDE')"></span>
                                                             </a>
-                                                        </li>  
+                                                        </li>
                                                         <!-- EMCPDF-1131: this should be changed in next sprint
                                                         <li data-option="resize">
                                                             <a href="#">
@@ -329,6 +330,7 @@
                                                             <ul>
                                                         -->
                                                         <li data-option="divider"></li>
+                                                        <!-- /ko -->
                                                                 <!-- ko if: editDisabled() !== true -->
                                                                 <li data-option="wider" data-bind="css: { 'oj-disabled': (!widerEnabled() || !maximizeEnabled() || editDisabled())}">
                                                                     <a href="#">
