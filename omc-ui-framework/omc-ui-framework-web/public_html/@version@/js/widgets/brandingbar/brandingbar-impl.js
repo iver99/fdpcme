@@ -8,6 +8,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
     'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg',
     'uifwk/@version@/js/util/zdt-util-impl',
     'uifwk/@version@/js/sdk/menu-util-impl',
+    'uifwk/@version@/js/sdk/SessionCacheUtil',
     'ojs/ojknockout',
     'ojs/ojtoolbar',
     'ojs/ojmenu',
@@ -15,11 +16,27 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
     'ojs/ojdialog',
     'ojs/ojoffcanvas'
 ],
-    function (ko, $, dfumodel, msgUtilModel, contextModel, oj, nls, zdtUtilModel, menuModel) {
+    function (ko, $, dfumodel, msgUtilModel, contextModel, oj, nls, zdtUtilModel, menuModel, sessionCacheModel) {
         function BrandingBarViewModel(params) {
             var self = this;
             var msgUtil = new msgUtilModel();
             var cxtUtil = new contextModel();
+            var menuStatusSessionCacheName = '_uifwk_hamburgermenustatuscache';
+            var menuStatusSessionCacheDataKey = 'hamburger_menu_is_open';
+            var menuStatusSessionCache = new sessionCacheModel(menuStatusSessionCacheName, 1);
+            if (window.performance) {
+                    //We should only clear the cache once during a page refresh, otherwise
+                    //it may cause cached data lost though service menus already fetched
+                    if (window.performance.navigation.type === 1) {
+                        menuStatusSessionCache.clearCache();
+                    }
+                }
+            function storeHamburgerMenuStatus(status){
+                menuStatusSessionCache && menuStatusSessionCache.updateCacheData(menuStatusSessionCacheName, menuStatusSessionCacheDataKey, status);
+            }
+            function retrieveHmaburgerMenuStatus(){
+                return menuStatusSessionCache && menuStatusSessionCache.retrieveDataFromCache(menuStatusSessionCacheName) && menuStatusSessionCache.retrieveDataFromCache(menuStatusSessionCacheName)[menuStatusSessionCacheDataKey];
+            }
             var NO_HIGHLIGHT = 'NO_HIGHLIGHT';
             var CONTEXT_CHANGE = 'CONTEXT_CHANGE';
             // clear topologyParams first from global context
@@ -963,7 +980,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         else {
                             $("#omcHamburgerMenu").addClass('oj-offcanvas-start');
                             $("#omcHamburgerMenu").removeClass(' oj-lg-2');
-                            if(!$("#omcHamburgerMenu").hasClass("oj-offcanvas-open")){
+                            var menuInitialStatus = retrieveHmaburgerMenuStatus();
+                            if(!$("#omcHamburgerMenu").hasClass("oj-offcanvas-open") && menuInitialStatus !== 'closed'){
                                 oj.OffcanvasUtils.toggle({
                                         "edge": "start",
                                         "displayMode": "push",
@@ -978,6 +996,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                                         "selector": "#omcHamburgerMenu",
                                         "autoDismiss": "focusLoss"
                                     });
+                                if(menuInitialStatus !== 'closed'){
                                     setTimeout(function(){
                                             oj.OffcanvasUtils.open({
                                                 "edge": "start",
@@ -987,6 +1006,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                                             });
                                             resetCurrentHamburgerMenu();
                                     },500);
+                                }
                             }
                         }
                     }
@@ -998,6 +1018,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         if (self.xlargeScreen()) {
                             $("#omcHamburgerMenu").toggle();
                             if ($("#omcHamburgerMenu").is(':visible')) {
+                                storeHamburgerMenuStatus("opened");
                                 resetCurrentHamburgerMenu();
                                 $("#uifwkLayoutMainContainer").removeClass('oj-lg-12');
                                 $("#uifwkLayoutMainContainer").addClass('oj-lg-10');
@@ -1005,6 +1026,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                                 triggerDashboardResizeEvent('Hamburger menu opened.');
                             }
                             else {
+                                storeHamburgerMenuStatus("closed");
                                 $("#uifwkLayoutMainContainer").removeClass('oj-lg-10');
                                 $("#uifwkLayoutMainContainer").addClass('oj-lg-12');
                                 triggerHamburgerMenuToggleEvent('close');
@@ -1012,6 +1034,13 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                             }
                         }
                         else {
+                            if(self.xlargeScreen()){
+                                if($("#omcHamburgerMenu").hasClass("oj-offcanvas-open")){
+                                    storeHamburgerMenuStatus("closed");
+                                }else{
+                                    storeHamburgerMenuStatus("opened");
+                                }
+                            }
                             oj.OffcanvasUtils.open({
                                 "edge": "start",
                                 "displayMode": "overlay",
@@ -1078,15 +1107,17 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     if (!avoidPageResizeOptIn) {
                         $("#omcHamburgerMenu").addClass('oj-offcanvas-start');
                         $("#omcHamburgerMenu").removeClass(' oj-lg-2');
-                        if(self.xlargeScreen()){
+                        var menuInitialStatus = retrieveHmaburgerMenuStatus();
+                        if(self.xlargeScreen() && menuInitialStatus !== 'closed'){
                             $((function(){
                                 oj.OffcanvasUtils.open({
-                                        "edge": "start",
-                                        "displayMode": "push",
-                                        "selector": "#omcHamburgerMenu",
-                                        "autoDismiss": "none"
-                                    });
+                                    "edge": "start",
+                                    "displayMode": "push",
+                                    "selector": "#omcHamburgerMenu",
+                                    "autoDismiss": "none"
+                                });
                                 triggerDashboardResizeEvent('Hamburger menu opened.');
+                                storeHamburgerMenuStatus("opened");
                             })());
                         }
                     }
@@ -1891,6 +1922,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 
         return BrandingBarViewModel;
     });
+
 
 
 
