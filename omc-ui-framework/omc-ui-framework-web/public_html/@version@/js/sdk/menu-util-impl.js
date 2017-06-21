@@ -352,13 +352,14 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
                 }
             };
             
+            self.xlargeScreen = oj.ResponsiveKnockoutUtils.createMediaQueryObservable('(min-width: 1440px)');
+            
             /**
              * Initialize hamburger menu layout
              * 
              * @returns
              */
             self.initializeHamburgerMenuLayout = function() {
-                self.xlargeScreen = oj.ResponsiveKnockoutUtils.createMediaQueryObservable('(min-width: 1440px)');
                 function setPinnedHamburgerMenuStyles() {
                     $("#omcHamburgerMenu").removeClass('oj-offcanvas-start');
                     //$("#omcHamburgerMenu").addClass('oj-lg-2');
@@ -401,8 +402,8 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
                     //$("#uifwkLayoutMainContainer").width(document.body.clientWidth);
                 }
                 else {
-                    //$('#uifwkLayoutHbgmenuPlaceHolder').width(250);
-                    //$('#uifwkLayoutMainContainer').width($('#offcanvasInnerContainer').width() - 250);
+                    $('#uifwkLayoutHbgmenuPlaceHolder').width(250);
+                    $('#uifwkLayoutMainContainer').width($(window).width() - 250);
                     //setPinnedHamburgerMenuStyles();
                     //$('#uifwkLayoutHbgmenuPlaceHolder').width(250);
                     //$('#uifwkLayoutHbgmenuPlaceHolder').width(250);
@@ -433,6 +434,25 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
                     }
                 };
                 window.addEventListener("message", onHamburgerMenuToggle, false);
+            };
+            
+            /**
+             * Resize hamburger menu layout
+             * 
+             * @returns
+             */
+            self.resizeHamburgerMenuLayout = function() {
+                if(!self.xlargeScreen()) {
+                    $("#uifwkLayoutMainContainer").width($(window).width());
+                }
+                else {
+                    if ($("#omcHamburgerMenu").length > 0 && $("#omcHamburgerMenu").is(':visible')) {
+                        $('#uifwkLayoutMainContainer').width($(window).width() - 250);
+                    }
+                    else {
+                        $("#uifwkLayoutMainContainer").width($(window).width());
+                    }
+                }
             };
         }
         return UIFWKGlobalMenuUtil;
