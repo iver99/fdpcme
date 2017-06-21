@@ -880,7 +880,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                                 });
                         }
                     }else{
-                        if(!$("#omcHamburgerMenu").hasClass("oj-offcanvas-open")){
+                        var menuInitialStatus = retrieveHmaburgerMenuStatus();
+                        if(!$("#omcHamburgerMenu").hasClass("oj-offcanvas-open") && menuInitialStatus !== 'closed'){
                             oj.OffcanvasUtils.toggle({
                                     "edge": "start",
                                     "displayMode": "push",
@@ -895,15 +896,17 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                                     "selector": "#omcHamburgerMenu",
                                     "autoDismiss": "focusLoss"
                                 });
-                                setTimeout(function(){
-                                        oj.OffcanvasUtils.open({
-                                            "edge": "start",
-                                            "displayMode": "push",
-                                            "selector": "#omcHamburgerMenu",
-                                            "autoDismiss": "none"
-                                        });
-                                        resetCurrentHamburgerMenu();
-                                },500);
+                                if(menuInitialStatus !== 'closed'){
+                                    setTimeout(function(){
+                                            oj.OffcanvasUtils.open({
+                                                "edge": "start",
+                                                "displayMode": "push",
+                                                "selector": "#omcHamburgerMenu",
+                                                "autoDismiss": "none"
+                                            });
+                                            resetCurrentHamburgerMenu();
+                                    },500);
+                                }
                         }
                     }
                 });
