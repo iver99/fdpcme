@@ -1441,7 +1441,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 		return true;
 	}
 
-	private WebElement clickTileConfigButton(WebDriver driver, String widgetName, int index)
+	protected WebElement clickTileConfigButton(WebDriver driver, String widgetName, int index)
 	{
 		WebElement tileTitle = getTileTitleElement(driver, widgetName, index);
 		WebElement tileConfig = tileTitle.findElement(By.xpath(DashBoardPageId_190.BUILDERTILECONFIGLOCATOR));
@@ -1625,7 +1625,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 
 	}
 
-	private WebElement getTileTitleElement(WebDriver driver, String widgetName, int index)
+	protected WebElement getTileTitleElement(WebDriver driver, String widgetName, int index)
     {
         org.openqa.selenium.WebDriver openDriver;
         openDriver = driver.getWebDriver();

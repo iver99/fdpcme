@@ -1482,4 +1482,28 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 		}
 		driver.takeScreenShot();
 	}
+
+	@Override
+	public void addLinkToWidgetTitle(WebDriver driver, String widgetName, int index, String dashboardName)
+	{
+		Assert.assertTrue(false, "This method is not available in the current version");
+		driver.getLogger().info("Method not available in the current version");
+	}
+
+	@Override
+	public void addLinkToWidgetTitle(WebDriver driver, String widgetName, String dashboardName){
+		addLinkToWidgetTitle(driver, widgetName, 0, dashboardName);
+	}
+
+	@Override
+	public boolean verifyLinkOnWidgetTitle(WebDriver driver, String widgetName, int index, String dashboardName){
+		Assert.assertTrue(false, "This method is not available in the current version");
+		driver.getLogger().info("Method not available in the current version");
+		return false;
+	}
+
+	@Override
+	public boolean verifyLinkOnWidgetTitle(WebDriver driver, String widgetName, String dashboardName){
+		return verifyLinkOnWidgetTitle(driver, widgetName, 0, dashboardName);
+	}
 }
