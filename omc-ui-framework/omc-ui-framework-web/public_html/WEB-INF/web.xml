@@ -9,6 +9,15 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
+
+  <servlet>
+    <servlet-name>fileServlet</servlet-name>
+    <servlet-class>weblogic.servlet.FileServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>fileServlet</servlet-name>
+    <url-pattern>/*</url-pattern>
+  </servlet-mapping>
   
   <filter>
     <filter-name>OMCMultiInstanceBeginFilter</filter-name>
