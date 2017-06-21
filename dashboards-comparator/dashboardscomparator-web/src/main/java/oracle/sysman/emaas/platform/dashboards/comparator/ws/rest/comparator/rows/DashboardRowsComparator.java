@@ -531,7 +531,7 @@ public class DashboardRowsComparator extends AbstractComparator
 		rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME,tenantId);
 		rc.setHeader(RestClient.X_REMOTE_USER,userTenant);
 		char[] authToken = LookupManager.getInstance().getAuthorizationToken();
-		String response = rc.get(lk.getHref(),tenantId, new String(authToken));
+		String response = rc.get(url,tenantId, new String(authToken));
 		
 		logger.info("Checking sync reponse. Response is " + response);
 		return response;

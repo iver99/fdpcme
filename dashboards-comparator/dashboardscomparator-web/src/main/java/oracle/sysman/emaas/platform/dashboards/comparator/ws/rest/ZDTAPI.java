@@ -292,6 +292,10 @@ public class ZDTAPI
 			tenantArrayForClient2 = obj2.getJSONArray("tenants");
 			logger.info("tenantArray size2 = " + tenantArrayForClient2.length());
 			
+			if (tenantArrayForClient1.length() == 0 && tenantArrayForClient2.length() == 0) {
+				return Response.status(status).entity("No user created dashboards, Nothing to compare").build();
+			}
+			
 			boolean iscompared = true;
 			JSONObject tenantObj = new JSONObject();
 			if ((!iscomparedForClient1) || (!iscomparedForClient2)) {

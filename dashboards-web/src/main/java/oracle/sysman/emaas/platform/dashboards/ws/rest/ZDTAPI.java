@@ -208,6 +208,7 @@ public class ZDTAPI extends APIBase
 		if (type == null) {
 			type = "full";
 		}
+		logger.info("syncDate="+syncDate);
 		EntityManager em = null;
 		String lastComparisonDateForSync = null;
 		List<Map<String, Object>> comparedDataToSync = null;
@@ -215,7 +216,9 @@ public class ZDTAPI extends APIBase
 			DashboardServiceFacade dsf = new DashboardServiceFacade();
 			em = dsf.getEntityManager();
 			lastComparisonDateForSync = DataManager.getInstance().getLastComparisonDateForSync(em);
+			logger.info("lastComparisonDateForSync="+lastComparisonDateForSync);
 			comparedDataToSync = DataManager.getInstance().getComparedDataToSync(em, lastComparisonDateForSync);
+			logger.info("comparedDataToSync="+comparedDataToSync);
 		} catch (Exception e) {
 			logger.error(e.getLocalizedMessage(), e);
 			return Response.status(400).entity(e.getLocalizedMessage()).build();				
