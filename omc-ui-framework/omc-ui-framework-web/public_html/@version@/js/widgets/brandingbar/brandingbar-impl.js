@@ -932,6 +932,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     $("#omcHamburgerMenu").removeClass('oj-lg-2');
                     $("#omcHamburgerMenu").removeClass('oj-flex-item');
                     $("#uifwkLayoutMainContainer").removeClass('oj-lg-10'); 
+                    $("#uifwkLayoutMainContainer").removeClass('oj-lg-12'); 
                     $("#uifwkLayoutMainContainer").removeClass('oj-flex-item'); 
                     //$("#uifwkLayoutMainContainer").addClass('oj-web-applayout-scrollable');
                     $("#uifwkLayoutMainContainer").addClass('oj-web-applayout-page');
@@ -966,6 +967,13 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 
                     }else{
                         if (avoidPageResizeOptIn) {
+                            var menuInitialStatus = retrieveHmaburgerMenuStatus();
+                            if (menuInitialStatus !== 'closed') {
+                                $("#omcHamburgerMenu").show();
+                            }
+                            else {
+                                $("#omcHamburgerMenu").hide();
+                            }
                             setPinnedHamburgerMenuStyles();
                             if($("#omcHamburgerMenu").hasClass("oj-offcanvas-open")){
                                 oj.OffcanvasUtils.close({
@@ -1034,13 +1042,6 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                             }
                         }
                         else {
-                            if(self.xlargeScreen()){
-                                if($("#omcHamburgerMenu").hasClass("oj-offcanvas-open")){
-                                    storeHamburgerMenuStatus("closed");
-                                }else{
-                                    storeHamburgerMenuStatus("opened");
-                                }
-                            }
                             oj.OffcanvasUtils.open({
                                 "edge": "start",
                                 "displayMode": "overlay",
@@ -1054,6 +1055,13 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         }
                     }
                     else {
+                        if(self.xlargeScreen()){
+                            if($("#omcHamburgerMenu").hasClass("oj-offcanvas-open")){
+                                storeHamburgerMenuStatus("closed");
+                            }else{
+                                storeHamburgerMenuStatus("opened");
+                            }
+                        }
                         oj.OffcanvasUtils.toggle({
                             "edge": "start",
                             "displayMode": self.xlargeScreen() ? "push" : "overlay",
@@ -1102,6 +1110,26 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                                 $("#offcanvasInnerContainer").width(document.body.clientWidth);
                             }
                         }
+                        else {
+//                            triggerDashboardResizeEvent('Resize.');
+//                            if (self.xlargeScreen()) {
+//                                setPinnedHamburgerMenuStyles();
+//                                if ($("#omcHamburgerMenu").is(':visible')) {
+//                                    $("#uifwkLayoutMainContainer").removeClass('oj-lg-12');
+//                                    $("#uifwkLayoutMainContainer").addClass('oj-lg-10');
+//                                }
+//                                else {
+//                                    $("#uifwkLayoutMainContainer").removeClass('oj-lg-10');
+//                                    $("#uifwkLayoutMainContainer").addClass('oj-lg-12');
+//                                }
+//                            }
+//                            else {
+//                                setOverlayHamburgerMenuStyles();
+//                                $("#uifwkLayoutMainContainer").removeClass('oj-lg-10');
+//                                $("#uifwkLayoutMainContainer").addClass('oj-lg-12');
+//                            }
+                            
+                        }
                     });
                     
                     if (!avoidPageResizeOptIn) {
@@ -1124,6 +1152,19 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     else {
                         if(!self.xlargeScreen()) {
                             setOverlayHamburgerMenuStyles();
+                        }
+                        else {
+                            var menuInitialStatus = retrieveHmaburgerMenuStatus();
+                            if (menuInitialStatus !== 'closed') {
+                                //$("#uifwkLayoutMainContainer").removeClass('oj-lg-12');
+                                //$("#uifwkLayoutMainContainer").addClass('oj-lg-10');
+                                $("#omcHamburgerMenu").show();
+                            }
+                            else {
+                                $("#omcHamburgerMenu").hide();
+                                $("#uifwkLayoutMainContainer").removeClass('oj-lg-10');
+                                $("#uifwkLayoutMainContainer").addClass('oj-lg-12');
+                            }
                         }
                     }
 
