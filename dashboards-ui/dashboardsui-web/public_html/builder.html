@@ -8,6 +8,8 @@
         <!-- This is the main css file for the default Alta theme -->
         <link rel="stylesheet" href="libs/@version@/js/oraclejet/css/libs/oj/v2.0.2/alta/oj-alta-min.css" type="text/css"/>
 
+        <script src="libs/@version@/js/oraclejet/js/libs/jquery/jquery-2.1.3.min.js"></script>
+
         <script type="text/javascript">
                 ////ADDITIONALDATA////
         </script>
@@ -83,7 +85,8 @@
                     <!--/ko-->
                     <!--/ko-->
                     <!--/ko-->
-                </ul>                
+                </ul>
+                <!-- ko if: renderDeletionDialogs -->
                     <div style="display:none" id="deleteDashboardset"
                          data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'icon', rootAttributes: { style: 'min-width: 480px; min-height:200px;'}}">
                         <div class="oj-dialog-header oj-helper-clearfix">
@@ -102,7 +105,7 @@
                                                  rootAttributes: {style:'margin-right:20px'}},click:dbConfigMenuClick.cancelDeleteDbs"></button>
                         </div>
                     </div>
-                <!--single dashboard in dashboard set close-->
+                    <!--single dashboard in dashboard set close-->
                     <div style="display:none" id="deleteDashboard"
                              data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'icon', rootAttributes: { style: 'min-width: 460px; min-height:200px;'}}">
                             <div class="oj-dialog-header oj-helper-clearfix">
@@ -125,6 +128,7 @@
                                                      rootAttributes: {style:'margin-right:20px'}},click:$data.cancelRemoveDashboard"></button>
                             </div>
                      </div>
+                <!-- /ko -->
             </div>
             <!-- /ko -->
             <div id="dashboards-tabs-contents">
@@ -247,15 +251,14 @@
                         <div class="tiles-wrapper fit-size df-computed-content-width" style="width: 80%; float: left; position: relative; height: auto;">
                             <div class="tile-dragging-placeholder"></div>
                             <div class="widget-area" data-bind="foreach: editor.tiles" style="margin-top: 50px; margin-left: 5px; margin-right: 5px; height: auto;">
-                                <!-- ko if: type() === 'DEFAULT' -->
                                 <div class="dbd-widget" data-bind="attr: {style: cssStyle, id: 'tile'+clientGuid, ismobile: $root.isMobileDevice,'data-tile-name':WIDGET_NAME}, css: tileDisplayClass(), 
                                                                     event: {mouseover: function(data, event) {$root.showPullRightBtn(clientGuid, data, event)}, mouseout: function(data, event) {$root.hidePullRightBtn(clientGuid, data, event)}}">
                                     <div class="dbd-tile-container" role="presentation" tabindex="0" data-bind="event: {focus: function(data, event) {$root.focusOnTile(clientGuid, data, event)}}">
                                         <div class="dbd-tile-header tile-drag-handle" style="display: flex">
-                                          <!-- ko if: $root.dashboard.systemDashboard() && linkedDashboard && linkedDashboard() !== '#'-->
+                                          <!-- ko if: linkedDashboard && linkedDashboard() !== '#'-->
                                             <h2 class="dbd-tile-title"><a data-bind="text:hideTitle() === 'true' ? '': title, attr: {href: linkedDashboard, 'data-tile-title': title}"></a></h2>
                                           <!-- /ko -->
-                                          <!-- ko if: !$root.dashboard.systemDashboard() || !linkedDashboard || linkedDashboard() === '#'-->
+                                          <!-- ko if: !linkedDashboard || linkedDashboard() === '#'-->
                                             <h2 class="dbd-tile-title" data-bind="text:hideTitle() === 'true' ? '': title, attr: {'data-tile-title': title}"></h2>
                                           <!-- /ko -->
                                             <!-- ko if: $root.initTileKoRightBtnsResizeHdls -->
@@ -434,15 +437,9 @@
                                         <div class="dbd-tile-element" data-bind="css: loadEangerLoadedTile($element)">
                                             <!-- ko stopBinding: true -->
                                             <div class="dbd-tile-widget-wrapper" style="position: relative; width: 100%; height: 100%;">
-                                                <!--<div data-bind="component:{name:WIDGET_KOC_NAME, params:{tile:$data }}" style="width: 100%; height: 100%;"></div>-->
                                             </div>
                                             <!-- /ko -->
                                         </div>
-                                        <!--ko if:$root.dashboard.systemDashboard()===true-->
-                                        <div class="dbd-resize-handler dbd-right-bottom-arrow-icon">
-                                            <span class="oj-fwk-icon-arrow-s-end oj-component-icon"></span>
-                                        </div>
-                                        <!--/ko-->
                                         <!-- ko if: $root.initTileKoRightBtnsResizeHdls -->
                                             <div data-bind="css:{'cursor-resize-ew dbd-resize-handler dbd-resize-handler-left':($root.dashboard.systemDashboard()===false) && !(($root.dashboard.sharePublic()===true)&&($root.dashboard.owner()!==$root.loginUser())) &&($root.isMobileDevice !== 'true')}"></div>
                                             <div data-bind="css:{'cursor-resize-ew dbd-resize-handler dbd-resize-handler-right':($root.dashboard.systemDashboard()===false) && !(($root.dashboard.sharePublic()===true)&&($root.dashboard.owner()!==$root.loginUser())) &&($root.isMobileDevice !== 'true')}"></div>
@@ -451,33 +448,8 @@
                                                 <span data-bind="css:{'oj-fwk-icon-arrow-s-end oj-component-icon':($root.dashboard.systemDashboard()===false) && !(($root.dashboard.sharePublic()===true)&&($root.dashboard.owner()!==$root.loginUser())) &&($root.isMobileDevice !== 'true')}"></span>
                                             </div>
                                         <!-- /ko -->
-                                        <!-- <div class="dbd-tile-link-wrapper" data-bind="css: linkText()? '': 'dbd-tile-link-empty'">
-                                            <a class="dbd-tile-link" data-bind="text: linkText, attr: {href: linkUrl, target: '_blank'}, css: linkText()? '': 'dbd-tile-link-empty'"></a>                                           
-                                            <div class="dbd-tile-link-btns">
-                                            <button class="oj-button oj-default oj-button-half-chrome dbd-display-area-editor-btn dbd-tile-link-btn"
-                                                    data-bind="click: function() {$parent.openEditTileLinkDialog($data)},ojComponent: {
-                                                    component:'ojButton'
-                                                    }, attr: {title: getNlsString('COMMON_BTN_EDIT'), id: 'dbd-tile-link-editor-btn_'+clientGuid}">
-                                                <img src="@version@/images/func_edit_16_ena.png" data-bind="attr: {alt: getNlsString('COMMON_BTN_EDIT')}"/>
-                                            </button>
-                                            <button class="oj-button oj-default oj-button-half-chrome dbd-display-area-editor-btn dbd-tile-link-btn"
-                                                    data-bind="click: function() {$parent.deleteTileLink($data)}, ojComponent: {
-                                                    component:'ojButton'
-                                                    }, attr: {title: getNlsString('COMMON_BTN_DELETE'), id: 'dbd-tile-link-delete-btn_'+clientGuid}" tabindex="0">
-                                                <img src="@version@/images/func_delete_16_ena.png" data-bind="attr: {alt: getNlsString('COMMON_BTN_DELETE')}"/>
-                                            </button>
-                                            </div>  
-                                        </div> -->
                                     </div>
-                                </div>
-                                <!-- /ko -->
-                                <!-- ko if: type() === 'TEXT_WIDGET' -->
-<!--                                <div class="dbd-widget" style="height: auto;" data-bind="attr: {style: tileDisplayClass, id: 'tile'+clientGuid}">
-                                    <div class="tile-drag-handle" style=" cursor: move;">
-                                        <div data-bind="component: {name: 'DF_V1_WIDGET_TEXT', params: params}"></div>
-                                    </div>
-                                </div>-->
-                                <!-- /ko -->                                
+                                </div>                             
                                 </div>
                             </div>
                         </div>
