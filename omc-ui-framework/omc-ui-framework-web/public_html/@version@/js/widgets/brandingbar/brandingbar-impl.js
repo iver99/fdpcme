@@ -916,14 +916,14 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     $("#offcanvasInnerContainer").addClass('oj-flex');
                     $("#offcanvasInnerContainer").addClass('oj-flex-items-pad');
                     if ($("#omcHamburgerMenu").is(':visible')) {
-                        $("#omcHamburgerMenu").addClass('oj-lg-2');
+                        //$("#omcHamburgerMenu").addClass('oj-lg-2');
                         $("#uifwkLayoutMainContainer").removeClass('oj-lg-12');
-                        $("#uifwkLayoutMainContainer").addClass('oj-lg-10');
+                        //$("#uifwkLayoutMainContainer").addClass('oj-lg-10');
                     }
                     else {
-                        $("#omcHamburgerMenu").removeClass('oj-lg-2');
-                        $("#uifwkLayoutMainContainer").removeClass('oj-lg-10');
-                        $("#uifwkLayoutMainContainer").addClass('oj-lg-12');
+                        //$("#omcHamburgerMenu").removeClass('oj-lg-2');
+                        //$("#uifwkLayoutMainContainer").removeClass('oj-lg-10');
+                        //$("#uifwkLayoutMainContainer").addClass('oj-lg-12');
                     }
                 }
                 
@@ -932,7 +932,6 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     $("#omcHamburgerMenu").removeClass('oj-lg-2');
                     $("#omcHamburgerMenu").removeClass('oj-flex-item');
                     $("#uifwkLayoutMainContainer").removeClass('oj-lg-10'); 
-                    $("#uifwkLayoutMainContainer").removeClass('oj-lg-12'); 
                     $("#uifwkLayoutMainContainer").removeClass('oj-flex-item'); 
                     //$("#uifwkLayoutMainContainer").addClass('oj-web-applayout-scrollable');
                     $("#uifwkLayoutMainContainer").addClass('oj-web-applayout-page');
@@ -1026,17 +1025,19 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         if (self.xlargeScreen()) {
                             $("#omcHamburgerMenu").toggle();
                             if ($("#omcHamburgerMenu").is(':visible')) {
+                                $("#uifwkLayoutMainContainer").width($(window).width() - 250);
                                 storeHamburgerMenuStatus("opened");
                                 resetCurrentHamburgerMenu();
-                                $("#uifwkLayoutMainContainer").removeClass('oj-lg-12');
-                                $("#uifwkLayoutMainContainer").addClass('oj-lg-10');
+                                //$("#uifwkLayoutMainContainer").removeClass('oj-lg-12');
+                                //$("#uifwkLayoutMainContainer").addClass('oj-lg-10');
                                 triggerHamburgerMenuToggleEvent('open');
                                 triggerDashboardResizeEvent('Hamburger menu opened.');
                             }
                             else {
                                 storeHamburgerMenuStatus("closed");
-                                $("#uifwkLayoutMainContainer").removeClass('oj-lg-10');
-                                $("#uifwkLayoutMainContainer").addClass('oj-lg-12');
+                                $("#uifwkLayoutMainContainer").width($(window).width());
+                                //$("#uifwkLayoutMainContainer").removeClass('oj-lg-10');
+                                //$("#uifwkLayoutMainContainer").addClass('oj-lg-12');
                                 triggerHamburgerMenuToggleEvent('close');
                                 triggerDashboardResizeEvent('Hamburger menu closed.');
                             }
@@ -1111,24 +1112,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                             }
                         }
                         else {
-//                            triggerDashboardResizeEvent('Resize.');
-//                            if (self.xlargeScreen()) {
-//                                setPinnedHamburgerMenuStyles();
-//                                if ($("#omcHamburgerMenu").is(':visible')) {
-//                                    $("#uifwkLayoutMainContainer").removeClass('oj-lg-12');
-//                                    $("#uifwkLayoutMainContainer").addClass('oj-lg-10');
-//                                }
-//                                else {
-//                                    $("#uifwkLayoutMainContainer").removeClass('oj-lg-10');
-//                                    $("#uifwkLayoutMainContainer").addClass('oj-lg-12');
-//                                }
-//                            }
-//                            else {
-//                                setOverlayHamburgerMenuStyles();
-//                                $("#uifwkLayoutMainContainer").removeClass('oj-lg-10');
-//                                $("#uifwkLayoutMainContainer").addClass('oj-lg-12');
-//                            }
-                            
+                            menuUtil.resizeHamburgerMenuLayout();
                         }
                     });
                     
@@ -1162,8 +1146,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                             }
                             else {
                                 $("#omcHamburgerMenu").hide();
-                                $("#uifwkLayoutMainContainer").removeClass('oj-lg-10');
-                                $("#uifwkLayoutMainContainer").addClass('oj-lg-12');
+                                //$("#uifwkLayoutMainContainer").removeClass('oj-lg-10');
+                                //$("#uifwkLayoutMainContainer").addClass('oj-lg-12');
                             }
                         }
                     }

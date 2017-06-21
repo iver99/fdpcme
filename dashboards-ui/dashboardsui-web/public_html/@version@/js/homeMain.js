@@ -220,7 +220,7 @@ require(['dashboards/dbsmodel',
             var titleVM = new TitleViewModel();
 
             $(document).ready(function() {
-                menuUtil.initializeHamburgerMenuLayout();
+//                menuUtil.initializeHamburgerMenuLayout();
                 dfu.getSubscribedApps2WithEdition(function(apps) {
                     if (apps && (!apps.applications || apps.applications.length === 0)) {
                         oj.Logger.error("Tenant subscribes to no service. Redirect to dashboard error page", true);
