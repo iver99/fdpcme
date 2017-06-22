@@ -25,6 +25,8 @@ public class PropertyReader
 	  }
 
 	private static final Logger LOGGER = LogManager.getLogger(PropertyReader.class);
+	
+	public static final String DFUI_CONFIG = "dfuiconfig.properties";
 
 	public static final String getInstallDir()
 	{
@@ -51,7 +53,13 @@ public class PropertyReader
 		InputStream input = null;
 		try {
 
-			input = new FileInputStream(CONFIG_DIR + File.separator + filename);
+			if (SERVICE_PROPS.equals(filename)) {
+				input = new FileInputStream(CONFIG_DIR + File.separator + filename);
+			}
+			else {
+				input = PropertyReader.class.getResourceAsStream(filename);
+			}
+			
 			prop.load(input);
 
 		}
