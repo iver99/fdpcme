@@ -186,16 +186,27 @@ require(['dashboards/dbsmodel',
 //                    }
 //                });
 //            });
-            menuUtil.subscribeHamburgerMenuToggleEvent(function(toggleType) {
-                if (toggleType === 'open') {
+            
+            function resizeHomeMainLayout(hbgmenuStatus) {
+                if (hbgmenuStatus === 'open') {
                     $('.main-content-area').removeClass('dbs-main-large-width');
                 }
-                else if (toggleType === 'close') {
+                else if (hbgmenuStatus === 'close') {
                     if ($('.main-content-area')) {
                         $('.main-content-area').addClass('dbs-main-large-width');
                     }
                 }
+            }
+            
+            menuUtil.subscribeHamburgerMenuToggleEvent(function(toggleType) {
+                resizeHomeMainLayout(toggleType);
             });
+            
+            $(window).resize(function() {
+                var hbgmenuStatus = $("#omcHamburgerMenu").length > 0 && $("#omcHamburgerMenu").is(':visible') ? 'open' : 'close';
+                resizeHomeMainLayout(hbgmenuStatus);
+            });
+            
             function HeaderViewModel() {
                 var self = this;
                 self.userName = dfu.getUserName();

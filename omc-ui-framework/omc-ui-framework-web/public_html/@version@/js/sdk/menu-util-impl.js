@@ -4,9 +4,10 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
     'jquery',
     'uifwk/@version@/js/util/ajax-util-impl',
     'uifwk/@version@/js/util/df-util-impl',
-    'uifwk/@version@/js/util/usertenant-util-impl'
+    'uifwk/@version@/js/util/usertenant-util-impl',
+    'uifwk/@version@/js/sdk/SessionCacheUtil'
 ],
-    function (oj, ko, $, ajaxUtilModel, dfuModel, userTenantModel)
+    function (oj, ko, $, ajaxUtilModel, dfuModel, userTenantModel, sessionCacheModel)
     {
         function UIFWKGlobalMenuUtil() {
             var self = this;
@@ -371,9 +372,9 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
                     $("#offcanvasInnerContainer").addClass('oj-flex');
                     $("#offcanvasInnerContainer").addClass('oj-flex-items-pad');
                     if ($("#omcHamburgerMenu").is(':visible')) {
-                        $("#omcHamburgerMenu").addClass('oj-lg-2');
-                        $("#uifwkLayoutMainContainer").removeClass('oj-lg-12');
-                        $("#uifwkLayoutMainContainer").addClass('oj-lg-10');
+                        //$("#omcHamburgerMenu").addClass('oj-lg-2');
+                        //$("#uifwkLayoutMainContainer").removeClass('oj-lg-12');
+                        //$("#uifwkLayoutMainContainer").addClass('oj-lg-10');
                     }
                     else {
                         $("#omcHamburgerMenu").removeClass('oj-lg-2');
@@ -386,14 +387,21 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
                     //$("#omcHamburgerMenu").addClass('oj-offcanvas-start');
                     //$("#omcHamburgerMenu").removeClass('oj-lg-2');
                     //$("#omcHamburgerMenu").removeClass('oj-flex-item');
-                    $("#uifwkLayoutHbgmenuPlaceHolder").removeClass('oj-lg-2');
+                    //$("#uifwkLayoutHbgmenuPlaceHolder").removeClass('oj-lg-2');
                     $("#uifwkLayoutHbgmenuPlaceHolder").removeClass('oj-flex-item');
-                    $("#uifwkLayoutMainContainer").removeClass('oj-lg-10'); 
+                    //$("#uifwkLayoutMainContainer").removeClass('oj-lg-10'); 
                     $("#uifwkLayoutMainContainer").removeClass('oj-flex-item'); 
                     $("#uifwkLayoutMainContainer").addClass('oj-web-applayout-scrollable');
                     $("#uifwkLayoutMainContainer").addClass('oj-web-applayout-page');
                     $("#offcanvasInnerContainer").removeClass('oj-flex');
                     $("#offcanvasInnerContainer").removeClass('oj-flex-items-pad');
+                }
+                
+                var menuStatusSessionCacheName = '_uifwk_hamburgermenustatuscache';
+                var menuStatusSessionCacheDataKey = 'hamburger_menu_is_open';
+                var menuStatusSessionCache = new sessionCacheModel(menuStatusSessionCacheName, 1);
+                function retrieveHmaburgerMenuStatus(){
+                    return menuStatusSessionCache && menuStatusSessionCache.retrieveDataFromCache(menuStatusSessionCacheName) && menuStatusSessionCache.retrieveDataFromCache(menuStatusSessionCacheName)[menuStatusSessionCacheDataKey];
                 }
                 
                 if(!self.xlargeScreen()) {
@@ -402,8 +410,23 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
                     //$("#uifwkLayoutMainContainer").width(document.body.clientWidth);
                 }
                 else {
+                    var menuInitialStatus = retrieveHmaburgerMenuStatus();
+                    if (menuInitialStatus !== 'closed') {
+                        $('#uifwkLayoutMainContainer').width($(window).width() - 250);
+                        //$("#uifwkLayoutMainContainer").removeClass('oj-lg-12');
+                        //$("#uifwkLayoutMainContainer").addClass('oj-lg-10');
+                        //$("#omcHamburgerMenu").show();
+                    }
+                    else {
+                        $('#uifwkLayoutHbgmenuPlaceHolder').hide();
+                        $("#omcHamburgerMenu").hide();
+                        $('#uifwkLayoutMainContainer').width($(window).width());
+                        //$("#omcHamburgerMenu").hide();
+                        //$("#uifwkLayoutMainContainer").removeClass('oj-lg-10');
+                        //$("#uifwkLayoutMainContainer").addClass('oj-lg-12');
+                    }
                     $('#uifwkLayoutHbgmenuPlaceHolder').width(250);
-                    $('#uifwkLayoutMainContainer').width($(window).width() - 250);
+                    //$('#uifwkLayoutMainContainer').width($(window).width() - 250);
                     //setPinnedHamburgerMenuStyles();
                     //$('#uifwkLayoutHbgmenuPlaceHolder').width(250);
                     //$('#uifwkLayoutHbgmenuPlaceHolder').width(250);

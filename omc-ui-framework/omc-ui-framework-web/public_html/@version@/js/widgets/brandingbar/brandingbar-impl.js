@@ -799,6 +799,10 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 if (!$('#omcHamburgerMenu').length) {
                     var hamburgerDiv = $($("#omc-hamburger-menu-template").text());
                     if (avoidPageResizeOptIn) {
+                        var menuInitialStatus = retrieveHmaburgerMenuStatus();
+                        if (menuInitialStatus === 'closed') {
+                            hamburgerDiv.css('display', 'none');
+                        }
                         $('#uifwkLayoutHbgmenuPlaceHolder').replaceWith(hamburgerDiv);
                     }
                     else {
@@ -1146,9 +1150,11 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                             }
                             else {
                                 $("#omcHamburgerMenu").hide();
+                                triggerHamburgerMenuToggleEvent('close');
                                 //$("#uifwkLayoutMainContainer").removeClass('oj-lg-10');
                                 //$("#uifwkLayoutMainContainer").addClass('oj-lg-12');
                             }
+                            menuUtil.resizeHamburgerMenuLayout();
                         }
                     }
 
