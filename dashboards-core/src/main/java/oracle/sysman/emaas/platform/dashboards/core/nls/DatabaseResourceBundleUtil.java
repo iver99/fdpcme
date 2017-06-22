@@ -58,9 +58,8 @@ public class DatabaseResourceBundleUtil {
         return getTranslatedString(appType, key);
     }
     
-    public static String getTranslatedString(DashboardApplicationType appType, String key)
-    {
-        DatabaseResourceBundle rb = null;
+    public static String getTranslatedString(DashboardApplicationType appType, String key) {
+/*        DatabaseResourceBundle rb = null;
         try {
             rb = (DatabaseResourceBundle) ResourceBundle.getBundle(appType.getJsonValue(), UserContext.getLocale(),
                     DatabaseResourceBundleUtil.class.getClassLoader(), new DatabaseResourceBundleControl());
@@ -76,7 +75,7 @@ public class DatabaseResourceBundleUtil {
                 LOGGER.warn("No translation for '{}' for service {} because: {}", key, appType.getJsonValue(),
                         ex.getLocalizedMessage());
             }
-        }
+        }*/
         return key;
     }
     
