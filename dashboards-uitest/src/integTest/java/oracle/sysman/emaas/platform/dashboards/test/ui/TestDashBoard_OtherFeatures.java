@@ -871,7 +871,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		DashboardHomeUtil.gridView(webd);
 
 		webd.getLogger().info("Create the dashboard, then to add text widget");
-		DashboardHomeUtil.createDashboard(webd, dbName_textWidget, dbDesc);
+		DashboardHomeUtil.createDashboard(webd, dbName_textWidget, dbDesc, DashboardHomeUtil.DASHBOARD);
 		
 		webd.getLogger().info("Verify the dashboard created Successfully");
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_textWidget, dbDesc, true), "Create dashboard failed!");		
