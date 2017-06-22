@@ -37,34 +37,27 @@ BEGIN
 END;
 /
 
-@&EMSAAS_SQL_ROOT/1.0.0/emaas_dashboards_seed_data_apm.sql &TENANT_ID
-@&EMSAAS_SQL_ROOT/1.0.0/emaas_dashboards_seed_data_ita.sql &TENANT_ID
-@&EMSAAS_SQL_ROOT/1.0.0/emaas_dashboards_seed_data_la.sql &TENANT_ID
+@&EMSAAS_SQL_ROOT/1.0.0/emaas_dashboards_seed_data.sql &TENANT_ID
 
-@&EMSAAS_SQL_ROOT/1.0.25/emaas_dashboards_seed_data_apm.sql &TENANT_ID
-@&EMSAAS_SQL_ROOT/1.0.25/emaas_dashboards_seed_data_ita.sql &TENANT_ID
-@&EMSAAS_SQL_ROOT/1.0.25/emaas_dashboards_seed_data_la.sql &TENANT_ID
+@&EMSAAS_SQL_ROOT/1.0.25/emaas_dashboards_seed_data.sql &TENANT_ID
 
 @&EMSAAS_SQL_ROOT/1.1.0/emaas_dashboards_seed_data.sql &TENANT_ID
 
-@&EMSAAS_SQL_ROOT/1.2.0/emaas_dashboards_seed_data_ita.sql &TENANT_ID
+@&EMSAAS_SQL_ROOT/1.2.0/emaas_dashboards_seed_data.sql &TENANT_ID
 
-@&EMSAAS_SQL_ROOT/1.4.0/emaas_dashboards_seed_data_ita.sql &TENANT_ID
-@&EMSAAS_SQL_ROOT/1.4.0/emaas_dashboards_seed_data_ta.sql &TENANT_ID
+@&EMSAAS_SQL_ROOT/1.4.0/emaas_dashboards_seed_data.sql &TENANT_ID
 
 @&EMSAAS_SQL_ROOT/1.5.0/emaas_dashboards_seed_data.sql &TENANT_ID
-@&EMSAAS_SQL_ROOT/1.5.0/emaas_dashboards_seed_data_ita.sql &TENANT_ID
-@&EMSAAS_SQL_ROOT/1.5.0/emaas_dashboards_seed_data_ta.sql &TENANT_ID
 
 @&EMSAAS_SQL_ROOT/1.7.1/emaas_dashboards_seed_data.sql &TENANT_ID
 
-@&EMSAAS_SQL_ROOT/1.7.5/emaas_dashboards_seed_data_ita.sql &TENANT_ID
+@&EMSAAS_SQL_ROOT/1.7.5/emaas_dashboards_seed_data.sql &TENANT_ID
 
 @&EMSAAS_SQL_ROOT/1.7.6/emaas_dashboards_seed_data.sql &TENANT_ID
 
 @&EMSAAS_SQL_ROOT/1.8.0/emaas_dashboards_seed_data.sql &TENANT_ID
 
-@&EMSAAS_SQL_ROOT/1.9.0/emaas_dashboards_seed_data_ita.sql &TENANT_ID
+@&EMSAAS_SQL_ROOT/1.9.0/emaas_dashboards_seed_data.sql &TENANT_ID
 
 @&EMSAAS_SQL_ROOT/1.9.0/emaas_dashboards_seed_data_ocs.sql &TENANT_ID
 
@@ -79,7 +72,7 @@ END;
 @&EMSAAS_SQL_ROOT/1.11.0/emaas_dashboards_seed_data_ocs.sql &TENANT_ID
 
 @&EMSAAS_SQL_ROOT/1.12.0/emaas_dashboards_seed_data_ta.sql &TENANT_ID
-@&EMSAAS_SQL_ROOT/1.12.0/emaas_dashboards_seed_data_ita.sql &TENANT_ID
+@&EMSAAS_SQL_ROOT/1.12.0/emaas_dashboards_seed_data.sql &TENANT_ID
 
 @&EMSAAS_SQL_ROOT/1.13.0/emaas_dashboards_widget_param_update.sql &TENANT_ID
 @&EMSAAS_SQL_ROOT/1.13.0/emaas_dashboards_update_orchetration_workflows.sql &TENANT_ID
