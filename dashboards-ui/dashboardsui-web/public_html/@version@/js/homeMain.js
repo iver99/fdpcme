@@ -231,6 +231,7 @@ require(['dashboards/dbsmodel',
             var titleVM = new TitleViewModel();
 
             $(document).ready(function() {
+                resizeHomeMainLayout(menuUtil.showHamburgerMenuByDefault() ? 'open' : 'close');
 //                menuUtil.initializeHamburgerMenuLayout();
                 dfu.getSubscribedApps2WithEdition(function(apps) {
                     if (apps && (!apps.applications || apps.applications.length === 0)) {

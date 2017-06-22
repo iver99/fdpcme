@@ -1122,7 +1122,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     
                     if (!avoidPageResizeOptIn) {
                         $("#omcHamburgerMenu").addClass('oj-offcanvas-start');
-                        $("#omcHamburgerMenu").removeClass(' oj-lg-2');
+                        $("#omcHamburgerMenu").removeClass('oj-lg-2');
+                        $("#omcHamburgerMenu").removeClass('oj-flex-item');
                         var menuInitialStatus = retrieveHmaburgerMenuStatus();
                         if(self.xlargeScreen() && menuInitialStatus !== 'closed'){
                             $((function(){

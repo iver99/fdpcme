@@ -355,6 +355,23 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
             
             self.xlargeScreen = oj.ResponsiveKnockoutUtils.createMediaQueryObservable('(min-width: 1440px)');
             
+            var menuStatusSessionCacheName = '_uifwk_hamburgermenustatuscache';
+            var menuStatusSessionCacheDataKey = 'hamburger_menu_is_open';
+            var menuStatusSessionCache = new sessionCacheModel(menuStatusSessionCacheName, 1);
+            function getHamburgerMenuInitialStatus(){
+                return menuStatusSessionCache && menuStatusSessionCache.retrieveDataFromCache(menuStatusSessionCacheName) && menuStatusSessionCache.retrieveDataFromCache(menuStatusSessionCacheName)[menuStatusSessionCacheDataKey];
+            }
+            
+            /**
+             * Check cached hamburger menu status to see if need to open hamburger menu by default
+             * 
+             * @returns {boolean} true: show by default, false: hide by default
+             */
+            self.showHamburgerMenuByDefault = function() {
+                var menuInitialStatus = getHamburgerMenuInitialStatus();
+                return menuInitialStatus !== 'closed';
+            };
+            
             /**
              * Initialize hamburger menu layout
              * 
@@ -397,21 +414,13 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
                     $("#offcanvasInnerContainer").removeClass('oj-flex-items-pad');
                 }
                 
-                var menuStatusSessionCacheName = '_uifwk_hamburgermenustatuscache';
-                var menuStatusSessionCacheDataKey = 'hamburger_menu_is_open';
-                var menuStatusSessionCache = new sessionCacheModel(menuStatusSessionCacheName, 1);
-                function retrieveHmaburgerMenuStatus(){
-                    return menuStatusSessionCache && menuStatusSessionCache.retrieveDataFromCache(menuStatusSessionCacheName) && menuStatusSessionCache.retrieveDataFromCache(menuStatusSessionCacheName)[menuStatusSessionCacheDataKey];
-                }
-                
                 if(!self.xlargeScreen()) {
                     setOverlayHamburgerMenuStyles();
                     //$("#offcanvasInnerContainer").width(document.body.clientWidth);
                     //$("#uifwkLayoutMainContainer").width(document.body.clientWidth);
                 }
                 else {
-                    var menuInitialStatus = retrieveHmaburgerMenuStatus();
-                    if (menuInitialStatus !== 'closed') {
+                    if (self.showHamburgerMenuByDefault()) {
                         $('#uifwkLayoutMainContainer').width($(window).width() - 250);
                         //$("#uifwkLayoutMainContainer").removeClass('oj-lg-12');
                         //$("#uifwkLayoutMainContainer").addClass('oj-lg-10');
