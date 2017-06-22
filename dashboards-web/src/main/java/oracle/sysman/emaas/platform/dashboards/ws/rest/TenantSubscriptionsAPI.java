@@ -158,6 +158,11 @@ public class TenantSubscriptionsAPI extends APIBase
                     ne.setApplication(appsInfo.getId());
                     LOGGER.info("V3: Edition info is {}",ne.getEdition());
                 }
+				if(SubscriptionAppsUtil.V4_TENANT.equals(appsInfo.getLicVersion())){
+					ne.setEdition(pickEdition(appsInfo));
+					ne.setApplication(appsInfo.getId());
+					LOGGER.info("V4: Edition info is {}",ne.getEdition());
+				}
 				LOGGER.info("Application with name {} and edition {} is added.",ne.getApplication(),ne.getEdition());
 				tenantEditionEntityList.add(ne);
 
