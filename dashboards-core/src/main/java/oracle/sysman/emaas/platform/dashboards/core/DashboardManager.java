@@ -1711,9 +1711,9 @@ public class DashboardManager
 			apps.add(dat);
 		}
         LOGGER.info("Before handling tenant application is {}", apps);
-		//handle v2/v3 tenant
+		//handle v2/v3/v4 tenant
 		if(!tv.getIsV1Tenant() && !apps.contains(DashboardApplicationType.UDE)){
-			LOGGER.info("#1 Adding UDE application type for v2/v3 tenant");
+			LOGGER.info("#1 Adding UDE application type for v2/v3/v4 tenant");
 			apps.add(DashboardApplicationType.UDE);
 		}else if(tv.getIsV1Tenant() && apps.contains(DashboardApplicationType.ITAnalytics)){
             apps.add(DashboardApplicationType.UDE);
@@ -1724,7 +1724,7 @@ public class DashboardManager
 	}
 
 	/**
-	 * if tenant is v1 , return true, if v2/v3, return false
+	 * if tenant is v1 , return true, if v2/v3/v4, return false
 	 * @return
 	 */
 	private TenantVersionModel checkTenantVersion(List<String> subscribedApps, TenantSubscriptionInfo tenantSubscriptionInfo, TenantVersionModel tv){
@@ -1736,7 +1736,7 @@ public class DashboardManager
 						SubscriptionAppsUtil.OSMACC_SERVICE_TYPE.equals(s) || SubscriptionAppsUtil.OMCSE_SERVICE_TYPE.equals(s) ||
 						SubscriptionAppsUtil.OMCEE_SERVICE_TYPE.equals(s) || SubscriptionAppsUtil.OMCLOG_SERVICE_TYPE.equals(s) ||
 						SubscriptionAppsUtil.SECSE_SERVICE_TYPE.equals(s) || SubscriptionAppsUtil.SECSMA_SERVICE_TYPE.equals(s)){
-					LOGGER.info("#1 Check tenant version is V2/V3 tenant.");
+					LOGGER.info("#1 Check tenant version is V2/V3/v4 tenant.");
 					tv.setIsV1Tenant(Boolean.FALSE);
 					return tv;
 				}
@@ -1747,8 +1747,9 @@ public class DashboardManager
 		if(tenantSubscriptionInfo.getAppsInfoList()!=null && !tenantSubscriptionInfo.getAppsInfoList().isEmpty()){
 			for(AppsInfo appsInfo : tenantSubscriptionInfo.getAppsInfoList()){
 				if(SubscriptionAppsUtil.V2_TENANT.equals(appsInfo.getLicVersion()) ||
-						SubscriptionAppsUtil.V3_TENANT.equals(appsInfo.getLicVersion())){
-					LOGGER.info("#2 Check tenant version is V2/V3 tenant.");
+						SubscriptionAppsUtil.V3_TENANT.equals(appsInfo.getLicVersion()) ||
+						SubscriptionAppsUtil.V4_TENANT.equals(appsInfo.getLicVersion())){
+					LOGGER.info("#2 Check tenant version is V2/V3/V4 tenant.");
                     tv.setIsV1Tenant(Boolean.FALSE);
 					return tv;
 				}
