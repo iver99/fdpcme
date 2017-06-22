@@ -72,6 +72,9 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		//verify dashboard in builder page
 		webd.getLogger().info("Verify the dashboard created Successfully");
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_Test, dbDesc_Test, true), "Create dashboard failed!");
+		DashboardBuilderUtil.saveDashboard(webd);
+		LoginAndLogout.logoutMethod();
+	
 	}
 
 	public void initTest(String testName)
