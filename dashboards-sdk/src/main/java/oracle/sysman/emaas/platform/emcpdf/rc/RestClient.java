@@ -23,7 +23,7 @@ import java.util.Map;
  * Created by chehao on 2017/3/13 13:19.
  */
 public class RestClient {
-    private final Logger LOGGER = LogManager.getLogger(RestClient.class);
+    private static final Logger LOGGER = LogManager.getLogger(RestClient.class);
     private Logger itrLogger = LogUtil.getInteractionLogger();
     public static final String OAM_REMOTE_USER = "OAM_REMOTE_USER";
     public static final String X_USER_IDENTITY_DOMAIN_NAME = "X-USER-IDENTITY-DOMAIN-NAME";
@@ -32,6 +32,9 @@ public class RestClient {
     public static final String SESSION_EXP = "SESSION_EXP";
     public static final String X_OMC_SERVICE_TRACE = "X-OMC-SERVICE-TRACE";
 
+	private static ClientConfig cc = new DefaultClientConfig();
+	private static Client client = Client.create(cc);
+
     //timeout milli-seconds
     private static final Integer DEFAULT_TIMEOUT = 30000;
     private Map<String, Object> headers;
@@ -39,6 +42,16 @@ public class RestClient {
     private String accept = MediaType.APPLICATION_JSON;
     //Default type is json
     private String type = MediaType.APPLICATION_JSON;
+
+	static {
+		synchronized (RestClient.class) {
+			long start = System.currentTimeMillis();
+			client.setConnectTimeout(DEFAULT_TIMEOUT);
+			client.setReadTimeout(DEFAULT_TIMEOUT);
+			long end = System.currentTimeMillis();
+			LOGGER.info("Time to initialize jersey client is {}ms", end - start);
+		}
+	}
 
     public RestClient(String loggerName){
         if(!StringUtil.isEmpty(loggerName)){
@@ -81,16 +94,18 @@ public class RestClient {
             return null;
         }
 
-        ClientConfig cc = new DefaultClientConfig();
-        Client client = Client.create(cc);
-        client.setConnectTimeout(DEFAULT_TIMEOUT);
-        client.setReadTimeout(DEFAULT_TIMEOUT);
+		// as jersey client cost for creating new object is high, will reuse the instance
+//        ClientConfig cc = new DefaultClientConfig();
+//        Client client = Client.create(cc);
+//        client.setConnectTimeout(DEFAULT_TIMEOUT);
+//        client.setReadTimeout(DEFAULT_TIMEOUT);
 
         if (StringUtil.isEmpty(auth)) {
             LOGGER.warn("Warning: RestClient get an empty auth token when connection to url {}", url);
+            itrLogger.warn("Warning: RestClient get an empty auth token when connection to url {}", url);
         } else {
             LogUtil.setInteractionLogThreadContext(tenant, url, LogUtil.InteractionLogDirection.OUT);
-            itrLogger.info("RestClient is connecting to get response after getting authorization token from registration manager.");
+            itrLogger.info("RestClient is connecting {}, method is GET", url);
         }
         itrLogger.info("RestClient call to [GET] {}",url);
         WebResource.Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth);
@@ -106,7 +121,7 @@ public class RestClient {
                     continue;
                 }
                 builder.header(key, headers.get(key));
-                itrLogger.info("Setting header ({}, {}) for call to {}", key, headers.get(key), url);
+                itrLogger.info("[GET] Setting header ({}, {}) for call to {}", key, headers.get(key), url);
             }
         }
         return builder.get(String.class);
@@ -122,20 +137,20 @@ public class RestClient {
             return null;
         }
 
-        ClientConfig cc = new DefaultClientConfig();
+		// as jersey client cost for creating new object is high, will reuse the instance
+        /*ClientConfig cc = new DefaultClientConfig();
         //TODO
 //        cc.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
         Client client = Client.create(cc);
         client.setConnectTimeout(DEFAULT_TIMEOUT);
-        client.setReadTimeout(DEFAULT_TIMEOUT);
+        client.setReadTimeout(DEFAULT_TIMEOUT);*/
 
         if (StringUtil.isEmpty(auth)) {
             LOGGER.warn("Warning: RestClient get an empty auth token when connection to url {}", url);
+            itrLogger.warn("Warning: RestClient get an empty auth token when connection to url {}", url);
         } else {
             LogUtil.setInteractionLogThreadContext(tenant, url, LogUtil.InteractionLogDirection.OUT);
-            itrLogger.info(
-                    "RestClient is connecting to {} after getting authorization token from registration manager. HTTP method is post.",
-                    url);
+            itrLogger.info("RestClient is connecting to {}. HTTP method is PUT.", url);
         }
         itrLogger.info("RestClient call to [PUT] {}",url);
         try{
@@ -153,7 +168,7 @@ public class RestClient {
                         continue;
                     }
                     builder.header(key, value);
-                    itrLogger.info("Setting header ({}, {}) for call to {}", key, headers.get(key), url);
+                    itrLogger.info("[PUT] Setting header ({}, {}) for call to {}", key, headers.get(key), url);
                 }
             }
             return builder.put(requestEntity.getClass(), requestEntity).toString();
@@ -166,6 +181,61 @@ public class RestClient {
             LOGGER.error(e);
             itrLogger.error("RestClient: Error occurred for [PUT] action, URL is {}: Signals a failure to process the HTTP request or HTTP response", url);
         }
+        return null;
+    }
+
+    public Object post(String url, Object requestEntity, String tenant, String auth)
+    {
+        if (StringUtil.isEmpty(url)) {
+            LOGGER.error("Unable to post to an empty URL for requestEntity: \"{}\", tenant: \"{}\"", requestEntity, tenant);
+            return null;
+        }
+        if (requestEntity == null || "".equals(requestEntity)) {
+            LOGGER.error("Unable to post an empty request entity");
+            return null;
+        }
+
+        /*ClientConfig cc = new DefaultClientConfig();
+//        cc.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
+        Client client = Client.create(cc);*/
+        if (StringUtil.isEmpty(auth)) {
+            LOGGER.warn("Warning: RestClient get an empty auth token when connection to url {}", url);
+            itrLogger.warn("Warning: RestClient get an empty auth token when connection to url {}", url);
+        }
+        else {
+            LogUtil.setInteractionLogThreadContext(tenant, url, LogUtil.InteractionLogDirection.OUT);
+            itrLogger.info("RestClient is connecting to {}. HTTP method is POST.", url);
+        }
+        itrLogger.info("RestClient call to [POST] {}",url);
+        try{
+
+            WebResource.Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth);
+            if (type != null) {
+                builder = builder.type(type);
+            }
+            if (accept != null) {
+                builder = builder.accept(accept);
+            }
+            if (headers != null) {
+                for (String key : headers.keySet()) {
+                    Object value = headers.get(key);
+                    if (value == null || HttpHeaders.AUTHORIZATION.equals(key)) {
+                        continue;
+                    }
+                    builder.header(key, value);
+                }
+            }
+            return builder.post(requestEntity.getClass(), requestEntity);
+        }catch(UniformInterfaceException e){
+            LOGGER.error("Error occurred for [POST] action, URL is {}: status code of the HTTP response indicates a response that is not expected", url);
+            itrLogger.error("Error occurred for [POST] action, URL is {}: status code of the HTTP response indicates a response that is not expected", url);
+            LOGGER.error(e);
+        }catch(ClientHandlerException e){//RestClient may timeout, so catch this runtime exception to make sure the response can return.
+            LOGGER.error("Error occurred for [POST] action, URL is {}: Signals a failure to process the HTTP request or HTTP response", url);
+            itrLogger.error("Error occurred for [POST] action, URL is {}: Signals a failure to process the HTTP request or HTTP response", url);
+            LOGGER.error(e);
+        }
+
         return null;
     }
 

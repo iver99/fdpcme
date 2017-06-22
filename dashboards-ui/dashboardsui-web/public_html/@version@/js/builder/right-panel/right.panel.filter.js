@@ -15,6 +15,7 @@ define([
             self.dashboard = $b.dashboard;
             self.rightPanelUtil = new rpu.RightPanelUtil();
             var ctxUtil = new contextModel();
+            var omcTimeConstants = ctxUtil.OMCTimeConstants;
             var omcContext = null;
             self.tilesViewModel = $b.getDashboardTilesViewModel ? $b.getDashboardTilesViewModel() : null;
             self.isDashboardSet = isDashboardSet;
@@ -48,7 +49,7 @@ define([
                     tsel:
                         {entitySupport: "byCriteria", entityContext: ""},
                     timeSel:
-                        {defaultValue: "last14days", start: "", end: ""},
+                        {defaultValue: "LAST_14_DAY", start: "", end: ""},
                     autoRefresh:
                         {defaultValue: 300000}
             };
@@ -173,7 +174,7 @@ define([
                 timePeriod = timeContext.timePeriod;
                 
                 //2. update/refresh value of entity seletor accordingly
-                if(ctxUtil.formalizeTimePeriod(timePeriod) && ctxUtil.formalizeTimePeriod(timePeriod) !== "CUSTOM") {
+                if(ctxUtil.formalizeTimePeriod(timePeriod) && ctxUtil.formalizeTimePeriod(timePeriod) !== omcTimeConstants.QUICK_PICK.CUSTOM) {
                     if(self.isDashboardSet) {
                         dashboardTilesViewModel.timePeriod(timePeriod);
                     }else {
@@ -181,14 +182,14 @@ define([
                             headerViewModel.brandingbarParams.timeSelectorParams.timePeriod(timePeriod);
                         }
                     }                    
-                }else if(ctxUtil.formalizeTimePeriod(timePeriod) === "CUSTOM" && start instanceof Date && end instanceof Date) {
+                }else if(ctxUtil.formalizeTimePeriod(timePeriod) === omcTimeConstants.QUICK_PICK.CUSTOM && start instanceof Date && end instanceof Date) {
                     if(self.isDashboardSet) {
-                        dashboardTilesViewModel.timePeriod("CUSTOM");
+                        dashboardTilesViewModel.timePeriod(omcTimeConstants.QUICK_PICK.CUSTOM);
                         dashboardTilesViewModel.initStart(start);
                         dashboardTilesViewModel.initEnd(end);
                     }else {
                         if(headerViewModel) {
-                            headerViewModel.brandingbarParams.timeSelectorParams.timePeriod("CUSTOM");
+                            headerViewModel.brandingbarParams.timeSelectorParams.timePeriod(omcTimeConstants.QUICK_PICK.CUSTOM);
                             headerViewModel.brandingbarParams.timeSelectorParams.startDateTime(start);
                             headerViewModel.brandingbarParams.timeSelectorParams.endDateTime(end);
                         }
@@ -197,9 +198,9 @@ define([
                 //3. change time context in timeSelectorModel and fire event to widgets
                 var viewStart = start;
                 var viewEnd = end;
-                var viewTimePeriod = (timePeriod === null) ? "Last 14 days" : timePeriod;
+                var viewTimePeriod = (timePeriod === null) ? omcTimeConstants.QUICK_PICK.LAST_14_DAY : timePeriod;
                 if(ctxUtil.formalizeTimePeriod(timePeriod)) {
-                    if(ctxUtil.formalizeTimePeriod(timePeriod) !== "CUSTOM") { //get start and end time for relative time period
+                    if(ctxUtil.formalizeTimePeriod(timePeriod) !== omcTimeConstants.QUICK_PICK.CUSTOM) { //get start and end time for relative time period
                         var tmp = ctxUtil.getStartEndTimeFromTimePeriod(ctxUtil.formalizeTimePeriod(timePeriod));
                         if(tmp) {
                             viewStart = tmp.start;
@@ -249,7 +250,11 @@ define([
             
             self.defaultTimeRangeValueText = ko.computed(function() {
                 if((self.defaultTimeRangeValue()[0] !== "custom") && (self.defaultTimeRangeValue()[0] !== "custom1")) {
-                    return self.rightPanelUtil.getDefaultTimeRangeValueText(self.defaultTimeRangeValue()[0]);
+                    var timeLabel = self.rightPanelUtil.getDefaultTimeRangeValueText(self.defaultTimeRangeValue()[0]);
+                    if(timeLabel) {
+                        return timeLabel;
+                    }
+                    return self.rightPanelUtil.getFlexTimePeriod(self.defaultTimeRangeValue()[0]);
                 }else {
                     return self.rightPanelUtil.getTimeInfo(self.defaultStartTime(), self.defaultEndTime());
                 }
@@ -361,7 +366,7 @@ define([
                 self.tilesViewModel = tilesViewModel;
                 var dashboard = tilesViewModel.dashboard;
                 if(!dashboard.extendedOptions) {
-                    dashboard.extendedOptions = ko.observable("{\"tsel\": {\"entitySupport\": \"byCriteria\", \"entityContext\": \"\"}, \"timeSel\": {\"defaultValue\": \"last14days\", \"start\": 0, \"end\": 0}}");
+                    dashboard.extendedOptions = ko.observable("{\"tsel\": {\"entitySupport\": \"byCriteria\", \"entityContext\": \"\"}, \"timeSel\": {\"defaultValue\": \"LAST_14_DAY\", \"start\": 0, \"end\": 0}}");
                 }
                 self.dashboard = dashboard;
                 var extendedOptions = JSON.parse(dashboard.extendedOptions());

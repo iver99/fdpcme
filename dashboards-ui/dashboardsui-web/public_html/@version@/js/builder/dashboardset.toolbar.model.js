@@ -36,6 +36,8 @@ define(['knockout',
             });
 
             self.isDashboardSet = ko.observable(ko.unwrap(dashboardInst.type)  === "SET");
+            
+            self.canLazyInitSetOptionMenu = ko.observable(false);
 
             var zdtUtil = new zdtUtilModel();
             self.zdtStatus = ko.observable(false);
@@ -169,10 +171,18 @@ define(['knockout',
                         self.dbConfigMenuClick.homeDbs(self);
                         break;
                     case 'dbs-delete':
+                        self.renderDeletionDialogs(true);
                         $('#deleteDashboardset').ojDialog("open");
                         break;
                     default:
                         break;
+                }
+            };
+            
+            self.dbdSetOptionBeforeOpen = function(){
+                if(!self.canLazyInitSetOptionMenu()){
+                    self.canLazyInitSetOptionMenu(true);
+                    $('#dbd-set-option').ojMenu("refresh");
                 }
             };
             
@@ -337,6 +347,8 @@ define(['knockout',
                 $('#duplicateDsbDialog').ojDialog('close');
             };
 
+            /* defer rendering of dashboard set and dashboard dialog until deletion button is clicked */
+            self.renderDeletionDialogs = ko.observable(false);
             self.dbConfigMenuClick = new dbConfigMenuClick();
 
             self.dashboardsetMenu = ko.observableArray([
@@ -562,7 +574,6 @@ define(['knockout',
                                 "content": $("<div class='dbd-info other-nav-info' id='dashboardTabInfo-" + dashboardId + "'></div>"),
                                 "index": insertIndex
                             });
-                    $("#dbd-tabs-container").ojTabs("refresh");
                 }
 
             function findTargetInArr(dashboardsetItems,dashboardPickerId){
@@ -803,6 +814,7 @@ define(['knockout',
 
            self.removeDashboardInSet = function (removeId,currentSelectedItem,whetherDelete,event){
                 if (self.dashboardInstMap[removeId].type !== 'new' && self.dashboardInstMap[removeId].$b.isDashboardUpdated() === true && !whetherDelete) {
+                    self.renderDeletionDialogs(true);
                     $('#deleteDashboard').ojDialog("open");
                     event.preventDefault();
                 } else {

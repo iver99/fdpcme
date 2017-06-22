@@ -12,6 +12,7 @@ import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
@@ -992,8 +993,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 		wait.until(ExpectedConditions.visibilityOf(dashboardSetContainer));
 		WaitUtil.waitForPageFullyLoaded(driver);
-		driver.takeScreenShot();
-
+		
 		List<WebElement> navs = driver.getWebDriver().findElements(By.cssSelector(DashBoardPageId_190.DASHBOARDSETNAVSCSS));
 		if (navs == null || navs.isEmpty()) {
 			throw new NoSuchElementException(
@@ -1007,8 +1007,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 				nav.click();
 				break;
 			}
-		}
-		driver.takeScreenShot();
+		}		
 		driver.getLogger().info("DashboardBuilderUtil.selectDashboardInsideSet completed");
 	}
 
@@ -1464,29 +1463,33 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	private void clickTileOpenInDataExplorerButton(WebDriver driver, String widgetName, int index)
 	{
 		driver.getLogger().info("Start to find widget with widgetName=" + widgetName + ", index=" + index);
-		WebElement widgetTitle = getTileTitleElement(driver, widgetName, index);
-		if (widgetTitle == null) {
-			throw new NoSuchElementException("Widget with title=" + widgetName + ", index=" + index + " is not found");
-		}
-		driver.getLogger().info("Found widget with name=" + widgetName + ", index =" + index + " before opening widget link");
-		WebElement widgetDataExplore = widgetTitle.findElement(By.xpath(DashBoardPageId_190.BUILDERTILEDATAEXPLORELOCATOR));
-		if (widgetDataExplore == null) {
-			throw new NoSuchElementException("Widget data explorer link for title=" + widgetName + ", index=" + index
-					+ " is not found");
-		}
-		driver.getLogger().info("Found widget configure button");
-		Actions builder = new Actions(driver.getWebDriver());
-		driver.getLogger().info("Now moving to the widget title bar");
-		builder.moveToElement(widgetTitle).perform();
-		driver.waitForServer();
-		driver.takeScreenShot();
-		driver.getLogger().info("and clicks the widget config button");
-		//		builder.moveToElement(widgetDataExplore).click().perform();
-		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		wait.until(ExpectedConditions.elementToBeClickable(widgetDataExplore));
-		widgetDataExplore.click();
-		driver.waitForServer();
-		driver.takeScreenShot();
+        WebElement widgetTitle = getTileTitleElement(driver, widgetName, index);
+        driver.getLogger().info("Found widget configure button");
+        Actions builder = new Actions(driver.getWebDriver());
+        driver.getLogger().info("Now moving to the widget title bar");
+        builder.moveToElement(widgetTitle).perform();
+        //driver.waitForServer();
+        driver.takeScreenShot();
+        if (widgetTitle == null) {
+                throw new NoSuchElementException("Widget with title=" + widgetName + ", index=" + index + " is not found");
+        }
+        driver.getLogger().info("Found widget with name=" + widgetName + ", index =" + index + " before opening widget link");
+        WebElement widgetDataExplore = widgetTitle.findElement(By.xpath(DashBoardPageId_190.BUILDERTILEDATAEXPLORELOCATOR));
+        if (widgetDataExplore == null) {
+                throw new NoSuchElementException("Widget data explorer link for title=" + widgetName + ", index=" + index
+                                + " is not found");
+        }
+        driver.getLogger().info("Found widget configure button");
+        driver.takeScreenShot();
+        //driver.getLogger().info("and clicks the widget config button");
+        builder.moveToElement(widgetDataExplore).click().perform();
+        //WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
+        //wait.until(ExpectedConditions.elementToBeClickable(widgetDataExplore));
+        //widgetDataExplore.click();
+        driver.takeScreenShot();
+        driver.waitForServer();
+        driver.takeScreenShot();
+
 
 	}
 
@@ -1623,17 +1626,31 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	}
 
 	private WebElement getTileTitleElement(WebDriver driver, String widgetName, int index)
-	{
+    {
+        org.openqa.selenium.WebDriver openDriver;
+        openDriver = driver.getWebDriver();
+        String titleXpath;
+
 		driver.waitForElementPresent(DashBoardPageId_190.BUILDERTILESEDITAREA);
-		driver.click(DashBoardPageId_190.BUILDERTILESEDITAREA);
+		//driver.getWebDriver().findElement(By.id(DashBoardPageId_190.BUILDERTILESEDITAREA)).click();
+ 	        //WebElement element = driver.getElement("//button[contains(@id,'rightpanel-pencil')]");
+        	//element.click();
+                //JavascriptExecutor jse =(JavascriptExecutor)driver.getWebDriver();
+                //jse.executeScript("arguments[0].click();", element);
+                driver.waitForServer();
+		driver.takeScreenShot();
+		//driver.click(DashBoardPageId_190.BUILDERTILESEDITAREA);
 
 		String titleTitlesLocator = String.format(DashBoardPageId_190.BUILDERTILETITLELOCATOR, widgetName);
 		List<WebElement> tileTitles = driver.getWebDriver().findElements(By.xpath(titleTitlesLocator));
 		if (tileTitles == null || tileTitles.size() <= index) {
 			throw new NoSuchElementException("Tile with title=" + widgetName + ", index=" + index + " is not found");
 		}
-		tileTitles.get(index).click();
-		driver.waitForServer();
+        //tileTitles.get(index).click();
+        titleXpath = tileTitles.get(index).toString();
+        //((JavascriptExecutor) openDriver).executeScript("arguments[0].click();", tileTitles.get(index));
+        new Actions(driver.getWebDriver()).moveToElement(tileTitles.get(index)).perform();	
+    	driver.waitForServer();
 		driver.takeScreenShot();
 		return tileTitles.get(index);
 	}

@@ -10,7 +10,10 @@ import java.util.List;
 import javax.ws.rs.core.Response;
 
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.resource.TenantWithoutSubscriptionException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.UserOptionsNotFoundException;
+
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.testng.Assert;
@@ -27,11 +30,14 @@ import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.core.model.PaginatedDashboards;
+import oracle.sysman.emaas.platform.dashboards.core.model.Tile;
 import oracle.sysman.emaas.platform.dashboards.core.model.UserOptions;
 import oracle.sysman.emaas.platform.dashboards.core.model.combined.CombinedDashboard;
 import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.ssfDatautil.SSFDataUtil;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.DashboardAPIUtil;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.ScreenshotData;
 
 
 
@@ -71,7 +77,8 @@ public class DashboardAPITest
 		};
 		assertCreateDashboard();
 	}
-
+	
+	
 	@Test
 	public void testCreateDashboardWithBasicServiceMalfunctionException(@Mocked final DependencyStatus anyDependencyStatus) throws Exception
 	{
@@ -302,6 +309,81 @@ public class DashboardAPITest
 		};
 		assertQueryDashboardById();
 	}
+	
+	@Test
+	public void testExportDashboard(@Mocked final DependencyStatus anyDependencyStatus, 
+			@Mocked final CombinedDashboard combinedDashboard,
+			@Mocked final JSONObject obj,
+			@Mocked final SSFDataUtil ssfUtil) throws Exception, TenantWithoutSubscriptionException {
+		final List<BigInteger> dbdIds = new ArrayList<BigInteger>();
+		dbdIds.add(new BigInteger("24"));
+		final List<Dashboard> subDbds = new ArrayList<Dashboard>();
+		subDbds.add(new Dashboard());
+		final List<Tile> allTiles = new ArrayList<Tile>();
+		allTiles.add(new Tile());
+		final BigInteger id = new BigInteger("123");
+		    
+		new Expectations() {
+			{
+				anyDependencyStatus.isDatabaseUp();
+				result = true;
+				
+				mockedDashboardManager.getDashboardIdsByNames((List<String>)any, anyLong);
+				result = dbdIds;
+				
+				mockedDashboardManager.getDashboardById((BigInteger) any, anyLong);
+      			result = combinedDashboard;
+				
+      			combinedDashboard.getSubDashboards();
+				result = subDbds;
+				
+				combinedDashboard.getDashboardId();
+				result = id;
+				
+				combinedDashboard.getTileList();
+				result = allTiles;
+				 
+				mockedDashboardManager.getDashboardBase64ScreenShotById((BigInteger)any, anyLong);
+				result = new ScreenshotData(anyString, null, null);		
+				
+				ssfUtil.getSSFData(anyString, anyString);
+				result = "{\"name\":\"search\"}";
+				
+			}
+		};
+		assertExportDashboard();
+	}
+	
+	@Test
+	public void testImportDashboard(@Mocked final DependencyStatus anyDependencyStatus, 
+			@Mocked final SSFDataUtil ssfUtil,
+			@Mocked final Dashboard dbd
+			) throws Exception, TenantWithoutSubscriptionException {	
+		Tile tile = new Tile();
+		tile.setWidgetUniqueId("123456");
+		final List<Tile> tiles = new ArrayList<Tile>();
+		tiles.add(tile);
+		new Expectations() {
+			{
+				anyDependencyStatus.isDatabaseUp();
+				result = true;
+				ssfUtil.saveSSFData(anyString, anyString, anyBoolean);
+				result = "{\"1\":\"1234\"}";
+				
+				dbd.getType();
+				result = "SET";
+				
+				dbd.getTileList();
+				result = tiles;
+				
+				mockedDashboardManager.saveForImportedDashboard(dbd, anyLong, anyBoolean);
+				result = dbd;
+				
+			}
+		};
+		assertImportDashboardOverride();
+	}
+	
 
 	@Test
 	public void testQueryCombinedData(@Mocked final DependencyStatus anyDependencyStatus) throws Exception
@@ -497,6 +579,8 @@ public class DashboardAPITest
 		};
 		assertUpdateDashboard();
 	}
+	
+	
 
 	@Test
 	public void testUpdateDashboardWithCommonSecurityException(@Mocked final JsonUtil mockedJsonUtil) throws Exception
@@ -646,13 +730,26 @@ public class DashboardAPITest
 		Assert.assertNotNull(dashboardAPI.queryDashboardById("tenant01", "tenant01.emcsadmin",
 				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101", BigInteger.valueOf(123L)));
 	}
+	
+	private void assertExportDashboard() throws JSONException
+	{
+		Assert.assertNotNull(dashboardAPI.exportDashboards("tenant01", "tenant01.emcsadmin", "https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101",
+				new JSONArray("[\"DashboardName\"]")));
+	}
+	
+	private void assertImportDashboardOverride() throws JSONException
+	{
+		Assert.assertNotNull(dashboardAPI.importDashboards("tenant01", "tenant01.emcsadmin", "https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101",true,
+				new JSONArray("[{\"Dashboard\": [{\"name\": \"Import Export Sub Dashboard_2\", \"tiles\": [{ \"type\": \"DEFAULT\",\"row\": 0,\"WIDGET_UNIQUE_ID\": \"3201\"}],\"id\": \"255446032935128268636523999445694642173\"},{\"name\": \"TestPamelaDBD_1\",\"description\": \"testDBD\",\"enableDescription\": \"FALSE\",\"userOptions\": {\"userName\": \"emcsadmin\",\"dashboardId\": \"270540442558749074000543557139546793426\",\"autoRefreshInterval\": 300000},\"type\": \"SET\",\"subDashboards\": [{\"name\": \"Import Export Sub Dashboard_2\",\"tiles\": [{ \"type\": \"DEFAULT\",\"row\": 0,\"WIDGET_UNIQUE_ID\": \"3201\"}],\"id\": \"255446032935128268636523999445694642173\"}]}],\"Savedsearch\": [{\"creationDate\": \"2017-04-14T02:24:14.287Z\",\"lastModificationDate\": \"2017-04-14T02:24:14.287Z\",\"id\": \"271515282512072253341097402942789505632\"}]}]")));
+	
+	}
 
 	private void assertQueryCombinedDashboardById()
 	{
 		Assert.assertNotNull(dashboardAPI.queryCombinedData("tenant01", "tenant01.emcsadmin",
 				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101", BigInteger.valueOf(123L), null));
 	}
-
+ 
 	private void assertQueryDashboards()
 	{
 		Assert.assertNotNull(dashboardAPI.queryDashboards("tenant01", "tenant01.emcsadmin",

@@ -29,6 +29,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.entitiesList = ko.observableArray();
             self.timeCxtText = ko.observable();
 
+            self.renderEmaasAppheaderGlobalNavMenu = ko.observable(false);
 
             self.userName = $.isFunction(params.userName) ? params.userName() : params.userName;
             self.tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
@@ -109,7 +110,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 self.udeTopologyData = data;
             };
             self.updateGlobalContextByTopologySelection = params.updateGlobalContextByTopologySelection;
-
+            self.showMaxMinButtonInDF = ko.observable(true);
+            self.showEnterpriseTopology = true;
             if (params) {
                 self.associations(params.associations);
                 self.layout(params.layout);
@@ -121,7 +123,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             var dfu = new dfumodel(self.userName, self.tenantName);
             //Append uifwk css file into document head
             dfu.loadUifwkCss();
-
+            //self.udeEnterPriseTopologyLanded = false;
             if (!ko.components.isRegistered('emctas-globalbar'))
             {
                 var versionedTemplate = window.getSDKVersionFile ?
@@ -134,6 +136,12 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     template: {require: 'text!' + template}
                 });
             }
+            window.emctasGlobalBarCallback = function () {
+                //enable enterpriseTopology
+                self.udeEnterPriseTopologyLanded = true;
+                self.topologyDisabled(false);
+                restoreTopologyDisplayStatus();
+            };
 
             if (self.showGlobalContextBanner() === true) {
                 refreshOMCContext();
@@ -288,7 +296,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.topologyHeight = ko.observable();
             self.topologySize.subscribe(function (topoHeight) {
                 var legendHeight = 0;
-                if($("#ude_topology_legend").length > 0) { //Re-set legend height if there is legend.
+                if ($("#ude_topology_legend").length > 0) { //Re-set legend height if there is legend.
                     //TO DO: hard-code legend height for now. Need to get legend height dynamically after UDE support it later.
                     legendHeight = 300;
                 }
@@ -327,21 +335,39 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 $b && $b.triggerBuilderResizeEvent('Topology is restored!');
             };
             self.maxMinTopologyToggle = function () {
-                if (!self.isMaximized()) {
-                    self.maximizeTopology();
-                } else {
-                    self.restoreTopology();
+                if (self.showMaxMinButtonInDF() === true) {
+                    if (!self.isMaximized()) {
+                        self.maximizeTopology();
+                    } else {
+                        self.restoreTopology();
+                    }
                 }
             };
 
             self.topologyCssHeight = ko.observable();
             self.topologyStyle = ko.computed(function () {
-                var height = "100%; max-height: 204px"
-                if (self.topologyCssHeight()) {
-                    height = (self.topologyCssHeight() + 3) + "px";
+                if (self.showMaxMinButtonInDF() === true) {
+                    var height = "100%; max-height: 204px";
+                    if (self.topologyCssHeight()) {
+                        height = (self.topologyCssHeight() + 3) + "px";
+                    }
+                    return "display: flex; float: left; width: 100%; height: " + height + ";";
+                } else {
+                    return "height:100%;width:100%;";
                 }
-                return "display: flex; float: left; width: 100%; height: " + height + ";";
             });
+
+            /*
+             * Called by UDE if topology is maximized or restored
+             */
+            self.topologyResizeCallback = function (isMaximized) {
+                var $b = $(".right-panel-toggler:visible")[0] && ko.dataFor($(".right-panel-toggler:visible")[0]).$b;
+                if (isMaximized) {
+                    $b && $b.triggerBuilderResizeEvent('Topology is maximized!');
+                } else {
+                    $b && $b.triggerBuilderResizeEvent('Topology is restored!');
+                }
+            };
 
             //NLS strings
             self.productName = nls.BRANDING_BAR_MANAGEMENT_CLOUD;
@@ -366,7 +392,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.removePillTitle = nls.PILL_REMOVE_TITLE;
             self.appName = ko.observable();
 
-            self.hasMessages = ko.observable(true);
+            self.hasMessages = ko.observable(false);
             self.messageList = ko.observableArray();
             self.clearMessageIcon = "/emsaasui/uifwk/@version@/images/widgets/clearEntry_ena.png";
             var errorMessageIcon = "/emsaasui/uifwk/@version@/images/widgets/stat_error_16.png";
@@ -511,6 +537,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.sessionTimeoutBtnOK = nls.BRANDING_BAR_SESSION_TIMEOUT_DIALOG_BTN_OK;
             self.sessionTimeoutWarnDialogId = 'sessionTimeoutWarnDialog';
             self.sessionTimeoutWarnIcon = warnMessageIcon;
+            self.renderSessionTimeoutDialog = ko.observable(false);
 
             //Fetch and set sso logout url and session expiry time
             dfu.getRegistrations(function (data) {
@@ -666,11 +693,13 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 }
             };
 
-            $("#emaasAppheaderGlobalNavMenuId").ojMenu({
-                "beforeOpen": function (event, ui) {
+            self.emaasAppheaderGlobalNavMenuBeforeOpen = function(){
+                if(!self.renderEmaasAppheaderGlobalNavMenu()){
+                    self.renderEmaasAppheaderGlobalNavMenu(true);
+                    $('#emaasAppheaderGlobalNavMenuId').ojMenu("refresh");
                     self.aboutBoxImmediateLoading(true);
                 }
-            });
+            };
 
             var templatePath = "uifwk/js/widgets/navlinks/html/navigation-links.html";
             var vmPath = "uifwk/js/widgets/navlinks/js/navigation-links";
@@ -756,6 +785,19 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 }
             }
             
+            function triggerDashboardResizeEvent(message) {
+                if (window.selectedDashboardInst && window.selectedDashboardInst() && window.selectedDashboardInst().$b) {
+                    window.selectedDashboardInst().$b.triggerBuilderResizeEvent(message);
+                }
+                else if ($(".right-panel-toggler")[0] && ko.dataFor($(".right-panel-toggler")[0])) {
+                    var $b = ko.dataFor($(".right-panel-toggler")[0]).$b;
+                    $b && $b.triggerBuilderResizeEvent(message);
+                }
+                else {
+                    $(window).trigger('resize');
+                }
+            }
+            
             self.hamburgerMenuEnabled = omcHamburgerMenuOptIn ? true : false;
             self.isHamburgerMenuRegistered = ko.observable(false);
             if (omcHamburgerMenuOptIn) {
@@ -781,9 +823,62 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     injectHamburgerMenuComponent();
                 }
                 
+                function resetCurrentHamburgerMenu() {
+                    //Show composite menu if it's called before hamburger menu finished loading
+                    if (window._uifwk && window._uifwk.compositeMenuName && window._uifwk.compositeMenuJson 
+                            && window._uifwk.stayInComposite && !window._uifwk.isCompositeMenuShown) {
+                        menuUtil.showCompositeObjectMenu(window._uifwk.compositeMenuParentId,
+                                                        window._uifwk.compositeMenuName, 
+                                                        window._uifwk.compositeMenuJson, 
+                                                        window._uifwk.compositeMenuCollapseCallback);
+                    }
+                    //Set current menu item if specified by API call
+                    if (window._uifwk && window._uifwk.currentOmcMenuItemId) {
+                        menuUtil.setCurrentMenuItem(window._uifwk.currentOmcMenuItemId, window._uifwk.underOmcAdmin);
+                    }
+                    else {
+                        //Set current menu item if specified from branding bar params
+                        var selectedMenuId = params.omcCurrentMenuId;
+                        if (selectedMenuId) {
+                            menuUtil.setCurrentMenuItem(selectedMenuId);
+                        }
+                    }
+                }
+                
+                (function() {
+                    if (!window._uifwk) {
+                        window._uifwk = {};
+                    }
+                    var beforePrint = function() {
+                        window._uifwk.isUnderPrint = true;
+                    };
+
+                    var afterPrint = function() {
+                        window._uifwk.isUnderPrint = false;
+                    };
+
+                    if (window.matchMedia) {
+                        var mediaQueryList = window.matchMedia('print');
+                        mediaQueryList.addListener(function(mql) {
+                            if (mql.matches) {
+                                beforePrint();
+                            } else {
+                                afterPrint();
+                            }
+                        });
+                    }
+
+                    window.onbeforeprint = beforePrint;
+                    window.onafterprint = afterPrint;
+
+                }());
+                
                 self.xlargeScreen = oj.ResponsiveKnockoutUtils.createMediaQueryObservable('(min-width: 1440px)');
 
                 self.xlargeScreen.subscribe(function(isXlarge){
+                    if (window._uifwk && (window._uifwk.isUnderPrint || window._uifwk.resizeTriggeredByPrint)) {
+                        return;
+                    }
                     if(!isXlarge){
                         if($("#omcHamburgerMenu").hasClass("oj-offcanvas-open")){
                             oj.OffcanvasUtils.close({
@@ -800,6 +895,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                                     "selector": "#omcHamburgerMenu",
                                     "autoDismiss": "none"
                                 });
+                            resetCurrentHamburgerMenu();
                         }else if($("#omcHamburgerMenu").hasClass("oj-offcanvas-overlay")){
                                 oj.OffcanvasUtils.close({
                                     "edge": "start",
@@ -814,19 +910,23 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                                             "selector": "#omcHamburgerMenu",
                                             "autoDismiss": "none"
                                         });
+                                        resetCurrentHamburgerMenu();
                                 },500);
                         }
                     }
                 });
 
                 self.toggleHamburgerMenu = function() {
-                    return oj.OffcanvasUtils.toggle({
+                    oj.OffcanvasUtils.toggle({
                             "edge": "start",
                             "displayMode": self.xlargeScreen() ? "push" : "overlay",
     //                      "content": "#main-container",
                             "selector": "#omcHamburgerMenu",
                             "autoDismiss": self.xlargeScreen() ? "none" : "focusLoss"
                         });
+                    if($("#omcHamburgerMenu").hasClass("oj-offcanvas-open")) {
+                        resetCurrentHamburgerMenu();
+                    }
                 };
 
                 var menuUtil = new menuModel();
@@ -836,13 +936,22 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 if (!window._uifwk.obbMenuLoadedListenerRegistered) {
                 menuUtil.subscribeServiceMenuLoadedEvent(function(){
                     $("#omcHamburgerMenu").on("ojopen", function(event, offcanvas) {
-                        if(offcanvas.displayMode === "push")
+                        if(offcanvas.displayMode === "push") {
                             $("#offcanvasInnerContainer").width(document.body.clientWidth-250);
-                        });
+                            triggerDashboardResizeEvent('Hamburger menu opened.');
+                        }});
+                        
                     $("#omcHamburgerMenu").on("ojclose", function(event, offcanvas) {
                         $("#offcanvasInnerContainer").width(document.body.clientWidth);
+                        triggerDashboardResizeEvent('Hamburger menu closed.');
                     });
                     $(window).resize(function() {
+                        if (window._uifwk.isUnderPrint) {
+                            window._uifwk.resizeTriggeredByPrint = true;
+                        }
+                        else {
+                            window._uifwk.resizeTriggeredByPrint = false;
+                        }
                         if ($("#omcHamburgerMenu").hasClass("oj-offcanvas-open") && !$("#omcHamburgerMenu").hasClass("oj-offcanvas-overlay")) {
                             $("#offcanvasInnerContainer").width(document.body.clientWidth - 250);
                         } else {
@@ -858,6 +967,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                                     "selector": "#omcHamburgerMenu",
                                     "autoDismiss": "none"
                                 });
+                            triggerDashboardResizeEvent('Hamburger menu opened.');
                         })());
                     }
                     
@@ -1011,6 +1121,10 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         refreshOMCContext();
                     }
                 }
+                else if (data && data.tag && data.tag === 'EMAAS_OMC_SESSION_TIME_OUT') {
+                    self.renderSessionTimeoutDialog(true);
+                    dfu.showSessionTimeoutWarningDialog(self.sessionTimeoutWarnDialogId);
+                }
             }
 
             function fireTopologyStatusChangeEvent(actionType) {
@@ -1154,6 +1268,25 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                             var newMsg = hiddenMessages[0];
                             displayMessages.push(newMsg);
                             hiddenMessages = removeItemByPropertyValue(hiddenMessages, 'id', newMsg.id);
+                            displayMessageCount++;
+                        }
+                    }
+                    if (data.category === catRetryFail) {
+                        currentRetryFailMsgId = null;
+                    }
+                    if (data.category === catPlannedDowntime) {
+                        currentPlannedDowntimeMsgId = null;
+                    }
+                }else if(data && data.category){
+                    var originDispMsgCnt = displayMessages.length;
+                    hiddenMessages = removeItemByPropertyValue(hiddenMessages, 'category', data.category);
+                    displayMessages = removeItemByPropertyValue(displayMessages, 'category', data.category);
+                    if (originDispMsgCnt > displayMessages.length) {
+                        displayMessageCount--;
+                        if (hiddenMessages.length > 0) {
+                            var newMsg = hiddenMessages[0];
+                            displayMessages.push(newMsg);
+                            hiddenMessages = removeItemByPropertyValue(hiddenMessages, 'category', newMsg.category);
                             displayMessageCount++;
                         }
                     }
@@ -1338,6 +1471,22 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                             self.miniEntityCardActions(topologyParams.miniEntityCardActions);
                             self.topologyParamsSet = true;
                         }
+                        else {
+                            self.associations(null);
+                            self.customNodeDataLoader(null);
+                            self.customEventHandler(null);
+                            self.miniEntityCardActions(true);
+                            self.topologyParamsSet = true;
+                        }
+                        if (self.udeEnterPriseTopologyLanded && self.showEnterpriseTopology) { // set queryvar with   non-empty for enterprise topology
+                            self.layout("LINEAR");
+                            self.queryVars({entityName: "All Entities", entityType: "Enterprise Topology"});
+                        }
+                        else {
+                            self.layout("TIERED");
+                            self.queryVars(null);
+                        }
+
                         $(".ude-topology-in-brandingbar .oj-diagram").ojDiagram("refresh");
                         if (self.isTopologyDisplayed()) {
                             console.log("***************topology initialied");
@@ -1374,16 +1523,23 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     if (!cxtUtil.getCompositeMeId()) {
                         window.centernodeid_diagram = cxtUtil.getEntities()[0]['meId'];
                     }
+                    self.showEnterpriseTopology = false;
+                    window.globalpillsempty = false;
                 }
                 //When no compositeMEID exists, disable topology button
                 else {
-                    //Hide topology
-
+                    //show enterprise topology
+                    self.showEnterpriseTopology = true;
+                    window.globalpillsempty = true;
                     if (self.isTopologyDisplayed() && !self.topologyDisabled()) {
                         self.showTopology();
                     }
-
-                    self.topologyDisabled(true);
+                    if (self.udeEnterPriseTopologyLanded) {
+                        self.topologyDisabled(false);
+                    }
+                    else {
+                        self.topologyDisabled(true);
+                    }
 
                 }
 

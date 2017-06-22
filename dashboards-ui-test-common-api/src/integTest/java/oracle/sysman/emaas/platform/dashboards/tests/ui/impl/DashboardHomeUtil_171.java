@@ -29,6 +29,7 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardHomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
+import org.openqa.selenium.JavascriptExecutor;
 
 public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements IDashboardHomeUtil
 {
@@ -227,7 +228,7 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call gridView");
 		driver.waitForElementPresent(DashBoardPageId.DASHBOARDSGRIDVIEWLOCATOR);
-		driver.takeScreenShot();
+		
 		driver.click(DashBoardPageId.DASHBOARDSGRIDVIEWLOCATOR);
 	}
 
@@ -324,7 +325,7 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call listView");
 		driver.waitForElementPresent(DashBoardPageId.DASHBOARDSLISTVIEWLOCATOR);
-		driver.takeScreenShot();
+		
 		driver.click(DashBoardPageId.DASHBOARDSLISTVIEWLOCATOR);
 	}
 
@@ -377,7 +378,10 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	 */
 	@Override
 	public void search(WebDriver driver, String searchString) 
-	{
+    {
+        org.openqa.selenium.WebDriver openDriver;
+        openDriver = driver.getWebDriver();
+
 		driver.getLogger().info("[DashboardHomeUtil] call search searchString: " + searchString);
 		Validator.notEmptyString("searchString", searchString);
 		driver.getLogger().info("[DashboardHomeUtil] call search");
@@ -385,7 +389,9 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 		driver.getElement(DashBoardPageId.SEARCHDASHBOARDINPUTLOCATOR).clear();
 		driver.click(DashBoardPageId.SEARCHDASHBOARDINPUTLOCATOR);
 		driver.sendKeys(DashBoardPageId.SEARCHDASHBOARDINPUTLOCATOR, searchString);
-		driver.click(DashBoardPageId.SEARCHDASHBOARDSEARCHBTNLOCATOR);
+        //driver.click(DashBoardPageId.SEARCHDASHBOARDSEARCHBTNLOCATOR);
+		driver.waitForServer();
+        ((JavascriptExecutor) openDriver).executeScript("arguments[0].click();", openDriver.findElement(By.xpath(DashBoardPageId.SEARCHDASHBOARDSEARCHBTNLOCATOR)));
 		WaitUtil.waitForPageFullyLoaded(driver);
 	}
 
@@ -514,15 +520,13 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 		Actions actions = new Actions(driver.getWebDriver());
 		driver.getLogger().info("Focus to the table header");
 		actions.moveToElement(tableHeader).build().perform();
-		driver.takeScreenShot();
-
+		
 		driver.getLogger().info("Click Sort icon");
 		actions.moveToElement(tableSort).click().perform();
 
 		driver.takeScreenShot();
 
-		WaitUtil.waitForPageFullyLoaded(driver);
-		driver.takeScreenShot();
+		WaitUtil.waitForPageFullyLoaded(driver);		
 	}
 
 	/* (non-Javadoc)
@@ -541,15 +545,13 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 		Actions actions = new Actions(driver.getWebDriver());
 		driver.getLogger().info("Focus to the table header");
 		actions.moveToElement(tableHeader).build().perform();
-		driver.takeScreenShot();
-
+		
 		driver.getLogger().info("Click Sort icon");
 		actions.moveToElement(tableSort).click().perform();
 
 		driver.takeScreenShot();
 
 		WaitUtil.waitForPageFullyLoaded(driver);
-		driver.takeScreenShot();
 	}
 
 	/* (non-Javadoc)
@@ -568,15 +570,11 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 		driver.getLogger().info("Focus to the table header");
 		actions.moveToElement(tableHeader).build().perform();
 		
-		driver.waitForServer();
-		driver.takeScreenShot();
-
 		driver.getLogger().info("Click Sort icon");
 		actions.moveToElement(tableSort).click().perform();
+		driver.takeScreenShot();		
 		
 		driver.waitForServer();	
-		driver.takeScreenShot();
-
 	}
 
 	/* (non-Javadoc)
