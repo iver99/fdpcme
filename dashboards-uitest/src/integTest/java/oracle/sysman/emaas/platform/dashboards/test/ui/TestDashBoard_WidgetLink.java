@@ -11,6 +11,7 @@
 package oracle.sysman.emaas.platform.dashboards.test.ui;
 
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -48,6 +49,8 @@ public class TestDashBoard_WidgetLink extends LoginAndLogout
 	{
 		dbName_Test = "Test Widget Link-" + DashBoardUtils.generateTimeStamp();
 		dbDesc_Test = "test widget link";
+		
+		dbName2_Test = "link dashboard - " + DashBoardUtils.generateTimeStamp();
 
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start to test in createTestDashboard");
@@ -85,7 +88,30 @@ public class TestDashBoard_WidgetLink extends LoginAndLogout
 
 		//verify dashboard in builder page
 		webd.getLogger().info("Verify the dashboard created Successfully");
-		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName2_Test, dbDesc_Test, true), "Create dashboard failed!");		
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName2_Test, dbDesc_Test, true), "Create dashboard failed!");	
+		
+		LoginAndLogout.logoutMethod();
+	}
+	
+	@AfterClass
+	public void RemoveDashboard()
+	{
+		//Initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to remove test data");
+
+		//delete dashboard
+		webd.getLogger().info("Switch to grid view");
+		DashboardHomeUtil.gridView(webd);
+
+		webd.getLogger().info("Start to remove the test data...");
+		DashBoardUtils.deleteDashboard(webd, dbName_Test);
+		DashBoardUtils.deleteDashboard(webd, dbName2_Test);
+		DashBoardUtils.deleteDashboard(webd, dbName3_Test);		
+
+		webd.getLogger().info("All test data have been removed");
+
+		LoginAndLogout.logoutMethod();
 	}
 	
 	@Test
