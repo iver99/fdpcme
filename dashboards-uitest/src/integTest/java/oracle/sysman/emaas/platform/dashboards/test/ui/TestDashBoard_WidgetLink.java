@@ -212,6 +212,8 @@ public class TestDashBoard_WidgetLink extends LoginAndLogout
 		DashboardBuilderUtil.showWidgetTitle(webd, widgetName, false);
 		
 		//verify that Add link is disabled
+		webd.getLogger().info("Verify that the link can't be added");
+		DashBoardUtils.verifyAddLinkButton(webd, widgetName, 0);
 		
 		//show the title
 		webd.getLogger().info("Show the widget title");

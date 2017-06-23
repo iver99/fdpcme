@@ -9,6 +9,7 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.WelcomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_1150;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_1180;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_1200;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_190;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
@@ -1188,6 +1189,50 @@ public class DashBoardUtils
 			default:
 				webdriver.getLogger().info("The tenantType is: " + tenantType);
 		}
+	}
+	
+	public static void verifyAddLinkButton(WebDriver webdriver, String widgetName, int index)
+	{	    	
+		Validator.notEmptyString("widgetName", widgetName);
+		Validator.equalOrLargerThan0("index", index);
+
+		webdriver.waitForElementPresent(DashBoardPageId_190.BUILDERTILESEDITAREA);
+		WebDriverWait wait = new WebDriverWait(webdriver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(DashBoardPageId_190.BUILDERTILESEDITAREA)));
+		WaitUtil.waitForPageFullyLoaded(webdriver);
+		
+		String titleTitlesLocator = String.format(DashBoardPageId_190.BUILDERTILETITLELOCATOR, widgetName);
+		
+		List<WebElement> tileTitles = webdriver.getWebDriver().findElements(By.xpath(titleTitlesLocator));
+		if (tileTitles == null || tileTitles.size() <= index) {
+			throw new NoSuchElementException("Tile with title=" + widgetName + ", index=" + index + " is not found");
+		}
+        
+        String titleXpath = tileTitles.get(index).toString();
+        
+        new Actions(webdriver.getWebDriver()).moveToElement(tileTitles.get(index)).perform();	
+        webdriver.waitForServer();
+        webdriver.takeScreenShot();
+		
+		WebElement tileTitle = tileTitles.get(index);
+		WebElement tileConfig = tileTitle.findElement(By.xpath(DashBoardPageId_190.BUILDERTILECONFIGLOCATOR));
+		if (tileConfig == null) {
+			throw new NoSuchElementException("Tile config menu for title=" + widgetName + ", index=" + index + " is not found");
+		}
+		
+		Actions builder = new Actions(webdriver.getWebDriver());
+		builder.moveToElement(tileTitle).perform();
+		builder.moveToElement(tileConfig).click().perform();
+		
+		//click edit button in widget config menu
+		webdriver.waitForElementPresent(DashBoardPageId_1200.BUILDERTILEEDITLOCATOR);
+		webdriver.click(DashBoardPageId_1200.BUILDERTILEEDITLOCATOR);
+
+		webdriver.waitForElementPresent("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTAREACSSLOCATOR);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTAREACSSLOCATOR)));
+	
+		WebElement searchInput = webdriver.getElement("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHBOXCSSLOCATOR);
+		Assert.assertFalse(searchInput.isEnabled(), "'Search' input box is not diabled");
 	}
 
 	private static String trimUrlParameters(String url)
