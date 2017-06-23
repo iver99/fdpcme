@@ -43,7 +43,7 @@ public class DashboardBuilderUtil_1200 extends DashboardBuilderUtil_1190
 			driver.waitForElementPresent("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHBOXCSSLOCATOR);
 		}
 
-		if(dashboardName != null || !dashboardName.isEmpty()){
+		if(dashboardName != null && !dashboardName.isEmpty()){
 			WebElement searchInput = driver.getElement("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHBOXCSSLOCATOR);
 			// focus on search input box
 			wait.until(ExpectedConditions.elementToBeClickable(searchInput));
@@ -82,8 +82,7 @@ public class DashboardBuilderUtil_1200 extends DashboardBuilderUtil_1190
 				driver.waitForElementPresent("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTADDBTNCSSLOCATOR);
 				driver.click("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTADDBTNCSSLOCATOR);
 
-				driver.getLogger().info("Content added");
-				driver.takeScreenShot();
+				driver.getLogger().info("Content added");			
 			}
 			catch (IllegalArgumentException e) {
 				throw new NoSuchElementException("Content for " + dashboardName + " is not found");
@@ -134,5 +133,62 @@ public class DashboardBuilderUtil_1200 extends DashboardBuilderUtil_1190
 	@Override
 	public boolean verifyLinkOnWidgetTitle(WebDriver driver, String widgetName, String dashboardName){
 		return verifyLinkOnWidgetTitle(driver, widgetName, 0, dashboardName);
+	}
+	
+	@Override
+	public void clickLinkOnWidgetTitle(WebDriver driver, String widgetName, int index)
+	{
+		driver.getLogger().info(
+				"DashboardBuilderUtil.clickLinkOnWidgetTitle started for widgetName=" + widgetName + ", index=" + index);
+		Validator.notEmptyString("widgetName", widgetName);
+		Validator.equalOrLargerThan0("index", index);
+		
+		if(hasWidgetLink(driver, widgetName, index))
+		{
+			String titleTitlesLocator = String.format(DashBoardPageId_1200.BUILDERLINKEDTILETITLELOCATOR, widgetName);
+			List<WebElement> tileTitles = driver.getWebDriver().findElements(By.cssSelector(titleTitlesLocator));
+			
+			tileTitles.get(index).click();
+			driver.takeScreenShot();
+			driver.savePageToFile();			
+		}
+		else
+		{
+			throw new NoSuchElementException("The Widget '" + widgetName + "' doesn't have link");
+		}	
+	}
+	
+	@Override
+	public void clickLinkOnWidgetTitle(WebDriver driver, String widgetName)
+	{
+		clickLinkOnWidgetTitle(driver, widgetName, 0);
+	}
+	
+	@Override
+	public boolean hasWidgetLink(WebDriver driver, String widgetName, int index){
+		driver.getLogger().info(
+				"DashboardBuilderUtil.isWidgetHasLink started for widgetName=" + widgetName + ", index=" + index);
+		Validator.notEmptyString("widgetName", widgetName);
+		Validator.equalOrLargerThan0("index", index);
+
+		driver.waitForElementPresent(DashBoardPageId_190.BUILDERTILESEDITAREA);
+		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(DashBoardPageId_190.BUILDERTILESEDITAREA)));
+		WaitUtil.waitForPageFullyLoaded(driver);
+
+		String titleTitlesLocator = String.format(DashBoardPageId_1200.BUILDERLINKEDTILETITLELOCATOR, widgetName);
+		List<WebElement> tileTitles = driver.getWebDriver().findElements(By.cssSelector(titleTitlesLocator));
+		if (tileTitles == null || tileTitles.size() <= index) {
+			driver.getLogger().info(
+					"isWidgetHasLink compelted and returns false. There is no link in the widget");
+			return false;
+		}else {
+			return true;
+		}		
+	}
+		
+	@Override
+	public boolean hasWidgetLink(WebDriver driver, String widgetName){
+		return hasWidgetLink(driver, widgetName, 0);
 	}
 }

@@ -410,9 +410,45 @@ public class DashboardBuilderUtil
 		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
 		return dbu.verifyWidget(driver, widgetName, index);
 	}
+	
+	public static void clickLinkOnWidgetTitle(WebDriver driver, String widgetName)
+	{		
+		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		dbu.clickLinkOnWidgetTitle(driver, widgetName);
+	}
 
+	/**
+	 * @param driver
+	 * @param widgetName
+	 * @param index
+	 * @return
+	 */
+	public static void clickLinkOnWidgetTitle(WebDriver driver, String widgetName, int index)
+	{
+		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		dbu.clickLinkOnWidgetTitle(driver, widgetName, index);	
+		
+	}
+
+	public static boolean hasWidgetLink(WebDriver driver, String widgetName)
+	{		
+		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		return dbu.hasWidgetLink(driver, widgetName, 0);
+	}
+
+	/**
+	 * @param driver
+	 * @param widgetName
+	 * @param index
+	 * @return
+	 */
+	public static boolean hasWidgetLink(WebDriver driver, String widgetName, int index)
+	{
+		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		return dbu.hasWidgetLink(driver, widgetName, index);	
+		
+	}
 	private DashboardBuilderUtil()
 	{
 	}
-
 }
