@@ -1308,8 +1308,8 @@ public class DashboardCRUD
 			
 			Assert.assertTrue(res1.getStatusCode() == 404);
 
-			Assert.assertEquals(res1.jsonPath().getString("errorCode"), "20001");
-			Assert.assertEquals(res1.jsonPath().getString("errorMessage"), "Specified dashboard is not found");
+			Assert.assertEquals(res1.jsonPath().getString("errorCode"), "20004");
+			Assert.assertEquals(res1.jsonPath().getString("errorMessage"), "Specified Widget is not found!");
 			
 			Response res2 =  RestAssured
 					.given()
@@ -1321,8 +1321,8 @@ public class DashboardCRUD
 			
 			Assert.assertTrue(res2.getStatusCode() == 404);
 
-			Assert.assertEquals(res2.jsonPath().getString("errorCode"), "20001");
-			Assert.assertEquals(res2.jsonPath().getString("errorMessage"), "Specified dashboard is not found");
+			Assert.assertEquals(res2.jsonPath().getString("errorCode"), "20004");
+			Assert.assertEquals(res2.jsonPath().getString("errorMessage"), "Specified Widget is not found!");
 			
 		}
 		catch (Exception e) {
