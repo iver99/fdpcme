@@ -864,6 +864,8 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 	@Test
 	public void testTextWidget()
 	{
+		dbName_textWidget = "Dashboard_textWidget-" + DashBoardUtils.generateTimeStamp();
+		
 		String dbDesc = "Add text widget into dashboard";
 		String content = "This is the dashboard which is used to test the new feature of adding text widget";
 		//String content_Hyperlink = "";
