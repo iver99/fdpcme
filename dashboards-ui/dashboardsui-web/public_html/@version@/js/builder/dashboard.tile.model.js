@@ -1010,6 +1010,7 @@ define(['knockout',
                     hideMainLabel: true,
                     timePeriodsSet: ctxUtil.OMCTimeConstants.timePeriodsSet.SHORT_TERM,
                     enableLatestOnCustomPanel: enableLatestOnCustomPanel,
+                    dtpickerPosition: "left",
                     callbackAfterApply: function(start, end, tp) {
                         callbackAfterApply(start, end, tp);   
                     }
