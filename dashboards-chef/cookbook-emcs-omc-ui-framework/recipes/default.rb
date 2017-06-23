@@ -54,3 +54,15 @@ include_recipe 'cookbook-emcs-emsaas-weblogic::managedServer_setup'
 
 # common app deployment to managed server
 include_recipe 'cookbook-emcs-emsaas-weblogic::managedServer_deployApp'
+
+#Bounce the server to apply oAuth configuration
+oauth_config_success="#{node["log_dir"]}/#{node["SAAS_servicename"]}-oauth-success"
+include_recipe 'cookbook-emcs-emsaas-weblogic::managedServer_stopServer' unless File.exists?("#{oauth_config_success}")
+include_recipe 'cookbook-emcs-emsaas-weblogic::managedServer_startServer' unless File.exists?("#{oauth_config_success}")
+
+bash "success_block" do
+  code <<-EOF
+         echo "OAuth configuration success" > #{oauth_config_success}
+EOF
+end
+
