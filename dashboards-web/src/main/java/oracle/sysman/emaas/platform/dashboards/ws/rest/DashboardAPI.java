@@ -13,10 +13,7 @@ package oracle.sysman.emaas.platform.dashboards.ws.rest;
 import com.sun.jersey.core.util.Base64;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
-import oracle.sysman.emaas.platform.dashboards.core.DashboardConstants;
-import oracle.sysman.emaas.platform.dashboards.core.DashboardManager;
-import oracle.sysman.emaas.platform.dashboards.core.DashboardsFilter;
-import oracle.sysman.emaas.platform.dashboards.core.UserOptionsManager;
+import oracle.sysman.emaas.platform.dashboards.core.*;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.DashboardSameNameException;
@@ -791,7 +788,7 @@ public class DashboardAPI extends APIBase
 			//retrieve search data
 			rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME, tenantName);
 			rc.setHeader(RestClient.X_REMOTE_USER, tenantName+ "." +userName);
-			searchResponse = rc.get(searchHref, tenantName,((RegistryLookupUtil.VersionedLink) searchLink).getAuthToken());
+			searchResponse = rc.getWithException(searchHref, tenantName,((RegistryLookupUtil.VersionedLink) searchLink).getAuthToken());
 			LOGGER.info("Retrieved from SSF API widget data is {}", searchResponse);
 			LOGGER.info("It takes {}ms to retrieve saved search meta data from SavedSearch API", (System.currentTimeMillis()- start));
             JsonUtil ju = JsonUtil.buildNormalMapper();
@@ -805,7 +802,7 @@ public class DashboardAPI extends APIBase
 			Link categoryLink = RegistryLookupUtil.getServiceInternalLink("SavedSearch", "1.0+", "category", null);
 			LOGGER.info("Retrieving category information with id {}", searchModel.getCategory().getId());
 			String categoryHref = categoryLink.getHref() + "/" + searchModel.getCategory().getId();
-			categoryResponse = rc.get(categoryHref, tenantName,((RegistryLookupUtil.VersionedLink) searchLink).getAuthToken());
+			categoryResponse = rc.getWithException(categoryHref, tenantName,((RegistryLookupUtil.VersionedLink) searchLink).getAuthToken());
 			categoryModel = ju.fromJson(categoryResponse, CategoryModel.class);
 			LOGGER.info("Retrieved from SSF API category data is {}", categoryResponse);
 			LOGGER.info("It takes {}ms to retrieve category data from SavedSearch API", (System.currentTimeMillis()- start2));
@@ -818,6 +815,7 @@ public class DashboardAPI extends APIBase
 			return buildErrorResponse(new ErrorEntity(e));
 		}catch (Exception e) {
 			LOGGER.error(e);
+			return buildErrorResponse(new ErrorEntity(DashboardErrorConstants.WIDGET_NOT_EXISTED_EXCEPTION_CODE,"Specified Widget is not found!"));
 		}
 		//check dashboard is existed, if existed, put new widget into last position
 		Long tenantId = null;
@@ -855,6 +853,7 @@ public class DashboardAPI extends APIBase
 
 		} catch (DashboardNotFoundException e) {
 			LOGGER.error(e);
+			return buildErrorResponse(new ErrorEntity(e));
 		}
 		LOGGER.info("Add new Widget into dashboard api tooks {}ms", (System.currentTimeMillis()-start));
 		return Response.ok(getJsonUtil().toJson(dbd)).build();
