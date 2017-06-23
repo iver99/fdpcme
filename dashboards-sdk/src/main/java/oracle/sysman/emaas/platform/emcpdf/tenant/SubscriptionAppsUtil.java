@@ -84,7 +84,7 @@ public class SubscriptionAppsUtil {
         for (SubscriptionApps subscriptionApps : subscriptionAppsList) {
             List editions = getEditions(subscriptionApps.getEditionComponentsList());
             //support v4 tenant and not break v2 tenant.
-            if(editions!=null && !editions.isEmpty() && editions.size() == 5){
+            if(editions!=null && editions.size() == 5){
                 isV4Tenant = true;
                 LOGGER.info("V4 tenant is detected...");
             }
