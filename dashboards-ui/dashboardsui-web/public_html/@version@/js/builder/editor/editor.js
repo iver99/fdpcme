@@ -726,6 +726,8 @@ define(['knockout',
 
                     if (koc_name && viewmodel && template) {
                         if(widget_source === Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK) {
+                            viewmodel = "/emsaasui/emcpdfui/@version@/js/widgets/textwidget/js/dashboardTextWidget.js";
+                            template = "/emsaasui/emcpdfui/@version@/js/widgets/textwidget/dashboardTextWidget.html";
                             Builder.registerComponent(koc_name, viewmodel, template);
                             oj.Logger.log("widget: " + koc_name + " is registered");
                             oj.Logger.log("widget template: " + template);
