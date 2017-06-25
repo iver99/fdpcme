@@ -317,7 +317,7 @@ public class TestDashBoard_WidgetLink extends LoginAndLogout
 		
 		//click the link in widget
 		webd.getLogger().info("Click the widget link");
-		DashboardBuilderUtil.clickLinkOnWidgetTitle(webd, widgetName, 1);
+		DashboardBuilderUtil.clickLinkOnWidgetTitle(webd, widgetName, 0);
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName2_Test, dbDesc_Test, true), "Not open the correct dashboard");
 	}
 }
