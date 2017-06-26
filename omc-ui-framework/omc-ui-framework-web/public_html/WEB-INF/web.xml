@@ -9,6 +9,15 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
+
+  <servlet>
+    <servlet-name>fileServlet</servlet-name>
+    <servlet-class>weblogic.servlet.FileServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>fileServlet</servlet-name>
+    <url-pattern>/*</url-pattern>
+  </servlet-mapping>
   
   <filter>
     <filter-name>OMCMultiInstanceBeginFilter</filter-name>
@@ -25,7 +34,7 @@
     <filter-class>oracle.wsm.agent.handler.servlet.SecurityFilter</filter-class>
     <init-param>
           <param-name>servlet-name</param-name>
-          <param-value>jersey</param-value>
+          <param-value>fileServlet</param-value>
     </init-param>
   </filter>
   <filter-mapping>

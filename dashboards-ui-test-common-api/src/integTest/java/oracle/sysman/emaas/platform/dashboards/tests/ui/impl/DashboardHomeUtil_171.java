@@ -409,7 +409,11 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 
 		boolean isDisplayed=driver.isDisplayed(indicator);
 		driver.getLogger().info("isDisplayed:"+ isDisplayed);
-		driver.click(indicator);
+		driver.waitForElementPresent(indicator);
+		driver.waitForElementEnabled(indicator);
+		driver.getWebDriver().findElement(By.xpath(indicator)).click();
+		//driver.click(indicator);
+		driver.waitForServer();
 		driver.setPageLoadDetector(BuildPageLoadDetector.class);
 		driver.waitForServer(); 
 		driver.setPageLoadDetector(null);

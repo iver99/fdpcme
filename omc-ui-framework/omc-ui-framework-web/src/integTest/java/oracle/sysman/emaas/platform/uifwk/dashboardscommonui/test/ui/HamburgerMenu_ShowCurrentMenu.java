@@ -17,6 +17,7 @@ import oracle.sysman.emaas.platform.uifwk.dashboardscommonui.test.ui.util.UICont
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.openqa.selenium.By;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -41,12 +42,15 @@ public class HamburgerMenu_ShowCurrentMenu extends LoginAndLogout
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), "");
 		webd.getLogger().info("Start the test case: verifyCurrentMenu");
-
+		if(BrandingBarUtil.isHamburgerMenuDisplayed(webd))
+		{
+			BrandingBarUtil.toggleHamburgerMenu(webd);
+		}
 		//click the 'Show Composite' button
 		webd.getLogger().info("Click the 'Set Current Menu' button");
 		String indicator = UIControls.SGENERATEMENUBTN.replace("_name_", "Set Current Menu");
-		webd.click("css=" + indicator);
-
+		//webd.click("css=" + indicator);
+		webd.getWebDriver().findElement(By.cssSelector(indicator)).click();
 		//check the hamburger menu
 		webd.getLogger().info("Check the menu items in hamburger menu");
 		Assert.assertTrue(BrandingBarUtil.isMenuItemExisted(webd, "Alert Rules"));
