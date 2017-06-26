@@ -81,7 +81,7 @@ task onboardAllTenants(dependsOn:[omcOnboardTenants(testTenants_v3)]){
 task suiteLicensingTest(type: EMTest, dependsOn:[onboardAllTenants]){
 options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
 
-     	environment "WEBDRIVER_WAIT_TIMEOUT", "300000"   
+     	environment "WEBDRIVER_WAIT_TIMEOUT", "300000"
 	test('name': 'suiteLicensingTest') {
 	    classes([:]) {
 //		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestSuiteLicensing_OMC')
@@ -91,7 +91,7 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestSuiteLicensing_OMCLOG')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestSuiteLicensing_SECSE')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestSuiteLicensing_SECSMA')
-	    }	
+	    }
 	}
     }
     useWebdriver = true
@@ -117,7 +117,7 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.VerifyWidget')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.VerifyOOB')
             }
-        }	
+        }
     }
     useWebdriver = true
     useRestAssured = true

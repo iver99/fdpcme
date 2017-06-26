@@ -27,6 +27,7 @@ define([
             self.dashboardsetToolBarModel.renderDeletionDialogs(true);
             queryDashboardSetsBySubId(self.dashboard().id(), function (resp) {
                 window.selectedDashboardInst().dashboardSets && window.selectedDashboardInst().dashboardSets(resp.dashboardSets || []);
+                window.selectedDashboardInst().linkedDashboardList && window.selectedDashboardInst().linkedDashboardList(resp.linkedDashboardList);
                 self.toolbarModel().openDashboardDeleteConfirmDialog();
             });
         };

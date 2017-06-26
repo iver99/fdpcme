@@ -65,7 +65,7 @@ define(['knockout',
 
             self.targets = eagerCreated ? eagerCreated.targets : ko.observable(null);
             self.timeSelectorModel = eagerCreated ? eagerCreated.timeSelector : null;
-            
+
             self.tilesView = $b.getDashboardTilesView();
             self.isOnePageType = (self.dashboard.type() === Builder.SINGLEPAGE_TYPE);
 
@@ -136,7 +136,7 @@ define(['knockout',
             self.appendNewTile = function(name, description, width, height, widget) {
                 if (widget) {
                     var newTile = self.editor.createNewTile(name, description, width, height, widget, self.timeSelectorModel, self.targets, true, dashboardInst);
-                    Builder.eagerLoadDahshboardSingleTileAtPageLoad(dfu, ko, newTile);                    
+                    Builder.eagerLoadDahshboardSingleTileAtPageLoad(dfu, ko, newTile);
                     if (newTile){
                        self.editor.tiles.push(newTile);
                        self.show();
@@ -253,18 +253,6 @@ define(['knockout',
                     return;
                 }
                 switch (ui.item.data("option")) {
-                    case "showhide-title":
-                        self.editor.showHideTitle(tile);
-                        self.show();
-                        self.notifyTileChange(tile, new Builder.TileChange("POST_HIDE_TITLE"));
-                        break;
-                    case "remove":
-                        self.editor.deleteTile(tile);
-                        self.show();
-                        self.notifyTileChange(tile, new Builder.TileChange("POST_DELETE"));
-                        $b.triggerEvent($b.EVENT_TILE_RESTORED, 'triggerred by tile deletion', tile);
-                        $b.triggerEvent($b.EVENT_TILE_DELETED, null, tile);
-                        break;
                     case "wider":
                         self.editor.broadenTile(tile);
                         self.show();
@@ -284,6 +272,11 @@ define(['knockout',
                         self.editor.shorterTile(tile);
                         self.show();
                         self.notifyTileChange(tile, new Builder.TileChange("POST_SHORTER"));
+                        break;
+                    case "edit":
+                        self.editor.editTile(tile);
+                        self.show();
+                        self.notifyTileChange(tile, new Builder.TileChange("POST_EDIT"));
                         break;
                     case "up":
                         self.editor.moveUpTile(tile);
@@ -845,7 +838,7 @@ define(['knockout',
                 self.previousDragCell = null;
                 Builder.getTileConfigure(self.editor.mode, self.dashboard, tile, self.timeSelectorModel, self.targets, dashboardInst);
             };
-           
+
             self.dashboardTimeRangeChangedHandler = function() {
                 self.showTimeRange(self.dashboard.enableTimeRange() === 'TRUE');
             };
@@ -961,7 +954,7 @@ define(['knockout',
                     initTargets && self.targets(initTargets);
                 });
             }
-            
+
             function callbackForOmcCtxChange(ctxChangeEvent) {
                 //handle entity context changed by selecting GC entity selector
                 if(!ctxChangeEvent || !ctxChangeEvent.contextName) {
@@ -971,7 +964,7 @@ define(['knockout',
                     console.log("***callbackForOmcCtxChange: contextName is " + ctxChangeEvent.contextName + ". It is not entity context change, so return***");
                     return;
                 }
-                
+
                 Builder.requireTargetSelectorUtils(true, function(TargetSelectorUtils) {
                     if (TargetSelectorUtils) {
                         TargetSelectorUtils.registerComponents();
@@ -981,10 +974,10 @@ define(['knockout',
                         //save users' selection of entity context by GC entity selector
                         self.returnFromPageTsel(entityContext);
                     });
-                }); 
-                    
+                });
+
             }
-            
+
             ctxUtil.subscribeOMCContextChangeEvent(callbackForOmcCtxChange);
             
             if(!self.timeSelectorModel) {
@@ -1027,11 +1020,11 @@ define(['knockout',
                     self.timeSelectorModel.timeRangeChange(false);
                 }
             });
-         
+
             self.initStart = ko.observable(self.timeSelectorModel.viewStart());
             self.initEnd = ko.observable(self.timeSelectorModel.viewEnd());
             self.timePeriod = ko.observable(self.timeSelectorModel.viewTimePeriod());
-           
+
             var dashboardExdedOpt = self.dashboard.extendedOptions && JSON.parse(ko.unwrap(self.dashboard.extendedOptions()));
             dashboardExdedOpt && dashboardExdedOpt.timePeriodNotShow ? self.timePeriodsNotToShow = dashboardExdedOpt.timePeriodNotShow :self.timePeriodsNotToShow = [];
             //whether to enable "Latest" on custom panel
@@ -1046,7 +1039,7 @@ define(['knockout',
                     timePeriodsSet: ctxUtil.OMCTimeConstants.timePeriodsSet.SHORT_TERM,
                     enableLatestOnCustomPanel: enableLatestOnCustomPanel,
                     callbackAfterApply: function(start, end, tp) {
-                        callbackAfterApply(start, end, tp);   
+                        callbackAfterApply(start, end, tp);
                     }
                 };
             }else {
@@ -1063,7 +1056,7 @@ define(['knockout',
                     }
                 }
             }
-            
+
             function callbackAfterApply(start, end, tp) {
                 self.timeSelectorModel.viewStart(start);
                 self.timeSelectorModel.viewEnd(end);

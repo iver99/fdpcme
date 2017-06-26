@@ -357,6 +357,17 @@ public class Dashboard
 	@JsonProperty("dashboardSets")
 	private List<Dashboard> dashboardSets;
 	
+	@JsonProperty("linkedDashboardList")
+	private List<String> linkedDashboardList;
+	
+	public List<String> getLinkedDashboardList() {
+		return linkedDashboardList;
+	}
+
+	public void setLinkedDashboardList(List<String> linkedDashboardList) {
+		this.linkedDashboardList = linkedDashboardList;
+	}
+
 	@JsonProperty("dupDashboardId")
 	private BigInteger dupDashboardId;
 	
@@ -806,9 +817,9 @@ public class Dashboard
 
     public void setDashboardSets(List<Dashboard> dashboardSets) {
         this.dashboardSets = dashboardSets;
-    }
+    } 
 
-    private void removeUnsharedDashboards(EmsDashboard ed)
+	private void removeUnsharedDashboards(EmsDashboard ed)
 	{
 		if (ed.getSharePublic() == 0) {
 			Long tenantId = ed.getTenantId();

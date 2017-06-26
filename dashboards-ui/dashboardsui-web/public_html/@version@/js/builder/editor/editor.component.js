@@ -217,6 +217,9 @@ define(['knockout',
                 css += tile.WIDGET_LINKED_DASHBOARD && tile.WIDGET_LINKED_DASHBOARD() ? ' dbd-tile-linked-dashboard' : '';
                 return css;
             });
+            if(!tile.WIDGET_LINKED_DASHBOARD){
+                tile.WIDGET_LINKED_DASHBOARD = ko.observable();
+            }
             tile.linkedDashboard = ko.computed(function() {
                 if (dashboard.systemDashboard() && tile.WIDGET_LINKED_DASHBOARD && tile.WIDGET_LINKED_DASHBOARD()) {
                     var link = '/emsaasui/emcpdfui/builder.html?dashboardId=' + tile.WIDGET_LINKED_DASHBOARD();

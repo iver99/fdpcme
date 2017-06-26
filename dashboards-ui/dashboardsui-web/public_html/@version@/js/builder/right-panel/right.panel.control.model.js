@@ -8,7 +8,7 @@ define(['knockout',
 'ojs/ojcollapsible'
 ],
 function (ko, $, oj, dfu, mbu, uiutil) {
-    function rightPanelControl($b) {
+    function rightPanelControl($b,selectedContent) {
         var self = this;
         self.$b = ko.observable($b);
         self.normalMode = new Builder.NormalEditorMode();
@@ -23,6 +23,7 @@ function (ko, $, oj, dfu, mbu, uiutil) {
         self.completelyHidden = ko.observable(false);
         self.editPanelContent = ko.observable("settings");
         self.scrollbarWidth = uiutil.getScrollbarWidth();
+        self.lastHighlightWigetIndex=null;
 
         self.expandDBEditor = function (target, isToExpand) {
             if ("singleDashboard-edit" === target) {
@@ -32,15 +33,18 @@ function (ko, $, oj, dfu, mbu, uiutil) {
             }
         };
 
-        self.editRightpanelLinkage = function (target) {
+        self.editRightpanelLinkage = function (target,param) {
             var highlightIcon = "pencil";
             self.completelyHidden(false);
             var panelTarget;
             if (target === "singleDashboard-edit") {
-                panelTarget = "edit";
+                panelTarget = "editdashboard";
             } else if (target === "dashboardset-edit") {
                 panelTarget = "editset";
+            } else if (target === "editcontent") {
+                panelTarget = "editcontent";
             }
+
             self.rightPanelIcon(highlightIcon);
             if (!self.showRightPanel()) {
                 self.toggleLeftPanel();
@@ -51,6 +55,12 @@ function (ko, $, oj, dfu, mbu, uiutil) {
                 self.expandDBEditor(target, true);
                 $(".dashboard-picker-container:visible").addClass("df-collaps");
             }
+
+            if (panelTarget === "editcontent") {
+                $('.dbd-right-panel-editcontent-title').ojCollapsible("option", "expanded", true);
+                selectedContent && selectedContent(param);
+            }
+
             self.$b().triggerBuilderResizeEvent('resize right panel');
         };
 
@@ -61,10 +71,17 @@ function (ko, $, oj, dfu, mbu, uiutil) {
             } else if ($(event.currentTarget).hasClass('rightpanel-wrench')) {
                 clickedIcon = "wrench";
             }
+            resetTileHighlighted();
 
-            if (self.showRightPanel() && clickedIcon !== self.rightPanelIcon()) {
+            var _changeRightPanelTab=self.showRightPanel() && clickedIcon !== self.rightPanelIcon();
+            var _closeRightPanel=self.showRightPanel();
+
+            if (_changeRightPanelTab) {
                 self.rightPanelIcon(clickedIcon);
-            } else if (self.showRightPanel()) {
+                if(clickedIcon === "pencil" && self.editPanelContent() === "editcontent"){
+                    setTileHightlighted(self.lastHighlightWigetIndex);
+                }
+            } else if (_closeRightPanel) {
                 self.rightPanelIcon("none");
                 self.toggleLeftPanel();
                 if ("NORMAL" !== self.$b().dashboard.type() || self.$b().dashboard.systemDashboard()) {
@@ -73,6 +90,9 @@ function (ko, $, oj, dfu, mbu, uiutil) {
             } else {
                 self.rightPanelIcon(clickedIcon);
                 self.toggleLeftPanel();
+                if(clickedIcon === "pencil" && self.editPanelContent() === "editcontent"){
+                    setTileHightlighted(self.lastHighlightWigetIndex);
+                }
             }
             $b.triggerBuilderResizeEvent('show right panel');
         };
@@ -86,7 +106,7 @@ function (ko, $, oj, dfu, mbu, uiutil) {
                     $(".dashboard-picker-container:visible").addClass("df-collaps");
                     self.$b().triggerBuilderResizeEvent('show right panel');
                 });
-            } else {            
+            } else {
                 $(".dbd-left-panel").animate({width: 0});
                 $(".right-panel-toggler").animate({right: self.scrollbarWidth + 3 + 'px'}, 'normal', function () {
                     self.expandDBEditor(true);
@@ -100,8 +120,12 @@ function (ko, $, oj, dfu, mbu, uiutil) {
 
         self.switchEditPanelContent = function (data, event) {
             if ($(event.currentTarget).hasClass('edit-dsb-link')) {
-                self.editPanelContent("edit");
+                self.editPanelContent("editdashboard");
                 self.expandDBEditor("singleDashboard-edit", true);
+            } else if($(event.currentTarget).hasClass('edit-content-link')){
+                self.editPanelContent("editcontent");
+                $('.dbd-right-panel-editcontent-title').ojCollapsible("option", "expanded", true);
+                selectedContent && selectedContent(ko.dataFor(event.currentTarget));
             } else if ($(event.currentTarget).hasClass('edit-dsbset-link')) {
                 self.editPanelContent("editset");
                 self.expandDBEditor("dashboardset-edit", true);
@@ -111,7 +135,39 @@ function (ko, $, oj, dfu, mbu, uiutil) {
             self.$b().triggerBuilderResizeEvent('OOB dashboard detected and hide left panel');
         };
 
-        function rightPanelChange(status) {
+        self.editPanelContent.subscribe(function () {
+            if (self.editPanelContent() !== "editcontent") {
+               resetTileHighlighted();
+            }
+        });
+
+        self.completelyHidden.subscribe(function () {
+            resetTileHighlighted();
+        });
+
+        function resetTileHighlighted() {
+            if(self.$b && self.$b().dashboard && self.$b().dashboard.tiles){
+                var tilesArray = self.$b().dashboard.tiles();
+                tilesArray.forEach(function resetObject(element, index) {
+                    if (element.outlineHightlight() === true) {
+                        self.lastHighlightWigetIndex = index;
+                    }
+                    element.outlineHightlight(false);
+                });
+            }
+        }
+
+        function setTileHightlighted(targetIndex) {
+            var tilesArray = self.$b().dashboard.tiles();
+            tilesArray.forEach(function resetObject(element, index) {
+                if (index === targetIndex) {
+                    element.outlineHightlight(true);
+                }
+            });
+        }
+
+
+        function rightPanelChange(status,param) {
             if(status==="complete-hidden-rightpanel"){
                 self.completelyHidden(true);
                 self.$b().triggerBuilderResizeEvent('hide right panel');
@@ -119,7 +175,7 @@ function (ko, $, oj, dfu, mbu, uiutil) {
                 if (!self.initializeRightPanel()) {
                     self.initializeRightPanel(true);
                 }
-                self.editRightpanelLinkage(status);               
+                self.editRightpanelLinkage(status,param);
             }          
         }
         
@@ -143,9 +199,9 @@ function (ko, $, oj, dfu, mbu, uiutil) {
                     self.$b().triggerEvent(self.$b().EVENT_NEW_WIDGET_STOP_DRAGGING, null, e, t);
                 }
             });
-        }; 
-                
-        self.initializeCollapsible = function(){     
+        };
+
+        self.initializeCollapsible = function(){
             $('.dbd-right-panel-editdashboard-filters').ojCollapsible({"expanded": false});
             $('.dbd-right-panel-editdashboard-share').ojCollapsible({"expanded": false});
             $('.dbd-right-panel-editdashboard-general').ojCollapsible({"expanded": false});
@@ -177,11 +233,26 @@ function (ko, $, oj, dfu, mbu, uiutil) {
                 }
             });
 
-            $('.dbd-right-panel-editdashboard-set-share').on({
-                "ojexpand": function (event, ui) {
-                    $('.dbd-right-panel-editdashboard-set-general').ojCollapsible("option", "expanded", false);
-                }
-            });
+        $('.dbd-right-panel-editdashboard-set-share').on({
+            "ojexpand": function (event, ui) {
+                $('.dbd-right-panel-editdashboard-set-general').ojCollapsible("option", "expanded", false);
+            }
+        });
+
+        $('.dbd-right-panel-editcontent-title').ojCollapsible({"expanded": false});
+        $('.dbd-right-panel-editcontent-filters').ojCollapsible({"expanded": false});
+
+        $('.dbd-right-panel-editcontent-filters').on({
+            "ojexpand": function (event, ui) {
+                $('.dbd-right-panel-editcontent-title').ojCollapsible("option", "expanded", false);
+            }
+        });
+
+        $('.dbd-right-panel-editcontent-title').on({
+            "ojexpand": function (event, ui) {
+                $('.dbd-right-panel-editcontent-filters').ojCollapsible("option", "expanded", false);
+            }
+        });
 
         };
     }

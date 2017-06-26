@@ -238,6 +238,14 @@ public class DashboardServiceFacade
 	//	{
 	//		return em.createNamedQuery("EmsDashboardTileParams.findAll", EmsDashboardTileParams.class).getResultList();
 	//	}
+	
+	@SuppressWarnings("unchecked")
+	public List<String> getlinkedDashboards(BigInteger dashboardId) {
+		String sql = "select DISTINCT NAME from EMS_DASHBOARD D WHERE D.DASHBOARD_ID in (select DASHBOARD_ID from EMS_DASHBOARD_TILE t where t.WIDGET_LINKED_DASHBOARD="+dashboardId+")";
+		Query listQuery = em.createNativeQuery(sql);
+		List<String> linkedDashboads = listQuery.getResultList();
+		return linkedDashboads;
+	}
 
 	/** <code>select o from EmsPreference o</code> */
 	public List<EmsPreference> getEmsPreferenceFindAll(String username)
@@ -668,6 +676,16 @@ public class DashboardServiceFacade
 				}
 			}
 		}
+		commitTransaction();
+	}
+	
+	public void updateTileLinkedDashboard(BigInteger dashboardId) {
+		if (!getEntityManager().getTransaction().isActive()) {
+			getEntityManager().getTransaction().begin();
+		}
+		String sql = "update EMS_DASHBOARD_TILE t set t.WIDGET_LINKED_DASHBOARD=null where t.WIDGET_LINKED_DASHBOARD="+dashboardId;
+		Query query = em.createNativeQuery(sql);
+		query.executeUpdate();
 		commitTransaction();
 	}
 

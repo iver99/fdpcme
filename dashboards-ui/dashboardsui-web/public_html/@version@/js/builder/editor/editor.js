@@ -189,6 +189,10 @@ define(['knockout',
                 }
                 self.tilesReorder();
             };
+            
+            self.editTile = function (tile) {
+                Builder.rightPanelChange("editcontent", tile);
+            };
 
             self.moveTileTo = function(cell, tile) {
                 var dragStartRow = self.mode.getModeRow(tile);

@@ -34,57 +34,58 @@ public class DashboardBuilderUtil_1100 extends DashboardBuilderUtil_190
 			e.printStackTrace();
 		}
 
-		focusOnWidgetHeader(driver, widgetEl);
-		driver.takeScreenShot();
+        focusOnWidgetHeader(driver, widgetEl);
+        driver.takeScreenShot();
 
-		String tileMoveCSS = null;
-		switch (moveOption) {
-			case TILE_UP:
-				tileMoveCSS = DashBoardPageId_1100.UpTileCSS;
-				break;
-			case TILE_DOWN:
-				tileMoveCSS = DashBoardPageId_1100.DownTileCSS;
-				break;
-			case TILE_LEFT:
-				tileMoveCSS = DashBoardPageId_1100.LeftTileCSS;
-				break;
-			case TILE_RIGHT:
-				tileMoveCSS = DashBoardPageId_1100.RightTileCSS;
-				break;
-			default:
-				break;
-		}
-		if (null == tileMoveCSS) {
-			return;
-		}
+        String tileMoveCSS = null;
+        switch (moveOption) {
+            case TILE_UP:
+            	tileMoveCSS = DashBoardPageId_1100.UpTileCSS;
+                break;
+            case TILE_DOWN:
+            	tileMoveCSS = DashBoardPageId_1100.DownTileCSS;
+                break;
+            case TILE_LEFT:
+            	tileMoveCSS = DashBoardPageId_1100.LeftTileCSS;
+                break;
+            case TILE_RIGHT:
+            	tileMoveCSS = DashBoardPageId_1100.RightTileCSS;
+                break;
+            default:
+                break;
+        }
+        if (null == tileMoveCSS) {
+            return;
+        }
 
-		widgetEl.findElement(By.cssSelector(DashBoardPageId_1100.ConfigTileCSS)).click();
-		driver.click("css=" + tileMoveCSS);
-		driver.getLogger().info("Move the widget: " + moveOption);
-	}
+        widgetEl.findElement(By.cssSelector(DashBoardPageId_1100.ConfigTileCSS)).click();
+        driver.click("css=" + tileMoveCSS);
+        driver.getLogger().info("Move the widget: " + moveOption);
+        driver.takeScreenShot();
+    }
+    
+    @Override
+    public void moveWidget(WebDriver driver, String widgetName, String moveOption)
+    {
+    	moveWidget(driver, widgetName, 0, moveOption);
+    }
+    
+    protected void focusOnWidgetHeader(WebDriver driver, WebElement widgetElement)
+    {
+        if (null == widgetElement) {
+            driver.getLogger().info("Fail to find the widget element");
+            driver.takeScreenShot();
+            driver.savePageToFile();
+            throw new NoSuchElementException("Widget config menu is not found");
+        }
 
-	@Override
-	public void moveWidget(WebDriver driver, String widgetName, String moveOption)
-	{
-		moveWidget(driver, widgetName, 0, moveOption);
-	}
+        WebElement widgetHeader = widgetElement.findElement(By.cssSelector(DashBoardPageId_1100.TileTitleCSS));
+        Actions actions = new Actions(driver.getWebDriver());
+        actions.moveToElement(widgetHeader).build().perform();
+        driver.getLogger().info("Focus to the widget");
+    }
 
-	private void focusOnWidgetHeader(WebDriver driver, WebElement widgetElement)
-	{
-		if (null == widgetElement) {
-			driver.getLogger().info("Fail to find the widget element");
-			driver.takeScreenShot();
-			driver.savePageToFile();
-			throw new NoSuchElementException("Widget config menu is not found");
-		}
-
-		WebElement widgetHeader = widgetElement.findElement(By.cssSelector(DashBoardPageId_1100.TileTitleCSS));
-		Actions actions = new Actions(driver.getWebDriver());
-		actions.moveToElement(widgetHeader).build().perform();
-		driver.getLogger().info("Focus to the widget");
-	}
-
-	private WebElement getWidgetByName(WebDriver driver, String widgetName, int index) throws InterruptedException
+	protected WebElement getWidgetByName(WebDriver driver, String widgetName, int index) throws InterruptedException
 	{
 		if (widgetName == null) {
 			return null;
