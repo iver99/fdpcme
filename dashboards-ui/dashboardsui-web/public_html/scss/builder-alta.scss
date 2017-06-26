@@ -783,6 +783,9 @@ body, html {
     .cursor-resize-right-bottom{
         cursor:se-resize;
     }
+    .dbd-resize-handler-placeholder.cursor-resize-right-bottom{
+        cursor:default;
+    }
 }
 
 .dbd-one-page .dbd-tile-element {

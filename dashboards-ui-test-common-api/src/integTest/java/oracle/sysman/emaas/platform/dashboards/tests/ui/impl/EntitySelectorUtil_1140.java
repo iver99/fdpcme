@@ -150,23 +150,23 @@ public class EntitySelectorUtil_1140 extends EntitySelectorUtil_Version implemen
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IEntitySelectorUtil#searchText(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
 	@Override
-	public void searchText(WebDriver driver, Logger logger, final String text)
+	public void searchText(WebDriver driver, Logger logger, final String entityName)
 	{
 		//Write text in entity selector
 		logger.log(Level.INFO, "Waiting for Entity Selector input to be clickable");
 		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), UNTIL_TIMEOUT);
 		WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By
 				.xpath(DashBoardPageId.EntSelTypeAheadFieldInput)));
-		logger.log(Level.INFO, "Searching value ''{0}'' in Entity Selector", text);
+		logger.log(Level.INFO, "Searching value ''{0}'' in Entity Selector", entityName);
 		element.click();
                 //Wait until suggestions are displayed before typing the text to avoid timing issues
                 wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(DashBoardPageId.EntSelSuggestionPopup)));
 		element.clear();
-		element.sendKeys(text);
+		element.sendKeys(entityName);
 		driver.takeScreenShot();
 
 		//Wait until the results are displayed
-		logger.log(Level.INFO, "Waiting for results to be displayed for text ''{0}''", text);
+		logger.log(Level.INFO, "Waiting for results to be displayed for text ''{0}''", entityName);
                 final Logger finalLogger = logger;
 		wait.until(new ExpectedCondition<Boolean>() {
 			@Override
@@ -176,16 +176,23 @@ public class EntitySelectorUtil_1140 extends EntitySelectorUtil_Version implemen
 				int count = resultItems.size();
 				finalLogger.log(Level.INFO, "Waiting for search results to be updated. Current items displayed = {0}", count);
 				List<WebElement> resultItemsByText = webdriver.findElements(By.xpath(MessageFormat.format(
-						DashBoardPageId.EntSelSearchResultsItemByText, text)));
+						DashBoardPageId.EntSelSearchResultsItemByText, entityName)));
 
 				return count == resultItemsByText.size();
 			}
 		});
 
 		driver.takeScreenShot();
-		logger.log(Level.INFO, "Results for ''{0}'' are available", text);
+		logger.log(Level.INFO, "Results for ''{0}'' are available", entityName);
 
 	}
+        
+        @Override
+	public void searchText(WebDriver driver, Logger logger, final String entityName, final String entityType, final String category)
+        {
+                Assert.assertTrue(false, "This method is not available in the current version");
+                logger.info("Method not available in the current version");
+        }
 
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IEntitySelectorUtil#selectCompositeEntity(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
@@ -196,7 +203,7 @@ public class EntitySelectorUtil_1140 extends EntitySelectorUtil_Version implemen
 		//search text in entity selector
 		searchText(driver, logger, entityName);
 
-		//select the first composite entity found with that description
+		//select the composite entity found with that description
 		selectFirstSuggestionByCategory(driver, logger, CATEGORY_COMPOSITE, entityName, entityType, false);
 
 	}
@@ -210,7 +217,7 @@ public class EntitySelectorUtil_1140 extends EntitySelectorUtil_Version implemen
 		//search text in entity selector
 		searchText(driver, logger, entityName);
 
-		//select the first entity found with that description
+		//select the entity found with that description
 		selectFirstSuggestionByCategory(driver, logger, CATEGORY_ENTITIES, entityName, entityType, false);
 
 	}

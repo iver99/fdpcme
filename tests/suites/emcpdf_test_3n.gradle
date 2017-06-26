@@ -169,7 +169,9 @@ task DEVUiTest(type:EMTest,dependsOn:omcSetup){
 //Setup gradle to onboard a new tenant
 apply from: 'onboard_tenant.gradle'
 
+
 task QATest1(type:EMTest,dependsOn:[omcSetup, onboardNewTenant]){ 
+// 	environment "VNC_SIZE", "1600x1200"       
 
         environment "WEBDRIVER_WAIT_TIMEOUT", "300000"
 	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/BrandingBar_TestAnalyzerPage.class"
@@ -212,6 +214,9 @@ task DEVTest2(type:EMTest,dependsOn:omcSetup){
 //Task is for dashboard UI Test
 task e2e (type: EMTest,dependsOn:omcSetup ){
 options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n','parallel':'none') {
+
+  //      environment "VNC_SIZE", "1600x1200"
+
         environment "WEBDRIVER_WAIT_TIMEOUT", "300000"
         test('name': 'DashboardUITest', 'preserve-order':'true') {
             classes([:]) {
