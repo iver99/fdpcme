@@ -891,7 +891,6 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		//Verify the content is added successfully
 		webd.getLogger().info("Verify the content is added successfully");
 		
-		//WebElement textContent = webd.getWebDriver().findElement(By.xpath("//div[@data-bind='html: content()']"));
 		WebElement textContent = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.TEXTCONTENTCSS));
 		Assert.assertEquals(textContent.getText(), content);
 	}
