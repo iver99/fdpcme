@@ -808,9 +808,6 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     else {
                        $('#offcanvasInnerContainer').append(hamburgerDiv); 
                     }
-//                    $('#offcanvasInnerContainer').append(hamburgerDiv);
-//                    $('#uifwkLayoutHbgmenuPlaceHolder').append(hamburgerDiv);
-//                    $('#uifwkLayoutHbgmenuPlaceHolder').replaceWith(hamburgerDiv);
                     ko.applyBindings(self, hamburgerDiv[0]);
                 }
             }
@@ -911,33 +908,16 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 
                 function setPinnedHamburgerMenuStyles() {
                     $("#omcHamburgerMenu").removeClass('oj-offcanvas-start');
-                    //$("#omcHamburgerMenu").addClass('oj-lg-2');
-                    //$("#omcHamburgerMenu").addClass('oj-flex-item');
-                    //$("#uifwkLayoutMainContainer").addClass('oj-lg-10'); 
                     $("#uifwkLayoutMainContainer").addClass('oj-flex-item'); 
-                    //$("#uifwkLayoutMainContainer").removeClass('oj-web-applayout-scrollable');
                     $("#uifwkLayoutMainContainer").removeClass('oj-web-applayout-page');
                     $("#offcanvasInnerContainer").addClass('oj-flex');
                     $("#offcanvasInnerContainer").addClass('oj-flex-items-pad');
-                    if ($("#omcHamburgerMenu").is(':visible')) {
-                        //$("#omcHamburgerMenu").addClass('oj-lg-2');
-                        $("#uifwkLayoutMainContainer").removeClass('oj-lg-12');
-                        //$("#uifwkLayoutMainContainer").addClass('oj-lg-10');
-                    }
-                    else {
-                        //$("#omcHamburgerMenu").removeClass('oj-lg-2');
-                        //$("#uifwkLayoutMainContainer").removeClass('oj-lg-10');
-                        //$("#uifwkLayoutMainContainer").addClass('oj-lg-12');
-                    }
                 }
                 
                 function setOverlayHamburgerMenuStyles() {
                     $("#omcHamburgerMenu").addClass('oj-offcanvas-start');
-                    $("#omcHamburgerMenu").removeClass('oj-lg-2');
                     $("#omcHamburgerMenu").removeClass('oj-flex-item');
-                    $("#uifwkLayoutMainContainer").removeClass('oj-lg-10'); 
                     $("#uifwkLayoutMainContainer").removeClass('oj-flex-item'); 
-                    //$("#uifwkLayoutMainContainer").addClass('oj-web-applayout-scrollable');
                     $("#uifwkLayoutMainContainer").addClass('oj-web-applayout-page');
                     $("#offcanvasInnerContainer").removeClass('oj-flex');
                     $("#offcanvasInnerContainer").removeClass('oj-flex-items-pad');
@@ -950,9 +930,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         return;
                     }
                     if(!isXlarge){
-                        //$("#omcHamburgerMenu").hide();
                         if (avoidPageResizeOptIn) {
-//                            menuHidden = true;
                             setOverlayHamburgerMenuStyles();
                             $("#omcHamburgerMenu").show();
                             triggerDashboardResizeEvent('Hamburger menu closed.');
@@ -990,7 +968,6 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         }
                         else {
                             $("#omcHamburgerMenu").addClass('oj-offcanvas-start');
-                            $("#omcHamburgerMenu").removeClass(' oj-lg-2');
                             var menuInitialStatus = retrieveHmaburgerMenuStatus();
                             if(!$("#omcHamburgerMenu").hasClass("oj-offcanvas-open") && menuInitialStatus !== 'closed'){
                                 oj.OffcanvasUtils.toggle({
@@ -1022,8 +999,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         }
                     }
                 });
-    
-//                var menuHidden = false;
+                
                 self.toggleHamburgerMenu = function() {
                     if (avoidPageResizeOptIn) {
                         if (self.xlargeScreen()) {
@@ -1032,16 +1008,12 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                                 $("#uifwkLayoutMainContainer").width($(window).width() - 250);
                                 storeHamburgerMenuStatus("opened");
                                 resetCurrentHamburgerMenu();
-                                //$("#uifwkLayoutMainContainer").removeClass('oj-lg-12');
-                                //$("#uifwkLayoutMainContainer").addClass('oj-lg-10');
                                 triggerHamburgerMenuToggleEvent('open');
                                 triggerDashboardResizeEvent('Hamburger menu opened.');
                             }
                             else {
                                 storeHamburgerMenuStatus("closed");
                                 $("#uifwkLayoutMainContainer").width($(window).width());
-                                //$("#uifwkLayoutMainContainer").removeClass('oj-lg-10');
-                                //$("#uifwkLayoutMainContainer").addClass('oj-lg-12');
                                 triggerHamburgerMenuToggleEvent('close');
                                 triggerDashboardResizeEvent('Hamburger menu closed.');
                             }
@@ -1100,7 +1072,6 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         });
                     }
                     
-                    //$("#omcHamburgerMenu").height(document.body.scrollHeight);
                     $(window).resize(function() {
                         if (window._uifwk.isUnderPrint) {
                             window._uifwk.resizeTriggeredByPrint = true;
@@ -1122,7 +1093,6 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     
                     if (!avoidPageResizeOptIn) {
                         $("#omcHamburgerMenu").addClass('oj-offcanvas-start');
-                        $("#omcHamburgerMenu").removeClass('oj-lg-2');
                         $("#omcHamburgerMenu").removeClass('oj-flex-item');
                         var menuInitialStatus = retrieveHmaburgerMenuStatus();
                         if(self.xlargeScreen() && menuInitialStatus !== 'closed'){
@@ -1145,15 +1115,11 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         else {
                             var menuInitialStatus = retrieveHmaburgerMenuStatus();
                             if (menuInitialStatus !== 'closed') {
-                                //$("#uifwkLayoutMainContainer").removeClass('oj-lg-12');
-                                //$("#uifwkLayoutMainContainer").addClass('oj-lg-10');
                                 $("#omcHamburgerMenu").show();
                             }
                             else {
                                 $("#omcHamburgerMenu").hide();
                                 triggerHamburgerMenuToggleEvent('close');
-                                //$("#uifwkLayoutMainContainer").removeClass('oj-lg-10');
-                                //$("#uifwkLayoutMainContainer").addClass('oj-lg-12');
                             }
                             menuUtil.resizeHamburgerMenuLayout();
                         }

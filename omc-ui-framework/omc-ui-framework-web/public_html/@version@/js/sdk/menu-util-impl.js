@@ -379,35 +379,8 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
              * @returns
              */
             self.initializeHamburgerMenuLayout = function() {
-                function setPinnedHamburgerMenuStyles() {
-                    $("#omcHamburgerMenu").removeClass('oj-offcanvas-start');
-                    //$("#omcHamburgerMenu").addClass('oj-lg-2');
-                    //$("#omcHamburgerMenu").addClass('oj-flex-item');
-                    //$("#uifwkLayoutMainContainer").addClass('oj-lg-10'); 
-                    $("#uifwkLayoutMainContainer").addClass('oj-flex-item'); 
-                    $("#uifwkLayoutMainContainer").removeClass('oj-web-applayout-scrollable');
-                    $("#uifwkLayoutMainContainer").removeClass('oj-web-applayout-page');
-                    $("#offcanvasInnerContainer").addClass('oj-flex');
-                    $("#offcanvasInnerContainer").addClass('oj-flex-items-pad');
-                    if ($("#omcHamburgerMenu").is(':visible')) {
-                        //$("#omcHamburgerMenu").addClass('oj-lg-2');
-                        //$("#uifwkLayoutMainContainer").removeClass('oj-lg-12');
-                        //$("#uifwkLayoutMainContainer").addClass('oj-lg-10');
-                    }
-                    else {
-                        $("#omcHamburgerMenu").removeClass('oj-lg-2');
-                        $("#uifwkLayoutMainContainer").removeClass('oj-lg-10');
-                        $("#uifwkLayoutMainContainer").addClass('oj-lg-12');
-                    }
-                }
-                
                 function setOverlayHamburgerMenuStyles() {
-                    //$("#omcHamburgerMenu").addClass('oj-offcanvas-start');
-                    //$("#omcHamburgerMenu").removeClass('oj-lg-2');
-                    //$("#omcHamburgerMenu").removeClass('oj-flex-item');
-                    //$("#uifwkLayoutHbgmenuPlaceHolder").removeClass('oj-lg-2');
                     $("#uifwkLayoutHbgmenuPlaceHolder").removeClass('oj-flex-item');
-                    //$("#uifwkLayoutMainContainer").removeClass('oj-lg-10'); 
                     $("#uifwkLayoutMainContainer").removeClass('oj-flex-item'); 
                     $("#uifwkLayoutMainContainer").addClass('oj-web-applayout-scrollable');
                     $("#uifwkLayoutMainContainer").addClass('oj-web-applayout-page');
@@ -417,32 +390,17 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
                 
                 if(!self.xlargeScreen()) {
                     setOverlayHamburgerMenuStyles();
-                    //$("#offcanvasInnerContainer").width(document.body.clientWidth);
-                    //$("#uifwkLayoutMainContainer").width(document.body.clientWidth);
                 }
                 else {
                     if (self.showHamburgerMenuByDefault()) {
                         $('#uifwkLayoutMainContainer').width($(window).width() - 250);
-                        //$("#uifwkLayoutMainContainer").removeClass('oj-lg-12');
-                        //$("#uifwkLayoutMainContainer").addClass('oj-lg-10');
-                        //$("#omcHamburgerMenu").show();
                     }
                     else {
                         $('#uifwkLayoutHbgmenuPlaceHolder').hide();
                         $("#omcHamburgerMenu").hide();
                         $('#uifwkLayoutMainContainer').width($(window).width());
-                        //$("#omcHamburgerMenu").hide();
-                        //$("#uifwkLayoutMainContainer").removeClass('oj-lg-10');
-                        //$("#uifwkLayoutMainContainer").addClass('oj-lg-12');
                     }
                     $('#uifwkLayoutHbgmenuPlaceHolder').width(250);
-                    //$('#uifwkLayoutMainContainer').width($(window).width() - 250);
-                    //setPinnedHamburgerMenuStyles();
-                    //$('#uifwkLayoutHbgmenuPlaceHolder').width(250);
-                    //$('#uifwkLayoutHbgmenuPlaceHolder').width(250);
-                    //$("#offcanvasInnerContainer").width(document.body.clientWidth);
-                    //$('#uifwkLayoutMainContainer').width(document.body.clientWidth - 290);
-                    //$('#uifwkLayoutMainContainer').width(document.body.clientWidth - 250);
                 }
             };
             

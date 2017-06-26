@@ -386,7 +386,6 @@ require(['knockout',
             }
 
             $(document).ready(function() {
-//                menuUtil.initializeHamburgerMenuLayout();
                 ko.applyBindings(new HeaderViewModel(), $('#headerWrapper')[0]);
                 ko.applyBindings(new MainViewModel(), $('#main-container')[0]);
                 $("#loading").hide();
