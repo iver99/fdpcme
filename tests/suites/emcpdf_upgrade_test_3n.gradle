@@ -34,7 +34,7 @@ task pre_upgrade (type: EMTest, dependsOn: omcSetup){
    //println "Customizing the UpgradeDataPopulation"
      options.suiteXmlBuilder().suite('name': 'PreUpg') {
 
-        environment "VNC_SIZE", "1600x1200"
+  //      environment "VNC_SIZE", "1600x1200"
 
         environment "WEBDRIVER_WAIT_TIMEOUT", "300000" 
         test('name': 'Pre_upg') {
@@ -64,7 +64,7 @@ task post_upgrade (type: EMTest, dependsOn: [omcCloudUpgrade,omcTenantAgentSetup
 
     //println "Overriding the UpgradeDataValidation"
        options.suiteXmlBuilder().suite('name': 'PostUpg') {
-        environment "VNC_SIZE", "1600x1200"
+//        environment "VNC_SIZE", "1600x1200"
         environment "WEBDRIVER_WAIT_TIMEOUT", "300000"
         test('name': 'post_upg') {
             classes([:]) {
