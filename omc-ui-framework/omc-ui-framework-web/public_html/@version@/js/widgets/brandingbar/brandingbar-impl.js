@@ -908,6 +908,9 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 
                 function setPinnedHamburgerMenuStyles() {
                     $("#omcHamburgerMenu").removeClass('oj-offcanvas-start');
+                    $("#omcHamburgerMenu").removeClass('oj-offcanvas-open');
+                    $("#omcHamburgerMenu").removeClass('oj-offcanvas-overlay');
+                    $("#omcHamburgerMenu").removeClass('oj-offcanvas-transition');
                     $("#uifwkLayoutMainContainer").addClass('oj-flex-item'); 
                     $("#uifwkLayoutMainContainer").removeClass('oj-web-applayout-page');
                     $("#offcanvasInnerContainer").addClass('oj-flex');
@@ -915,6 +918,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 }
                 
                 function setOverlayHamburgerMenuStyles() {
+                    $("#omcHamburgerMenu").css('display', '');
                     $("#omcHamburgerMenu").addClass('oj-offcanvas-start');
                     $("#omcHamburgerMenu").removeClass('oj-flex-item');
                     $("#uifwkLayoutMainContainer").removeClass('oj-flex-item'); 
@@ -932,7 +936,6 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     if(!isXlarge){
                         if (avoidPageResizeOptIn) {
                             setOverlayHamburgerMenuStyles();
-                            $("#omcHamburgerMenu").show();
                             triggerDashboardResizeEvent('Hamburger menu closed.');
                             triggerHamburgerMenuToggleEvent('close');
                         }
@@ -948,6 +951,13 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 
                     }else{
                         if (avoidPageResizeOptIn) {
+                            if($("#omcHamburgerMenu").hasClass("oj-offcanvas-open")){
+                                oj.OffcanvasUtils.close({
+                                        "edge": "start",
+                                        "displayMode": "overlay",
+                                        "selector": "#omcHamburgerMenu"
+                                    });
+                            }
                             var menuInitialStatus = retrieveHmaburgerMenuStatus();
                             if (menuInitialStatus !== 'closed') {
                                 $("#omcHamburgerMenu").show();
@@ -956,13 +966,6 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                                 $("#omcHamburgerMenu").hide();
                             }
                             setPinnedHamburgerMenuStyles();
-                            if($("#omcHamburgerMenu").hasClass("oj-offcanvas-open")){
-                                oj.OffcanvasUtils.close({
-                                        "edge": "start",
-                                        "displayMode": "overlay",
-                                        "selector": "#omcHamburgerMenu"
-                                    });
-                            }
                             resetCurrentHamburgerMenu();
                             triggerHamburgerMenuToggleEvent('open');
                         }
