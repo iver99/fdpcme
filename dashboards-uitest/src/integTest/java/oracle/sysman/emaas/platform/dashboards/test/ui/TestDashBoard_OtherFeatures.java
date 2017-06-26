@@ -886,6 +886,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		//Assert.assertTrue(DashboardBuilderUtil.verifyWidget(webd, widgetName), "text widget isn't added into the dashboard successfully");
 		DashboardBuilderUtil.editTextWidgetAddContent(webd, 1, content);
 		
+		DashboardBuilderUtil.saveDashboard(webd);
 		
 		//Verify the content is added successfully
 		webd.getLogger().info("Verify the content is added successfully");
@@ -893,7 +894,5 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		//WebElement textContent = webd.getWebDriver().findElement(By.xpath("//div[@data-bind='html: content()']"));
 		WebElement textContent = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.TEXTCONTENTCSS));
 		Assert.assertEquals(textContent.getText(), content);
-		
-		DashboardBuilderUtil.saveDashboard(webd);
 	}
 }
