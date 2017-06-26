@@ -8,6 +8,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
     'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg',
     'uifwk/@version@/js/util/zdt-util-impl',
     'uifwk/@version@/js/sdk/menu-util-impl',
+    'uifwk/@version@/js/sdk/SessionCacheUtil',
     'ojs/ojknockout',
     'ojs/ojtoolbar',
     'ojs/ojmenu',
@@ -15,11 +16,27 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
     'ojs/ojdialog',
     'ojs/ojoffcanvas'
 ],
-    function (ko, $, dfumodel, msgUtilModel, contextModel, oj, nls, zdtUtilModel, menuModel) {
+    function (ko, $, dfumodel, msgUtilModel, contextModel, oj, nls, zdtUtilModel, menuModel, sessionCacheModel) {
         function BrandingBarViewModel(params) {
             var self = this;
             var msgUtil = new msgUtilModel();
             var cxtUtil = new contextModel();
+            var menuStatusSessionCacheName = '_uifwk_hamburgermenustatuscache';
+            var menuStatusSessionCacheDataKey = 'hamburger_menu_is_open';
+            var menuStatusSessionCache = new sessionCacheModel(menuStatusSessionCacheName, 1);
+            if (window.performance) {
+                    //We should only clear the cache once during a page refresh, otherwise
+                    //it may cause cached data lost though service menus already fetched
+                    if (window.performance.navigation.type === 1) {
+                        menuStatusSessionCache.clearCache();
+                    }
+                }
+            function storeHamburgerMenuStatus(status){
+                menuStatusSessionCache && menuStatusSessionCache.updateCacheData(menuStatusSessionCacheName, menuStatusSessionCacheDataKey, status);
+            }
+            function retrieveHmaburgerMenuStatus(){
+                return menuStatusSessionCache && menuStatusSessionCache.retrieveDataFromCache(menuStatusSessionCacheName) && menuStatusSessionCache.retrieveDataFromCache(menuStatusSessionCacheName)[menuStatusSessionCacheDataKey];
+            }
             var NO_HIGHLIGHT = 'NO_HIGHLIGHT';
             var CONTEXT_CHANGE = 'CONTEXT_CHANGE';
             // clear topologyParams first from global context
@@ -888,7 +905,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                                 });
                         }
                     }else{
-                        if(!$("#omcHamburgerMenu").hasClass("oj-offcanvas-open")){
+                        var menuInitialStatus = retrieveHmaburgerMenuStatus();
+                        if(!$("#omcHamburgerMenu").hasClass("oj-offcanvas-open") && menuInitialStatus !== 'closed'){
                             oj.OffcanvasUtils.toggle({
                                     "edge": "start",
                                     "displayMode": "push",
@@ -903,20 +921,29 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                                     "selector": "#omcHamburgerMenu",
                                     "autoDismiss": "focusLoss"
                                 });
-                                setTimeout(function(){
-                                        oj.OffcanvasUtils.open({
-                                            "edge": "start",
-                                            "displayMode": "push",
-                                            "selector": "#omcHamburgerMenu",
-                                            "autoDismiss": "none"
-                                        });
-                                        resetCurrentHamburgerMenu();
-                                },500);
+                                if(menuInitialStatus !== 'closed'){
+                                    setTimeout(function(){
+                                            oj.OffcanvasUtils.open({
+                                                "edge": "start",
+                                                "displayMode": "push",
+                                                "selector": "#omcHamburgerMenu",
+                                                "autoDismiss": "none"
+                                            });
+                                            resetCurrentHamburgerMenu();
+                                    },500);
+                                }
                         }
                     }
                 });
 
                 self.toggleHamburgerMenu = function() {
+                    if(self.xlargeScreen()){
+                        if($("#omcHamburgerMenu").hasClass("oj-offcanvas-open")){
+                            storeHamburgerMenuStatus("closed");
+                        }else{
+                            storeHamburgerMenuStatus("opened");
+                        }
+                    }
                     oj.OffcanvasUtils.toggle({
                             "edge": "start",
                             "displayMode": self.xlargeScreen() ? "push" : "overlay",
@@ -959,7 +986,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         }
                     });
 
-                    if(self.xlargeScreen()){
+                    var menuInitialStatus = retrieveHmaburgerMenuStatus();
+                    if(self.xlargeScreen() && menuInitialStatus !== 'closed'){
                         $((function(){
                             oj.OffcanvasUtils.open({
                                     "edge": "start",
@@ -968,6 +996,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                                     "autoDismiss": "none"
                                 });
                             triggerDashboardResizeEvent('Hamburger menu opened.');
+                            storeHamburgerMenuStatus("opened");
                         })());
                     }
                     

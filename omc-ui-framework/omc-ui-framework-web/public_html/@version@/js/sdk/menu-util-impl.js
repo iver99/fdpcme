@@ -31,6 +31,7 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
                 'GLOBAL_COMPLIANCE': 'omc_root_Compliance',
                 'GLOBAL_ADMIN': 'omc_root_admin',
                 'GLOBAL_ADMIN_ALERTRULES': 'omc_root_admin_alertrules',
+                'GLOBAL_ADMIN_NOTIFICATION_CHANNELS': 'omc_root_admin_notificationChannels',
                 'GLOBAL_ADMIN_AGENTS': 'omc_root_admin_agents',
                 'GLOBAL_ADMIN_CLOUDDISCOVERYPROFILES': 'omc_root_admin_clouddiscoveryprofiles',
                 'GLOBAL_ADMIN_ENTITIESCONFIG': 'omc_root_admin_entitiesconfig',
