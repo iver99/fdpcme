@@ -19,7 +19,6 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceQ
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.SanitizedInstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
-
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.DefaultKeyGenerator;
@@ -50,7 +49,35 @@ public class RegistryLookupUtil
 	public static final String SECURITY_ANALYTICS_SERVICE = "SecurityAnalyticsUI";
 	public static final String COMPLIANCE_SERVICE = "ComplianceUIService";
 	public static final String ORCHESTRATION_SERVICE = "CosUIService";
+	
+	public static final String DEFAULT_VERSION = "1.0+";
 
+    /**
+     * get internal link for <b>non-tenant</b> request by 
+     * {@link oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil.DEFAULT_VERSION}
+     * @param serviceName
+     * @param rel
+     * @return
+     */
+    public static VersionedLink getServiceInternalLink(String serviceName, String rel)
+    {
+        return RegistryLookupUtil.getServiceInternalLink(serviceName, rel, null);
+    }
+    
+    /**
+     * get internal link for <b>tenantName</b> by 
+     * {@link oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil.DEFAULT_VERSION}
+     * @param serviceName
+    
+     * @param rel
+     * @param tenantName
+     * @return
+     */
+    public static VersionedLink getServiceInternalLink(String serviceName, String rel, String tenantName)
+    {
+        return RegistryLookupUtil.getServiceInternalLink(serviceName, DEFAULT_VERSION, rel, tenantName);
+    }
+	
 	public static VersionedLink getServiceInternalLink(String serviceName, String version, String rel, String tenantName)
 	{
 		return RegistryLookupUtil.getServiceInternalLink(serviceName, version, rel, false, tenantName);
@@ -129,7 +156,7 @@ public class RegistryLookupUtil
 	public static VersionedLink getServiceInternalEndpoint(String serviceName, String version, String tenantName)
 	{
 		LOGGER.debug(
-				"/getServiceInternalLink/ Trying to retrieve service internal link for service: \"{}\", version: \"{}\", tenant: \"{}\"",
+				"/getServiceInternalEndpoint/ Trying to retrieve service internal link for service: \"{}\", version: \"{}\", tenant: \"{}\"",
 				serviceName, version, tenantName);
 //		LogUtil.setInteractionLogThreadContext(tenantName, "Retristry lookup client", LogUtil.InteractionLogDirection.OUT);
 		InstanceInfo info = getInstanceInfo(serviceName, version);

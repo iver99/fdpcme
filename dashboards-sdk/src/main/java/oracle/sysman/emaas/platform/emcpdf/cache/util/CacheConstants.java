@@ -10,8 +10,6 @@ public class CacheConstants {
     public static final String CACHES_CLOUD_SERVICE_LINK_CACHE = "cloudServiceLinkCache";
     public static final String CACHES_HOME_LINK_CACHE = "homeLinkCache";
     public static final String CACHES_VISUAL_ANALYZER_LINK_CACHE = "visualAnalyzerLinkCache";
-    public static final String CACHES_SERVICE_EXTERNAL_LINK_CACHE = "externalLinkCache";
-    public static final String CACHES_SERVICE_INTERNAL_LINK_CACHE = "internalLinkCache";
     public static final String CACHES_VANITY_BASE_URL_CACHE = "vanityBaseUrlCache";
     public static final String CACHES_DOMAINS_DATA_CACHE = "domainsDataCache";
     public static final String CACHES_TENANT_APP_MAPPING_CACHE = "tenantAppMappingCache";
@@ -40,6 +38,10 @@ public class CacheConstants {
 	public static final String LOOKUP_CACHE_KEY_OOB_DASHBOARD_SAVEDSEARCH = "oobDashboardSavedSearch";
 	public static final String LOOKUP_CACHE_KEY_SERVICE_MENU = "serviceMenus";
 //    public static final String LOOKUP_CACHE_KEY_TENANT_SUBSCRIPTION_INFO = "tenantSubscriptionInfo";
+    
+    // Load OOB metadata at runtime
+    public static final String CACHES_OOB_DASHBOARD_CACHE = "oobDashboardCache";
+    public static final String CACHES_OOB_SAVEDSEARCH_CACHE = "oobSavedSearchCache";
 
 	public static final String SCREENSHOT_BASE64_PNG_PREFIX = "data:image/png;base64,";
 	public static final String SCREENSHOT_BASE64_JPG_PREFIX = "data:image/jpeg;base64,";

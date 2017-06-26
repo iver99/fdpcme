@@ -96,6 +96,7 @@ public class TenantSubscriptionUtil {
 
         LOGGER.info("Trying to retrieve subscription info from /serviceRequest for tenant {}",tenant);
         List<String> apps = new RetryableLookupClient<List<String>>().connectAndDoWithRetry("TenantService", "1.0+", "collection/tenants", false, null, new RetryableLookupClient.RetryableRunner<List<String>>() {
+            @Override
             public List<String> runWithLink(RegistryLookupUtil.VersionedLink lookupLink) throws Exception {
                 if (lookupLink == null || lookupLink.getHref() == null || "".equals(lookupLink.getHref())) {
                     LOGGER.warn(
