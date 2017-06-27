@@ -267,7 +267,11 @@ public class TestDashBoard_WidgetLink extends LoginAndLogout
 		
 		//verify the link has been removed
 		webd.getLogger().info("Verify the link has been removed");
-		Assert.assertFalse(DashboardBuilderUtil.hasWidgetLink(webd, widgetName, 0), "Widget has link");		
+		Assert.assertFalse(DashboardBuilderUtil.hasWidgetLink(webd, widgetName, 0), "Widget has link");	
+		
+		//save the dashboard
+		webd.getLogger().info("Save the dashboard");
+		DashboardBuilderUtil.saveDashboard(webd);
 	}
 	
 	@Test
