@@ -205,7 +205,7 @@
                                     <div class="landing-home-box-content">
                                         <div class="landing-home-box-content-head" data-bind="text: dataExplorers"></div>
                                         <div class="landing-home-box-content-desc" data-bind="text: dataExplorersDesc"></div>
-                                        <select id="dataExp_options" aria-label="Select Data Explorers" style="float: right; margin-top: 25px; margin-right: 10px; width: 235px;" data-bind="ojComponent: {component: 'ojSelect', value: data_type, optionChange: dataExplorersChosen}">                                      
+                                        <select id="dataExp_options" aria-label="Select Data Explorers" style="position:absolute; width: 235px; margin: 0; right: 10px; bottom: 10px;" data-bind="ojComponent: {component: 'ojSelect', value: data_type, optionChange: dataExplorersChosen}">                                      
                                             <option value="select" id="dataExp_Select" data-bind="text: select"></option>                                            
                                             <!-- ko foreach: exploreDataLinkList -->
                                             <option data-bind="attr: {id: 'dataExp_'+name.split(' ')[0]}, value: name, text: name"></option>
