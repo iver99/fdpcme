@@ -10,6 +10,7 @@
 
 package oracle.sysman.emaas.platform.dashboards.tests.ui.impl;
 
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import org.testng.Assert;
@@ -25,7 +26,17 @@ public class GlobalContextUtil_1180 extends GlobalContextUtil_1170
 		//Assert.assertTrue(false, "This method is not available in the current version, please use EntitySelectorUtil.getPillContents(WebDriver driver, Logger logger)");
 		driver.getLogger().warning("This method not supported in the current version, please use EntitySelectorUtil.getPillContents(WebDriver driver, Logger logger)");
 		Logger logger = driver.getLogger();
-				
-		return EntitySelectorUtil.getPillContents(driver, logger).get(0);
+		
+		ArrayList<String> gcname = EntitySelectorUtil.getPillContents(driver, logger);
+		
+		if (gcname.size()>0)
+		{
+			driver.getLogger().info("return the first global context pill: " + gcname.get(0));
+			return gcname.get(0);
+		}
+		else
+		{
+			return "";
+		}		
 	}
 }
