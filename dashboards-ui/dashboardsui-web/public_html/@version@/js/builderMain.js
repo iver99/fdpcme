@@ -219,7 +219,6 @@ require(['knockout',
     'knockout.mapping',
     'uifwk/js/util/df-util',
     'uifwk/js/util/logging-util',
-    'uifwk/js/sdk/menu-util',
     'ojs/ojcore',
     /*'ojs/ojcomponentcore',
     'ojs/ojchart',
@@ -530,3 +529,4 @@ function getDateString(isoString) {
 }
 
 window.addEventListener("message", updateOnePageHeight, false);
+
