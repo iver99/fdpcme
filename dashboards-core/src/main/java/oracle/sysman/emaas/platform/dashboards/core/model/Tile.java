@@ -855,9 +855,9 @@ public class Tile
 		if (row == null) {
 			row = TILE_DEFAULT_ROW;
 		}
-		column = 0;
-		width = 8;
-		height = 1;
+		//column = 0;
+		//width = 8;
+		//height = 1;
 		Integer tileType = DataFormatUtils.tileTypeString2Integer(type);
 		// text tile does not support time control
 		Integer supportTimeControl = 0;
@@ -960,7 +960,7 @@ public class Tile
 	        to.setLastModificationDate(to.getCreationDate());
 	    }
 		if (Tile.TILE_TYPE_TEXT_WIDGET.equals(getType())) {
-			to.setWidgetName(Tile.TEXT_WIDGET_NAME);
+			/*to.setWidgetName(Tile.TEXT_WIDGET_NAME);
 			to.setWidgetDescription(Tile.TEXT_WIDGET_DESCRIPTION);
 			to.setWidgetGroupName(Tile.TEXT_WIDGET_NAME);
 			to.setWidgetOwner(Tile.TEXT_WIDGET_OWNER);
@@ -969,7 +969,7 @@ public class Tile
 			to.setWidgetViewmode(Tile.TEXT_WIDGET_VIEWMODEL);
 			to.setWidgetTemplate(Tile.TEXT_WIDGET_TEMPLATE);
 			to.setWidth(Tile.TEXT_WIDGET_WIDTH);
-			to.setWidgetUniqueId(Tile.TEXT_WIDGET_NAME);
+			to.setWidgetUniqueId(Tile.TEXT_WIDGET_NAME);*/
 			to.setWidgetCreationTime(String.valueOf(DateUtil.getGatewayTime()));
 			String encodedContent = StringEscapeUtils.escapeHtml4(getContent());
 			if (StringUtil.isEmpty(encodedContent) || encodedContent.length() > TEXT_WIDGET_MAX_CONTENT_LEN) {

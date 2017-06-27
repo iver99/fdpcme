@@ -285,6 +285,13 @@
 		"name": "jersey-json",
 		"version": "1.17.1",
 		"transitive": false
+	},
+	"ckeditor": {
+		"group": "CKSource",
+		"name": "ckeditor_full",
+		"version": "4.5.1",
+		"ext": "zip",
+		"transitive": false
 	}
 
 }

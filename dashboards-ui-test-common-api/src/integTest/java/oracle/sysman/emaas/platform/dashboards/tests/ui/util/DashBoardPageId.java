@@ -285,6 +285,7 @@ public class DashBoardPageId
 	public static final String DASHBOARDSETOPTIONSADDHOMECSS = "#dbs-home a[dashboardset-option=\"Set as Home\"]";
 	//dashboard tool bar
 	public static final String DASHBOARDSAVECSS = "button.dashboardSaveBtn";
+	public static final String DASHBOARDADDTEXTWIDGETCSS = "button.dashboardTextBtn";
 
 	//dashboard delete dialog
 	public static final String BUILDERDELETEDIALOGLOCATOR = "id=ojDialogWrapper-delete-dashboard";
@@ -317,7 +318,9 @@ public class DashBoardPageId
 	public static final String REMOVETILEID = "/html/body/div[1]/div/ul/li[10]/a/span[2]";
 	//tile css locators -> css=<locator>
 	public static final String WIDGETTITLECSS = ".dbd-widget";
-
+	public static final String TEXTWIDGETCONTENTCSS = "div[id^='textContentWrapper_']";
+	public static final String TEXTWIDGETEDITORCSS = "div[id^='textEditorWrapper_'] .cke_editable";
+	
 	public static final String TILETITLECSS = "h2.dbd-tile-title";
 	public static final String CONFIGTILECSS = "button[id^=actionButton]";
 	public static final String WIDERTILECSS = "li[data-option=wider]";

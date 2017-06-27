@@ -89,7 +89,9 @@ define(['knockout',
                 var tiles = [];
                 if (self.dashboard.tiles && self.dashboard.tiles()) {
                     for (var i = 0; i < self.dashboard.tiles().length; i++) {
-                        tiles.push(self.dashboard.tiles()[i]);
+                        if(self.dashboard.tiles()[i].type() !== "TEXT_WIDGET") {
+                            tiles.push(self.dashboard.tiles()[i]);
+                        }
                     }
                     tiles.sort(function(tile1, tile2) {
                         return tile1.WIDGET_NAME() > tile2.WIDGET_NAME() ? 1 : (tile1.WIDGET_NAME() < tile2.WIDGET_NAME() ? -1 : 0);

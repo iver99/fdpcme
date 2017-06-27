@@ -189,14 +189,14 @@
                             </div>  
                             <!-- /ko -->
                             <button class='dashboardOptsBtn dashboard-screenshot oj-button oj-default oj-button-half-chrome no-print' id ="dashboardOptsBtn"
-                                    data-bind="ojComponent: { component: 'ojButton', chroming: 'half', icons: {start:'fa-icon-font fa-icon-font-16 dbd-toolbar-icon-option'},
+                                    data-bind="ojComponent: { component: 'ojButton', display: 'icons', chroming: 'half', icons: {start:'fa-icon-font fa-icon-font-16 dbd-toolbar-icon-option'},
                                     menu: '#dashboardOptsMenu'+toolBarGuid},
                                     attr: {title: getNlsString('DBS_BUILDER_BTN_OPTIONS'),id:'dashboardOptsBtn_'+[].toString.apply(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1)))}">
                             </button>
                             <!-- ko if: editDisabled() !== true && $root.isMobileDevice !== 'true' && notZdtStatus -->
                             <button class="dashboardSaveBtn dashboardOptsBtn oj-button oj-default oj-button-half-chrome no-print" id ="dashboardSaveBtn"
                                     data-bind="click: handleDashboardSave, ojComponent: {
-                                        component:'ojButton', chroming: 'half', disabled: disableSave,
+                                        component:'ojButton', display: 'icons', chroming: 'half', disabled: disableSave,
                                         icons: {start: 'fa-icon-font fa-icon-font-16 dbd-toolbar-icon-save'}
                                         }, attr: {title: getNlsString('DBS_BUILDER_BTN_SAVE_DASHBOARD'),id:'dashboardSaveBtn_'+[].toString.apply(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1)))}">
                             </button>
@@ -208,8 +208,19 @@
                                 <!-- /ko -->
                                 <!-- /ko -->
                             </ul>
-                            <!-- /ko -->
                             <span role="separator" aria-orientation="vertical" class="oj-toolbar-separator no-print"></span>
+                            <button class="dashboardTextBtn oj-button oj-default oj-button-half-chrome no-print" id ="dashboardTextBtn"
+                                    data-bind="click: handleAddTextWidget, ojComponent: {
+                                        component:'ojButton', display: 'icons', chroming: 'half', 
+                                        icons: {start: 'fa-icon-font fa-icon-font-16 dbd-toolbar-icon-text'}
+                                        }, attr: {title: getNlsString('DBS_BUILDER_BTN_TEXT'),id:'dashboardTextBtn_'+[].toString.apply(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1)))}, visible: editDisabled() !== true && $root.isMobileDevice !== 'true' && notZdtStatus">
+                            </button>
+                            <!-- /ko -->
+                            
+                            <!-- ko if: shouldShowSeparator -->
+                            <span role="separator" aria-orientation="vertical" class="oj-toolbar-separator no-print"></span>
+                            <!-- /ko -->
+                            
                             <!--ko if: dashboard.enableEntityFilter && ((dashboard.enableEntityFilter() === 'TRUE') || (isUnderSet && dashboard.enableEntityFilter() === 'GC')) -->
                             <div class="df-target-selector">   
                                 <emcta-target-selector data-bind="attr: {id: 'tsel_'+dashboard.id()}"
@@ -321,6 +332,7 @@
                                 data-bind="attr: {'id': 'tileMenu' + $data.clientGuid, title: getNlsString('DBS_BUILDER_TILE_ACTIONS')}, 
                                 event: {mouseover: function(data, event) {$root.showPullRightBtn($data.clientGuid, data, event)}, mouseout: function(data, event) {$root.hidePullRightBtn($data.clientGuid, data, event)}},
                                 ojComponent: {component: 'ojMenu', select: $root.menuItemSelect, open: $root.widgetMenuOpen, openOptions: {position: {'my': 'left center', 'at': 'right center'} } }">
+                                <!-- ko if: $data.type() === "DEFAULT"-->
                                 <li data-option="showhide-title">
                                     <a href="#" data-bind="attr: {'data-show-hide-title': $data.hideTitle() === 'true' ? 'show' : 'hide'}">
                                         <span class="oj-menu-item-icon demo-icon-font">
@@ -340,6 +352,7 @@
                                     <ul>
                                 -->
                                 <li data-option="divider"></li>
+                                <!-- /ko -->
                                         <!-- ko if: $data.editDisabled() !== true -->
                                         <li data-option="wider" data-bind="css: { 'oj-disabled': (!$data.widerEnabled() || !$data.maximizeEnabled() || $data.editDisabled())}">
                                             <a href="#">

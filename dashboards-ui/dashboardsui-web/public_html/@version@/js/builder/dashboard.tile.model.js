@@ -48,6 +48,11 @@ define(['knockout',
             widgetAreaContainer = $b.findEl('.widget-area');
 
             self.dashboard = $b.dashboard;
+            //only show vertical separator after text widget add icon when entity selector or time selector show up in dashboard toolbar
+            self.shouldShowSeparator = ko.computed(function() {
+                return (self.dashboard.enableEntityFilter && ((self.dashboard.enableEntityFilter() === 'TRUE') || (self.isUnderSet && self.dashboard.enableEntityFilter() === 'GC')))
+                       || self.isUnderSet && self.dashboard.enableTimeRange && (self.dashboard.enableTimeRange() === 'TRUE' || self.dashboard.enableTimeRange() === 'GC')
+            });
             var ddsDashboard = new Builder.DashboardDataSource().dataSource[self.dashboard.id()];
             var eagerCreated = ddsDashboard.eagerCreated ? ddsDashboard.eagerCreated : null;
             self.normalMode = (eagerCreated && eagerCreated.normalMode) ? eagerCreated.normalMode : new Builder.NormalEditorMode();
@@ -624,9 +629,9 @@ define(['knockout',
 
                 var dragStartRow = self.editor.mode.getModeRow(tile);
                 var cell = self.editor.getCellFromPosition(widgetAreaWidth, ui.helper.position());
-                if(tile.content) {
-                    cell.column = 0;
-                }
+//                if(tile.content) {
+//                    cell.column = 0;
+//                }
 
                 $b.findEl('.tile-dragging-placeholder').css({
                     left: tile.left() - 5,
@@ -687,9 +692,9 @@ define(['knockout',
                 }
                 var tile = ko.dataFor(ui.helper[0]);
                 var cell = self.editor.getCellFromPosition(widgetAreaWidth, ui.helper.position());
-                if(tile.content) {
-                    cell.column = 0;
-                }
+//                if(tile.content) {
+//                    cell.column = 0;
+//                }
                 ui.helper.css({left:tile.left(), top:tile.top()});
 
                 $(ui.helper).css("opacity", 1);
@@ -1051,6 +1056,7 @@ define(['knockout',
                     hideMainLabel: true,
                     timePeriodsSet: ctxUtil.OMCTimeConstants.timePeriodsSet.SHORT_TERM,
                     enableLatestOnCustomPanel: enableLatestOnCustomPanel,
+                    dtpickerPosition: "left",
                     callbackAfterApply: function(start, end, tp) {
                         callbackAfterApply(start, end, tp);   
                     }
