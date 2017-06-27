@@ -123,7 +123,7 @@
         <div  style="border-top: 1px solid #d6dfe6; margin-top: 10px; padding-top: 5px; "> 
             <button name="dsbinfopop_delete" class="oj-button-half-chrome" data-bind="ojComponent: {component:'ojButton', label: getNlsString('DBS_HOME_DSB_PAGE_INFO_DELETE_LABEL'), 
                                                                                                        icons: {start:'oj-fwk-icon icon-trashcan-ena-16 dbs-icon-size-16'}, 
-                                                                                                       disabled: (dashboard.systemDashboard || $component.userName !== dashboard.owner ||$component.dashboardInTabs || $component.zdtStatus)}, 
+                                                                                                       disabled: (dashboard.systemDashboard || $component.userName !== dashboard.owner || $component.dashboardInTabs() || $component.zdtStatus())}, 
                                                                                          click: $component.handleDashboardDeleted"></button>
             <!--button class="oj-button-half-chrome oj-sm-float-end" data-bind="ojComponent: {component:'ojButton', label: 'Close'}, click: $component.handleCloseDashboardPop"></button-->
         </div>
