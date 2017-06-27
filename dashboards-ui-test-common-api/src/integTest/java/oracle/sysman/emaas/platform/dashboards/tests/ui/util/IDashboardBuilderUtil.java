@@ -126,6 +126,14 @@ public interface IDashboardBuilderUtil extends IUiTestCommonAPI
 
 	public void showWidgetTitle(WebDriver driver, String widgetName, int index, boolean visibility);
 
+	public void addLinkToWidgetTitle(WebDriver driver, String widgetName, String dashboardName);
+
+	public void addLinkToWidgetTitle(WebDriver driver, String widgetName, int index, String dashboardName);
+
+	public boolean verifyLinkOnWidgetTitle(WebDriver driver, String widgetName, String dashboardName);
+
+	public boolean verifyLinkOnWidgetTitle(WebDriver driver, String widgetName, int index, String dashboardName);
+
 	/**
 	 * sort dashboards
 	 *

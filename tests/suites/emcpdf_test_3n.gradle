@@ -153,7 +153,7 @@ task QATest(type:EMTest,dependsOn:[omcSetup]) {
 	include "oracle/sysman/emaas/platform/dashboards/test/RegistryLookup/*"
 	include "oracle/sysman/emaas/platform/dashboards/test/preference/*"
 	include "oracle/sysman/emaas/platform/dashboards/test/screenshot/*"
-	include "oracle/sysman/emaas/platform/dashboards/test/TenantSubscriptions/TenantSubscriptions.class" 
+	include "oracle/sysman/emaas/platform/dashboards/test/TenantSubscriptions/TenantSubscriptions.class"
 
 	useRestAssured=true
 	ext.set("testType", "integration")
@@ -205,7 +205,7 @@ task DEVTest(type:EMTest,dependsOn:omcSetup){
 //Task is added from "emcpdf_uifwk_dev_test_3n"
 task DEVTest2(type:EMTest,dependsOn:omcSetup){
 	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/util/StringUtilTest.class"
-	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/wls/management/AppLoggingManageMXBeanTest.class"
+	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/wls/management/AppLoggingManageMXBeanTest.class"	
 	useRestAssured=true
 	ext.set("testType", "unit")
 }

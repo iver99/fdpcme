@@ -320,6 +320,29 @@ public class DashboardBuilderUtil
 		dbu.showWidgetTitle(driver, widgetName, index, visibility);
 	}
 
+	public static void addLinkToWidgetTitle(WebDriver driver, String widgetName, String dashboardName)
+	{
+		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		dbu.addLinkToWidgetTitle(driver, widgetName, dashboardName);
+	}
+
+	public static void addLinkToWidgetTitle(WebDriver driver, String widgetName, int index, String dashboardName)
+	{
+		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		dbu.addLinkToWidgetTitle(driver, widgetName, index, dashboardName);
+	}
+
+	public static boolean verifyLinkOnWidgetTitle(WebDriver driver, String widgetName, String dashboardName)
+	{
+		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		return dbu.verifyLinkOnWidgetTitle(driver, widgetName, dashboardName);
+	}
+
+	public static boolean verifyLinkOnWidgetTitle(WebDriver driver, String widgetName, int index, String dashboardName) {
+		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		return dbu.verifyLinkOnWidgetTitle(driver, widgetName, index, dashboardName);
+	}
+
 	/**
 	 * sort dashboards
 	 *

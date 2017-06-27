@@ -49,18 +49,30 @@ define(['dashboards/dbsmodel',
 
         self.addToTitleAbled = ko.observable(false);
         self.selectedContent = selectedContent;
-//        self.hideTitle = self.selectedContent()?ko.observable(("true" === self.selectedContent().hideTitle()||true === self.selectedContent().hideTitle())? ["hideTitle"]:[]):ko.observable([]);
-        self.hideTitle = ko.observable([]);
+        self.hideTitle = self.selectedContent()?ko.observable(("true" === self.selectedContent().hideTitle()||true === self.selectedContent().hideTitle())? ["hideTitle"]:[]):ko.observable([]);
+//        self.hideTitle = ko.observable([]);
+        self.prevContentHideTitleSubscription = null;
         self.hasLinkedToTitle = ko.observable(false);
         self.selectedContent.subscribe(function(tile){
+            if(self.prevContentHideTitleSubscription){
+                self.prevContentHideTitleSubscription.dispose();
+            }
             if(!tile){
                 return;
             }
             self.dashboardTilesViewModel = ko.dataFor($(".tiles-wrapper:visible")[0]);
             resetAddLinkToTitle();
 //            self.hideTitle("true" === tile.hideTitle()?["hideTitle"]:[]);
-            self.hideTitle([]);
-            tile.hideTitle("false");
+            self.hideTitle(("true" === self.selectedContent().hideTitle()||true === self.selectedContent().hideTitle())? ["hideTitle"]:[]);
+            self.prevContentHideTitleSubscription = tile.hideTitle.subscribe(function(val){
+                if(val === "true"){
+                    self.hideTitle(["hideTitle"]);
+                    resetAddLinkToTitle(true);
+                }else if(val === "false"){
+                    self.hideTitle([]);
+                    $("input.dashboard-search-input").ojInputText({"disabled": false});
+                }
+            });
             tile.outlineHightlight(true);
             if(tile.WIDGET_LINKED_DASHBOARD && tile.WIDGET_LINKED_DASHBOARD()){
                 self.selectedDashboardId(tile.WIDGET_LINKED_DASHBOARD());
@@ -72,30 +84,7 @@ define(['dashboards/dbsmodel',
                 });
             }
         });
-        self.hideTitle.subscribe(function(val){
-            var tile = self.selectedContent();
-            var checkboxVal2tileVal = val.indexOf("hideTitle")>-1? "true":"false";
-            if(checkboxVal2tileVal !== self.selectedContent().hideTitle()){
-                self.dashboardTilesViewModel.editor.showHideTitle(tile);
-                self.dashboardTilesViewModel.show();
-                self.dashboardTilesViewModel.notifyTileChange(tile, new Builder.TileChange("POST_HIDE_TITLE"));
-            }
-            if(val.indexOf("hideTitle")>-1){
-                resetAddLinkToTitle(true);
-            }else{
-                $("input.dashboard-search-input").ojInputText({"disabled": false});
-            }
-        });
-        self.removeContentClicked = function () {
-            var tile = self.selectedContent();
-            self.dashboardTilesViewModel.editor.deleteTile(tile);
-            self.dashboardTilesViewModel.show();
-            self.dashboardTilesViewModel.notifyTileChange(tile, new Builder.TileChange("POST_DELETE"));
-            $b.triggerEvent($b.EVENT_TILE_RESTORED, 'triggerred by tile deletion', tile);
-            $b.triggerEvent($b.EVENT_TILE_DELETED, null, tile);
-            self.dashboardTilesViewModel.triggerTileTimeControlSupportEvent();
-            $(".back-to-edit-settings").click();
-        };
+
 
 
 
@@ -214,12 +203,14 @@ define(['dashboards/dbsmodel',
             }
             self.selectedContent().WIDGET_LINKED_DASHBOARD(self.selectedDashboard()?self.selectedDashboard().id:null);
             self.hasLinkedToTitle(true);
+            $b.triggerEvent($b.EVENT_TILE_LINK_CHANGED, null);
         };
 
         self.removeLinkToTitleClicked = function(e, d){
             self.selectedContent().WIDGET_LINKED_DASHBOARD(null);
             self.hasLinkedToTitle(false);
             resetAddLinkToTitle();
+            $b.triggerEvent($b.EVENT_TILE_LINK_CHANGED, null);
         };
 
         function resetAddLinkToTitle(holdHasLinkedToTitle){

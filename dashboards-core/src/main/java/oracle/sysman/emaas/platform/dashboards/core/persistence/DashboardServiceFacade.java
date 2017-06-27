@@ -36,6 +36,19 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Query;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+
 public class DashboardServiceFacade
 {
 	private static final Logger LOGGER = LogManager.getLogger(DashboardServiceFacade.class);
@@ -107,7 +120,7 @@ public class DashboardServiceFacade
         }
         return null;
 	}
-	
+
 	public List<BigInteger> getDashboardIdsByNames(List<String> names, Long tenantId) {
 		StringBuilder parameters = new StringBuilder();
 		List<BigInteger> ids = new ArrayList<BigInteger>();
@@ -121,7 +134,7 @@ public class DashboardServiceFacade
 			}
 			parameters.append("'"+ name + "'");
 		}
-		
+
 		String sql = "select dashboard_id from ems_dashboard t where t.name in (" + parameters.toString() + ")"
 		+ " and t.tenant_id = " + tenantId +  " and t.deleted = 0";
 		Query query = em.createNativeQuery(sql);
@@ -134,12 +147,12 @@ public class DashboardServiceFacade
 		}
 		return ids;
 	}
-	
+
 	public String getDashboardNameWithMaxSuffixNumber(String name, Long tenantId) {
 		if (name.contains("'")) {
 			name  = name.replaceAll("'", "''");
 		}
-		String sql = "select name from (" + "select name from ems_dashboard where name like '" + name + "%' and tenant_Id = " + tenantId 
+		String sql = "select name from (" + "select name from ems_dashboard where name like '" + name + "%' and tenant_Id = " + tenantId
 				+ " order by name desc" + ") where rownum = 1";
 		Query query = em.createNativeQuery(sql);
 		Object result = query.getSingleResult();
@@ -215,7 +228,7 @@ public class DashboardServiceFacade
 	//	{
 	//		return em.createNamedQuery("EmsDashboardTileParams.findAll", EmsDashboardTileParams.class).getResultList();
 	//	}
-	
+
 	@SuppressWarnings("unchecked")
 	public List<String> getlinkedDashboards(BigInteger dashboardId) {
 		String sql = "select DISTINCT NAME from EMS_DASHBOARD D WHERE D.DASHBOARD_ID in (select DASHBOARD_ID from EMS_DASHBOARD_TILE t where t.WIDGET_LINKED_DASHBOARD="+dashboardId+")";
@@ -608,7 +621,7 @@ public class DashboardServiceFacade
 		}
 		commitTransaction();
 	}
-	
+
 	public void updateTileLinkedDashboard(BigInteger dashboardId) {
 		if (!getEntityManager().getTransaction().isActive()) {
 			getEntityManager().getTransaction().begin();
