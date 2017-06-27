@@ -23,6 +23,7 @@ public class DashboardBuilderUtil_1200 extends DashboardBuilderUtil_1190
 		WebElement selectedDashboardEl = getSelectedDashboardEl(driver);
 		WebElement textButton = selectedDashboardEl.findElement(By.cssSelector(DashBoardPageId.DASHBOARDADDTEXTWIDGETCSS));
 		textButton.click();
+		driver.waitForServer();
 		driver.takeScreenShot();
 		driver.getLogger().info("add text widget compelted");
 	}
@@ -43,6 +44,8 @@ public class DashboardBuilderUtil_1200 extends DashboardBuilderUtil_1190
 		widget.clear();
 		widget.click();
 		widget.sendKeys(content);
+		
+		driver.waitForServer();
 		
 		driver.takeScreenShot();
 		driver.getLogger().info("editTextWidgetAddContent completed");
