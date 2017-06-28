@@ -24,8 +24,15 @@ define([], function() {
         };
 
         self.delayResizeListenerQueue = [];
+        self.firstResize = false;
         self.triggerEvent = function(event, p1, p2, p3, p4) {
             if (event === "EVENT_BUILDER_RESIZE") {
+                if (!self.firstResize && $("#globalBody").is(":visible")) {
+                    console.debug("resize widget area to get initial position/size for widgets for the 1st time");
+                    self.executeListenersImmediately(event, p1, p2, p3, p4);
+                    self.firstResize = true;
+                    return;
+                }
                 var delayedEvent = {
                     event: event,
                     p1: p1,
