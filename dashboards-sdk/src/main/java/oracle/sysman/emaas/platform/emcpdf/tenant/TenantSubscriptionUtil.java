@@ -178,6 +178,10 @@ public class TenantSubscriptionUtil {
                     }
 
                     List<String> subscribeAppsList = SubscriptionAppsUtil.getSubscribedAppsList(tenantSubscriptionInfo);
+                    //Edition info integrity check...
+                    if(!editionInfoIntegrityCheck(subAppsList)){
+                        LOGGER.info("#2.Full response from /serviceRequest is {}", appsResponse);
+                    }
                     LOGGER.info("After mapping Subscribed App list is {}", subscribeAppsList);
                     if (subscribeAppsList == null) {
                         LOGGER.error("After Mapping action,Empty subscription list found!");
@@ -264,6 +268,21 @@ public class TenantSubscriptionUtil {
         List<AppsInfo> toAppsInfoList = new ArrayList<AppsInfo>();
         toAppsInfoList.addAll(from.getAppsInfoList());
         to.setAppsInfoList(toAppsInfoList);
+    }
+    private static boolean editionInfoIntegrityCheck(List<SubscriptionApps> subAppsList) {
+        if(!subAppsList.isEmpty()){
+            LOGGER.info("Checking edition info's integrity");
+
+            if(subAppsList.get(0).getEditionComponentsList()!=null && !subAppsList.get(0).getEditionComponentsList().isEmpty() ){
+                String editionInfo = subAppsList.get(0).getEditionComponentsList().get(0).getEdition();
+                if(!StringUtils.isEmpty(editionInfo)){
+                    LOGGER.info("Integrity of edition info check passed...");
+                    return true;
+                }
+            }
+        }
+        LOGGER.warn("Integrity of edition info check failed...");
+        return false;
     }
 
     private TenantSubscriptionUtil() {

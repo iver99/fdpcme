@@ -359,6 +359,12 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
             }
             if(data.dashboard.description)
             {
+                var rulerElem = $("#ruler");
+                rulerElem.show();
+                if(!data.dashboard.hasLongDscrpt && rulerElem.html(data.dashboard.description).height()>32){
+                    data.dashboard.hasLongDscrpt = true;
+                }
+                rulerElem.hide();
                 data.dashboard.description = data.dashboard.description.toString().replace(/\n/g,"<br>");
             }
             self.selectedDashboard(data);
