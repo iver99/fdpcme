@@ -20,10 +20,12 @@ requirejs.config({
             'uifwk/js/widgets/navlinks/js/navigation-links',
             'uifwk/js/widgets/timeFilter/js/timeFilter',
             'uifwk/js/widgets/widgetselector/js/widget-selector',
+            'uifwk/js/widgets/widgetselector-listview/js/widget-selector-listview',
             'text!uifwk/js/widgets/aboutbox/html/aboutbox.html',
             'text!uifwk/js/widgets/navlinks/html/navigation-links.html',
             'text!uifwk/js/widgets/brandingbar/html/brandingbar.html',
             'text!uifwk/js/widgets/widgetselector/html/widget-selector.html',
+            'text!uifwk/js/widgets/widgetselector-listview/html/widget-selector-listview.html',
             'text!uifwk/js/widgets/timeFilter/html/timeFilter.html',
             'text!uifwk/js/widgets/datetime-picker/html/datetime-picker.html'
             ]
@@ -153,6 +155,12 @@ require(['knockout',
                     template:{require:'text!uifwk/js/widgets/widgetselector/html/widget-selector.html'}
                 });
             }
+            if (!ko.components.isRegistered('df-widget-selector-listview')) {
+                ko.components.register("df-widget-selector-listview",{
+                    viewModel:{require:'uifwk/js/widgets/widgetselector-listview/js/widget-selector-listview'},
+                    template:{require:'text!uifwk/js/widgets/widgetselector-listview/html/widget-selector-listview.html'}
+                });
+            }
 
             /**
             * Get URL parameter value according to URL parameter name
@@ -269,6 +277,11 @@ require(['knockout',
                 };
 
                 self.openWidgetSelectorDialog = function() {
+                    $('#'+widgetSelectorDialogId).ojDialog('open');
+                };
+                
+                self.openWidgetSelectorList = function() {
+                    debugger;
                     $('#'+widgetSelectorDialogId).ojDialog('open');
                 };
             }

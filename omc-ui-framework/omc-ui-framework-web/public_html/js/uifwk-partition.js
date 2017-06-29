@@ -16,6 +16,7 @@ define([
 'uifwk/js/widgets/hamburger-menu/js/hamburger-menu',
 'uifwk/js/widgets/timeFilter/js/timeFilter',
 'uifwk/js/widgets/widgetselector/js/widget-selector',
+'uifwk/js/widgets/widgetselector-listview/js/widget-selector-listview',
 'uifwk/js/util/zdt-util',
 'uifwk/js/sdk/menu-util'
 ],
