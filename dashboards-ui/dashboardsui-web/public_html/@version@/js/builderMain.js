@@ -379,7 +379,6 @@ require(['knockout',
                                 };
 
                                 onElementHeightChange($("#headerWrapper"), function() {
-                                    console.debug("Height for headerWrapper is changed!");
                                     var height = $("#headerWrapper").height();
                                     if (!self.headerHeight){
                                         self.headerHeight = height;
