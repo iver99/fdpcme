@@ -8,7 +8,9 @@ define('uifwk/@version@/js/widgets/widgetselector-listview/widget-selector-listv
     'ojs/ojselectcombobox',
     'ojs/ojdialog',
     'ojs/ojinputtext',
-    'ojs/ojbutton'
+    'ojs/ojbutton',
+    'ojs/ojlistview', 
+    'ojs/ojjsontreedatasource'
     ],
         function (ko, $, dfumodel, oj, nls, typeaheadsearch) {
             function WidgetSelectorListviewViewModel(params) {
@@ -74,7 +76,18 @@ define('uifwk/@version@/js/widgets/widgetselector-listview/widget-selector-listv
                 self.currentWidget = ko.observable();
                 self.confirmBtnDisabled = ko.observable(true);
                 self.widgetOnLoading = ko.observable(true);
-
+                //JUST FOR TEST TO BE REMOVED
+                $.ajaxSettings.async = false;
+                $.getJSON( "http://www.oracle.com/webfolder/technetwork/jet/demo/cookbook/dataCollections/listView/jsonHierListView/files.json", 
+                function(data){
+                        self.widgetsDataSource = new oj.JsonTreeDataSource(data);
+                }); 
+                self.itemOnly = function(context){
+                        return context['leaf'];
+                };
+                self.isWidgetOwnerGroup = function(file, bindingContext){
+                        return bindingContext.$itemContext.leaf ? 'widget_details' : 'widget_group';
+                } ;
                 // Initialize data and refresh
                 self.beforeOpenDialog = function(event, ui) {
                     refreshWidgets();
