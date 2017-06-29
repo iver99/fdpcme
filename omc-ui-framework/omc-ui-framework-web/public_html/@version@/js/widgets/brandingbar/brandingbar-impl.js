@@ -353,7 +353,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     }
                     return "display: flex; float: left; width: 100%; height: " + height + ";";
                 } else {
-                    return "height:100%;width:100%;";
+                    return "display:block;float:none;width:100%;";
                 }
             });
 
