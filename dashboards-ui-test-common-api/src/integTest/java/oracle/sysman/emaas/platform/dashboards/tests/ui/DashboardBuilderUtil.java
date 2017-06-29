@@ -23,6 +23,12 @@ public class DashboardBuilderUtil
 		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
 		dbu.addNewDashboardToSet(driver, dashboardName);
 	}
+	
+	public static void addTextWidgetToDashboard(WebDriver driver)
+	{
+		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		dbu.addTextWidgetToDashboard(driver);
+	}
 
 	public static void addWidgetToDashboard(WebDriver driver, String searchString)
 	{
@@ -82,6 +88,12 @@ public class DashboardBuilderUtil
 	{
 		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
 		dbu.editDashboardSet(driver, name, descriptions);
+	}
+	
+	public static void editTextWidgetAddContent(WebDriver driver, int index, String content)
+	{
+		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		dbu.editTextWidgetAddContent(driver, index, content);
 	}
 
 	/*

@@ -4,9 +4,10 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
     'jquery',
     'uifwk/@version@/js/util/ajax-util-impl',
     'uifwk/@version@/js/util/df-util-impl',
-    'uifwk/@version@/js/util/usertenant-util-impl'
+    'uifwk/@version@/js/util/usertenant-util-impl',
+    'uifwk/@version@/js/sdk/SessionCacheUtil'
 ],
-    function (oj, ko, $, ajaxUtilModel, dfuModel, userTenantModel)
+    function (oj, ko, $, ajaxUtilModel, dfuModel, userTenantModel, sessionCacheModel)
     {
         function UIFWKGlobalMenuUtil() {
             var self = this;
@@ -31,6 +32,7 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
                 'GLOBAL_COMPLIANCE': 'omc_root_Compliance',
                 'GLOBAL_ADMIN': 'omc_root_admin',
                 'GLOBAL_ADMIN_ALERTRULES': 'omc_root_admin_alertrules',
+                'GLOBAL_ADMIN_NOTIFICATION_CHANNELS': 'omc_root_admin_notificationChannels',
                 'GLOBAL_ADMIN_AGENTS': 'omc_root_admin_agents',
                 'GLOBAL_ADMIN_CLOUDDISCOVERYPROFILES': 'omc_root_admin_clouddiscoveryprofiles',
                 'GLOBAL_ADMIN_ENTITIESCONFIG': 'omc_root_admin_entitiesconfig',
@@ -349,6 +351,98 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
                         targetUrl = generateVanityUrl(originalUrl, urls[serviceName]);
                     }
                     callback(targetUrl);
+                }
+            };
+            
+            self.xlargeScreen = oj.ResponsiveKnockoutUtils.createMediaQueryObservable('(min-width: 1440px)');
+            
+            var menuStatusSessionCacheName = '_uifwk_hamburgermenustatuscache';
+            var menuStatusSessionCacheDataKey = 'hamburger_menu_is_open';
+            var menuStatusSessionCache = new sessionCacheModel(menuStatusSessionCacheName, 1);
+            function getHamburgerMenuInitialStatus(){
+                return menuStatusSessionCache && menuStatusSessionCache.retrieveDataFromCache(menuStatusSessionCacheName) && menuStatusSessionCache.retrieveDataFromCache(menuStatusSessionCacheName)[menuStatusSessionCacheDataKey];
+            }
+            
+            /**
+             * Check cached hamburger menu status to see if need to open hamburger menu by default
+             * 
+             * @returns {boolean} true: show by default, false: hide by default
+             */
+            self.showHamburgerMenuByDefault = function() {
+                var menuInitialStatus = getHamburgerMenuInitialStatus();
+                return menuInitialStatus !== 'closed';
+            };
+            
+            /**
+             * Initialize hamburger menu layout
+             * 
+             * @returns
+             */
+            self.initializeHamburgerMenuLayout = function() {
+                function setOverlayHamburgerMenuStyles() {
+                    $("#uifwkLayoutHbgmenuPlaceHolder").removeClass('oj-flex-item');
+                    $("#uifwkLayoutMainContainer").removeClass('oj-flex-item'); 
+                    $("#uifwkLayoutMainContainer").addClass('oj-web-applayout-scrollable');
+                    $("#uifwkLayoutMainContainer").addClass('oj-web-applayout-page');
+                    $("#offcanvasInnerContainer").removeClass('oj-flex');
+                    $("#offcanvasInnerContainer").removeClass('oj-flex-items-pad');
+                }
+                
+                if(!self.xlargeScreen()) {
+                    setOverlayHamburgerMenuStyles();
+                }
+                else {
+                    if (self.showHamburgerMenuByDefault()) {
+                        $('#uifwkLayoutMainContainer').width($(window).width() - 250);
+                    }
+                    else {
+                        $('#uifwkLayoutHbgmenuPlaceHolder').hide();
+                        $("#omcHamburgerMenu").hide();
+                        $('#uifwkLayoutMainContainer').width($(window).width());
+                    }
+                    $('#uifwkLayoutHbgmenuPlaceHolder').width(250);
+                }
+            };
+            
+            /**
+             * Add listener when hamburger menu is opened or closed in large screen
+             * 
+             * @param {Function} callback Callback function to be invoked
+             * 
+             * @returns
+             */
+            self.subscribeHamburgerMenuToggleEvent = function(callback) {
+                function onHamburgerMenuToggle(event) {
+                    if (event.origin !== window.location.protocol + '//' + window.location.host) {
+                        return;
+                    }
+                    var eventData = event.data;
+                    //Only handle received message for composite menu display
+                    if (eventData && eventData.tag && eventData.tag === 'EMAAS_OMC_GLOBAL_MENU_TOGGLE_STATUS') {
+                        if ($.isFunction(callback)) {
+                            callback(eventData.toggleType);
+                        }
+                    }
+                };
+                window.addEventListener("message", onHamburgerMenuToggle, false);
+            };
+            
+            /**
+             * Resize hamburger menu layout
+             * 
+             * @returns
+             */
+            self.resizeHamburgerMenuLayout = function() {
+                if(!self.xlargeScreen()) {
+                    $("#uifwkLayoutMainContainer").width($(window).width());
+                }
+                else {
+                    if ($("#omcHamburgerMenu").length > 0 && $("#omcHamburgerMenu").is(':visible')) {
+                        $('#uifwkLayoutMainContainer').width($(window).width() - 250);
+                    }
+                    else {
+                        $("#uifwkLayoutMainContainer").width($(window).width());
+                    }
                 }
             };
         }

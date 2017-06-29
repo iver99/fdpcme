@@ -13,6 +13,7 @@ import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.CommonResourceException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
+import oracle.sysman.emaas.platform.dashboards.core.nls.DatabaseResourceBundleUtil;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
 import oracle.sysman.emaas.platform.dashboards.core.util.BigIntegerSerializer;
 import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
@@ -209,6 +210,12 @@ public class Dashboard
 		return Dashboard.valueOf(ed, null, true, true, true);
 	}
 
+    public static Dashboard valueOf(EmsDashboard from, Dashboard to, boolean loadSubDashboards, boolean alwaysLoadTiles,
+            boolean loadTileParams)
+    {
+        return Dashboard.valueOf(from, to, loadSubDashboards, alwaysLoadTiles, loadTileParams, false);
+    }
+
 	/**
 	 * Get a dashboard instance from EmsDashboard instance, by providing the prototype dashboard object
 	 *
@@ -222,7 +229,7 @@ public class Dashboard
 	 * @return
 	 */
 	public static Dashboard valueOf(EmsDashboard from, Dashboard to, boolean loadSubDashboards, boolean alwaysLoadTiles,
-			boolean loadTileParams)
+			boolean loadTileParams, boolean loadScreenShot)
 	{
 		if (from == null) {
 			return null;
@@ -233,7 +240,6 @@ public class Dashboard
 		to.setCreationDate(from.getCreationDate());
 		to.setDashboardId(from.getDashboardId());
 		to.setDeleted(from.getDeleted() == null ? null : from.getDeleted().compareTo(BigInteger.ZERO) > 0);
-		to.setDescription(from.getDescription());
 		to.setEnableTimeRange(EnableTimeRangeState.fromValue(from.getEnableTimeRange()));
 		to.setEnableEntityFilter(EnableEntityFilterState.fromValue(from.getEnableEntityFilter()));
 		to.setEnableDescription(EnableDescriptionState.fromValue(from.getEnableDescription()));
@@ -243,27 +249,36 @@ public class Dashboard
 		to.setSharePublic(DataFormatUtils.integer2Boolean(from.getSharePublic()));
 		to.setLastModificationDate(from.getLastModificationDate());
 		to.setLastModifiedBy(from.getLastModifiedBy());
-		to.setName(from.getName());
 		to.setOwner(from.getOwner());
 		// by default, we'll not load screenshot for query
-		//		to.setScreenShot(from.getScreenShot());
+		if(loadScreenShot) {
+		    to.setScreenShot(from.getScreenShot());
+		}
 		to.setType(DataFormatUtils.dashboardTypeInteger2String(from.getType()));
 		to.setExtendedOptions(from.getExtendedOptions());
 		to.setApplicationType(from.getApplicationType());
+		
+		// translate OOB data
+		if(to.isSystem) {
+		    to.setName(DatabaseResourceBundleUtil.getTranslatedString(DashboardApplicationType.fromValue(from.getApplicationType()), from.getName()));
+		    to.setDescription(DatabaseResourceBundleUtil.getTranslatedString(DashboardApplicationType.fromValue(from.getApplicationType()), from.getDescription()));
+		} else {
+		    to.setName(from.getName());
+		    to.setDescription(from.getDescription());
+		}
+		
 		if (from.getType().equals(DASHBOARD_TYPE_CODE_SET)) {
 			to.setEnableTimeRange(null);
 			to.setIsSystem(DataFormatUtils.integer2Boolean(from.getIsSystem()));
 			if (loadSubDashboards) {
-				List<EmsSubDashboard> emsSubDashboards = from
-						.getSubDashboardList();
+				List<EmsSubDashboard> emsSubDashboards = from.getSubDashboardList();
 				if (emsSubDashboards != null) {
 					List<BigInteger> subDashboardIds = new ArrayList<BigInteger>();
 					getSubDashboardIds(emsSubDashboards, subDashboardIds);
 					Long tenantId = from.getTenantId();
 					EntityManager em = null;
 					try {
-						DashboardServiceFacade dsf = new DashboardServiceFacade(
-								tenantId);
+						DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 						List<EmsDashboard> subEmsDashboards = dsf.getEmsDashboardByIds(subDashboardIds, tenantId);
 						List<Dashboard> subDashboardList = new ArrayList<Dashboard>();
 						getSubDashboardsFromEmsSubDashboards(subEmsDashboards,
@@ -545,6 +560,7 @@ public class Dashboard
 		Integer isShowInHome=DataFormatUtils.boolean2Integer(showInHome);
 		Integer dashboardType = DataFormatUtils.dashboardTypeString2Integer(type);
 		Integer appType = appicationType == null ? null : appicationType.getValue();
+		//TODO Integer appType = applicationType;
 		String htmlEcodedName = StringEscapeUtils.escapeHtml4(name);
 		String htmlEcodedDesc = description == null ? null : StringEscapeUtils.escapeHtml4(description);
 
@@ -909,9 +925,6 @@ public class Dashboard
 
 		for (int index = 0; index < dashboards.size(); index++) {
 			Dashboard subDashboard = dashboards.get(index);
-
-			Long tenantId = ed.getTenantId();
-
 			BigInteger subDashboardId = subDashboard.getDashboardId();
 			EmsDashboard subbed = dsf.getEmsDashboardById(subDashboardId);
 

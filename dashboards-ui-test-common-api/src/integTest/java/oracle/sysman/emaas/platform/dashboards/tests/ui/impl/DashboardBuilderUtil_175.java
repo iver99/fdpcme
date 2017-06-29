@@ -74,7 +74,7 @@ public abstract class DashboardBuilderUtil_175 extends DashboardBuilderUtil_171
 		driver.getLogger().info("Now moving to the widget title bar");
 		builder.moveToElement(widgetTitle).perform();
 		driver.takeScreenShot();
-
+		driver.savePageToFile();
 		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 		String widgetAttribute = widgetTitle.getAttribute("title");
 		if ("Restore".equalsIgnoreCase(widgetAttribute)) {
@@ -84,6 +84,7 @@ public abstract class DashboardBuilderUtil_175 extends DashboardBuilderUtil_171
 			wait.until(ExpectedConditions.elementToBeClickable(widgetMaxMin));
 			widgetMaxMin.click();
 			driver.takeScreenShot();
+			driver.savePageToFile();
 		}
 
 	}
@@ -110,7 +111,7 @@ public abstract class DashboardBuilderUtil_175 extends DashboardBuilderUtil_171
 		driver.getLogger().info("Now moving to the widget title bar");
 		builder.moveToElement(widgetTitle).perform();
 		driver.takeScreenShot();
-
+		driver.savePageToFile();
 		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 		String widgetAttribute = widgetTitle.getAttribute("title");
 		if ("Maximize".equalsIgnoreCase(widgetAttribute)) {
@@ -120,15 +121,15 @@ public abstract class DashboardBuilderUtil_175 extends DashboardBuilderUtil_171
 			wait.until(ExpectedConditions.elementToBeClickable(widgetMaxMin));
 			widgetMaxMin.click();
 			driver.takeScreenShot();
+			driver.savePageToFile();
 		}
 
 	}
 
 	private WebElement getTileTitleElement(WebDriver driver, String widgetName, int index)
 	{
-		driver.waitForElementPresent(DashBoardPageId_190.BUILDERTILESEDITAREA);
+
 		driver.click(DashBoardPageId_190.BUILDERTILESEDITAREA);
-		driver.takeScreenShot();
 
 		String titleTitlesLocator = String.format(DashBoardPageId_190.BUILDERTILETITLELOCATOR, widgetName);
 		List<WebElement> tileTitles = driver.getWebDriver().findElements(By.xpath(titleTitlesLocator));

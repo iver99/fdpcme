@@ -10,18 +10,22 @@
 
 package oracle.sysman.emaas.platform.dashboards.tests.ui.impl;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardHomeUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
+import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
@@ -36,7 +40,7 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	private static final Logger LOGGER = LogManager.getLogger(DashboardHomeUtil_171.class);
 
 	//	public static void createDashboardSet(WebDriver driver, String name, String descriptions, Boolean displayDesc,
-	//			Boolean selectorRefreshcontrol) 
+	//			Boolean selectorRefreshcontrol)
 	//	{
 	//
 	//	}
@@ -45,7 +49,7 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardHomeUtil#closeOverviewPage(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
 	@Override
-	public void closeOverviewPage(WebDriver driver) 
+	public void closeOverviewPage(WebDriver driver)
 	{
 
 		if (driver.isDisplayed(DashBoardPageId.OVERVIEWCLOSEID)) {
@@ -58,7 +62,7 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardHomeUtil#createDashboard(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void createDashboard(WebDriver driver, String name, String descriptions) 
+	public void createDashboard(WebDriver driver, String name, String descriptions)
 	{
 		createDashboard(driver, name, descriptions, TYPE_DASHBOARD);
 
@@ -68,7 +72,7 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardHomeUtil#createDashboard(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void createDashboard(WebDriver driver, String name, String descriptions, String type) 
+	public void createDashboard(WebDriver driver, String name, String descriptions, String type)
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call createDashboard : " + name);
 		driver.click(convertID(DashBoardPageId.CREATEDSBUTTONID));
@@ -85,12 +89,11 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 		else if (DASHBOARDSET.equalsIgnoreCase(type)) {
 			driver.check(convertID(DashBoardPageId.DASHBOARDTYPE_SET));
 		}
- 
+
 		boolean isDisplayed = driver.isDisplayed(convertID(DashBoardPageId.DASHOKBUTTONID));
-		driver.getLogger().info("isDisplayed:" +isDisplayed);
+		driver.getLogger().info("isDisplayed:" + isDisplayed);
 		driver.click(convertID(DashBoardPageId.DASHOKBUTTONID));
 		driver.setPageLoadDetector(BuildPageLoadDetector.class);
-		driver.waitForServer(); 
 		driver.setPageLoadDetector(null);
 
 	}
@@ -99,7 +102,7 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardHomeUtil#createDashboardSet(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void createDashboardSet(WebDriver driver, String name, String descriptions) 
+	public void createDashboardSet(WebDriver driver, String name, String descriptions)
 	{
 		createDashboard(driver, name, descriptions, TYPE_DASHBOARDSET);
 
@@ -109,7 +112,7 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardHomeUtil#deleteDashboard(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void deleteDashboard(WebDriver driver, String dashboardName, String view) 
+	public void deleteDashboard(WebDriver driver, String dashboardName, String view)
 	{
 
 		driver.getLogger().info("[DashboardHomeUtil] call delete dashboardName : " + dashboardName);
@@ -118,22 +121,25 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 		if (DASHBOARDS_GRID_VIEW.equals(view)) {
 			gridView(driver);
 			driver.takeScreenShot();
+			driver.savePageToFile();
 			deleteDashboardInGrid(driver, dashboardName);
 		}
 
 		if (DASHBOARDS_LIST_VIEW.equals(view)) {
 			listView(driver);
 			driver.takeScreenShot();
+			driver.savePageToFile();
 			deleteDashboardInList(driver, dashboardName);
 		}
 		driver.takeScreenShot();
+		driver.savePageToFile();
 	}
 
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardHomeUtil#filterOptions(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
 	@Override
-	public void filterOptions(WebDriver driver, String filter) 
+	public void filterOptions(WebDriver driver, String filter)
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call filterOptions filter: " + filter);
 		Validator.notEmptyString("filter", filter);
@@ -145,37 +151,37 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 		if (trimedFs.contains("apm")) {
 			driver.waitForElementPresent(DashBoardPageId.FILTERAPMLOCATOR);
 			driver.click(DashBoardPageId.FILTERAPMLOCATOR);
-			WaitUtil.waitForPageFullyLoaded(driver);
+
 		}
 		if (trimedFs.contains("la")) {
 			driver.waitForElementPresent(DashBoardPageId.FILTERLALOCATOR);
 			driver.click(DashBoardPageId.FILTERLALOCATOR);
-			WaitUtil.waitForPageFullyLoaded(driver);
+
 		}
 		if (trimedFs.contains("ita")) {
 			driver.waitForElementPresent(DashBoardPageId.FILTERITALOCATOR);
 			driver.click(DashBoardPageId.FILTERITALOCATOR);
-			WaitUtil.waitForPageFullyLoaded(driver);
+
 		}
 		if (trimedFs.contains("oracle")) {
 			driver.waitForElementPresent(DashBoardPageId.FILTERORACLELOCATOR);
 			driver.click(DashBoardPageId.FILTERORACLELOCATOR);
-			WaitUtil.waitForPageFullyLoaded(driver);
+
 		}
 		if (trimedFs.contains("share")) {
 			driver.waitForElementPresent(DashBoardPageId.FILTERSHARELOCATOR);
 			driver.click(DashBoardPageId.FILTERSHARELOCATOR);
-			WaitUtil.waitForPageFullyLoaded(driver);
+
 		}
 		if (trimedFs.contains("me")) {
 			driver.waitForElementPresent(DashBoardPageId.FILTERMELOCATOR);
 			driver.click(DashBoardPageId.FILTERMELOCATOR);
-			WaitUtil.waitForPageFullyLoaded(driver);
+
 		}
 		if (trimedFs.contains("favorites")) {
 			driver.waitForElementPresent(DashBoardPageId.FILTERFAVORITELOCATOR);
 			driver.click(DashBoardPageId.FILTERFAVORITELOCATOR);
-			WaitUtil.waitForPageFullyLoaded(driver);
+
 		}
 	}
 
@@ -193,7 +199,7 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardHomeUtil#gotoDataExplorer(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
 	@Override
-	public void gotoDataExplorer(WebDriver driver, String option) 
+	public void gotoDataExplorer(WebDriver driver, String option)
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call exploreData -> " + option);
 
@@ -201,34 +207,34 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 
 		driver.click(convertName(DashBoardPageId.EXPLOREDATABTNID));
 		//WebElement menu = driver.getElement(convertName(DashBoardPageId.EXPLOREDATAMENU));
-                 
-                if (IDashboardHomeUtil.EXPLOREDATA_MENU_LOG.equals(option)) {                 
-                        driver.click(DashBoardPageId.EXPLORE_LOG);
-                 } else {
-                     	driver.click(DashBoardPageId.EXPLORE_Search);
-		 }
- 
-               
-              }  
-               
-		/*List<WebElement> menuList = menu.findElements(By.tagName("li"));
-		for (WebElement menuItem : menuList) {
-			if (option.equals(menuItem.getText())) {
-				menuItem.click();
-				break;
-			}
+
+		if (IDashboardHomeUtil.EXPLOREDATA_MENU_LOG.equals(option)) {
+			driver.click(DashBoardPageId.EXPLORE_LOG);
 		}
+		else {
+			driver.click(DashBoardPageId.EXPLORE_Search);
+		}
+
+	}
+
+	/*List<WebElement> menuList = menu.findElements(By.tagName("li"));
+	for (WebElement menuItem : menuList) {
+		if (option.equals(menuItem.getText())) {
+			menuItem.click();
+			break;
+		}
+	}
 	}*/
 
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardHomeUtil#gridView(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
 	@Override
-	public void gridView(WebDriver driver) 
+	public void gridView(WebDriver driver)
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call gridView");
 		driver.waitForElementPresent(DashBoardPageId.DASHBOARDSGRIDVIEWLOCATOR);
-		
+
 		driver.click(DashBoardPageId.DASHBOARDSGRIDVIEWLOCATOR);
 	}
 
@@ -236,7 +242,7 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardHomeUtil#isDashboardExisted(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
 	@Override
-	public boolean isDashboardExisted(WebDriver driver, String dashboardName) 
+	public boolean isDashboardExisted(WebDriver driver, String dashboardName)
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call isDashboardExists dashboardName: " + dashboardName);
 		Validator.notEmptyString("dashboardName", dashboardName);
@@ -251,7 +257,7 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardHomeUtil#isFilterOptionSelected(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
 	@Override
-	public boolean isFilterOptionSelected(WebDriver driver, String filter) 
+	public boolean isFilterOptionSelected(WebDriver driver, String filter)
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call isFilterOptionSelected filter: " + filter);
 		Validator.notEmptyString("filter", filter);
@@ -286,14 +292,14 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardHomeUtil#listDashboardNames(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
 	@Override
-	public List<String> listDashboardNames(WebDriver driver) 
+	public List<String> listDashboardNames(WebDriver driver)
 	{
 		driver.waitForServer();
 		List<String> names = new ArrayList<String>();
 		List<WebElement> eles = driver.getWebDriver().findElements(By.xpath(DashBoardPageId.DASHBOARDNAMECONTAINERS));
 		for (int i = 1; i <= eles.size(); i++) {
 			String locator = DashBoardPageId.DASHBOARDNAMEINDEXLOCATOR.replaceFirst("_index_", String.valueOf(i));
-			driver.getLogger().info("Get dahsbord name for: "+ locator);
+			driver.getLogger().info("Get dahsbord name for: " + locator);
 			driver.waitForElementPresent(locator);
 			driver.waitForServer();
 			WebElement ele = driver.getElement(locator);
@@ -321,11 +327,11 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardHomeUtil#listView(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
 	@Override
-	public void listView(WebDriver driver) 
+	public void listView(WebDriver driver)
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call listView");
 		driver.waitForElementPresent(DashBoardPageId.DASHBOARDSLISTVIEWLOCATOR);
-		
+
 		driver.click(DashBoardPageId.DASHBOARDSLISTVIEWLOCATOR);
 	}
 
@@ -333,7 +339,7 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardHomeUtil#resetFilterOptions(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
 	@Override
-	public void resetFilterOptions(WebDriver driver) 
+	public void resetFilterOptions(WebDriver driver)
 	{
 
 		driver.getLogger().info("[DashboardHomeUtil] call resetFilterOptions");
@@ -399,7 +405,7 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardHomeUtil#selectDashboard(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
 	@Override
-	public void selectDashboard(WebDriver driver, String dashboardName) 
+	public void selectDashboard(WebDriver driver, String dashboardName)
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call selectDashboard dashboardName: " + dashboardName);
 		String indicator = DashBoardPageId.DASHBOARDNAMELOCATOR.replace("_name_", dashboardName);
@@ -413,7 +419,7 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 		driver.waitForElementEnabled(indicator);
 		driver.getWebDriver().findElement(By.xpath(indicator)).click();
 		//driver.click(indicator);
-		driver.waitForServer();
+		//driver.waitForServer();
 		driver.setPageLoadDetector(BuildPageLoadDetector.class);
 		driver.waitForServer(); 
 		driver.setPageLoadDetector(null);
@@ -423,24 +429,23 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardHomeUtil#selectOOB(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
 	@Override
-	public void selectOOB(WebDriver driver, String dashboardName) 
+	public void selectOOB(WebDriver driver, String dashboardName)
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call selectOOB dashboardName: " + dashboardName);
 		Validator.notEmptyString("dashboardName", dashboardName);
-		String indicator = driver.isElementPresent(DashBoardPageId.OOBDASHBOARDNAMELOCATORLISTVIEW) ?
-				DashBoardPageId.OOBDASHBOARDNAMELOCATOR.replace("_name_", dashboardName)
-				: DashBoardPageId.OOBDASHBOARD_LIST_LINK.replace("_name_", dashboardName);
-		if (!driver.isElementPresent(indicator)) {
-			throw new NoSuchElementException("Dashboard not exists. Name: " + dashboardName);
-		}
-		driver.click(indicator);
+		String indicator = driver.isElementPresent(DashBoardPageId.OOBDASHBOARDNAMELOCATORLISTVIEW) ? DashBoardPageId.OOBDASHBOARDNAMELOCATOR
+				.replace("_name_", dashboardName) : DashBoardPageId.OOBDASHBOARD_LIST_LINK.replace("_name_", dashboardName);
+				if (!driver.isElementPresent(indicator)) {
+					throw new NoSuchElementException("Dashboard not exists. Name: " + dashboardName);
+				}
+				driver.click(indicator);
 	}
 
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardHomeUtil#sortBy(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
 	@Override
-	public void sortBy(WebDriver driver, String option) 
+	public void sortBy(WebDriver driver, String option)
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call sortBy option: " + option);
 		Validator.notEmptyString("option", option);
@@ -450,57 +455,57 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 		if ("default".equals(option)) {
 			driver.waitForElementPresent(DashBoardPageId.SORTBYDEFAULTLOCATOR);
 			driver.click(DashBoardPageId.SORTBYDEFAULTLOCATOR);
-			WaitUtil.waitForPageFullyLoaded(driver);
+
 		}
 		else if (DASHBOARD_QUERY_ORDER_BY_NAME_ASC.equals(option)) {
 			driver.waitForElementPresent(DashBoardPageId.SORTBYNAMEASCLOCATOR);
 			driver.click(DashBoardPageId.SORTBYNAMEASCLOCATOR);
-			WaitUtil.waitForPageFullyLoaded(driver);
+
 		}
 		else if (DASHBOARD_QUERY_ORDER_BY_NAME_DSC.equals(option)) {
 			driver.waitForElementPresent(DashBoardPageId.SORTBYNAMEDSCLOCATOR);
 			driver.click(DashBoardPageId.SORTBYNAMEDSCLOCATOR);
-			WaitUtil.waitForPageFullyLoaded(driver);
+
 		}
 		else if (DASHBOARD_QUERY_ORDER_BY_OWNER_ASC.equals(option)) {
 			driver.waitForElementPresent(DashBoardPageId.SORTBYCREATEDBYASCLOCATOR);
 			driver.click(DashBoardPageId.SORTBYCREATEDBYASCLOCATOR);
-			WaitUtil.waitForPageFullyLoaded(driver);
+
 		}
 		else if (DASHBOARD_QUERY_ORDER_BY_OWNER_DSC.equals(option)) {
 			driver.waitForElementPresent(DashBoardPageId.SORTBYCREATEDBYDSCLOCATOR);
 			driver.click(DashBoardPageId.SORTBYCREATEDBYDSCLOCATOR);
-			WaitUtil.waitForPageFullyLoaded(driver);
+
 		}
 		else if (DASHBOARD_QUERY_ORDER_BY_CREATE_TIME_ASC.equals(option)) {
 			driver.waitForElementPresent(DashBoardPageId.SORTBYCREATEDATEASCLOCATOR);
 			driver.click(DashBoardPageId.SORTBYCREATEDATEASCLOCATOR);
-			WaitUtil.waitForPageFullyLoaded(driver);
+
 		}
 		else if (DASHBOARD_QUERY_ORDER_BY_CREATE_TIME_DSC.equals(option)) {
 			driver.waitForElementPresent(DashBoardPageId.SORTBYCREATEDATEDSCLOCATOR);
 			driver.click(DashBoardPageId.SORTBYCREATEDATEDSCLOCATOR);
-			WaitUtil.waitForPageFullyLoaded(driver);
+
 		}
 		else if (DASHBOARD_QUERY_ORDER_BY_LAST_MODIFEID_ASC.equals(option)) {
 			driver.waitForElementPresent(DashBoardPageId.SORTBYLASTMODIFIEDASCLOCATOR);
 			driver.click(DashBoardPageId.SORTBYLASTMODIFIEDASCLOCATOR);
-			WaitUtil.waitForPageFullyLoaded(driver);
+
 		}
 		else if (DASHBOARD_QUERY_ORDER_BY_LAST_MODIFEID_DSC.equals(option)) {
 			driver.waitForElementPresent(DashBoardPageId.SORTBYLASTMODIFIEDDSCLOCATOR);
 			driver.click(DashBoardPageId.SORTBYLASTMODIFIEDDSCLOCATOR);
-			WaitUtil.waitForPageFullyLoaded(driver);
+
 		}
 		else if (DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME_ASC.equals(option)) {
 			driver.waitForElementPresent(DashBoardPageId.SORTBYLASTACCESSASCLOCATOR);
 			driver.click(DashBoardPageId.SORTBYLASTACCESSASCLOCATOR);
-			WaitUtil.waitForPageFullyLoaded(driver);
+
 		}
 		else if (DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME_DSC.equals(option)) {
 			driver.waitForElementPresent(DashBoardPageId.SORTBYLASTACCESSDSCLOCATOR);
 			driver.click(DashBoardPageId.SORTBYLASTACCESSDSCLOCATOR);
-			WaitUtil.waitForPageFullyLoaded(driver);
+
 		}
 		else {
 			throw new IllegalArgumentException("Unknow Sort by option: " + option);
@@ -512,7 +517,7 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardHomeUtil#sortListViewByCreateBy(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
 	@Override
-	public void sortListViewByCreateBy(WebDriver driver) 
+	public void sortListViewByCreateBy(WebDriver driver)
 	{
 
 		driver.getLogger().info("[DashboardHomeUtil] call clickListViewTableCreatedByHeader");
@@ -523,8 +528,7 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 
 		Actions actions = new Actions(driver.getWebDriver());
 		driver.getLogger().info("Focus to the table header");
-		actions.moveToElement(tableHeader).build().perform();
-		
+		actions.moveToElement(tableHeader).build().perform();		
 		driver.getLogger().info("Click Sort icon");
 		actions.moveToElement(tableSort).click().perform();
 
@@ -537,24 +541,20 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardHomeUtil#sortListViewByLastModified(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
 	@Override
-	public void sortListViewByLastModified(WebDriver driver) 
+	public void sortListViewByLastModified(WebDriver driver)
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call clickListViewTableLastModifiedHeader");
 		driver.waitForElementPresent(DashBoardPageId.LISTVIEWTABLELASTMODIFIEDHEADERLOCATOR);
 
-		WebElement tableHeader = driver.getWebDriver()
-				.findElement(By.xpath(DashBoardPageId.LISTVIEWTABLELASTMODIFIEDHEADERLOCATOR));
+		WebElement tableHeader = driver.getWebDriver().findElement(
+				By.xpath(DashBoardPageId.LISTVIEWTABLELASTMODIFIEDHEADERLOCATOR));
 		WebElement tableSort = tableHeader.findElement(By.cssSelector(DashBoardPageId.LISTVIEWSORTLOCATORCSS));
 
 		Actions actions = new Actions(driver.getWebDriver());
 		driver.getLogger().info("Focus to the table header");
 		actions.moveToElement(tableHeader).build().perform();
-		
 		driver.getLogger().info("Click Sort icon");
 		actions.moveToElement(tableSort).click().perform();
-
-		driver.takeScreenShot();
-
 		WaitUtil.waitForPageFullyLoaded(driver);
 	}
 
@@ -562,7 +562,7 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardHomeUtil#sortListViewByName(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
 	@Override
-	public void sortListViewByName(WebDriver driver) 
+	public void sortListViewByName(WebDriver driver)
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call clickListViewTableNameHeader");
 		driver.waitForElementPresent(DashBoardPageId.LISTVIEWTABLENAMEHEADERLOCATOR);
@@ -585,7 +585,7 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardHomeUtil#waitForDashboardPresent(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
 	@Override
-	public void waitForDashboardPresent(WebDriver driver, String dashboardName) 
+	public void waitForDashboardPresent(WebDriver driver, String dashboardName)
 	{
 		Validator.notEmptyString("dashboardName", dashboardName);
 		driver.getLogger().info("[DashboardHomeUtil] call waitForDashboardPresent dashboardName: " + dashboardName);
@@ -601,11 +601,6 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	private String convertID(String id)
 	{
 		return "id=" + id;
-	}
-
-	protected String convertName(String name)
-	{
-		return "name=" + name;
 	}
 
 	private void deleteDashboardInGrid(WebDriver driver, String dashboardName)
@@ -628,8 +623,9 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 
 				driver.getLogger().info("wait for the popup dialog close");
 				WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-				wait.until(ExpectedConditions
-						.invisibilityOfElementLocated(By.cssSelector(DashBoardPageId.DASHBOARD_HOME_DELETE_DIALOG)));
+				//				wait.until(ExpectedConditions.invisibilityOfElementLocated(By
+				//						.cssSelector(DashBoardPageId.DASHBOARD_HOME_DELETE_DIALOG)));
+				driver.waitForElementNotVisible("css=" + DashBoardPageId.DASHBOARD_HOME_DELETE_DIALOG);
 				break;
 			}
 		}
@@ -665,9 +661,9 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 
 				driver.getLogger().info("click on the delete button");
 				driver.click(convertName(DashBoardPageId.DASHBOARD_HOME_DELETE_CONFIRM)); // confirm to delete
-				WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-				wait.until(ExpectedConditions
-						.invisibilityOfElementLocated(By.cssSelector(DashBoardPageId.DASHBOARD_HOME_DELETE_DIALOG)));
+				//				WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
+				//wait.until(ExpectedConditions.invisibilityOfElementLocated(BycssSelector(DashBoardPageId.DASHBOARD_HOME_DELETE_DIALOG));
+				driver.waitForElementNotVisible("css=" + DashBoardPageId.DASHBOARD_HOME_DELETE_DIALOG);
 				break;
 			}
 		}
@@ -679,7 +675,7 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 			return element.getAttribute(attribute);
 		}
 		catch (Exception e) {
-			LOGGER.info("context",e);
+			LOGGER.info("context", e);
 		}
 
 		return null;
@@ -695,10 +691,15 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 			}
 		}
 		catch (Exception e) {
-			LOGGER.info("context",e);
+			LOGGER.info("context", e);
 		}
 
 		return result;
+	}
+
+	protected String convertName(String name)
+	{
+		return "name=" + name;
 	}
 
 }

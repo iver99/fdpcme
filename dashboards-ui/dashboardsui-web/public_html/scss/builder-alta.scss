@@ -145,6 +145,15 @@ body, html {
             margin: 8px 8px 8px 8px;
             vertical-align: top;
         }
+        
+        .dashboardTextBtn{
+            .dbd-toolbar-icon-text{
+                height: 30px;
+                &:before{
+                    height: 30px;
+                }
+            }
+        }
 
 
         .df-date-time-picker {
@@ -310,6 +319,10 @@ body, html {
 
 .dbd-toolbar-icon-options:before {
   content: url(../images/func_gear_16_ena.png);
+}
+
+.dbd-toolbar-icon-text:before {
+  content: "\f031";
 }
 
 .dbd-toolbar-icon-edit:before,.fa-pencil-df:before {
@@ -787,6 +800,9 @@ body, html {
     }
     .cursor-resize-right-bottom{
         cursor:se-resize;
+    }
+    .dbd-resize-handler-placeholder.cursor-resize-right-bottom{
+        cursor:default;
     }
 }
 .dbd-tile-container.tile-border-highlight{
@@ -1697,4 +1713,16 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
 .share-default-value {
     color: grey;
     margin-top: 5px;
+}
+
+.textWidgetWrapper {
+    width: -moz-calc(100% - 20px);
+    width: -webkit-calc(100% - 20px);
+    width: -o-calc(100% - 20px);
+    width: calc(100% - 20px);
+    height: -moz-calc(100% - 20px);
+    height: -webkit-calc(100% - 20px);
+    height: -o-calc(100% - 20px);
+    height: calc(100% - 20px);
+    margin: 0px 10px;
 }

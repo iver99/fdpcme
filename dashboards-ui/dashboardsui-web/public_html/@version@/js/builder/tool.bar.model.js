@@ -350,6 +350,30 @@ define(['knockout',
                     errorCallback && errorCallback(error);
                 });
             };
+            
+                self.handleAddTextWidget = function () {
+                    var textWidget = {
+                        WIDGET_UNIQUE_ID: 1,
+                        WIDGET_NAME: "Text Widget",
+                        WIDGET_DESCRIPTION: "Text Widget provided by Oracle",
+                        WIDGET_OWNER: "ORACLE",
+                        WIDGET_CREATION_TIME: "2017-06-18T00:00:00:000Z",
+                        WIDGET_SOURCE: 0,
+                        WIDGET_GROUP_NAME: "Dashboard",
+                        WIDGET_SCREENSHOT_HREF: null,
+                        WIDGET_SUPPORT_TIME_CONTROL: 0,
+                        WIDGET_KOC_NAME: "df-text-widget",
+                        WIDGET_TEMPLATE: "/js/widgets/textwidget/dashboardTextWidget.html",
+                        WIDGET_VIEWMODEL: "/js/widgets/textwidget/js/dashboardTextWidget.js",
+                        PROVIDER_NAME: "Dashboard-UI",
+                        PROVIDER_VERSION: "1.0",
+                        PROVIDER_ASSET_ROOT: "assetRoot",
+//                        WIDGET_EDITABLE: "true",
+                        content: null,
+                        type: "TEXT_WIDGET"
+                    };
+                    self.tilesViewModel.appendNewTile(textWidget.WIDGEET_NAME, textWidget.WIDGEET_DESCRIPTION, 4, 2, ko.toJS(textWidget));
+                }
                   
             var prefUtil = new pfu(dfu.getPreferencesUrl(), dfu.getDashboardsRequestHeader());
             var addFavoriteLabel = getNlsString('DBS_BUILDER_BTN_FAVORITES_ADD');

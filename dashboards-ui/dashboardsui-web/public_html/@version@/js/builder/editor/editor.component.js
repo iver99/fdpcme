@@ -329,7 +329,7 @@ define(['knockout',
                 Builder.registerComponent(tile.WIDGET_KOC_NAME(), kocVM, kocTemplate);*/
             }
             
-            tile.loadEangerLoadedTile = function(element) {
+            tile.loadEagerLoadedTile = function(element) {
                 Builder.attachEagerLoadedDahshboardSingleTileAtPageLoad(tile, $(element).find(".dbd-tile-widget-wrapper")[0]);
                 return "dbd-tile-widget-wrapper-loaded";
             }

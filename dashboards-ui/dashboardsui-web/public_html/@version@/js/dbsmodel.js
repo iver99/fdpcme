@@ -359,6 +359,12 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
             }
             if(data.dashboard.description)
             {
+                var rulerElem = $("#ruler");
+                rulerElem.show();
+                if(!data.dashboard.hasLongDscrpt && rulerElem.html(data.dashboard.description).height()>32){
+                    data.dashboard.hasLongDscrpt = true;
+                }
+                rulerElem.hide();
                 data.dashboard.description = data.dashboard.description.toString().replace(/\n/g,"<br>");
             }
             self.selectedDashboard(data);
@@ -528,8 +534,14 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
                             }
                             else
                             {
+                                dfu.showMessage({
+                                    type: 'error',
+                                    summary: oj.Translations.getTranslatedString("DBS_Home_FAILED_TO_CREATE_DASHBOARD",jqXHR ? jqXHR.responseText : ""),
+                                    detail: '',
+                                    removeDelayTime: 8000});
+
                                 // a server error record
-                                 oj.Logger.error("Error when creating dashboard. " + (jqXHR ? jqXHR.responseText : ""));
+                                oj.Logger.error("Error when creating dashboard. " + (jqXHR ? jqXHR.responseText : ""));
                             }
                             if (_m !== null)
                             {
@@ -541,7 +553,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
                                 $( "#cDsbDialog" ).css("cursor", "default");
                             }
                             else
-                            {
+                            {                            
                                 $( "#cDsbDialog" ).css("cursor", "default");
                                 $( "#cDsbDialog" ).ojDialog( "close" );
                             }

@@ -46,7 +46,8 @@ requirejs.config({
 //        'emcta': '/emsaasui/emcta/ta/@version@/js', //for DEV_MODE
         'emcla':'/emsaasui/emlacore/js',
         'emcsutl': '/emsaasui/uifwk/emcsDependencies/uifwk/js/util', // why we need this?
-        'uifwk': '/emsaasui/uifwk'
+        'uifwk': '/emsaasui/uifwk',
+        'ckeditor': '../../libs/@version@/js/ckeditor/ckeditor'
     },
     bundles: function() {
         if (window.DEV_MODE !==null && typeof window.DEV_MODE ==="object") {
@@ -218,13 +219,19 @@ require(['knockout',
     'knockout.mapping',
     'uifwk/js/util/df-util',
     'uifwk/js/util/logging-util',
-    'uifwk/js/sdk/menu-util',
     'ojs/ojcore',
+    /*'ojs/ojcomponentcore',
+    'ojs/ojchart',
+    'ojs/ojlegend',
+    'ojs/ojprogressbar',
+    'ojs/ojcomponents',
+    'ojs/ojarraytabledatasource',*/
     'builder/builder.functions',
-    'builder/builder.jet.partition',
+//    'builder/builder.jet.partition',
     'uifwk/js/util/df-util',
     'uifwk/js/util/logging-util',
-    'dashboards/dashboardhome-impl',
+//    'dashboards/dashboardhome-impl',
+    'ojs/ojtabs',
     'jqueryui',
     'common.uifwk',
     'builder/builder.core',
@@ -271,7 +278,7 @@ require(['knockout',
                     require(['uifwk/js/util/df-util',
                         'uifwk/js/util/logging-util',
                         'uifwk/js/sdk/menu-util',
-                        'dashboards/dashboardhome-impl',
+//                        'dashboards/dashboardhome-impl',
                         'jqueryui',
                         'common.uifwk',
                         'builder/builder.core',
@@ -280,7 +287,7 @@ require(['knockout',
                         'builder/dashboardset.panels.model',
                         'builder/dashboardDataSource/dashboard.datasource'
                     ],
-                        function(dfumodel, _emJETCustomLogger, menuModel, dashboardhome_impl) // this callback gets executed when all required modules are loaded
+                        function(dfumodel, _emJETCustomLogger, menuModel/*, dashboardhome_impl*/) // this callback gets executed when all required modules are loaded
                         {
                             var logger = new _emJETCustomLogger();
                             var menuUtil = new menuModel();
@@ -320,12 +327,12 @@ require(['knockout',
                                 template: {require: 'text!./widgets/textwidget/textwidget.html'}
                             });*/
 
-                            if (!ko.components.isRegistered('df-oracle-dashboard-list')) {
-                                ko.components.register("df-oracle-dashboard-list",{
-                                    viewModel:dashboardhome_impl,
-                                    template:{require:'text!/emsaasui/emcpdfui/@version@/html/dashboardhome.html'}
-                                });
-                            }
+//                        if (!ko.components.isRegistered('df-oracle-dashboard-list')) {
+//                            ko.components.register("df-oracle-dashboard-list",{
+//                                viewModel:dashboardhome_impl,
+//                                template:{require:'text!/emsaasui/emcpdfui/@version@/html/dashboardhome.html'}
+//                            });
+//                        }
 
                             function DashboardTitleModel(dashboard) {
                                 var self = this;
@@ -522,3 +529,4 @@ function getDateString(isoString) {
 }
 
 window.addEventListener("message", updateOnePageHeight, false);
+
