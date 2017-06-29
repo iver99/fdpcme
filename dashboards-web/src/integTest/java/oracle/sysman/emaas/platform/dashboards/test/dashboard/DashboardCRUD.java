@@ -1308,7 +1308,7 @@ public class DashboardCRUD
 			
 			Assert.assertTrue(res1.getStatusCode() == 404);
 
-			Assert.assertEquals(res1.jsonPath().getString("errorCode"), "20004");
+			Assert.assertEquals(res1.jsonPath().getString("errorCode"), "20005");
 			Assert.assertEquals(res1.jsonPath().getString("errorMessage"), "Specified Widget is not found!");
 			
 			Response res2 =  RestAssured
@@ -1321,7 +1321,7 @@ public class DashboardCRUD
 			
 			Assert.assertTrue(res2.getStatusCode() == 404);
 
-			Assert.assertEquals(res2.jsonPath().getString("errorCode"), "20004");
+			Assert.assertEquals(res2.jsonPath().getString("errorCode"), "20005");
 			Assert.assertEquals(res2.jsonPath().getString("errorMessage"), "Specified Widget is not found!");
 			
 		}
