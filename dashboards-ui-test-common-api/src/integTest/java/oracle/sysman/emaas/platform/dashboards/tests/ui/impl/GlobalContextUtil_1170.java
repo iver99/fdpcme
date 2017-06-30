@@ -31,7 +31,7 @@ public class GlobalContextUtil_1170 extends GlobalContextUtil_1160
 		Boolean isGlobalContextExists = false;
 		if (driver.isDisplayed(GLBCTXTID)) {
 			driver.getLogger().info("the global context bar is  visible. Continue valiation");
-			if (driver.isDisplayed(GLBCTX_TOPBTN) && driver.isDisplayed(GLBCTX_CTXSEL)) {
+			if (driver.isDisplayed(GLBCTX_TOPBTN) && driver.isDisplayed(GLBCTX_CTXSEL_TEXT)) {
 				isGlobalContextExists = true;
 			}
 			else {
