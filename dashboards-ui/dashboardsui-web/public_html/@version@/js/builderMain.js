@@ -369,7 +369,23 @@ require(['knockout',
 				    }
 			        };
 
-                                $("#headerWrapper").on("DOMSubtreeModified", function() {
+                                function onElementHeightChange($node, callback){
+                                    var lastHeight = $node.height(), newHeight;
+                                    (function run(){
+                                        newHeight = $node.height();
+                                        if( lastHeight != newHeight ) {
+                                            callback();
+                                        }
+                                        lastHeight = newHeight;
+
+                                        if( self.onElementHeightChangeTimer )
+                                            clearTimeout(self.onElementHeightChangeTimer);
+
+                                        self.onElementHeightChangeTimer = setTimeout(run, 1000);
+                                    })();
+                                };
+
+                                onElementHeightChange($("#headerWrapper"), function() {
                                     var height = $("#headerWrapper").height();
                                     if (!self.headerHeight){
                                         self.headerHeight = height;
