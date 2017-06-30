@@ -42,22 +42,16 @@
                     <script type="text/html" id="widget_details">
                         <li data-bind="attr: {id: WIDGET_UNIQUE_ID}">
                             <div class="oj-flex" style="flex-wrap: nowrap">
-                                <span class="oj-flex-item" data-bind="style: { backgroundImage:'url('+WIDGET_SCREENSHOT_HREF+')', 
-                                    backgroundRepeat: 'no-repeat', backgroundSize: '150px 160px', minHeight: '150px', minWidth: '160px', maxWidth:'160px' }">
+                                <span class="oj-flex-item-0" style="padding-right: 10px">
+                                    <img data-bind="attr: {alt: WIDGET_NAME, src: WIDGET_SCREENSHOT_HREF, width: imgWidth, height: imgHeight}" class="widget-selector-screenshot" style="vertical-align: middle;"/>
                                 </span>
-                                <div class="oj-flex-item demo-content">
-                                    <div>
-                                        <span data-bind="text: WIDGET_NAME"></span>
-                                    </div>
-                                    <div>
-                                        <span class="oj-text-xs oj-text-secondary-color" data-bind="text: WIDGET_DESCRIPTION"></span>
-                                    </div>
-                                    <div>
-                                        <span class="oj-text-xs oj-text-secondary-color" data-bind="text: 'Source: ' + WIDGET_GROUP_NAME"></span>
-                                    </div>
-                                    <div>
-                                        <span class="oj-text-xs oj-text-secondary-color" data-bind="text: 'Created by: ' + WIDGET_OWNER"></span>
-                                    </div> 
+                                <div class="oj-flex-item" style="vertical-align: middle;">
+                                    <p>
+                                        <span data-bind="text: WIDGET_NAME" class="oj-label"></span>
+                                        <span class="oj-text-sm" data-bind="text: WIDGET_DESCRIPTION?WIDGET_DESCRIPTION:$parent.widgetNoDescription, css:{'font-style-italic':!WIDGET_DESCRIPTION||WIDGET_DESCRIPTION === $parent.widgetNoDescription}"></span>
+                                    </p>
+                                    <span class="oj-text-sm widget-selector-text-secondary-color widget-selector-description" data-bind="text: $parent.widgetLableCreatedBy + WIDGET_GROUP_NAME"></span><br>
+                                    <span class="oj-text-sm widget-selector-text-secondary-color" data-bind="text: $parent.widgetLableLastModified + WIDGET_OWNER"></span>
                                 </div>
                             </div>
                         </li>

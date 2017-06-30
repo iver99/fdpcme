@@ -337,3 +337,17 @@
     color: #9e9e9e;
     cursor: default;
 }
+
+.widget-selector-text-secondary-color{
+    color: gray;
+}
+
+.font-style-italic{
+    font-style: italic !important;
+}
+
+.widget-selector-description{
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}

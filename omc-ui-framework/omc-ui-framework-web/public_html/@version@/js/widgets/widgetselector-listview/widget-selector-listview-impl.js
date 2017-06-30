@@ -39,6 +39,9 @@ define('uifwk/@version@/js/widgets/widgetselector-listview/widget-selector-listv
                 self.widgetScreenShotPageTitle = nls.WIDGET_SELECTOR_WIDGET_NAVI_SCREENSHOT_TITLE;
                 self.widgetDescPageTitle = nls.WIDGET_SELECTOR_WIDGET_NAVI_DESC_TITLE;
                 self.widgetsLoadingHints = nls.WIDGET_SELECTOR_WIDGETS_LOADING_HINT;
+                self.widgetLableCreatedBy = nls.WIDGET_SELECTOR_WIDGET_CREATED_BY;
+                self.widgetLableLastModified = nls.WIDGET_SELECTOR_WIDGET_LAST_MODIFIED;
+                self.widgetNoDescription = nls.WIDGET_SELECTOR_WIDGET_NO_DESCRIPTION;
 
                 self.widgetGroupFilterVisible = ko.observable(widgetProviderName && widgetProviderVersion ? false : true);
                 self.searchText = ko.observable("");
