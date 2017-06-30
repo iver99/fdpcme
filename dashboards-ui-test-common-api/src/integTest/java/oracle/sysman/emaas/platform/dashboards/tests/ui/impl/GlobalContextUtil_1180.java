@@ -13,14 +13,14 @@ package oracle.sysman.emaas.platform.dashboards.tests.ui.impl;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
-import org.testng.Assert;
-
 import oracle.sysman.emaas.platform.dashboards.tests.ui.EntitySelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 public class GlobalContextUtil_1180 extends GlobalContextUtil_1170
 {	
+	public static final String GLBCTXTBUTTON = "//div[@id='topologyButtonWrapper']/span/label";
+	
 	@Override
 	public String getGlobalContextName(WebDriver driver)
 	{
@@ -47,6 +47,34 @@ public class GlobalContextUtil_1180 extends GlobalContextUtil_1170
 		{
 			driver.getLogger().info("It is global context read only mode");
 			return driver.getText(DashBoardPageId.EntSelReadOnlyPill);
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IGlobalContextUtil#showTopology(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
+	 */
+	@Override
+	public void showTopology(WebDriver driver)
+	{
+		if (driver.isDisplayed(GLBCTXTPLDIV)) {
+			driver.getLogger().info("the topology already got displayed");
+		}
+		else {
+			driver.click(GLBCTXTBUTTON);
+		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IGlobalContextUtil#hideTopology(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
+	 */
+	@Override
+	public void hideTopology(WebDriver driver)
+	{
+		if (driver.isDisplayed(GLBCTXTPLDIV)) {
+			driver.click(GLBCTXTBUTTON);
+		}
+		else {
+			driver.getLogger().info("the topology already got hidden");
 		}
 	}
 }
