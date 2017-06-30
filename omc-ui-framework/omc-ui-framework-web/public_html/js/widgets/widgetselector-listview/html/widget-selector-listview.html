@@ -25,9 +25,14 @@
                     </div> 
                 </div>
                 <div id="widget-selector-widgets" data-bind="attr:{'data-wgt-slt-auto-close': autoCloseDialog !== false ? 'TRUE' : 'FALSE'}">
+                    <!-- ko if: widgetOnLoading -->
+                    <div id="widget-selector-loading" data-bind="text: widgetsLoadingHints"></div>
+                    <!-- /ko -->
+                    <!-- ko if not: widgetOnLoading -->
                     <ul id="widget-selector-listview" aria-label="list using json data" 
                         data-bind="ojComponent: {component: 'ojListView', data: widgetsDataSource, selectionMode: 'single', item: {template: isWidgetOwnerGroup, focusable: itemOnly, selectable: itemOnly}, drillMode: 'none'}">
-                    </ul>
+                    </ul>                   
+                    
                     <script type="text/html" id="widget_group">
                         <li data-bind="attr: {id: id}">
                             <span data-bind="text: name"></span>
@@ -35,22 +40,29 @@
                     </script>
 ​
                     <script type="text/html" id="widget_details">
-                        <li data-bind="attr: {id: id}">
+                        <li data-bind="attr: {id: WIDGET_UNIQUE_ID}">
                             <div class="oj-flex" style="flex-wrap: nowrap">
                                 <span class="oj-flex-item" data-bind="style: { backgroundImage: '', 
-                                    backgroundRepeat: 'no-repeat', backgroundSize: '40px 40px', minHeight: '40px', minWidth: '40px', maxWidth: '40px' }, attr: { 'aria-label': type }">
+                                    backgroundRepeat: 'no-repeat', backgroundSize: '40px 40px', minHeight: '40px', minWidth: '40px', maxWidth: '40px' }">
                                 </span>
                                 <div class="oj-flex-item demo-content">
                                     <div>
-                                        <span data-bind="text: name"></span>
+                                        <span data-bind="text: WIDGET_NAME"></span>
                                     </div>
                                     <div>
-                                        <span class="oj-text-xs oj-text-secondary-color" data-bind="text: 'Last modified on ' + modified"></span>
+                                        <span class="oj-text-xs oj-text-secondary-color" data-bind="text: WIDGET_DESCRIPTION"></span>
                                     </div>
+                                    <div>
+                                        <span class="oj-text-xs oj-text-secondary-color" data-bind="text: 'Source: ' + WIDGET_GROUP_NAME"></span>
+                                    </div>
+                                    <div>
+                                        <span class="oj-text-xs oj-text-secondary-color" data-bind="text: 'Created by: ' + WIDGET_OWNER"></span>
+                                    </div> 
                                 </div>
                             </div>
                         </li>
                     </script> 
+                    <!-- /ko -->
                 </div>               
             </div>     
             <div class="oj-dialog-footer" style="padding-right: 18px" > 

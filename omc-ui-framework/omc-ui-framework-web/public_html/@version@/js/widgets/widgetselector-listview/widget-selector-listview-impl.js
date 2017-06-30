@@ -76,22 +76,17 @@ define('uifwk/@version@/js/widgets/widgetselector-listview/widget-selector-listv
                 self.currentWidget = ko.observable();
                 self.confirmBtnDisabled = ko.observable(true);
                 self.widgetOnLoading = ko.observable(true);
-                //JUST FOR TEST TO BE REMOVED
-                $.ajaxSettings.async = false;
-                $.getJSON( "http://www.oracle.com/webfolder/technetwork/jet/demo/cookbook/dataCollections/listView/jsonHierListView/files.json", 
-                function(data){
-                        self.widgetsDataSource = new oj.JsonTreeDataSource(data);
-                }); 
+                self.widgetsDataSource = ko.observable();
+                // Initialize data and refresh
+                self.beforeOpenDialog = function(event, ui) {
+                    refreshWidgets();
+                };
                 self.itemOnly = function(context){
                         return context['leaf'];
                 };
                 self.isWidgetOwnerGroup = function(file, bindingContext){
                         return bindingContext.$itemContext.leaf ? 'widget_details' : 'widget_group';
                 } ;
-                // Initialize data and refresh
-                self.beforeOpenDialog = function(event, ui) {
-                    refreshWidgets();
-                };
 
                 // Widget group selector value change handler
                 self.optionChangedHandler = function(data, event) {
@@ -422,7 +417,8 @@ define('uifwk/@version@/js/widgets/widgetselector-listview/widget-selector-listv
 
                     getWidgetGroups().done(function(data, textStatus, jqXHR){
                         oj.Logger.info("Finished loading widget groups. Start to load widgets.");
-                        getWidgets().done(function(data, textStatus, jqXHR){
+                        getWidgets().done(function(data, textStatus, jqXHR){ 
+                            generateWidgetsDataSource(data);
                             oj.Logger.info("Finished loading widget groups and widgets. Start to load page display data.");
                             //If already has search text input during widgets loading, then do a search after widgets loading finished
                             if (self.searchText() && $.trim(self.searchText()) !== "") {
@@ -443,6 +439,39 @@ define('uifwk/@version@/js/widgets/widgetselector-listview/widget-selector-listv
                     .fail(function(xhr, textStatus, errorThrown){
                         oj.Logger.error("Failed to fetch widget groups.");
                     });
+                };
+                
+                function generateWidgetsDataSource(data){ 
+                    var createByMeTitle = {"id": "created-by-me", "name": "CREATED BY ME"};
+                    var createByOracleTitle = {"id": "created-by-oracle", "name": "CREATED BY ORACLE"};
+                    var createByOthersTitle = {"id": "created-by-others", "name": "CREATED BY OTHERS"};
+                    var widgetsCreatedByOracle = []; 
+                    var widgetsCreatedByME = []; 
+                    var widgetsCreatedByOthers = [];
+                    $.each($.grep(data, function(n){return n.WIDGET_OWNER === "ORACLE"}),function(n,value){
+                        widgetsCreatedByOracle.push({"attr":value});                        
+                    });
+                    $.each($.grep(data, function(n){return n.WIDGET_OWNER === self.userName}),function(n,value){
+                        widgetsCreatedByME.push({"attr":value});                        
+                    });
+                    $.each($.grep(data, function(n){return (n.WIDGET_OWNER !== self.userName)&&(n.WIDGET_OWNER !== "ORACLE")}),function(n,value){
+                        widgetsCreatedByME.push({"attr":value});                        
+                    });
+                    //FOR TEST ADD THE SYSTEM WIDGET TO EVERY GROUP TO BE MODIFIED
+                    var initWidgetsDataSource = [
+                        {
+                         "attr":createByMeTitle,
+                         "children":widgetsCreatedByOracle
+                        },
+                        {
+                         "attr":createByOracleTitle,
+                         "children":widgetsCreatedByOracle
+                        },
+                        {
+                         "attr":createByOthersTitle,
+                         "children":widgetsCreatedByOracle
+                        }];      
+                    self.widgetsDataSource(new oj.JsonTreeDataSource(initWidgetsDataSource));
                 };
 
                 // Load widgets from ajax call result data
