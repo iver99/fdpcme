@@ -15,9 +15,14 @@ public class BuildPageLoadDetector extends DefaultJetPageLoadDetector {
     }
     @Override
     public boolean isPageLoadComplete() {
-        boolean isComplete;
-        isComplete = webdriver.isDisplayed("css="+ DashBoardPageId.BRANDINGBARICON);
-        webdriver.getLogger().info(" isComplete: "+ isComplete);
-        return isComplete;
-    }
+    	boolean isComplete = false;
+    	try {
+    	    isComplete = webdriver.isDisplayed("css="+ DashBoardPageId.BRANDINGBARICON);
+    	} catch (Exception ex) {
+    	    webdriver.getLogger().warning("Exception during isDisplayed check, but will continue..");
+    	} finally {
+    	    webdriver.getLogger().info(" isComplete: "+ isComplete);
+    	}
+    	return isComplete;
+    	}
 }

@@ -47,7 +47,7 @@ def emcpsmRegClientVer = getDependentSdkVersion('com.oracle.emaas.emcpsm', 'regi
 def emcpsmRegLookupClientVer = getDependentSdkVersion('com.oracle.emaas.emcpsm', 'registry-lookup-client', '1.+')
 def emcpdfCommonAPIVer=getDependentSdkVersion('com.oracle.emaas.emcpdf.testsdk.ui', 'dashboards-ui-test-common-api', '2.+')
 def emcpdfDashboardsSdkVer= getDependentSdkVersion('com.oracle.emaas.emcpdf', 'dashboards-sdk', '1.+')
-def omctfSetupTestSDKVer = getDependentSdkVersion('com.oracle.omc.omctf.testsdk', 'omctf_omcsetup', '1.+')
+//def omctfSetupTestSDKVer = getDependentSdkVersion('com.oracle.omc.omctf.testsdk', 'omctf_omcsetup', '1.+')
 
 //Update the lrgConfig configuration to specify where the test jar is.
 dependencies{
@@ -76,7 +76,7 @@ dependencies{
 
     testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: emcpdfCommonAPIVer)
 
-    testConfig(group: 'com.oracle.omc.omctf.testsdk', name: 'omctf_omcsetup', version: omctfSetupTestSDKVer)
+   //testConfig(group: 'com.oracle.omc.omctf.testsdk', name: 'omctf_omcsetup', version: omctfSetupTestSDKVer)
 
     testConfig(group: 'com.oracle.emaas.emcpdf', name: 'dashboards-sdk', version: emcpdfDashboardsSdkVer)
 
