@@ -5,6 +5,7 @@ define('uifwk/@version@/js/widgets/widgetselector-listview/widget-selector-listv
     'ojs/ojcore',
     'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg',
     'uifwk/@version@/js/util/typeahead-search-impl', 
+    'uifwk/js/util/mobile-util',
     'ojs/ojselectcombobox',
     'ojs/ojdialog',
     'ojs/ojinputtext',
@@ -12,7 +13,7 @@ define('uifwk/@version@/js/widgets/widgetselector-listview/widget-selector-listv
     'ojs/ojlistview', 
     'ojs/ojjsontreedatasource'
     ],
-        function (ko, $, dfumodel, oj, nls, typeaheadsearch) {
+        function (ko, $, dfumodel, oj, nls, typeaheadsearch, mbu) {
             function WidgetSelectorListviewViewModel(params) {
                 var self = this;
                 new typeaheadsearch(); //Initialize typeahead search
@@ -42,6 +43,9 @@ define('uifwk/@version@/js/widgets/widgetselector-listview/widget-selector-listv
                 self.widgetLableCreatedBy = nls.WIDGET_SELECTOR_WIDGET_CREATED_BY;
                 self.widgetLableLastModified = nls.WIDGET_SELECTOR_WIDGET_LAST_MODIFIED;
                 self.widgetNoDescription = nls.WIDGET_SELECTOR_WIDGET_NO_DESCRIPTION;
+                self.isMobileDevice = ko.observable( (new mbu()).isSmallDevice );
+                self.hideScrollbar = ko.observable(true);
+                self.isMobileDevice()?self.hideScrollbar(false):self.hideScrollbar(true);
 
                 self.widgetGroupFilterVisible = ko.observable(widgetProviderName && widgetProviderVersion ? false : true);
                 self.searchText = ko.observable("");

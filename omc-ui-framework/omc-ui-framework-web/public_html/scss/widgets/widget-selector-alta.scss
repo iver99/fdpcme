@@ -351,3 +351,12 @@
     overflow:hidden;
     text-overflow:ellipsis;
 }
+
+.widget-selector-hide-scrollbar{
+    overflow-y: hidden;
+    padding-right: 14px;
+}
+
+.widget-selector-show-scrollbar{
+    overflow-y: auto;
+}
