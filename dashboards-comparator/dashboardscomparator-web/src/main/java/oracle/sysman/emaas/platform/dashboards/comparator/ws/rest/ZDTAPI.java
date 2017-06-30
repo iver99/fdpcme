@@ -316,7 +316,9 @@ public class ZDTAPI
 				if (comparedDataNum != 0) {
 					percen = (double)comparedDataNum/(double)totalRow;
 				}
-				
+				if (totalRow == 0) {
+					return Response.status(status).entity("No user created dashboards, Nothing to compare").build();					
+				}
 				DecimalFormat df = new DecimalFormat("#.######");
 				double percentage = Double.parseDouble(df.format(percen));
 				Date currentUtcDate = getCurrentUTCTime();
