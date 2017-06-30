@@ -204,6 +204,7 @@ define(['dashboards/dbsmodel',
             self.selectedContent().WIDGET_LINKED_DASHBOARD(self.selectedDashboard()?self.selectedDashboard().id:null);
             self.hasLinkedToTitle(true);
             $b.triggerEvent($b.EVENT_TILE_LINK_CHANGED, null);
+            saveDashboard();
         };
 
         self.removeLinkToTitleClicked = function(e, d){
@@ -211,6 +212,7 @@ define(['dashboards/dbsmodel',
             self.hasLinkedToTitle(false);
             resetAddLinkToTitle();
             $b.triggerEvent($b.EVENT_TILE_LINK_CHANGED, null);
+            saveDashboard();
         };
 
         function resetAddLinkToTitle(holdHasLinkedToTitle){
@@ -226,7 +228,13 @@ define(['dashboards/dbsmodel',
             $(".search-content-dropdown-list-container #listview li").removeClass("oj-selected");
         }
 
-
+        function saveDashboard(){
+            self.toolbarModel().handleSaveUpdateToServer(function(){
+                self.toolbarModel().isUpdated(false);
+            }, function(error){
+                error && error.errorMessage() && dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING'), detail: '', removeDelayTime: 5000});
+            });
+        }
     }
     return {'rightPanelEditContentModel': rightPanelEditContentModel};
 });
