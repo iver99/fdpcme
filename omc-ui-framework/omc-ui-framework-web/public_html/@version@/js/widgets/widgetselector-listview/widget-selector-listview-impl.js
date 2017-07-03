@@ -282,15 +282,17 @@ define('uifwk/@version@/js/widgets/widgetselector-listview/widget-selector-listv
 
                 // Widget box click handler
                 self.widgetBoxClicked = function(data, event) {
-                    var curWidget = self.currentWidget();
-                    if (curWidget && (curWidget.PROVIDER_NAME !== data.PROVIDER_NAME ||
+                    if (event.type === "click" || (event.type === "keypress" && event.keyCode === 13)) {
+                        var curWidget = self.currentWidget();
+                        if (curWidget && (curWidget.PROVIDER_NAME !== data.PROVIDER_NAME ||
                             curWidget.WIDGET_UNIQUE_ID !== data.WIDGET_UNIQUE_ID)) { 
-                        self.currentWidget(data);
+                            self.currentWidget(data);
+                        }
+                        else if (!curWidget) {
+                            self.currentWidget(data);
+                        }
+                        widgetSelectionConfirmed();
                     }
-                    else if (!curWidget) {
-                        self.currentWidget(data);
-                    }
-                    widgetSelectionConfirmed();
                 };
 
                 // Widget handler for selected widget
