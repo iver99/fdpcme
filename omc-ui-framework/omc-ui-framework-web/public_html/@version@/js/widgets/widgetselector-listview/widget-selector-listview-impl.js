@@ -284,23 +284,17 @@ define('uifwk/@version@/js/widgets/widgetselector-listview/widget-selector-listv
                 self.widgetBoxClicked = function(data, event) {
                     var curWidget = self.currentWidget();
                     if (curWidget && (curWidget.PROVIDER_NAME !== data.PROVIDER_NAME ||
-                            curWidget.WIDGET_UNIQUE_ID !== data.WIDGET_UNIQUE_ID)) {
-                        widgetArray[curWidget.index].isSelected(false);
-                        data.isSelected(true);
+                            curWidget.WIDGET_UNIQUE_ID !== data.WIDGET_UNIQUE_ID)) { 
                         self.currentWidget(data);
                     }
                     else if (!curWidget) {
-                        data.isSelected(true);
                         self.currentWidget(data);
                     }
-
-                    if (self.confirmBtnDisabled() === true){
-                        self.confirmBtnDisabled(false);
-                    }
+                    widgetSelectionConfirmed();
                 };
 
                 // Widget handler for selected widget
-                self.widgetSelectionConfirmed = function() {
+                function widgetSelectionConfirmed(){
                     //Close dialog if autoCloseDialog is true or not set
                     if (self.autoCloseDialog !== false){
                         $('#'+self.dialogId).ojDialog('close');
