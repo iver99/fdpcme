@@ -166,6 +166,7 @@ define('uifwk/@version@/js/widgets/widgetselector-listview/widget-selector-listv
                 // Search widgets by selected widget group and search text(name, description)
                 self.searchWidgets = function() {
                     searchResultArray = [];
+                    var searchingHightLightTemplate = "<span class='widget-selector-search-matching'>$&</span>";
                     var allWidgets = getAvailableWidgets();
                     var searchtxt = $.trim(ko.toJS(self.searchText));
                     if (searchtxt === '') {
@@ -175,7 +176,10 @@ define('uifwk/@version@/js/widgets/widgetselector-listview/widget-selector-listv
                         for (var i=0; i<allWidgets.length; i++) {
                             if (allWidgets[i].WIDGET_NAME.toLowerCase().indexOf(searchtxt.toLowerCase()) > -1 ||
                                     (allWidgets[i].WIDGET_DESCRIPTION && allWidgets[i].WIDGET_DESCRIPTION.toLowerCase().indexOf(searchtxt.toLowerCase()) > -1)) {
-                                searchResultArray.push(allWidgets[i]);
+                                var singleWidget = $.extend(true,{},allWidgets[i]);
+                                singleWidget.WIDGET_NAME = singleWidget.WIDGET_NAME.replace(new RegExp(searchtxt, 'gi'), searchingHightLightTemplate);
+                                singleWidget.WIDGET_DESCRIPTION = singleWidget.WIDGET_DESCRIPTION.replace(new RegExp(searchtxt, 'gi'), searchingHightLightTemplate);
+                                searchResultArray.push(singleWidget);
                             }
                         }
                     }
