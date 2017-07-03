@@ -188,6 +188,11 @@ define('uifwk/@version@/js/widgets/widgetselector-listview/widget-selector-listv
                     refreshNaviButton();
                     naviFromSearchResults = true;
                     refreshWidgetAndButtonStatus();
+                    searchtxt?generateWidgetsDataSource(searchResultArray, true):generateWidgetsDataSource(searchResultArray);
+                };
+
+                self.onSearchBoxBlur = function(){
+                    !($.trim(ko.toJS(self.searchText))) && generateWidgetsDataSource(getAvailableWidgets());
                 };
 
                 self.clearSearchText = function() {
@@ -448,36 +453,43 @@ define('uifwk/@version@/js/widgets/widgetselector-listview/widget-selector-listv
                     });
                 };
                 
-                function generateWidgetsDataSource(data){ 
+                function generateWidgetsDataSource(data, isOnSearching){ 
                     var createByMeTitle = {"id": "created-by-me", "name": "CREATED BY ME"};
                     var createByOracleTitle = {"id": "created-by-oracle", "name": "CREATED BY ORACLE"};
                     var createByOthersTitle = {"id": "created-by-others", "name": "CREATED BY OTHERS"};
                     var widgetsCreatedByOracle = []; 
                     var widgetsCreatedByME = []; 
                     var widgetsCreatedByOthers = [];
-                    $.each($.grep(data, function(n){return n.WIDGET_OWNER === "ORACLE"}),function(n,value){
-                        widgetsCreatedByOracle.push({"attr":value});                        
-                    });
-                    $.each($.grep(data, function(n){return n.WIDGET_OWNER === self.userName}),function(n,value){
-                        widgetsCreatedByME.push({"attr":value});                        
-                    });
-                    $.each($.grep(data, function(n){return (n.WIDGET_OWNER !== self.userName)&&(n.WIDGET_OWNER !== "ORACLE")}),function(n,value){
-                        widgetsCreatedByME.push({"attr":value});                        
-                    });
                     //FOR TEST ADD THE SYSTEM WIDGET TO EVERY GROUP TO BE MODIFIED
-                    var initWidgetsDataSource = [
-                        {
-                         "attr":createByMeTitle,
-                         "children":widgetsCreatedByOracle
-                        },
-                        {
-                         "attr":createByOracleTitle,
-                         "children":widgetsCreatedByOracle
-                        },
-                        {
-                         "attr":createByOthersTitle,
-                         "children":widgetsCreatedByOracle
-                        }];      
+                    var initWidgetsDataSource = [];
+                    if(isOnSearching){
+                        $.each($.grep(data, function(n){return n.WIDGET_OWNER === "ORACLE"}),function(n,value){
+                            widgetsCreatedByOracle.push({"attr":value});                        
+                        });
+                        $.each($.grep(data, function(n){return n.WIDGET_OWNER === self.userName}),function(n,value){
+                            widgetsCreatedByME.push({"attr":value});                        
+                        });
+                        $.each($.grep(data, function(n){return (n.WIDGET_OWNER !== self.userName)&&(n.WIDGET_OWNER !== "ORACLE")}),function(n,value){
+                            widgetsCreatedByOthers.push({"attr":value});                        
+                        });
+                        initWidgetsDataSource = [
+                            {
+                             "attr":createByMeTitle,
+                             "children":widgetsCreatedByOracle
+                            },
+                            {
+                             "attr":createByOracleTitle,
+                             "children":widgetsCreatedByOracle
+                            },
+                            {
+                             "attr":createByOthersTitle,
+                             "children":widgetsCreatedByOracle
+                            }];
+                    }else{
+                        $.each(data,function(n,value){
+                            initWidgetsDataSource.push({"attr":value});                        
+                        });
+                    }
                     self.widgetsDataSource(new oj.JsonTreeDataSource(initWidgetsDataSource));
                 };
 
