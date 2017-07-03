@@ -935,7 +935,7 @@ public class DashboardManager
 		sb.append(" and ((p.is_system=0 ");
 		if (filter != null) {
 			if (filter.getIncludedWidgetGroupsString(tenantVersionModel) != null && !filter.getIncludedWidgetGroupsString(tenantVersionModel).isEmpty()) {
-				sb.append(" and (p.dashboard_id in (select t.dashboard_Id from Ems_Dashboard_Tile t where t.TENANT_ID = ?"+ index++ +" or t.TENANT_ID = ?" + index++ + " and t.WIDGET_GROUP_NAME in ("
+				sb.append(" and (p.dashboard_id in (select t.dashboard_Id from Ems_Dashboard_Tile t where (t.TENANT_ID = ?"+ index++ +" or t.TENANT_ID = ?" + index++ + ") and t.WIDGET_GROUP_NAME in ("
 						+ filter.getIncludedWidgetGroupsString(tenantVersionModel) + " ))) ");
 				paramList.add(tenantId);
 				paramList.add(NON_TENANT_ID);
@@ -963,7 +963,7 @@ public class DashboardManager
 		sb1.append(" and ( (p.is_system=0 ");
 		if (filter != null) {
 			if (filter.getIncludedWidgetGroupsString(tenantVersionModel) != null && !filter.getIncludedWidgetGroupsString(tenantVersionModel).isEmpty()) {
-				sb1.append(" and p.DASHBOARD_ID in (SELECT p2.DASHBOARD_SET_ID FROM EMS_DASHBOARD_SET p2 WHERE p2.SUB_DASHBOARD_ID IN (SELECT t.dashboard_Id FROM Ems_Dashboard_Tile t WHERE t.TENANT_ID = ?"+ index++ +" or t.TENANT_ID = ?" + index++ + " and t.WIDGET_GROUP_NAME IN ("
+				sb1.append(" and p.DASHBOARD_ID in (SELECT p2.DASHBOARD_SET_ID FROM EMS_DASHBOARD_SET p2 WHERE p2.SUB_DASHBOARD_ID IN (SELECT t.dashboard_Id FROM Ems_Dashboard_Tile t WHERE (t.TENANT_ID = ?"+ index++ +" or t.TENANT_ID = ?" + index++ + ") and t.WIDGET_GROUP_NAME IN ("
 						+ filter.getIncludedWidgetGroupsString(tenantVersionModel)+ ")))");
 				paramList.add(tenantId);
 				paramList.add(NON_TENANT_ID);
@@ -996,7 +996,7 @@ public class DashboardManager
 						+ "p.APPLICATION_TYPE,p.CREATION_DATE,p.LAST_MODIFICATION_DATE,p.NAME,p.OWNER,p.TENANT_ID,p.TYPE,p.APPLICATION_TYPE ");
 		String jpqlQuery = sbQuery.toString();
 
-		LOGGER.debug("Executing SQL is: " + jpqlQuery);
+		LOGGER.info("Executing SQL is: " + jpqlQuery);
 		DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);	
 		EntityManager em = dsf.getEntityManager();
 		try {
@@ -1793,7 +1793,7 @@ public class DashboardManager
 		for (int i = 0; i < paramList.size(); i++) {
 			Object value = paramList.get(i);
 			query.setParameter(i + 1, value);
-			LOGGER.debug("binding parameter [{}] as [{}]", i + 1, value);
+			LOGGER.info("binding parameter [{}] as [{}]", i + 1, value);
 		}
 	}
 
