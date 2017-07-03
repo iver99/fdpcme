@@ -420,6 +420,7 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 		driver.getWebDriver().findElement(By.xpath(indicator)).click();
 		//driver.click(indicator);
 		//driver.waitForServer();
+		driver.takeScreenShot();
 		driver.setPageLoadDetector(BuildPageLoadDetector.class);
 		driver.waitForServer(); 
 		driver.setPageLoadDetector(null);
