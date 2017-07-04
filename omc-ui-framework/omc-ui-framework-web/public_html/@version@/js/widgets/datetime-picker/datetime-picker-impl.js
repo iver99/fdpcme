@@ -1190,21 +1190,11 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     }
                 }
                 
-                //TODO: need to update this when EMCPDF-3845 is merged
-                /*self.getTranslatedTimePeriod = function(tpId) {
-                    if(self.timePeriodsNlsObject[self.badgeTimePeriod()]) {
-                        return self.timePeriodsNlsObject[self.badgeTimePeriod()];
-                    }
-                    var parsedTp = ctxUtil.parseTimePeriodToUnitAndDuration(tpId);
-                    if(parsedTp) {
-                        return ctxUtil.getFlexTimePeriod(parsedTp.duration, parsedTp.unit);
-                    }else {
-                        console.error("Error! Can't get translated time period for invalid time period: " + tpId);
-                        return null;
-                    }
-                };*/
+                self.getTranslatedTimePeriod = function(tpId) {
+                    return ctxUtil.getTranslatedTimePeriod(tpId);
+                };
                 
-                self.badgeMsgTitle(msgUtil.formatMessage(nls.DATETIME_PICKER_BADGE_MESSAGE_TITLE, self.timePeriodsNlsObject[self.badgeTimePeriod()]));
+                self.badgeMsgTitle(msgUtil.formatMessage(nls.DATETIME_PICKER_BADGE_MESSAGE_TITLE, self.getTranslatedTimePeriod(self.badgeTimePeriod())));
 
                 if(!ko.components.isRegistered("time-filter")) {
                     ko.components.register("time-filter", {
