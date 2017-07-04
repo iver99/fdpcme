@@ -34,6 +34,7 @@ public class BrandingBarUtil
 	public static final String NAV_LINK_TEXT_ADMIN_ALERT = IBrandingBarUtil.NAV_LINK_TEXT_ADMIN_ALERT;
 	public static final String NAV_LINK_TEXT_ADMIN_ADMINCONSOLE = IBrandingBarUtil.NAV_LINK_TEXT_ADMIN_ADMINCONSOLE;
 	//Hamburger Menu
+	public static final String ROOT_MENU_TITLE = IBrandingBarUtil.ROOT_MENU_TITLE;
 	public static final String ROOT_MENU_HOME = IBrandingBarUtil.ROOT_MENU_HOME;
 	public static final String ROOT_MENU_ALERTS = IBrandingBarUtil.ROOT_MENU_ALERTS;
 	public static final String ROOT_MENU_DASHBOARDS = IBrandingBarUtil.ROOT_MENU_DASHBOARDS;

@@ -16,7 +16,6 @@ import org.testng.annotations.Test;
 
 public class TestHomePage_SortBy extends LoginAndLogout
 {
-
 	@BeforeClass
 	public void createDashboard()
 	{

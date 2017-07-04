@@ -64,13 +64,22 @@ public interface IEntitySelectorUtil extends IUiTestCommonAPI
          * @param category 
          */
         public void replacePillSelection(WebDriver driver, Logger logger, int pillIndex, String entityName, String entityType, String category);
+        
+        /**
+	 * @param driver
+         * @param logger
+	 * @param entityName
+	 */
+	public void searchText(WebDriver driver, Logger logger, String entityName);
 
 	/**
 	 * @param driver
          * @param logger
-	 * @param text
+	 * @param entityName
+         * @param entityType
+         * @param category
 	 */
-	public void searchText(WebDriver driver, Logger logger, String text);
+	public void searchText(WebDriver driver, Logger logger, String entityName, String entityType, String category);
 
 	/**
 	 * @param driver

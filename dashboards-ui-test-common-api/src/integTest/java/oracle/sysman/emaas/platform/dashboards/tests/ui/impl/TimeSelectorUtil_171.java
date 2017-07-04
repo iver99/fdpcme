@@ -931,8 +931,18 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 		}
 
 		String[] date = tmpDate.split("-");
-		String StartDate = date[0].trim();
-		String EndDate = date[1].trim();
+		String StartDate="";
+		String EndDate = "";
+		if(date.length>1)
+		{
+			StartDate= date[0].trim();
+			EndDate = date[1].trim();
+		}
+		else
+		{
+			StartDate = date[0].trim();
+			EndDate = date[0].trim();
+		}
 		String tmpStartDate = StartDate;
 		String[] tmpStart = StartDate.split(" ");
 

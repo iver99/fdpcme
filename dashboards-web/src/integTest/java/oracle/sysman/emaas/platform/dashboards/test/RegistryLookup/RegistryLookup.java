@@ -193,7 +193,8 @@ public class RegistryLookup
 			Assert.assertTrue(res.getStatusCode() == 200);
 			Assert.assertEquals(res.jsonPath().get("rel"), "sso.home");
 			Assert.assertNotNull(res.jsonPath().get("href"));
-
+			// auth token shouldn't be sent to UI
+			Assert.assertNull(res.jsonPath().get("authToken"));
 		}
 		catch (Exception e) {
 			LOGGER.info("context",e);

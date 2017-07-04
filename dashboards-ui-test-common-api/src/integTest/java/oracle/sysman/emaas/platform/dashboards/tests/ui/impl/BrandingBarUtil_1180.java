@@ -595,6 +595,12 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 		driver.getLogger().info("visitApplicationAdministration started");
 		//check if hamburger menu icon exist
 		if (isHamburgerMenuEnabled(driver)) {
+			//verify if current menu is rootmenu
+			while(!isRootMenu(driver))
+			{
+				driver.getLogger().info("Current menu is not root menu, need to back to parent menu");
+				goBackToParentMenu(driver);
+			}
 			if (NAV_LINK_TEXT_ADMIN_ADMINCONSOLE.equals(adminLinkName)) {
 				expandSubMenu(driver, ROOT_MENU_ADMIN);
 				clickMenuItem(driver, GLOBAL_ADMIN_MENU_ENTITIES_CFG);
@@ -629,6 +635,12 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 		if (isHamburgerMenuEnabled(driver)) {
 			HBGMenuItem = cloudServiceLinkToHamburgerMenuItem(driver, cloudServiceLinkName);
 			driver.getLogger().info("Start to visit cloud service link from hambuger menu. Link name: " + HBGMenuItem);
+			//verify if current menu is rootmenu
+			while(!isRootMenu(driver))
+			{
+				driver.getLogger().info("Current menu is not root menu, need to back to parent menu");
+				goBackToParentMenu(driver);
+			}
 			if (NAV_LINK_TEXT_ADMIN_AGENT.equals(cloudServiceLinkName)) {
 				expandSubMenu(driver, ROOT_MENU_ADMIN);
 				clickMenuItem(driver, GLOBAL_ADMIN_MENU_AGENTS);
@@ -651,6 +663,12 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 		driver.getLogger().info("visitApplicationHome started");
 		//check if hamburger menu icon exist
 		if (isHamburgerMenuEnabled(driver)) {
+			//verify if current menu is rootmenu
+			while(!isRootMenu(driver))
+			{
+				driver.getLogger().info("Current menu is not root menu, need to back to parent menu");
+				goBackToParentMenu(driver);
+			}
 			if (NAV_LINK_TEXT_HOME_ALERTS.equals(homeLinkName)) {
 				clickMenuItem(driver, ROOT_MENU_ALERTS);
 			}
@@ -692,6 +710,12 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 		//check if hamburger menu icon exist
 		if (isHamburgerMenuEnabled(driver)) {
 			driver.getLogger().info("Start to visit menu : " + visualAnalyzerLinkName + "from hamburger menu");
+			//verify if current menu is rootmenu
+			while(!isRootMenu(driver))
+			{
+				driver.getLogger().info("Current menu is not root menu, need to back to parent menu");
+				goBackToParentMenu(driver);
+			}
 			if (NAV_LINK_TEXT_LOGEXPLORER.equals(visualAnalyzerLinkName)) {
 				clickMenuItem(driver, ROOT_MENU_LA);
 			}
@@ -716,6 +740,12 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 		if (isHamburgerMenuEnabled(driver)) {
 			//click the menu "Dashboards" in hamburger menu
 			driver.getLogger().info("[visitDashboardHome] start to visit 'Dashboards' menu in hamburger menu.");
+			//verify if current menu is rootmenu
+			while(!isRootMenu(driver))
+			{
+				driver.getLogger().info("Current menu is not root menu, need to back to parent menu");
+				goBackToParentMenu(driver);
+			}
 			clickMenuItem(driver, ROOT_MENU_DASHBOARDS);
 		}
 		else {
@@ -734,6 +764,12 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 		if (isHamburgerMenuEnabled(driver)) {
 			//check the 'My Favorite' options in filter options in Dashboard home page
 			driver.getLogger().info("[visitMyFavorites] start to visit 'My Favorites' link in home page.");
+			//verify if current menu is rootmenu
+			while(!isRootMenu(driver))
+			{
+				driver.getLogger().info("Current menu is not root menu, need to back to parent menu");
+				goBackToParentMenu(driver);
+			}
 			clickMenuItem(driver, ROOT_MENU_DASHBOARDS);
 			if (!DashboardHomeUtil.isFilterOptionSelected(driver, "favorites")) {
 				DashboardHomeUtil.filterOptions(driver, "favorites");
@@ -755,6 +791,12 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 		if (isHamburgerMenuEnabled(driver)) {
 			//click the menu "Home" in hamburger menu
 			driver.getLogger().info("[visitMyHome] start to visit 'Home' link from hamburger menu.");
+			//verify if current menu is rootmenu
+			while(!isRootMenu(driver))
+			{
+				driver.getLogger().info("Current menu is not root menu, need to back to parent menu");
+				goBackToParentMenu(driver);
+			}
 			clickMenuItem(driver, ROOT_MENU_HOME);
 		}
 		else {
@@ -857,6 +899,20 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 		}
 		else {
 			return false;
+		}
+	}
+	
+	private boolean isRootMenu(WebDriver driver)
+	{
+		if(driver.isDisplayed("css=" + DashBoardPageId_1180.HAMBURGERMENU_PREVIOUSICON_CSS))
+		{
+			driver.getLogger().info("Current Menu is not root menu");
+			return false;			
+		}
+		else
+		{
+			driver.getLogger().info("Current Menu is root menu");
+			return true;
 		}
 	}
 }

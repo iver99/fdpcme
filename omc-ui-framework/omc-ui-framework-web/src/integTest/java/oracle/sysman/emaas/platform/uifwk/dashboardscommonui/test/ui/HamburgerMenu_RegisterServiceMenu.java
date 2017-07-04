@@ -15,6 +15,7 @@ import oracle.sysman.emaas.platform.uifwk.dashboardscommonui.test.ui.util.Common
 import oracle.sysman.emaas.platform.uifwk.dashboardscommonui.test.ui.util.LoginAndLogout;
 import oracle.sysman.emaas.platform.uifwk.dashboardscommonui.test.ui.util.UIControls;
 
+import org.openqa.selenium.By;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -109,11 +110,15 @@ public class HamburgerMenu_RegisterServiceMenu extends LoginAndLogout
 
 	private void verifyRegisterServiceMenu(String serviceMenuItem, String servieAdminMenu)
 	{
+		if(BrandingBarUtil.isHamburgerMenuDisplayed(webd))
+		{
+			BrandingBarUtil.toggleHamburgerMenu(webd);
+		}
 		//click the 'Show Composite' button
 		webd.getLogger().info("Click the 'Show Composite' button");
 		String indicator = UIControls.SGENERATEMENUBTN.replace("_name_", "Register Service Menu");
-		webd.click("css=" + indicator);
-
+		//webd.click("css=" + indicator);
+		webd.getWebDriver().findElement(By.cssSelector(indicator)).click();
 		//check the hamburger menu
 		webd.getLogger().info("Check the menu items in hamburger menu");
 		Assert.assertTrue(BrandingBarUtil.isMenuItemExisted(webd, serviceMenuItem));
@@ -121,7 +126,7 @@ public class HamburgerMenu_RegisterServiceMenu extends LoginAndLogout
 
 		//check the current header
 		webd.getLogger().info("Check the Menu Header");
-		Assert.assertEquals(BrandingBarUtil.getCurrentMenuHeader(webd), "OMC Management Cloud");
+		Assert.assertEquals(BrandingBarUtil.getCurrentMenuHeader(webd), BrandingBarUtil.ROOT_MENU_TITLE);
 
 		//expand sub menu
 		webd.getLogger().info("Click Compliance to expand sub menu");
@@ -153,11 +158,11 @@ public class HamburgerMenu_RegisterServiceMenu extends LoginAndLogout
 
 		//Click Hierarchical to back to root menu
 		webd.getLogger().info("Click Hierarchical to back to root menu");
-		BrandingBarUtil.clickHierarchicalMenu(webd, "OMC Management Cloud");
+		BrandingBarUtil.clickHierarchicalMenu(webd, BrandingBarUtil.ROOT_MENU_TITLE);
 
 		//check the current header
 		webd.getLogger().info("Check the Menu Header");
-		Assert.assertEquals(BrandingBarUtil.getCurrentMenuHeader(webd), "OMC Management Cloud");
+		Assert.assertEquals(BrandingBarUtil.getCurrentMenuHeader(webd), BrandingBarUtil.ROOT_MENU_TITLE);
 
 		//click Adminitration
 		BrandingBarUtil.expandSubMenu(webd, BrandingBarUtil.ROOT_MENU_ADMIN);

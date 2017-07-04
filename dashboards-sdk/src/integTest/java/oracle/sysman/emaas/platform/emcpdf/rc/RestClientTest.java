@@ -47,8 +47,6 @@ public class RestClientTest {
             throws Exception {
         new NonStrictExpectations() {
             {
-                new DefaultClientConfig();
-                Client.create(anyClientConfig);
                 StringUtil.isEmpty(anyString);
                 result = false;
             }
@@ -67,12 +65,6 @@ public class RestClientTest {
     public void testRestClientGetS2(@Mocked final DefaultClientConfig anyClientConfig, @Mocked final Client anyClient,
                                     @Mocked final URI anyUri, @Mocked final UriBuilder anyUriBuilder, @Mocked final MediaType anyMediaType,
                                     @Mocked final com.sun.jersey.api.client.WebResource.Builder anyBuilder) {
-        new NonStrictExpectations() {
-            {
-                new DefaultClientConfig();
-                Client.create(anyClientConfig);
-            }
-        };
         RestClient rc = new RestClient();
         rc.setHeader("TestHeader","header1");
         rc.get("http://test.link.com", "emaastesttenant1", null);
@@ -92,8 +84,6 @@ public class RestClientTest {
         // test UniformInterfaceException
         new NonStrictExpectations() {
             {
-                new DefaultClientConfig();
-                Client.create(anyClientConfig);
                 anyBuilder.get(String.class);
                 result = new UniformInterfaceException(anyClientResponse);
             }
@@ -111,8 +101,6 @@ public class RestClientTest {
         // test ClientHandlerException
         new NonStrictExpectations() {
             {
-                new DefaultClientConfig();
-                Client.create(anyClientConfig);
                 anyBuilder.get(String.class);
                 result = new ClientHandlerException();
             }
@@ -123,8 +111,6 @@ public class RestClientTest {
         // test Exception
         new NonStrictExpectations() {
             {
-                new DefaultClientConfig();
-                Client.create(anyClientConfig);
                 anyBuilder.get(String.class);
                 result = new Exception();
             }
@@ -138,12 +124,6 @@ public class RestClientTest {
     public void testRestClientPut(@Mocked final DefaultClientConfig anyClientConfig, @Mocked final Client anyClient,
                                   @Mocked final URI anyUri, @Mocked final UriBuilder anyUriBuilder, @Mocked final MediaType anyMediaType,
                                   @Mocked final com.sun.jersey.api.client.WebResource.Builder anyBuilder) {
-        new NonStrictExpectations() {
-            {
-                new DefaultClientConfig();
-                Client.create(anyClientConfig);
-            }
-        };
         RestClient rc = new RestClient();
         List<String> list = new ArrayList<>();
         list.add("test1");
@@ -159,13 +139,7 @@ public class RestClientTest {
     public void testRestClientPOST(@Mocked final DefaultClientConfig anyClientConfig, @Mocked final Client anyClient,
                                   @Mocked final URI anyUri, @Mocked final UriBuilder anyUriBuilder, @Mocked final MediaType anyMediaType,
                                   @Mocked final com.sun.jersey.api.client.WebResource.Builder anyBuilder,@Mocked final ClientResponse anyClientResponse) {
-        new NonStrictExpectations() {
-            {
-                new DefaultClientConfig();
-                Client.create(anyClientConfig);
-            }
-        };
-        RestClient rc = new RestClient();
+       	RestClient rc = new RestClient();
         List<String> list = new ArrayList<>();
         list.add("test1");
         rc.setHeader("TestHeader", "header1");
@@ -173,8 +147,6 @@ public class RestClientTest {
         // test UniformInterfaceException
         new NonStrictExpectations() {
             {
-                new DefaultClientConfig();
-                Client.create(anyClientConfig);
                 anyBuilder.post((Class)any, any);
                 result = new UniformInterfaceException(anyClientResponse);
             }
@@ -185,8 +157,6 @@ public class RestClientTest {
         // test ClientHandlerException
         new NonStrictExpectations() {
             {
-                new DefaultClientConfig();
-                Client.create(anyClientConfig);
                 anyBuilder.post((Class)any, any);
                 result = new ClientHandlerException();
             }

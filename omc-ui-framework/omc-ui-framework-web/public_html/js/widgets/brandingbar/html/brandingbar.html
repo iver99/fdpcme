@@ -212,9 +212,10 @@
         <!-- ko if: showEntitySelector() -->
         <!-- topology --->
         <!-- ko if: isTopologyCompRegistered() !== false -->
-        <div id="ude-topology-div" style="overflow-y:auto; height:auto; display: flex; padding-left: 10px; padding-right: 10px; padding-bottom: 5px;"
-             data-bind="visible: isTopologyDisplayed, event: {mouseover: showTopologyMaxIcon, mouseout: hideTopologyMaxIcon}" class="ude-sdk">
-            <!-- ko if: topologyHeight() > 201 -->
+        <div id="ude-topology-div" style="height:auto; display: flex; padding-left: 10px; padding-right: 10px; padding-bottom: 5px;"
+             data-bind="style:{'overflow-y': showMaxMinButtonInDF() ? 'auto': 'hidden'},visible: isTopologyDisplayed, event: {mouseover: showMaxMinButtonInDF() ? showTopologyMaxIcon: null, 
+                                mouseout: showMaxMinButtonInDF()? hideTopologyMaxIcon: null}" class="ude-sdk">
+            <!-- ko if: topologyHeight() > 201 && showMaxMinButtonInDF() -->
             <div id="ude-topology-title" style="display: flex; position: absolute; z-index: 1" data-bind="style: {right: maxIconToRight}">
                     <button data-bind="attr: {'id': 'maxMinTopology', title: isMaximized() ? topologyRestoreLabel : topologyMaximizeLabel}, click: maxMinTopologyToggle,
                                     style: {display: 'none'},
@@ -228,8 +229,9 @@
             <!-- /ko -->
             
             <!--<div data-bind="attr: {style: topologyStyle}" style="margin: 0 auto">test div</div>-->
-        <div style="overflow-y: auto; height: auto; display: flex; width:100%;
-            border-width: 1px; border-color: #d6dfe6; border-style: solid; background-color: white;">
+        <div style="height: auto; display: flex; width:100%;
+            border-width: 1px; border-color: #d6dfe6; border-style: solid; background-color: white;"
+            data-bind="style:{'overflow-y': showMaxMinButtonInDF() ? 'auto': 'hidden'}">
         <div class="ude-topology ude-topology-in-brandingbar" data-bind="attr: {style: topologyStyle},
            component:{name:'emctas-topology', 
             params:{
@@ -244,7 +246,10 @@
                    updateGlobalContextByTopologySelection: updateGlobalContextByTopologySelection,
                    enableCache: true,
                    topologySize: topologySize,
-                   topologyData: topologyData
+                   topologyData: topologyData,
+                   showMaxMinButtonInDF: showMaxMinButtonInDF,
+                   topologyResizeCallback: topologyResizeCallback,
+                   showEnterpriseTopology:showEnterpriseTopology
                 }
             }">
         </div>

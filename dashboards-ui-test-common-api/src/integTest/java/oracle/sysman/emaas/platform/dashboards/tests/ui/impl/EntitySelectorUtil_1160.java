@@ -21,6 +21,7 @@ import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -146,10 +147,10 @@ public class EntitySelectorUtil_1160 extends EntitySelectorUtil_1150
                 pill.click();
                 
                 //Write the new entity name
-                searchText(driver, logger, entityName);
+                searchText(driver, logger, entityName, entityType, category);
                 
                 //Select first option matching entity name, type and category
-                selectFirstSuggestionByCategory(driver, logger, category, entityName, entityType, true);
+                selectSuggestionByCategory(driver, logger, category, entityName, entityType, true);
                 driver.takeScreenShot();
                 logger.log(Level.INFO, "New selection for pill is ''{0}''.", new Object[]{entityName});
         }
@@ -157,15 +158,29 @@ public class EntitySelectorUtil_1160 extends EntitySelectorUtil_1150
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IEntitySelectorUtil#searchText(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
+        @Override
+	public void searchText(WebDriver driver, Logger logger, final String entityName)
+        {
+            searchText(driver, logger, entityName, null, null);
+        }
+        
 	@Override
-	public void searchText(WebDriver driver, Logger logger, final String text)
+	public void searchText(WebDriver driver, Logger logger, final String entityName, final String entityType, final String category)
 	{
 		//Write text in entity selector
 		logger.log(Level.INFO, "Waiting for Entity Selector input to be clickable");
 		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), UNTIL_TIMEOUT);
 		WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By
 				.xpath(DashBoardPageId.EntSelTypeAheadFieldInput)));
-		logger.log(Level.INFO, "Searching value ''{0}'' in Entity Selector", text);
+                String suggestionsXpath = DashBoardPageId.ENTSEL_SUGGESTIONLIST;
+                if (entityType != null && category != null) {
+                    logger.log(Level.INFO, "Searching name ''{0}'' of type ''{0}'' in Entity Selector", new Object[]{entityName, entityType});
+                    suggestionsXpath = category.equals(CATEGORY_COMPOSITE) ? MessageFormat.format(DashBoardPageId.EntSelSuggestionByCompositeCategory,
+                                    entityType) : MessageFormat.format(DashBoardPageId.EntSelSuggestionByEntitiesCategory, entityType);
+                } else {
+                    logger.log(Level.INFO, "Searching value ''{0}'' in Entity Selector", entityName);
+                }
+                
 		element.click();
                 //Wait until suggestions are displayed before typing the text to avoid timing issues
                 wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(DashBoardPageId.EntSelSuggestionPopup)));
@@ -173,15 +188,16 @@ public class EntitySelectorUtil_1160 extends EntitySelectorUtil_1150
                 //metric with parenthesis in name loses the left parenthesis when added to data palette search box
                 //see Selenium Issue 1723 - Firefox Driver send_keys won't send left parenthesis
                 //Using workaround suggested in issue
-                element.sendKeys(interceptStringForSearch(logger, text));
+                element.sendKeys(interceptStringForSearch(logger, entityName));
 		driver.takeScreenShot();
 
 		//Wait until the results are displayed
-		logger.log(Level.INFO, "Waiting for results to be displayed for text ''{0}''", text);
+                logger.log(Level.INFO, "Waiting for results to be displayed for text ''{0}''", entityName);
                 WaitUtil.waitForPageFullyLoaded(driver);
+                waitForSuggestionsRefreshed(driver, logger, entityName, suggestionsXpath);
                 
 		driver.takeScreenShot();
-		logger.log(Level.INFO, "Results for ''{0}'' are available", text);
+		logger.log(Level.INFO, "Results for ''{0}'' are available", entityName);
 
 	}
 
@@ -192,10 +208,10 @@ public class EntitySelectorUtil_1160 extends EntitySelectorUtil_1150
 	public void selectCompositeEntity(WebDriver driver, Logger logger, String entityName, String entityType)
 	{
 		//search text in entity selector
-		searchText(driver, logger, entityName);
+		searchText(driver, logger, entityName, entityType, CATEGORY_COMPOSITE);
 
 		//select the first composite entity found with that description
-		selectFirstSuggestionByCategory(driver, logger, CATEGORY_COMPOSITE, entityName, entityType, false);
+		selectSuggestionByCategory(driver, logger, CATEGORY_COMPOSITE, entityName, entityType, false);
 
 	}
 
@@ -206,10 +222,10 @@ public class EntitySelectorUtil_1160 extends EntitySelectorUtil_1150
 	public void selectEntity(WebDriver driver, Logger logger, String entityName, String entityType)
 	{
 		//search text in entity selector
-		searchText(driver, logger, entityName);
+		searchText(driver, logger, entityName, entityType, CATEGORY_ENTITIES);
 
 		//select the first entity found with that description
-		selectFirstSuggestionByCategory(driver, logger, CATEGORY_ENTITIES, entityName, entityType, false);
+		selectSuggestionByCategory(driver, logger, CATEGORY_ENTITIES, entityName, entityType, false);
 
 	}
 
@@ -258,19 +274,17 @@ public class EntitySelectorUtil_1160 extends EntitySelectorUtil_1150
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IEntitySelectorUtil#selectFirstSuggestionByCategory(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
-	private void selectFirstSuggestionByCategory(WebDriver driver, Logger logger, String category, String entityName, String entityType, boolean isEditingPill)
+	private void selectSuggestionByCategory(WebDriver driver, Logger logger, String category, String entityName, String entityType, boolean isEditingPill)
 	{
-		//select the first composite entity that matches category and entity type
+		//select the composite entity that matches category and entity type
 		logger.log(Level.INFO, "Waiting for the matching suggestion to be clickable");
                 driver.takeScreenShot();
                 driver.savePageToFile();
-		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), UNTIL_TIMEOUT);
-		logger.log(Level.INFO, "Click on first available suggestion");
-                // TODO Auto-generated method stub
-		final int prevCount = getNumberOfPills(driver, logger);
-		String xpath = category.equals(CATEGORY_COMPOSITE) ? MessageFormat.format(DashBoardPageId.EntSelSuggestionByCompositeCategory,
-				entityType) : MessageFormat.format(DashBoardPageId.EntSelSuggestionByEntitiesCategory, entityType);
-		WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(xpath)));
+                
+                //Click on the suggestion that matches the search parameters
+                final int prevCount = getNumberOfPills(driver, logger);
+                logger.log(Level.INFO, "Click on matching suggestion");
+                WebElement element = getMatchingSuggestion(driver, logger, entityName, entityType, category);
 		element.click();
                 driver.takeScreenShot();
                 driver.savePageToFile();
@@ -293,10 +307,10 @@ public class EntitySelectorUtil_1160 extends EntitySelectorUtil_1150
         {
                 logger.log(Level.INFO, "Waiting for the type ahead input to disappear");
                 //Wait for typeahead input to dissappear
-                driver.waitForElementNotVisible("xpath=" + DashBoardPageId.EntSelTypeAheadFieldInput);
+                WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), UNTIL_TIMEOUT);
+                wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath(DashBoardPageId.EntSelTypeAheadFieldInput)));
                 
                 logger.log(Level.INFO, "Waiting for the edited pill to be updated");
-                WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), UNTIL_TIMEOUT);
                 final WebDriver finalDriver = driver;
                 final Logger finalLogger = logger;
                 //make sure the amount of pills didn't change
@@ -355,6 +369,64 @@ public class EntitySelectorUtil_1160 extends EntitySelectorUtil_1150
                     }
                 }
                 return correct;
+        }
+        
+        private void waitForSuggestionsRefreshed(WebDriver driver, Logger logger, String entityName, final String xpath) {
+                final String trimmed = entityName.replaceAll(" +", "");
+                
+                logger.log(Level.INFO, "Looking for value in typeahead: {0}", trimmed);
+                driver.savePageToFile();
+                driver.takeScreenShot();
+                
+                final Logger finalLogger = logger;
+                WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), UNTIL_TIMEOUT);
+                // wait until suggest popup has been refreshed with new text
+                // note that even after desired entry is found, check the remaining
+                // entries just to make sure there are no stale elements because if
+                // there are, then the popup is still in the process of being 
+                // refreshed with the new entries
+                wait.until(new ExpectedCondition<Boolean>() {
+                    @Override
+                    public Boolean apply(org.openqa.selenium.WebDriver webdriver) {
+                        List<WebElement> elements = webdriver.findElements(By.xpath(xpath));
+                        boolean found = false;
+                        for (WebElement elem : elements) {
+                            try {
+                                String value = elem.getText().replaceAll(" +", "").split("\n")[0];
+                                finalLogger.log(Level.INFO, "Typeahead popup entry is: {0}", value);
+                                if (value.contains(trimmed)) {
+                                    finalLogger.log(Level.INFO, "Found {0} on typeahead popup (contains)", trimmed);
+                                    found = true;
+                                }
+                            } catch (StaleElementReferenceException e) {
+                                finalLogger.info("Element was stale, return false");
+                                return false;
+                            }
+                        }
+                        return found;
+                    }
+                });
+        }
+        
+        private WebElement getMatchingSuggestion(WebDriver driver, Logger logger, String entityName, String entityType, String category) {
+                String xpath = category.equals(CATEGORY_COMPOSITE) ? MessageFormat.format(DashBoardPageId.EntSelSuggestionByCompositeCategory,
+                                    entityType) : MessageFormat.format(DashBoardPageId.EntSelSuggestionByEntitiesCategory, entityType);
+                List<WebElement> suggestions = driver.getWebDriver().findElements(By.xpath(xpath));
+                String trimmed = entityName.replaceAll(" +", "");
+                logger.log(Level.INFO, "Select value in typeahead: {0}", trimmed);
+                
+                if (!suggestions.isEmpty()) {
+                    logger.log(Level.INFO, "Check first for match in suggestions list.");
+                    for (WebElement suggestion : suggestions) {
+                        String value = suggestion.getText().replaceAll(" +", "").split("\n")[0];
+                        if (value.contains(trimmed)) {
+                            logger.log(Level.INFO, "Match found at index: {0}", suggestions.indexOf(suggestion));
+                            return suggestion;
+                        }                
+                    }
+                }
+                logger.log(Level.INFO, "No results for: {0}", trimmed);
+                return null;
         }
 
 }

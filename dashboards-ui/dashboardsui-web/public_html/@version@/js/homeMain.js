@@ -174,6 +174,18 @@ require(['dashboards/dbsmodel',
             else if (filterId === 'ita') {
                 defaultMenuId = menuUtil.OMCMenuConstants.GLOBAL_ITANALYTICS;
             }
+            menuUtil.subscribeServiceMenuLoadedEvent(function(){
+                $("#omcHamburgerMenu").on("ojopen", function(event, offcanvas) {
+                    if(offcanvas.displayMode === "push" && $('.main-content-area')) {
+                        $('.main-content-area').removeClass('dbs-main-large-width');
+                    }});
+
+                $("#omcHamburgerMenu").on("ojclose", function(event, offcanvas) {
+                    if ($('.main-content-area')) {
+                        $('.main-content-area').addClass('dbs-main-large-width');
+                    }
+                });
+            });
             function HeaderViewModel() {
                 var self = this;
                 self.userName = dfu.getUserName();

@@ -40,6 +40,7 @@ dependencies
 	earlib	getProjectArtifact('registry-client') 
     earlib getProjectArtifact('registry-lookup-client')  
 	earlib getProjectArtifact('emaas-platform-tenant-sdk')    
+        earlib getProjectArtifact('multi-instances-sdk')
 	earlib getProjectArtifact('commons-logging')   
         earlib  getProjectArtifact('zookeeper')   
         earlib getProjectArtifact('commons-lang3')   

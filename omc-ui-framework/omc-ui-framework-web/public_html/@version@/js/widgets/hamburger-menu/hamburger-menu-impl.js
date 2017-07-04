@@ -308,7 +308,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                                 dfdLoadServiceMenus.resolve();
                             }
                         }, true, function(){
-                            dfdLoadServiceMenus.reject();
+                            dfdLoadServiceMenus.resolve();
                         });
                     return dfdLoadServiceMenus;
                 }
@@ -335,14 +335,14 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     if (!self.subscribedApps || self.subscribedApps.length < 1) {
                         function subscribedAppsCallback(data) {
                             if (!data) {
-                                dfdGetSubscribedApps.reject();
+                                dfdGetSubscribedApps.resolve();
                             }
                             else {
                                 self.subscribedApps = data.applications;
                                 dfdGetSubscribedApps.resolve();
                             }
                         }
-                        dfu.getSubscribedApps2WithEdition(subscribedAppsCallback);
+                        dfu.getSubscribedApps2WithEdition(subscribedAppsCallback, function(){dfdGetSubscribedApps.resolve();});
                     }
                     else {
                         dfdGetSubscribedApps.resolve();
@@ -874,6 +874,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                         clearCompositeMenuItems();
                         self.expanded([]);
                         self.dataSource(new oj.JsonTreeDataSource(omcMenus));
+                        window._uifwk.isCompositeMenuShown = false;
                         //$("#omcMenuNavList").ojNavigationList("refresh");
                         if (window._uifwk.compositeMenuCollapseCallback) {
                             var callback = window._uifwk.compositeMenuCollapseCallback;
@@ -911,6 +912,24 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     }
                     
                     if (item && /*((item.id.indexOf("omc_root")>-1 && item.id.indexOf("omc_root_admin")<0) ||!item.children) &&*/ !item.disabled) {
+                        if (!item.children || item.children.length <= 0) {
+                            if (!window._uifwk) {
+                                window._uifwk = {};
+                            }
+                            if (window._uifwk.stayInComposite && window._uifwk.compositeMenuJson) {
+                                var rootCompositMenuItem = {'id': rootCompositeMenuid, 
+                                                            'labelKey': window._uifwk.compositeMenuName, 
+                                                            'externalUrl': '#', 
+                                                            'children': window._uifwk.compositeMenuJson.serviceCompositeMenus};
+                                if (!findItem(rootCompositMenuItem, data.id)) {
+                                    window._uifwk.stayInComposite = false;
+                                }
+                            }
+                            else {
+                                window._uifwk.stayInComposite = false;
+                            }
+                            window._uifwk.currentOmcMenuItemId = data.id;
+                        }
                         if(item.externalUrl && item.externalUrl !== '#' && item.children && item.children.length > 0){
                             self.preventExpandForAPMLabel = true;
                         }
@@ -988,11 +1007,13 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 }
                 
                 function fetchLinkFromRegistrationData(data, linkType, serviceName) {
-                    var links = data[linkType];
-                    if (links && links.length > 0) {
-                        for (var i = 0; i < links.length; i++) {
-                            if (links[i].serviceName === serviceName) {
-                                return links[i].href;
+                    if (data) {
+                        var links = data[linkType];
+                        if (links && links.length > 0) {
+                            for (var i = 0; i < links.length; i++) {
+                                if (links[i].serviceName === serviceName) {
+                                    return links[i].href;
+                                }
                             }
                         }
                     }
@@ -1169,4 +1190,5 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
             }
             return HamburgerMenuViewModel;
         });
+
 

@@ -11,6 +11,7 @@
 package oracle.sysman.emaas.platform.uifwk.timepicker.test.ui;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.ITimeSelectorUtil.TimeRange;
@@ -20,6 +21,8 @@ import oracle.sysman.emaas.platform.uifwk.timepicker.test.ui.util.LoginAndLogout
 import oracle.sysman.emaas.platform.uifwk.timepicker.test.ui.util.UIControls;
 
 import org.testng.annotations.Test;
+
+import java.util.Date;
 
 /**
  * @author shangwan
@@ -31,7 +34,7 @@ public class TestTimePicker_DateOnly extends LoginAndLogout
 		login(this.getClass().getName() + "." + testName, "timeSelectorDateOnly.html");
 		CommonUIUtils.loadWebDriver(webd);
 	}
-
+	
 	@Test(alwaysRun = true)
 	public void testTimePicker_Custom() throws ParseException
 	{
@@ -70,6 +73,37 @@ public class TestTimePicker_DateOnly extends LoginAndLogout
 				UIControls.SENDTEXT_DATEONLY2, true, false);
 
 		webd.shutdownBrowser(true);
+	}
+	
+	@Test(alwaysRun = true)
+	public void testTimePicker_Custom_CurrentDate() throws ParseException
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test case: testTimePicker_Custom_CurrentDate");
+		
+		Date now = new Date();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+		String currentDate = dateFormat.format( now ); 
+		
+		webd.getLogger().info("Set the end date as current day");
+		String returnDate = TimeSelectorUtil.setCustomTimeWithDateOnly(webd, 3, "04/14/2016", currentDate);			
+		webd.getLogger().info("Return Date:  " + returnDate);
+
+		//verify the result
+		webd.getLogger().info("verify the time range is set correctly");
+		CommonUIUtils.verifyResult(webd, 1, returnDate, TimeRange.Custom, UIControls.SSTARTTEXT_DATEONLY3,
+				UIControls.SENDTEXT_DATEONLY3, true, false);
+		
+		webd.getLogger().info("Set the stard date and end date as current day");
+		returnDate = TimeSelectorUtil.setCustomTimeWithDateOnly(webd, 3, currentDate, currentDate);			
+		webd.getLogger().info("Return Date:  " + returnDate);
+
+		//verify the result
+		webd.getLogger().info("verify the time range is set correctly");
+		CommonUIUtils.verifyResult(webd, 1, returnDate, TimeRange.Custom, UIControls.SSTARTTEXT_DATEONLY3,
+				UIControls.SENDTEXT_DATEONLY3, true, false);
+
+		webd.shutdownBrowser(true);	
 	}
 
 	@Test(alwaysRun = true)

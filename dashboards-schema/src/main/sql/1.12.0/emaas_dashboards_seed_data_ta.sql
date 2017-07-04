@@ -39,6 +39,9 @@ OPEN TENANT_CURSOR;
      IF (V_TID<>-1) THEN
         V_TENANT_ID:=V_TID;
      ELSE
+       IF NOT TENANT_CURSOR%ISOPEN THEN
+        OPEN TENANT_CURSOR;
+       END IF;
        FETCH TENANT_CURSOR INTO V_TENANT_ID;
        EXIT WHEN TENANT_CURSOR%NOTFOUND;     
      END IF;  
@@ -97,7 +100,10 @@ OPEN TENANT_CURSOR;
         EXIT;
      END IF;
   END LOOP;
-  CLOSE TENANT_CURSOR;
+  IF TENANT_CURSOR%ISOPEN THEN
+    CLOSE TENANT_CURSOR;
+  END IF;
+
   commit;
   DBMS_OUTPUT.PUT_LINE('Description and screenshot of some TA OOB widgets have been updated according to EMCPDF-2180.');
 

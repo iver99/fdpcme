@@ -44,6 +44,7 @@ public interface IBrandingBarUtil extends IUiTestCommonAPI
 	public static final String NAV_LINK_TEXT_ADMIN_ADMINCONSOLE = "Administration";
 
 	//Hamburger menu items
+	public static final String ROOT_MENU_TITLE = "Management Cloud";
 	public static final String ROOT_MENU_HOME = "Home";
 	public static final String ROOT_MENU_ALERTS = "Alerts";
 	public static final String ROOT_MENU_DASHBOARDS = "Dashboards";

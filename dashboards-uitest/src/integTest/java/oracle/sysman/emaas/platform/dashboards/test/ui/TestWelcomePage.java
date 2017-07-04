@@ -309,10 +309,10 @@ public class TestWelcomePage extends LoginAndLogout
 
 		WebElement el = webd.getWebDriver().findElement(By.id(PageId.ITA_BOXID));
 		Assert.assertTrue(el.isSelected());
-		DashBoardUtils.itaOobExist();
-		DashBoardUtils.outDateOob();
-		DashBoardUtils.laOobNotExist();
-		DashBoardUtils.apmOobNotExist();
+		DashBoardUtils.itaOobExist(webd);
+		DashBoardUtils.outDateOob(webd);
+		DashBoardUtils.laOobNotExist(webd);
+		DashBoardUtils.apmOobNotExist(webd);
 		webd.getLogger().info("Test open ITA in welcome page finished!!!");
 	}
 

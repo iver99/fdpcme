@@ -20,7 +20,7 @@ public class AdditionalDataProvider
 {
 	private final static Logger LOGGER = LogManager.getLogger(AdditionalDataProvider.class);
 
-	public static String getAdditionalDataForRequest(HttpServletRequest httpReq)
+	public static String getPreloadDataForRequest(HttpServletRequest httpReq)
 	{
 		String userTenant = httpReq.getHeader(DashboardsUiCORSFilter.OAM_REMOTE_USER_HEADER);
 		// TODO: check session expiry header
@@ -36,14 +36,14 @@ public class AdditionalDataProvider
 				return null;
 			}
 
-			return AdditionalDataProvider.getAdditionalData(httpReq, tenant, user, httpReq.getHeader("referer"), sesExp,
+			return AdditionalDataProvider.getPreloadData(httpReq, tenant, user, httpReq.getHeader("referer"), sesExp,
 					httpReq.getRequestURI());
 		}
 		return null;
 	}
 
-	private static String getAdditionalData(HttpServletRequest httpReq, String tenant, String user, String referer,
-			String sessionExp, String uri)
+	private static String getPreloadData(HttpServletRequest httpReq, String tenant, String user, String referer,
+										 String sessionExp, String uri)
 	{
 		if (StringUtil.isEmpty(tenant) || StringUtil.isEmpty(user)) {
 			LOGGER.warn(
@@ -51,14 +51,20 @@ public class AdditionalDataProvider
 					tenant, user);
 			return null;
 		}
-		//long start =System.currentTimeMillis();
 		StringBuilder sb = new StringBuilder();
 		if (AdditionalDataFilter.BUILDER_URI.equals(uri)) { // only builder page needs dashbaord data
-			String result = getDashboardData(httpReq) + HtmlBootstrapJsUtil.getSDKVersionJS();
-			LOGGER.debug("Builder page data is {}",result);
+			long start = System.currentTimeMillis();
+			sb.append("window.dfBootstrapDataReceived=$.Deferred();");
+			String sdkJS = HtmlBootstrapJsUtil.getSDKVersionJS();
+			long end = System.currentTimeMillis();
+			if (sdkJS != null) {
+				sb.append(HtmlBootstrapJsUtil.getSDKVersionJS());
+			}
+			sb.append("<!-- SDKVersionJS() time: ").append(end - start).append("ms -->");
+			String result = sb.toString();
+			LOGGER.debug("Builder page SDKVersionJS data is {}", result);
 			return result;
 		}else{
-
 			//Get necessary data for branding bar
 			String bootstrapJS = HtmlBootstrapJsUtil.getAllBootstrapJS(httpReq);
 			if (StringUtil.isEmpty(bootstrapJS)) {
@@ -68,26 +74,32 @@ public class AdditionalDataProvider
 				LOGGER.debug("Retrieved bootstrap js: " + bootstrapJS);
 				sb.append(bootstrapJS);
 			}
-
-			//        String userInfoString = DashboardDataAccessUtil.getUserTenantInfo(tenant, tenant + "." + user, referer, sessionExp);
-			//        if (StringUtil.isEmpty(userInfoString)) {
-			//            LOGGER.warn("Retrieved null or empty user info for tenant {} user {}", tenant, user);
-			//        }
-			//        else {
-			//            sb.append("window._userInfoServerCache=").append(userInfoString).append(";");
-			//        }
-			//
-			//        String regString = DashboardDataAccessUtil.getRegistrationData(tenant, tenant + "." + user, referer, sessionExp);
-			//        if (StringUtil.isEmpty(regString)) {
-			//            LOGGER.warn("Retrieved null or empty registration for tenant {} user {}", tenant, user);
-			//        }
-			//        else {
-			//            sb.append("window._registrationServerCache=").append(regString).append(";");
-			//        }
 			return sb.toString();
 		}
-
 	}
+
+	public static String getPostloadDataForRequest(HttpServletRequest httpReq)
+	{
+		String uri = httpReq.getRequestURI();
+		if (!AdditionalDataFilter.BUILDER_URI.equals(uri)) {
+			return "</body></html>";
+		}
+
+		// for dashboard builder page
+		StringBuilder sb = new StringBuilder("<script>");
+		long start = System.currentTimeMillis();
+		String dashboardData = getDashboardData(httpReq);
+		long end = System.currentTimeMillis();
+		if (dashboardData != null) {
+			sb.append(dashboardData);
+		}
+		sb.append("window.dfBootstrapDataReceived.resolve()</script>")
+				.append("<!-- Dashboard meta data: ").append(end - start).append("ms --></body></html>");
+		String result = sb.toString();
+		LOGGER.debug("Builder page dashboard meta data is {}", result);
+		return result;
+	}
+
 	private static String getDashboardData(HttpServletRequest httpReq) {
 		String userTenant = httpReq.getHeader(DashboardsUiCORSFilter.OAM_REMOTE_USER_HEADER);
 		// TODO: check session expiry header

@@ -17,6 +17,8 @@ public class LoginAndLogout
 	{
 		if (webd != null) {
 			((JavascriptExecutor) webd.getWebDriver()).executeScript("scroll(0,0)");
+			webd.takeScreenShot();
+
 			LoginUtils.doLogout(webd);
 			//			try {
 			//				webd.shutdownBrowser(true);

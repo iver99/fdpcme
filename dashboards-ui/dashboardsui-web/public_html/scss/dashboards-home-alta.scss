@@ -361,8 +361,8 @@ a:hover {
     margin-left: auto;
     margin-right: auto;
     float: none;
-    width: 1545px;
-    min-width: 1545px;
+    //width: 1545px;
+    //min-width: 1545px;
     max-width: 1545px;}
 }
 
@@ -482,4 +482,8 @@ a:hover {
 }
 .dbs-summaries-container a:visited{  
     color: #333; 
+}
+
+.dbs-main-large-width {
+    width: 1545px;
 }

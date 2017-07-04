@@ -36,6 +36,13 @@
 		"version": "2.0.+",
 		"transitive": false
 	},
+        "multi-instances-sdk": {
+                "method": "artifactFilterSdkVersion",
+                "group": "com.oracle.emaas.emcpcs.sdk",
+                "name": "multi-instances-sdk",
+                "version": "1.0.+",
+                "transitive": false
+        },
 	"security-client": {
 		"method": "artifactFilterSdkVersion",
 		"group": "com.oracle.emaas.emcpsf.sdk",

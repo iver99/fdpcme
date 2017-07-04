@@ -172,6 +172,8 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
                 window._uifwk.compositeMenuParentId = parentMenuId;
                 window._uifwk.compositeMenuName = objMenuName;
                 window._uifwk.compositeMenuJson = menuJson;
+                window._uifwk.isCompositeMenuShown = true;
+                window._uifwk.stayInComposite = true;
                 if (window._uifwk.serviceMenuLoaded) {
                     fireCompositeMenuDisplayEvent(parentMenuId, objMenuName, menuJson);
                 }
