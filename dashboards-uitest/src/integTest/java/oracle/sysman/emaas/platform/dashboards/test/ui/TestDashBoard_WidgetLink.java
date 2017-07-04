@@ -136,11 +136,6 @@ public class TestDashBoard_WidgetLink extends LoginAndLogout
 		webd.getLogger().info("Add Widget Link");
 		DashboardBuilderUtil.addLinkToWidgetTitle(webd, widgetName, OOBName);
 		
-		//once EMCPDF-4281 fixed, save action should be removed
-		//save the dashboard
-		webd.getLogger().info("Save dashboard");
-		DashboardBuilderUtil.saveDashboard(webd);
-		
 		//click the widget link
 		webd.getLogger().info("Click the link added to the widget");
 		Assert.assertTrue(DashboardBuilderUtil.verifyLinkOnWidgetTitle(webd, widgetName, OOBName));		
@@ -168,11 +163,6 @@ public class TestDashBoard_WidgetLink extends LoginAndLogout
 		webd.getLogger().info("Add Widget Link");
 		DashboardBuilderUtil.addLinkToWidgetTitle(webd, widgetName, dbName2_Test);
 				
-		//once EMCPDF-4281 fixed, save action should be removed
-		//save the dashboard
-		webd.getLogger().info("Save dashboard");
-		DashboardBuilderUtil.saveDashboard(webd);
-				
 		//click the widget link
 		webd.getLogger().info("Click the link added to the widget");
 		DashboardBuilderUtil.clickLinkOnWidgetTitle(webd, widgetName);
@@ -199,13 +189,8 @@ public class TestDashBoard_WidgetLink extends LoginAndLogout
 		
 		//edit the link in the widget
 		webd.getLogger().info("Add Widget Link");
-		DashboardBuilderUtil.addLinkToWidgetTitle(webd, widgetName, "");
-				
-		//once EMCPDF-4281 fixed, save action should be removed
-		//save the dashboard
-		webd.getLogger().info("Save dashboard");
-		DashboardBuilderUtil.saveDashboard(webd);
-				
+		DashboardBuilderUtil.addLinkToWidgetTitle(webd, widgetName, "");				
+			
 		//click the widget link
 		webd.getLogger().info("Verify the link in the widget has been removed");
 		Assert.assertFalse(DashboardBuilderUtil.hasWidgetLink(webd, widgetName));		
@@ -309,10 +294,6 @@ public class TestDashBoard_WidgetLink extends LoginAndLogout
 		//add link to the second widget
 		webd.getLogger().info("Add link to the second widget");
 		DashboardBuilderUtil.addLinkToWidgetTitle(webd, widgetName, 1, dbName2_Test);
-		
-		//save the dashboard
-		webd.getLogger().info("Save the dashboard");
-		DashboardBuilderUtil.saveDashboard(webd);
 		
 		//verify the widget
 		webd.getLogger().info("Verify the widgets");
