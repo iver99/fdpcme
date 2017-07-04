@@ -397,7 +397,7 @@ public class DashboardRowsComparator extends AbstractComparator
 		return response;
 	}
 	
-	private CountsEntity retrieveCountsForSingleInstance(String tenantId, String userTenant,LookupClient lc ,String maxComparedTime) throws Exception, IOException
+	public CountsEntity retrieveCountsForSingleInstance(String tenantId, String userTenant,LookupClient lc ,String maxComparedTime) throws Exception, IOException
 	{
 		Link lk = getSingleInstanceUrl(lc, "zdt/counts", "http");
 		if (lk == null) {

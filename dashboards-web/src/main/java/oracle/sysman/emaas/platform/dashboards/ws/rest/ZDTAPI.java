@@ -15,6 +15,7 @@ import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -39,6 +40,8 @@ import oracle.sysman.emaas.platform.dashboards.core.zdt.DataManager;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.TableRowsSynchronizer;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.ZDTEntity;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.*;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.PreferenceRowEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.TableRowsEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.ZDTComparatorStatusRowEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.ZDTSyncStatusRowEntity;
@@ -194,6 +197,106 @@ public class ZDTAPI extends APIBase
 		}
 		return Response.ok(getJsonUtil().toJson(zdte)).build();
 	}
+	
+	private  List<List<?>> splitList(List<?> list, int len) {
+		if (list == null || list.size() == 0 || len < 1) {
+			return null;
+		}		 
+		List<List<?>> result = new ArrayList<List<?>>();		 		 
+		int size = list.size();
+		int count = (size + len - 1) / len;		 	 
+		for (int i = 0; i < count; i++) {			
+			List<?> subList = list.subList(i * len, ((i + 1) * len > size ? size : len * (i + 1)));
+			result.add(subList);
+		}
+			return result;
+		}
+	
+	public List<TableRowsEntity> splitTableRowEntity(TableRowsEntity originalEntity){
+		List<TableRowsEntity> entities = new ArrayList<TableRowsEntity>();
+		if (originalEntity != null) {
+			List<List<?>> splitDashboard = null;
+			List<List<?>> splitDashboardSet = null;
+			List<List<?>> splitTile = null;
+			List<List<?>> splitTileParams = null;
+			List<List<?>> splitUserOptions = null;
+			List<List<?>> splitPreference = null;
+			// for each connection, we just sync 1000 rows
+			int length = 1000;
+			if (originalEntity.getEmsDashboard() != null) {
+				splitDashboard = splitList(originalEntity.getEmsDashboard(), length);
+			}
+			
+			if (originalEntity.getEmsDashboardSet() != null) {
+				splitDashboardSet = splitList(originalEntity.getEmsDashboardSet(),length);
+			}
+			
+			if (originalEntity.getEmsDashboardTile() != null) {
+				splitTile = splitList(originalEntity.getEmsDashboardTile(),length);
+			}
+			
+			if (originalEntity.getEmsDashboardTileParams() != null) {
+				splitTileParams = splitList(originalEntity.getEmsDashboardTileParams(),length);
+			}
+			
+			if (originalEntity.getEmsDashboardUserOptions() != null) {
+				splitUserOptions = splitList(originalEntity.getEmsDashboardUserOptions(),length);
+			}
+			
+			if (originalEntity.getEmsPreference() != null) {
+				splitPreference = splitList(originalEntity.getEmsPreference(),length);
+			}
+			
+			// sync search table first and then sync parameter table to avoid key constraints
+			if (splitDashboard != null) {
+				for (List<?> DashboardList : splitDashboard) {
+					TableRowsEntity rowEntity = new TableRowsEntity();
+					rowEntity.setEmsDashboard((List<DashboardRowEntity>) DashboardList);
+					entities.add(rowEntity);
+				}
+			}
+			if (splitDashboardSet != null) {
+				for (List<?> dashboardSetList : splitDashboardSet) {					
+					TableRowsEntity rowEntity = new TableRowsEntity();
+					rowEntity.setEmsDashboardSet((List<DashboardSetRowEntity>) dashboardSetList);
+					entities.add(rowEntity);
+				}
+			}
+			
+			if (splitTile != null) {
+				for (List<?> tileList : splitTile) {
+					TableRowsEntity rowEntity = new TableRowsEntity();
+					rowEntity.setEmsDashboardTile((List<DashboardTileRowEntity>) tileList);
+					entities.add(rowEntity);
+				}
+			}
+			
+			if (splitTileParams != null) {
+				for (List<?> tileParams : splitTileParams) {
+					TableRowsEntity rowEntity = new TableRowsEntity();
+					rowEntity.setEmsDashboardTileParams((List<DashboardTileParamsRowEntity>) tileParams);
+					entities.add(rowEntity);
+				}
+			}
+			
+			if (splitUserOptions != null) {
+				for (List<?> userOptionsList : splitUserOptions) {
+					TableRowsEntity rowEntity = new TableRowsEntity();
+					rowEntity.setEmsDashboardUserOptions((List<DashboardUserOptionsRowEntity>) userOptionsList);
+					entities.add(rowEntity);
+				}
+			}
+			
+			if (splitPreference != null) {
+				for (List<?> preferenceList : splitPreference) {
+					TableRowsEntity rowEntity = new TableRowsEntity();
+					rowEntity.setEmsPreference((List<PreferenceRowEntity>) preferenceList);
+					entities.add(rowEntity);
+				}
+			}
+		}
+		return entities;
+	}
 
 	@GET
 	@Path("sync")
@@ -233,7 +336,13 @@ public class ZDTAPI extends APIBase
 					Object compareResult = dataMap.get("COMPARISON_RESULT");
 					Object compareDate = dataMap.get("COMPARISON_DATE");
 					data = getJsonUtil().fromJson(compareResult.toString(), TableRowsEntity.class);
-					String response = new TableRowsSynchronizer().sync(data);
+					List<TableRowsEntity> entities = splitTableRowEntity(data);
+					String response = null;
+					if (entities != null) {
+						for (TableRowsEntity entity : entities) {
+							response = new TableRowsSynchronizer().sync(entity);
+						}
+					}
 					lastCompareDate = (String) compareDate;
 					if (response.contains("Errors:")) {
 						saveToSyncTable(syncDate, type, "FAILED",lastCompareDate);
@@ -268,9 +377,6 @@ public class ZDTAPI extends APIBase
 		cal.add(Calendar.HOUR_OF_DAY, 6);
 		Date nextScheduleDate = cal.getTime();
 		String nextScheduleDateStr = getTimeString(nextScheduleDate);
-		// TO DO... currently each sync operation will sync all of the existing compared result, 
-		// so for the existing compared result the divergence percentage will always be 0.0
-		// In the future, it is better to add logic to check the divergence percentage for the rows which are not compared;
 		double divergencePercentage = 0.0; 
 		return DataManager.getInstance().saveToSyncTable(syncDateStr, nextScheduleDateStr, type, syncResult, divergencePercentage, lastComparisonDate);
 		

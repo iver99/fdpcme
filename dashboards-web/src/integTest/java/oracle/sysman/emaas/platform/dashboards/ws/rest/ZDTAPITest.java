@@ -4,6 +4,13 @@ import mockit.Expectations;
 import mockit.Mocked;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.PersistenceManager;
 import oracle.sysman.emaas.platform.dashboards.core.zdt.DataManager;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.DashboardRowEntity;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.DashboardSetRowEntity;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.DashboardTileParamsRowEntity;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.DashboardTileRowEntity;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.DashboardUserOptionsRowEntity;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.PreferenceRowEntity;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.TableRowsEntity;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -86,6 +93,30 @@ public class ZDTAPITest {
     }
     
     @Test
+    public void testSplitTableRowEntity() {
+    	TableRowsEntity entity = new TableRowsEntity();
+    	List<DashboardRowEntity> dashboards = new ArrayList<DashboardRowEntity>();
+    	dashboards.add(new DashboardRowEntity());
+    	List<DashboardSetRowEntity> dashboardSets = new ArrayList<DashboardSetRowEntity>();
+    	dashboardSets.add(new DashboardSetRowEntity());
+    	List<DashboardTileRowEntity> tiles = new ArrayList<DashboardTileRowEntity>();
+    	tiles.add(new DashboardTileRowEntity());
+    	List<DashboardTileParamsRowEntity> tileParams = new ArrayList<DashboardTileParamsRowEntity>();
+    	tileParams.add(new DashboardTileParamsRowEntity());
+    	List<DashboardUserOptionsRowEntity> userOptions = new ArrayList<DashboardUserOptionsRowEntity>();
+    	userOptions.add(new DashboardUserOptionsRowEntity());
+    	List<PreferenceRowEntity> preference = new ArrayList<PreferenceRowEntity>();
+    	preference.add(new PreferenceRowEntity());
+    	entity.setEmsDashboard(dashboards);
+    	entity.setEmsDashboardSet(dashboardSets);
+    	entity.setEmsDashboardTile(tiles);
+    	entity.setEmsDashboardTileParams(tileParams);
+    	entity.setEmsDashboardUserOptions(userOptions);
+    	entity.setEmsPreference(preference);
+    	zdtapi.splitTableRowEntity(entity);
+    }
+    
+    @Test
     public void testSync2(@Mocked final PersistenceManager persistenceManager, 
 			@Mocked final EntityManager em) throws Exception {
         final List<Map<String, Object>> comparedDataToSync = new ArrayList<Map<String, Object>>();
@@ -102,6 +133,24 @@ public class ZDTAPITest {
     		}
     	};
     	zdtapi.sync(null, "2017-05-12 15:29:23");
+    }
+    
+    @Test
+    public void testGetAllTenants(@Mocked final PersistenceManager persistenceManager, 
+			@Mocked final EntityManager em) {
+    	final List<Object> tenants = new ArrayList<Object>();
+    	tenants.add("tenant");
+    	new Expectations() {
+    		{
+    			DataManager.getInstance();
+    			result = dataManager;
+    			dataManager.getLatestComparisonDateForCompare(em);
+    			result = "date";
+    			dataManager.getAllTenants(em);
+    			result = tenants;
+    		}
+    	};
+    	zdtapi.getAllTenants();
     }
     
     @Test

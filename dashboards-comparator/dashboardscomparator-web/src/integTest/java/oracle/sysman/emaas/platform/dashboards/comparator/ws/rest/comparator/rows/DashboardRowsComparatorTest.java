@@ -318,6 +318,87 @@ public class DashboardRowsComparatorTest
 		drc.saveComparatorStatus("tenantId", "userTenant", null, null);
 	}
 	
+	@Test
+	public void testSyncForInstance() throws Exception {
+		final HashMap<String, LookupClient> lookupEntry = new HashMap<String, LookupClient>();
+    	new Expectations(){
+            {
+                abstractComparator.getOMCInstances();
+                result = lookupEntry;
+    			lookupEntry.put("omc1",client1);
+    	    	lookupEntry.put("omc2",client2);
+            }
+        };
+        DashboardRowsComparator drc = new DashboardRowsComparator();
+		drc.syncForInstance("tenantId", "userTenant", null, "full","date");
+	}
+	
+	@Test
+	public void testRetrieveCountsForSingleInstance() throws IOException, Exception {
+		final HashMap<String, LookupClient> lookupEntry = new HashMap<String, LookupClient>();
+    	new Expectations(){
+            {
+                abstractComparator.getOMCInstances();
+                result = lookupEntry;
+    			lookupEntry.put("omc1",client1);
+    	    	lookupEntry.put("omc2",client2);
+            }
+        };
+		DashboardRowsComparator drc = new DashboardRowsComparator();
+		drc.retrieveCountsForSingleInstance("", "", null, "");
+	}
+	
+	@Test
+	public void testCombineRowEntity() throws ZDTException {
+		final HashMap<String, LookupClient> lookupEntry = new HashMap<String, LookupClient>();
+    	new Expectations(){
+            {
+                abstractComparator.getOMCInstances();
+                result = lookupEntry;
+    			lookupEntry.put("omc1",client1);
+    	    	lookupEntry.put("omc2",client2);
+            }
+        };
+		DashboardRowsComparator drc = new DashboardRowsComparator();
+		List<TableRowsEntity> rowEntityList =  new ArrayList<TableRowsEntity>();
+		TableRowsEntity entity = new TableRowsEntity();
+    	List<DashboardRowEntity> dashboards = new ArrayList<DashboardRowEntity>();
+    	dashboards.add(new DashboardRowEntity());
+    	List<DashboardSetRowEntity> dashboardSets = new ArrayList<DashboardSetRowEntity>();
+    	dashboardSets.add(new DashboardSetRowEntity());
+    	List<DashboardTileRowEntity> tiles = new ArrayList<DashboardTileRowEntity>();
+    	tiles.add(new DashboardTileRowEntity());
+    	List<DashboardTileParamsRowEntity> tileParams = new ArrayList<DashboardTileParamsRowEntity>();
+    	tileParams.add(new DashboardTileParamsRowEntity());
+    	List<DashboardUserOptionsRowEntity> userOptions = new ArrayList<DashboardUserOptionsRowEntity>();
+    	userOptions.add(new DashboardUserOptionsRowEntity());
+    	List<PreferenceRowEntity> preference = new ArrayList<PreferenceRowEntity>();
+    	preference.add(new PreferenceRowEntity());
+    	entity.setEmsDashboard(dashboards);
+    	entity.setEmsDashboardSet(dashboardSets);
+    	entity.setEmsDashboardTile(tiles);
+    	entity.setEmsDashboardTileParams(tileParams);
+    	entity.setEmsDashboardUserOptions(userOptions);
+    	entity.setEmsPreference(preference);
+    	rowEntityList.add(entity);
+    	drc.combineRowEntity(rowEntityList);
+	}
+	
+	@Test
+	public void testRetrieveTenants() throws Exception {
+		final HashMap<String, LookupClient> lookupEntry = new HashMap<String, LookupClient>();
+    	new Expectations(){
+            {
+                abstractComparator.getOMCInstances();
+                result = lookupEntry;
+    			lookupEntry.put("omc1",client1);
+    	    	lookupEntry.put("omc2",client2);
+            }
+        };
+		DashboardRowsComparator drc = new DashboardRowsComparator();
+		drc.retrieveTenants("", "", null);
+	}
+	
 	
 	@Test
 	public void testretrieveSyncStatusForOmcInstance() throws Exception {
