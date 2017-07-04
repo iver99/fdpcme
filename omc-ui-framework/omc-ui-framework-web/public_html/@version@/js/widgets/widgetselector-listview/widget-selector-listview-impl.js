@@ -430,7 +430,7 @@ define('uifwk/@version@/js/widgets/widgetselector-listview/widget-selector-listv
                     getWidgetGroups().done(function(data, textStatus, jqXHR){
                         oj.Logger.info("Finished loading widget groups. Start to load widgets.");
                         getWidgets().done(function(data, textStatus, jqXHR){ 
-                            generateWidgetsDataSource(data);
+                            generateWidgetsDataSource(widgetArray);
                             oj.Logger.info("Finished loading widget groups and widgets. Start to load page display data.");
                             //If already has search text input during widgets loading, then do a search after widgets loading finished
                             if (self.searchText() && $.trim(self.searchText()) !== "") {
@@ -522,6 +522,15 @@ define('uifwk/@version@/js/widgets/widgetselector-listview/widget-selector-listv
                             }
                         }
                     }
+                    widgetArray.sort(function(wdgtA, wdgtB){
+                        if(wdgtA.WIDGET_NAME > wdgtB.WIDGET_NAME){
+                            return 1;
+                        }else if(wdgtA.WIDGET_NAME < wdgtB.WIDGET_NAME){
+                            return -1;
+                        }else if(wdgtA.WIDGET_NAME === wdgtB.WIDGET_NAME){
+                            return 0;
+                        }
+                    });
                 };
 
                 function loadWidgetScreenshot(widget) {
