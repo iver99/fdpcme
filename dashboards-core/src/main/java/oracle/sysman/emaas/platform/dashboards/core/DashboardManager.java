@@ -996,7 +996,7 @@ public class DashboardManager
 						+ "p.APPLICATION_TYPE,p.CREATION_DATE,p.LAST_MODIFICATION_DATE,p.NAME,p.OWNER,p.TENANT_ID,p.TYPE,p.APPLICATION_TYPE ");
 		String jpqlQuery = sbQuery.toString();
 
-		LOGGER.info("Executing SQL is: " + jpqlQuery);
+		LOGGER.debug("Executing SQL is: " + jpqlQuery);
 		DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);	
 		EntityManager em = dsf.getEntityManager();
 		try {
@@ -1793,7 +1793,7 @@ public class DashboardManager
 		for (int i = 0; i < paramList.size(); i++) {
 			Object value = paramList.get(i);
 			query.setParameter(i + 1, value);
-			LOGGER.info("binding parameter [{}] as [{}]", i + 1, value);
+			LOGGER.debug("binding parameter [{}] as [{}]", i + 1, value);
 		}
 	}
 
