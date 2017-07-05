@@ -491,6 +491,7 @@ define('uifwk/@version@/js/widgets/widgetselector-listview/widget-selector-listv
                     var widgetsCreatedByOracle = []; 
                     var widgetsCreatedByME = []; 
                     var widgetsCreatedByOthers = [];
+                    var titleListMap = [{title: createByMeTitle, list: widgetsCreatedByME}, {title: createByOracleTitle, list: widgetsCreatedByOracle}, {title: createByOthersTitle, list: widgetsCreatedByOthers}];
                     //FOR TEST ADD THE SYSTEM WIDGET TO EVERY GROUP TO BE MODIFIED
                     var initWidgetsDataSource = [];
                     if(isOnSearching){
@@ -503,19 +504,13 @@ define('uifwk/@version@/js/widgets/widgetselector-listview/widget-selector-listv
                         $.each($.grep(data, function(n){return (n.WIDGET_OWNER !== self.userName)&&(n.WIDGET_OWNER !== "ORACLE")}),function(n,value){
                             widgetsCreatedByOthers.push({"attr":value});                        
                         });
-                        initWidgetsDataSource = [
-                            {
-                             "attr":createByMeTitle,
-                             "children":widgetsCreatedByOracle
-                            },
-                            {
-                             "attr":createByOracleTitle,
-                             "children":widgetsCreatedByOracle
-                            },
-                            {
-                             "attr":createByOthersTitle,
-                             "children":widgetsCreatedByOracle
-                            }];
+                        for(var i = 0; i < titleListMap.length; ++i)
+                            if(titleListMap[i].list.length>0){
+                            initWidgetsDataSource.push({
+                             "attr":titleListMap[i].title,
+                             "children":titleListMap[i].list
+                            });
+                        }
                     }else{
                         $.each(data,function(n,value){
                             initWidgetsDataSource.push({"attr":value});                        
