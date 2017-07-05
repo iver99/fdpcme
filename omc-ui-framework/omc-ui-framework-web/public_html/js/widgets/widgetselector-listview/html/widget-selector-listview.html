@@ -51,8 +51,8 @@
                                 </span>
                                 <div class="oj-flex-item" style="vertical-align: middle;">
                                     <p>
-                                        <span data-bind="html: WIDGET_NAME" class="oj-label"></span>
-                                        <span class="oj-text-sm" data-bind="html: WIDGET_DESCRIPTION?WIDGET_DESCRIPTION:$parent.widgetNoDescription, css:{'font-style-italic':!WIDGET_DESCRIPTION||WIDGET_DESCRIPTION === $parent.widgetNoDescription}"></span>
+                                        <span data-bind="html: highlightedName" class="oj-label"></span>
+                                        <span class="oj-text-sm" data-bind="html: highlightedDescription?highlightedDescription:$parent.widgetNoDescription, css:{'font-style-italic':!WIDGET_DESCRIPTION||WIDGET_DESCRIPTION === $parent.widgetNoDescription}"></span>
                                     </p>
                                     <span class="oj-text-sm widget-selector-text-secondary-color widget-selector-description" data-bind="text: $parent.widgetLableCreatedBy + WIDGET_GROUP_NAME"></span><br>
                                     <span class="oj-text-sm widget-selector-text-secondary-color" data-bind="text: $parent.widgetLableLastModified + WIDGET_OWNER"></span>

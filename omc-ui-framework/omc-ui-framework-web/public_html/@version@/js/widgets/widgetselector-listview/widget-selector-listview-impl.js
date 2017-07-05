@@ -177,8 +177,8 @@ define('uifwk/@version@/js/widgets/widgetselector-listview/widget-selector-listv
                             if (allWidgets[i].WIDGET_NAME.toLowerCase().indexOf(searchtxt.toLowerCase()) > -1 ||
                                     (allWidgets[i].WIDGET_DESCRIPTION && allWidgets[i].WIDGET_DESCRIPTION.toLowerCase().indexOf(searchtxt.toLowerCase()) > -1)) {
                                 var singleWidget = $.extend(true,{},allWidgets[i]);
-                                singleWidget.WIDGET_NAME = singleWidget.WIDGET_NAME.replace(new RegExp(searchtxt, 'gi'), searchingHightLightTemplate);
-                                singleWidget.WIDGET_DESCRIPTION = singleWidget.WIDGET_DESCRIPTION.replace(new RegExp(searchtxt, 'gi'), searchingHightLightTemplate);
+                                singleWidget.highlightedName = singleWidget.WIDGET_NAME.replace(new RegExp(searchtxt, 'gi'), searchingHightLightTemplate);
+                                singleWidget.highlightedDescription = singleWidget.WIDGET_DESCRIPTION.replace(new RegExp(searchtxt, 'gi'), searchingHightLightTemplate);
                                 searchResultArray.push(singleWidget);
                             }
                         }
@@ -530,6 +530,8 @@ define('uifwk/@version@/js/widgets/widgetselector-listview/widget-selector-listv
                                 widget.WIDGET_VISUAL = ko.observable();
                                 widget.imgWidth = ko.observable("190px");
                                 widget.imgHeight = ko.observable("140px");
+                                widget.highlightedName = widget.WIDGET_NAME;
+                                widget.highlightedDescription = widget.WIDGET_DESCRIPTION;
 
                                 if (!widget.WIDGET_DESCRIPTION){
                                     widget.WIDGET_DESCRIPTION = "";
