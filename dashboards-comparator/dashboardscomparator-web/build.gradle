@@ -136,7 +136,7 @@ dependencies {
  
     compile getProjectArtifact('security-client')  
     
-    providedCompile (group: 'com.oracle.emaas.emcpgw.sdk', name: 'gateway-client', version: "${emaasAPIGWVersion}")
+    providedCompile (group: 'com.oracle.emaas.emcpgw.sdk', name: 'gateway-client', version: "${emaasGatewayClientVersion}")
     
     
     

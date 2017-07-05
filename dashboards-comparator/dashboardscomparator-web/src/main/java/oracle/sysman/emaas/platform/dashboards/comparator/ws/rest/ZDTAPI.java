@@ -167,6 +167,8 @@ public class ZDTAPI
 		// this comparator invokes the 2 instances REST APIs and retrieves the counts for objects (like dashboards), and return the counts for each instance
 		/*Long tenantId = null;
         tenantId = getTenantId(tenantIdParam);*/
+		//logger.info("X-USER-IDENTITY-DOMAIN-NAME = "+tenantIdParam);
+		//logger.info("X-REMOTE-USER = "+userTenant);
 		DashboardCountsComparator dcc = new DashboardCountsComparator();
 		InstancesComparedData<CountsEntity> result = dcc.compare(tenantIdParam, userTenant);
 		InstancesComapredCounts ic = new InstancesComapredCounts(new InstanceCounts(result.getInstance1()),
