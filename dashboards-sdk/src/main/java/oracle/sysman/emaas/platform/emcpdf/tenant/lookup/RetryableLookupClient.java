@@ -42,7 +42,7 @@ public class RetryableLookupClient<T> {
         int retry = 0;
         //int retry_on_same = 0;
         //as discussed in review meeting, we will retry for ~(2+4+8+16+32+64)s
-        // above comment is deprecated due to EMCPDF-4447 change max retry to 4 times
+        // above comment is deprecated due to EMCPDF-4447 change max retry to 4 times(include 1st request, and 3 retry.)
         int MAX_TOTAL_RETRY = 4;
 //        int MAX_RETRY_ON_SAME_INSTANCE = 10; // 10 exponential retries will get us close to 6 minutes
         double delaySecs = 2;
@@ -53,7 +53,11 @@ public class RetryableLookupClient<T> {
 
         Random delayRand = new Random(System.currentTimeMillis());
         while ((retry++) < MAX_TOTAL_RETRY /*&& (retry_on_same < MAX_RETRY_ON_SAME_INSTANCE)*/) {
-            LOGGER.info("Retry for the {} time", retry);
+            if(retry == 1){
+                LOGGER.debug("First time to request.");
+            }else{
+                LOGGER.info("Retry for the {} time", retry - 1);
+            }
 
             try {
                 List<InstanceInfo> result = getServiceInstances(serviceName, version, tenantName);
@@ -78,7 +82,7 @@ public class RetryableLookupClient<T> {
                     }
                 }
                 if (lk == null) {
-                    LOGGER.warn("Retrieved null link for service {}, version {}, rel {}, prefixMatch {}, tenant {}. Will retry after delay",
+                    LOGGER.error("Retrieved null link for service {}, version {}, rel {}, prefixMatch {}, tenant {}. Will retry after delay",
                             serviceName, version, rel, prefixMatch, tenantName); // log the exception and go ahead to retry
                 } else {
                     T rtn = runner.runWithLink(lk); // this method may raise RetryableLookupException (for retry case) or other exception that'll stop the retry procedure
@@ -95,8 +99,10 @@ public class RetryableLookupClient<T> {
             // Delay between retries grows over time
             LOGGER.info("Waiting for {}s before next retry", delaySecs);
             try {
-                Thread.sleep((long) (delaySecs * 1000));
+                Thread.currentThread().sleep((long) (delaySecs * 1000));
             } catch (InterruptedException ie) {
+                LOGGER.error("Interrupted Exception get thrown during retry logic...");
+                LOGGER.error(ie);
             }
             LOGGER.info("After waiting, will retry or abort the retry procedure");
             delaySecs = delaySecs * 2 * (0.9 + delayRand.nextDouble() * 0.2); // Grow by 1.8 to 2.2 each time
