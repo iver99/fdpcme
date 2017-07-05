@@ -41,7 +41,9 @@ public class RetryableLookupClient<T> {
         // here is the logic for doing somework
         int retry = 0;
         //int retry_on_same = 0;
-        int MAX_TOTAL_RETRY = 6; //as discussed in review meeting, we will retry for ~(2+4+8+16+32+64)s
+        //as discussed in review meeting, we will retry for ~(2+4+8+16+32+64)s
+        // above comment is deprecated due to EMCPDF-4447 change max retry to 4 times
+        int MAX_TOTAL_RETRY = 4;
 //        int MAX_RETRY_ON_SAME_INSTANCE = 10; // 10 exponential retries will get us close to 6 minutes
         double delaySecs = 2;
 
