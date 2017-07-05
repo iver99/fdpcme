@@ -434,6 +434,7 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
              */
             self.resizeHamburgerMenuLayout = function() {
                 if(!self.xlargeScreen()) {
+                    $("#offcanvasInnerContainer").width($(window).width());
                     $("#uifwkLayoutMainContainer").width($(window).width());
                 }
                 else {
@@ -443,6 +444,7 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
                     else {
                         $("#uifwkLayoutMainContainer").width($(window).width());
                     }
+                    $("#offcanvasInnerContainer").width($(window).width());
                 }
             };
         }
