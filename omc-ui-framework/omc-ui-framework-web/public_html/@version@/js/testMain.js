@@ -281,7 +281,7 @@ require(['knockout',
                 };
                 
                 self.openWidgetSelectorList = function() {
-                    $('#'+widgetSelectorDialogId).ojDialog('open');
+                    $('#'+widgetSelectorDialogId).ojPopup('open', '#add-widget-button2');
                 };
             }
 

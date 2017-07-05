@@ -1,8 +1,8 @@
         <div style="display:none;" class="widget-selector-main"  data-testapiversion="1.7.5" 
-            data-bind="ojComponent:{component: 'ojDialog', beforeOpen: beforeOpenDialog,
+            data-bind="ojComponent:{component: 'ojPopup',autoDismiss:'focusLoss', beforeOpen: beforeOpenDialog,
                 initialVisibility: 'hide', title: widgetSelectorTitle, resizeBehavior: 'none',
                 rootAttributes: { style: 'width: 867px;'}}, attr: {id: dialogId}">   
-            <div class="oj-dialog-body" style="height: 510px; overflow: hidden;" >
+            <div style="overflow: hidden;" >
                 <!--<label for="categorySelect" hidden style='padding: 0px; margin: 0px; width:0px;height:0px;' data-bind="text: widgetGroupLabel"></label>-->
                 <div id="widget-selector-search-container">
                     <div id="widget-selector-searchbox" class="widget-searchbox-without-filter" data-bind="event:{keydown: widgetBoxClicked}">
