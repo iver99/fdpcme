@@ -116,10 +116,14 @@ public class TenantSubscriptionUtil {
                     rc.setHeader("X-USER-IDENTITY-DOMAIN-NAME", tenant);
                     appsResponse = rc.getWithException(queryHref, tenant, lookupLink.getAuthToken());
                 } catch (UniformInterfaceException e) {
-                    if (e.getResponse() != null && e.getResponse().getStatus() == 503) {
-                        LOGGER.error("Got status code {} when getting tenant {} subscribed apps", e.getResponse().getStatus(), tenant);
-                        LOGGER.error(e);
-                        throw new RetryableLookupClient.RetryableLookupException(e);
+                    // will print HTTP response code when response is not null.
+                    if (e.getResponse() != null) {
+                        LOGGER.error("Got HTTP response code {} when getting tenant {} subscribed apps", e.getResponse().getStatus(), tenant);
+                        //only resp code 503 will trigger retry logic.
+                        if(e.getResponse().getStatus() == 503){
+                            LOGGER.error(e);
+                            throw new RetryableLookupClient.RetryableLookupException(e);
+                        }
                     }
                     LOGGER.error(e);
                     throw e;
