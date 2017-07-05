@@ -1,7 +1,6 @@
 package oracle.sysman.emaas.platform.dashboards.comparator.webutils.util;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.api.client.*;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import mockit.*;
@@ -13,6 +12,7 @@ import oracle.sysman.emaas.platform.dashboards.comparator.webutils.json.AppMappi
 import oracle.sysman.emaas.platform.dashboards.comparator.webutils.json.AppMappingEntity;
 import oracle.sysman.emaas.platform.dashboards.comparator.webutils.json.DomainEntity;
 import oracle.sysman.emaas.platform.dashboards.comparator.webutils.json.DomainsEntity;
+import oracle.sysman.emaas.platform.emcpdf.cache.util.*;
 import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -461,5 +461,110 @@ public class TenantSubscriptionUtilTest {
     private UriBuilder uriBuilder;
 
 */
+
+    @Test(groups = {"s2"})
+    public void testRestClientGetNullAuthS2(@Mocked final DefaultClientConfig anyClientConfig, @Mocked final Client anyClient,
+                                            @Mocked final URI anyUri, @Mocked final UriBuilder anyUriBuilder, @Mocked final MediaType anyMediaType,
+                                            @Mocked final RegistrationManager anyRegistrationManager, @Mocked final com.sun.jersey.api.client.WebResource.Builder anyBuilder, @Mocked final oracle.sysman.emaas.platform.emcpdf.cache.util.StringUtil anyStringUtil)
+            throws Exception {
+        new NonStrictExpectations() {
+            {
+                RegistrationManager.getInstance();
+                result = anyRegistrationManager;
+                anyRegistrationManager.getAuthorizationToken();
+                result = authToken;
+            }
+        };
+        new TenantSubscriptionUtil.RestClient().get("http://test.link.com", "emaastesttenant1", null);
+        new Verifications() {
+            {
+                UriBuilder.fromUri(anyString).build();
+                anyClient.resource(anyUri).header(anyString, any);
+                anyBuilder.get(String.class);
+            }
+        };
+    }
+
+    /*@Test(groups = {"s2"})
+    public void testRestClientGetS2(@Mocked final DefaultClientConfig anyClientConfig, @Mocked final Client anyClient,
+                                    @Mocked final URI anyUri, @Mocked final UriBuilder anyUriBuilder, @Mocked final MediaType anyMediaType,
+                                    @Mocked final com.sun.jersey.api.client.WebResource.Builder anyBuilder) {
+        TenantSubscriptionUtil.RestClient rc = new TenantSubscriptionUtil.RestClient();
+//        rc.setHeader("TestHeader","header1");
+        rc.get("http://test.link.com", "emaastesttenant1", null);
+        new Verifications() {
+            {
+                UriBuilder.fromUri(anyString).build();
+                anyClient.resource(anyUri).header(anyString, any);
+                anyBuilder.get(String.class);
+            }
+        };
+    }*/
+    @Injectable char[] authToken = {'T'};
+    @Test(groups = {"s2"}, expectedExceptions = UniformInterfaceException.class)
+    public void testRestClientGetException1(@Mocked final DefaultClientConfig anyClientConfig, @Mocked final Client anyClient,
+                                            @Mocked final URI anyUri, @Mocked final UriBuilder anyUriBuilder, @Mocked final MediaType anyMediaType,
+                                            @Mocked final RegistrationManager anyRegistrationManager, @Mocked final com.sun.jersey.api.client.WebResource.Builder anyBuilder, @Mocked final ClientResponse anyClientResponse) {
+        // test UniformInterfaceException
+        new NonStrictExpectations() {
+            {
+                RegistrationManager.getInstance();
+                result = anyRegistrationManager;
+                anyRegistrationManager.getAuthorizationToken();
+                result = authToken;
+                anyBuilder.get(String.class);
+                result = new UniformInterfaceException(anyClientResponse);
+            }
+        };
+        TenantSubscriptionUtil.RestClient rc = new TenantSubscriptionUtil.RestClient();
+//        rc.setHeader("TestHeader","header1");
+        rc.get("http://test.link.com", "emaastesttenant1", null);
+        new Verifications() {
+            {
+                UriBuilder.fromUri(anyString).build();
+                anyClient.resource(anyUri).header(anyString, any);
+                anyBuilder.get(String.class);
+            }
+        };
+        // test ClientHandlerException
+        new NonStrictExpectations() {
+            {
+                anyBuilder.get(String.class);
+                result = new ClientHandlerException();
+            }
+        };
+        rc = new TenantSubscriptionUtil.RestClient();
+        rc.get("http://test.link.com", "emaastesttenant1", null);
+        // test Exception
+        new NonStrictExpectations() {
+            {
+                anyBuilder.get(String.class);
+                result = new Exception();
+            }
+        };
+        rc = new TenantSubscriptionUtil.RestClient();
+        rc.get("http://test.link.com", "emaastesttenant1", null);
+    }
+
+    @Test(groups = {"s2"})
+    public void testRestClientPut(@Mocked final DefaultClientConfig anyClientConfig, @Mocked final Client anyClient,
+                                  @Mocked final URI anyUri, @Mocked final UriBuilder anyUriBuilder, @Mocked final MediaType anyMediaType,
+                                  @Mocked final RegistrationManager anyRegistrationManager, @Mocked final com.sun.jersey.api.client.WebResource.Builder anyBuilder) {
+        TenantSubscriptionUtil.RestClient rc = new TenantSubscriptionUtil.RestClient();
+        List<String> list = new ArrayList<>();
+        list.add("test1");
+        new NonStrictExpectations() {
+            {
+                RegistrationManager.getInstance();
+                result = anyRegistrationManager;
+                anyRegistrationManager.getAuthorizationToken();
+                result = authToken;
+                anyBuilder.put(String.class, any);
+//                result = new UniformInterfaceException(anyClientResponse);
+            }
+        };
+        rc.put("http://test.link.com", list.toString(), "emaastesttenant1", null);
+    }
 }
+
 
