@@ -337,30 +337,64 @@
     color: #9e9e9e;
     cursor: default;
 }
+.widget-selector-main-new{
+    #widget-selector-searchbox .widget-searchtxt-without-filter { 
+       width: 506px;
+    }
+    #widget-selector-searchbox #widget-selector-search-input {
+        float:left;
+        height:30px;
+    }
+    #widget-selector-searchbox .widget-search-input-without-filter {
+        width: 536px;
+    }
+    .widget-searchbox-with-filter {
+        width: 622px;
+    }
+    .widget-searchbox-without-filter {
+        width: 570px;
+    }
+    
+    #widget-selector-search-container {
+        padding-left: 4px;
+        padding-right: 4px;
+        height:32px;
+        width:538px;
+    }
 
-.widget-selector-text-secondary-color{
-    color: gray;
-}
+    #widget-selector-widgets {
+        padding-left: 4px;
+        float: left;
+        width:570px;
+        height:420px;
+        line-height: 420px;
+    }
+    
+    
+    
+    .widget-selector-text-secondary-color{
+        color: gray;
+    }
 
-.font-style-italic{
-    font-style: italic !important;
-}
+    .font-style-italic{
+        font-style: italic !important;
+    }
 
-.widget-selector-description{
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-}
+    .widget-selector-description{
+        white-space:nowrap;
+        overflow:hidden;
+        text-overflow:ellipsis;
+    }
 
-.widget-selector-hide-scrollbar{
-    overflow-y: hidden;
-    padding-right: 14px;
-}
+    .widget-selector-hide-scrollbar{
+        overflow-y: hidden;
+    }
 
-.widget-selector-show-scrollbar{
-    overflow-y: auto;
-}
+    .widget-selector-show-scrollbar{
+        overflow-y: auto;
+    }
 
-.widget-selector-search-matching{
-    color: blue;
+    .widget-selector-search-matching{
+        color: blue;
+    }
 }
