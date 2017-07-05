@@ -370,7 +370,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     }
                     return "display: flex; float: left; width: 100%; height: " + height + ";";
                 } else {
-                    return "height:100%;width:100%;";
+                    return "display:block;float:none;width:100%;";
                 }
             });
 
@@ -1689,13 +1689,15 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     //show enterprise topology
                     self.showEnterpriseTopology = true;
                     window.globalpillsempty = true;
-                    if (self.isTopologyDisplayed() && !self.topologyDisabled()) {
-                        self.showTopology();
-                    }
                     if (self.udeEnterPriseTopologyLanded) {
                         self.topologyDisabled(false);
                     }
                     else {
+                        // only hide the topology(when displayed)
+                        //if ude enterprise topology has not yet landed
+                        if (self.isTopologyDisplayed() && !self.topologyDisabled()) {
+                            self.showTopology();
+                        }
                         self.topologyDisabled(true);
                     }
 

@@ -85,6 +85,12 @@ define(['knockout',
             self.dashboardDescriptionEditing = ko.observable(self.dashboardDescription());
             self.editDisabled = ko.observable(self.dashboard.type() === SINGLEPAGE_TYPE || self.dashboard.systemDashboard() || self.currentUser !== self.dashboard.owner());
             self.disableSave = ko.observable(false);
+            //only show vertical separator after text widget add icon when entity selector or time selector show up in dashboard toolbar in an editable dashboard
+            self.shouldShowSeparator = ko.computed(function() {
+                var isTselTimeSelInToolbar = (self.dashboard.enableEntityFilter && ((self.dashboard.enableEntityFilter() === 'TRUE') || (self.isUnderSet && self.dashboard.enableEntityFilter() === 'GC')))
+                       || self.isUnderSet && self.dashboard.enableTimeRange && (self.dashboard.enableTimeRange() === 'TRUE' || self.dashboard.enableTimeRange() === 'GC');
+                return !self.editDisabled() && self.tilesViewModel.isMobileDevice !== "true" && self.notZdtStatus() && isTselTimeSelInToolbar;
+            });
             
             if(self.isUnderSet && dashboardSetOptions && ko.isObservable(dashboardSetOptions.autoRefreshInterval)){
                 self.autoRefreshInterval = ko.observable(ko.unwrap(dashboardSetOptions.autoRefreshInterval));
