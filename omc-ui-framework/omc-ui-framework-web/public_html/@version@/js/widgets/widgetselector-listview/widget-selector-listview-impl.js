@@ -46,7 +46,7 @@ define('uifwk/@version@/js/widgets/widgetselector-listview/widget-selector-listv
                 self.isMobileDevice = ko.observable( (new mbu()).isSmallDevice );
                 self.hideScrollbar = ko.observable(true);
                 self.isMobileDevice()?self.hideScrollbar(false):self.hideScrollbar(true);
-
+                self.needRefreshWidgetList = ko.observable(true);
                 self.widgetGroupFilterVisible = ko.observable(widgetProviderName && widgetProviderVersion ? false : true);
                 self.searchText = ko.observable("");
                 self.clearButtonVisible = ko.computed(function(){return self.searchText() && '' !== self.searchText() ? true : false;});
@@ -196,7 +196,9 @@ define('uifwk/@version@/js/widgets/widgetselector-listview/widget-selector-listv
                 };
 
                 self.onSearchBoxBlur = function(){
-                    !($.trim(ko.toJS(self.searchText))) && generateWidgetsDataSource(getAvailableWidgets());
+                    if(self.needRefreshWidgetList()){
+                        !($.trim(ko.toJS(self.searchText))) && generateWidgetsDataSource(getAvailableWidgets());
+                    }
                 };
 
                 self.clearSearchText = function() {
@@ -281,8 +283,8 @@ define('uifwk/@version@/js/widgets/widgetselector-listview/widget-selector-listv
                 };
 
                 // Widget box click handler
-                self.widgetBoxClicked = function(data, event) {
-                    if (event.type === "click" || (event.type === "keypress" && event.keyCode === 13)) {
+                self.widgetBoxClicked = function(data, event) { 
+                    if (event.type === "keydown" && event.keyCode === 13) {
                         var curWidget = self.currentWidget();
                         if (curWidget && (curWidget.PROVIDER_NAME !== data.PROVIDER_NAME ||
                             curWidget.WIDGET_UNIQUE_ID !== data.WIDGET_UNIQUE_ID)) { 
@@ -292,9 +294,38 @@ define('uifwk/@version@/js/widgets/widgetselector-listview/widget-selector-listv
                             self.currentWidget(data);
                         }
                         widgetSelectionConfirmed();
+                    }else if (event.type === "keydown" && event.keyCode === 9) { 
+                        if (event.shiftKey) { 
+                            navigateWidgetList(event, false);
+                        }else{ 
+                            navigateWidgetList(event, true);
+                        }
+                    }else if(event.target.id === "searchTxt"){ 
+                        return true;
                     }
                 };
 
+                function navigateWidgetList(event, isDown){   
+                            self.needRefreshWidgetList(false);
+                            var fromWidget = $(event.target);
+                            if(event.target.id === "searchTxt"){
+                                var toWidget =$($("#widget-selector-listview").children()[0]);                                
+                            }else{
+                                var toWidget = isDown ? $((event.target).nextElementSibling) : $((event.target).previousElementSibling);
+                                var scrollToPosition = isDown ? $((event.target).nextElementSibling).position().top : $((event.target).previousElementSibling).position().top; 
+                                fromWidget.removeClass("oj-selected oj-focus oj-hover");                              
+                                fromWidget.attr("aria-selected","false");
+                                $("#widget-selector-widgets").scrollTop(scrollToPosition-60);  
+                                fromWidget.removeAttr("tabindex");   
+                            }    
+                            if(toWidget){
+                                toWidget.attr("tabindex","0");
+                                toWidget.addClass("oj-selected oj-focus oj-hover"); 
+                                toWidget.focus();
+                            }                                       
+                            fromWidget.blur();                            
+                            self.needRefreshWidgetList(true);
+                };
                 // Widget handler for selected widget
                 function widgetSelectionConfirmed(){
                     //Close dialog if autoCloseDialog is true or not set
