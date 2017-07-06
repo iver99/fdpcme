@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import oracle.sysman.emaas.platform.dashboards.core.DashboardErrorConstants;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.CommonResourceException;
@@ -972,9 +973,13 @@ public class Tile
 			to.setWidgetUniqueId(Tile.TEXT_WIDGET_NAME);*/
 			to.setWidgetCreationTime(String.valueOf(DateUtil.getGatewayTime()));
 			String encodedContent = StringEscapeUtils.escapeHtml4(getContent());
-			if (StringUtil.isEmpty(encodedContent) || encodedContent.length() > TEXT_WIDGET_MAX_CONTENT_LEN) {
-				throw new CommonFunctionalException(
-						MessageUtils.getDefaultBundleString(CommonFunctionalException.TEXT_WIDGET_INVALID_CONTENT_ERROR));
+			if (StringUtil.isEmpty(encodedContent)) {
+				throw new CommonFunctionalException(DashboardErrorConstants.DASHBOARD_TEXT_WIDGET_EMPTY_CONTENT_ERROR_CODE,
+						MessageUtils.getDefaultBundleString(CommonFunctionalException.TEXT_WIDGET_INVALID_EMPTY_CONTENT_ERROR));
+			}
+			if (encodedContent.length() > TEXT_WIDGET_MAX_CONTENT_LEN) {
+				throw new CommonFunctionalException(DashboardErrorConstants.DASHBOARD_TEXT_WIDGET_CONTENT_TOO_LONG_ERROR_CODE,
+						MessageUtils.getDefaultBundleString(CommonFunctionalException.TEXT_WIDGET_CONTENT_TOO_LONG_ERROR));
 			}
 			EmsDashboardTileParams edtp = new EmsDashboardTileParams(1, Tile.TEXT_WIDGET_PARAM_NAME_CONTENT,
 					TileParam.PARAM_TYPE_CODE_STRING, null, encodedContent, null, to);
