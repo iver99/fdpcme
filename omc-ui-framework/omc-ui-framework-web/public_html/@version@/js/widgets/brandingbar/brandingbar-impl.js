@@ -936,6 +936,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     if(!isXlarge){
                         if (avoidPageResizeOptIn) {
                             setOverlayHamburgerMenuStyles();
+                            menuUtil.resizeHamburgerMenuLayout();
                             triggerDashboardResizeEvent('Hamburger menu closed.');
                             triggerHamburgerMenuToggleEvent('close');
                         }
