@@ -502,3 +502,13 @@ html:not([dir="ltr"]) .oj-navigationlist-hierarchical-menu .oj-menu-item-icon {
     -webkit-transform: none;
     transform: none;
 }
+
+@-moz-document url-prefix() {
+    @media screen and (min-width: 1440px) {
+        #offcanvasInnerContainer.oj-flex {
+            -webkit-flex-wrap: inherit;
+            flex-wrap: inherit;
+        }
+    }
+}
+
