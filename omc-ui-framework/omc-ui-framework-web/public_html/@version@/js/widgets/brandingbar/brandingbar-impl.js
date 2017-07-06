@@ -961,9 +961,11 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                             var menuInitialStatus = retrieveHmaburgerMenuStatus();
                             if (menuInitialStatus !== 'closed') {
                                 $("#omcHamburgerMenu").show();
+                                $("#uifwkLayoutMainContainer").width($(window).width() - 250);
                             }
                             else {
                                 $("#omcHamburgerMenu").hide();
+                                $("#uifwkLayoutMainContainer").width($(window).width());
                             }
                             setPinnedHamburgerMenuStyles();
                             resetCurrentHamburgerMenu();
