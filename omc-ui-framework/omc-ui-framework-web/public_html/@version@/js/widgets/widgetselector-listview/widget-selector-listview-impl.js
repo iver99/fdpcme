@@ -305,24 +305,33 @@ define('uifwk/@version@/js/widgets/widgetselector-listview/widget-selector-listv
                     }
                 };
 
-                function navigateWidgetList(event, isDown){   
+                function navigateWidgetList(event, isDown){  
                             self.needRefreshWidgetList(false);
                             var fromWidget = $(event.target);
                             if(event.target.id === "searchTxt"){
                                 var toWidget =$($("#widget-selector-listview").children()[0]);                                
                             }else{
-                                var toWidget = isDown ? $((event.target).nextElementSibling) : $((event.target).previousElementSibling);
-                                var scrollToPosition = isDown ? $((event.target).nextElementSibling).position().top : $((event.target).previousElementSibling).position().top; 
-                                fromWidget.removeClass("oj-selected oj-focus oj-hover");                              
-                                fromWidget.attr("aria-selected","false");
-                                $("#widget-selector-widgets").scrollTop(scrollToPosition-60);  
-                                fromWidget.removeAttr("tabindex");   
-                            }    
+                                var toWidget;
+                                var scrollToPosition;
+                                if(isDown && (event.target).nextElementSibling){
+                                   toWidget= $((event.target).nextElementSibling);
+                                   scrollToPosition =  toWidget.position().top;
+                                }else if(!isDown && (event.target).previousElementSibling){
+                                   toWidget = $((event.target).previousElementSibling);
+                                   scrollToPosition = toWidget.position().top; 
+                                }
+                            }
+                            fromWidget.removeClass("oj-selected oj-focus oj-hover");                              
+                            fromWidget.attr("aria-selected","false");
+                            $("#widget-selector-widgets").scrollTop(scrollToPosition-60);  
+                            fromWidget.removeAttr("tabindex");                         
                             if(toWidget){
                                 toWidget.attr("tabindex","0");
                                 toWidget.addClass("oj-selected oj-focus oj-hover"); 
                                 toWidget.focus();
-                            }                                       
+                            }else{
+                                $("#searchTxt").focus();
+                            }
                             fromWidget.blur();                            
                             self.needRefreshWidgetList(true);
                 };
