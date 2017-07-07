@@ -68,7 +68,14 @@ define(['knockout', 'jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-i
                         .done(
                             function (data) {
                                 doneCallback(data);
-                            });
+                            })
+                        .fail(function(jqXHR, textStatus, errorThrown){
+                            if (jqXHR.status === 401 && location.href && location.href.indexOf("error.html") === -1) {
+                                oj.Logger.error("Failed to detect OMC planned downtime due to 401 error. Redirect to error page", true);
+                                location.href = "/emsaasui/emcpdfui/error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_MSG";
+                                return;
+                            }
+                        });
                     }
                 }
 
