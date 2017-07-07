@@ -58,8 +58,9 @@ define(["require", "knockout", "jquery", "ojs/ojcore", "ckeditor"],
                     editor.on("focus", function() {
                        this.setData(self.content()); 
                     });
-                    editor.on("change", function() {
-                        self.content(this.getData());
+                    editor.on("key", function() {
+                        var _self = this;
+                        setTimeout(function(){self.content(_self.getData());}, 100);
                     });
                 };
                 
