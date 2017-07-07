@@ -1,6 +1,8 @@
 package oracle.sysman.emaas.platform.emcpdf.tenant.subscription2;
 
 import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import mockit.*;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
@@ -498,6 +500,68 @@ public class TenantSubscriptionUtilTest {
         List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1", new TenantSubscriptionInfo());
         //Assert.assertNull(services);
         Assert.assertTrue(services == null || services.isEmpty());
+    }
+    @Test(groups = {"s2"})
+    public void testGetTenantSubscribedServices(@Mocked final ClientResponse clientResponse, @Mocked final UniformInterfaceException uniformInterfaceException, @Mocked RegistryLookupUtil anyUtil,
+                                                @Mocked final RestClient anyClient, @Mocked final JsonUtil anyJsonUtil,
+                                                @Mocked final InstanceInfo anyInstanceInfo,
+                                                @Mocked final LookupManager anyLookupManager) throws Exception {
+        final VersionedLink link = new VersionedLink();
+        link.withHref("http://den00zyr.us.oracle.com:7007/naming/entitynaming/v1/domains");
+        link.withRel("");
+        final List<VersionedLink> links = Arrays.asList(link);
+        final List<InstanceInfo> insList = new ArrayList<InstanceInfo>();
+        insList.add(anyInstanceInfo);
+        final List<ServiceRequestCollection> src = new ArrayList<>();
+        ServiceRequestCollection serviceRequestCollection = new ServiceRequestCollection();
+        OrderComponents orderComponents = new OrderComponents();
+        ServiceComponent serviceComponent = new ServiceComponent();
+        List<Component> listComponent = new ArrayList<>();
+        Component component = new Component();
+        component.setComponent_id("com-id");
+        List<ComponentParameter> listCompenentParameter = new ArrayList<>();
+        ComponentParameter componentParameter = new ComponentParameter();
+        componentParameter.setKey("APPLICATION_EDITION");
+        componentParameter.setValue("edition");
+        listCompenentParameter.add(componentParameter);
+        listComponent.add(component);
+        component.setComponent_parameter(listCompenentParameter);
+        serviceComponent.setComponent(listComponent);
+        serviceComponent.setComponent_id("id");
+        orderComponents.setServiceComponent(serviceComponent);
+        serviceRequestCollection.setServiceType("OMC");
+        serviceRequestCollection.setTrial(false);
+        serviceRequestCollection.setOrderComponents(orderComponents);
+        src.add(serviceRequestCollection);
+
+        new Expectations() {
+            {
+                Deencapsulation.setField(TenantSubscriptionUtil.class, "IS_TEST_ENV", null);
+                LookupManager.getInstance().getLookupClient().lookup((InstanceQuery) any);
+                result = insList;
+                anyInstanceInfo.getLinksWithProtocol(anyString, anyString);
+                result = links;
+
+                anyClient.getWithException(anyString, anyString, anyString);
+                result = "resp";
+                anyJsonUtil.buildNormalMapper();
+                result = anyJsonUtil;
+                anyJsonUtil.fromJsonToList(anyString, ServiceRequestCollection.class);
+                result = src;
+            }
+        };
+        List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1", new TenantSubscriptionInfo());
+        //Assert.assertNull(services);
+//        Assert.assertTrue(services == null || services.isEmpty());
+    }
+    @Test(groups = {"s1"})
+    public void testIsMonitoringServiceOnly() {
+        Assert.assertFalse(TenantSubscriptionUtil.isMonitoringServiceOnly(null));
+        Assert.assertFalse(TenantSubscriptionUtil.isMonitoringServiceOnly(Arrays.asList("Monitoring", "ITA")));
+        Assert.assertFalse(TenantSubscriptionUtil.isMonitoringServiceOnly(Arrays.asList(new String[]{null})));
+        Assert.assertFalse(TenantSubscriptionUtil.isMonitoringServiceOnly(Arrays.asList("test")));
+//        Assert.assertTrue(TenantSubscriptionUtil.isMonitoringServiceOnly(Arrays
+//                .asList(ApplicationEditionConverter.ApplicationOPCName.APM.toString())));
     }
 
     @Test(groups = {"s2"})
