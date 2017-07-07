@@ -70,21 +70,24 @@ define(['knockout', 'jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-i
                                 doneCallback(data);
                             })
                         .fail(function(jqXHR, textStatus, errorThrown){
-                            if (jqXHR.status === 401 && location.href && location.href.indexOf("error.html") === -1) {
-                                oj.Logger.error("Failed to detect OMC planned downtime due to 401 error. Redirect to error page", true);
-                                location.href = "/emsaasui/emcpdfui/error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_MSG";
+                            //To avoid circular dependency use require call
+                            require(['uifwk/@version@/js/sdk/context-util-impl'], function (cxtModel) {
+                                var cxtUtil = new cxtModel();
+                                if (jqXHR.status === 401 && location.href && location.href.indexOf("error.html") === -1) {
+                                    oj.Logger.error("Failed to detect OMC planned downtime due to 401 error. Redirect to error page", true);
+                                    location.href = cxtUtil.appendOMCContext("/emsaasui/emcpdfui/error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_MSG&invalidUrl=" + encodeURIComponent(location.href));
+                                }
+                                else if (location.href && location.href.indexOf("error.html") === -1) {
+                                    oj.Logger.error("Failed to retrieve tenant or user. Redirect to error page", true);
+                                    location.href = cxtUtil.appendOMCContext("/emsaasui/emcpdfui/error.html?msg=DBS_ERROR_ORA_EMSAAS_USERNAME_AND_TENANTNAME_INVALID&invalidUrl=" + encodeURIComponent(location.href));
+                                }
                                 return;
-                            }
+                            });
                         });
                     }
                 }
 
                   if ((!tenantName || !userName) && location.href && location.href.indexOf("error.html") === -1) {
-                        //To avoid circular dependency use require call
-                        require(['uifwk/@version@/js/sdk/context-util-impl'], function (cxtModel) {
-                            var cxtUtil = new cxtModel();
-                            location.href = cxtUtil.appendOMCContext("/emsaasui/emcpdfui/error.html?msg=DBS_ERROR_ORA_EMSAAS_USERNAME_AND_TENANTNAME_INVALID&invalidUrl=" + encodeURIComponent(location.href));
-                        });
                         return null;
                   }
                   else{
