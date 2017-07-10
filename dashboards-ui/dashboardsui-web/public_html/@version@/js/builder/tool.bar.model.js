@@ -14,15 +14,17 @@ define(['knockout',
         'builder/tool-bar/duplicate.dialog',
         'uifwk/js/util/preference-util',
         'uifwk/js/util/zdt-util',
+        'uifwk/js/sdk/menu-util',
         'builder/builder.core',
         'builder/dashboardDataSource/dashboard.datasource'
     ],
-    function(ko, $, dfu, idfbcutil, ssu, cxtModel, oj, ed, dd, pfu,zdtUtilModel) {
+    function(ko, $, dfu, idfbcutil, ssu, cxtModel, oj, ed, dd, pfu, zdtUtilModel, menuModel) {
         // dashboard type to keep the same with return data from REST API
         var SINGLEPAGE_TYPE = "SINGLEPAGE";
         var DEFAULT_AUTO_REFRESH_INTERVAL = 300000;
         var cxtUtil = new cxtModel();
         var omcTimeConstants = cxtUtil.OMCTimeConstants;
+        var menuUtil = new menuModel();
 
         function ToolBarModel($b,dashboardSetOptions) {
             var self = this;
@@ -503,6 +505,7 @@ define(['knockout',
                     self.favoritesIcon(cssRemoveFavorite);
                     self.favoriteName(removeFavoriteName);
                     self.isFavoriteDashboard = true;
+                    menuUtil.fireFavoriteDsbChangedEvent(self.isFavoriteDashboard);
                 }
                 function errorCallback(jqXHR, textStatus, errorThrown) {
                     dfu.showMessage({
@@ -525,6 +528,7 @@ define(['knockout',
                     self.favoritesIcon(cssAddFavorite);
                     self.favoriteName(addFavoriteName);
                     self.isFavoriteDashboard = false;
+                    menuUtil.fireFavoriteDsbChangedEvent(self.isFavoriteDashboard);
                 }
                 function errorCallback(jqXHR, textStatus, errorThrown) {
                     dfu.showMessage({
