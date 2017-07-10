@@ -48,11 +48,15 @@ public class HamburgerMenu_CompositeMenu extends LoginAndLogout
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), "");
 		webd.getLogger().info("Start the test case: verifyCompositeMenu");
 
+		if(BrandingBarUtil.isHamburgerMenuDisplayed(webd))
+		{
+			BrandingBarUtil.toggleHamburgerMenu(webd);
+		}
 		//click the 'Show Composite' button
 		webd.getLogger().info("Click the 'Show Composite' button");
 		String indicator = UIControls.SGENERATEMENUBTN.replace("_name_", "Show Composite");
-		webd.click("css=" + indicator);
-
+		//webd.click("css=" + indicator);
+		webd.getWebDriver().findElement(By.cssSelector(indicator)).click();
 		//check the hamburger menu
 		webd.getLogger().info("Check the menu items in hamburger menu");
 		Assert.assertTrue(BrandingBarUtil.isMenuItemExisted(webd, "Composite Menu 1"));
