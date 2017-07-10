@@ -285,7 +285,7 @@ define('uifwk/@version@/js/widgets/widgetselector-listview/widget-selector-listv
 
                 // Widget box click handler
                 self.widgetBoxClicked = function(data, event) { 
-                    if (event.type === "keydown" && event.keyCode === 13) {
+                    if (event.type === "keydown" && event.keyCode === 13 || event.type === "click") {
                         var curWidget = self.currentWidget();
                         if (curWidget && (curWidget.PROVIDER_NAME !== data.PROVIDER_NAME ||
                             curWidget.WIDGET_UNIQUE_ID !== data.WIDGET_UNIQUE_ID)) { 
