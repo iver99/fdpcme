@@ -938,8 +938,10 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 };
                 
                 self.isStartLaterThanEnd = function() {
-                    var start = self.startDateISO() + self.startTime();
-                    var end = self.endDateISO() + self.endTime();
+//                    var start = self.startDateISO() + self.startTime();
+//                    var end = self.endDateISO() + self.endTime();
+                    var start = self.inputDateConverter.parse(self.rawStartDate()) + self.timeConverter().parse(self.rawStartTime());
+                    var end = self.inputDateConverter.parse(self.rawEndDate()) + self.timeConverter().parse(self.rawEndTime());
                     if(new Date(start) > new Date(end)) {
                         return true;
                     }else {
