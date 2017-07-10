@@ -93,11 +93,11 @@
 ​
                     <script type="text/html" id="widget_details">
                         <li data-bind="attr: {id: WIDGET_UNIQUE_ID}, event:{keydown: $parent.widgetBoxClicked, click: $parent.widgetBoxClicked}">
-                            <div class="oj-flex widget-selector-list-grid" style="flex-wrap: nowrap; overflow: hidden;">
+                            <div class="oj-flex widget-selector-list-grid" style="flex-wrap: nowrap;">
                                 <span class="oj-flex-item-0" style="padding-right: 10px">
                                     <img data-bind="attr: {alt: WIDGET_NAME, src: WIDGET_SCREENSHOT_HREF, width: imgWidth, height: imgHeight}" class="widget-selector-screenshot" style="vertical-align: middle;"/>
                                 </span>
-                                <div class="oj-flex-item" style="vertical-align: middle;">
+                                <div class="oj-flex-item" style="vertical-align: middle; overflow: hidden;">
                                     <p>
                                         <span data-bind="html: highlightedName" class="oj-label"></span>
                                         <span class="oj-text-sm widget-selector-description" data-bind="html: highlightedDescription?highlightedDescription:$parent.widgetNoDescription, css:{'font-style-italic':!WIDGET_DESCRIPTION||WIDGET_DESCRIPTION === $parent.widgetNoDescription}"></span>
