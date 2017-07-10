@@ -64,7 +64,7 @@ public class TestTimePicker_ErrorMsg extends LoginAndLogout
 		String returnmsg = CommonUIUtils.verifyErrorMsg(webd, 1, dayAfter, currentDate, false, false);			
 		webd.getLogger().info("Return Date:  " + returnmsg);
 		
-		Assert.assertTrue(errormsg_2.equals(returnmsg.trim()));
+		Assert.assertTrue(errormsg_2.equals(returnmsg.trim()) || returnmsg.trim().contains(errormsg_4));
 
 		webd.shutdownBrowser(true);	
 	}
@@ -145,7 +145,7 @@ public class TestTimePicker_ErrorMsg extends LoginAndLogout
 		String returnmsg = CommonUIUtils.verifyErrorMsg(webd, 3, dayAfter, currentDate, true, false);			
 		webd.getLogger().info("Return Date:  " + returnmsg);
 		
-		Assert.assertTrue(errormsg_2.equals(returnmsg.trim()));
+		Assert.assertTrue(errormsg_2.equals(returnmsg.trim()) || returnmsg.trim().contains(errormsg_4));
 
 		webd.shutdownBrowser(true);	
 	}
@@ -172,7 +172,7 @@ public class TestTimePicker_ErrorMsg extends LoginAndLogout
 		String returnmsg = CommonUIUtils.verifyErrorMsg(webd, 3, currentDate, dayAfter,true, false);			
 		webd.getLogger().info("Return Date:  " + returnmsg);
 		
-		Assert.assertTrue(errormsg_1.equals(returnmsg.trim()) || errormsg_2.equals(returnmsg.trim()));
+		Assert.assertTrue(errormsg_1.equals(returnmsg.trim()) || returnmsg.trim().contains(errormsg_4));
 
 		webd.shutdownBrowser(true);	
 	}
@@ -199,7 +199,7 @@ public class TestTimePicker_ErrorMsg extends LoginAndLogout
 		String returnmsg = CommonUIUtils.verifyErrorMsg(webd, 3, currentDate, dayBefore,true, false);			
 		webd.getLogger().info("Return Date:  " + returnmsg);
 		
-		Assert.assertTrue(errormsg_2.equals(returnmsg.trim()));
+		Assert.assertTrue(errormsg_2.equals(returnmsg.trim()) || returnmsg.trim().contains(errormsg_4));
 
 		webd.shutdownBrowser(true);	
 	}
@@ -226,7 +226,7 @@ public class TestTimePicker_ErrorMsg extends LoginAndLogout
 		String returnmsg = CommonUIUtils.verifyErrorMsg(webd, 1, dayAfter, currentDate, false, true);			
 		webd.getLogger().info("Return Date:  " + returnmsg);
 		
-		Assert.assertTrue(errormsg_2.equals(returnmsg.trim()));
+		Assert.assertTrue(errormsg_2.equals(returnmsg.trim()) || returnmsg.trim().contains(errormsg_4));
 
 		webd.shutdownBrowser(true);	
 	}
