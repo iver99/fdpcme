@@ -6,6 +6,20 @@ define(['knockout',
 function (ko, $, oj, dfu) {
     function rightPanelWidget($b) {
         var self = this;
+        var widgetSelectorDialogId = 'sampleWidgetSelectorDialog';
+        var widgetBoxWidth = 362;
+        self.widgetSelectorParams = {
+                    dialogId: widgetSelectorDialogId,
+                    dialogTitle: 'Add Content',
+                    userName: dfu.getUserName(),
+                    tenantName: dfu.getTenantName(),
+                    useIn: 'builder',
+                    autoCloseDialog: false
+    //                ,providerName: 'TargetAnalytics'
+    //                ,providerVersion: '1.0.5'
+    //                ,providerName: 'DashboardFramework'
+    //                ,providerVersion: '1.0'
+                };
         self.widgets = ko.observableArray([]);
         self.keyword = ko.observable('');
         self.keywordInput=ko.observable('');
@@ -229,19 +243,19 @@ function (ko, $, oj, dfu) {
             scrollInstantStore(event.target.scrollTop);
         };
 
-        if (typeof window.MutationObserver !== 'undefined') {
-            var widgetListHeightChangeObserver = new MutationObserver(function () {
-                widgetListHeight($dbdLeftPanelWidgets.height());
-            });
-            widgetListHeightChangeObserver.observe($dbdLeftPanelWidgets[0], {
-                attributes: true,
-                attrbuteFilter: ['style']
-            });
-        } else {
-            $b.addBuilderResizeListener(function () {
-                widgetListHeight($dbdLeftPanelWidgets.height());
-            });
-        }
+//        if (typeof window.MutationObserver !== 'undefined') {
+//            var widgetListHeightChangeObserver = new MutationObserver(function () {
+//                widgetListHeight($dbdLeftPanelWidgets.height());
+//            });
+//            widgetListHeightChangeObserver.observe($dbdLeftPanelWidgets[0], {
+//                attributes: true,
+//                attrbuteFilter: ['style']
+//            });
+//        } else {
+//            $b.addBuilderResizeListener(function () {
+//                widgetListHeight($dbdLeftPanelWidgets.height());
+//            });
+//        }
 
         widgetListHeight.subscribe(function () {
             loadSeeableWidgetScreenshots();

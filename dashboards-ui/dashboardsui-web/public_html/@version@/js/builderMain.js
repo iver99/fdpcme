@@ -42,8 +42,8 @@ requirejs.config({
         'idfbcutil':'internaldfcommon/js/util/internal-df-browser-close-util',
         'd3':'../../libs/@version@/js/d3/d3.min',
         'emsaasui':'/emsaasui',
-        'emcta':'/emsaasui/emcta/ta/js',
-//        'emcta': '/emsaasui/emcta/ta/@version@/js', //for DEV_MODE
+//        'emcta':'/emsaasui/emcta/ta/js',
+        'emcta': '/emsaasui/emcta/ta/@version@/js', //for DEV_MODE
         'emcla':'/emsaasui/emlacore/js',
         'emcsutl': '/emsaasui/uifwk/emcsDependencies/uifwk/js/util', // why we need this?
         'uifwk': '/emsaasui/uifwk',
@@ -168,11 +168,13 @@ requirejs.config({
             'uifwk/js/widgets/datetime-picker/js/datetime-picker',
             'uifwk/js/widgets/navlinks/js/navigation-links',
             'uifwk/js/widgets/timeFilter/js/timeFilter',
+            'uifwk/js/widgets/widgetselector-listview/js/widget-selector-listview',
             'text!uifwk/js/widgets/aboutbox/html/aboutbox.html',
             'text!uifwk/js/widgets/navlinks/html/navigation-links.html',
             'text!uifwk/js/widgets/brandingbar/html/brandingbar.html',
             'text!uifwk/js/widgets/timeFilter/html/timeFilter.html',
-            'text!uifwk/js/widgets/datetime-picker/html/datetime-picker.html'
+            'text!uifwk/js/widgets/datetime-picker/html/datetime-picker.html',
+            'text!uifwk/js/widgets/widgetselector-listview/html/widget-selector-listview.html'
             ];
         return bundles;
     }(),
@@ -320,6 +322,12 @@ require(['knockout',
                                 ko.components.register("df-datetime-picker",{
                                     viewModel: {require: 'uifwk/js/widgets/datetime-picker/js/datetime-picker'},
                                     template: {require: 'text!uifwk/js/widgets/datetime-picker/html/datetime-picker.html'}
+                                });
+                            }
+                            if (!ko.components.isRegistered('df-widget-selector-listview')) {
+                                ko.components.register("df-widget-selector-listview",{
+                                    viewModel:{require:'uifwk/js/widgets/widgetselector-listview/js/widget-selector-listview'},
+                                    template:{require:'text!uifwk/js/widgets/widgetselector-listview/html/widget-selector-listview.html'}
                                 });
                             }
                             /*ko.components.register("DF_V1_WIDGET_TEXT", {
