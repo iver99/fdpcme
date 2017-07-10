@@ -296,7 +296,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                         headers: header,
                         success: function (data) {
                             $.each(data.dashboards, function (idx, dsb) {
-                                self.favoriteDsb.push({name: dsb.name, href: dsb.href});
+                                self.favoriteDsb.push({name: dsb.name, href: "/emsaasui/emcpdfui/builder.html?dashboardId="+dsb.id});
                             });
                             dfdGetFavoriteDsb.resolve();
                         },
@@ -1213,8 +1213,8 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 //Menu selection handler when a menu is clicked
                 self.selectionHandler = function(data, event) {
                     self.selectedItem(data.id);
-                    if (event.type === 'click' && (data.id.indexOf('omc_root_') !== -1 || data.selfHandleMenuSelection === 'false' 
-                            || !serviceAppId || data.appId !== serviceAppId)) {
+                    if (event.type === 'click' && ((data.id.indexOf('omc_root_') !== -1 || data.selfHandleMenuSelection === 'false' 
+                            || !serviceAppId || data.appId !== serviceAppId))||(data.id.indexOf('omc_dashboards_grp_') !== -1)) {
                         handleMenuSelection(true, data);
                     }
                     else {
