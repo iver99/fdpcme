@@ -161,6 +161,10 @@ function(ko, $, dfu, dfumodel, _emJETCustomLogger, oj, cxtModel)
         self.errorPageTitle = oj.Translations.getTranslatedString("DBS_ERROR_PAGE_TITLE");
 
         var msgKey = dfu.getUrlParam("msg");
+        if (msgKey === 'DBS_ERROR_PAGE_NOT_FOUND_MSG') {
+            if (!window._uifwk) {window._uifwk = {};}
+            window._uifwk.hideHamburgerMenuOnPage = true;
+        }
         var serviceid = dfu.getUrlParam("service");
         var serviceName = oj.Translations.getResource("SERVICE_NAME_" + serviceid) ? oj.Translations.getTranslatedString("SERVICE_NAME_" + serviceid) : null;
             var isValid = checkParams(msgKey, serviceid, serviceName);
