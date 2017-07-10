@@ -27,7 +27,8 @@ requirejs.config({
             'text!uifwk/js/widgets/widgetselector/html/widget-selector.html',
             'text!uifwk/js/widgets/widgetselector-listview/html/widget-selector-listview.html',
             'text!uifwk/js/widgets/timeFilter/html/timeFilter.html',
-            'text!uifwk/js/widgets/datetime-picker/html/datetime-picker.html'
+            'text!uifwk/js/widgets/datetime-picker/html/datetime-picker.html',
+            'text!uifwk/js/widgets/widgetselector-listview/html/widget-selector-listview.html'
             ]
     },
     // Path mappings for the logical module names

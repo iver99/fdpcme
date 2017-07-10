@@ -29,6 +29,7 @@ define('uifwk/@version@/js/widgets/widgetselector-listview/widget-selector-listv
                 self.tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
                 self.dialogId = $.isFunction(params.dialogId) ? params.dialogId() :
                         (params.dialogId ? params.dialogId : 'widgetSelectorDialog');
+                self.useIn = $.isFunction(params.useIn) ? params.useIn() : (params.useIn?params.useIn:'normal');
                 self.widgetHandler = params.widgetHandler;
                 self.autoCloseDialog = $.isFunction(params.autoCloseDialog) ? params.autoCloseDialog() : params.autoCloseDialog;
                 self.widgetSelectorTitle = dialogTitle ? dialogTitle : nls.WIDGET_SELECTOR_DEFAULT_DIALOG_TITLE;
@@ -86,7 +87,7 @@ define('uifwk/@version@/js/widgets/widgetselector-listview/widget-selector-listv
                 self.widgetsDataSource = ko.observable();
                 // Initialize data and refresh
                 self.beforeOpenDialog = function(event, ui) {
-                    refreshWidgets();
+                    self.refreshWidgets();
                 };
                 self.itemOnly = function(context){
                         return context['leaf'];
@@ -452,7 +453,7 @@ define('uifwk/@version@/js/widgets/widgetselector-listview/widget-selector-listv
                 };
 
                 // Refresh widget/widget group data and UI displaying
-                function refreshWidgets() {
+                self.refreshWidgets = function() {
                     widgetArray = [];
                     curGroupWidgets = [];
                     curPageWidgets=[];
