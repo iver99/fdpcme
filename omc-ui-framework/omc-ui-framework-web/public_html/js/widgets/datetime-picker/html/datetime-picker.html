@@ -174,7 +174,7 @@
                             </span>
                         </span>
                         <div>
-                            <input data-bind="ojComponent: {component: 'ojInputDate', value: startDateISO, disabled: lrCtrlVal() !== 'timeLevelCtrl',
+                            <input data-bind="ojComponent: {component: 'ojInputDate', value: startDateISO, rawValue: rawStartDate, disabled: lrCtrlVal() !== 'timeLevelCtrl',
                                                     datePicker: {daysOutsideMonth: 'hidden'},
                                                     converter: inputDateConverter,
                                                     required: true,
@@ -185,7 +185,7 @@
                                                 },
                                     attr: {id: 'inputStartDate_'+randomId, 'aira-label': startDateLabel}"/>
                             <!-- ko if: !hideTimeSelection() -->
-                            <input data-bind="ojComponent: {component: 'ojInputTime', value: startTime, converter: getTimeConverter(), timePicker: {timeIncrement: timeIncrement()},
+                            <input data-bind="ojComponent: {component: 'ojInputTime', value: startTime, rawValue: rawStartTime, converter: getTimeConverter(), timePicker: {timeIncrement: timeIncrement()},
                                                     disabled: lrCtrlVal() !== 'timeLevelCtrl',
                                                     required: true,
                                                     optionChange: startTimeChanged,
@@ -194,7 +194,7 @@
                                     attr: {id: 'inputStartTime_'+randomId, 'aira-label': startTimeLabel}"/>
                             <!-- /ko -->
                             <span class="relRadios" style="font-weight: bold; padding-top: 8px;">-</span>
-                            <input data-bind="ojComponent: {component: 'ojInputDate', value: endDateISO, disabled: lrCtrlVal() !== 'timeLevelCtrl',
+                            <input data-bind="ojComponent: {component: 'ojInputDate', value: endDateISO, rawValue: rawEndDate, disabled: lrCtrlVal() !== 'timeLevelCtrl',
                                                     datePicker: {daysOutsideMonth: 'hidden'},
                                                     converter: inputDateConverter,
                                                     required: true,
@@ -205,7 +205,7 @@
                                                 },
                                     attr: {id: 'inputEndDate_'+randomId, 'aira-label': endDateLabel}"/>
                             <!-- ko if: !hideTimeSelection() -->
-                            <input data-bind="ojComponent: {component: 'ojInputTime', value: endTime, converter: getTimeConverter(), timePicker: {timeIncrement: timeIncrement()},
+                            <input data-bind="ojComponent: {component: 'ojInputTime', value: endTime, rawValue: rawEndTime, converter: getTimeConverter(), timePicker: {timeIncrement: timeIncrement()},
                                                     disabled: lrCtrlVal() !== 'timeLevelCtrl',
                                                     required: true,
                                                     optionChange: endTimeChanged,

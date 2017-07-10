@@ -849,6 +849,12 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 
                 self.startTime = ko.observable("T00:00:00");
                 self.endTime = ko.observable("T00:00:00");
+                
+                self.rawStartDate = ko.observable();
+                self.rawStartTime = ko.observable();
+                self.rawEndDate = ko.observable();
+                self.rawEndTime = ko.observable();
+                
                 self.timePeriod = ko.observable();
                 self.dateTimeInfo = ko.observable();
                 self.selectByDrawer = ko.observable(false);
@@ -890,6 +896,23 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         start: start,
                         end: end
                     };
+                };
+                
+                self.isFormatError = function() {
+                    if(self.startDateError() === 3 || self.startTimeError() === 3 || self.endDateError() === 3 || self.endTimeError() === 3) {
+                        //if error meassage summary contains the string in input box. If it is, then it's a format error
+                        var eles = $(".oj-message-error .oj-message-summary");
+                        for(var i=0; i<eles.length; i++) {
+                            var ele = $(eles[i]);
+                            if(ele.text().search(self.rawStartDate()) > 0 || ele.text().search(self.rawStartTime()) > 0 
+                                    || ele.text().search(self.rawEndDate()) > 0 || ele.text().search(self.rawEndTime()) > 0) {
+                                return true;
+                            }
+                        }
+                        return false;
+                    }else {
+                        return false;
+                    }
                 };
                 
                 self.isStartLaterThanEnd = function(start, end) {
@@ -948,6 +971,9 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         self.startDateError(0);
                         return;
                     }
+                    if(self.isFormatError() === true) {
+                        return;
+                    }
                     if(self.isStartLaterThanEnd() === true) {
                         self.startDateError(1);
                     }else if(self.isCustomBeyondWindowLimit() === true) {
@@ -965,6 +991,9 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         return;
                     }
                     if(self.lrCtrlVal() !== "timeLevelCtrl") {
+                        return;
+                    }
+                    if(self.isFormatError() === true) {
                         return;
                     }
                     if(self.isStartLaterThanEnd() === true) {
@@ -986,6 +1015,9 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     if(self.lrCtrlVal() !== "timeLevelCtrl") {
                         return;
                     }
+                    if(self.isFormatError() === true) {
+                        return;
+                    }
                     if(self.isStartLaterThanEnd() === true) {
                         self.startTimeError(1);
                     }else if(self.isCustomBeyondWindowLimit() === true) {
@@ -1003,6 +1035,9 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         return;
                     }
                     if(self.lrCtrlVal() !== "timeLevelCtrl") {
+                        return;
+                    }
+                    if(self.isFormatError() === true) {
                         return;
                     }
                     if(self.isStartLaterThanEnd() === true) {
