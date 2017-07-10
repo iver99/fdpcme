@@ -239,6 +239,51 @@ public class RestClient {
         return null;
     }
 
+    public void post(String url, String tenant, String auth)
+    {
+        if (StringUtil.isEmpty(url)) {
+            LOGGER.error("Unable to post to an empty URL for tenant: \"{}\"", tenant);
+        }
+
+        if (StringUtil.isEmpty(auth)) {
+            LOGGER.warn("Warning: RestClient get an empty auth token when connection to url {}", url);
+            itrLogger.warn("Warning: RestClient get an empty auth token when connection to url {}", url);
+        }
+        else {
+            LogUtil.setInteractionLogThreadContext(tenant, url, LogUtil.InteractionLogDirection.OUT);
+            itrLogger.info("RestClient is connecting to {}. HTTP method is POST.", url);
+        }
+        itrLogger.info("RestClient call to [POST] {}",url);
+        
+        try {
+            WebResource.Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth);
+            if (type != null) {
+                builder = builder.type(type);
+            }
+            if (accept != null) {
+                builder = builder.accept(accept);
+            }
+            if (headers != null) {
+                for (String key : headers.keySet()) {
+                    Object value = headers.get(key);
+                    if (value == null || HttpHeaders.AUTHORIZATION.equals(key)) {
+                        continue;
+                    }
+                    builder.header(key, value);
+                }
+            }
+            builder.post();
+        } catch(UniformInterfaceException e){
+            LOGGER.error("Error occurred for [POST] action, URL is {}: status code of the HTTP response indicates a response that is not expected", url);
+            itrLogger.error("Error occurred for [POST] action, URL is {}: status code of the HTTP response indicates a response that is not expected", url);
+            LOGGER.error(e);
+        } catch(ClientHandlerException e){//RestClient may timeout, so catch this runtime exception to make sure the response can return.
+            LOGGER.error("Error occurred for [POST] action, URL is {}: Signals a failure to process the HTTP request or HTTP response", url);
+            itrLogger.error("Error occurred for [POST] action, URL is {}: Signals a failure to process the HTTP request or HTTP response", url);
+            LOGGER.error(e);
+        }
+    }
+
     public void setHeader(String header, Object value) {
         if (headers == null) {
             headers = new HashMap<String, Object>();
