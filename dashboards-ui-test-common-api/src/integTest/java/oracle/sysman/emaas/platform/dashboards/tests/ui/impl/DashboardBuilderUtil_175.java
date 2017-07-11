@@ -127,7 +127,7 @@ public abstract class DashboardBuilderUtil_175 extends DashboardBuilderUtil_171
 	private WebElement getTileTitleElement(WebDriver driver, String widgetName, int index)
 	{
 		driver.waitForElementPresent(DashBoardPageId_190.BUILDERTILESEDITAREA);
-		driver.click(DashBoardPageId_190.BUILDERTILESEDITAREA);
+		//driver.click(DashBoardPageId_190.BUILDERTILESEDITAREA);
 		driver.getWebDriver().findElement(By.xpath(DashBoardPageId_190.BUILDERTILESEDITAREA));
 		new Actions(driver.getWebDriver()).moveToElement(
 				driver.getWebDriver().findElement(By.xpath(DashBoardPageId_190.BUILDERTILESEDITAREA))).perform();
