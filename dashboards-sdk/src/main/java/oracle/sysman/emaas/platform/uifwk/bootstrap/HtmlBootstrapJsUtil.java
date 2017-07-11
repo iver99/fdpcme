@@ -87,8 +87,8 @@ public class HtmlBootstrapJsUtil
 		String userTenant = httpReq.getHeader(OAM_REMOTE_USER_HEADER);
 		String tenant = null;
 		String user = null;
-		if (!StringUtil.isEmpty(userTenant) && userTenant.indexOf(".") > 0) {
-			int pos = userTenant.indexOf(".");
+		if (!StringUtil.isEmpty(userTenant) && userTenant.indexOf('.') > 0) {
+			int pos = userTenant.indexOf('.');
 			tenant = userTenant.substring(0, pos);
 			user = userTenant.substring(pos + 1);
 			LOGGER.info("Retrieved tenant is {} and user is {} from userTenant {}", tenant, user, userTenant);

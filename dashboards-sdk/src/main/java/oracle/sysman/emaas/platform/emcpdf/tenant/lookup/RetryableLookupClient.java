@@ -19,7 +19,6 @@ import java.util.Random;
 public class RetryableLookupClient<T> {
     private static final Logger LOGGER = LogManager.getLogger(RetryableLookupClient.class);
 
-//    private static final Logger itrLogger = LogUtil.getInteractionLogger();
 
     public static class RetryableLookupException extends Exception {
         public RetryableLookupException(Exception e) {
@@ -95,6 +94,7 @@ public class RetryableLookupClient<T> {
             try {
                 Thread.sleep((long) (delaySecs * 1000));
             } catch (InterruptedException ie) {
+                //TODO should not be empty
             }
             LOGGER.info("After waiting, will retry or abort the retry procedure");
             delaySecs = delaySecs * 2 * (0.9 + delayRand.nextDouble() * 0.2); // Grow by 1.8 to 2.2 each time
@@ -108,7 +108,6 @@ public class RetryableLookupClient<T> {
         InstanceInfo info = InstanceInfo.Builder.newBuilder().withServiceName(serviceName).withVersion(version).build();
         if (!StringUtil.isEmpty(tenantName)) {
             InstanceInfo ins = LookupManager.getInstance().getLookupClient().getInstanceForTenant(info, tenantName);
-//            itrLogger.debug("Retrieved instance {} by using getInstanceForTenant for tenant {}", ins, tenantName);
             if (ins == null) {
                 LOGGER.error(
                         "Error: retrieved null instance info with getInstanceForTenant. Details: serviceName={}, version={}, tenantName={}",
