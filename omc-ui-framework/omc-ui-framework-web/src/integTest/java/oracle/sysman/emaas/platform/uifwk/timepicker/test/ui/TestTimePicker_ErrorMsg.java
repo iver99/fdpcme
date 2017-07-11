@@ -253,7 +253,7 @@ public class TestTimePicker_ErrorMsg extends LoginAndLogout
 		String returnmsg = CommonUIUtils.verifyErrorMsg(webd, 1, currentDate, dayAfter,false, true);			
 		webd.getLogger().info("Return Date:  " + returnmsg);
 		
-		Assert.assertTrue(errormsg_1.equals(returnmsg.trim()) || returnmsg.trim().contains(errormsg_4));
+		Assert.assertTrue(errormsg_1.equals(returnmsg.trim()) || returnmsg.trim().contains(errormsg_4) || errormsg_2.equals(returnmsg.trim()));
 
 		webd.shutdownBrowser(true);	
 	}
