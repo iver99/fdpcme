@@ -112,7 +112,6 @@ function (ko, $, oj, dfu, mbu, uiutil) {
                     $(".dashboard-picker-container:visible").addClass("df-collaps");
                     self.$b().triggerBuilderResizeEvent('show right panel');
                 });
-                $(".dbd-right-panel-build-container>div>div")[0] && ko.dataFor($(".dbd-right-panel-build-container>div>div")[0]).refreshWidgets();
             } else {
                 $(".dbd-left-panel").animate({width: 0});
                 $(".right-panel-toggler").animate({right: self.scrollbarWidth + 3 + 'px'}, 'normal', function () {

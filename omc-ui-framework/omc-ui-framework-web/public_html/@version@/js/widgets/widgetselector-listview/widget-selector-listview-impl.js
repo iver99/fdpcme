@@ -730,7 +730,7 @@ define('uifwk/@version@/js/widgets/widgetselector-listview/widget-selector-listv
 
                     return result;
                 };
-
+                self.useIn === 'builder' && self.refreshWidgets();
             }
 
             return WidgetSelectorListviewViewModel;

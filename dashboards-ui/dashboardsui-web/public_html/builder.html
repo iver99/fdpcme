@@ -1202,9 +1202,9 @@
                         <div class="dbd-right-panel-wrench" data-bind="style:{'display': rightPanelControl.rightPanelIcon()=='wrench'?'block':'none'}">
                             <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title fit-size-vertical-sibling" data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_BUILD_TITLE')"></div>
                             <div class="dbd-right-panel-build-container fit-size" style="padding:0">
-                                <div data-bind="component: {
+                                <div id="right-panel-widget-selector-listview" data-bind="component: {
                                         name: 'df-widget-selector-listview',
-                                        params: rightPanelWidget.widgetSelectorParams
+                                        params: rightPanelWidget.widgetSelectorParams,
                                     }">
                                 </div>
                             </div>
