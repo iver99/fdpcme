@@ -8,18 +8,7 @@ function (ko, $, oj, dfu) {
         var self = this;
         var widgetSelectorDialogId = 'sampleWidgetSelectorDialog';
         var widgetBoxWidth = 362;
-        self.widgetSelectorParams = {
-                    dialogId: widgetSelectorDialogId,
-                    dialogTitle: 'Add Content',
-                    userName: dfu.getUserName(),
-                    tenantName: dfu.getTenantName(),
-                    useIn: 'builder',
-                    autoCloseDialog: false
-    //                ,providerName: 'TargetAnalytics'
-    //                ,providerVersion: '1.0.5'
-    //                ,providerName: 'DashboardFramework'
-    //                ,providerVersion: '1.0'
-                };
+
         self.widgets = ko.observableArray([]);
         self.keyword = ko.observable('');
         self.keywordInput=ko.observable('');
@@ -172,8 +161,8 @@ function (ko, $, oj, dfu) {
             event.currentTarget.focus();
         };
 
-        self.widgetPlusClicked = function (widget, event) {
-            self.tilesViewModel().appendNewTile(widget.WIDGET_NAME(), "", 4, 2, ko.toJS(widget));
+        self.widgetPlusHandler = function (widget, event) {
+            self.tilesViewModel().appendNewTile(widget.WIDGET_NAME, "", 4, 2, ko.toJS(widget));
         };
 
         self.widgetShowPlusIcon = function (widget, event) {
@@ -285,6 +274,19 @@ function (ko, $, oj, dfu) {
                 self.clearRightPanelSearch(true);
             }
         }
+         self.widgetSelectorParams = {
+                    dialogId: widgetSelectorDialogId,
+                    dialogTitle: 'Add Content',
+                    userName: dfu.getUserName(),
+                    tenantName: dfu.getTenantName(),
+                    useIn: 'builder',
+                    autoCloseDialog: false,
+                    widgetHandler: self.widgetPlusHandler
+//                    ,providerName: 'TargetAnalytics'
+//                    ,providerVersion: '1.0.5'
+//                    ,providerName: 'DashboardFramework'
+//                    ,providerVersion: '1.0'
+                };       
     }
     return {"rightPanelWidget": rightPanelWidget};
 }

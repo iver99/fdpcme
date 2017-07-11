@@ -285,6 +285,7 @@ define('uifwk/@version@/js/widgets/widgetselector-listview/widget-selector-listv
 
                 // Widget box click handler
                 self.widgetBoxClicked = function(data, event) { 
+                    $($("#widget-selector-listview").children()).removeClass("oj-selected oj-focus oj-hover");
                     if (event.type === "keydown" && event.keyCode === 13 || event.type === "click") {
                         var curWidget = self.currentWidget();
                         if (curWidget && (curWidget.PROVIDER_NAME !== data.PROVIDER_NAME ||
