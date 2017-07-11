@@ -95,6 +95,9 @@ define('uifwk/@version@/js/util/zdt-util-impl', ['knockout',
                         })
                         .fail(function(jqXHR, textStatus, errorThrown) {
                             if (jqXHR.status === 401 && location.href && location.href.indexOf("error.html") === -1) {
+                                window._uifwk.cachedData.isPlannedDowntime(false);
+                                window._uifwk.cachedData.isFetchingOMCStatus = false;
+                                window._uifwk.hideHamburgerMenuOnPage = true;
                                 oj.Logger.error("Failed to detect OMC planned downtime due to 401 error. Redirect to error page", true);
                                 location.href = "/emsaasui/emcpdfui/error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_MSG";
                                 return;

@@ -89,10 +89,11 @@ require(['knockout',
     'uifwk/js/util/logging-util',    
     'ojs/ojcore',
     'uifwk/js/sdk/context-util',
+    'uifwk/js/util/zdt-util',
     'ojs/ojknockout',
     'ojs/ojbutton'
 ],
-function(ko, $, dfu, dfumodel, _emJETCustomLogger, oj, cxtModel)
+function(ko, $, dfu, dfumodel, _emJETCustomLogger, oj, cxtModel, zdtModel)
 {
     var logger = new _emJETCustomLogger();
     var logReceiver = dfu.getLogUrl();
@@ -161,10 +162,6 @@ function(ko, $, dfu, dfumodel, _emJETCustomLogger, oj, cxtModel)
         self.errorPageTitle = oj.Translations.getTranslatedString("DBS_ERROR_PAGE_TITLE");
 
         var msgKey = dfu.getUrlParam("msg");
-        if (msgKey === 'DBS_ERROR_PAGE_NOT_FOUND_MSG') {
-            if (!window._uifwk) {window._uifwk = {};}
-            window._uifwk.hideHamburgerMenuOnPage = true;
-        }
         var serviceid = dfu.getUrlParam("service");
         var serviceName = oj.Translations.getResource("SERVICE_NAME_" + serviceid) ? oj.Translations.getTranslatedString("SERVICE_NAME_" + serviceid) : null;
             var isValid = checkParams(msgKey, serviceid, serviceName);
@@ -233,9 +230,11 @@ function(ko, $, dfu, dfumodel, _emJETCustomLogger, oj, cxtModel)
     }
 
     $(document).ready(function() {
-        var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
-        ko.applyBindings(new HeaderViewModel(), $('#headerWrapper')[0]);
-        ko.applyBindings(new ErrorPageModel(), $('#errorMain')[0]);
-        $('#global-body').show();
+        var zdtUtil = new zdtModel();
+        zdtUtil.detectPlannedDowntime(function(){
+            ko.applyBindings(new HeaderViewModel(), $('#headerWrapper')[0]);
+            ko.applyBindings(new ErrorPageModel(), $('#errorMain')[0]);
+            $('#global-body').show();
+        });
     });
 });
