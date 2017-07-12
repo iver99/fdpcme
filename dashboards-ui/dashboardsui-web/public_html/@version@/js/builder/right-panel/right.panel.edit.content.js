@@ -28,23 +28,26 @@ define(['dashboards/dbsmodel',
         self.dashboards = ko.observableArray();
         self.selectedDashboardId = ko.observable();
         self.allDashboards = ko.observableArray();
-        var serviceUrl = "/sso.static/dashboards.service?offset=0&limit=120&orderBy=default";
-        if (dfu.isDevMode()) {
-            var serviceUrl = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"dashboards?offset=0&limit=120&orderBy=default");
+        function loadDashboardList(sucCallback){
+            var serviceUrl = "/sso.static/dashboards.service?offset=0&orderBy=default";
+            if (dfu.isDevMode()) {
+                var serviceUrl = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"dashboards?offset=0&orderBy=default");
+            }
+            dfu.ajaxWithRetry({
+                            url: serviceUrl,
+                            headers: dfu.getDashboardsRequestHeader(),
+                            contentType:'application/json',
+                            success: function(data, textStatus) {
+                                self.allDashboards(data.dashboards);
+                                self.dashboards(data.dashboards.slice(0));
+                                sucCallback();
+                            },
+                            error: function(xhr, textStatus, errorThrown){
+                                oj.Logger.error('Failed to get service instances by URL: '+serviceUrl);
+                            },
+                            async: false
+                        });
         }
-        dfu.ajaxWithRetry({
-                        url: serviceUrl,
-                        headers: dfu.getDashboardsRequestHeader(),
-                        contentType:'application/json',
-                        success: function(data, textStatus) {
-                            self.allDashboards(data.dashboards);
-                            self.dashboards(data.dashboards.slice(0));
-                        },
-                        error: function(xhr, textStatus, errorThrown){
-                            oj.Logger.error('Failed to get service instances by URL: '+serviceUrl);
-                        },
-                        async: false
-                    });
 
 
         self.addToTitleAbled = ko.observable(false);
@@ -93,7 +96,13 @@ define(['dashboards/dbsmodel',
         self.onContentSearching = ko.observable(false);
         self.onContentSearching.subscribe(function(val){
             if(val){
-                $(".search-content-dropdown-list-container ul").ojListView( "refresh" );
+                if(!self.allDashboards() || self.allDashboards().length === 0){
+                    loadDashboardList(function(){
+                        $(".search-content-dropdown-list-container ul").ojListView( "refresh" );
+                    });
+                }else{
+                    $(".search-content-dropdown-list-container ul").ojListView( "refresh" );
+                }
             }else{
                 $(".search-content-dropdown-list-container ul").ojListView({"selection":[]});
             }
