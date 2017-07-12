@@ -1,6 +1,6 @@
 <!-- ko if: useIn === 'normal' -->
         <div class="widget-selector-main-new"  data-testapiversion="1.7.5" 
-             data-bind="ojComponent:{component: 'ojPopup', autoDismiss:'focusLoss', beforeOpen: beforeOpenDialog, title: widgetSelectorTitle, initialFocus: 'popup', focus: function(){console.log('##############################on focus!!!');},
+             data-bind="ojComponent:{component: 'ojPopup', autoDismiss:'focusLoss', beforeOpen: beforeOpenDialog, title: widgetSelectorTitle, initialFocus: 'popup',
                 rootAttributes: { style: 'width: 600px;'}}, attr: {id: dialogId}">   
             <div style="overflow: hidden;" >
                 <!--<label for="categorySelect" hidden style='padding: 0px; margin: 0px; width:0px;height:0px;' data-bind="text: widgetGroupLabel"></label>-->
@@ -102,8 +102,9 @@
                                         <span data-bind="html: highlightedName" class="oj-label"></span>
                                         <span class="oj-text-sm widget-selector-description" data-bind="html: highlightedDescription?highlightedDescription:$parent.widgetNoDescription, css:{'font-style-italic':!WIDGET_DESCRIPTION||WIDGET_DESCRIPTION === $parent.widgetNoDescription}"></span>
                                     </p>
-                                    <span class="oj-text-sm widget-selector-text-secondary-color" data-bind="text: $parent.widgetLableCreatedBy + WIDGET_GROUP_NAME"></span><br>
-                                    <span class="oj-text-sm widget-selector-text-secondary-color" data-bind="text: $parent.widgetLableLastModified + WIDGET_OWNER"></span>
+                                    <span class="oj-text-sm widget-selector-text-secondary-color" data-bind="text: $parent.widgetLableSource + WIDGET_GROUP_NAME"></span><br>
+                                    <span class="oj-text-sm widget-selector-text-secondary-color" data-bind="text: $parent.widgetLableCreatedBy + WIDGET_OWNER"></span><br>
+                                    <span class="oj-text-sm widget-selector-text-secondary-color" data-bind="text: $parent.widgetLableLastModified + WIDGET_CREATION_TIME"></span>
                                 </div>
                             </div>
                         </li>
