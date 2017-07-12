@@ -102,9 +102,13 @@
                                         <span data-bind="html: highlightedName" class="oj-label"></span>
                                         <span class="oj-text-sm widget-selector-description" data-bind="html: highlightedDescription?highlightedDescription:$parent.widgetNoDescription, css:{'font-style-italic':!WIDGET_DESCRIPTION||WIDGET_DESCRIPTION === $parent.widgetNoDescription}"></span>
                                     </p>
+                                    <!-- ko if: $parent.useIn === 'builder' -->
                                     <span class="oj-text-sm widget-selector-text-secondary-color" data-bind="text: $parent.widgetLableSource + WIDGET_GROUP_NAME"></span><br>
+                                    <!-- /ko -->
                                     <span class="oj-text-sm widget-selector-text-secondary-color" data-bind="text: $parent.widgetLableCreatedBy + WIDGET_OWNER"></span><br>
+                                    <!-- ko if: $parent.useIn === 'normal' -->
                                     <span class="oj-text-sm widget-selector-text-secondary-color" data-bind="text: $parent.widgetLableLastModified + WIDGET_CREATION_TIME"></span>
+                                    <!-- /ko -->
                                 </div>
                             </div>
                         </li>
