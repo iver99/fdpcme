@@ -28,11 +28,13 @@ define(['dashboards/dbsmodel',
         self.dashboards = ko.observableArray();
         self.selectedDashboardId = ko.observable();
         self.allDashboards = ko.observableArray();
+        var loadDashboardReqSent = false;
         function loadDashboardList(sucCallback){
             var serviceUrl = "/sso.static/dashboards.service?offset=0&orderBy=default";
             if (dfu.isDevMode()) {
                 var serviceUrl = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"dashboards?offset=0&orderBy=default");
             }
+            loadDashboardReqSent = true;
             dfu.ajaxWithRetry({
                             url: serviceUrl,
                             headers: dfu.getDashboardsRequestHeader(),
@@ -44,6 +46,7 @@ define(['dashboards/dbsmodel',
                             },
                             error: function(xhr, textStatus, errorThrown){
                                 oj.Logger.error('Failed to get service instances by URL: '+serviceUrl);
+                                loadDashboardReqSent = false;
                             },
                             async: false
                         });
@@ -97,7 +100,7 @@ define(['dashboards/dbsmodel',
         self.onContentSearching.subscribe(function(val){
             if(val){
                 if(!self.allDashboards() || self.allDashboards().length === 0){
-                    loadDashboardList(function(){
+                    !loadDashboardReqSent && loadDashboardList(function(){
                         $(".search-content-dropdown-list-container ul").ojListView( "refresh" );
                     });
                 }else{
