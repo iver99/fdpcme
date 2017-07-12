@@ -405,26 +405,17 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardHomeUtil#selectDashboard(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
 	@Override
-	public void selectDashboard(WebDriver driver, String dashboardName)
-	{
-		driver.getLogger().info("[DashboardHomeUtil] call selectDashboard dashboardName: " + dashboardName);
-		String indicator = DashBoardPageId.DASHBOARDNAMELOCATOR.replace("_name_", dashboardName);
-		if (!driver.isElementPresent(indicator)) {
-			throw new NoSuchElementException("Dashboard not exists. Name: " + dashboardName);
-		}
+         public void selectDashboard(WebDriver driver, String dashboardName) 
+         {
+                   driver.getLogger().info("[DashboardHomeUtil] call selectDashboard dashboardName: " + dashboardName);
+                   String indicator = DashBoardPageId.DASHBOARDNAMELOCATOR.replace("_name_", dashboardName);
+                   driver.setPageLoadDetector(BuildPageLoadDetector.class);
+                   driver.waitForElementEnabled(indicator);
+                   driver.getWebDriver().findElement(By.xpath(indicator)).click();
+                   driver.waitForServer();
+                   driver.setPageLoadDetector(null);
+         }
 
-		boolean isDisplayed=driver.isDisplayed(indicator);
-		driver.getLogger().info("isDisplayed:"+ isDisplayed);
-		driver.waitForElementPresent(indicator);
-		driver.waitForElementEnabled(indicator);
-		driver.getWebDriver().findElement(By.xpath(indicator)).click();
-		//driver.click(indicator);
-		//driver.waitForServer();
-		driver.takeScreenShot();
-		driver.setPageLoadDetector(BuildPageLoadDetector.class);
-		driver.waitForServer(); 
-		driver.setPageLoadDetector(null);
-	}
 
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardHomeUtil#selectOOB(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
