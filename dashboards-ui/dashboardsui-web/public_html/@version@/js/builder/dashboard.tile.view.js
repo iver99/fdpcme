@@ -10,7 +10,7 @@ define(['knockout',
         'uiutil',
         'uifwk/js/util/screenshot-util',
         'ojs/ojcore',
-        'builder/builder.jet.partition',
+//        'builder/builder.jet.partition',
         'builder/builder.core'
     ],
 
