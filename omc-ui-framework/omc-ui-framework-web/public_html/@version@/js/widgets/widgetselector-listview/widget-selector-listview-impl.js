@@ -308,36 +308,70 @@ define('uifwk/@version@/js/widgets/widgetselector-listview/widget-selector-listv
                     }
                 };
 
-                function navigateWidgetList(event, isDown){  
-                            self.needRefreshWidgetList(false);
-                            var fromWidget = $(event.target);
-                            if(event.target.id === "searchTxt"){
-                                var toWidget =$($("#widget-selector-listview").children()[0]);                                
-                            }else{
-                                var toWidget;
-                                var scrollToPosition;
-                                if(isDown && (event.target).nextElementSibling){
-                                   toWidget= $((event.target).nextElementSibling);
-                                   scrollToPosition =  toWidget.position().top;
-                                }else if(!isDown && (event.target).previousElementSibling){
-                                   toWidget = $((event.target).previousElementSibling);
-                                   scrollToPosition = toWidget.position().top; 
-                                }
-                            }
-                            fromWidget.removeClass("oj-selected oj-focus oj-hover");                              
-                            fromWidget.attr("aria-selected","false");
-                            $("#widget-selector-widgets").scrollTop(scrollToPosition-60);  
-                            fromWidget.removeAttr("tabindex");                         
-                            if(toWidget){
-                                toWidget.attr("tabindex","0");
-                                toWidget.addClass("oj-selected oj-focus oj-hover"); 
-                                toWidget.focus();
-                            }else{
-                                $("#searchTxt").focus();
-                            }
-                            fromWidget.blur();                            
-                            self.needRefreshWidgetList(true);
+                function isGroupListView(){
+                    return $("li[id^=created-by]").length > 0;
                 };
+                
+                function navigateListView(event ,fromWidget ,toWidget ,isDown ,topOfWidgetList){
+                    if(event.target.id === "searchTxt"){
+                        toWidget = topOfWidgetList;
+                        if(isGroupListView()) toWidget = $(topOfWidgetList.find("ul").children()[0]);
+                    }else{
+                        if(isDown && fromWidget.nextElementSibling){
+                            toWidget = $(fromWidget.nextElementSibling);
+                        }else if(!isDown && (event.target).previousElementSibling){
+                            toWidget = $(fromWidget.previousElementSibling);
+                        }
+                    }
+                    return toWidget;
+                };
+                
+                function jumpToNextPrevGroup(fromWidget ,isDown ,toWidget){
+                    var toGroup;
+                    var fromGroup = $(fromWidget).closest("li[id^=created-by]");
+                    if(isDown && fromGroup.next("li[id^=created-by]").length > 0){
+                        toGroup= $(fromGroup.next("li[id^=created-by]"));   
+                        toWidget = $($(toGroup.find("ul")).children()[0]);
+                    }else if (!isDown && fromGroup.prev("li[id^=created-by]").length > 0){
+                        toGroup= fromGroup.prev("li[id^=created-by]"); 
+                        toWidget = $($(toGroup.find("ul")).children().last());
+                    }
+                    return toWidget;
+                };
+                
+                function focusListItem(element){
+                    element.attr("tabindex","0");
+                    element.addClass("oj-selected oj-focus oj-hover"); 
+                    element.focus(); 
+                    scrollTo(element);
+                };
+                
+                function blurListItem(element){
+                    element.attr("aria-selected","false");
+                    element.removeClass("oj-selected oj-focus oj-hover");                              
+                    element.removeAttr("tabindex");   
+                    element.blur();  
+                };
+                
+                function scrollTo(target){
+                    var scrollToPosition;
+                    scrollToPosition = target.position().top; 
+                    $("#widget-selector-widgets").scrollTop(scrollToPosition-60); 
+                };
+                
+                function navigateWidgetList(event ,isDown){  
+                    self.needRefreshWidgetList(false);
+                    var fromWidget = event.target;
+                    var toWidget;
+                    var topOfWidgetList = $($("#widget-selector-listview").children()[0]);
+                    toWidget = navigateListView(event ,fromWidget ,toWidget ,isDown ,topOfWidgetList);                    
+                    debugger;
+                    if(!toWidget && isGroupListView())toWidget = jumpToNextPrevGroup(fromWidget ,isDown ,toWidget);
+                    toWidget ? focusListItem(toWidget) : $("#searchTxt").focus();
+                    blurListItem($(fromWidget));                          
+                    self.needRefreshWidgetList(true);
+                };
+                
                 // Widget handler for selected widget
                 function widgetSelectionConfirmed(){
                     //Close dialog if autoCloseDialog is true or not set
