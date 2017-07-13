@@ -286,8 +286,8 @@ define('uifwk/@version@/js/widgets/widgetselector-listview/widget-selector-listv
 
                 // Widget box click handler
                 self.widgetBoxClicked = function(data, event) { 
-                    $($("#widget-selector-listview").children()).removeClass("oj-selected oj-focus oj-hover");
-                    if (event.type === "keydown" && event.keyCode === 13 || event.type === "click") {
+                    self.needRefreshWidgetList(false);
+                    if (event.type === "keydown" && event.keyCode === 13 || event.type === "mousedown") {
                         var curWidget = self.currentWidget();
                         if (curWidget && (curWidget.PROVIDER_NAME !== data.PROVIDER_NAME ||
                             curWidget.WIDGET_UNIQUE_ID !== data.WIDGET_UNIQUE_ID)) { 
@@ -306,6 +306,7 @@ define('uifwk/@version@/js/widgets/widgetselector-listview/widget-selector-listv
                     }else if(event.target.id === "searchTxt"){ 
                         return true;
                     }
+                    self.needRefreshWidgetList(true);
                 };
 
                 function isGroupListView(){
@@ -360,7 +361,6 @@ define('uifwk/@version@/js/widgets/widgetselector-listview/widget-selector-listv
                 };
                 
                 function navigateWidgetList(event ,isDown){  
-                    self.needRefreshWidgetList(false);
                     var fromWidget = event.target;
                     var toWidget;
                     var topOfWidgetList = $($("#widget-selector-listview").children()[0]);
@@ -369,7 +369,6 @@ define('uifwk/@version@/js/widgets/widgetselector-listview/widget-selector-listv
                     if(!toWidget && isGroupListView())toWidget = jumpToNextPrevGroup(fromWidget ,isDown ,toWidget);
                     toWidget ? focusListItem(toWidget) : $("#searchTxt").focus();
                     blurListItem($(fromWidget));                          
-                    self.needRefreshWidgetList(true);
                 };
                 
                 // Widget handler for selected widget
