@@ -82,12 +82,23 @@ define(['dashboards/dbsmodel',
             tile.outlineHightlight(true);
             if(tile.WIDGET_LINKED_DASHBOARD && tile.WIDGET_LINKED_DASHBOARD()){
                 self.selectedDashboardId(tile.WIDGET_LINKED_DASHBOARD());
+                if(!self.allDashboards() || self.allDashboards().length === 0){
+                    !loadDashboardReqSent && loadDashboardList(function(){
                 self.allDashboards().forEach(function(dashboard){
                         if(self.selectedDashboardId() === dashboard.id){
                             self.selectedDashboard(dashboard);
                             self.hasLinkedToTitle(true);
                         }
                 });
+                    });
+                }else{
+                    self.allDashboards().forEach(function(dashboard){
+                        if(self.selectedDashboardId() === dashboard.id){
+                            self.selectedDashboard(dashboard);
+                            self.hasLinkedToTitle(true);
+                        }
+                    });
+                }
             }
         });
 
