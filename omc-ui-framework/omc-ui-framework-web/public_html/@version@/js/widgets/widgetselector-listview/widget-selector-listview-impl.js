@@ -7,7 +7,7 @@ define('uifwk/@version@/js/widgets/widgetselector-listview/widget-selector-listv
     'uifwk/@version@/js/util/typeahead-search-impl', 
     'uifwk/js/util/mobile-util',
     'ojs/ojselectcombobox',
-    'ojs/ojdialog',
+    'ojs/ojpopup',
     'ojs/ojinputtext',
     'ojs/ojbutton',
     'ojs/ojlistview', 
@@ -376,7 +376,7 @@ define('uifwk/@version@/js/widgets/widgetselector-listview/widget-selector-listv
                 function widgetSelectionConfirmed(){
                     //Close dialog if autoCloseDialog is true or not set
                     if (self.autoCloseDialog !== false){
-                        $('#'+self.dialogId).ojDialog('close');
+                        $('#'+self.dialogId).ojPopup('close');
                     }
                     if (self.widgetHandler && $.isFunction(self.widgetHandler)) {
                         var selectedWidget = self.currentWidget();
