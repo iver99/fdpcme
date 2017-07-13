@@ -32,7 +32,7 @@
                     <!-- ko if: widgetOnLoading -->
                     <div id="widget-selector-loading" data-bind="text: widgetsLoadingHints"></div>
                     <!-- /ko -->
-                    <!-- ko if not: widgetOnLoading -->
+                    <!-- ko if: widgetOnLoading() == false -->
                     <ul id="widget-selector-listview" aria-label="list using json data" 
                         data-bind="ojComponent: {component: 'ojListView', data: widgetsDataSource, selectionMode: 'single', item: {template: isWidgetOwnerGroup, focusable: itemOnly, selectable: itemOnly}, drillMode: 'none'}">
                     </ul>                   
@@ -75,7 +75,7 @@
                     <!-- ko if: widgetOnLoading -->
                     <div id="widget-selector-loading" data-bind="text: widgetsLoadingHints"></div>
                     <!-- /ko -->
-                    <!-- ko if not: widgetOnLoading -->
+                    <!-- ko if: widgetOnLoading() == false-->
                     <ul id="widget-selector-listview" aria-label="list using json data" 
                         data-bind="ojComponent: {component: 'ojListView', data: widgetsDataSource, selectionMode: 'single', item: {template: isWidgetOwnerGroup, focusable: itemOnly, selectable: itemOnly}, drillMode: 'none'}">
                     </ul>                   
