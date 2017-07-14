@@ -153,7 +153,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     template: {require: 'text!' + template}
                 });
             }
-            window.emctasGlobalBarCallback = function () {
+            self.emctasGlobalBarCallback = function () {
                 //enable enterpriseTopology
                 self.udeEnterPriseTopologyLanded = true;
                 self.topologyDisabled(false);
