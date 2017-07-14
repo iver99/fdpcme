@@ -357,7 +357,7 @@ define('uifwk/@version@/js/widgets/widgetselector-listview/widget-selector-listv
                 function scrollTo(target){
                     var scrollToPosition;
                     scrollToPosition = target.position().top; 
-                    $("#widget-selector-widgets").scrollTop(scrollToPosition-60); 
+                    $("#widget-selector-widgets").scrollTop(scrollToPosition); 
                 };
                 
                 function navigateWidgetList(event ,isDown){  
@@ -365,12 +365,10 @@ define('uifwk/@version@/js/widgets/widgetselector-listview/widget-selector-listv
                     var toWidget;
                     var topOfWidgetList = $($("#widget-selector-listview").children()[0]);
                     toWidget = navigateListView(event ,fromWidget ,toWidget ,isDown ,topOfWidgetList);                    
-                    debugger;
                     if(!toWidget && isGroupListView())toWidget = jumpToNextPrevGroup(fromWidget ,isDown ,toWidget);
                     toWidget ? focusListItem(toWidget) : $("#searchTxt").focus();
                     blurListItem($(fromWidget));                          
                 };
-                
                 // Widget handler for selected widget
                 function widgetSelectionConfirmed(){
                     //Close dialog if autoCloseDialog is true or not set
