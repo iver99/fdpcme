@@ -1099,9 +1099,13 @@ public class DashboardManager
 			if (matcher.find()) {
 				Integer num = new Integer(matcher.group());
 				int increaseNum = num.intValue() + 1;
-				int flag = existingName.lastIndexOf("_");
-				String subName = existingName.substring(0, flag);
-				finalString = subName + "_" + increaseNum; 				
+				if (existingName.endsWith("_"+num)) {
+					int flag = existingName.lastIndexOf("_");
+					String subName = existingName.substring(0, flag);
+					finalString = subName + "_" + increaseNum; 
+				} else {
+					finalString = existingName + "_1";
+				}						
 			} else {
 				finalString = existingName + "_1";
 			}
