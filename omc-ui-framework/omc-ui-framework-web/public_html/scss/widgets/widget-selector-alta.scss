@@ -436,7 +436,7 @@
     .widget-searchbox-with-filter {
         width: 332px;
     }
-    .widget-searchbox-without-filter {
+    #widget-selector-searchbox.widget-searchbox-without-filter {
         width: 304px;
     }
     
@@ -444,6 +444,7 @@
         padding: 8px;
         height:32px;
         width:304px;
+        background-color: white;
     }
 
     #widget-selector-widgets {
