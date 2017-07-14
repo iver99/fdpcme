@@ -356,8 +356,10 @@ define('uifwk/@version@/js/widgets/widgetselector-listview/widget-selector-listv
                 
                 function scrollTo(target){
                     var scrollToPosition;
-                    scrollToPosition = target.position().top; 
-                    $("#widget-selector-widgets").scrollTop(scrollToPosition); 
+                    if(target.position()){
+                        scrollToPosition = target.position().top; 
+                        $("#widget-selector-widgets").scrollTop(scrollToPosition); 
+                    }
                 };
                 
                 function navigateWidgetList(event ,isDown){  
