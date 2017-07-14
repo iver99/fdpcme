@@ -5,13 +5,16 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-impl',[
     'ojs/ojcore',
     'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg',
     'uifwk/@version@/js/util/typeahead-search-impl', 
+    'uifwk/js/util/mobile-util',
     'ojs/ojselectcombobox',
-    'ojs/ojdialog',
+    'ojs/ojpopup',
     'ojs/ojinputtext',
-    'ojs/ojbutton'
+    'ojs/ojbutton',
+    'ojs/ojlistview', 
+    'ojs/ojjsontreedatasource'
     ],
-        function (ko, $, dfumodel, oj, nls, typeaheadsearch) {
-            function WidgetSelectorViewModel(params) {
+        function (ko, $, dfumodel, oj, nls, typeaheadsearch, mbu) {
+            function WidgetSelectorListviewViewModel(params) {
                 var self = this;
                 new typeaheadsearch(); //Initialize typeahead search
 
@@ -26,6 +29,7 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-impl',[
                 self.tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
                 self.dialogId = $.isFunction(params.dialogId) ? params.dialogId() :
                         (params.dialogId ? params.dialogId : 'widgetSelectorDialog');
+                self.useIn = $.isFunction(params.useIn) ? params.useIn() : (params.useIn?params.useIn:'normal');
                 self.widgetHandler = params.widgetHandler;
                 self.autoCloseDialog = $.isFunction(params.autoCloseDialog) ? params.autoCloseDialog() : params.autoCloseDialog;
                 self.widgetSelectorTitle = dialogTitle ? dialogTitle : nls.WIDGET_SELECTOR_DEFAULT_DIALOG_TITLE;
@@ -37,7 +41,14 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-impl',[
                 self.widgetScreenShotPageTitle = nls.WIDGET_SELECTOR_WIDGET_NAVI_SCREENSHOT_TITLE;
                 self.widgetDescPageTitle = nls.WIDGET_SELECTOR_WIDGET_NAVI_DESC_TITLE;
                 self.widgetsLoadingHints = nls.WIDGET_SELECTOR_WIDGETS_LOADING_HINT;
-
+                self.widgetLableSource = nls.WIDGET_SELECTOR_WIDGET_SOURCE;
+                self.widgetLableCreatedBy = nls.WIDGET_SELECTOR_WIDGET_CREATED_BY;
+                self.widgetLableLastModified = nls.WIDGET_SELECTOR_WIDGET_LAST_MODIFIED;
+                self.widgetNoDescription = nls.WIDGET_SELECTOR_WIDGET_NO_DESCRIPTION;
+                self.isMobileDevice = ko.observable( (new mbu()).isSmallDevice );
+                self.hideScrollbar = ko.observable(true);
+                self.isMobileDevice()?self.hideScrollbar(false):self.hideScrollbar(true);
+                self.needRefreshWidgetList = ko.observable(true);
                 self.widgetGroupFilterVisible = ko.observable(widgetProviderName && widgetProviderVersion ? false : true);
                 self.searchText = ko.observable("");
                 self.clearButtonVisible = ko.computed(function(){return self.searchText() && '' !== self.searchText() ? true : false;});
@@ -74,11 +85,17 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-impl',[
                 self.currentWidget = ko.observable();
                 self.confirmBtnDisabled = ko.observable(true);
                 self.widgetOnLoading = ko.observable(true);
-
+                self.widgetsDataSource = ko.observable();
                 // Initialize data and refresh
                 self.beforeOpenDialog = function(event, ui) {
-                    refreshWidgets();
+                    self.refreshWidgets();
                 };
+                self.itemOnly = function(context){
+                        return context['leaf'];
+                };
+                self.isWidgetOwnerGroup = function(file, bindingContext){
+                        return bindingContext.$itemContext.leaf ? 'widget_details' : 'widget_group';
+                } ;
 
                 // Widget group selector value change handler
                 self.optionChangedHandler = function(data, event) {
@@ -151,6 +168,7 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-impl',[
                 // Search widgets by selected widget group and search text(name, description)
                 self.searchWidgets = function() {
                     searchResultArray = [];
+                    var searchingHightLightTemplate = "<span class='widget-selector-search-matching'>$&</span>";
                     var allWidgets = getAvailableWidgets();
                     var searchtxt = $.trim(ko.toJS(self.searchText));
                     if (searchtxt === '') {
@@ -160,7 +178,10 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-impl',[
                         for (var i=0; i<allWidgets.length; i++) {
                             if (allWidgets[i].WIDGET_NAME.toLowerCase().indexOf(searchtxt.toLowerCase()) > -1 ||
                                     (allWidgets[i].WIDGET_DESCRIPTION && allWidgets[i].WIDGET_DESCRIPTION.toLowerCase().indexOf(searchtxt.toLowerCase()) > -1)) {
-                                searchResultArray.push(allWidgets[i]);
+                                var singleWidget = $.extend(true,{},allWidgets[i]);
+                                singleWidget.highlightedName = singleWidget.WIDGET_NAME.replace(new RegExp(searchtxt, 'gi'), searchingHightLightTemplate);
+                                singleWidget.highlightedDescription = singleWidget.WIDGET_DESCRIPTION.replace(new RegExp(searchtxt, 'gi'), searchingHightLightTemplate);
+                                searchResultArray.push(singleWidget);
                             }
                         }
                     }
@@ -173,6 +194,13 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-impl',[
                     refreshNaviButton();
                     naviFromSearchResults = true;
                     refreshWidgetAndButtonStatus();
+                    searchtxt?generateWidgetsDataSource(searchResultArray, true):generateWidgetsDataSource(searchResultArray);
+                };
+
+                self.onSearchBoxBlur = function(){
+                    if(self.needRefreshWidgetList()){
+                        !($.trim(ko.toJS(self.searchText))) && generateWidgetsDataSource(getAvailableWidgets());
+                    }
                 };
 
                 self.clearSearchText = function() {
@@ -257,29 +285,97 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-impl',[
                 };
 
                 // Widget box click handler
-                self.widgetBoxClicked = function(data, event) {
-                    var curWidget = self.currentWidget();
-                    if (curWidget && (curWidget.PROVIDER_NAME !== data.PROVIDER_NAME ||
-                            curWidget.WIDGET_UNIQUE_ID !== data.WIDGET_UNIQUE_ID)) {
-                        widgetArray[curWidget.index].isSelected(false);
-                        data.isSelected(true);
-                        self.currentWidget(data);
+                self.widgetBoxClicked = function(data, event) { 
+                    self.needRefreshWidgetList(false);
+                    if (event.type === "keydown" && event.keyCode === 13 || event.type === "mousedown") {
+                        var curWidget = self.currentWidget();
+                        if (curWidget && (curWidget.PROVIDER_NAME !== data.PROVIDER_NAME ||
+                            curWidget.WIDGET_UNIQUE_ID !== data.WIDGET_UNIQUE_ID)) { 
+                            self.currentWidget(data);
+                        }
+                        else if (!curWidget) {
+                            self.currentWidget(data);
+                        }
+                        widgetSelectionConfirmed();
+                    }else if (event.type === "keydown" && event.keyCode === 9) { 
+                        if (event.shiftKey) { 
+                            navigateWidgetList(event, false);
+                        }else{ 
+                            navigateWidgetList(event, true);
+                        }
+                    }else if(event.target.id === "searchTxt"){ 
+                        return true;
                     }
-                    else if (!curWidget) {
-                        data.isSelected(true);
-                        self.currentWidget(data);
-                    }
-
-                    if (self.confirmBtnDisabled() === true){
-                        self.confirmBtnDisabled(false);
-                    }
+                    self.needRefreshWidgetList(true);
                 };
 
+                function isGroupListView(){
+                    return $("li[id^=created-by]").length > 0;
+                };
+                
+                function navigateListView(event ,fromWidget ,toWidget ,isDown ,topOfWidgetList){
+                    if(event.target.id === "searchTxt"){
+                        toWidget = topOfWidgetList;
+                        if(isGroupListView()) toWidget = $(topOfWidgetList.find("ul").children()[0]);
+                    }else{
+                        if(isDown && fromWidget.nextElementSibling){
+                            toWidget = $(fromWidget.nextElementSibling);
+                        }else if(!isDown && (event.target).previousElementSibling){
+                            toWidget = $(fromWidget.previousElementSibling);
+                        }
+                    }
+                    return toWidget;
+                };
+                
+                function jumpToNextPrevGroup(fromWidget ,isDown ,toWidget){
+                    var toGroup;
+                    var fromGroup = $(fromWidget).closest("li[id^=created-by]");
+                    if(isDown && fromGroup.next("li[id^=created-by]").length > 0){
+                        toGroup= $(fromGroup.next("li[id^=created-by]"));   
+                        toWidget = $($(toGroup.find("ul")).children()[0]);
+                    }else if (!isDown && fromGroup.prev("li[id^=created-by]").length > 0){
+                        toGroup= fromGroup.prev("li[id^=created-by]"); 
+                        toWidget = $($(toGroup.find("ul")).children().last());
+                    }
+                    return toWidget;
+                };
+                
+                function focusListItem(element){
+                    element.attr("tabindex","0");
+                    element.addClass("oj-selected oj-focus oj-hover"); 
+                    element.focus(); 
+                    scrollTo(element);
+                };
+                
+                function blurListItem(element){
+                    element.attr("aria-selected","false");
+                    element.removeClass("oj-selected oj-focus oj-hover");                              
+                    element.removeAttr("tabindex");   
+                    element.blur();  
+                };
+                
+                function scrollTo(target){
+                    var scrollToPosition;
+                    if(target.position()){
+                        scrollToPosition = target.position().top; 
+                        $("#widget-selector-widgets").scrollTop(scrollToPosition); 
+                    }
+                };
+                
+                function navigateWidgetList(event ,isDown){  
+                    var fromWidget = event.target;
+                    var toWidget;
+                    var topOfWidgetList = $($("#widget-selector").children()[0]);
+                    toWidget = navigateListView(event ,fromWidget ,toWidget ,isDown ,topOfWidgetList);                    
+                    if(!toWidget && isGroupListView())toWidget = jumpToNextPrevGroup(fromWidget ,isDown ,toWidget);
+                    toWidget ? focusListItem(toWidget) : $("#searchTxt").focus();
+                    blurListItem($(fromWidget));                          
+                };
                 // Widget handler for selected widget
-                self.widgetSelectionConfirmed = function() {
+                function widgetSelectionConfirmed(){
                     //Close dialog if autoCloseDialog is true or not set
                     if (self.autoCloseDialog !== false){
-                        $('#'+self.dialogId).ojDialog('close');
+                        $('#'+self.dialogId).ojPopup('close');
                     }
                     if (self.widgetHandler && $.isFunction(self.widgetHandler)) {
                         var selectedWidget = self.currentWidget();
@@ -392,7 +488,7 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-impl',[
                 };
 
                 // Refresh widget/widget group data and UI displaying
-                function refreshWidgets() {
+                self.refreshWidgets = function() {
                     widgetArray = [];
                     curGroupWidgets = [];
                     curPageWidgets=[];
@@ -409,7 +505,8 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-impl',[
 
                     getWidgetGroups().done(function(data, textStatus, jqXHR){
                         oj.Logger.info("Finished loading widget groups. Start to load widgets.");
-                        getWidgets().done(function(data, textStatus, jqXHR){
+                        getWidgets().done(function(data, textStatus, jqXHR){ 
+                            generateWidgetsDataSource(widgetArray);
                             oj.Logger.info("Finished loading widget groups and widgets. Start to load page display data.");
                             //If already has search text input during widgets loading, then do a search after widgets loading finished
                             if (self.searchText() && $.trim(self.searchText()) !== "") {
@@ -431,6 +528,41 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-impl',[
                         oj.Logger.error("Failed to fetch widget groups.");
                     });
                 };
+                
+                function generateWidgetsDataSource(data, isOnSearching){ 
+                    var createByMeTitle = {"id": "created-by-me", "name": "CREATED BY ME"};
+                    var createByOracleTitle = {"id": "created-by-oracle", "name": "CREATED BY ORACLE"};
+                    var createByOthersTitle = {"id": "created-by-others", "name": "CREATED BY OTHERS"};
+                    var widgetsCreatedByOracle = []; 
+                    var widgetsCreatedByME = []; 
+                    var widgetsCreatedByOthers = [];
+                    var titleListMap = [{title: createByMeTitle, list: widgetsCreatedByME}, {title: createByOracleTitle, list: widgetsCreatedByOracle}, {title: createByOthersTitle, list: widgetsCreatedByOthers}];
+                    //FOR TEST ADD THE SYSTEM WIDGET TO EVERY GROUP TO BE MODIFIED
+                    var initWidgetsDataSource = [];
+                    if(isOnSearching){
+                        $.each($.grep(data, function(n){return n.WIDGET_OWNER === "ORACLE"}),function(n,value){
+                            widgetsCreatedByOracle.push({"attr":value});                        
+                        });
+                        $.each($.grep(data, function(n){return n.WIDGET_OWNER === self.userName}),function(n,value){
+                            widgetsCreatedByME.push({"attr":value});                        
+                        });
+                        $.each($.grep(data, function(n){return (n.WIDGET_OWNER !== self.userName)&&(n.WIDGET_OWNER !== "ORACLE")}),function(n,value){
+                            widgetsCreatedByOthers.push({"attr":value});                        
+                        });
+                        for(var i = 0; i < titleListMap.length; ++i)
+                            if(titleListMap[i].list.length>0){
+                            initWidgetsDataSource.push({
+                             "attr":titleListMap[i].title,
+                             "children":titleListMap[i].list
+                            });
+                        }
+                    }else{
+                        $.each(data,function(n,value){
+                            initWidgetsDataSource.push({"attr":value});                        
+                        });
+                    }
+                    self.widgetsDataSource(new oj.JsonTreeDataSource(initWidgetsDataSource));
+                };
 
                 // Load widgets from ajax call result data
                 function loadWidgets(data) {
@@ -443,6 +575,8 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-impl',[
                                 widget.WIDGET_VISUAL = ko.observable();
                                 widget.imgWidth = ko.observable("190px");
                                 widget.imgHeight = ko.observable("140px");
+                                widget.highlightedName = widget.WIDGET_NAME;
+                                widget.highlightedDescription = widget.WIDGET_DESCRIPTION;
 
                                 if (!widget.WIDGET_DESCRIPTION){
                                     widget.WIDGET_DESCRIPTION = "";
@@ -461,6 +595,15 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-impl',[
                             }
                         }
                     }
+                    widgetArray.sort(function(wdgtA, wdgtB){
+                        if(wdgtA.WIDGET_NAME > wdgtB.WIDGET_NAME){
+                            return 1;
+                        }else if(wdgtA.WIDGET_NAME < wdgtB.WIDGET_NAME){
+                            return -1;
+                        }else if(wdgtA.WIDGET_NAME === wdgtB.WIDGET_NAME){
+                            return 0;
+                        }
+                    });
                 };
 
                 function loadWidgetScreenshot(widget) {
@@ -621,9 +764,9 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-impl',[
 
                     return result;
                 };
-
+                self.useIn === 'builder' && self.refreshWidgets();
             }
 
-            return WidgetSelectorViewModel;
+            return WidgetSelectorListviewViewModel;
         });
 

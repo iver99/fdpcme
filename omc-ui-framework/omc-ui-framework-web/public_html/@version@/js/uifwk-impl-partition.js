@@ -11,8 +11,6 @@ define([
 'text!uifwk/js/widgets/brandingbar/html/brandingbar.html',
 'uifwk/@version@/js/widgets/widgetselector/widget-selector-impl',
 'text!uifwk/js/widgets/widgetselector/html/widget-selector.html',
-'uifwk/@version@/js/widgets/widgetselector-listview/widget-selector-listview-impl',
-'text!uifwk/js/widgets/widgetselector-listview/html/widget-selector-listview.html',
 'uifwk/@version@/js/widgets/time-filter/time-filter-impl',
 'text!uifwk/js/widgets/timeFilter/html/timeFilter.html',
 'uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',
