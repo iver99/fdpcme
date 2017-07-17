@@ -24,6 +24,7 @@ define(['knockout',
             }else {
                 self.hideTitle = ko.observable("false");
             }
+            self.outlineHightlight = ko.observable(false);
             self.cssStyle = ko.computed(function() {
                 return "position: absolute; left: " + self.left() + "px; top: " + self.top() + "px; width: " + self.cssWidth() + "px; height: " + self.cssHeight() + "px;";
             });

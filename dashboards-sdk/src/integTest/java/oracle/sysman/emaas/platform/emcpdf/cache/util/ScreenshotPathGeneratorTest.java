@@ -1,15 +1,11 @@
 package oracle.sysman.emaas.platform.emcpdf.cache.util;
 
-import com.sun.corba.se.spi.orbutil.fsm.Input;
 import mockit.Expectations;
 import mockit.Mocked;
 import mockit.NonStrictExpectations;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.math.BigInteger;
-import java.util.Date;
 import java.util.Properties;
 
 /**

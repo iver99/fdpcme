@@ -10,9 +10,7 @@ import oracle.sysman.emaas.platform.emcpdf.cache.util.TimeUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.LinkedHashMap;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 /**
  * Created by chehao on 2016/12/9.
@@ -62,6 +60,7 @@ public class LinkedHashMapCache extends AbstractCache{
     public void clear() {
         super.clear();
         cacheMap.clear();
+        LOGGER.info("Cache group with name {} is cleared!", name);
     }
 
     @Override
@@ -73,7 +72,20 @@ public class LinkedHashMapCache extends AbstractCache{
         }
         Object obj=super.get(key, factory);
        if(obj!=null){
-           LOGGER.debug("CachedItem with key {} and value {} is retrieved from cache group {}",key,obj,name);
+           LOGGER.debug("CachedItem with key {} and value {} is [retrieved] from cache group {}",key,obj,name);
+           //EMCPDF-4115
+           if(obj instanceof List){
+               LOGGER.debug("#1 Returning a unmodifiableList for key = {}", key);
+               return Collections.unmodifiableList((List)obj);
+           }
+           if(obj instanceof Set){
+               LOGGER.debug("#2 Returning a unmodifiableSet for key = {}", key);
+               return Collections.unmodifiableSet((Set)obj);
+           }
+           if(obj instanceof Map){
+               LOGGER.debug("#3 Returning a unmodifiableMap for key = {}", key);
+               return Collections.unmodifiableMap((Map)obj);
+           }
            return obj;
        }
         LOGGER.debug("Get returns null for key {} as object null is got", key);
@@ -87,7 +99,7 @@ public class LinkedHashMapCache extends AbstractCache{
             return;
         }
         cacheMap.put(key, new CachedItem(key,value));
-        LOGGER.debug("CachedItem with key {} and value {} is cached into cache group {}",key,value,name);
+        LOGGER.debug("CachedItem with key {} and value {} is [cached] into cache group {}",key,value,name);
     }
 
     @Override
@@ -98,7 +110,7 @@ public class LinkedHashMapCache extends AbstractCache{
         }
         super.evict(key);
         cacheMap.remove(key);
-        LOGGER.debug("Cached Item with key {} is evicted from cache group {}",key,name);
+        LOGGER.debug("Cached Item with key {} is [evicted] from cache group {}",key,name);
     }
 
     @Override
@@ -113,14 +125,15 @@ public class LinkedHashMapCache extends AbstractCache{
 
     @Override
     public boolean isExpired(CachedItem cachedItem) {
-//    	LOGGER.debug("time to live is {}, creation time is {}, current time is {}",timeToLive,cachedItem.getCreationTime(),System.currentTimeMillis());
+        long now = System.currentTimeMillis();
         if(timeToLive<=0){
-            LOGGER.debug("isExpired returns false for cacheditem with key {} as timeToLive is minus value", cachedItem.getKey(), timeToLive);
+            LOGGER.debug("CachedItem time to live <=0, not expired.");
             return false;
         }
-        boolean rtn = (System.currentTimeMillis()-cachedItem.getCreationTime())>TimeUtil.toMillis(timeToLive);
-        LOGGER.debug("isExpired returns {} for cacheditem with key {} after compare cache item lived time and the timeToLive {}", rtn, cachedItem.getKey(), timeToLive);
-        return rtn;
+        boolean isExpired = (now-cachedItem.getCreationTime()) > TimeUtil.toMillis(timeToLive);
+        LOGGER.debug("CachedItem key = {}, value = {}, time to live is {}, creation time is {}, current time is {},is expired? {}",
+                cachedItem.getKey(), cachedItem.getValue(), timeToLive, cachedItem.getCreationTime(), now, isExpired);
+        return isExpired;
     }
 
     private void logCacheStatus(){
