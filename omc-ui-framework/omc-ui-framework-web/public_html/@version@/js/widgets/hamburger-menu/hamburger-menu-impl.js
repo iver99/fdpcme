@@ -594,16 +594,8 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                                 self.serviceLinks = [];
                                 if (dfu.getDevData().globalMenuJSON && serviceAppId) {
                                     self.serviceLinks = [{
-                                        'appId': 'APM',//serviceAppId,
+                                        'appId': serviceAppId,
                                         'metaDataHref': dfu.getDevData().globalMenuJSON
-                                    },
-                                    {
-                                        'appId': 'Monitoring',//serviceAppId,
-                                        'metaDataHref': '/emsaasui/uifwk/@version@/data/serviceMenus1.json'
-                                    },
-                                    {
-                                        'appId': 'LogAnalytics',//serviceAppId,
-                                        'metaDataHref': '/emsaasui/uifwk/@version@/data/serviceMenus2.json'
                                     }];
                                 }
                             }
