@@ -1726,3 +1726,9 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
     height: calc(100% - 20px);
     margin: 0px 10px;
 }
+
+//set image width to 100% instead of a fixed width generate by ckeditor
+.textWidgetWrapper img {
+    width: 100% !important;
+    height: auto !important;
+}

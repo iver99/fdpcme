@@ -87,6 +87,10 @@ define(["require", "knockout", "jquery", "ojs/ojcore", "ckeditor"],
                         dialogDefinition.removeContents("Link");
                         dialogDefinition.removeContents("advanced");
                         
+                        //set width and height for image dialog
+                        dialogDefinition.width = 420;
+                        dialogDefinition.height = 150;
+                        
                         var imageInfoTab = dialogDefinition.getContents("info");
                         //hide other boxes inside "info" Tab
                         imageInfoTab.get("htmlPreview").style = "display: none";
