@@ -58,8 +58,14 @@ define(["require", "knockout", "jquery", "ojs/ojcore", "ckeditor"],
                     editor.on("focus", function() {
                        this.setData(self.content()); 
                     });
+                    //"change" event needs to be added even if we have "key" event as "add link/image" won't fire "key" event
                     editor.on("change", function() {
-                        self.content(this.getData());
+                       self.content(this.getData());
+                    });
+                    //fix "can't input Chinese" issue in IE
+                    editor.on("key", function() {
+                        var _self = this;
+                        setTimeout(function(){self.content(_self.getData());}, 100);
                     });
                 };
                 

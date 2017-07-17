@@ -128,17 +128,21 @@ public abstract class DashboardBuilderUtil_175 extends DashboardBuilderUtil_171
 
 	private WebElement getTileTitleElement(WebDriver driver, String widgetName, int index)
 	{
-
-		driver.click(DashBoardPageId_190.BUILDERTILESEDITAREA);
+		driver.waitForElementPresent(DashBoardPageId_190.BUILDERTILESEDITAREA);
+		//driver.click(DashBoardPageId_190.BUILDERTILESEDITAREA);
+		driver.getWebDriver().findElement(By.xpath(DashBoardPageId_190.BUILDERTILESEDITAREA));
+		new Actions(driver.getWebDriver()).moveToElement(
+				driver.getWebDriver().findElement(By.xpath(DashBoardPageId_190.BUILDERTILESEDITAREA))).perform();
+		driver.takeScreenShot();
 
 		String titleTitlesLocator = String.format(DashBoardPageId_190.BUILDERTILETITLELOCATOR, widgetName);
 		List<WebElement> tileTitles = driver.getWebDriver().findElements(By.xpath(titleTitlesLocator));
 		if (tileTitles == null || tileTitles.size() <= index) {
 			throw new NoSuchElementException("Tile with title=" + widgetName + ", index=" + index + " is not found");
 		}
-		
+
 		new Actions(driver.getWebDriver()).moveToElement(tileTitles.get(index)).perform();
-	//	tileTitles.get(index).click();
+		//	tileTitles.get(index).click();
 		driver.takeScreenShot();
 		return tileTitles.get(index);
 	}
