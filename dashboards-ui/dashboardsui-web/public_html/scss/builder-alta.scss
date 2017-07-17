@@ -1727,8 +1727,8 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
     margin: 0px 10px;
 }
 
-//set image width to 100% instead of a fixed width generate by ckeditor
+//set image max-width to 100% so that image smaller than tile show its original size, image lager than tile show 100% width
 .textWidgetWrapper img {
-    width: 100% !important;
+    max-width: 100% !important;
     height: auto !important;
 }
