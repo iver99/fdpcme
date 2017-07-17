@@ -185,8 +185,11 @@ define(['knockout',
                     
                     if(self.rightPanelControl.completelyHidden() === false && self.rightPanelWidget.isWidgetLoaded()===false) { 
                         //load widgets only when right panel is editable and have not loaded widget before
-                        self.rightPanelWidget.loadWidgets(null,function successCallback(){
-                            initRightPanelDragAndTile();
+                        //self.rightPanelWidget.loadWidgets(null,function successCallback(){
+                        self.rightPanelWidget.initWidgetData(null, function() {
+                            self.rightPanelWidget.incrementalLoadWidgets(null, self.rightPanelWidget.DEFAULT_WIDGET_INCREMENT_AMOUNT, function(){
+                                initRightPanelDragAndTile();
+                            });
                         });
                     }  
                     
@@ -197,6 +200,17 @@ define(['knockout',
                     
                     self.emptyDashboard && self.rightPanelControl.initializeRightPanel(true);
                     initRightPanelDragAndTile();
+                     self.initLoadOnScroll();
+            };
+            
+            self.initLoadOnScroll = function() {
+                $('.dbd-left-panel-widgets').scroll(function() {
+                    if ($('.dbd-left-panel-widgets').scrollTop() + $('.dbd-left-panel-widgets').height() >= $('.dbd-left-panel-widgets-list').height()) {
+                        console.debug("Scrolled to the bottom of widget list. Loading more...");
+                        var widgetPanel = $b.getRightPanelWidget();
+                        widgetPanel.incrementalLoadWidgets(null, widgetPanel.DEFAULT_WIDGET_INCREMENT_AMOUNT);
+                    }
+                });
             };
 
             self.initEventHandlers = function() {

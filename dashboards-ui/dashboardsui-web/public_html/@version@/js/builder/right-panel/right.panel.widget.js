@@ -6,6 +6,8 @@ define(['knockout',
 function (ko, $, oj, dfu) {
     function rightPanelWidget($b) {
         var self = this;
+        $b.registerObject(self, 'RightPanelWidget');
+        self.DEFAULT_WIDGET_INCREMENT_AMOUNT = 40;
         self.widgets = ko.observableArray([]);
         self.keyword = ko.observable('');
         self.keywordInput=ko.observable('');
@@ -14,6 +16,65 @@ function (ko, $, oj, dfu) {
         self.clearRightPanelSearch = ko.observable(false);
         self.isWidgetLoaded =ko.observable(false);
         self.tilesViewModel = ko.observable($b.getDashboardTilesViewModel && $b.getDashboardTilesViewModel());
+        
+        self.widgetsData = null;
+        self.incrementIndex = 0;
+        self.incrementalLoadWidgets = function (req,amount, successCallback) { // amout=0 to load all
+            if (amount < 0) {
+                console.warn("Failed to load widgets data incrementally for invalid amout of widget. Amount value is " + amount);
+                return;
+            }
+//            self.initWidgetData(req, function() {
+            if (!self.widgetsData || self.widgetsData.length <= 0) {
+                console.warn("Failed to load widgets data incrementally for widgetsData is empty");
+                return;
+            }
+            if (self.incrementIndex >= self.widgetsData.length) {
+                console.warn("Failed to load widgets data incrementally as all widgets have been loaded");
+                return;
+            }
+//                if (self.widgetsData && self.widgetsData.length > 0 && self.incrementIndex < self.widgetsData.length-1) {
+                    for (var i = self.incrementIndex; i < (amount === 0 ? self.widgetsData.length : Math.min(self.incrementIndex+amount, self.widgetsData.length)); i++) {
+                        if (!self.widgetsData[i].WIDGET_DESCRIPTION) {
+                            self.widgetsData[i].WIDGET_DESCRIPTION = null;
+                        }
+                        var wgt = ko.mapping.fromJS(self.widgetsData[i]);
+                    if(self.widgetsData[i].WIDGET_DESCRIPTION){
+                        wgt.WIDGET_DESCRIPTION = self.widgetsData[i].WIDGET_DESCRIPTION.toString().replace(/\n/g,"<br>");
+                        }
+                        if (wgt && !wgt.WIDGET_VISUAL) {
+                            wgt.WIDGET_VISUAL = ko.observable('');
+                        }
+                        if (wgt && !wgt.imgWidth) {
+                            wgt.imgWidth = ko.observable('120px');
+                        }
+                        if (wgt && !wgt.imgHeight) {
+                            wgt.imgHeight = ko.observable('120px');
+                        }
+                        self.widgets.push(wgt);
+                    }
+                    self.incrementIndex += amount;
+                    self.initWidgetDraggable();
+                    successCallback && successCallback();
+//                }
+//            });
+        };
+
+        self.initWidgetData = function (req,successCallback) {
+            var widgetDS = new Builder.WidgetDataSource();
+            self.searchStaus('searching');
+            widgetDS.loadWidgetData(
+                req && (typeof req.term === "string") ? req.term : self.keyword(),
+                function (widgets) {
+                    self.widgets([]);
+                    self.widgetsData = widgets;
+                    self.incrementIndex = 0;
+                    self.isWidgetLoaded(true);
+                    self.searchStaus('search-complete');
+                    successCallback && successCallback();
+                }
+            );
+        };
 
         self.loadWidgets = function (req,successCallback) {
             var widgetDS = new Builder.WidgetDataSource();
@@ -112,7 +173,10 @@ function (ko, $, oj, dfu) {
         };
         self.searchWidgetsClicked = function () {
             setInputClearIcon();
-            self.loadWidgets();
+            //self.loadWidgets();
+            self.initWidgetData(null, function() {
+                self.incrementalLoadWidgets(null, self.DEFAULT_WIDGET_INCREMENT_AMOUNT);
+            });
         };
 
         self.clearWidgetSearchInputClicked = function () {
