@@ -27,12 +27,8 @@ project.ext.omctf_omcCloudSetup_additionalParam = ""
 //Add data population(pre-upgrade) tests or tasks here
 //task omcUpgradeDataPopulation (type: EMTest,overwrite: true) {
 task pre_upgrade (type: EMTest, dependsOn: omcSetup){
-   //doFirst{
-           //tasks.refreshAll.execute()
-    // }
 
-   //println "Customizing the UpgradeDataPopulation"
-     options.suiteXmlBuilder().suite('name': 'PreUpg') {
+	 options.suiteXmlBuilder().suite('name': 'PreUpg') {
 
 	environment "VNC_SIZE", "1600x1200"
 
@@ -47,19 +43,13 @@ task pre_upgrade (type: EMTest, dependsOn: omcSetup){
 
     useWebdriver = true
     useRestAssured = true
-    //doLast {
-        //println "Done with overridden omcUpgradeDataPopulation"
-    //}
-   
+    
 }
 
-//Add data validation(post-upgrade) tests or tasks here
 
-//task omcUpgradeDataValidation (type: EMTest, overwrite: true) {
 
-task post_upgrade (type: EMTest, dependsOn: [omcCloudUpgrade,omcTenantAgentSetup]){
+task post_upgrade (type: EMTest, dependsOn:omcCloudUpgrade){
 
-    //println "Overriding the UpgradeDataValidation"
        options.suiteXmlBuilder().suite('name': 'PostUpg') {
 	environment "VNC_SIZE", "1600x1200"
         environment "WEBDRIVER_WAIT_TIMEOUT", "300000"
@@ -100,19 +90,13 @@ task post_upgrade (type: EMTest, dependsOn: [omcCloudUpgrade,omcTenantAgentSetup
     useWebdriver = true
     useRestAssured = true
 }
+
+
 post_upgrade.mustRunAfter pre_upgrade
 omcCloudUpgrade.mustRunAfter pre_upgrade
-
-//cleanUpAll.mustRunAfter ([pre_upgrade,post_upgrade])
 omcTeardown.mustRunAfter ([pre_upgrade,post_upgrade])
 
-    //doLast {
-       //println "Done with overridden omcUpgradeDataValidation"
-    //}
 
-    // Above is an example, please place your actual task definition for data validation
-//omcTeardown.mustRunAfter(omcUpgradeDataValidation)
-//task emaas_small_upgrade_3n (dependsOn: ['omcSetup']) {
 
 task emcpdf_upgrade_test_3n (dependsOn:[pre_upgrade,post_upgrade,omcTeardown]){
     apply from: getAbsoluteFilePath(project.configurations.omctfConfig,"omctf_taskprocessor")
