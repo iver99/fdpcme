@@ -84,19 +84,6 @@ define([
                 }
                 return null;
             };
-            
-            self.getFlexTimePeriod = function(timePeriod) {
-                if(timePeriod === "CUSTOM") {
-                    return getNlsString("DATETIME_PICKER_TIME_PERIOD_OPTION_CUSTOM");
-                }
-                if(timePeriod === "LATEST") {
-                    return getNlsString("DATETIME_PICKER_TIME_PERIOD_OPTION_LATEST");
-                }
-                var parsedTp = ctxUtil.parseTimePeriodToUnitAndDuration(timePeriod);
-                if(parsedTp) {
-                    return ctxUtil.getFlexTimePeriod(parsedTp.duration, parsedTp.unit);
-                }
-            }
         }
         
         return {"RightPanelUtil": RightPanelUtil}; //new RightPanelUtil();

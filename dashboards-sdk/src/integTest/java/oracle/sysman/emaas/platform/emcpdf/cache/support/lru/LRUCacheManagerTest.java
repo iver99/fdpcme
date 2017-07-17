@@ -1,8 +1,7 @@
 package oracle.sysman.emaas.platform.emcpdf.cache.support.lru;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import mockit.Deencapsulation;
 import mockit.Expectations;
@@ -157,6 +156,67 @@ public class LRUCacheManagerTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Test(expectedExceptions = UnsupportedOperationException.class)
+    public void testUnModifiableCollections1(){
+        List list = new ArrayList();
+        list.add(new Object());
+        List immutableList = Collections.unmodifiableList(list);
+        immutableList.add(new Object());
+
+    }
+
+    @Test(expectedExceptions = UnsupportedOperationException.class)
+    public void testUnModifiableCollections2(){
+        Set set = new HashSet<>();
+        set.add(new Object());
+        Set immutableSet = Collections.unmodifiableSet(set);
+
+        immutableSet.add(new Object());
+
+    }
+
+    @Test(expectedExceptions = UnsupportedOperationException.class)
+    public void testUnModifiableCollections3(){
+        Map<String,Object> map = new HashMap<String,Object>();
+        map.put("test",new Object());
+        Map immutableMap = Collections.unmodifiableMap(map);
+        Assert.assertNotNull(immutableMap.get("test"));
+        immutableMap.put("test",new Object());
+    }
+    @Test(expectedExceptions = UnsupportedOperationException.class)
+    public void testUnModifiableCache1() throws ExecutionException {
+        ICacheManager cm=LRUCacheManager.getInstance();
+        ICache cache = cm.getCache("testCache1",100,0L);
+        Tenant tenant=new Tenant("tenant1");
+        Object key = DefaultKeyGenerator.getInstance().generate(tenant,new Keys("keys1"));
+        List<String> cachedList = new ArrayList<>();
+        cachedList.add("one");
+        cachedList.add("two");
+        cache.put(key, cachedList);
+        List newList = (List) cache.get(key);
+        Assert.assertNotNull(newList);
+        Assert.assertEquals(2, newList.size());
+        newList.add("tree");//UnsupportedOperationException threw out
+        Assert.assertEquals(2, newList.size());
+    }
+
+    @Test(expectedExceptions = UnsupportedOperationException.class)
+    public void testUnModifiableCache2() throws ExecutionException {
+        ICacheManager cm=LRUCacheManager.getInstance();
+        ICache cache = cm.getCache("testCache2",100,0L);
+        Tenant tenant=new Tenant("tenant2");
+        Object key = DefaultKeyGenerator.getInstance().generate(tenant,new Keys("keys2"));
+        Map<String,Object> cachedMap = new HashMap<>();
+        cachedMap.put("one", new Object());
+        cachedMap.put("two", new Object());
+        cache.put(key, cachedMap);
+        Map newMap = (Map) cache.get(key);
+        Assert.assertNotNull(newMap);
+        Assert.assertEquals(2, newMap.size());
+        newMap.put("tree", new Object());//UnsupportedOperationException threw out
+        Assert.assertEquals(2, newMap.size());
     }
 
 
