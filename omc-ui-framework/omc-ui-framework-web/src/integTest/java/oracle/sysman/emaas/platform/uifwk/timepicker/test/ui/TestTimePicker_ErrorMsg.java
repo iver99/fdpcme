@@ -33,8 +33,8 @@ public class TestTimePicker_ErrorMsg extends LoginAndLogout
 {
 	private static String errormsg_1 = "Date and time must be on or sooner than current date and time.";
 	private static String errormsg_2 = "The start date/time is after the end date/time.";
-	private static String errormsg_3 = "Date must be on or later than";
-	private static String errormsg_4 = "Date must be on or sooner than";
+	private static String errormsg_3 = "Date and time must be on or later than";
+	private static String errormsg_4 = "Date and time must be on or sooner than";
 	
 	public void initTest(String testName, String url)
 	{
