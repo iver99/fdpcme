@@ -2,7 +2,7 @@ buildscript {
      apply from: 'test-buildscript-apply.gradle'
 }
 apply from: 'test-project-apply.gradle'
-
+apply from: 'onboard_tenant.gradle'
 
 /***************** OMCTF Plugin **********************/
 configurations { omctfPluginConfig }
@@ -48,7 +48,7 @@ task pre_upgrade (type: EMTest, dependsOn: omcCloudSetup){
 
 
 
-task post_upgrade (type: EMTest, dependsOn:omcCloudUpgrade){
+task post_upgrade (type: EMTest, dependsOn:[omcCloudUpgrade,onboardNewTenant]){
 
        options.suiteXmlBuilder().suite('name': 'PostUpg') {
 	environment "VNC_SIZE", "1600x1200"
