@@ -340,11 +340,16 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 function isServiceMenuLoaded(appId) {
                     if (self.serviceLinks && self.serviceLinks.length > 0) {
                         var serviceMenus = self.serviceLinks;
+                        var serviceMenuDef = null;
                         for (var i = 0; i < serviceMenus.length; i++) {
                             var menuDefItem = serviceMenus[i];
-                            if (menuDefItem && menuDefItem.appId === appId && menuDefItem.loaded) {
-                                return true;
+                            if (menuDefItem && menuDefItem.appId === appId) {
+                                serviceMenuDef = menuDefItem;
+                                break;
                             }
+                        }
+                        if (!serviceMenuDef || serviceMenuDef.loaded) {
+                            return true;
                         }
                         return false;
                     }
@@ -431,6 +436,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                                 }
                                 self.serviceMenuData[adminMenuId].children.push($.extend(true, {}, singleServiceData.serviceAdminMenus));
                                 self.serviceMenuData[adminMenuId].children[rootMenuData[adminMenuId].children.length].id = 'omc_root_admin_grp_'+singleServiceData.appId;
+                                adminSubMenuId = rootMenuData[adminMenuId].children.length;
                             }
                             self.serviceMenuData[adminMenuId].children[adminSubMenuId].children = addPrefixForRootAdminSubMenu(self.serviceMenuData[adminMenuId].children[adminSubMenuId].children);
                         }
