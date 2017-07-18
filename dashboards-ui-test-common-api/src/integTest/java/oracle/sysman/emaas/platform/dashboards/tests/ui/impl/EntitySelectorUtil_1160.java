@@ -69,15 +69,26 @@ public class EntitySelectorUtil_1160 extends EntitySelectorUtil_1150
 	 */
 	@Override
 	public void openEntitySelector(WebDriver driver, Logger logger)
-	{ //Open Entity Selector to display the suggestions
+	{ 
+                //Wait until backend operations are completed
+                logger.log(Level.INFO, "Wait until backend operations are completed before opening Entity Selector");
+                WaitUtil.waitForPageFullyLoaded(driver);
+                WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), UNTIL_TIMEOUT);
+            
+                //Open Entity Selector to display the suggestions
 		logger.log(Level.INFO, "Click Global Context Entity Selector to display suggestions");
+                wait.until(ExpectedConditions.elementToBeClickable(By.xpath(DashBoardPageId.EntSelTypeAheadField)));
 		String xpath = "xpath=" + DashBoardPageId.EntSelTypeAheadField;
 		driver.click(xpath);
+                
+                //Verify type ahead field is clickable
+                logger.log(Level.INFO, "Verify Entity Selector type ahead field is clickable");
+                wait.until(ExpectedConditions.elementToBeClickable(By.xpath(DashBoardPageId.EntSelTypeAheadFieldInput)));
+                logger.log(Level.INFO, "Entity Selector type ahead field is clickable");
 
 		//Verify suggestions popup is visible
 		logger.log(Level.INFO, "Verify Entity Selector suggestions are visible");
-		WebDriverWait waitPopup = new WebDriverWait(driver.getWebDriver(), UNTIL_TIMEOUT);
-		waitPopup.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(DashBoardPageId.EntSelSuggestionPopup)));
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(DashBoardPageId.EntSelSuggestionPopup)));
 		driver.takeScreenShot();
 		logger.log(Level.INFO, "Entity Selector options are displayed");
 
@@ -174,7 +185,7 @@ public class EntitySelectorUtil_1160 extends EntitySelectorUtil_1150
 				.xpath(DashBoardPageId.EntSelTypeAheadFieldInput)));
                 String suggestionsXpath = DashBoardPageId.ENTSEL_SUGGESTIONLIST;
                 if (entityType != null && category != null) {
-                    logger.log(Level.INFO, "Searching name ''{0}'' of type ''{0}'' in Entity Selector", new Object[]{entityName, entityType});
+                    logger.log(Level.INFO, "Searching name ''{0}'' of type ''{1}'' in Entity Selector", new Object[]{entityName, entityType});
                     suggestionsXpath = category.equals(CATEGORY_COMPOSITE) ? MessageFormat.format(DashBoardPageId.EntSelSuggestionByCompositeCategory,
                                     entityType) : MessageFormat.format(DashBoardPageId.EntSelSuggestionByEntitiesCategory, entityType);
                 } else {
