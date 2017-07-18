@@ -21,10 +21,12 @@
 
     </head>
     <body>
-        <div class="loadingIndicator" id="loading">Loading</div>
+        <div data-bind="text: LOADING" style="position: fixed; top: 0; margin-left: -65px; width: 120px; height: 15px; left: 50%; z-index: 999; background-color: #e6ffe0; padding: 5px; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; text-align: center; border-style: solid; border-width: 1px; border-top: none; box-shadow: 2px 2px 2px #888888;" class="loadingIndicator" id="loading"></div>
         <div id="globalBody" style="display:none;" class="oj-web-applayout-offcanvas-wrapper oj-offcanvas-outer-wrapper">
-            <div id="offcanvasInnerContainer" class="oj-offcanvas-inner-wrapper">
-                <div id="mainContent" role="main" class="oj-web-applayout-scrollable oj-web-applayout-page">
+            <div id="offcanvasInnerContainer" class="oj-offcanvas-inner-wrapper oj-flex oj-flex-items-pad">
+                <div id="uifwkLayoutHbgmenuPlaceHolder"></div>
+                <div id="uifwkLayoutMainContainer" class="oj-web-applayout-scrollable">
+                <div id="mainContent" role="main">
                 <!-- ko component: {
                     name: "df-oracle-branding-bar",
                     params: brandingbarParams
@@ -205,7 +207,7 @@
                                     <div class="landing-home-box-content">
                                         <div class="landing-home-box-content-head" data-bind="text: dataExplorers"></div>
                                         <div class="landing-home-box-content-desc" data-bind="text: dataExplorersDesc"></div>
-                                        <select id="dataExp_options" aria-label="Select Data Explorers" style="float: right; margin-top: 25px; margin-right: 10px; width: 235px;" data-bind="ojComponent: {component: 'ojSelect', value: data_type, optionChange: dataExplorersChosen}">                                      
+                                        <select id="dataExp_options" aria-label="Select Data Explorers" style="position:absolute; width: 235px; margin: 0; right: 10px; bottom: 10px;" data-bind="ojComponent: {component: 'ojSelect', value: data_type, optionChange: dataExplorersChosen}">                                      
                                             <option value="select" id="dataExp_Select" data-bind="text: select"></option>                                            
                                             <!-- ko foreach: exploreDataLinkList -->
                                             <option data-bind="attr: {id: 'dataExp_'+name.split(' ')[0]}, value: name, text: name"></option>
@@ -239,6 +241,7 @@
                         <!-- /ko -->
                     </ul>
                 </div>
+            </div>
             </div>
             </div>
         </div>
