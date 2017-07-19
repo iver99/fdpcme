@@ -699,57 +699,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                             loadSingleServiceMenuJson(linkItem).done(function(){
                                 self.loadedServiceCnt(self.loadedServiceCnt() + 1);
                             });
-//                            var serviceItem = {};
-//                            serviceItem.appId = linkItem.appId;
-//                            serviceItem.serviceName = linkItem.serviceName;
-//                            serviceItem.version = linkItem.version;
-//                            var header = dfu.getDefaultHeader();
-//
-//                            var url = linkItem.metaDataHref;
-//                            url = url.substring(url.indexOf('/emsaasui/'));
-//                            dfu.ajaxWithRetry(url, {
-//                                type: 'get',
-//                                dataType: 'json',
-//                                contentType: "application/json",
-//                                headers: header,
-//                                success: function (data) {
-//                                    serviceItem.serviceMenus = data.serviceMenus;
-//                                    serviceItem.serviceAdminMenus = data.serviceAdminMenus;
-//                                    url = data.serviceMenuMsgBundle;
-//                                    if (!url){
-//                                        hitErrorsWhenLoading = true;
-//                                        oj.Logger.error("No message file is defined in the service menu json file. Service name: " + serviceItem.serviceName);
-//                                        self.loadedServiceCnt(self.loadedServiceCnt() + 1);
-//                                        return;
-//                                    }
-//                                    url = url.substring(url.indexOf('/emsaasui/') + 1, url.length - 3);
-//                                    
-//                                    //Load resource bundle files
-//                                    require(['ojL10n!' + url], function (_nls) {
-//                                        serviceItem.serviceMenuMsgBundle = _nls;
-//                                        serviceItem.serviceMenus = applyNlsOnMenu(serviceItem.serviceMenus, _nls, serviceItem.appId);
-//                                        serviceItem.serviceAdminMenus = applyNlsOnMenu(serviceItem.serviceAdminMenus, _nls, serviceItem.appId);
-//                                        self.allServiceData.push(serviceItem);
-//                                        self.loadedServiceCnt(self.loadedServiceCnt() + 1);
-//                                        markLoadedServiceMenus(linkItem.appId);
-//                                    }, 
-//                                    function() {
-//                                        hitErrorsWhenLoading = true;
-//                                        oj.Logger.error("Failed to load message file for service menus. Service name: " + serviceItem.serviceName);
-//                                        self.loadedServiceCnt(self.loadedServiceCnt() + 1);
-//                                    });
-//                                },
-//                                error: function (xhr, textStatus, errorThrown) {
-//                                    self.loadedServiceCnt(self.loadedServiceCnt() + 1);
-//                                    hitErrorsWhenLoading = true;
-//                                    oj.Logger.error("Failed to load service menu json file due to error: " + textStatus + ". Service name: " + serviceItem.serviceName);
-//                                }
-//                            });
                         });
-//                    }
-//                    else {
-//                        dfdLoadSvcMenuData.resolve();
-//                    }
                     return dfdLoadSvcMenuData;
                 }
                 
