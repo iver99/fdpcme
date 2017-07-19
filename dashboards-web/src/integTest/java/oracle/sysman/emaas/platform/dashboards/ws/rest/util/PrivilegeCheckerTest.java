@@ -33,6 +33,61 @@ import org.testng.annotations.Test;
 public class PrivilegeCheckerTest
 {
 	private static final Logger LOGGER = LogManager.getLogger(PrivilegeCheckerTest.class);
+	
+	@Test(groups = { "s2" })
+	public void testGetUserGrants(@Mocked final RegistryLookupUtil lookupUtil, @Mocked final RestClient rc, @Mocked final JsonUtil jsonUtl)
+	{
+		String tenantName = "emaastesttenant1";
+		String userName = "emcsadmin";
+		final VersionedLink link = new VersionedLink();
+		link.withHref("http://hostname:port/testapi");
+		link.setAuthToken("auth");
+		final String sampleUserGrants = "ADMINISTER_LOG_TYPE,RUN_AWR_VIEWER_APP,USE_TARGET_ANALYTICS,ADMIN_ITA_WAREHOUSE,ADMINISTER_ROLE";
+
+		// Test case when failed to discover the SecurityAuthorization service link
+		new Expectations() {
+			{
+				RegistryLookupUtil.getServiceInternalEndpoint(anyString, anyString, anyString);
+				result = null;
+			}
+		};
+		Assert.assertNull(PrivilegeChecker.getUserGrants(tenantName, userName));
+
+		// Test case for getting user grants successfully
+		new Expectations() {
+			{
+				RegistryLookupUtil.getServiceInternalEndpoint(anyString, anyString, anyString);
+				result = link;
+				rc.get(anyString, anyString, anyString);
+				result = sampleUserGrants;
+			}
+		};
+		Assert.assertEquals(PrivilegeChecker.getUserGrants(tenantName, userName), sampleUserGrants);
+
+		// Test case for Exception
+		try {
+			new Expectations() {
+				{
+					rc.get(anyString, anyString, anyString);
+					result = new Exception();
+				}
+			};
+		}
+		catch (Exception e) {
+			LOGGER.info("Error context",e);
+			//Ignore the expected exception here
+		}
+		Assert.assertNull(PrivilegeChecker.getUserGrants(tenantName, userName));
+	}
+	
+	@Test(groups = { "s1" })
+	public void testGetUserGrantsWithNullInput()
+	{
+		Assert.assertNull(PrivilegeChecker.getUserGrants(null, "TestUser"));
+		Assert.assertNull(PrivilegeChecker.getUserGrants("TestTenant", null));
+		Assert.assertNull(PrivilegeChecker.getUserGrants(null, null));
+	}
+	
 	@Test(groups = { "s2" })
 	public void testGetUserRoles(@Mocked final RegistryLookupUtil lookupUtil, @Mocked final RestClient rc,
 			@Mocked final JsonUtil jsonUtl)

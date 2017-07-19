@@ -85,6 +85,12 @@ define(['knockout',
             self.dashboardDescriptionEditing = ko.observable(self.dashboardDescription());
             self.editDisabled = ko.observable(self.dashboard.type() === SINGLEPAGE_TYPE || self.dashboard.systemDashboard() || self.currentUser !== self.dashboard.owner());
             self.disableSave = ko.observable(false);
+            //only show vertical separator after text widget add icon when entity selector or time selector show up in dashboard toolbar in an editable dashboard
+            self.shouldShowSeparator = ko.computed(function() {
+                var isTselTimeSelInToolbar = (self.dashboard.enableEntityFilter && ((self.dashboard.enableEntityFilter() === 'TRUE') || (self.isUnderSet && self.dashboard.enableEntityFilter() === 'GC')))
+                       || self.isUnderSet && self.dashboard.enableTimeRange && (self.dashboard.enableTimeRange() === 'TRUE' || self.dashboard.enableTimeRange() === 'GC');
+                return !self.editDisabled() && self.tilesViewModel.isMobileDevice !== "true" && self.notZdtStatus() && isTselTimeSelInToolbar;
+            });
             
             if(self.isUnderSet && dashboardSetOptions && ko.isObservable(dashboardSetOptions.autoRefreshInterval)){
                 self.autoRefreshInterval = ko.observable(ko.unwrap(dashboardSetOptions.autoRefreshInterval));
@@ -311,7 +317,14 @@ define(['knockout',
                             removeDelayTime: 5000
                     });
                 }, function(error) {
-                    error && error.errorMessage() && dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING'), detail: '', removeDelayTime: 5000});
+                    if(error && error.errorCode && error.errorCode() === 10002) {
+                        dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING_TEXT_WIDGET_EMPTY_CONTENT'), detail: '', removeDelayTime: 5000});
+                    }else if(error && error.errorCode && error.errorCode() === 10003) {
+                        dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING_TEXT_WIDGET_TOO_LONG_CONTENT'), detail: '', removeDelayTime: 5000});
+
+                    }else {
+                        error && error.errorMessage() && dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING'), detail: '', removeDelayTime: 5000});
+                    }
                 });
             };
 
@@ -350,6 +363,30 @@ define(['knockout',
                     errorCallback && errorCallback(error);
                 });
             };
+            
+                self.handleAddTextWidget = function () {
+                    var textWidget = {
+                        WIDGET_UNIQUE_ID: 1,
+                        WIDGET_NAME: "Text Widget",
+                        WIDGET_DESCRIPTION: "Text Widget provided by Oracle",
+                        WIDGET_OWNER: "ORACLE",
+                        WIDGET_CREATION_TIME: "2017-06-18T00:00:00:000Z",
+                        WIDGET_SOURCE: 0,
+                        WIDGET_GROUP_NAME: "Dashboard",
+                        WIDGET_SCREENSHOT_HREF: null,
+                        WIDGET_SUPPORT_TIME_CONTROL: 0,
+                        WIDGET_KOC_NAME: "df-text-widget",
+                        WIDGET_TEMPLATE: "/js/widgets/textwidget/dashboardTextWidget.html",
+                        WIDGET_VIEWMODEL: "/js/widgets/textwidget/js/dashboardTextWidget.js",
+                        PROVIDER_NAME: "Dashboard-UI",
+                        PROVIDER_VERSION: "1.0",
+                        PROVIDER_ASSET_ROOT: "assetRoot",
+//                        WIDGET_EDITABLE: "true",
+                        content: null,
+                        type: "TEXT_WIDGET"
+                    };
+                    self.tilesViewModel.appendNewTile(textWidget.WIDGEET_NAME, textWidget.WIDGEET_DESCRIPTION, 4, 2, ko.toJS(textWidget));
+                }
                   
             var prefUtil = new pfu(dfu.getPreferencesUrl(), dfu.getDashboardsRequestHeader());
             var addFavoriteLabel = getNlsString('DBS_BUILDER_BTN_FAVORITES_ADD');
