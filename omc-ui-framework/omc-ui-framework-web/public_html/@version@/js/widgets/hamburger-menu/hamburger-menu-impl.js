@@ -36,6 +36,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 var sessionCacheOmcMenusSubscribedAppsKey = 'subscribed_apps';
                 var sessionCacheBaseVanityUrlsKey = 'base_vanity_urls';
                 var sessionCacheUserRolesKey = 'user_roles';
+                var sessionCacheAllServiceDataKey = 'all_service_data';
                 var omcMenuSeparatorId = 'omc_service_menu_separator';
                 
                 var userName = params.userName;
@@ -538,7 +539,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     return unloadedMenus;
                 }
                 
-                function refreshSingleServiceMenu(appId, key) {
+                function refreshSingleServiceMenu(appId, key, callback) {
                     omcMenus = []; //TODO
                     var svcMenuLink = findServiceMenuLinkByAppId(appId);
                     loadSingleServiceMenuJson(svcMenuLink).done(function() {
@@ -552,9 +553,14 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                                 var menuItem = getMenuItem(item);
                                 omcMenus.push(menuItem);
                             }
-                            self.dataSource(new oj.JsonTreeDataSource(omcMenus));
-                            setTimeout(function(){$("#hamburgerMenu #navlistcontainer>div").ojNavigationList("expand", key, true);}, 1);
+                            if (key) {
+                                self.dataSource(new oj.JsonTreeDataSource(omcMenus));
+                                setTimeout(function(){$("#hamburgerMenu #navlistcontainer>div").ojNavigationList("expand", key, true);}, 1);
+                            }
                             updateServiceMenuCache();
+                            if (callback) {
+                                callback();
+                            }
                         }
                     });
                 }
@@ -775,10 +781,23 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     self.serviceMenuData = cachedMenus[sessionCacheServiceMenuDataKey];
                     self.baseVanityUrls = cachedMenus[sessionCacheBaseVanityUrlsKey];
                     self.userRoles = cachedMenus[sessionCacheUserRolesKey];
-                    self.dataSource(new oj.JsonTreeDataSource(omcMenus));
-                    self.hamburgerMenuLoaded(true);
-                    //$("#omcHamburgerMenuInnerComp").show();
-                    menuUtil.fireServiceMenuLoadedEvent();
+                    self.allServiceData = cachedMenus[sessionCacheAllServiceDataKey];
+                    
+                    function refreshHamburgerMenuFromCache() {
+                        cachedMenus = sessionCaches[0].retrieveDataFromCache(sessionCacheAllMenusKey);
+                        omcMenus = cachedMenus[sessionCacheOmcMenusDataKey];
+                        self.serviceMenuData = cachedMenus[sessionCacheServiceMenuDataKey];
+                        self.dataSource(new oj.JsonTreeDataSource(omcMenus));
+                        self.hamburgerMenuLoaded(true);
+                        //$("#omcHamburgerMenuInnerComp").show();
+                        menuUtil.fireServiceMenuLoadedEvent();
+                    }
+                    if (!isServiceMenuLoaded(serviceAppId)) {
+                        refreshSingleServiceMenu(serviceAppId, null, refreshHamburgerMenuFromCache);
+                    }
+                    else {
+                        refreshHamburgerMenuFromCache();
+                    }
                 }
                 //otherwise, get all service menus from service registries
                 else {
@@ -815,6 +834,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                         sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheServiceMenuDataKey, self.serviceMenuData);
                         sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheBaseVanityUrlsKey, self.baseVanityUrls);
                         sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheUserRolesKey, self.userRoles);
+                        sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheAllServiceDataKey, self.allServiceData);
                         self.dataSource(new oj.JsonTreeDataSource(omcMenus));
                         self.hamburgerMenuLoaded(true);
                         //$("#omcHamburgerMenuInnerComp").show();
@@ -1400,7 +1420,13 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 $("#omcMenuNavList").on("ojbeforeexpand", function (event, ui) {
                     // verify that the component firing the event is a component of interest ,
                     //  verify whether the event is fired by js
-                    if (ui.key.indexOf("omc_root_") > -1 && ui.key.indexOf("omc_root_admin") < 0) {
+                    if(/*ui.key.indexOf("omc_root")>-1 && ui.key.indexOf("omc_root_admin")<0 && */self.preventExpandForAPMLabel){
+                        event.preventDefault();
+                        event.stopPropagation();
+                        self.preventExpandForAPMLabel = false;
+                        return false;
+                    }
+                    else if (ui.key.indexOf("omc_root_") > -1 && ui.key.indexOf("omc_root_admin") < 0) {
                         var appId = ui.key.substring(9);
                         if (!isServiceMenuLoaded(appId)) {
                             event.preventDefault();
@@ -1418,12 +1444,6 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                                 setTimeout(function(){$("#hamburgerMenu #navlistcontainer>div").ojNavigationList("expand", ui.key, true);});
                             });
                         }
-                    }
-                    if(/*ui.key.indexOf("omc_root")>-1 && ui.key.indexOf("omc_root_admin")<0 && */self.preventExpandForAPMLabel){
-                        event.preventDefault();
-                        event.stopPropagation();
-                        self.preventExpandForAPMLabel = false;
-                        return false;
                     }
                 });
                 
