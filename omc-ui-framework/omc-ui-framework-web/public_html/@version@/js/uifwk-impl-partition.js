@@ -1,5 +1,6 @@
 define([
 'knockout',
+'uifwk/@version@/js/sdk/menu-util-impl',
 'uifwk/@version@/js/widgets/aboutbox/aboutbox-impl',
 'text!uifwk/js/widgets/aboutbox/html/aboutbox.html',
 'uifwk/@version@/js/widgets/navlinks/navigation-links-impl',
@@ -28,10 +29,9 @@ define([
 'uifwk/@version@/js/resources/nls/uifwkCommonMsg',
 'uifwk/@version@/js/resources/nls/root/uifwkCommonMsg',
 'uifwk/@version@/js/util/zdt-util-impl',
-'uifwk/@version@/js/sdk/entity-object',
-'uifwk/@version@/js/sdk/menu-util-impl'
+'uifwk/@version@/js/sdk/entity-object'
 ],
-    function (ko, aboutVM, aboutTemplate, navVM, navTemplate, brandingVM, brandingTemplate, widgetsVM, widgetsTemplate, timefilterVM, timeFilterTemplate, timePickerVM, timePickerTemplate) {
+    function (ko, menuModel, aboutVM, aboutTemplate, navVM, navTemplate, brandingVM, brandingTemplate, hbgmenuVM, hbgmenuTemplate, widgetsVM, widgetsTemplate, timefilterVM, timeFilterTemplate, timePickerVM, timePickerTemplate) {
 //        function registerComponent(kocName, kocViewModel, kocTemplate)
 //        {
 //            if (!ko.components.isRegistered(kocName))
@@ -45,6 +45,14 @@ define([
 //        registerComponent("df-common-widget-selector", widgetsVM, widgetsTemplate);
 //        registerComponent("time-filter", timefilterVM, timeFilterTemplate);
 //        registerComponent("date-time-picker", timePickerVM, timePickerTemplate);
+        $(document).ready(function() {
+            var avoidPageResizeOptIn = $('#uifwkLayoutHbgmenuPlaceHolder').length > 0 ? true : false;
+            if (avoidPageResizeOptIn) {
+                var menuUtil = new menuModel();
+                menuUtil.initializeHamburgerMenuLayout();
+            }
+        });
+        
         var versionedContextSelectorUtils = window.getSDKVersionFile ?
             window.getSDKVersionFile('emsaasui/emcta/ta/js/sdk/contextSelector/api/ContextSelectorUtils') : null;
         var contextSelectorUtil = versionedContextSelectorUtils ? versionedContextSelectorUtils :

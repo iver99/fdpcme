@@ -2,7 +2,7 @@ buildscript {
      apply from: 'test-buildscript-apply.gradle'
 }
 apply from: 'test-project-apply.gradle'
-
+apply from: 'onboard_tenant.gradle'
 
 /***************** OMCTF Plugin **********************/
 configurations { omctfPluginConfig }
@@ -26,13 +26,9 @@ dependencies {
 project.ext.omctf_omcCloudSetup_additionalParam = ""
 //Add data population(pre-upgrade) tests or tasks here
 //task omcUpgradeDataPopulation (type: EMTest,overwrite: true) {
-task pre_upgrade (type: EMTest, dependsOn: omcSetup){
-   //doFirst{
-           //tasks.refreshAll.execute()
-    // }
+task pre_upgrade (type: EMTest, dependsOn: omcCloudSetup){
 
-   //println "Customizing the UpgradeDataPopulation"
-     options.suiteXmlBuilder().suite('name': 'PreUpg') {
+	 options.suiteXmlBuilder().suite('name': 'PreUpg') {
 
 	environment "VNC_SIZE", "1600x1200"
 
@@ -40,9 +36,6 @@ task pre_upgrade (type: EMTest, dependsOn: omcSetup){
         test('name': 'Pre_upg') {
             classes([:]) {
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.DPdashboard.TestDashBoard')
-                //'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.DP.TestHomePageDp')
-		//'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.DP.TestWidgetDp')
-		//'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.BugVerification')
             }
 
        }
@@ -50,44 +43,60 @@ task pre_upgrade (type: EMTest, dependsOn: omcSetup){
 
     useWebdriver = true
     useRestAssured = true
-    //doLast {
-        //println "Done with overridden omcUpgradeDataPopulation"
-    //}
-   
+    
 }
 
-//Add data validation(post-upgrade) tests or tasks here
 
-//task omcUpgradeDataValidation (type: EMTest, overwrite: true) {
 
-task post_upgrade (type: EMTest, dependsOn: [omcCloudUpgrade,omcTenantAgentSetup]){
+task post_upgrade (type: EMTest, dependsOn:[omcCloudUpgrade,onboardNewTenant]){
 
-    //println "Overriding the UpgradeDataValidation"
        options.suiteXmlBuilder().suite('name': 'PostUpg') {
 	environment "VNC_SIZE", "1600x1200"
         environment "WEBDRIVER_WAIT_TIMEOUT", "300000"
         test('name': 'post_upg') {
             classes([:]) {
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.DVdashboard.TestDashBoard')
-                //'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.DV.TestBrandingBarDv')
+      
                  }
-         }
+        }         
+        test('name': 'DashboardUITest', 'preserve-order':'true') {
+            classes([:]) {
+        'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashBoard_SimpleCRUD')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashBoard_OtherFeatures')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.BugVerification')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet_SimpleCRUD')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet_OtherFeatures')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet_DashboardRelated_CreatedInsideSet')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet_DashboardRelated_CreatedOutsideSet')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet_DuplicateDashboard')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboard_NegativeCases')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestRightPanel_DashboardFilters')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboard')
+            }
+	}
+	test('name': 'DashboardUITest_testDashboardSet_SetHome', 'preserve-order':'true'){
+	    classes([:]) {
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet_SetHome')
+	    }
+	}
+	test('name': 'DashboardUITest_testDashboard_SetHome', 'preserve-order':'true'){
+	    classes([:]) {
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashBoard_SetHome')
+	    }
+	}
+         
   }
  
     useWebdriver = true
     useRestAssured = true
 }
+
+
 post_upgrade.mustRunAfter pre_upgrade
-//cleanUpAll.mustRunAfter ([pre_upgrade,post_upgrade])
+omcCloudUpgrade.mustRunAfter pre_upgrade
 omcTeardown.mustRunAfter ([pre_upgrade,post_upgrade])
 
-    //doLast {
-       //println "Done with overridden omcUpgradeDataValidation"
-    //}
 
-    // Above is an example, please place your actual task definition for data validation
-//omcTeardown.mustRunAfter(omcUpgradeDataValidation)
-//task emaas_small_upgrade_3n (dependsOn: ['omcSetup']) {
 
 task emcpdf_upgrade_test_3n (dependsOn:[pre_upgrade,post_upgrade,omcTeardown]){
     apply from: getAbsoluteFilePath(project.configurations.omctfConfig,"omctf_taskprocessor")

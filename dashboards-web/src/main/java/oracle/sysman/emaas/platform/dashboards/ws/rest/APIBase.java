@@ -10,6 +10,8 @@
 
 package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
+import java.util.Locale;
+
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -65,7 +67,7 @@ public class APIBase
 
 	public void clearUserContext()
 	{
-		UserContext.clearCurrentUser();
+		UserContext.clear();
 		TenantContext.clearCurrentUser();
 	}
 
@@ -103,8 +105,12 @@ public class APIBase
 		}
 
 	}
+	
+	public void initializeUserContext(String opcTenantId, String userTenant) throws CommonSecurityException {
+	    initializeUserContext(opcTenantId, userTenant, null);
+	}
 
-	public void initializeUserContext(String opcTenantId, String userTenant) throws CommonSecurityException
+	public void initializeUserContext(String opcTenantId, String userTenant, Locale userLocale) throws CommonSecurityException
 	{
 		if (opcTenantId == null || "".equals(opcTenantId)) {
 			throw new CommonSecurityException(
@@ -127,6 +133,10 @@ public class APIBase
 		UserContext.setUserTenant(userTenant);
 		String tenantName = userTenant.substring(0, idx);
 		TenantContext.setCurrentTenant(tenantName);
+		
+		if(userLocale != null) {
+		    UserContext.setLocale(userLocale);
+		}
 	}
 
 	protected void infoInteractionLogAPIIncomingCall(String tenantId, String serviceInvoked, String msg, Object... params)

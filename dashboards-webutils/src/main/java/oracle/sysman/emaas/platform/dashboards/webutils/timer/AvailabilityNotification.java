@@ -13,7 +13,6 @@ package oracle.sysman.emaas.platform.dashboards.webutils.timer;
 import javax.management.Notification;
 import javax.management.NotificationListener;
 
-import oracle.sysman.emaas.platform.dashboards.webutils.ParallelThreadPool;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -25,7 +24,6 @@ import oracle.sysman.emaas.platform.dashboards.targetmodel.services.GlobalStatus
 import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
 import oracle.sysman.emaas.platform.dashboards.webutils.services.RegistryServiceManager;
 
-import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * @author guobaochen
