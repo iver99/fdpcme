@@ -211,7 +211,7 @@ task DEVTest2(type:EMTest,dependsOn:omcSetup){
 }
 
 //Task is for dashboard UI Test
-task e2e (type: EMTest,dependsOn:omcSetup ){
+/*task e2e (type: EMTest,dependsOn:omcSetup ){
 options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n','parallel':'none') {
 
         environment "VNC_SIZE", "1600x1200"
@@ -246,13 +246,20 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n','parallel':
     }
     useWebdriver = true
     useRestAssured = true
-}
+}*/
 
 //QATest.mustRunAfter([omcSetup])
 
+/*
 task emcpdf_test_3n (dependsOn:[QATest,DEVUiTest,QATest1,DEVTest,DEVTest2,e2e, omcTeardown]) {
     e2e.mustRunAfter([QATest1])
     omcTeardown.mustRunAfter([QATest,DEVUiTest,QATest1,DEVTest,DEVTest2,e2e])
+
+    apply from: getAbsoluteFilePath(configurations.omctfConfig,"omctf_taskprocessor")
+}
+*/
+task emcpdf_test_3n (dependsOn:[QATest,DEVUiTest,QATest1,DEVTest,DEVTest2, omcTeardown]) {
+    omcTeardown.mustRunAfter([QATest,DEVUiTest,QATest1,DEVTest,DEVTest2])
 
     apply from: getAbsoluteFilePath(configurations.omctfConfig,"omctf_taskprocessor")
 }
