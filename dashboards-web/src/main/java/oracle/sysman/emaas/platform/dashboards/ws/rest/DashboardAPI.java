@@ -547,6 +547,7 @@ public class DashboardAPI extends APIBase
 			String userName = UserContext.getCurrentUser();
 			Dashboard dbd = dm.getCombinedDashboardById(dashboardId, tenantId, userName);
 			updateDashboardAllHref(dbd, tenantIdParam);
+			LOGGER.info(""+getJsonUtil().toJson(dbd));
 			return Response.ok(getJsonUtil().toJson(dbd)).build();
 		}
 		catch(DashboardNotFoundException e){
