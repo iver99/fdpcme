@@ -553,7 +553,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                                 omcMenus.push(menuItem);
                             }
                             self.dataSource(new oj.JsonTreeDataSource(omcMenus));
-                            setTimeout(function(){$("#hamburgerMenu #navlistcontainer>div").ojNavigationList("expand", key, true);});
+                            setTimeout(function(){$("#hamburgerMenu #navlistcontainer>div").ojNavigationList("expand", key, true);}, 1);
                             updateServiceMenuCache();
                         }
                     });
