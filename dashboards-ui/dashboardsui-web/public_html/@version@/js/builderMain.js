@@ -46,7 +46,8 @@ requirejs.config({
 //        'emcta': '/emsaasui/emcta/ta/@version@/js', //for DEV_MODE
         'emcla':'/emsaasui/emlacore/js',
         'emcsutl': '/emsaasui/uifwk/emcsDependencies/uifwk/js/util', // why we need this?
-        'uifwk': '/emsaasui/uifwk'
+        'uifwk': '/emsaasui/uifwk',
+        'ckeditor': '../../libs/@version@/js/ckeditor/ckeditor'
     },
     bundles: function() {
         if (window.DEV_MODE !==null && typeof window.DEV_MODE ==="object") {
@@ -218,7 +219,6 @@ require(['knockout',
     'knockout.mapping',
     'uifwk/js/util/df-util',
     'uifwk/js/util/logging-util',
-    'uifwk/js/sdk/menu-util',
     'ojs/ojcore',
     /*'ojs/ojcomponentcore',
     'ojs/ojchart',
@@ -369,7 +369,23 @@ require(['knockout',
 				    }
 			        };
 
-                                $("#headerWrapper").on("DOMSubtreeModified", function() {
+                                function onElementHeightChange($node, callback){
+                                    var lastHeight = $node.height(), newHeight;
+                                    (function run(){
+                                        newHeight = $node.height();
+                                        if( lastHeight != newHeight ) {
+                                            callback();
+                                        }
+                                        lastHeight = newHeight;
+
+                                        if( self.onElementHeightChangeTimer )
+                                            clearTimeout(self.onElementHeightChangeTimer);
+
+                                        self.onElementHeightChangeTimer = setTimeout(run, 1000);
+                                    })();
+                                };
+
+                                onElementHeightChange($("#headerWrapper"), function() {
                                     var height = $("#headerWrapper").height();
                                     if (!self.headerHeight){
                                         self.headerHeight = height;
@@ -529,3 +545,4 @@ function getDateString(isoString) {
 }
 
 window.addEventListener("message", updateOnePageHeight, false);
+

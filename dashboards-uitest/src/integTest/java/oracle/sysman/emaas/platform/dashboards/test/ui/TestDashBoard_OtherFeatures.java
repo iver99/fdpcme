@@ -46,6 +46,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 	private String dbName_duplicate = "";
 	private String dbName_duplicateOOB = "";
 	private String dbName_saveConfirmation = "";
+	private String dbName_textWidget = "";
 
 	private final String customWidgetName = "Execution Details";
 	private final String OOBName = "Middleware Operations";
@@ -109,6 +110,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		DashBoardUtils.deleteDashboard(webd, dbName_Test);
 		DashBoardUtils.deleteDashboard(webd, dbName_duplicate);
 		DashBoardUtils.deleteDashboard(webd, dbName_duplicateOOB);
+		DashBoardUtils.deleteDashboard(webd, dbName_textWidget);
 
 		webd.getLogger().info("All test data have been removed");
 
@@ -857,5 +859,39 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 				"startTime%3D" + String.valueOf(StartTimeStamp) + "%26endTime%3D" + String.valueOf(EndTimeStamp))) {
 			Assert.fail("not open the correct widget");
 		}
+	}
+	
+	@Test
+	public void testTextWidget()
+	{
+		dbName_textWidget = "Dashboard_textWidget-" + DashBoardUtils.generateTimeStamp();
+		
+		String dbDesc = "Add text widget into dashboard";
+		String content = "This is the dashboard which is used to test the new feature of adding text widget";
+		//String content_Hyperlink = "";
+		
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testTextWidget");
+
+		DashboardHomeUtil.gridView(webd);
+
+		webd.getLogger().info("Create the dashboard, then to add text widget");
+		DashboardHomeUtil.createDashboard(webd, dbName_textWidget, dbDesc, DashboardHomeUtil.DASHBOARD);
+		
+		webd.getLogger().info("Verify the dashboard created Successfully");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_textWidget, dbDesc, true), "Create dashboard failed!");		
+		
+		DashboardBuilderUtil.addTextWidgetToDashboard(webd);
+		
+		//Assert.assertTrue(DashboardBuilderUtil.verifyWidget(webd, widgetName), "text widget isn't added into the dashboard successfully");
+		DashboardBuilderUtil.editTextWidgetAddContent(webd, 1, content);
+		
+		DashboardBuilderUtil.saveDashboard(webd);
+		
+		//Verify the content is added successfully
+		webd.getLogger().info("Verify the content is added successfully");
+		
+		WebElement textContent = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.TEXTCONTENTCSS));
+		Assert.assertEquals(textContent.getText(), content);
 	}
 }

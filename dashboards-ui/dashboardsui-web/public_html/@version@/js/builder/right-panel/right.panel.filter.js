@@ -249,12 +249,12 @@ define([
             });
             
             self.defaultTimeRangeValueText = ko.computed(function() {
-                if((self.defaultTimeRangeValue()[0] !== "custom") && (self.defaultTimeRangeValue()[0] !== "custom1")) {
+                if((self.defaultTimeRangeValue()[0] !== "custom") && (self.defaultTimeRangeValue()[0] !== "custom1") && self.defaultTimeRangeValue()[0] !== "CUSTOM") {
                     var timeLabel = self.rightPanelUtil.getDefaultTimeRangeValueText(self.defaultTimeRangeValue()[0]);
                     if(timeLabel) {
                         return timeLabel;
                     }
-                    return self.rightPanelUtil.getFlexTimePeriod(self.defaultTimeRangeValue()[0]);
+                    return ctxUtil.getTranslatedTimePeriod(self.defaultTimeRangeValue()[0], omcTimeConstants.timePeriodsSet.SHORT_TERM);
                 }else {
                     return self.rightPanelUtil.getTimeInfo(self.defaultStartTime(), self.defaultEndTime());
                 }

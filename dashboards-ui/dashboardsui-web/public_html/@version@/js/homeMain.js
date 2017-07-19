@@ -174,18 +174,27 @@ require(['dashboards/dbsmodel',
             else if (filterId === 'ita') {
                 defaultMenuId = menuUtil.OMCMenuConstants.GLOBAL_ITANALYTICS;
             }
-            menuUtil.subscribeServiceMenuLoadedEvent(function(){
-                $("#omcHamburgerMenu").on("ojopen", function(event, offcanvas) {
-                    if(offcanvas.displayMode === "push" && $('.main-content-area')) {
-                        $('.main-content-area').removeClass('dbs-main-large-width');
-                    }});
-
-                $("#omcHamburgerMenu").on("ojclose", function(event, offcanvas) {
+            
+            function resizeHomeMainLayout(hbgmenuStatus) {
+                if (hbgmenuStatus === 'open') {
+                    $('.main-content-area').removeClass('dbs-main-large-width');
+                }
+                else if (hbgmenuStatus === 'close') {
                     if ($('.main-content-area')) {
                         $('.main-content-area').addClass('dbs-main-large-width');
                     }
-                });
+                }
+            }
+            
+            menuUtil.subscribeHamburgerMenuToggleEvent(function(toggleType) {
+                resizeHomeMainLayout(toggleType);
             });
+            
+            $(window).resize(function() {
+                var hbgmenuStatus = $("#omcHamburgerMenu").length > 0 && $("#omcHamburgerMenu").is(':visible') ? 'open' : 'close';
+                resizeHomeMainLayout(hbgmenuStatus);
+            });
+            
             function HeaderViewModel() {
                 var self = this;
                 self.userName = dfu.getUserName();
@@ -210,6 +219,7 @@ require(['dashboards/dbsmodel',
             var titleVM = new TitleViewModel();
 
             $(document).ready(function() {
+                resizeHomeMainLayout(menuUtil.showHamburgerMenuByDefault() ? 'open' : 'close');
                 dfu.getSubscribedApps2WithEdition(function(apps) {
                     if (apps && (!apps.applications || apps.applications.length === 0)) {
                         oj.Logger.error("Tenant subscribes to no service. Redirect to dashboard error page", true);

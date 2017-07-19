@@ -34,7 +34,7 @@ public class GlobalContextUtil_1130 extends GlobalContextUtil_Version implements
 	public static final String GLBCTXTBUTTON = "buttonShowTopology";
 	public static final String DSBNAME = "DASHBOARD_GLOBALTESTING";
 	public static final String DSBSETNAME = "DASHBOARDSET_GLOBALTESTING";
-	private static final String GLBCTXTPLDIV = "ude-topology-div";
+	public static final String GLBCTXTPLDIV = "ude-topology-div";
 
 	private static String addOrUpdateUrlParam(String url, String paramName, String paramValue)
 			throws UnsupportedEncodingException

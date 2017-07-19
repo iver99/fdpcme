@@ -50,7 +50,8 @@ public class CommonFunctionalException extends DashboardException
 	public static final String PROVIDER_VERSION_REQUIRED = "PROVIDER_VERSION_REQUIRED";
 	public static final String PROVIDER_ASSET_ROOT_REQUIRED = "PROVIDER_ASSET_ROOT_REQUIRED";
 	public static final String TILE_INVALID_TITLE_EXCEED_MAX_LEN = "TILE_INVALID_TITLE_EXCEED_MAX_LEN";
-	public static final String TEXT_WIDGET_INVALID_CONTENT_ERROR = "TEXT_WIDGET_INVALID_CONTENT_ERROR";
+	public static final String TEXT_WIDGET_INVALID_EMPTY_CONTENT_ERROR = "TEXT_WIDGET_INVALID_EMPTY_CONTENT_ERROR";
+	public static final String TEXT_WIDGET_CONTENT_TOO_LONG_ERROR = "TEXT_WIDGET_CONTENT_TOO_LONG_ERROR";
 	public static final String TEXT_WIDGET_INVALID_LINK_TEXT_ERROR = "TEXT_WIDGET_INVALID_LINK_TEXT_ERROR";
 	public static final String TEXT_WIDGET_INVALID_LINK_URL_ERROR = "TEXT_WIDGET_INVALID_LINK_URL_ERROR";
 
@@ -68,6 +69,14 @@ public class CommonFunctionalException extends DashboardException
 	public CommonFunctionalException(String message)
 	{
 		super(DashboardErrorConstants.DASHBOARD_COMMON_UI_ERROR_CODE, message);
+	}
+
+	/**
+	 * Constructs a new <code>CommonFunctionalException</code> with the specified error code and detail message.
+	 */
+	public CommonFunctionalException(Integer errorCode, String message)
+	{
+		super(errorCode, message);
 	}
 
 	/**

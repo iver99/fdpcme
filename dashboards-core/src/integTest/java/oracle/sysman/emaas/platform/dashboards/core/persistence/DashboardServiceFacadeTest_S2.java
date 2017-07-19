@@ -313,7 +313,7 @@ public class DashboardServiceFacadeTest_S2 extends BaseTest
 		dsf.commitTransaction();
 		dsf.getEmsDashboardById(BigInteger.ZERO);
 		dsf.getEmsDashboardFindAll();
-		dsf.getEmsDashboardByName("ss", "test");
+		dsf.getEmsDashboardByName("ss");
 		dsf.getEmsPreference("ss", "ss");
 		dsf.getEntityManager();
 		dsf.getEmsPreferenceFindAll("test");
@@ -405,7 +405,7 @@ public class DashboardServiceFacadeTest_S2 extends BaseTest
 			d.setDeleted(BigInteger.valueOf(1L));
 			dashboardServiceFacade.mergeEmsDashboard(d);
 			//List<EmsDashboard> ds = dashboardServiceFacade.getEmsDashboardFindAll();
-			Assert.assertNull(dashboardServiceFacade.getEmsDashboardByName(d.getName(), d.getOwner()));
+			Assert.assertNull(dashboardServiceFacade.getEmsDashboardByName(d.getName()));
 		}
 		finally {
 			if (em != null) {
