@@ -195,7 +195,7 @@ define(['knockout',
                         //load widgets only when right panel is editable and have not loaded widget before
                         //self.rightPanelWidget.loadWidgets(null,function successCallback(){
                         self.rightPanelWidget.initWidgetData(null, function() {
-                            self.rightPanelWidget.incrementalLoadWidgets(null, self.rightPanelWidget.DEFAULT_WIDGET_INCREMENT_AMOUNT, function(){
+                            self.rightPanelWidget.forwardRenderWidgets(self.rightPanelWidget.DEFAULT_WIDGET_INCREMENT_AMOUNT, function(){
                                 initRightPanelDragAndTile();
                             });
                         });
@@ -214,9 +214,14 @@ define(['knockout',
             self.initLoadOnScroll = function() {
                 $('.dbd-left-panel-widgets').scroll(function() {
                     if ($('.dbd-left-panel-widgets').scrollTop() + $('.dbd-left-panel-widgets').height() >= $('.dbd-left-panel-widgets-list').height()) {
-                        console.debug("Scrolled to the bottom of widget list. Loading more...");
+                        console.debug("Scrolled to the bottom of widget list. Loading more forwardly...");
                         var widgetPanel = $b.getRightPanelWidget();
-                        widgetPanel.incrementalLoadWidgets(null, widgetPanel.DEFAULT_WIDGET_INCREMENT_AMOUNT);
+                        widgetPanel.forwardRenderWidgets(widgetPanel.DEFAULT_WIDGET_INCREMENT_AMOUNT);
+                    }
+                    if ($('.dbd-left-panel-widgets').scrollTop() <= 0) {
+                        console.debug("Scrolled to the top of widget list. Loading more backwardly...");
+                        var widgetPanel = $b.getRightPanelWidget();
+                        widgetPanel.backwardRenderWidgets(widgetPanel.DEFAULT_WIDGET_INCREMENT_AMOUNT);
                     }
                 });
             };
