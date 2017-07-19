@@ -41,7 +41,7 @@ public class DashboardApiLifecycleServiceTest
 		List<ApplicationServiceManager> registeredServices = (List<ApplicationServiceManager>) Deencapsulation.getField(apils,
 				"registeredServices");
 		Assert.assertNotNull(registeredServices);
-		Assert.assertTrue(registeredServices.size() == 5);
+		Assert.assertTrue(registeredServices.size() == 6);
 
 		Assert.assertEquals(AbstractApplicationLifecycleService.APPLICATION_LOGGER_SUBSYSTEM,
 				"oracle.sysman.emaas.platform.dashboards");
