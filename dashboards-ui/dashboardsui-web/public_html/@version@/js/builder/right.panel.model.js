@@ -196,11 +196,11 @@ define(['knockout',
                     self.rightPanelControl.initializeRightPanel.subscribe(function (newValue) {
                         newValue && self.rightPanelControl.initializeCollapsible();
                         newValue && initRightPanelDragAndTile();
+                        self.initLoadOnScroll();
                     });
                     
                     self.emptyDashboard && self.rightPanelControl.initializeRightPanel(true);
                     initRightPanelDragAndTile();
-                     self.initLoadOnScroll();
             };
             
             self.initLoadOnScroll = function() {
