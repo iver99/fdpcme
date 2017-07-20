@@ -134,12 +134,11 @@ public class ZDTAPITest {
     	tableRow1.setEmsDashboard(new ArrayList<DashboardRowEntity>());
     	TableRowsEntity tableRow2 = new TableRowsEntity();
     	tableRow2.setEmsDashboard(new ArrayList<DashboardRowEntity>());
-    	InstanceData<TableRowsEntity> instance1 = new InstanceData<TableRowsEntity>("", null,tableRow1,  100);
-    	InstanceData<TableRowsEntity> instance2 = new InstanceData<TableRowsEntity>("", null,tableRow2,  100);
+    	InstanceData<TableRowsEntity> instance1 = new InstanceData<TableRowsEntity>("", null,tableRow1);
+    	InstanceData<TableRowsEntity> instance2 = new InstanceData<TableRowsEntity>("", null,tableRow2);
     	instance1.setKey("omc");
     	instance1.setClient(null);
-    	instance1.setData(tableRow2);;
-    	instance1.setTotalRowNum(100);
+    	instance1.setData(tableRow2);
     	final HashMap<String, LookupClient> lookupEntry = new HashMap<String, LookupClient>();
     	
     	

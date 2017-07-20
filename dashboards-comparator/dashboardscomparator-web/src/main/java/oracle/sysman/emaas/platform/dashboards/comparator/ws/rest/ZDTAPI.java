@@ -15,7 +15,9 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -48,9 +50,7 @@ import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.row
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.TableRowsEntity;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.ZDTComparatorStatusRowEntity;
 
-/**
- * @author guochen
- */
+
 @Path("/v1/comparator")
 public class ZDTAPI
 {
@@ -165,10 +165,6 @@ public class ZDTAPI
 	{
 		logger.info("There is an incoming call from ZDT comparator API to compare");
 		// this comparator invokes the 2 instances REST APIs and retrieves the counts for objects (like dashboards), and return the counts for each instance
-		/*Long tenantId = null;
-        tenantId = getTenantId(tenantIdParam);*/
-		//logger.info("X-USER-IDENTITY-DOMAIN-NAME = "+tenantIdParam);
-		//logger.info("X-REMOTE-USER = "+userTenant);
 		DashboardCountsComparator dcc = new DashboardCountsComparator();
 		InstancesComparedData<CountsEntity> result = dcc.compare(tenantIdParam, userTenant);
 		InstancesComapredCounts ic = new InstancesComapredCounts(new InstanceCounts(result.getInstance1()),
@@ -189,7 +185,7 @@ public class ZDTAPI
 	
 	public String getTimeString(Date date)
 	{
-		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
+		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");  
 		String dateStr = sdf.format(date);
 		return dateStr;
 	}
@@ -219,8 +215,6 @@ public class ZDTAPI
 	public Response getSyncStatus(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
             @HeaderParam(value = "X-REMOTE-USER") String userTenant) {
 		logger.info("incoming call from zdt comparator to get sync status");
-		logger.info("tenantIdParam="+tenantIdParam);
-		logger.info("userTenant="+userTenant);
 		DashboardRowsComparator dcc = null;
 		String response = null;
 		try {
@@ -253,8 +247,6 @@ public class ZDTAPI
             @HeaderParam(value = "X-REMOTE-USER") String userTenant, @QueryParam("type") @DefaultValue("incremental")  String compareType,
             @QueryParam("before") int skipMinutes) {
 		logger.info("incoming call from zdt comparator to do row comparing");
-	//	logger.info("tenantIDParam="+tenantIdParam);
-	//	logger.info("userTenant="+userTenant);
 		String message = "";
 		int status = 200;
 		if (compareType == null) {
@@ -273,8 +265,6 @@ public class ZDTAPI
 			DashboardRowsComparator dcc = new DashboardRowsComparator();
 			String tenants1 = dcc.retrieveTenants(tenantIdParam, userTenant,dcc.getClient1());			
 			String tenants2 = dcc.retrieveTenants(tenantIdParam, userTenant,dcc.getClient2());
-			logger.info("tenants1=" + tenants1);
-			logger.info("tenants2=" + tenants2);
 			if (tenants1 == null || tenants2 == null) {
 				return Response.status(400).entity(new ErrorEntity(ZDTErrorConstants.NULL_TABLE_ROWS_ERROR_CODE, ZDTErrorConstants.NULL_TABLE_ROWS_ERROR_MESSAGE)).build();
 			}
@@ -298,70 +288,165 @@ public class ZDTAPI
 				return Response.status(status).entity("No user created dashboards, Nothing to compare").build();
 			}
 			
+			Set<String> tenants = new HashSet<String>();
+			for (int i = 0; i < tenantArrayForClient1.length(); i++) {
+				String tenant = tenantArrayForClient1.get(i).toString();
+				tenants.add(tenant);
+			}
+			for (int i = 0; i < tenantArrayForClient2.length(); i++) {
+				String tenant = tenantArrayForClient2.get(i).toString();
+	
+				tenants.add(tenant);
+			}
+			
 			boolean iscompared = true;
-			JSONObject tenantObj = new JSONObject();
 			if ((!iscomparedForClient1) || (!iscomparedForClient2)) {
 				// any one of the clouds has not yet been compared, then they should be compared in full mode
-				iscompared = false;				
-				tenantObj.put("client1", tenantArrayForClient1);
-				tenantObj.put("client2", tenantArrayForClient2);
+				iscompared = false;							
 			}
-			InstancesComparedData<TableRowsEntity> result = dcc.compare(tenantIdParam, userTenant,compareType,maxComparedDate,
-					iscompared, tenantObj);
+			InstancesComparedData<TableRowsEntity> result = null;
+			int totalRowForClient1 = dcc.getTotalRowForOmcInstance(tenantIdParam, userTenant,dcc.getClient1(), maxComparedDate);
+			int totalRowForClient2 = 0;dcc.getTotalRowForOmcInstance(tenantIdParam, userTenant,dcc.getClient2(), maxComparedDate);
+			int totalRow = totalRowForClient1 + totalRowForClient2;
+			if (totalRow == 0) {
+	
+				return Response.status(status).entity("No user created dashboards, Nothing to compare").build();					
+			}
+			int totalDifferentRows = 0;
 			
-			if (result != null) {
-				int comparedDataNum = dcc.countForComparedRows(result.getInstance1().getData()) + dcc.countForComparedRows(result.getInstance2().getData());
-				logger.info("comparedNum={}",comparedDataNum);
-				int totalRow = result.getInstance1().getTotalRowNum() + result.getInstance2().getTotalRowNum();
-				logger.info("totalRow={}",totalRow);
-				double percen = 0;
-				if (comparedDataNum != 0) {
-					percen = (double)comparedDataNum/(double)totalRow;
-				}
-				if (totalRow == 0) {
-					return Response.status(status).entity("No user created dashboards, Nothing to compare").build();					
-				}
-				DecimalFormat df = new DecimalFormat("#.######");
-				double percentage = Double.parseDouble(df.format(percen));
-				Date currentUtcDate = getCurrentUTCTime();
-				String comparisonDate = getTimeString(currentUtcDate);
-				Calendar cal = Calendar.getInstance();
-				cal.setTime(currentUtcDate);
-				cal.add(Calendar.HOUR_OF_DAY, 6);
-				Date nextScheduleDate = cal.getTime();
-				String nextScheduleDateStr = getTimeString(nextScheduleDate);
-				JsonUtil jsonUtil = JsonUtil.buildNormalMapper();
-				
-				TableRowsEntity data1 = result.getInstance1().getData();
-				String result1 = jsonUtil.toJson(data1);
-				ZDTComparatorStatusRowEntity statusRow1 = new ZDTComparatorStatusRowEntity(comparisonDate,compareType,nextScheduleDateStr,percentage, result1);
+			if (!iscompared || compareType == "full") {
+				int count = 0;
+				JSONObject obj = null;
+				//handle tenant one by one and save comparison result for each tenant
+				for (String tenantStr : tenants) {
+					result = dcc.compare(tenantIdParam, userTenant,compareType,maxComparedDate,
+							iscompared, tenantStr);
+					
+					if (result != null) {
+						int comparedDataNum = dcc.countForComparedRows(result.getInstance1().getData()) + dcc.countForComparedRows(result.getInstance2().getData());
+						logger.info("comparedNum={}",comparedDataNum);
+						
+						totalDifferentRows = totalDifferentRows + comparedDataNum;
+						
+						double percentage = 0;
+						Date currentUtcDate = getCurrentUTCTime();
+						String comparisonDate = getTimeString(currentUtcDate);
+						Calendar cal = Calendar.getInstance();
+						cal.setTime(currentUtcDate);
+						cal.add(Calendar.HOUR_OF_DAY, 6);
+						Date nextScheduleDate = cal.getTime();
+						String nextScheduleDateStr = getTimeString(nextScheduleDate);
+						
+						if (count == tenants.size()) {
+							// the last tenant is fetched										
+							double percen = (double)totalDifferentRows/(double)totalRow;
+							DecimalFormat df = new DecimalFormat("#.##########");
+							percentage = Double.parseDouble(df.format(percen));
+						}
+						
+						JsonUtil jsonUtil = JsonUtil.buildNormalMapper();
+						
+						TableRowsEntity data1 = result.getInstance1().getData();
+						String result1 = jsonUtil.toJson(data1);
+						ZDTComparatorStatusRowEntity statusRow1 = new ZDTComparatorStatusRowEntity(comparisonDate,compareType,nextScheduleDateStr,percentage, result1);
+										
+						TableRowsEntity data2 = result.getInstance2().getData();
+						String result2 = jsonUtil.toJson(data2);
+						ZDTComparatorStatusRowEntity statusRow2 = new ZDTComparatorStatusRowEntity(comparisonDate,compareType,nextScheduleDateStr,percentage, result2);
+						
+						// save status information for client 1  -- switch data for sync
+						LookupClient client1 = result.getInstance1().getClient();
+						dcc.saveComparatorStatus(tenantIdParam,userTenant, client1, statusRow2);
+						
+						// save status informantion for client 2 -- switch data for sync
+						LookupClient client2 = result.getInstance2().getClient();
+						dcc.saveComparatorStatus(tenantIdParam,userTenant, client2, statusRow1);
+						
+						StringBuffer sb1 = new StringBuffer();
+						sb1.append(result1);
+						
+						StringBuffer sb2 = new StringBuffer();
+						sb2.append(result2);
+						
+						if (count == tenants.size()) {
+							 obj = new JSONObject();
+								obj.put("comparisonDateTime", comparisonDate);
+								obj.put("comparisonType", compareType);
+								obj.put("differentRowNum", totalDifferentRows);
+								obj.put("totalRowNum", totalRow);
+								obj.put("divergencePercentage", percentage);
 								
-				TableRowsEntity data2 = result.getInstance2().getData();
-				String result2 = jsonUtil.toJson(data2);
-				ZDTComparatorStatusRowEntity statusRow2 = new ZDTComparatorStatusRowEntity(comparisonDate,compareType,nextScheduleDateStr,percentage, result2);
-				
-				// save status information for client 1  -- switch data for sync
-				LookupClient client1 = result.getInstance1().getClient();
-				dcc.saveComparatorStatus(tenantIdParam,userTenant, client1, statusRow2);
-				
-				// save status informantion for client 2 -- switch data for sync
-				LookupClient client2 = result.getInstance2().getClient();
-				dcc.saveComparatorStatus(tenantIdParam,userTenant, client2, statusRow1);
-				
-				JSONObject obj = new JSONObject();
-				obj.put("comparisonDateTime", comparisonDate);
-				obj.put("comparisonType", compareType);
-				obj.put("divergencePercentage", percentage);
-				
-				JSONObject subObj = new JSONObject();
-				subObj.put(result.getInstance1().getKey(), result2);
-				subObj.put(result.getInstance2().getKey(), result1);
-				obj.put("divergenceSummary", subObj);
-			
-				message = obj.toString();
-				
+								if (totalDifferentRows > 1000) {
+									obj.put("divergenceSummary", "The number for different rows is more than 1000; There is too much content to display;");
+								} else {
+									JSONObject subObj = new JSONObject();
+									subObj.put(result.getInstance1().getKey(), sb2.toString());
+									subObj.put(result.getInstance2().getKey(), sb1.toString());
+									obj.put("divergenceSummary", subObj);
+								}	
+						}						
+						result = null;
+						
+					} else {
+						Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(ZDTErrorConstants.NULL_LINK_ERROR_CODE, ZDTErrorConstants.NULL_LINK_ERROR_MESSAGE))).build();
+					}
+				}// end loop for tenants
+				message = obj.toString(); 
 			} else {
-				Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(ZDTErrorConstants.NULL_LINK_ERROR_CODE, ZDTErrorConstants.NULL_LINK_ERROR_MESSAGE))).build();
+				result = dcc.compare(tenantIdParam, userTenant,compareType,maxComparedDate,
+						iscompared, null);
+				
+				if (result != null) {
+					int comparedDataNum = dcc.countForComparedRows(result.getInstance1().getData()) + dcc.countForComparedRows(result.getInstance2().getData());
+					logger.info("comparedNum={}",comparedDataNum);
+					double percen = 0;
+					if (comparedDataNum != 0) {
+						percen = (double)comparedDataNum/(double)totalRow;
+					}
+					if (totalRow == 0) {
+						return Response.status(status).entity("No user created dashboards, Nothing to compare").build();					
+					}
+					DecimalFormat df = new DecimalFormat("#.######");
+					double percentage = Double.parseDouble(df.format(percen));
+					Date currentUtcDate = getCurrentUTCTime();
+					String comparisonDate = getTimeString(currentUtcDate);
+					Calendar cal = Calendar.getInstance();
+					cal.setTime(currentUtcDate);
+					cal.add(Calendar.HOUR_OF_DAY, 6);
+					Date nextScheduleDate = cal.getTime();
+					String nextScheduleDateStr = getTimeString(nextScheduleDate);
+					JsonUtil jsonUtil = JsonUtil.buildNormalMapper();
+					
+					TableRowsEntity data1 = result.getInstance1().getData();
+					String result1 = jsonUtil.toJson(data1);
+					ZDTComparatorStatusRowEntity statusRow1 = new ZDTComparatorStatusRowEntity(comparisonDate,compareType,nextScheduleDateStr,percentage, result1);
+									
+					TableRowsEntity data2 = result.getInstance2().getData();
+					String result2 = jsonUtil.toJson(data2);
+					ZDTComparatorStatusRowEntity statusRow2 = new ZDTComparatorStatusRowEntity(comparisonDate,compareType,nextScheduleDateStr,percentage, result2);
+					
+					// save status information for client 1  -- switch data for sync
+					LookupClient client1 = result.getInstance1().getClient();
+					dcc.saveComparatorStatus(tenantIdParam,userTenant, client1, statusRow2);
+					
+					// save status informantion for client 2 -- switch data for sync
+					LookupClient client2 = result.getInstance2().getClient();
+					dcc.saveComparatorStatus(tenantIdParam,userTenant, client2, statusRow1);
+					
+					JSONObject obj = new JSONObject();
+					obj.put("comparisonDateTime", comparisonDate);
+					obj.put("comparisonType", compareType);
+					obj.put("divergencePercentage", percentage);
+					
+					JSONObject subObj = new JSONObject();
+					subObj.put(result.getInstance1().getKey(), result2);
+					subObj.put(result.getInstance2().getKey(), result1);
+					obj.put("divergenceSummary", subObj);
+				
+					message = obj.toString();					
+				} else {
+					Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(ZDTErrorConstants.NULL_LINK_ERROR_CODE, ZDTErrorConstants.NULL_LINK_ERROR_MESSAGE))).build();
+				}
 			}
 		} catch(ZDTException zdtE) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(zdtE))).build();

@@ -46,9 +46,7 @@ import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.TableRowsEn
 import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.ZDTComparatorStatusRowEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.ZDTSyncStatusRowEntity;
 
-/**
- * @author guochen
- */
+
 @Path("/v1/zdt")
 public class ZDTAPI extends APIBase
 {
@@ -343,8 +341,15 @@ public class ZDTAPI extends APIBase
 							response = new TableRowsSynchronizer().sync(entity);
 						}
 					}
-					lastCompareDate = (String) compareDate;
-					if (response.contains("Errors:")) {
+					if (lastCompareDate != null) {
+						if (lastCompareDate.compareTo( (String) compareDate) < 0) {
+							lastCompareDate = (String) compareDate;
+						}
+					} else {
+						lastCompareDate = (String) compareDate;
+					}
+					
+					if (response != null && response.contains("Errors:")) {
 						saveToSyncTable(syncDate, type, "FAILED",lastCompareDate);
 						return Response.status(500).entity(response).build();
 					}
@@ -367,24 +372,27 @@ public class ZDTAPI extends APIBase
 	private int saveToSyncTable(String syncDateStr, String type, String syncResult, String lastComparisonDate) {
 		Date syncDate = null;
 		try {  
-		    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
+		    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");  
 		    syncDate = sdf.parse(syncDateStr);  
 		} catch (ParseException e) {  
 		    logger.error(e);
 		}
+		String nextScheduleDateStr = null;
 		Calendar cal = Calendar.getInstance();
-		cal.setTime(syncDate);
-		cal.add(Calendar.HOUR_OF_DAY, 6);
-		Date nextScheduleDate = cal.getTime();
-		String nextScheduleDateStr = getTimeString(nextScheduleDate);
-		double divergencePercentage = 0.0; 
-		return DataManager.getInstance().saveToSyncTable(syncDateStr, nextScheduleDateStr, type, syncResult, divergencePercentage, lastComparisonDate);
+		if (syncDate != null) {
+			cal.setTime(syncDate);
+			cal.add(Calendar.HOUR_OF_DAY, 6);
+			Date nextScheduleDate = cal.getTime();
+			nextScheduleDateStr = getTimeString(nextScheduleDate);
+		}
 		
+		double divergencePercentage = 0.0; 
+		return DataManager.getInstance().saveToSyncTable(syncDateStr, nextScheduleDateStr, type, syncResult, divergencePercentage, lastComparisonDate);		
 	}
 	
 	private String getTimeString(Date date)
 	{
-		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
+		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");  
 		String dateStr = sdf.format(date);
 		return dateStr;
 	}

@@ -115,7 +115,7 @@ public class DashboardRowsComparator extends AbstractComparator
 	}
 
 	public InstancesComparedData<TableRowsEntity> compare(String tenantId, String userTenant, String comparisonType, 
-			String maxComparedDate,boolean iscompared, JSONObject tenantObj) throws ZDTException
+			String maxComparedDate,boolean iscompared, String tenant) throws ZDTException
 	{
 		try {
 			logger.info("Starts to compare the two DF OMC instances: table by table and row by row");
@@ -127,77 +127,26 @@ public class DashboardRowsComparator extends AbstractComparator
 			TableRowsEntity tre1 = null;
 			TableRowsEntity tre2 = null;
 			if (!iscompared || comparisonType == "full") {
-				// for the first time comparing, fetch all table data tenant by tenant
-				// for client1
-				List<TableRowsEntity> allRowEntitisForClient1 = new ArrayList<TableRowsEntity>();
-				JSONArray array1 = tenantObj.getJSONArray("client1");
-				for (int i = 0; i < array1.length(); i++) {
-					String tenant = array1.get(i).toString();
-					TableRowsEntity subTre = retrieveRowsForSingleInstance(client1, tenantId, userTenant, 
-							comparisonType, maxComparedDate,tenant);
-					if (subTre == null) {
-						logger.error("Failed to retrieve ZDT table rows entity for instance {}", key1);
-						logger.info("Completed to compare the two ssf OMC instances");
-						return null;
-					}
-					allRowEntitisForClient1.add(subTre);
-				}
-				tre1 = combineRowEntity(allRowEntitisForClient1);
+				tre1 = retrieveRowsForSingleInstance(client1, tenantId, userTenant, 
+						comparisonType, maxComparedDate,tenant);
+				tre2 = retrieveRowsForSingleInstance(client2, tenantId, userTenant, 
+						comparisonType, maxComparedDate,tenant);
 				
-				logger.info("tre1 dashboard size = "+tre1.getEmsDashboard().size());
-				logger.info("tre1 dashboard tile size = "+tre1.getEmsDashboardTile().size());
-				// for client2
-				List<TableRowsEntity> allRowEntitisForClient2 = new ArrayList<TableRowsEntity>();
-				JSONArray array2 = tenantObj.getJSONArray("client2");
-				for (int i = 0; i < array2.length(); i++) {
-					String tenant = array2.get(i).toString();
-					TableRowsEntity subTre = retrieveRowsForSingleInstance(client2, tenantId, userTenant, 
-							comparisonType, maxComparedDate,tenant);
-					allRowEntitisForClient2.add(subTre);
-				}
-				tre2 = combineRowEntity(allRowEntitisForClient2);
 				logger.info("tre2 dashboard size = "+tre2.getEmsDashboard().size());
 				logger.info("tre2 dashboard tile size = "+tre2.getEmsDashboardTile().size());
 			} else {
 				tre1 = retrieveRowsForSingleInstance(client1, tenantId, userTenant, 
 						comparisonType, maxComparedDate,null);
+				if (tre1 == null) {
+					logger.error("Failed to retrieve ZDT table rows entity for instance {}", key1);
+					return null;
+				}
 				tre2 = retrieveRowsForSingleInstance(client2, tenantId, userTenant, 
 						comparisonType, maxComparedDate,null);
 			}
-						
-			CountsEntity entity1 = retrieveCountsForSingleInstance(tenantId, userTenant,client1, maxComparedDate);
-			if (entity1 == null) {
-				return null;
-			}
-			int rowNum1 = (int)(entity1.getCountOfDashboards()
-					+ entity1.getCountOfPreference()
-					+ entity1.getCountOfDashboardSet()
-					+ entity1.getCountOfTile()
-					+ entity1.getCountOfTileParam() 
-					+ entity1.getCountOfUserOptions());
-			if (tre1 == null) {
-				logger.error("Failed to retrieve ZDT table rows entity for instance {}", key1);
-				logger.info("Completed to compare the two DF OMC instances");
-				return null;
-			}
-
-			CountsEntity entity2 = retrieveCountsForSingleInstance(tenantId, userTenant,client2,maxComparedDate);
-			if (entity2 == null) {
-				return null;
-			}
-			int rowNum2 = (int)(entity2.getCountOfDashboards()
-					+ entity2.getCountOfPreference()
-					+ entity2.getCountOfDashboardSet()
-					+ entity2.getCountOfTile()
-					+ entity2.getCountOfTileParam() 
-					+ entity2.getCountOfUserOptions());
-			if (tre2 == null) {
-				logger.error("Failed to retrieve ZDT table rows entity for instance {}", key2);
-				logger.info("Completed to compare the two DF OMC instances");
-				return null;
-			}
-			InstancesComparedData<TableRowsEntity> cd = compareInstancesData(new InstanceData<TableRowsEntity>(key1, client1, tre1,rowNum1),
-					new InstanceData<TableRowsEntity>(key2, client2, tre2,rowNum2));
+			
+			InstancesComparedData<TableRowsEntity> cd = compareInstancesData(new InstanceData<TableRowsEntity>(key1, client1, tre1),
+					new InstanceData<TableRowsEntity>(key2, client2, tre2));
 			logger.info("Completed to compare the two DF OMC instances");
 			return cd;
 		}
@@ -205,6 +154,21 @@ public class DashboardRowsComparator extends AbstractComparator
 			logger.error(e.getLocalizedMessage(), e);
 			return null;
 		}
+	}
+	
+	public int getTotalRowForOmcInstance(String tenantId, String userTenant, LookupClient client, String maxComparedDate) throws IOException, Exception {
+		CountsEntity entity = retrieveCountsForSingleInstance(tenantId, userTenant,client, maxComparedDate);
+		if (entity == null) {
+			return 0;
+		}
+		int rowNum = (int)(entity.getCountOfDashboards()
+				+ entity.getCountOfDashboardSet()
+				+ entity.getCountOfPreference()
+				+ entity.getCountOfTile()
+				+ entity.getCountOfTileParam()
+				+ entity.getCountOfUserOptions());
+		return rowNum;
+	
 	}
 	
 	public int countForComparedRows(TableRowsEntity tableRow) {
@@ -328,8 +292,8 @@ public class DashboardRowsComparator extends AbstractComparator
 			return null;
 		}
 		// prepare the output compared data
-		InstanceData<TableRowsEntity> outData1 = new InstanceData<TableRowsEntity>(insData1.getKey(), insData1.getClient(), new TableRowsEntity(),insData1.getTotalRowNum());
-		InstanceData<TableRowsEntity> outData2 = new InstanceData<TableRowsEntity>(insData2.getKey(), insData2.getClient(), new TableRowsEntity(),insData2.getTotalRowNum());
+		InstanceData<TableRowsEntity> outData1 = new InstanceData<TableRowsEntity>(insData1.getKey(), insData1.getClient(), new TableRowsEntity());
+		InstanceData<TableRowsEntity> outData2 = new InstanceData<TableRowsEntity>(insData2.getKey(), insData2.getClient(), new TableRowsEntity());
 		InstancesComparedData<TableRowsEntity> cd = new InstancesComparedData<TableRowsEntity>(outData1, outData2);
 		compareDashboardRows(insData1.getData().getEmsDashboard(), insData2.getData().getEmsDashboard(), cd);
 		compareDashboardSetRows(insData1.getData().getEmsDashboardSet(), insData2.getData().getEmsDashboardSet(), cd);

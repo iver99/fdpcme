@@ -151,7 +151,7 @@ public class DashboardRowsComparatorTest
 		TableRowsEntity tre2 = Deencapsulation.invoke(drc, "retrieveRowsEntityFromJsonForSingleInstance",
 				JSON_RESPONSE_DATA_TABLE);
 		InstancesComparedData<TableRowsEntity> cd = Deencapsulation.invoke(drc, "compareInstancesData",
-				new InstanceData<TableRowsEntity>(null,null, tre1,0), new InstanceData<TableRowsEntity>(null, null,tre2,0));
+				new InstanceData<TableRowsEntity>(null,null, tre1), new InstanceData<TableRowsEntity>(null, null,tre2));
 		// the 2 instances have the same data, so there is no difference from the compared result
 		TableRowsEntity result1 = cd.getInstance1().getData();
 		TableRowsEntity result2 = cd.getInstance1().getData();
@@ -236,8 +236,8 @@ public class DashboardRowsComparatorTest
 				JsonUtil.buildNormalMapper().toJson(tre1));
 		tre2 = Deencapsulation.invoke(drc, "retrieveRowsEntityFromJsonForSingleInstance",
 				JsonUtil.buildNormalMapper().toJson(tre2));
-		cd = Deencapsulation.invoke(drc, "compareInstancesData", new InstanceData<TableRowsEntity>(null,null, tre1,0),
-				new InstanceData<TableRowsEntity>(null, null,tre2,0));
+		cd = Deencapsulation.invoke(drc, "compareInstancesData", new InstanceData<TableRowsEntity>(null,null, tre1),
+				new InstanceData<TableRowsEntity>(null, null,tre2));
 		result1 = cd.getInstance1().getData();
 		result2 = cd.getInstance2().getData();
 		Assert.assertEquals(result1.getEmsDashboard().get(0), dre1);
@@ -458,7 +458,8 @@ public class DashboardRowsComparatorTest
         };
 		DashboardRowsComparator drc = new DashboardRowsComparator();
 	
-		drc.compare(null, null, null, "2017-05-27", false, obj);
+		drc.compare(null, null, null, "2017-05-27", false, "tenant");
+		drc.compare(null, null, null, "2017-05-27", false, null);
 	}
 	
 	@Test

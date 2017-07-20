@@ -18,8 +18,8 @@ public class DashboardComparatorServiceManager implements ApplicationServiceMana
 
 	private Timer timer;
 	private Integer notificationId;
-	// comparison and sync will be triggered every 6 hours 
-	private static final long PERIOD = Timer.ONE_HOUR * 6;
+	// comparison and sync will be triggered every 12 hours 
+	private static final long PERIOD = Timer.ONE_HOUR * 12;
 
 	@Override
 	public String getName() {
@@ -32,7 +32,8 @@ public class DashboardComparatorServiceManager implements ApplicationServiceMana
 		timer = new Timer();
 		NotificationListener notification = new DashboardComparatorHandlerNotification();
 		timer.addNotificationListener(notification, null, null);
-		Date timerTriggerAt = new Date(new Date().getTime() + 10000L);
+		//start to compare and sync in about 2.7 hours after deployment
+		Date timerTriggerAt = new Date(new Date().getTime() + 10000000L);
 		notificationId = timer.addNotification("DashboardComparisonServiceTimer", null, notification, timerTriggerAt, PERIOD, 0);
 		timer.start();
 		LOGGER.info("Timer for dashboard comparison started. notificationId={}", notificationId);
