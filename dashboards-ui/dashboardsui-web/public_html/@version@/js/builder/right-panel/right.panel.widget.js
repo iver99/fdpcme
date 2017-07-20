@@ -57,7 +57,7 @@ function (ko, $, oj, dfu) {
                 }
                 self.loadedWidgetStartIndex += deRenderSize;
                 console.debug("The first widgets were removed to keep the max window size. New start index is:"+self.loadedWidgetStartIndex);
-                // need to scroll widget list element to the correct position. This is needed for backward rendering only
+                // need to scroll widget list element to the correct position
                 var widgetHeight = $('.dbd-left-panel-widget').height(); // single widget element height
                 $('.dbd-left-panel-widgets').scrollTop($('.dbd-left-panel-widgets-list').height() - $('.dbd-left-panel-widgets').height() - widgetHeight * sizeToLoad);
 
@@ -87,7 +87,7 @@ function (ko, $, oj, dfu) {
             }
             self.loadedWidgetStartIndex -= sizeToLoad;
             console.debug("New widgets rendered backwardly. Loaded size:"+sizeToLoad+". Start index:"+self.loadedWidgetStartIndex+",end index:"+self.loadedWidgetEndIndex);
-            // need to scroll widget list element to the correct position. This is needed for backward rendering only
+            // need to scroll widget list element to the correct position
             var widgetHeight = $('.dbd-left-panel-widget').height(); // single widget element height
             $('.dbd-left-panel-widgets').scrollTop(widgetHeight * sizeToLoad);
             // need keep the max loaded widgets size
