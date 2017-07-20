@@ -57,6 +57,8 @@ public class DashboardServiceFacade
 	private final String ACTION_NAME = this.getClass().getSimpleName();//current class name
 	
 	private final EntityManager em;
+	
+	private static final Long NON_TENANT_ID = DashboardManager.getInstance().NON_TENANT_ID;
 
 	/**
 	 * constructor without specifying the tenant id
@@ -136,7 +138,7 @@ public class DashboardServiceFacade
 		}
 
 		String sql = "select dashboard_id from ems_dashboard t where t.name in (" + parameters.toString() + ")"
-		+ " and t.tenant_id = " + tenantId +  " and t.deleted = 0";
+		+ " and ( t.tenant_id = " + tenantId + " or t.tenant_id =" + NON_TENANT_ID +  " ) and t.deleted = 0";
 		Query query = em.createNativeQuery(sql);
 		List<Object> result = query.getResultList();
 		if (result != null && !result.isEmpty()) {
@@ -152,8 +154,8 @@ public class DashboardServiceFacade
 		if (name.contains("'")) {
 			name  = name.replaceAll("'", "''");
 		}
-		String sql = "select name from (" + "select name from ems_dashboard where name like '" + name + "%' and tenant_Id = " + tenantId
-				+ " order by name desc" + ") where rownum = 1";
+		String sql = "select name from (" + "select name from ems_dashboard where name like '" + name + "%' and (tenant_Id = " + tenantId
+				+ " or tenant_id = " + NON_TENANT_ID + " ) order by name desc" + ") where rownum = 1";
 		Query query = em.createNativeQuery(sql);
 		Object result = query.getSingleResult();
 		if (result != null) {
@@ -202,7 +204,8 @@ public class DashboardServiceFacade
 
 	public void removePreferenceByKey(String userName, String key, long tenantId)
 	{
-		String sql = "select * from ems_preference p where p.user_Name ='"+userName+"' and p.pref_key = '"+key+"' and p.tenant_id="+tenantId;		
+		String sql = "select * from ems_preference p where p.user_Name ='"+userName+"' and p.pref_key = '"+key+"' and (p.tenant_id="
+	+ tenantId + " or p.tenant_id=" + NON_TENANT_ID + ")";		
 		Query query = em.createNativeQuery(sql, EmsPreference.class);
 		@SuppressWarnings("unchecked")
 		List<EmsPreference> emsPreferenceList = query.getResultList();
@@ -452,7 +455,7 @@ public class DashboardServiceFacade
 	@SuppressWarnings("unchecked")
 	public void removeDashboardsByTenant(boolean permanent, Long tenantId)
 	{
-		String sql = "select * from Ems_Dashboard d where d.tenant_Id = " + tenantId;
+		String sql = "select * from Ems_Dashboard d where d.tenant_Id = " + tenantId + " or d.tenant_id =" + NON_TENANT_ID;
 		Query query = em.createNativeQuery(sql,EmsDashboard.class);
 		List<EmsDashboard> dashboards = query.getResultList();
 		if (dashboards != null && dashboards.size() > 0) {
@@ -471,7 +474,7 @@ public class DashboardServiceFacade
 	@SuppressWarnings("unchecked")
 	public void removeDashboardSetsByTenant(boolean permanent, Long tenantId)
 	{
-		String sql = "select * from Ems_dashboard_set d where d.tenant_Id = " + tenantId;
+		String sql = "select * from Ems_dashboard_set d where d.tenant_Id = " + tenantId + " or d.tenant_id =" + NON_TENANT_ID;
 		Query query = em.createNativeQuery(sql,EmsSubDashboard.class);
 		List<EmsSubDashboard> dashboardSets = query.getResultList();
 		if (dashboardSets != null && dashboardSets.size() > 0) {
@@ -490,7 +493,7 @@ public class DashboardServiceFacade
 	@SuppressWarnings("unchecked")
 	public void removeDashboardTilesByTenant(boolean permanent, Long tenantId)
 	{
-		String sql = "select * from Ems_Dashboard_Tile d where d.tenant_Id = " + tenantId;
+		String sql = "select * from Ems_Dashboard_Tile d where d.tenant_Id = " + tenantId + " or d.tenant_id =" + NON_TENANT_ID;
 		Query query = em.createNativeQuery(sql,EmsDashboardTile.class);
 		List<EmsDashboardTile> dashboardTiles = query.getResultList();
 		if (dashboardTiles != null && dashboardTiles.size() > 0) {
@@ -509,7 +512,7 @@ public class DashboardServiceFacade
 	@SuppressWarnings("unchecked")
 	public void removeDashboardTileParamsByTenant(boolean permanent, Long tenantId)
 	{
-		String sql = "select * from Ems_Dashboard_Tile_Params d where d.tenant_Id = " + tenantId;
+		String sql = "select * from Ems_Dashboard_Tile_Params d where d.tenant_Id = " + tenantId + " or d.tenant_id =" + NON_TENANT_ID;
 		Query query = em.createNativeQuery(sql,EmsDashboardTileParams.class);
 		List<EmsDashboardTileParams> dashboardTileParams = query.getResultList();
 		if (dashboardTileParams != null && dashboardTileParams.size() > 0) {
@@ -528,7 +531,7 @@ public class DashboardServiceFacade
 	@SuppressWarnings("unchecked")
 	public void removeDashboardPreferenceByTenant(boolean permanent, Long tenantId)
 	{
-		String sql = "select * from Ems_Preference d where d.tenant_Id = " + tenantId;
+		String sql = "select * from Ems_Preference d where d.tenant_Id = " + tenantId + " or d.tenant_id =" + NON_TENANT_ID;
 		Query query = em.createNativeQuery(sql,EmsPreference.class);
 		List<EmsPreference> preferences = query.getResultList();
 		if (preferences != null && preferences.size() > 0) {
@@ -547,7 +550,7 @@ public class DashboardServiceFacade
 	@SuppressWarnings("unchecked")
 	public void removeUserOptionsByTenant(boolean permanent, Long tenantId)
 	{
-		String sql = "select * from Ems_Dashboard_User_Options d where d.tenant_Id = " + tenantId;
+		String sql = "select * from Ems_Dashboard_User_Options d where d.tenant_Id = " + tenantId + " or d.tenant_id =" + NON_TENANT_ID;
 		Query query = em.createNativeQuery(sql,EmsUserOptions.class);
 		List<EmsUserOptions> options = query.getResultList();
 		if (options != null && options.size() > 0) {
@@ -695,9 +698,10 @@ public class DashboardServiceFacade
 			}
 		}
 		if(subDashboardList.size()>0){
-			String sql="update ems_dashboard t set t.show_inhome=1 where t.tenant_id=?1 and t.dashboard_id in ("+sb.toString()+")";
+			String sql="update ems_dashboard t set t.show_inhome=1 where (t.tenant_id=?1 or t.tenant_id =?2) and t.dashboard_id in ("+sb.toString()+")";
 			Query query=em.createNativeQuery(sql);
 			query.setParameter(1,ed.getTenantId());
+			query.setParameter(2,NON_TENANT_ID);
 			query.executeUpdate();
 		}
 		commitTransaction();
