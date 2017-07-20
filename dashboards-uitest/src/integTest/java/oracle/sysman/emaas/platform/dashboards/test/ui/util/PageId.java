@@ -21,7 +21,7 @@ public class PageId
 	public static final String ENTERPRISEOVERVIEWBYARIALABEL = "//*[@aria-label='Enterprise Overview']";
 	public static final String SORTBYID = "oj-select-choice-mainContentsortcb";
 	public static final String DASHBOARDINFO_NAME_CSS = ".dsbinfopop [data-bind=\"with: selectedDashboard\"] [data-bind=\"text: dashboard.name\"]";
-	public static final String DASHBOARDINFO_DESC_CSS = ".dsbinfopop [data-bind=\"with: selectedDashboard\"] [data-bind=\"html: dashboard.description\"]";
+	public static final String DASHBOARDINFO_DESC_CSS = ".dsbinfopop [data-bind=\"with: selectedDashboard\"] [data-bind*=\"html: dashboard.description\"]";
 	public static final String DASHBOARD_HOME_ERRMSG_CSS = ".oj-message.oj-message-error";
 	public static final String DASHBOARD_CREATE_DIALOG_CSS = "#ojDialogWrapper-cDsbDialog";
 

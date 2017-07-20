@@ -201,6 +201,9 @@ require(['knockout',
                 self.widgetList = ko.observableArray(widgetArray);
                 self.addWidgetBtnLabel = appId === "Dashboard" ? "Add" : "Open";
                 self.addWidgetBtnDisabled = (appId === "Dashboard" || appId === "ITAnalytics" || appId === "LogAnalytics") ? false : true;
+                self.showCompositeTitle = "Show Composite";
+                self.setCurrentMenuTitle = "Set Current Menu";
+                self.registerServiceMenuTitle = "Register Service Menu";
 
                 var appIdAPM = "APM";
                 var appIdITAnalytics = "ITAnalytics";

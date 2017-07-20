@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,6 +35,7 @@ import org.apache.logging.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.DashboardSameNameException;
@@ -54,7 +54,6 @@ import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsPreference;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 
 public class DashboardManager
 {
@@ -74,6 +73,7 @@ public class DashboardManager
 
 	public static final String SCREENSHOT_BASE64_PNG_PREFIX = "data:image/png;base64,";
 	public static final String SCREENSHOT_BASE64_JPG_PREFIX = "data:image/jpeg;base64,";
+	public static final Long NON_TENANT_ID = -11L;
 
 	/**
 	 * Returns the singleton instance for dashboard manager
@@ -136,6 +136,16 @@ public class DashboardManager
 			}
 		}
 	}
+	
+	public void refreshOobDashboardByAppType(Integer applicationType, Long tenantId, List<EmsDashboard> oobList) {
+        DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+        List<BigInteger> ids = dsf.getDashboardIdsByAppType(applicationType);
+        dsf.refreshOobDashboards(ids, oobList);
+        EntityManager em = dsf.getEntityManager();
+        if (em != null) {
+            em.close();
+        }
+	}
 
 	/**
 	 * Delete a dashboard specified by dashboard id for given tenant.
@@ -177,6 +187,7 @@ public class DashboardManager
 
 			em.setProperty("soft.deletion.permanent", permanent);
 			dsf.updateSubDashboardShowInHome(dashboardId);
+			dsf.updateTileLinkedDashboard(dashboardId);
 
 			//emcpdf2801 delete dashboard's user option
 			LOGGER.info("Deleting user options for id "+dashboardId);
@@ -560,13 +571,12 @@ public class DashboardManager
 			LOGGER.debug("Dashboard not found for name \"{}\" is invalid", name);
 			return null;
 		}
-		String currentUser = UserContext.getCurrentUser();
 		EntityManager em = null;
 		try {
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			em = dsf.getEntityManager();
-			EmsDashboard ed = dsf.getEmsDashboardByName(name, currentUser);
-			return Dashboard.valueOf(ed);
+			EmsDashboard ed = dsf.getEmsDashboardByName(name);
+			return Dashboard.valueOf(ed, null, true, true, true, true);
 		}
 		catch (NoResultException e) {
 			LOGGER.debug("Dashboard not found for name \"{}\" because NoResultException is caught", name);
@@ -652,8 +662,11 @@ public class DashboardManager
 			for (EmsDashboard emsDashboard : emsDashboards) {
 				dashboardList.add(Dashboard.valueOf(emsDashboard, null, false, false, false));
 			}
+			
+			List<String> linkedDashboardList = dsf.getlinkedDashboards(dashboardId);		
 
 			dashboard.setDashboardSets(dashboardList);
+			dashboard.setLinkedDashboardList(linkedDashboardList);
 
 			return dashboard;
 		}
@@ -894,9 +907,9 @@ public class DashboardManager
 		StringBuilder sbApps = new StringBuilder();
 		//this if branch is useless
 		if (apps.isEmpty()) {
-			sb.append(" and p.deleted = 0 and p.tenant_Id = ?" + index++ + " and (p.share_public = 1 or p.owner = ?" + index++
-					+ ") ");
+			sb.append(" and p.deleted = 0 and (p.tenant_Id = ?" + index++ + " or p.tenant_Id = ?" + index++ + ") and (p.share_public = 1 or p.owner = ?" + index++ + ") ");
 			paramList.add(tenantId);
+			paramList.add(NON_TENANT_ID);
 			paramList.add(currentUser);
 		}
 		else {
@@ -907,9 +920,9 @@ public class DashboardManager
 				}
 				sbApps.append(String.valueOf(app.getValue()));
 			}
-
-			sb.append(" and p.deleted = 0 and p.tenant_Id = ?" + index++ + " and ((p.type<>2 and (p.share_public = 1 or p.owner = ?"+index+++" or p.application_type in (" + sbApps.toString() + "))" );
+			sb.append(" and p.deleted = 0 and (p.tenant_Id = ?" + index++ + " or p.tenant_Id = ?" + index++ + ") and ((p.type<>2 and (p.share_public = 1 or p.owner = ?"+index+++" or p.application_type in (" + sbApps.toString() + "))" );
 			paramList.add(tenantId);
+			paramList.add(NON_TENANT_ID);
 			paramList.add(currentUser);
 		}
 
@@ -922,9 +935,10 @@ public class DashboardManager
 		sb.append(" and ((p.is_system=0 ");
 		if (filter != null) {
 			if (filter.getIncludedWidgetGroupsString(tenantVersionModel) != null && !filter.getIncludedWidgetGroupsString(tenantVersionModel).isEmpty()) {
-				sb.append(" and (p.dashboard_id in (select t.dashboard_Id from Ems_Dashboard_Tile t where t.WIDGET_GROUP_NAME in ("
+				sb.append(" and (p.dashboard_id in (select t.dashboard_Id from Ems_Dashboard_Tile t where (t.TENANT_ID = ?"+ index++ +" or t.TENANT_ID = ?" + index++ + ") and t.WIDGET_GROUP_NAME in ("
 						+ filter.getIncludedWidgetGroupsString(tenantVersionModel) + " ))) ");
-
+				paramList.add(tenantId);
+				paramList.add(NON_TENANT_ID);
 			}
 		}
 		sb.append(") or (p.is_system=1 ");
@@ -935,7 +949,7 @@ public class DashboardManager
 
 		if (queryString != null && !"".equals(queryString)) {
 			Locale locale = AppContext.getInstance().getLocale();
-			index=concatQueryString(queryString, ic, sb, index, paramList, locale);
+			index=concatQueryString(queryString, ic, sb, index, paramList, locale, tenantId);
 		}
 		sb.append(")");
 
@@ -949,8 +963,10 @@ public class DashboardManager
 		sb1.append(" and ( (p.is_system=0 ");
 		if (filter != null) {
 			if (filter.getIncludedWidgetGroupsString(tenantVersionModel) != null && !filter.getIncludedWidgetGroupsString(tenantVersionModel).isEmpty()) {
-				sb1.append(" and p.DASHBOARD_ID in (SELECT p2.DASHBOARD_SET_ID FROM EMS_DASHBOARD_SET p2 WHERE p2.SUB_DASHBOARD_ID IN (SELECT t.dashboard_Id FROM Ems_Dashboard_Tile t WHERE t.WIDGET_GROUP_NAME IN ("
+				sb1.append(" and p.DASHBOARD_ID in (SELECT p2.DASHBOARD_SET_ID FROM EMS_DASHBOARD_SET p2 WHERE p2.SUB_DASHBOARD_ID IN (SELECT t.dashboard_Id FROM Ems_Dashboard_Tile t WHERE (t.TENANT_ID = ?"+ index++ +" or t.TENANT_ID = ?" + index++ + ") and t.WIDGET_GROUP_NAME IN ("
 						+ filter.getIncludedWidgetGroupsString(tenantVersionModel)+ ")))");
+				paramList.add(tenantId);
+				paramList.add(NON_TENANT_ID);
 			}
 		}
 		sb1.append(") or (p.is_system=1 ");
@@ -963,7 +979,7 @@ public class DashboardManager
 		if (queryString != null && !"".equals(queryString)) {
 			Locale locale = AppContext.getInstance().getLocale();
 
-			index=concatQueryString(queryString, ic, sb1, index, paramList, locale);
+			index=concatQueryString(queryString, ic, sb1, index, paramList, locale, tenantId);
 		}
 		sb1.append("))");
 		if (sb1.length() > 0) {
@@ -1219,7 +1235,9 @@ public class DashboardManager
 					List<Tile> tiles = dbd.getTileList();
 					for (int i = 0; i < tiles.size(); i++) {
 						Tile tile = tiles.get(i);
-						tile.setTileId(IdGenerator.getTileId(ZDTContext.getRequestId(), i));
+						if(tile.getTileId() == null) {
+						    tile.setTileId(IdGenerator.getTileId(ZDTContext.getRequestId(), i));
+						}
 						if (tile.getCreationDate() == null) {
 							tile.setCreationDate(created);
 						}
@@ -1229,20 +1247,23 @@ public class DashboardManager
 						if(tile.getWidgetDeleted()==null) {
 							tile.setWidgetDeleted(Boolean.FALSE);
 						}
-						tile.setLastModificationDate(created);
+						if(tile.getLastModificationDate() == null) {
+						    tile.setLastModificationDate(created);
+						}
 					}
 				}
 			}
 
 			EmsDashboard ed = dbd.getPersistenceEntity(null);
 			ed.setCreationDate(dbd.getCreationDate());
-			ed.setOwner(currentUser);
+			ed.setOwner(dbd.getOwner());
 			//EMCPDF-2288,if this dashboard is duplicated from other dashboard,copy its screenshot to new dashboard
 			if(dbd.getDupDashboardId()!=null){
 				LOGGER.debug("Duplicating screenshot from dashoard {} to new Dashboard..",dbd.getDupDashboardId());
 				BigInteger dupId=dbd.getDupDashboardId();
 				EmsDashboard emsd=dsf.getEmsDashboardById(dupId);
 				ed.setScreenShot(emsd.getScreenShot());
+				ed.setOwner(currentUser);
 			}
 			String dbdName = (dbd.getName() !=null? dbd.getName().replace("&amp;", "&"):dbd.getName());
 			ed.setName(dbdName);
@@ -1499,6 +1520,10 @@ public class DashboardManager
 		}
 		//em = dsf.getEntityManager();
 		String currentUser = UserContext.getCurrentUser();
+		// TODO Shall we still save the last access date if it wan't accessed by a user?
+		if(NON_TENANT_ID.equals(tenantId) || currentUser == null) {
+		    return;
+		}
 		EmsUserOptions edla = dsf.getEmsUserOptions(currentUser, dashboardId);
 		if (edla == null) {
 			edla = new EmsUserOptions();
@@ -1590,7 +1615,7 @@ public class DashboardManager
 	 * @param locale
 	 */
 	private int concatQueryString(String queryString, boolean ic, StringBuilder sb, int index, List<Object> paramList,
-			Locale locale)
+			Locale locale, Long tenantId)
 	{
 		if (!ic) {
 			sb.append(" and (p.name LIKE ?" + index++ +" escape '\\' ");
@@ -1620,13 +1645,15 @@ public class DashboardManager
 		}
 
 		if (!ic) {
-			sb.append(" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where t.type <> 1 and t.title like ?"
-					+ index++ +" escape '\\' " + " )) ");
+			sb.append(" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where t.TENANT_ID = ?" + index++ + " and t.type <> 1 and t.title like ?"
+					+ index++ + " escape '\\' " + " )) ");
+			paramList.add(tenantId);
 			paramList.add("%" + queryString + "%");
 		}
 		else {
-			sb.append(" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where t.type <> 1 and lower(t.title) like ?"
-					+ index++ +" escape '\\' " + " )) ");
+			sb.append(" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where t.TENANT_ID = ?" + index++ + " and t.type <> 1 and lower(t.title) like ?"
+					+ index++ + " escape '\\' " + " )) ");
+			paramList.add(tenantId);
 			paramList.add("%" + queryString.toLowerCase(locale) + "%");
 		}
 		return index;

@@ -24,10 +24,6 @@ public abstract class AbstractCache implements ICache {
         return cacheCounter;
     }
 
-    public void setCacheCounter(SimpleCacheCounter cacheCounter) {
-        this.cacheCounter = cacheCounter;
-    }
-
     @Override
     public Object get(Object key) throws ExecutionException {
         return get(key, null);
@@ -42,11 +38,12 @@ public abstract class AbstractCache implements ICache {
         cacheCounter.recordRequest(1L);
         if (value != null) {
             if (isExpired(value)) {
-                LOGGER.debug("AbstractCache.get is called for key {}. Value is not null but is expired, so evict the key!", key);
+                LOGGER.debug("AbstractCache: Evicting cached item key = {} value = {}", key, value);
                 evict(key);
             } else {
                 LOGGER.debug("AbstractCache.get is called for key {}. Value isnot null or expired, so return the value {}!", key, value.getValue());
                 cacheCounter.recordHit(1L);
+                LOGGER.debug("AbstractCache: Returning cached item key = {} value = {}", key, value);
                 return value.getValue();
             }
         }
@@ -59,10 +56,12 @@ public abstract class AbstractCache implements ICache {
                     put(key, valueFromFactory);
                 }
             } catch (Exception e) {
-                LOGGER.error(e.getLocalizedMessage());
+                LOGGER.error("Error occurred when retrieving data from cache factory!");
+                LOGGER.error(e);
                 throw new ExecutionException(e);
             }
         }
+        LOGGER.debug("AbstractCache: Returning key = {}, value = {} from cache..", key, valueFromFactory);
         return valueFromFactory;
     }
 
@@ -127,10 +126,10 @@ public abstract class AbstractCache implements ICache {
      */
     public class SimpleCacheCounter implements CacheCounter {
 
-        private long hitCount;
+        private volatile long hitCount;
 
-        private long requestCount;
-        private long evictionCount;
+        private volatile long requestCount;
+        private volatile long evictionCount;
         public SimpleCacheCounter() {
             hitCount = 0L;
             requestCount = 0L;

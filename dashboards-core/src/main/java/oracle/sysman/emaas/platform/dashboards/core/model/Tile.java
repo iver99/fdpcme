@@ -7,9 +7,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import oracle.sysman.emaas.platform.dashboards.core.DashboardErrorConstants;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.CommonResourceException;
+import oracle.sysman.emaas.platform.dashboards.core.nls.DatabaseResourceBundleUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.BigIntegerSerializer;
 import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
 import oracle.sysman.emaas.platform.dashboards.core.util.DateUtil;
@@ -71,23 +73,19 @@ public class Tile
 		tile.setLastModifiedBy(edt.getLastModifiedBy());
 		tile.setOwner(edt.getOwner());
 		tile.setType(DataFormatUtils.tileTypeInteger2String(edt.getType()));
-		//    	tile.setPosition(edt.getPosition());
 		tile.setRow(edt.getRow());
 		tile.setColumn(edt.getColumn());
 		tile.setProviderAssetRoot(edt.getProviderAssetRoot());
 		tile.setProviderName(edt.getProviderName());
 		tile.setProviderVersion(edt.getProviderVersion());
 		tile.setTileId(edt.getTileId());
-		tile.setTitle(edt.getTitle());
 		tile.setWidgetCreationTime(edt.getWidgetCreationTime());
-		tile.setWidgetDescription(edt.getWidgetDescription());
 		tile.setWidgetDeleted(DataFormatUtils.integer2Boolean(edt.getWidgetDeleted()));
 		tile.setWidgetDeletionDate(edt.getWidgetDeletionDate());
 		tile.setWidgetGroupName(edt.getWidgetGroupName());
 		tile.setWidgetHistogram(edt.getWidgetHistogram());
 		tile.setWidgetIcon(edt.getWidgetIcon());
 		tile.setWidgetKocName(edt.getWidgetKocName());
-		tile.setWidgetName(edt.getWidgetName());
 		tile.setWidgetOwner(edt.getWidgetOwner());
 		tile.setWidgetSource(edt.getWidgetSource());
 		tile.setWidgetTemplate(edt.getWidgetTemplate());
@@ -96,6 +94,18 @@ public class Tile
 		tile.setWidgetSupportTimeControl(DataFormatUtils.integer2Boolean(edt.getWidgetSupportTimeControl()));
 		tile.setWidgetLinkedDashboard(edt.getWidgetLinkedDashboard());
 		tile.setWidth(edt.getWidth());
+		
+        // translate OOB data
+        if(TEXT_WIDGET_OWNER.equalsIgnoreCase(tile.getWidgetOwner())) {
+            tile.setTitle(DatabaseResourceBundleUtil.getTranslatedString(edt.getProviderName(), edt.getTitle()));
+            tile.setWidgetName(DatabaseResourceBundleUtil.getTranslatedString(edt.getProviderName(), edt.getWidgetName()));
+            tile.setWidgetDescription(DatabaseResourceBundleUtil.getTranslatedString(edt.getProviderName(), edt.getWidgetDescription()));
+        } else {
+            tile.setTitle(edt.getTitle());
+            tile.setWidgetName(edt.getWidgetName());
+            tile.setWidgetDescription(edt.getWidgetDescription());
+        }
+		
 		if (loadTileParams) {
 			List<EmsDashboardTileParams> edtpList = edt.getDashboardTileParamsList();
 			if (edtpList != null) {
@@ -846,9 +856,9 @@ public class Tile
 		if (row == null) {
 			row = TILE_DEFAULT_ROW;
 		}
-		column = 0;
-		width = 8;
-		height = 1;
+		//column = 0;
+		//width = 8;
+		//height = 1;
 		Integer tileType = DataFormatUtils.tileTypeString2Integer(type);
 		// text tile does not support time control
 		Integer supportTimeControl = 0;
@@ -946,10 +956,12 @@ public class Tile
 
 	private void updateSpecificType(EmsDashboardTile to) throws CommonFunctionalException
 	{
-		to.setCreationDate(DateUtil.getGatewayTime());
-		to.setLastModificationDate(to.getCreationDate());
+	    if(to.getCreationDate() == null) {
+	        to.setCreationDate(DateUtil.getGatewayTime());
+	        to.setLastModificationDate(to.getCreationDate());
+	    }
 		if (Tile.TILE_TYPE_TEXT_WIDGET.equals(getType())) {
-			to.setWidgetName(Tile.TEXT_WIDGET_NAME);
+			/*to.setWidgetName(Tile.TEXT_WIDGET_NAME);
 			to.setWidgetDescription(Tile.TEXT_WIDGET_DESCRIPTION);
 			to.setWidgetGroupName(Tile.TEXT_WIDGET_NAME);
 			to.setWidgetOwner(Tile.TEXT_WIDGET_OWNER);
@@ -958,12 +970,16 @@ public class Tile
 			to.setWidgetViewmode(Tile.TEXT_WIDGET_VIEWMODEL);
 			to.setWidgetTemplate(Tile.TEXT_WIDGET_TEMPLATE);
 			to.setWidth(Tile.TEXT_WIDGET_WIDTH);
-			to.setWidgetUniqueId(Tile.TEXT_WIDGET_NAME);
+			to.setWidgetUniqueId(Tile.TEXT_WIDGET_NAME);*/
 			to.setWidgetCreationTime(String.valueOf(DateUtil.getGatewayTime()));
 			String encodedContent = StringEscapeUtils.escapeHtml4(getContent());
-			if (StringUtil.isEmpty(encodedContent) || encodedContent.length() > TEXT_WIDGET_MAX_CONTENT_LEN) {
-				throw new CommonFunctionalException(
-						MessageUtils.getDefaultBundleString(CommonFunctionalException.TEXT_WIDGET_INVALID_CONTENT_ERROR));
+			if (StringUtil.isEmpty(encodedContent)) {
+				throw new CommonFunctionalException(DashboardErrorConstants.DASHBOARD_TEXT_WIDGET_EMPTY_CONTENT_ERROR_CODE,
+						MessageUtils.getDefaultBundleString(CommonFunctionalException.TEXT_WIDGET_INVALID_EMPTY_CONTENT_ERROR));
+			}
+			if (encodedContent.length() > TEXT_WIDGET_MAX_CONTENT_LEN) {
+				throw new CommonFunctionalException(DashboardErrorConstants.DASHBOARD_TEXT_WIDGET_CONTENT_TOO_LONG_ERROR_CODE,
+						MessageUtils.getDefaultBundleString(CommonFunctionalException.TEXT_WIDGET_CONTENT_TOO_LONG_ERROR));
 			}
 			EmsDashboardTileParams edtp = new EmsDashboardTileParams(1, Tile.TEXT_WIDGET_PARAM_NAME_CONTENT,
 					TileParam.PARAM_TYPE_CODE_STRING, null, encodedContent, null, to);
