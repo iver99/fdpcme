@@ -195,7 +195,7 @@ define(['knockout',
                         //load widgets only when right panel is editable and have not loaded widget before
                         //self.rightPanelWidget.loadWidgets(null,function successCallback(){
                         self.rightPanelWidget.initWidgetData(null, function() {
-                            self.rightPanelWidget.forwardRenderWidgets(self.rightPanelWidget.DEFAULT_WIDGET_INCREMENT_AMOUNT, function(){
+                            self.rightPanelWidget.forwardRenderWidgets(self.rightPanelWidget.DEFAULT_WIDGET_INIT_AMOUNT, function(){
                                 initRightPanelDragAndTile();
                             });
                         });
