@@ -58,7 +58,7 @@ public class DashboardServiceFacade
 	
 	private final EntityManager em;
 	
-	private static final Long NON_TENANT_ID = DashboardManager.getInstance().NON_TENANT_ID;
+	private static final Long NON_TENANT_ID = DashboardManager.NON_TENANT_ID;
 
 	/**
 	 * constructor without specifying the tenant id
