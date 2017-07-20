@@ -1141,6 +1141,7 @@ public class DashboardManager
 				tile.setOwner(null);
 				tile.setLastModifiedBy(null);
 				tile.setLastModificationDate(null);
+				tile.setTileId(null);
 			}
 		}
 		return dbd;
@@ -1238,6 +1239,8 @@ public class DashboardManager
 						if(tile.getTileId() == null) {
 						    tile.setTileId(IdGenerator.getTileId(ZDTContext.getRequestId(), i));
 						}
+						LOGGER.info("tile id = " + tile.getTileId());
+						LOGGER.info("tenant id = " + tenantId);
 						if (tile.getCreationDate() == null) {
 							tile.setCreationDate(created);
 						}
