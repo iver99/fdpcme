@@ -311,7 +311,6 @@ public class DashboardRowsComparatorTest
 	}
 
 	@Test
-<<<<<<< HEAD
 	public void testsaveComparatorStatus() throws Exception {
 		final HashMap<String, LookupClient> lookupEntry = new HashMap<String, LookupClient>();
     	new Expectations(){
@@ -511,35 +510,5 @@ public class DashboardRowsComparatorTest
         drc.getClient2();
         
 	}
-	
-=======
-	public void testCompare(@Mocked final ClientConfig clientConfig, @Mocked final LoadBalancer loadBalancer, @Mocked final CloudLookups cloudLookups, @Mocked LookupClient lookupClient) throws ZDTException, CloudLookupException, NoSuchFieldException, IllegalAccessException {
-		final HashMap<String, LookupClient> instances1 = new HashMap<String, LookupClient>();
-		List<String> urls = new ArrayList<>();
-		AtomicReference<List<String>> atomicReference = new AtomicReference<>();
-		atomicReference.set(urls);
-		urls.add("url1");
-		urls.add("url2");
-		LookupClient lookupClient1 = new LookupClient(clientConfig/*,urls,loadBalancer*/);
-//		lookupClient1.serviceUrls.set(urls);
-//		new Deencapsulation().
-//		Class clazz = lookupClient1.getClass();
-//		Field field = clazz.getDeclaredField("serviceUrls");
-//		field.setAccessible(true);
-//		field.set("serviceUrls", atomicReference);
-		instances1.put("key1", lookupClient1);
-		instances1.put("key2", lookupClient1);
-		new Expectations(){
-			{
-				cloudLookups.getCloudLookupClients();
-				result = instances1;
 
-			}
-		};
-		String tenantId="1000";
-		String userTenant = "tenant.user";
-		DashboardRowsComparator dashboardRowsComparator = new DashboardRowsComparator();
-		dashboardRowsComparator.compare(tenantId, userTenant);
-	}
->>>>>>> master
 }

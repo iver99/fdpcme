@@ -132,8 +132,8 @@ public class DashboardRowsComparator extends AbstractComparator
 				tre2 = retrieveRowsForSingleInstance(client2, tenantId, userTenant, 
 						comparisonType, maxComparedDate,tenant);
 				
-				logger.info("tre2 dashboard size = "+tre2.getEmsDashboard().size());
-				logger.info("tre2 dashboard tile size = "+tre2.getEmsDashboardTile().size());
+				//logger.info("tre2 dashboard size = "+tre2.getEmsDashboard().size());
+				//logger.info("tre2 dashboard tile size = "+tre2.getEmsDashboardTile().size());
 			} else {
 				tre1 = retrieveRowsForSingleInstance(client1, tenantId, userTenant, 
 						comparisonType, maxComparedDate,null);
@@ -161,12 +161,8 @@ public class DashboardRowsComparator extends AbstractComparator
 		if (entity == null) {
 			return 0;
 		}
-		int rowNum = (int)(entity.getCountOfDashboards()
-				+ entity.getCountOfDashboardSet()
-				+ entity.getCountOfPreference()
-				+ entity.getCountOfTile()
-				+ entity.getCountOfTileParam()
-				+ entity.getCountOfUserOptions());
+		int rowNum = (int)(entity.getCountOfDashboards()+ entity.getCountOfDashboardSet()+ entity.getCountOfPreference()+ entity.getCountOfTile()
+				+ entity.getCountOfTileParam()+ entity.getCountOfUserOptions());
 		return rowNum;
 	
 	}
@@ -200,8 +196,6 @@ public class DashboardRowsComparator extends AbstractComparator
 		}
 		RowEntityComparator<DashboardRowEntity> rec = new RowEntityComparator<DashboardRowEntity>();
 		CompareListPair<DashboardRowEntity> result = rec.compare(rows1, rows2);
-		logger.info("rows1={}",rows1==null?0:rows1.size());
-		logger.info("rows2={}",rows2==null?0:rows2.size());
 		cd.getInstance1().getData().setEmsDashboard(result.getList1());
 		cd.getInstance2().getData().setEmsDashboard(result.getList2());
 	}
@@ -303,8 +297,8 @@ public class DashboardRowsComparator extends AbstractComparator
 		compareDashboardUserOptionsRows(insData1.getData().getEmsDashboardUserOptions(),
 				insData2.getData().getEmsDashboardUserOptions(), cd);
 		comparePreferenceRows(insData1.getData().getEmsPreference(), insData2.getData().getEmsPreference(), cd);
-		logger.info("cloud1: {} ", insData1.getData().toString());
-		logger.info("cloud2: {} ", insData2.getData().toString());
+		//logger.info("cloud1: {} ", insData1.getData().toString());
+		//logger.info("cloud2: {} ", insData2.getData().toString());
 		return cd;
 	}
 
@@ -341,7 +335,7 @@ public class DashboardRowsComparator extends AbstractComparator
 			logger.warn("Checking dashboard OMC instance table rows: null/empty entity retrieved.");
 			throw new ZDTException(ZDTErrorConstants.NULL_TABLE_ROWS_ERROR_CODE, ZDTErrorConstants.NULL_TABLE_ROWS_ERROR_MESSAGE);
 		}
-		logger.info(tre.getEmsDashboard()==null?"nullRows":tre.getEmsDashboard().size());
+		//logger.info(tre.getEmsDashboard()==null?"nullRows":tre.getEmsDashboard().size());
 		return tre;
 	}
 	
@@ -357,7 +351,7 @@ public class DashboardRowsComparator extends AbstractComparator
 		
 		char[] authToken = LookupManager.getInstance().getAuthorizationToken();
 		String response = rc.get(lk.getHref(), tenantId, new String(authToken));
-		logger.info("checking tenants list " + response);
+		//logger.info("checking tenants list " + response);
 		return response;
 	}
 	
@@ -377,7 +371,7 @@ public class DashboardRowsComparator extends AbstractComparator
 		logger.info("start to get counts data");
 		//String response = rc.get(lk.getHref(),tenantId,new String(authToken));
 		String response = rc.get(url,tenantId,new String(authToken));
-		logger.info("get counts data:"+response);
+		//logger.info("get counts data:"+response);
 		JsonUtil ju = JsonUtil.buildNormalMapper();
 		CountsEntity ze = ju.fromJson(response, CountsEntity.class);
 		if (ze == null) {
@@ -419,7 +413,7 @@ public class DashboardRowsComparator extends AbstractComparator
 		char[] authToken = LookupManager.getInstance().getAuthorizationToken();
 		String response = rc.get(url, tenantId,new String(authToken));
 		
-		logger.info("Checking dashboard OMC instance table rows. Response is " + response);
+		//logger.info("Checking dashboard OMC instance table rows. Response is " + response);
 		return retrieveRowsEntityFromJsonForSingleInstance(response);
 	}
 	
@@ -439,7 +433,7 @@ public class DashboardRowsComparator extends AbstractComparator
 			token = new String(authToken);
 		}
 		String response = rc.get(lk.getHref(), tenantId, new String(authToken));
-		logger.info("checking comparator status is " + response);
+		//logger.info("checking comparator status is " + response);
 		
 		return response;
 	}
@@ -456,7 +450,7 @@ public class DashboardRowsComparator extends AbstractComparator
 		rc.setHeader(RestClient.X_REMOTE_USER, userTenant);
 		char[] authToken = LookupManager.getInstance().getAuthorizationToken();
 		String response = rc.get(lk.getHref(), tenantId, new String(authToken));
-		logger.info("checking sync status is " + response);
+		//logger.info("checking sync status is " + response);
 		
 		return response;
 	}
@@ -469,14 +463,14 @@ public class DashboardRowsComparator extends AbstractComparator
 		}
 		JsonUtil jsonUtil = JsonUtil.buildNonNullMapper();
 		String entityStr = jsonUtil.toJson(statusRowEntity);
- 		logger.info("print the put data {} !",entityStr);
+ 		//logger.info("print the put data {} !",entityStr);
  		//String response = new TenantSubscriptionUtil.RestClient().put(lk.getHref(), entityStr, tenantId, userTenant);
  		RestClient rc = RestClientProxy.getRestClient();
 		rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME, tenantId);
 		rc.setHeader(RestClient.X_REMOTE_USER, userTenant);
 		char[] authToken = LookupManager.getInstance().getAuthorizationToken();
 		String response = rc.put(lk.getHref(), entityStr,tenantId, new String(authToken));
- 		logger.info("Checking sync reponse. Response is " + response);
+ 		//logger.info("Checking sync reponse. Response is " + response);
 		return response;
 	}
 
@@ -487,7 +481,7 @@ public class DashboardRowsComparator extends AbstractComparator
 			logger.warn("Get a null or empty link for one single instance!");
 			return "Errors:Get a null or empty link for one single instance!";
 		}
-		logger.info("link is {} ",lk.getHref());
+		//logger.info("link is {} ",lk.getHref());
 		String url = lk.getHref() + "?syncType=" + type + "&syncDate=" + URLEncoder.encode(syncDate, "UTF-8");
 		logger.info("sync url is "+ url);
 		//String response = new TenantSubscriptionUtil.RestClient().get(url, tenantId, userTenant);
@@ -497,7 +491,7 @@ public class DashboardRowsComparator extends AbstractComparator
 		char[] authToken = LookupManager.getInstance().getAuthorizationToken();
 		String response = rc.get(url,tenantId, new String(authToken));
 		
-		logger.info("Checking sync reponse. Response is " + response);
+		//logger.info("Checking sync reponse. Response is " + response);
 		return response;
 	}
 
