@@ -319,6 +319,7 @@ public class ZDTAPI
 				JSONObject obj = null;
 				//handle tenant one by one and save comparison result for each tenant
 				for (String tenantStr : tenants) {
+					count = count + 1;
 					result = dcc.compare(tenantIdParam, userTenant,compareType,maxComparedDate,
 							iscompared, tenantStr);
 					
@@ -480,7 +481,10 @@ public class ZDTAPI
 			if (message1.contains("Errors") || message2.contains("Errors")) {
 				return Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(ZDTErrorConstants.FAIL_TO_SYNC_ERROR_CODE, ZDTErrorConstants.FAIL_TO_SYNC_ERROR_MESSAGE))).build();
 			}
-			return Response.ok(dcc.getKey1() + ":{"+ message1 + "} " + dcc.getKey2() + ":{"+ message2 + "}").build();
+			JSONObject object = new JSONObject();
+			object.put(dcc.getKey1(), message1);
+			object.put(dcc.getKey2(), message2);
+			return Response.ok(object).build();
 	    } catch(ZDTException zdtE) {
  			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(zdtE))).build();
  		} catch (Exception e) {
