@@ -1110,21 +1110,29 @@ public class DashboardManager
 		String existingName = dsf.getDashboardNameWithMaxSuffixNumber(name, tenantId);
 		String finalString  = null;
 		if (existingName != null) {
-			Pattern pattern = Pattern.compile("\\d+$");
-			Matcher matcher = pattern.matcher(existingName);
-			if (matcher.find()) {
-				Integer num = new Integer(matcher.group());
-				int increaseNum = num.intValue() + 1;
-				if (existingName.endsWith("_"+num)) {
-					int flag = existingName.lastIndexOf("_");
-					String subName = existingName.substring(0, flag);
-					finalString = subName + "_" + increaseNum; 
-				} else {
-					finalString = existingName + "_1";
-				}						
+			if (name.equals(existingName)) {
+				finalString = name + "_1";
 			} else {
-				finalString = existingName + "_1";
-			}
+				Pattern pattern = Pattern.compile("\\d+$");
+				Matcher matcher = pattern.matcher(existingName);
+				if (matcher.find()) {
+					Integer num = new Integer(matcher.group());
+					int increaseNum = num.intValue() + 1;
+					if (existingName.endsWith("_"+num)) {
+						int flag = existingName.lastIndexOf("_");
+						String subName = existingName.substring(0, flag);
+						if (subName.equals(name)) {
+							finalString = subName + "_" + increaseNum; 
+						} else {
+							finalString = name + "_1";
+						}						
+					} else {
+						finalString = name + "_1";
+					}						
+				} else {
+					finalString = name + "_1";
+				}
+			}			
 		}
 		return finalString;
 	}
