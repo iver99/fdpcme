@@ -7,8 +7,6 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver.ClickType;
 
-import org.openqa.selenium.By;
-
 /**
  * Created by qiqia on 2016/12/13.
  */
@@ -41,7 +39,6 @@ public class WelcomeUtil_1150 extends WelcomeUtil_175
 				break;
 
 		}
-		driver.getWebDriver().findElement(By.xpath(eleXpath)).click();
 		driver.click(eleXpath, ClickType.WEBELEMENT);
 
 	}
