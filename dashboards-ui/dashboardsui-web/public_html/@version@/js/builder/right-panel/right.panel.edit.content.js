@@ -40,7 +40,7 @@ define(['dashboards/dbsmodel',
                             headers: dfu.getDashboardsRequestHeader(),
                             contentType:'application/json',
                             success: function(data, textStatus) {
-                                queryStr && self.allDashboards(data.dashboards);
+                                !queryStr && self.allDashboards(data.dashboards);
                                 self.dashboards(data.dashboards.slice(0));
                                 sucCallback();
                             },
