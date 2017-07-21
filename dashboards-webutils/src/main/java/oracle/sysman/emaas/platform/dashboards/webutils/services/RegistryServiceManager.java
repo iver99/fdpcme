@@ -29,12 +29,10 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.NonServiceResource;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
-import oracle.sysman.emaas.platform.dashboards.webutils.ParallelThreadPool;
 import oracle.sysman.emaas.platform.dashboards.webutils.wls.lifecycle.AbstractApplicationLifecycleService;
 import oracle.sysman.emaas.platform.dashboards.webutils.wls.lifecycle.ApplicationServiceManager;
-
 import oracle.sysman.emaas.platform.emcpdf.cache.support.lru.LRUCacheManager;
-import oracle.sysman.emaas.platform.emcpdf.cache.support.screenshot.LRUScreenshotCacheManager;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -219,6 +217,10 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	private static final String NAV_STATIC_OMCSTATUS = NAV_API_BASE + "omcstatus";
 	private static final String NAV_WIDGET_NOTIFY = NAV_API_BASE + "widgetnotification";
 	private static final String NAV_SSF_LIFECYCLE = NAV_API_BASE + "ssflifecycle.ntf";
+	private static final String NAV_CACHE = NAV_API_BASE + "cache";
+	private static final String NAV_REFRESH_OOB = NAV_API_BASE + "refresh/oob";
+	private static final String NAV_REFRESH_NLS = NAV_API_BASE + "refresh/nls";
+	private static final String NAV_TOOL = NAV_API_BASE + "tool";
 
 	public static final ObjectName WLS_RUNTIME_SERVICE_NAME;
 
@@ -313,7 +315,6 @@ public class RegistryServiceManager implements ApplicationServiceManager
 		LOGGER.debug("Pre-stopped 'Service Regsitry'");
 		LOGGER.info("Pre-stopping cache");
 		LRUCacheManager.getInstance().close();
-		LRUScreenshotCacheManager.getInstance().close();
 		LOGGER.debug("Pre-stopped cache");
 	}
 
@@ -506,11 +507,30 @@ public class RegistryServiceManager implements ApplicationServiceManager
 				links.add(new Link().withRel("ssf.widget.changed").withHref(applicationUrlHttps + NAV_WIDGET_NOTIFY));
 			}
 			if (applicationUrlHttp != null) {
-				links.add(new Link().withRel("ssf.lifecycle.notify").withHref(applicationUrlHttp + NAV_SSF_LIFECYCLE));
+                links.add(new Link().withRel("ssf.lifecycle.notify").withHref(applicationUrlHttp + NAV_SSF_LIFECYCLE));
+            }
+            if (applicationUrlHttps != null) {
+                links.add(new Link().withRel("ssf.lifecycle.notify").withHref(applicationUrlHttps + NAV_SSF_LIFECYCLE));
+            }
+			if (applicationUrlHttp != null) {
+				links.add(new Link().withRel("dashboards.cache").withHref(applicationUrlHttp + NAV_CACHE));
 			}
-			if (applicationUrlHttps != null) {
-				links.add(new Link().withRel("ssf.lifecycle.notify").withHref(applicationUrlHttps + NAV_SSF_LIFECYCLE));
-			}
+            if (applicationUrlHttp != null) {
+                links.add(new Link().withRel("refresh/oob").withHref(applicationUrlHttp + NAV_REFRESH_OOB));
+            }
+            if (applicationUrlHttps != null) {
+                links.add(new Link().withRel("refresh/oob").withHref(applicationUrlHttps + NAV_REFRESH_OOB));
+            }
+            if (applicationUrlHttp != null) {
+                links.add(new Link().withRel("refresh/resource_bundle").withHref(applicationUrlHttp + NAV_REFRESH_NLS));
+            }
+            if (applicationUrlHttps != null) {
+                links.add(new Link().withRel("refresh/resource_bundle").withHref(applicationUrlHttps + NAV_REFRESH_NLS));
+            }
+            if (applicationUrlHttp != null) {
+                links.add(new Link().withRel("tool").withHref(applicationUrlHttp + NAV_TOOL));
+            }
+
 			InfoManager.getInstance().getInfo().setLinks(links);
 
 			LOGGER.info("Registering service with 'Service Registry'");

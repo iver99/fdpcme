@@ -43,6 +43,7 @@ def emcpsfSdkVer =  getDependentSdkVersion('com.oracle.emaas.emcpsf.sdk', 'secur
 def emaasGatewayClientVersion = getDependentSdkVersion('com.oracle.emaas.emcpgw.sdk', 'gateway-client', '1.+');
 
 def emcpsrvsPlatformSdkVer = getDependentSdkVersion('com.oracle.emaas.emcpsrvs.sdk', 'emaas-platform-tenant-sdk', '2.0.+')
+def emaasGatewayClientVersion = getDependentSdkVersion('com.oracle.emaas.emcpgw.sdk', 'gateway-client', '1.+');
 
 
 dependencies {
@@ -87,6 +88,7 @@ dependencies {
     testConfig(group: 'com.oracle.emaas.emcpsrvs.sdk', name:'emaas-platform-tenant-sdk', version: emcpsrvsPlatformSdkVer) { transitive = false }
     testConfig(group: 'com.oracle.emaas.emcpsm', name: 'registry-lookup-client', version: emcpsmRegLookupClientVer){ transitive = false }
     testConfig(group: 'com.oracle.emaas.emcpsm', name: 'registry-client', version: emcpsmRegClientVer){ transitive = false }
+	testConfig(group: 'com.oracle.emaas.emcpgw.sdk', name: 'gateway-client', version: emaasGatewayClientVersion){ transitive = false }
     
     testConfig(group: 'com.oracle.jdbc', name: 'ojdbc6', version: '12.1.0.1.0') { transitive = false }
     testConfig(group: 'com.oracle.weblogic', name: 'wlfullclient', version: '12.1.2-0-0'){ transitive = false }
@@ -129,6 +131,7 @@ task DEVTest_ws(type:EMTest){
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/DashboardsCORSFilterTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/FavoriteAPITest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/FavoriteEntityTest.class"
+	include "oracle/sysman/emaas/platform/dashboards/ws/rest/InternalToolAPITest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/IsFavoriteEntityTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/LoggingAPITest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/LoggingConfigAPITest.class"
@@ -141,6 +144,7 @@ task DEVTest_ws(type:EMTest){
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/SSFLifeCycleNotificationAPITest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/CacheAPITest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/OMCStatusAPITest.class"
+	include "oracle/sysman/emaas/platform/dashboards/ws/rest/MetadataRefreshAPITest.class"
 
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/zdt/*.class"
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/loggingconfig/*.class"
@@ -163,11 +167,13 @@ task DEVTest_ws(type:EMTest){
 
 task DEVTest(type:EMTest,dependsOn: DEVTest_ws){
 	//***************below are dashboards-core project test cases***************//
+	include "oracle/sysman/emaas/platform/dashboards/core/ResourceBundleManagerTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/DashboardExcepionsTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/DashboardManagerTest_S2.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/DBConnectionManagerTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/PreferenceManagerTest_S2.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/UserOptionsManagerTest_S2.class"
+//	include "oracle/sysman/emaas/platform/dashboards/core/persistence/PersistenceManagerTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/model/subscription2/*.class"
 
 	include "oracle/sysman/emaas/platform/dashboards/core/model/*.class"
@@ -203,6 +209,7 @@ task DEVUiTest(type:EMTest,dependsOn: DEVTest){
 	include "oracle/sysman/emaas/platform/dashboards/webutils/services/*.class"
 	include "oracle/sysman/emaas/platform/dashboards/targetmodel/services/*.class"
 	include "oracle/sysman/emaas/platform/dashboards/webutils/timer/*.class"
+	include "oracle/sysman/emaas/platform/dashboards/webutils/metadata/*.class"
 
  	useRestAssured=true
 	ext.set("testType", "unit")

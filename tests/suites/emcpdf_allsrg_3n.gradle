@@ -80,7 +80,7 @@ task onboardAllTenants(dependsOn:[omcOnboardTenants(testTenants_v3)]){
 
 task suiteLicensingTest(type: EMTest, dependsOn:[onboardAllTenants]){
 options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
-
+	environment "VNC_SIZE", "1600x1200"
      	environment "WEBDRIVER_WAIT_TIMEOUT", "300000"   
 	test('name': 'suiteLicensingTest') {
 	    classes([:]) {
@@ -91,7 +91,7 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestSuiteLicensing_OMCLOG')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestSuiteLicensing_SECSE')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestSuiteLicensing_SECSMA')
-	    }	
+	    }
 	}
     }
     useWebdriver = true
@@ -104,7 +104,7 @@ apply from: 'onboard_tenant.gradle'
 //Task is for dashboard UI Test
 task e2e (type: EMTest, dependsOn:[omcSetup, onboardTenant] ){
 options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
-//        environment "VNC_SIZE", "1600x1200"
+        environment "VNC_SIZE", "1600x1200"
         environment "WEBDRIVER_WAIT_TIMEOUT", "300000"
         test('name': 'DashboardUITest') {
             classes([:]) {
@@ -117,7 +117,7 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.VerifyWidget')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.VerifyOOB')
             }
-        }	
+        }
     }
     useWebdriver = true
     useRestAssured = true
@@ -134,7 +134,7 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
 	environment "WEBDRIVER_PROXY_PORT", "80"
 	environment "SKIP_OMCSETUP", "true"
 	environment "SKIP_OMCTEARDOWN", "1"
-//        environment "VNC_SIZE", "1600x1200"
+	environment "VNC_SIZE", "1600x1200"
 	environment "WEBDRIVER_WAIT_TIMEOUT", "300000"
         test('name': 'DashboardUITest') {
             classes([:]) {

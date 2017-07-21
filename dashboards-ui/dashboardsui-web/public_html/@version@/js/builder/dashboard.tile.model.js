@@ -20,8 +20,8 @@ define(['knockout',
         'builder/editor/editor.mode',
         'builder/dashboardDataSource/dashboard.datasource',
         'builder/widget/widget.model',
-        'jqueryui',
-        'builder/builder.jet.partition'
+        'jqueryui'
+//        'builder/builder.jet.partition'
 //        'ckeditor'
     ],
 
@@ -48,6 +48,7 @@ define(['knockout',
             widgetAreaContainer = $b.findEl('.widget-area');
 
             self.dashboard = $b.dashboard;
+            
             var ddsDashboard = new Builder.DashboardDataSource().dataSource[self.dashboard.id()];
             var eagerCreated = ddsDashboard.eagerCreated ? ddsDashboard.eagerCreated : null;
             self.normalMode = (eagerCreated && eagerCreated.normalMode) ? eagerCreated.normalMode : new Builder.NormalEditorMode();
@@ -173,6 +174,27 @@ define(['knockout',
             self.initTileKoRightBtnsResizeHdls = ko.observable(false);
             self.showPullRightBtn = function(clientGuid, data, event) {
                 self.initTileKoRightBtnsResizeHdls(true);
+                
+                var tileRightBtns = $("#tile"+clientGuid).find('.dbd-pull-right');
+                if (!tileRightBtns || !tileRightBtns.length) {
+                    console.debug("initialize tile buttons");
+                    var el = $($("#tile-widget-right-btns-template").text());
+                    el.appendTo($("#tile"+clientGuid).find('.dbd-tile-header')[0]);
+                    ko.applyBindings({$root: self, $data: data}, el[2]);
+                }
+                
+                if (self.isResizingSupported()) {
+                    var resizeHandlers = $("#tile"+clientGuid).find('.dbd-resize-handler-instance');
+                    if (!resizeHandlers || !resizeHandlers.length) {
+                        console.debug("initialize tile resizing handlers");
+                        var el = $($("#tile-widget-resize-handlers-template").text());
+                        el.appendTo($("#tile"+clientGuid).find('.dbd-tile-element')[0]);
+                        ko.applyBindings(self, el[2]);
+                        $("#tile"+clientGuid).find('.dbd-resize-handler-placeholder').remove();
+                        self.enableTilesResizing();
+                    }
+                }
+                
                 $("#tile"+clientGuid+" .dbd-btn-group").css("display", "inline-block");
                 $("#tile"+clientGuid+" .dbd-btn-editor").css("display", "flex");
                 $("#tile"+clientGuid+" .dbd-btn-maxminToggle").css("display", "flex");
@@ -194,21 +216,21 @@ define(['knockout',
                 }
             };
             self.openInDataExplorer = function (event, ui) {
-		        if (!self.dashboard.systemDashboard()){
-                	$b.getToolBarModel().handleDashboardSave();
+		if (!self.dashboard.systemDashboard() && self.isCreator){
+                    $b.getToolBarModel().handleDashboardSave();
                 }
                 var iId = setInterval(function() {
                     if (!$b.isDashboardUpdated()) {
                         clearInterval(iId);
-                        var tile = ko.dataFor(ui.currentTarget);
+                        var tile = ko.dataFor(ui.currentTarget).$data;
                         self.editor.configure(tile);
                     }
                 }, 300);
             };
 
             self.maxMinToggle = function (event, ui) {
-                var tile = ko.dataFor(ui.currentTarget);
-                if (event.maximizeEnabled()) {
+                var tile = ko.dataFor(ui.currentTarget).$data;
+                if (event.$data.maximizeEnabled()) {
                     self.maximize(tile);
                     self.notifyTileChange(tile, new Builder.TileChange("POST_MAXIMIZE"));
                     $b.triggerEvent($b.EVENT_TILE_MAXIMIZED, null, tile);
@@ -226,7 +248,7 @@ define(['knockout',
             };
 
             self.menuItemSelect = function (event, ui) {
-                var tile = ko.dataFor(ui.item[0]);
+                var tile = ko.dataFor(ui.item[0]).$data;
                 if (!tile) {
                     oj.Logger.error("Error: could not find tile from the ui data");
                     return;
@@ -235,6 +257,7 @@ define(['knockout',
                     case "showhide-title":
                         self.editor.showHideTitle(tile);
                         self.show();
+                        self.editor.editTile(tile, true);
                         self.notifyTileChange(tile, new Builder.TileChange("POST_HIDE_TITLE"));
                         break;
                     case "remove":
@@ -264,6 +287,11 @@ define(['knockout',
                         self.show();
                         self.notifyTileChange(tile, new Builder.TileChange("POST_SHORTER"));
                         break;
+                    case "edit":
+                        self.editor.editTile(tile);
+                        self.show();
+                        self.notifyTileChange(tile, new Builder.TileChange("POST_EDIT"));
+                        break;
                     case "up":
                         self.editor.moveUpTile(tile);
                         self.show();
@@ -289,8 +317,9 @@ define(['knockout',
                     default:
                         break;
                 }
-
-                $b.triggerEvent($b.EVENT_TILE_RESIZED, null, tile);
+                if(ui.item.data("option") !== 'edit'){
+                    $b.triggerEvent($b.EVENT_TILE_RESIZED, null, tile);
+                }
             };
 
 
@@ -383,6 +412,19 @@ define(['knockout',
             self.refreshThisWidget = function(tile) {
                 self.notifyTileChange(tile, new Builder.TileChange("PRE_REFRESH"));
             };
+            
+            self.isResizingSupported = function() {
+                if (self.dashboard.systemDashboard()) {
+                    return false;
+                }
+                if (self.dashboard.sharePublic() && self.dashboard.owner() !== self.loginUser()) {
+                    return false;
+                }
+                if (self.isMobileDevice === true) {
+                    return false;
+                }
+                return true;
+            };
 
             self.show = function() {
                 self.showTiles();
@@ -398,65 +440,7 @@ define(['knockout',
                 $('.dbd-widget').on('drag', self.handleOnDragging);
                 $('.dbd-widget').on('dragstop', self.handleStopDragging);
 
-                $('.dbd-resize-handler').off("mousedown");
-                $('.dbd-resize-handler').on('mousedown', function (event) {
-                    var targetHandler = $(event.currentTarget),resizeMode = null;
-                    if ($(targetHandler).hasClass('dbd-resize-handler-right')) {
-                        resizeMode = self.editor.RESIZE_OPTIONS.EAST;
-                    } else if ($(targetHandler).hasClass('dbd-resize-handler-left')) {
-                        resizeMode = self.editor.RESIZE_OPTIONS.WEST;
-                    } else if ($(targetHandler).hasClass('dbd-resize-handler-bottom')) {
-                        resizeMode = self.editor.RESIZE_OPTIONS.SOUTH;
-                    } else if ($(targetHandler).hasClass('dbd-resize-handler-right-bottom')) {
-                        resizeMode = self.editor.RESIZE_OPTIONS.SOUTH_EAST;
-                    }
-
-                    var isResizing =  resizeMode !== null;
-                    if(isResizing) {
-                        $('#globalBody').addClass('none-user-select');
-                        self.resizingTile(ko.dataFor(targetHandler.closest('.dbd-widget')[0]));
-                        var changedingTarget=targetHandler.closest('.dbd-widget');
-                        self.resizingOptions({mode:resizeMode,containerTop:changedingTarget.offset().top,containerLeft:changedingTarget.offset().left});
-                        self.beforeResizeWidth = self.resizingTile().cssWidth();
-                        self.beforeResizeHeight = self.resizingTile().cssHeight();
-                        self.currentWigedtWidth(self.resizingTile().cssWidth());
-                        self.currentWigedtHeight(self.resizingTile().cssHeight());                  
-                    }
-                    self.tilesView.disableDraggable();
-                });
-
-                $('#globalBody').off("mousemove").off("mouseup");
-                $('#globalBody').on('mousemove', function (event) {
-                    if (self.resizingOptions()) {
-                        if (self.resizingOptions().mode === self.editor.RESIZE_OPTIONS.EAST) {
-                            $(this).css('cursor', 'ew-resize');
-                        } else if (self.resizingOptions().mode === self.editor.RESIZE_OPTIONS.WEST) {
-                            $(this).css('cursor', 'ew-resize');
-                        } else if (self.resizingOptions().mode === self.editor.RESIZE_OPTIONS.SOUTH) {
-                            $(this).css('cursor', 'ns-resize');
-                        } else if (self.resizingOptions().mode === self.editor.RESIZE_OPTIONS.SOUTH_EAST) {
-                            $(this).css('cursor', 'se-resize');
-                        }
-                        var clonedTarget = $.extend(self.resizingOptions(), {left: event.clientX, top: event.clientY});
-                        self.resizingOptions(clonedTarget);
-                    }
-                }).on('mouseup', function (event) {
-                    if (self.resizingOptions() !== null && typeof (self.resizingOptions()) !== 'undefined') {
-                        self.currentWigedtWidth(self.resizingTile().cssWidth());
-                        self.currentWigedtHeight(self.resizingTile().cssHeight());
-                        self.resizingTileCopy = self.resizingTile();
-                        
-                        //set move options enabld/disabled after resizing tile
-                        self.resizingTileCopy.upEnabled(self.editor.mode.getModeRow(self.resizingTileCopy) > 0);
-                        self.resizingTileCopy.leftEnabled(self.editor.mode.getModeColumn(self.resizingTileCopy) > 0);
-                        self.resizingTileCopy.rightEnabled(self.editor.mode.getModeColumn(self.resizingTileCopy)+self.editor.mode.getModeWidth(self.resizingTileCopy) < self.editor.mode.MODE_MAX_COLUMNS);
-                    }
-                    self.resizingTile(null);
-                    self.resizingOptions(null);
-                    $(this).css('cursor', 'default');
-                    $('#globalBody').removeClass('none-user-select');       
-                    self.tilesView.enableDraggable();                 
-                });
+                self.enableTilesResizing();
 
                 //close widget menu if the page is moved up/down by scroll bar
                 $(".tiles-col-container").off("scroll");
@@ -469,6 +453,70 @@ define(['knockout',
                         self.editingWidgetId && self.hidePullRightBtn(self.editingWidgetId.substring(8));
                     }
                 });
+            };
+            
+            self.enableTilesResizing = function() {
+                if (self.isResizingSupported()) {
+                    $('.dbd-resize-handler').off("mousedown");
+                    $('.dbd-resize-handler').on('mousedown', function (event) {
+                        var targetHandler = $(event.currentTarget),resizeMode = null;
+                        if ($(targetHandler).hasClass('dbd-resize-handler-right')) {
+                            resizeMode = self.editor.RESIZE_OPTIONS.EAST;
+                        } else if ($(targetHandler).hasClass('dbd-resize-handler-left')) {
+                            resizeMode = self.editor.RESIZE_OPTIONS.WEST;
+                        } else if ($(targetHandler).hasClass('dbd-resize-handler-bottom')) {
+                            resizeMode = self.editor.RESIZE_OPTIONS.SOUTH;
+                        } else if ($(targetHandler).hasClass('dbd-resize-handler-right-bottom')) {
+                            resizeMode = self.editor.RESIZE_OPTIONS.SOUTH_EAST;
+                        }
+
+                        var isResizing =  resizeMode !== null;
+                        if(isResizing) {
+                            $('#globalBody').addClass('none-user-select');
+                            self.resizingTile(ko.dataFor(targetHandler.closest('.dbd-widget')[0]));
+                            var changedingTarget=targetHandler.closest('.dbd-widget');
+                            self.resizingOptions({mode:resizeMode,containerTop:changedingTarget.offset().top,containerLeft:changedingTarget.offset().left});
+                            self.beforeResizeWidth = self.resizingTile().cssWidth();
+                            self.beforeResizeHeight = self.resizingTile().cssHeight();
+                            self.currentWigedtWidth(self.resizingTile().cssWidth());
+                            self.currentWigedtHeight(self.resizingTile().cssHeight());                  
+                        }
+                        self.tilesView.disableDraggable();
+                    });
+
+                    $('#globalBody').off("mousemove").off("mouseup");
+                    $('#globalBody').on('mousemove', function (event) {
+                        if (self.resizingOptions()) {
+                            if (self.resizingOptions().mode === self.editor.RESIZE_OPTIONS.EAST) {
+                                $(this).css('cursor', 'ew-resize');
+                            } else if (self.resizingOptions().mode === self.editor.RESIZE_OPTIONS.WEST) {
+                                $(this).css('cursor', 'ew-resize');
+                            } else if (self.resizingOptions().mode === self.editor.RESIZE_OPTIONS.SOUTH) {
+                                $(this).css('cursor', 'ns-resize');
+                            } else if (self.resizingOptions().mode === self.editor.RESIZE_OPTIONS.SOUTH_EAST) {
+                                $(this).css('cursor', 'se-resize');
+                            }
+                            var clonedTarget = $.extend(self.resizingOptions(), {left: event.clientX, top: event.clientY});
+                            self.resizingOptions(clonedTarget);
+                        }
+                    }).on('mouseup', function (event) {
+                        if (self.resizingOptions() !== null && typeof (self.resizingOptions()) !== 'undefined') {
+                            self.currentWigedtWidth(self.resizingTile().cssWidth());
+                            self.currentWigedtHeight(self.resizingTile().cssHeight());
+                            self.resizingTileCopy = self.resizingTile();
+
+                            //set move options enabld/disabled after resizing tile
+                            self.resizingTileCopy.upEnabled(self.editor.mode.getModeRow(self.resizingTileCopy) > 0);
+                            self.resizingTileCopy.leftEnabled(self.editor.mode.getModeColumn(self.resizingTileCopy) > 0);
+                            self.resizingTileCopy.rightEnabled(self.editor.mode.getModeColumn(self.resizingTileCopy)+self.editor.mode.getModeWidth(self.resizingTileCopy) < self.editor.mode.MODE_MAX_COLUMNS);
+                        }
+                        self.resizingTile(null);
+                        self.resizingOptions(null);
+                        $(this).css('cursor', 'default');
+                        $('#globalBody').removeClass('none-user-select');       
+                        self.tilesView.enableDraggable();                 
+                    });
+                }
             };
 
             self.isDraggingCellChanged = function(pos) {
@@ -577,9 +625,9 @@ define(['knockout',
 
                 var dragStartRow = self.editor.mode.getModeRow(tile);
                 var cell = self.editor.getCellFromPosition(widgetAreaWidth, ui.helper.position());
-                if(tile.content) {
-                    cell.column = 0;
-                }
+//                if(tile.content) {
+//                    cell.column = 0;
+//                }
 
                 $b.findEl('.tile-dragging-placeholder').css({
                     left: tile.left() - 5,
@@ -640,9 +688,9 @@ define(['knockout',
                 }
                 var tile = ko.dataFor(ui.helper[0]);
                 var cell = self.editor.getCellFromPosition(widgetAreaWidth, ui.helper.position());
-                if(tile.content) {
-                    cell.column = 0;
-                }
+//                if(tile.content) {
+//                    cell.column = 0;
+//                }
                 ui.helper.css({left:tile.left(), top:tile.top()});
 
                 $(ui.helper).css("opacity", 1);
@@ -996,7 +1044,6 @@ define(['knockout',
             dashboardExdedOpt && dashboardExdedOpt.timePeriodNotShow ? self.timePeriodsNotToShow = dashboardExdedOpt.timePeriodNotShow :self.timePeriodsNotToShow = [];
             //whether to enable "Latest" on custom panel
             var enableLatestOnCustomPanel = ($.inArray(ctxUtil.OMCTimeConstants.QUICK_PICK.LATEST, self.timePeriodsNotToShow) >=0) ? false : true;
-            
             if(self.isUnderSet) {
                 self.datetimePickerParams = {
                     startDateTime: self.initStart,
@@ -1005,6 +1052,7 @@ define(['knockout',
                     hideMainLabel: true,
                     timePeriodsSet: ctxUtil.OMCTimeConstants.timePeriodsSet.SHORT_TERM,
                     enableLatestOnCustomPanel: enableLatestOnCustomPanel,
+                    dtpickerPosition: "left",
                     callbackAfterApply: function(start, end, tp) {
                         callbackAfterApply(start, end, tp);   
                     }

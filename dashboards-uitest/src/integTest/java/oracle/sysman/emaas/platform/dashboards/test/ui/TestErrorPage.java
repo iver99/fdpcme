@@ -250,6 +250,46 @@ public class TestErrorPage extends LoginAndLogout
 			Assert.fail(e.getLocalizedMessage());
 		}
 	}
+	
+	@Test(alwaysRun = true)
+	public void testErrorPage_COMMON_ACCESS_NO_PERMISSION_SECURITY()
+	{
+		try {
+			//init test
+			initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), "?msg=" + KEY_COMMON_ACCESS_NO_PERMISSION
+					+ "&service=SecurityAnalytics");
+			servicename = "Security Monitoring and Analytics";
+
+			//verify the error message
+			webd.getLogger().info(webd.getText("css=" + PageId.ERRORMESSAGE_CSS));
+			Assert.assertEquals(webd.getText("css=" + PageId.ERRORMESSAGE_CSS), MSG_COMMON_ACCESS_NO_PERMISSION_WITH_SERVICESNAME
+					+ servicename + " Administrator.");
+		}
+		catch (Exception e) {
+			Assert.fail(e.getLocalizedMessage());
+		}
+	}
+
+	@Test(alwaysRun = true)
+	public void testErrorPage_COMMON_ACCESS_NO_PERMISSION_SECURITY_invalidURL()
+	{
+		try {
+			//init test
+			initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), "?msg=" + KEY_COMMON_ACCESS_NO_PERMISSION
+					+ "&service=SecurityAnalytics&invalidUrl=http");
+			servicename = "Security Monitoring and Analytics";
+
+			//verify the error message
+			webd.getLogger().info(webd.getText("css=" + PageId.ERRORMESSAGE_CSS));
+			Assert.assertEquals(webd.getText("css=" + PageId.ERRORMESSAGE_CSS), MSG_COMMON_ACCESS_NO_PERMISSION_WITH_SERVICESNAME
+					+ servicename + " Administrator.");
+			webd.getLogger().info(webd.getText("css=" + PageId.ERRORURL_CSS));
+			Assert.assertEquals(webd.getText("css=" + PageId.ERRORURL_CSS), MSG_URL);
+		}
+		catch (Exception e) {
+			Assert.fail(e.getLocalizedMessage());
+		}
+	}
 
 	@Test(alwaysRun = true)
 	public void testErrorPage_COMMON_ACCESS_NO_SUBS()
@@ -405,6 +445,46 @@ public class TestErrorPage extends LoginAndLogout
 			Assert.fail(e.getLocalizedMessage());
 		}
 	}
+	
+	@Test(alwaysRun = true)
+	public void testErrorPage_COMMON_ACCESS_NO_SUBS_SECURITY()
+	{
+		try {
+			//init test
+			initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), "?msg=" + KEY_COMMON_ACCESS_NO_SUBS
+					+ "&service=SecurityAnalytics");
+			servicename = "Security Monitoring and Analytics";
+
+			//verify the error message
+			webd.getLogger().info(webd.getText("css=" + PageId.ERRORMESSAGE_CSS));
+			Assert.assertEquals(webd.getText("css=" + PageId.ERRORMESSAGE_CSS), MSG_COMMON_ACCESS_NO_SUBS_WITH_SERVICESNAME
+					+ servicename + ".");
+		}
+		catch (Exception e) {
+			Assert.fail(e.getLocalizedMessage());
+		}
+	}
+
+	@Test(alwaysRun = true)
+	public void testErrorPage_COMMON_ACCESS_NO_SUBS_SECURITY_invalidURL()
+	{
+		try {
+			//init test
+			initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), "?msg=" + KEY_COMMON_ACCESS_NO_SUBS
+					+ "&service=SecurityAnalytics&invalidUrl=http");
+			servicename = "Security Monitoring and Analytics";
+
+			//verify the error message
+			webd.getLogger().info(webd.getText("css=" + PageId.ERRORMESSAGE_CSS));
+			Assert.assertEquals(webd.getText("css=" + PageId.ERRORMESSAGE_CSS), MSG_COMMON_ACCESS_NO_SUBS_WITH_SERVICESNAME
+					+ servicename + ".");
+			webd.getLogger().info(webd.getText("css=" + PageId.ERRORURL_CSS));
+			Assert.assertEquals(webd.getText("css=" + PageId.ERRORURL_CSS), MSG_URL);
+		}
+		catch (Exception e) {
+			Assert.fail(e.getLocalizedMessage());
+		}
+	}
 
 	@Test(alwaysRun = true)
 	public void testErrorPage_COMMON_PAGE_NO_SUBS()
@@ -548,6 +628,46 @@ public class TestErrorPage extends LoginAndLogout
 			initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), "?msg=" + KEY_COMMON_PAGE_NO_SUBS
 					+ "&service=LogAnalytics&invalidUrl=http");
 			servicename = "Log Analytics";
+
+			//verify the error message
+			webd.getLogger().info(webd.getText("css=" + PageId.ERRORMESSAGE_CSS));
+			Assert.assertEquals(webd.getText("css=" + PageId.ERRORMESSAGE_CSS), MSG_COMMON_PAGE_NO_SUBS_WITH_SERVICESNAME
+					+ servicename + ".");
+			webd.getLogger().info(webd.getText("css=" + PageId.ERRORURL_CSS));
+			Assert.assertEquals(webd.getText("css=" + PageId.ERRORURL_CSS), MSG_URL);
+		}
+		catch (Exception e) {
+			Assert.fail(e.getLocalizedMessage());
+		}
+	}
+	
+	@Test(alwaysRun = true)
+	public void testErrorPage_COMMON_PAGE_NO_SUBS_SECURITY()
+	{
+		try {
+			//init test
+			initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), "?msg=" + KEY_COMMON_PAGE_NO_SUBS
+					+ "&service=SecurityAnalytics");
+			servicename = "Security Monitoring and Analytics";
+
+			//verify the error message
+			webd.getLogger().info(webd.getText("css=" + PageId.ERRORMESSAGE_CSS));
+			Assert.assertEquals(webd.getText("css=" + PageId.ERRORMESSAGE_CSS), MSG_COMMON_PAGE_NO_SUBS_WITH_SERVICESNAME
+					+ servicename + ".");
+		}
+		catch (Exception e) {
+			Assert.fail(e.getLocalizedMessage());
+		}
+	}
+
+	@Test(alwaysRun = true)
+	public void testErrorPage_COMMON_PAGE_NO_SUBS_SECURITY_invalidURL()
+	{
+		try {
+			//init test
+			initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), "?msg=" + KEY_COMMON_PAGE_NO_SUBS
+					+ "&service=SecurityAnalytics&invalidUrl=http");
+			servicename = "Security Monitoring and Analytics";
 
 			//verify the error message
 			webd.getLogger().info(webd.getText("css=" + PageId.ERRORMESSAGE_CSS));

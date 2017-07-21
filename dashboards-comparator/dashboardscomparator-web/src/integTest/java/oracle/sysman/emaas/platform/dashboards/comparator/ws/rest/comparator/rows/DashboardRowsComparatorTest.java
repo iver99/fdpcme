@@ -1,27 +1,34 @@
 package oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+
+import java.util.concurrent.atomic.AtomicReference;
+
+import mockit.Expectations;
+import mockit.Mocked;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LoadBalancer;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
+import oracle.sysman.emaas.platform.dashboards.comparator.exception.ZDTException;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import mockit.Deencapsulation;
-import mockit.Expectations;
-import mockit.Mocked;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceQuery;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
-import oracle.sysman.emaas.platform.dashboards.comparator.exception.ZDTException;
 import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.RestClientProxy;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.AbstractComparator;
@@ -304,6 +311,7 @@ public class DashboardRowsComparatorTest
 	}
 
 	@Test
+<<<<<<< HEAD
 	public void testsaveComparatorStatus() throws Exception {
 		final HashMap<String, LookupClient> lookupEntry = new HashMap<String, LookupClient>();
     	new Expectations(){
@@ -504,4 +512,34 @@ public class DashboardRowsComparatorTest
         
 	}
 	
+=======
+	public void testCompare(@Mocked final ClientConfig clientConfig, @Mocked final LoadBalancer loadBalancer, @Mocked final CloudLookups cloudLookups, @Mocked LookupClient lookupClient) throws ZDTException, CloudLookupException, NoSuchFieldException, IllegalAccessException {
+		final HashMap<String, LookupClient> instances1 = new HashMap<String, LookupClient>();
+		List<String> urls = new ArrayList<>();
+		AtomicReference<List<String>> atomicReference = new AtomicReference<>();
+		atomicReference.set(urls);
+		urls.add("url1");
+		urls.add("url2");
+		LookupClient lookupClient1 = new LookupClient(clientConfig/*,urls,loadBalancer*/);
+//		lookupClient1.serviceUrls.set(urls);
+//		new Deencapsulation().
+//		Class clazz = lookupClient1.getClass();
+//		Field field = clazz.getDeclaredField("serviceUrls");
+//		field.setAccessible(true);
+//		field.set("serviceUrls", atomicReference);
+		instances1.put("key1", lookupClient1);
+		instances1.put("key2", lookupClient1);
+		new Expectations(){
+			{
+				cloudLookups.getCloudLookupClients();
+				result = instances1;
+
+			}
+		};
+		String tenantId="1000";
+		String userTenant = "tenant.user";
+		DashboardRowsComparator dashboardRowsComparator = new DashboardRowsComparator();
+		dashboardRowsComparator.compare(tenantId, userTenant);
+	}
+>>>>>>> master
 }

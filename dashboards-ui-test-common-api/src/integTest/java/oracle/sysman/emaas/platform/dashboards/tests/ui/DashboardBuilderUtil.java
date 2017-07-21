@@ -23,6 +23,12 @@ public class DashboardBuilderUtil
 		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
 		dbu.addNewDashboardToSet(driver, dashboardName);
 	}
+	
+	public static void addTextWidgetToDashboard(WebDriver driver)
+	{
+		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		dbu.addTextWidgetToDashboard(driver);
+	}
 
 	public static void addWidgetToDashboard(WebDriver driver, String searchString)
 	{
@@ -82,6 +88,12 @@ public class DashboardBuilderUtil
 	{
 		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
 		dbu.editDashboardSet(driver, name, descriptions);
+	}
+	
+	public static void editTextWidgetAddContent(WebDriver driver, int index, String content)
+	{
+		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		dbu.editTextWidgetAddContent(driver, index, content);
 	}
 
 	/*
@@ -320,6 +332,29 @@ public class DashboardBuilderUtil
 		dbu.showWidgetTitle(driver, widgetName, index, visibility);
 	}
 
+	public static void addLinkToWidgetTitle(WebDriver driver, String widgetName, String dashboardName)
+	{
+		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		dbu.addLinkToWidgetTitle(driver, widgetName, dashboardName);
+	}
+
+	public static void addLinkToWidgetTitle(WebDriver driver, String widgetName, int index, String dashboardName)
+	{
+		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		dbu.addLinkToWidgetTitle(driver, widgetName, index, dashboardName);
+	}
+
+	public static boolean verifyLinkOnWidgetTitle(WebDriver driver, String widgetName, String dashboardName)
+	{
+		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		return dbu.verifyLinkOnWidgetTitle(driver, widgetName, dashboardName);
+	}
+
+	public static boolean verifyLinkOnWidgetTitle(WebDriver driver, String widgetName, int index, String dashboardName) {
+		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		return dbu.verifyLinkOnWidgetTitle(driver, widgetName, index, dashboardName);
+	}
+
 	/**
 	 * sort dashboards
 	 *
@@ -387,9 +422,45 @@ public class DashboardBuilderUtil
 		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
 		return dbu.verifyWidget(driver, widgetName, index);
 	}
+	
+	public static void clickLinkOnWidgetTitle(WebDriver driver, String widgetName)
+	{		
+		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		dbu.clickLinkOnWidgetTitle(driver, widgetName);
+	}
 
+	/**
+	 * @param driver
+	 * @param widgetName
+	 * @param index
+	 * @return
+	 */
+	public static void clickLinkOnWidgetTitle(WebDriver driver, String widgetName, int index)
+	{
+		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		dbu.clickLinkOnWidgetTitle(driver, widgetName, index);	
+		
+	}
+
+	public static boolean hasWidgetLink(WebDriver driver, String widgetName)
+	{		
+		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		return dbu.hasWidgetLink(driver, widgetName, 0);
+	}
+
+	/**
+	 * @param driver
+	 * @param widgetName
+	 * @param index
+	 * @return
+	 */
+	public static boolean hasWidgetLink(WebDriver driver, String widgetName, int index)
+	{
+		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		return dbu.hasWidgetLink(driver, widgetName, index);	
+		
+	}
 	private DashboardBuilderUtil()
 	{
 	}
-
 }

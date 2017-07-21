@@ -38,6 +38,8 @@ public class DashboardErrorConstants
 
 	public static final Integer DASHBOARD_COMMON_UI_ERROR_CODE = 10000;
 	public static final Integer DASHBOARD_SAME_NAME_EXISTS_ERROR_CODE = 10001;
+	public static final Integer DASHBOARD_TEXT_WIDGET_EMPTY_CONTENT_ERROR_CODE = 10002;
+	public static final Integer DASHBOARD_TEXT_WIDGET_CONTENT_TOO_LONG_ERROR_CODE = 10003;
 
 	// important: don't assign value larger than this value to dashboard ui request errors
 	public static final Integer DASHBOARD_UI_MAX_ERROR_CODE = 19999;
@@ -46,6 +48,8 @@ public class DashboardErrorConstants
 	public static final Integer DASHBOARD_NOT_FOUND_ERROR_CODE = 20001;
 	public static final Integer TENANT_NO_SUBSCRIPTION_ERROR_CODE = 20002;
 	public static final Integer USER_OPTIONS_NOT_FOUND_ERROR_CODE = 20003;
+	public static final Integer JSON_FORMAT_ERROR_CODE = 20004;
+	public static final Integer WIDGET_NOT_EXISTED_EXCEPTION_CODE = 20005;
 	
 	public static final Integer DEPENDENCY_UNAVAILABLE_ERROR_CODE = 20006;
 	public static final Integer ENTITY_NAMING_DEPENDENCY_UNAVAILABLE_ERROR_CODE = DEPENDENCY_UNAVAILABLE_ERROR_CODE;
