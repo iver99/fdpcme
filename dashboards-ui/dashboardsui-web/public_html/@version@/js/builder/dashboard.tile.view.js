@@ -114,7 +114,7 @@ define(['knockout',
             };
 
             $b.addBuilderResizeListener(self.resizeEventHandler);
-            $b.addEventListener($b.EVENT_POST_DOCUMENT_SHOW, self.postDocumentShow);
+//            $b.addEventListener($b.EVENT_POST_DOCUMENT_SHOW, self.postDocumentShow);
         }
 
         Builder.registerModule(DashboardTilesView, 'DashboardTilesView');

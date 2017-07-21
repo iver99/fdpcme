@@ -40,6 +40,8 @@ public class DashboardsApplication extends Application
 		hs.add(SSFLifeCycleNotificationAPI.class);
 		hs.add(CacheAPI.class);
 		hs.add(TenantSubscriptionsAPIv2.class);
+		hs.add(MetadataRefreshAPI.class);
+		hs.add(InternalToolAPI.class);
 		return hs;
 	}
 }

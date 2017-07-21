@@ -5,9 +5,11 @@ package oracle.sysman.emaas.platform.emcpdf.cache.support;
  */
 public class CachedItem {
 
-    private Object key;
-    private Object value;
-    private Long creationTime;
+    //make key, value, creationTime final, once created, can't be modified. EMCPDF-4115
+    //if object is a Collections(eg.List), this 'final' cannot guarantee code modify Collection's data, so will handle this issue in cache get action by returning a immutable collections.
+    final private Object key;
+    final private Object value;
+    final private Long creationTime;
     private Long lastAccessTime;
     private boolean available;
     private Long lastRefreshTime;
@@ -24,24 +26,13 @@ public class CachedItem {
         return key;
     }
 
-    public void setKey(Object key) {
-        this.key = key;
-    }
 
     public Object getValue() {
         return value;
     }
 
-    public void setValue(Object value) {
-        this.value = value;
-    }
-
     public Long getCreationTime() {
         return creationTime;
-    }
-
-    public void setCreationTime(Long creationTime) {
-        this.creationTime = creationTime;
     }
 
     public Long getLastAccessTime() {

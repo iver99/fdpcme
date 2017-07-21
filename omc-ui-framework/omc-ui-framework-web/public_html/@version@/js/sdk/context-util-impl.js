@@ -854,7 +854,47 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                 tp && self.setTimePeriod(tp, source);
             };
             
-            self.getFlexTimePeriod = function(num, opt) {
+            self.getTranslatedTimePeriod = function(timePeriodId, timePeriodsSet) {
+                if(!timePeriodId) {
+                    timePeriodId = self.getTimePeriod();
+                }
+                if(!timePeriodId) {
+                    console.error("Error in getTranslatedTimePeriod. Invalid time peroid id");
+                    return;
+                }
+                var quickPicks = self.OMCTimeConstants.QUICK_PICK;
+                var timeUnits = self.OMCTimeConstants.TIME_UNIT;
+                
+                if(timePeriodId === quickPicks.CUSTOM) {
+                    return nls.DATETIME_PICKER_TIME_PERIOD_OPTION_CUSTOM;
+                }
+                
+                if(timePeriodId === quickPicks.LATEST) {
+                    return nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LATEST;
+                }
+                
+                if(!self.isValidTimePeriod(timePeriodId)) {
+                    console.error("Error in getTranslatedTimePeriod. Invalid time peroid id: " + timePeriodId);
+                    return;
+                }
+                
+                if(timePeriodsSet === self.OMCTimeConstants.timePeriodsSet.SHORT_TERM) {
+                    if(timePeriodId === quickPicks.LAST_15_MINUTE) {
+                        return nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_15_MINS;
+                    }
+                    if(timePeriodId === quickPicks.LAST_30_MINUTE) {
+                        return nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_30_MINS;
+                    }
+                    if(timePeriodId === quickPicks.LAST_60_MINUTE) {
+                        return nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_60_MINS;
+                    }
+                }
+                
+                var parsedTp = self.parseTimePeriodToUnitAndDuration(timePeriodId);
+                return self.getTranslatedFlexTimePeriod(parsedTp.duration, parsedTp.unit);
+            }
+            
+            self.getTranslatedFlexTimePeriod = function(num, opt) {
                 var optLabel;
                 switch(opt) {
                     case self.OMCTimeConstants.TIME_UNIT.SECOND:

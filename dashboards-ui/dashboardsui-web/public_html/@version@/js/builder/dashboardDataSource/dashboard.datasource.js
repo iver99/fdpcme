@@ -343,11 +343,12 @@ define(['knockout',
                     oj.Logger.error(e);
                 }
             }
-
-
+            
+            
             var mapping = {
                 "tiles": {
                     "create": function (options) {
+                        options.data.content && (options.data.content = Builder.decodeHtml(options.data.content));
                         return new Builder.TileItem(options.data);
                     }
                 }

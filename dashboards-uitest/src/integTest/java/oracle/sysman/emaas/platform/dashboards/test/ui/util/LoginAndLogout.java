@@ -5,7 +5,9 @@ import oracle.sysman.emsaas.login.PageUtils;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriverUtils;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebElement;
 import org.testng.annotations.AfterMethod;
 
 public class LoginAndLogout
@@ -16,17 +18,15 @@ public class LoginAndLogout
 	public static void logoutMethod()
 	{
 		if (webd != null) {
+			webd.getLogger().info("If signout icon is invisible, need to scroll screen to display it");
+			WebElement webe = webd.getWebDriver().findElement(By.cssSelector("#menubutton"));
+			((JavascriptExecutor) webd.getWebDriver()).executeScript("arguments[0].scrollIntoView(true);", webe);
 			((JavascriptExecutor) webd.getWebDriver()).executeScript("scroll(0,0)");
 			webd.takeScreenShot();
+			
+			webd.getLogger().info("start to logout");
 
 			LoginUtils.doLogout(webd);
-			//			try {
-			//				webd.shutdownBrowser(true);
-			//			}
-			//			catch (Exception e) {
-			//				e.printStackTrace();
-			//				webd.getLogger().warning("Failed to shutdown browser" + e.getMessage());
-			//			}
 		}
 	}
 
