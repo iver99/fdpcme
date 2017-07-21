@@ -896,7 +896,7 @@ public class DashboardAPI extends APIBase
 					updateDashboardAllHref(d, tenantIdParam);
 				}
 			}
-			LOGGER.info("****************************Got all dashboards!:"+getJsonUtil().toJson(dbd));
+			LOGGER.info("****************************Got all dashboards!:"+getJsonUtil().toJson(pd));
 			return Response.ok(getJsonUtil().toJson(pd)).build();
 		}
 		catch (DashboardException e) {
