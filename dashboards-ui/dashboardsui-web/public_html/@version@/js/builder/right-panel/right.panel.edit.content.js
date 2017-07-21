@@ -29,18 +29,18 @@ define(['dashboards/dbsmodel',
         self.selectedDashboardId = ko.observable();
         self.allDashboards = ko.observableArray();
         var loadDashboardReqSent = false;
-        function loadDashboardList(sucCallback){
-            var serviceUrl = "/sso.static/dashboards.service?offset=0&orderBy=default";
+        function loadDashboardList(sucCallback, queryStr){
+            var serviceUrl = "/sso.static/dashboards.service?limit=120&offset=0&orderBy=default";
             if (dfu.isDevMode()) {
-                var serviceUrl = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"dashboards?offset=0&orderBy=default");
+                var serviceUrl = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"dashboards?limit=120&offset=0&orderBy=default");
             }
             loadDashboardReqSent = true;
             dfu.ajaxWithRetry({
-                            url: serviceUrl,
+                            url: queryStr? serviceUrl + '&queryString=' + queryStr : serviceUrl,
                             headers: dfu.getDashboardsRequestHeader(),
                             contentType:'application/json',
                             success: function(data, textStatus) {
-                                self.allDashboards(data.dashboards);
+                                queryStr && self.allDashboards(data.dashboards);
                                 self.dashboards(data.dashboards.slice(0));
                                 sucCallback();
                             },
@@ -51,7 +51,26 @@ define(['dashboards/dbsmodel',
                             async: false
                         });
         }
+        
 
+        function loadSingleDashboard(sucCallback, dashboardId){
+            var singleServiceUrl = "/sso.static/dashboards.service/";
+            if (dfu.isDevMode()) {
+                var singleServiceUrl = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"dashboards/");
+            }
+            dfu.ajaxWithRetry({
+                            url: singleServiceUrl + dashboardId,
+                            headers: dfu.getDashboardsRequestHeader(),
+                            contentType:'application/json',
+                            success: function(data, textStatus) {
+                                sucCallback(data);
+                            },
+                            error: function(xhr, textStatus, errorThrown){
+                                oj.Logger.error('Failed to get service instances by URL: '+singleServiceUrl);
+                            },
+                            async: false
+                        });
+        }
 
         self.addToTitleAbled = ko.observable(false);
         self.selectedContent = selectedContent;
@@ -82,23 +101,10 @@ define(['dashboards/dbsmodel',
             tile.outlineHightlight(true);
             if(tile.WIDGET_LINKED_DASHBOARD && tile.WIDGET_LINKED_DASHBOARD()){
                 self.selectedDashboardId(tile.WIDGET_LINKED_DASHBOARD());
-                if(!self.allDashboards() || self.allDashboards().length === 0){
-                    !loadDashboardReqSent && loadDashboardList(function(){
-                self.allDashboards().forEach(function(dashboard){
-                        if(self.selectedDashboardId() === dashboard.id){
-                            self.selectedDashboard(dashboard);
-                            self.hasLinkedToTitle(true);
-                        }
-                });
-                    });
-                }else{
-                    self.allDashboards().forEach(function(dashboard){
-                        if(self.selectedDashboardId() === dashboard.id){
-                            self.selectedDashboard(dashboard);
-                            self.hasLinkedToTitle(true);
-                        }
-                    });
-                }
+                loadSingleDashboard(function(dsbData){
+                    self.selectedDashboard(dsbData);
+                    self.hasLinkedToTitle(true);
+                },self.selectedDashboardId());
             }
         });
 
@@ -187,11 +193,7 @@ define(['dashboards/dbsmodel',
         self.autoSearchDashboard = function (searchTerm) {
             self.dashboards.removeAll();
             if(searchTerm.length>1){
-                self.allDashboards().forEach(function(dashboard){
-                    if(dashboard.name.toLowerCase().indexOf(searchTerm.toLowerCase())>-1){
-                        self.dashboards.push(dashboard);
-                    }
-                });
+                loadDashboardList(function(){}, searchTerm.toLowerCase().trim());
             }else{
                 self.allDashboards().forEach(function(dashboard){
                     self.dashboards.push(dashboard);
