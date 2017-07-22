@@ -1110,15 +1110,29 @@ public class DashboardManager
 		String existingName = dsf.getDashboardNameWithMaxSuffixNumber(name, tenantId);
 		String finalString  = null;
 		if (existingName != null) {
-			Pattern pattern = Pattern.compile("\\d+$");
-			Matcher matcher = pattern.matcher(existingName);
-			if (matcher.find()) {
-				Integer num = new Integer(matcher.group());
-				int increaseNum = num.intValue() + 1;
-				finalString = existingName.replace(num.toString(), ("" + increaseNum));
+			if (name.equals(existingName)) {
+				finalString = name + "_1";
 			} else {
-				finalString = existingName + "_1";
-			}
+				Pattern pattern = Pattern.compile("\\d+$");
+				Matcher matcher = pattern.matcher(existingName);
+				if (matcher.find()) {
+					Integer num = new Integer(matcher.group());
+					int increaseNum = num.intValue() + 1;
+					if (existingName.endsWith("_"+num)) {
+						int flag = existingName.lastIndexOf("_");
+						String subName = existingName.substring(0, flag);
+						if (subName.equals(name)) {
+							finalString = subName + "_" + increaseNum; 
+						} else {
+							finalString = name + "_1";
+						}						
+					} else {
+						finalString = name + "_1";
+					}						
+				} else {
+					finalString = name + "_1";
+				}
+			}			
 		}
 		return finalString;
 	}
@@ -1135,6 +1149,7 @@ public class DashboardManager
 				tile.setOwner(null);
 				tile.setLastModifiedBy(null);
 				tile.setLastModificationDate(null);
+				tile.setTileId(null);
 			}
 		}
 		return dbd;
@@ -1232,6 +1247,8 @@ public class DashboardManager
 						if(tile.getTileId() == null) {
 						    tile.setTileId(IdGenerator.getTileId(ZDTContext.getRequestId(), i));
 						}
+						LOGGER.info("tile id = " + tile.getTileId());
+						LOGGER.info("tenant id = " + tenantId);
 						if (tile.getCreationDate() == null) {
 							tile.setCreationDate(created);
 						}
