@@ -31,7 +31,7 @@ public class TestSuiteLicensing_V4 extends LoginAndLogout
 	public void initTest(String testName)
 	{
 
-		loginV4(testName, "home");
+		loginV4(this.getClass().getName() + "." + testName, "home");
 		DashBoardUtils.loadWebDriver(webd);
 	}
 

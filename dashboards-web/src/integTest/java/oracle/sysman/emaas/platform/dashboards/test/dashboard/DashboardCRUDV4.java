@@ -796,7 +796,7 @@ public class DashboardCRUDV4
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when()
-					.get("/dashboards?queryString=Test_Dashboard_QueryAll&offset=0&limit=5");
+							.get("/dashboards?queryString=Test_Dashboard_QueryAll&offset=0&limit=5");
 			Assert.assertTrue(res3.getStatusCode() == 200);
 			list_dashboards = res3.jsonPath().get("dashboards.name");
 			totalResults = res3.jsonPath().getInt("totalResults");
@@ -1599,9 +1599,13 @@ public class DashboardCRUDV4
 		}
 		finally {
 			if (!"".equals(dashboard_id)) {
-				Response res5 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-						.headers("OAM_REMOTE_USER", tenantid + "." + remoteuser, "Authorization", authToken).when()
-						.delete("/dashboards/" + dashboard_id);
+				Response res5 = RestAssured
+						.given()
+						.contentType(ContentType.JSON)
+						.log()
+						.everything()
+						.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "OAM_REMOTE_USER", tenantid + "." + remoteuser,
+								"Authorization", authToken).when().delete("/dashboards/" + dashboard_id);
 				Assert.assertTrue(res5.getStatusCode() == 204);
 			}
 		}
