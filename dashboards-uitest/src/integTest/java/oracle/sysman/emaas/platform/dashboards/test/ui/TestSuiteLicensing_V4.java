@@ -446,11 +446,11 @@ public class TestSuiteLicensing_V4 extends LoginAndLogout
 
 		//verify APM oob display
 		DashBoardUtils.apmOobExist(webd);
-		DashBoardUtils.itaOobNotExist(webd);
+		DashBoardUtils.itaOobNotExistV4(webd);
 		DashBoardUtils.laOobNotExist(webd);
 		DashBoardUtils.orchestrationOobNotExist(webd);
 		DashBoardUtils.securityOobNotExist(webd);
-		DashBoardUtils.udeOobExist(webd);
+		DashBoardUtils.udeOobExistV4(webd);
 		//reset cloud services checkbox
 		DashboardHomeUtil.resetFilterOptions(webd);
 	}
@@ -472,11 +472,11 @@ public class TestSuiteLicensing_V4 extends LoginAndLogout
 
 		//verify APM oob display
 		DashBoardUtils.apmOobExist(webd);
-		DashBoardUtils.itaOobNotExist(webd);
+		DashBoardUtils.itaOobNotExistV4(webd);
 		DashBoardUtils.laOobNotExist(webd);
 		DashBoardUtils.orchestrationOobNotExist(webd);
 		DashBoardUtils.securityOobNotExist(webd);
-		DashBoardUtils.udeOobExist(webd);
+		DashBoardUtils.udeOobExistV4(webd);
 		//reset cloud services checkbox
 		DashboardHomeUtil.resetFilterOptions(webd);
 	}
@@ -601,7 +601,7 @@ public class TestSuiteLicensing_V4 extends LoginAndLogout
 		DashBoardUtils.orchestrationOobNotExist(webd);
 		DashBoardUtils.securityOobNotExist(webd);
 		DashBoardUtils.outDateOob(webd);
-		DashBoardUtils.udeOobExist(webd);
+		DashBoardUtils.udeOobExistV4(webd);
 		//reset cloud services checkbox
 		DashboardHomeUtil.resetFilterOptions(webd);
 	}
@@ -628,7 +628,7 @@ public class TestSuiteLicensing_V4 extends LoginAndLogout
 		DashBoardUtils.orchestrationOobNotExist(webd);
 		DashBoardUtils.securityOobNotExist(webd);
 		DashBoardUtils.outDateOob(webd);
-		DashBoardUtils.udeOobExist(webd);
+		DashBoardUtils.udeOobExistV4(webd);
 		//reset cloud services checkbox
 		DashboardHomeUtil.resetFilterOptions(webd);
 	}
@@ -651,11 +651,11 @@ public class TestSuiteLicensing_V4 extends LoginAndLogout
 		//verify LA oob display
 		DashBoardUtils.laOobExist(webd);
 		DashBoardUtils.apmOobNotExist(webd);
-		DashBoardUtils.itaOobNotExist(webd);
+		DashBoardUtils.itaOobNotExistV4(webd);
 		DashBoardUtils.orchestrationOobNotExist(webd);
 		DashBoardUtils.securityOobNotExist(webd);
 		DashBoardUtils.outDateOob(webd);
-		DashBoardUtils.udeOobExist(webd);
+		DashBoardUtils.udeOobExistV4(webd);
 		//reset cloud services checkbox
 		DashboardHomeUtil.resetFilterOptions(webd);
 	}
@@ -678,11 +678,11 @@ public class TestSuiteLicensing_V4 extends LoginAndLogout
 		//verify LA oob display
 		DashBoardUtils.laOobExist(webd);
 		DashBoardUtils.apmOobNotExist(webd);
-		DashBoardUtils.itaOobNotExist(webd);
+		DashBoardUtils.itaOobNotExistV4(webd);
 		DashBoardUtils.orchestrationOobNotExist(webd);
 		DashBoardUtils.securityOobNotExist(webd);
 		DashBoardUtils.outDateOob(webd);
-		DashBoardUtils.udeOobExist(webd);
+		DashBoardUtils.udeOobExistV4(webd);
 		//reset cloud services checkbox
 		DashboardHomeUtil.resetFilterOptions(webd);
 	}
@@ -704,7 +704,7 @@ public class TestSuiteLicensing_V4 extends LoginAndLogout
 
 		//verify Orchestration oob display
 		DashBoardUtils.apmOobNotExist(webd);
-		DashBoardUtils.itaOobNotExist(webd);
+		DashBoardUtils.itaOobNotExistV4(webd);
 		DashBoardUtils.laOobNotExist(webd);
 		DashBoardUtils.securityOobNotExist(webd);
 		DashBoardUtils.orchestrationOobExist(webd);
@@ -733,7 +733,7 @@ public class TestSuiteLicensing_V4 extends LoginAndLogout
 
 		//verify Orchestration oob display
 		DashBoardUtils.apmOobNotExist(webd);
-		DashBoardUtils.itaOobNotExist(webd);
+		DashBoardUtils.itaOobNotExistV4(webd);
 		DashBoardUtils.laOobNotExist(webd);
 		DashBoardUtils.securityOobNotExist(webd);
 		DashBoardUtils.orchestrationOobExist(webd);
@@ -761,11 +761,11 @@ public class TestSuiteLicensing_V4 extends LoginAndLogout
 
 		//verify security oob display
 		DashBoardUtils.apmOobNotExist(webd);
-		DashBoardUtils.itaOobNotExist(webd);
+		DashBoardUtils.itaOobNotExistV4(webd);
 		DashBoardUtils.laOobNotExist(webd);
 		DashBoardUtils.orchestrationOobNotExist(webd);
 		DashBoardUtils.securityOobExist(webd);
-		DashBoardUtils.udeOobExist(webd);
+		DashBoardUtils.udeOobExistV4(webd);
 		//reset cloud services checkbox
 		DashboardHomeUtil.resetFilterOptions(webd);
 
@@ -788,11 +788,11 @@ public class TestSuiteLicensing_V4 extends LoginAndLogout
 
 		//verify APM oob display
 		DashBoardUtils.apmOobNotExist(webd);
-		DashBoardUtils.itaOobNotExist(webd);
+		DashBoardUtils.itaOobNotExistV4(webd);
 		DashBoardUtils.laOobNotExist(webd);
 		DashBoardUtils.orchestrationOobNotExist(webd);
 		DashBoardUtils.securityOobExist(webd);
-		DashBoardUtils.udeOobExist(webd);
+		DashBoardUtils.udeOobExistV4(webd);
 		//reset cloud services checkbox
 		DashboardHomeUtil.resetFilterOptions(webd);
 	}
