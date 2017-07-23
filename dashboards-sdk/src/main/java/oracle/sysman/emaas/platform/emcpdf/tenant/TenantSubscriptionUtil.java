@@ -85,8 +85,15 @@ public class TenantSubscriptionUtil {
                 TenantSubscriptionInfo tenantSubscriptionInfo1 = cachedTenantSubcriptionInfo.getTenantSubscriptionInfo();
                 LOGGER.info("retrieved tenantSubscriptionInfo for tenant {} from cache,data is {}", tenant, tenantSubscriptionInfo1);
                 LOGGER.info("retrieved subscribed apps for tenant {} from cache,data is {}", tenant, cachedApps);
-                if (cachedApps != null && tenantSubscriptionInfo1 != null) {
-                    copyTenantSubscriptionInfo(tenantSubscriptionInfo1, tenantSubscriptionInfo);
+                /**
+                 * CachedApps in cache can be empty now. Empty subscribedapps are put into cache may due to some unknow reason cause DF cannot retrieve
+                 * subscribedapps correctly, may be 404 of 'serviceRequest', or 503 error returned by 'serviceRequest'. Then we put empty subscribedapps
+                 * into cache in order to save other threads/requests' time.
+                 */
+                if (cachedApps != null) {
+                    if(tenantSubscriptionInfo1 != null){
+                        copyTenantSubscriptionInfo(tenantSubscriptionInfo1, tenantSubscriptionInfo);
+                    }
                     return cachedApps;
                 }
             }
@@ -102,8 +109,9 @@ public class TenantSubscriptionUtil {
                     LOGGER.warn(
                             "Failed to get entity naming service, or its rel (collection/lookups) link is empty. Exists the retrieval of subscribed service for tenant {}",
                             tenant);
-//                    cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE).evict(cacheKey);
-                    return Collections.emptyList();
+                    List<String> emptyStringList = Collections.emptyList();
+                    cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE).put(cacheKey, new CachedTenantSubcriptionInfo(emptyStringList, null));
+                    return emptyStringList;
                 }
 
                 LOGGER.info("Checking tenant (" + tenant + ") subscriptions. The serviceRequest lookups href is " + lookupLink.getHref());
@@ -118,10 +126,14 @@ public class TenantSubscriptionUtil {
                     rc.setHeader("X-USER-IDENTITY-DOMAIN-NAME", tenant);
                     appsResponse = rc.getWithException(queryHref, tenant, lookupLink.getAuthToken());
                 } catch (UniformInterfaceException e) {
-                    if (e.getResponse() != null && (e.getResponse().getStatus() == 404 || e.getResponse().getStatus() == 503)) {
-                        LOGGER.error("Got status code {} when getting tenant {} subscribed apps", e.getResponse().getStatus(), tenant);
-                        LOGGER.error(e);
-                        throw new RetryableLookupClient.RetryableLookupException(e);
+                    // will print HTTP response code when response is not null.
+                    if (e.getResponse() != null) {
+                        LOGGER.error("Got HTTP response code {} when getting tenant {} subscribed apps", e.getResponse().getStatus(), tenant);
+                        //only resp code 503 will trigger retry logic.
+                        if(e.getResponse().getStatus() == 503){
+                            LOGGER.error(e);
+                            throw new RetryableLookupClient.RetryableLookupException(e);
+                        }
                     }
                     LOGGER.error(e);
                     throw e;
@@ -144,7 +156,9 @@ public class TenantSubscriptionUtil {
                     if (src == null || src.isEmpty()) {
                         LOGGER.error("Checking tenant (" + tenant + ") subscriptions. Empty application mapping items are retrieved");
                         LOGGER.info("#1.Full response from /serviceRequest is {}", appsResponse);
-                        return Collections.emptyList();
+                        List<String> emptyStringList = Collections.emptyList();
+                        cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE).put(cacheKey, new CachedTenantSubcriptionInfo(emptyStringList, null));
+                        return emptyStringList;
                     }
                     List<SubscriptionApps> subAppsList = new ArrayList<SubscriptionApps>();
                     for (ServiceRequestCollection s : src) {
@@ -186,7 +200,9 @@ public class TenantSubscriptionUtil {
                     if (subscribeAppsList == null) {
                         LOGGER.error("After Mapping action,Empty subscription list found!");
                         LOGGER.info("#3.Full response from /serviceRequest is {}", appsResponse);
-                        return Collections.emptyList();
+                        List<String> emptyStringList = Collections.emptyList();
+                        cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE).put(cacheKey, new CachedTenantSubcriptionInfo(emptyStringList, null));
+                        return emptyStringList;
                     }
                     LOGGER.info("Put subscribe apps into cache,{},{}", subscribeAppsList, tenantSubscriptionInfo);
                     cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE).put(cacheKey,new CachedTenantSubcriptionInfo(subscribeAppsList, tenantSubscriptionInfo));
@@ -194,12 +210,15 @@ public class TenantSubscriptionUtil {
 
                 } catch (IOException e) {
                     LOGGER.error(e);
-                    return Collections.emptyList();
+                    List<String> emptyStringList = Collections.emptyList();
+                    cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE).put(cacheKey, new CachedTenantSubcriptionInfo(emptyStringList, null));
+                    return emptyStringList;
                 }
             }
         });
         if (apps == null) {
             apps = Collections.emptyList();
+            cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE).put(cacheKey, new CachedTenantSubcriptionInfo(apps, null));
             LOGGER.warn("Retrieved null list of subscribed apps for tenant {}", tenant);
         }
         return apps;

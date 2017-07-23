@@ -4,7 +4,10 @@ define(["require", "knockout", "jquery", "ojs/ojcore", "ckeditor"],
                 var self = this;
                 self.content = params.tile.content;
                 self.emptyContent = ko.computed(function() {
-                    var content = $("<div/>").html(self.content()).text().trim();
+                    if(!self.content()) {
+                        return true;
+                    }
+                    var content = self.content().replace(/(?:^(?:&nbsp;)+)|(?:(?:&nbsp;)+$)/g, '');
                     if(content) {
                         return false;
                     }else {
@@ -26,7 +29,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore", "ckeditor"],
                         {name: 'basicStyles', items: ['Bold', 'Italic']},
                         {name: 'colors', items: ['TextColor']},
                         {name: 'paragraph', items: ['JustifyLeft', 'JustifyCenter', 'JustifyRight']},
-                        {name: 'links', items: ['Link']}
+                        {name: 'links', items: ['Link', 'Image']}
                     ],
                     removePlugins: 'elementspath',
                     startupFocus: false,
@@ -50,7 +53,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore", "ckeditor"],
                     });
 
                     editor.on("blur", function () {
-//                        self.content(this.getData());
+                        self.content(this.getData());
                         $('#textContentWrapper_'+self.textWidgetId).show();
                         $('#textEditorWrapper_'+self.textWidgetId).hide();
                     });
@@ -74,6 +77,33 @@ define(["require", "knockout", "jquery", "ojs/ojcore", "ckeditor"],
                     $('#textEditorWrapper_'+self.textWidgetId).show();
                     $("#textEditor_" + self.textWidgetId).focus();
                 };
+                
+                CKEDITOR.on("dialogDefinition", function(ev) {
+                    var dialogName = ev.data.name;
+                    var dialogDefinition = ev.data.definition;
+                    
+                    if(dialogName === "image") {
+                        //hide "Link" and "Advanced" Tab
+                        dialogDefinition.removeContents("Link");
+                        dialogDefinition.removeContents("advanced");
+                        
+                        //set width and height for image dialog
+                        dialogDefinition.width = 420;
+                        dialogDefinition.height = 150;
+                        
+                        var imageInfoTab = dialogDefinition.getContents("info");
+                        //hide other boxes inside "info" Tab
+                        imageInfoTab.get("htmlPreview").style = "display: none";
+                        imageInfoTab.get("txtWidth").style = "display: none";
+                        imageInfoTab.get("txtHeight").style = "display: none";
+                        imageInfoTab.get("ratioLock").style = "display: none";
+                        imageInfoTab.get("txtBorder").style = "display: none";
+                        imageInfoTab.get("txtHSpace").style = "display: none";
+                        imageInfoTab.get("txtVSpace").style = "display: none";
+                        imageInfoTab.get("cmbAlign").style = "display: none";
+                        
+                    }
+                });
                 
                 self.loadTextEditor();
             }
