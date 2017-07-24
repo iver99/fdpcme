@@ -441,7 +441,7 @@ public class DashBoardUtils
 	public static void udeOobExistV4(WebDriver driver)
 	{
 		driver.getLogger().info("Wait for dashboards loading...");
-		DashboardHomeUtil.waitForDashboardPresent(driver, "Exadata Health");
+		DashboardHomeUtil.waitForDashboardPresent(driver, "Enterprise Health");
 
 		driver.getLogger().info("Verify below UDE OOB dashboard Set exist...");
 		//		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Exadata Health"));
