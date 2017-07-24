@@ -472,4 +472,31 @@ public class BugVerification extends LoginAndLogout
     		webd.getLogger().info("Hamburger menu is not enabled, do need to verify the fix for EMCPDF-4039");
     	}
     }
+    
+    @Test(alwaysRun = true)
+    public void testEMCPDF_1094()
+    {
+    	String dbdesc = "Dashboard_EMCPDF1094\nline break\r\ntest";
+    	String dbname = "Dashboard_EMCPDF1094";
+		//Initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test case: testEMCPDF_1094");
+
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//switch to Grid View
+		webd.getLogger().info("Switch to grid view");
+		DashboardHomeUtil.gridView(webd);
+
+		//create dashboard
+		webd.getLogger().info("Create a dashboard: with description, with time refresh");
+		DashboardHomeUtil.createDashboard(webd, dbname, dbdesc, DashboardHomeUtil.DASHBOARD);
+		DashboardBuilderUtil.editDashboard(webd, dbname, dbdesc, true);
+		webd.getLogger().info("verify the dashboard created Successfully");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbname, dbdesc, true),
+				"Create dashboard failed!"); 	
+    }
+
 }
