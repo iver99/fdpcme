@@ -185,7 +185,7 @@ public class TestSuiteLicensing_V4 extends LoginAndLogout
 		webd.getLogger().info("Test opening ITA: Availability Analytics in welcome page finished!!!");
 	}
 
-	@Test(alwaysRun = true)
+	//@Test(alwaysRun = true)
 	public void testOpenITA_DEPage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
