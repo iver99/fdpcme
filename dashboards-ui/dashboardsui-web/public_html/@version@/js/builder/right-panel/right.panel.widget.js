@@ -6,6 +6,10 @@ define(['knockout',
 function (ko, $, oj, dfu) {
     function rightPanelWidget($b) {
         var self = this;
+        $b.registerObject(self, 'RightPanelWidget');
+        self.DEFAULT_WIDGET_INIT_AMOUNT = 40;
+        self.DEFAULT_WIDGET_INCREMENT_AMOUNT = 20;
+        self.MAX_LOAD_WIDGET_WINDOW_SIZE = 100;
         self.widgets = ko.observableArray([]);
         self.keyword = ko.observable('');
         self.keywordInput=ko.observable('');
@@ -14,6 +18,129 @@ function (ko, $, oj, dfu) {
         self.clearRightPanelSearch = ko.observable(false);
         self.isWidgetLoaded =ko.observable(false);
         self.tilesViewModel = ko.observable($b.getDashboardTilesViewModel && $b.getDashboardTilesViewModel());
+        
+        self.widgetsData = null;
+        self.loadedWidgetStartIndex = -1;
+        self.loadedWidgetEndIndex = -1;
+        
+        self.forwardRenderWidgets = function (amount, successCallback) { // this method inserts values at the end and removes at the begining if needed
+            if (self.loadedWidgetEndIndex >= self.widgetsData.length-1) {
+                console.log("Do not need to load widgets data forwardly as all last widgets have been loaded");
+                return;
+            }
+            if (amount <= 0) {
+                console.warn("Failed to load widgets data incrementally for invalid amout of widget. Amount value is " + amount);
+                return;
+            }
+            if (!self.widgetsData || self.widgetsData.length <= 0) {
+                console.warn("Failed to load widgets data incrementally for widgetsData is empty");
+                return;
+            }
+            var sizeToLoad = Math.min(amount, self.widgetsData.length - self.loadedWidgetEndIndex - 1);
+            console.debug("Current loadedEndIndex (before loading) is:"+self.loadedWidgetEndIndex+" and all widgets size is:"+self.widgetsData.length+", size to load is:"+sizeToLoad);
+            for (var i = self.loadedWidgetEndIndex + 1; i < self.loadedWidgetEndIndex + 1 + sizeToLoad; i++) {
+                var wgt = self.getKOWidgetFromJSData(self.widgetsData[i]);
+                self.widgets.push(wgt);
+            }
+            self.loadedWidgetEndIndex += sizeToLoad;
+            if (self.loadedWidgetStartIndex === -1) {
+                self.loadedWidgetStartIndex = 0;
+            }
+            console.debug("New widgets rendered forwardly. Loaded size:"+sizeToLoad+". Start index:"+self.loadedWidgetStartIndex+",end index:"+self.loadedWidgetEndIndex);
+            // need keep the max loaded widgets size
+            var renderedSize = self.loadedWidgetEndIndex - self.loadedWidgetStartIndex + 1;
+            if (renderedSize > self.MAX_LOAD_WIDGET_WINDOW_SIZE) {
+                console.debug("Rendered widgets size exceeds window size. Rendered size:"+renderedSize);
+                var deRenderSize = renderedSize - self.MAX_LOAD_WIDGET_WINDOW_SIZE;
+                for (var i = 0; i < deRenderSize; i++) {
+                    self.widgets.shift();
+                }
+                self.loadedWidgetStartIndex += deRenderSize;
+                console.debug("The first widgets were removed to keep the max window size. New start index is:"+self.loadedWidgetStartIndex);
+                // need to scroll widget list element to the correct position
+                var widgetHeight = $('.dbd-left-panel-widget').height(); // single widget element height
+                $('.dbd-left-panel-widgets').scrollTop($('.dbd-left-panel-widgets-list').height() - $('.dbd-left-panel-widgets').height() - widgetHeight * sizeToLoad);
+
+            }
+            self.initWidgetDraggable();
+            successCallback && successCallback();
+        };
+        
+        self.backwardRenderWidgets = function (amount, successCallback) { // this method inserts values at the begining and removes at the end if needed
+            if (self.loadedWidgetStartIndex  <= 0) {
+                console.debug("Do not need to backward load widgets data as all first widgets have been loaded");
+                return;
+            }
+            if (amount <= 0) {
+                console.warn("Failed to backward load widgets data for invalid amout of widget. Amount value is " + amount);
+                return;
+            }
+            if (!self.widgetsData || self.widgetsData.length <= 0) {
+                console.warn("Failed to backward load widgets data incrementally for widgetsData is empty");
+                return;
+            }
+            var sizeToLoad = Math.min(amount, self.loadedWidgetStartIndex);
+            console.debug("Current loadedWidgetStartIndex (before loading) is:"+self.loadedWidgetStartIndex+" and all widgets size is:"+self.widgetsData.length+", size to load is:"+sizeToLoad);
+            for (var i = self.loadedWidgetStartIndex - 1; i > self.loadedWidgetStartIndex - 1 - sizeToLoad; i--) {
+                var wgt = self.getKOWidgetFromJSData(self.widgetsData[i]);
+                self.widgets.unshift(wgt);
+            }
+            self.loadedWidgetStartIndex -= sizeToLoad;
+            console.debug("New widgets rendered backwardly. Loaded size:"+sizeToLoad+". Start index:"+self.loadedWidgetStartIndex+",end index:"+self.loadedWidgetEndIndex);
+            // need to scroll widget list element to the correct position
+            var widgetHeight = $('.dbd-left-panel-widget').height(); // single widget element height
+            $('.dbd-left-panel-widgets').scrollTop(widgetHeight * sizeToLoad);
+            // need keep the max loaded widgets size
+            var renderedSize = self.loadedWidgetEndIndex - self.loadedWidgetStartIndex + 1;
+            if (renderedSize > self.MAX_LOAD_WIDGET_WINDOW_SIZE) {
+                console.debug("Rendered widgets size exceeds window size. Rendered size:"+renderedSize);
+                var deRenderSize = renderedSize - self.MAX_LOAD_WIDGET_WINDOW_SIZE;
+                for (var i = 0; i < deRenderSize; i++) {
+                    self.widgets.pop();
+                }
+                self.loadedWidgetEndIndex -= deRenderSize;
+                console.debug("The last widgets were removed to keep the max window size. Now end index is:"+self.loadedWidgetEndIndex);
+            }
+            self.initWidgetDraggable();
+            successCallback && successCallback();
+        };
+        
+        self.getKOWidgetFromJSData = function(widgetData) {
+            if (!widgetData.WIDGET_DESCRIPTION) {
+                widgetData.WIDGET_DESCRIPTION = null;
+            }
+            var wgt = ko.mapping.fromJS(widgetData);
+            if(widgetData.WIDGET_DESCRIPTION){
+                wgt.WIDGET_DESCRIPTION = widgetData.WIDGET_DESCRIPTION.toString().replace(/\n/g,"<br>");
+            }
+            if (wgt && !wgt.WIDGET_VISUAL) {
+                wgt.WIDGET_VISUAL = ko.observable('');
+            }
+            if (wgt && !wgt.imgWidth) {
+                wgt.imgWidth = ko.observable('120px');
+            }
+            if (wgt && !wgt.imgHeight) {
+                wgt.imgHeight = ko.observable('120px');
+            }
+            return wgt;
+        };
+
+        self.initWidgetData = function (req,successCallback) {
+            var widgetDS = new Builder.WidgetDataSource();
+            self.searchStaus('searching');
+            widgetDS.loadWidgetData(
+                req && (typeof req.term === "string") ? req.term : self.keyword(),
+                function (widgets) {
+                    self.widgets([]);
+                    self.widgetsData = widgets;
+                    self.loadedWidgetStartIndex = -1;
+                    self.loadedWidgetEndIndex = -1;
+                    self.isWidgetLoaded(true);
+                    self.searchStaus('search-complete');
+                    successCallback && successCallback();
+                }
+            );
+        };
 
         self.loadWidgets = function (req,successCallback) {
             var widgetDS = new Builder.WidgetDataSource();
@@ -24,22 +151,7 @@ function (ko, $, oj, dfu) {
                             self.widgets([]);
                             if (widgets && widgets.length > 0) {
                                 for (var i = 0; i < widgets.length; i++) {
-                                    if (!widgets[i].WIDGET_DESCRIPTION) {
-                                        widgets[i].WIDGET_DESCRIPTION = null;
-                                    }
-                                    var wgt = ko.mapping.fromJS(widgets[i]);
-                                if(widgets[i].WIDGET_DESCRIPTION){
-                                    wgt.WIDGET_DESCRIPTION = widgets[i].WIDGET_DESCRIPTION.toString().replace(/\n/g,"<br>");
-                                    }
-                                    if (wgt && !wgt.WIDGET_VISUAL) {
-                                        wgt.WIDGET_VISUAL = ko.observable('');
-                                    }
-                                    if (wgt && !wgt.imgWidth) {
-                                        wgt.imgWidth = ko.observable('120px');
-                                    }
-                                    if (wgt && !wgt.imgHeight) {
-                                        wgt.imgHeight = ko.observable('120px');
-                                    }
+                                    var wgt = self.getKOWidgetFromJSData(widgets[i]);
                                     self.widgets.push(wgt);
                                 }
                             }
@@ -112,7 +224,10 @@ function (ko, $, oj, dfu) {
         };
         self.searchWidgetsClicked = function () {
             setInputClearIcon();
-            self.loadWidgets();
+            //self.loadWidgets();
+            self.initWidgetData(null, function() {
+                self.forwardRenderWidgets(self.DEFAULT_WIDGET_INIT_AMOUNT);
+            });
         };
 
         self.clearWidgetSearchInputClicked = function () {

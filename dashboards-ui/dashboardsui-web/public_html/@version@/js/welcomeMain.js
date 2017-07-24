@@ -496,6 +496,7 @@ require(['ojs/ojcore',
             }
 
             $(document).ready(function () {
+                ko.applyBindings({LOADING : getNlsString('DBS_HOME_LOADING')}, $('#loading')[0]);  //to make text binding on loading work
                 dfu.getSubscribedApps2WithEdition(function(apps) {
                     if (apps && (!apps.applications || apps.applications.length === 0)) {
                         oj.Logger.error("Tenant subscribes to no service. Redirect to dashboard error page", true);
@@ -511,6 +512,10 @@ require(['ojs/ojcore',
                     if (e.responseJSON && e.responseJSON.errorCode == 20002) {
                         oj.Logger.error("Tenant subscribes to no service. Redirect to dashboard error page", true);
                         location.href = "./error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_NO_SUBS_MSG";
+                    }
+                    else {
+                        oj.Logger.error("Failed to get tenant subscribed applications. Redirect to dashboard error page", true);
+                        location.href = "./error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_MSG";
                     }
                 });
             });

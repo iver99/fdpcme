@@ -25,6 +25,7 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.StringUtil;
+import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.uifwk.util.DataAccessUtil;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
@@ -113,11 +114,25 @@ public class HtmlBootstrapJsUtil
 		//user info
 		LOGGER.debug("Start to get brandingbar data.");
 		String brandingbarData = DataAccessUtil.getBrandingBarData(tenant, user, referer, sessionExp);
+		//append uifwk cache data structure
+        sb.append("if(!window._uifwk){window._uifwk={};}if(!window._uifwk.cachedData){window._uifwk.cachedData={};}");
         if (!StringUtil.isEmpty(brandingbarData)) {
-            //append uifwk cache data structure
-            sb.append("if(!window._uifwk){window._uifwk={};}if(!window._uifwk.cachedData){window._uifwk.cachedData={};}");
             // the returned value from dashboard-api side could be injected into html directly
             sb.append(brandingbarData);
+        }
+        //In some cases http request to get brandingbar data failed with status like 401 (user don't have any role/privilege)
+        //We still want the logged in tenant, user info and the sso logout URL to be available 
+        else {
+        	//append uifwk cache data structure
+            sb.append("if(!window._uifwk){window._uifwk={};}if(!window._uifwk.cachedData){window._uifwk.cachedData={};}window._uifwk.cachedData.loggedInUser=");
+            sb.append(getLoggedInUser());
+            sb.append(";");
+            String ssoLogoutUrl = getSsoLogoutUrl();
+            if (!StringUtil.isEmpty(ssoLogoutUrl)) {
+            	sb.append("window.cachedSSOLogoutUrl=\"");
+            	sb.append(ssoLogoutUrl);
+            	sb.append("\";");
+            }
         }
 		String injectableJS = sb.toString();
 		LOGGER.info("getBrandingDataJS(), injectableJS: " + injectableJS);
@@ -127,7 +142,7 @@ public class HtmlBootstrapJsUtil
 	public static String getLoggedInUser()
 	{
 		String currentUser = LoginDataStore.getUserName();
-		String userName = "\\{currentUser:\"" + currentUser + "\"\\}";
+		String userName = "{currentUser:\"" + currentUser + "\"}";
 		return userName;
 	}
 
@@ -241,7 +256,7 @@ public class HtmlBootstrapJsUtil
 		LOGGER.debug("lookupLinksWithRelPrefix(" + linkPrefix + "): ", linkList.toString());
 		return linkList;
 	}
-  
+
         private static void generatePageLoadEvent(String tenantName, String userName, String referer, String sessionExp)
         {
             String userTenant = tenantName + "." + userName;
@@ -270,4 +285,29 @@ public class HtmlBootstrapJsUtil
                 LOGGER.error("Error in generating the page load event", e);
             }
         }
+
+	/**
+	 * Discover SSO logout URL from service registry
+	 *
+	 * @return String
+	 */
+	private static String getSsoLogoutUrl()
+	{
+		String securityServiceName = "SecurityService";
+		String securityServiceVersion = "1.0+";
+		String relSsoLogout = "sso.logout";
+		String ssoLogoutUrl = null;
+		String tenantName = LoginDataStore.getTenantName();
+		Link lk = RegistryLookupUtil.getServiceExternalLink(securityServiceName, securityServiceVersion, relSsoLogout, tenantName);
+		lk = RegistryLookupUtil.replaceWithVanityUrl(lk, tenantName, securityServiceName);
+		if (lk != null) {
+			ssoLogoutUrl = lk.getHref();
+		}
+		else {
+			String errorMsg = "Failed to discover SSO logout URL from service registry. Service name: " + securityServiceName + 
+					", Service version: " + securityServiceVersion + ", rel: " + relSsoLogout + ", Tenant name: " + tenantName;
+			LOGGER.error(errorMsg);
+		}
+		return ssoLogoutUrl;
+	}
 }

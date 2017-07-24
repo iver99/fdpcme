@@ -217,8 +217,11 @@ define(['knockout',
                 css += tile.WIDGET_LINKED_DASHBOARD && tile.WIDGET_LINKED_DASHBOARD() ? ' dbd-tile-linked-dashboard' : '';
                 return css;
             });
+            if(!tile.WIDGET_LINKED_DASHBOARD){
+                tile.WIDGET_LINKED_DASHBOARD = ko.observable();
+            }
             tile.linkedDashboard = ko.computed(function() {
-                if (dashboard.systemDashboard() && tile.WIDGET_LINKED_DASHBOARD && tile.WIDGET_LINKED_DASHBOARD()) {
+                if (tile.WIDGET_LINKED_DASHBOARD && tile.WIDGET_LINKED_DASHBOARD()) {
                     var link = '/emsaasui/emcpdfui/builder.html?dashboardId=' + tile.WIDGET_LINKED_DASHBOARD();
                     if((dashboard.enableTimeRange()==="TRUE" || Builder.isTimeRangeAvailInUrl()===true)&& timeSelectorModel && timeSelectorModel.viewStart()){
                         link += '&startTime='+timeSelectorModel.viewStart().getTime()+'&endTime='+timeSelectorModel.viewEnd().getTime();
@@ -326,7 +329,7 @@ define(['knockout',
                 Builder.registerComponent(tile.WIDGET_KOC_NAME(), kocVM, kocTemplate);*/
             }
             
-            tile.loadEangerLoadedTile = function(element) {
+            tile.loadEagerLoadedTile = function(element) {
                 Builder.attachEagerLoadedDahshboardSingleTileAtPageLoad(tile, $(element).find(".dbd-tile-widget-wrapper")[0]);
                 return "dbd-tile-widget-wrapper-loaded";
             }

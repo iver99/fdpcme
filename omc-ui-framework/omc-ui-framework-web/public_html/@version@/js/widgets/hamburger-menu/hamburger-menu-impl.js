@@ -8,11 +8,12 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
     'uifwk/@version@/js/sdk/context-util-impl',
     'uifwk/@version@/js/sdk/menu-util-impl',
     'uifwk/@version@/js/sdk/SessionCacheUtil',
-    'uifwk/@version@/js/util/usertenant-util-impl'
+    'uifwk/@version@/js/util/usertenant-util-impl',
+    'uifwk/@version@/js/util/message-util-impl'
     //'ojs/ojnavigationlist',
     //'ojs/ojjsontreedatasource'
     ],
-        function ($, oj, ko, nls, dfumodel, pfumodel, ctxmodel, menumodel, sessionCacheModel, utModel) {
+        function ($, oj, ko, nls, dfumodel, pfumodel, ctxmodel, menumodel, sessionCacheModel, utModel, msgModel) {
             function HamburgerMenuViewModel(params) {
                 var self = this;
                 var userName = params.userName;
@@ -35,6 +36,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 var sessionCacheOmcMenusSubscribedAppsKey = 'subscribed_apps';
                 var sessionCacheBaseVanityUrlsKey = 'base_vanity_urls';
                 var sessionCacheUserRolesKey = 'user_roles';
+                var sessionCacheAllServiceDataKey = 'all_service_data';
                 var omcMenuSeparatorId = 'omc_service_menu_separator';
                 
                 var userName = params.userName;
@@ -218,6 +220,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     {'id': 'omc_root_admin', type: 'menu_group', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_ADMIN_LABEL, 'externalUrl': '#', children: [
                             {'id': 'omc_root_admin_divider0', type: 'divider', 'label': '', 'externalUrl': '#'},
                             {'id': 'omc_root_admin_alertrules', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ADMIN_ALERTRULES_LABEL, 'externalUrl': '#'},
+                            {'id': 'omc_root_admin_notificationChannels', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ADMIN_NOTIFICATIONCHANNELS_LABEL, 'externalUrl': '#'},
                             {'id': 'omc_root_admin_agents', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ADMIN_AGENTS_LABEL, 'externalUrl': '#'},
                             {'id': 'omc_root_admin_clouddiscoveryprofiles', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ADMIN_CLOUDDISCOVERYPROFILES_LABEL, 'externalUrl': '#'},
                             {'id': 'omc_root_admin_entitiesconfig', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ADMIN_ENTITIESCONFIG_LABEL, 'externalUrl': '#'},
@@ -235,6 +238,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     'omc_root_dashboards',
                     'omc_root_admin', 
                     'omc_root_admin_alertrules', 
+                    'omc_root_admin_notificationChannels',
                     'omc_root_admin_agents',
 //                    'omc_root_admin_entitiesconfig',
                     rootCompositeMenuid
@@ -248,6 +252,8 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 self.dataSource = ko.observable();
                 var omcMenus = [];
                 var globalMenuIdHrefMapping = null;
+                var msgUtil = new msgModel();
+                var hitErrorsWhenLoading = false;
                 
                 //Get role names for current user
                 function getUserRoles() {
@@ -256,6 +262,10 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                         userTenantUtil.getUserRoles(function(data) {
                             if (data) {
                                 self.userRoles = data;
+                            }
+                            else {
+                                hitErrorsWhenLoading = true;
+                                oj.Logger.error("Failed to get user roles during hamburger menu loading.");
                             }
                             dfdGetUserRoles.resolve();
                         }, true);
@@ -273,6 +283,10 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     var host = window.location.host;
                     if (host.indexOf(tenantName + '.') === 0) {
                         menuUtil.getServiceBaseVanityUrls(function(data){
+                            if (!data) {
+                                hitErrorsWhenLoading = true;
+                                oj.Logger.error("Failed to get base vanity URLs during hamburger menu loading.");
+                            }
                             self.baseVanityUrls = data;
                             dfdFetchBaseVanityUrls.resolve();
                         });
@@ -281,6 +295,305 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                         dfdFetchBaseVanityUrls.resolve();
                     }
                     return dfdFetchBaseVanityUrls;
+                }
+                
+                //Determine which services menu need to be initially loaded
+                function determineInitialServiceMenusToLoad(allServiceMenus) {
+                    var currentMenuId = $.isFunction(params.omcCurrentMenuId) ? params.omcCurrentMenuId() : params.omcCurrentMenuId;
+                    self.serviceMenuToLoad = [];
+                    self.serviceMenuDeferLoad = [];
+                    if (allServiceMenus && allServiceMenus.length > 0) {
+                        if ($.inArray(serviceAppId, ['Error', 'Dashboard']) === -1) {
+                            if (currentMenuId && currentMenuId.indexOf('omc_root_admin_') === 0) {
+                                self.serviceMenuToLoad = $.extend([], allServiceMenus);
+                            }
+                            else {
+                                for (var i = 0; i < allServiceMenus.length; i++) {
+                                    var menuDefItem = allServiceMenus[i];
+                                    if (menuDefItem && menuDefItem.appId === serviceAppId) {
+                                        self.serviceMenuToLoad.push(menuDefItem);
+                                    }
+                                    else {
+                                        self.serviceMenuDeferLoad.push(menuDefItem);
+                                    }
+                                }
+                            }
+                        }
+                        else {
+                            self.serviceMenuDeferLoad = $.extend([], allServiceMenus);
+                        }
+                    }
+                }
+                
+                function markLoadedServiceMenus(appId) {
+                    if (self.serviceLinks && self.serviceLinks.length > 0) {
+                        var serviceMenus = self.serviceLinks;
+                        for (var i = 0; i < serviceMenus.length; i++) {
+                            var menuDefItem = serviceMenus[i];
+                            if (menuDefItem && menuDefItem.appId === appId) {
+                                menuDefItem.loaded = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+                
+                function isServiceMenuLoaded(appId) {
+                    if (self.serviceLinks && self.serviceLinks.length > 0) {
+                        var serviceMenus = self.serviceLinks;
+                        var serviceMenuDef = null;
+                        for (var i = 0; i < serviceMenus.length; i++) {
+                            var menuDefItem = serviceMenus[i];
+                            if (menuDefItem && menuDefItem.appId === appId) {
+                                serviceMenuDef = menuDefItem;
+                                break;
+                            }
+                        }
+                        if (!serviceMenuDef || serviceMenuDef.loaded) {
+                            return true;
+                        }
+                        return false;
+                    }
+                    return true;
+                }
+                
+                function findServiceMenuLinkByAppId(appId) {
+                    if (self.serviceLinks && self.serviceLinks.length > 0) {
+                        var serviceMenus = self.serviceLinks;
+                        for (var i = 0; i < serviceMenus.length; i++) {
+                            var menuDefItem = serviceMenus[i];
+                            if (menuDefItem && menuDefItem.appId === appId) {
+                                return menuDefItem;
+                            }
+                        }
+                    }
+                    return null;
+                }
+                
+                function loadDummyDeferServiceMenus() {
+                    if(!self.allServiceData || self.allServiceData.length < 1){
+                        self.allServiceData = [];
+                    }
+                    $.each(self.serviceMenuDeferLoad, function(idx, linkItem){
+                        var serviceItem = {};
+                        serviceItem.appId = linkItem.appId;
+                        serviceItem.serviceName = linkItem.serviceName;
+                        serviceItem.version = linkItem.version;
+                        serviceItem.serviceMenuMsgBundle = {};
+                        serviceItem.serviceMenus = [{"id": "omc_service_menu_separator"}];
+                        serviceItem.serviceAdminMenus = {};
+                        self.allServiceData.push(serviceItem);
+                    });
+                }
+                
+                function getServiceMenuDefIndex(appId) {
+                    if (self.allServiceData && self.allServiceData.length > 0) {
+                        for (var i = 0; i < self.allServiceData.length; i++) {
+                            var menuDefItem = self.allServiceData[i];
+                            if (menuDefItem && menuDefItem.appId === appId) {
+                                return i;
+                            }
+                        }
+                    }
+                    return -1;
+                }
+                
+                function loadServiceMenuData(singleServiceData) {
+                    //Find index for parent root menu item
+                    var menuId = findAppItemIndex(rootMenuData, 'omc_root_' + singleServiceData.appId);
+                    if (self.serviceMenuData[menuId]) {
+                        if (singleServiceData.serviceMenus) {
+                            self.serviceMenuData[menuId].children = singleServiceData.serviceMenus;
+                        }
+                        //Load service admin menu items
+                        if (singleServiceData.serviceAdminMenus && singleServiceData.serviceAdminMenus.children) {
+                            //Add a separator between service menus and admin menus if there is no one defined in JSON
+                            if (singleServiceData.serviceMenus && singleServiceData.serviceMenus.length > 0) {
+                                var lastServiceMenuItem = singleServiceData.serviceMenus[singleServiceData.serviceMenus.length - 1];
+                                if (lastServiceMenuItem.type !== 'divider') {
+                                    var dividerItem = generateDividerItem('omc_' + singleServiceData.appId);
+                                    self.serviceMenuData[menuId].children.push(dividerItem);
+                                }
+                            }
+                            //Append service admin menus to global service admin menus
+                            self.serviceMenuData[menuId].children.push(singleServiceData.serviceAdminMenus);
+                            var adminMenuId = findAppItemIndex(self.serviceMenuData,'omc_root_admin');
+                            var adminSubMenuId = findAppItemIndex(self.serviceMenuData[adminMenuId].children, 'omc_root_admin_grp_'+singleServiceData.appId);
+                            if (adminSubMenuId > -1) {
+                                var adminExternalUrl = singleServiceData.serviceAdminMenus.externalUrl;
+                                if (adminExternalUrl && adminExternalUrl !== '#') {
+                                    self.serviceMenuData[adminMenuId].children[adminSubMenuId].externalUrl = adminExternalUrl;
+                                    self.serviceMenuData[adminMenuId].children[adminSubMenuId].serviceNameForVanityUrl = singleServiceData.serviceAdminMenus.serviceNameForVanityUrl;
+                                }
+                                self.serviceMenuData[adminMenuId].children[adminSubMenuId].requiredPrivileges = singleServiceData.serviceAdminMenus.requiredPrivileges;
+                                self.serviceMenuData[adminMenuId].children[adminSubMenuId].children = [];
+                                        for(var i = 0; i< singleServiceData.serviceAdminMenus.children.length; ++i){
+                                self.serviceMenuData[adminMenuId].children[adminSubMenuId].children.push($.extend(true, {}, singleServiceData.serviceAdminMenus.children[i]));
+                                        }
+                            }
+                            else {
+                                if (!self.serviceMenuData[adminMenuId].children) {
+                                    self.serviceMenuData[adminMenuId].children = [];
+                                }
+                                self.serviceMenuData[adminMenuId].children.push($.extend(true, {}, singleServiceData.serviceAdminMenus));
+                                self.serviceMenuData[adminMenuId].children[rootMenuData[adminMenuId].children.length].id = 'omc_root_admin_grp_'+singleServiceData.appId;
+                                adminSubMenuId = rootMenuData[adminMenuId].children.length;
+                            }
+                            self.serviceMenuData[adminMenuId].children[adminSubMenuId].children = addPrefixForRootAdminSubMenu(self.serviceMenuData[adminMenuId].children[adminSubMenuId].children);
+                        }
+                    }
+                }
+                
+                function updateServiceMenuCache() {
+                    sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheOmcMenusServiceLinksKey, self.serviceLinks);
+                    sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheOmcMenusDataKey, omcMenus);
+                    sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheServiceMenuDataKey, self.serviceMenuData);
+                }
+                
+                function loadSingleServiceMenuJson(linkItem) {
+                    var dfdLoadSingleSvcMenu = $.Deferred();
+                    if (linkItem) {
+//                        if (needCount && !self.loadedServiceCnt) {
+//                            self.loadedServiceCnt = ko.observable(0);
+//                        }
+                        var serviceItem = {};
+                        serviceItem.appId = linkItem.appId;
+                        serviceItem.serviceName = linkItem.serviceName;
+                        serviceItem.version = linkItem.version;
+                        var header = dfu.getDefaultHeader();
+
+                        var url = linkItem.metaDataHref;
+                        url = url.substring(url.indexOf('/emsaasui/'));
+                        dfu.ajaxWithRetry(url, {
+                            type: 'get',
+                            dataType: 'json',
+                            contentType: "application/json",
+                            headers: header,
+                            success: function (data) {
+                                serviceItem.serviceMenus = data.serviceMenus;
+                                serviceItem.serviceAdminMenus = data.serviceAdminMenus;
+                                url = data.serviceMenuMsgBundle;
+                                if (!url){
+                                    hitErrorsWhenLoading = true;
+                                    oj.Logger.error("No message file is defined in the service menu json file. Service name: " + serviceItem.serviceName);
+                                    dfdLoadSingleSvcMenu.resolve();
+//                                    if (needCount) {
+//                                        self.loadedServiceCnt(self.loadedServiceCnt() + 1);
+//                                    }
+                                    return;
+                                }
+                                url = url.substring(url.indexOf('/emsaasui/') + 1, url.length - 3);
+
+                                //Load resource bundle files
+                                require(['ojL10n!' + url], function (_nls) {
+                                    serviceItem.serviceMenuMsgBundle = _nls;
+                                    serviceItem.serviceMenus = applyNlsOnMenu(serviceItem.serviceMenus, _nls, serviceItem.appId);
+                                    serviceItem.serviceAdminMenus = applyNlsOnMenu(serviceItem.serviceAdminMenus, _nls, serviceItem.appId);
+                                    var menuDefIndex = getServiceMenuDefIndex(linkItem.appId);
+                                    if (menuDefIndex > -1) {
+                                        self.allServiceData[menuDefIndex] = serviceItem;
+                                    }
+                                    else {
+                                        self.allServiceData.push(serviceItem);
+                                    }
+                                    markLoadedServiceMenus(linkItem.appId);
+                                    dfdLoadSingleSvcMenu.resolve();
+//                                    if (needCount) {
+//                                        self.loadedServiceCnt(self.loadedServiceCnt() + 1);
+//                                    }                      
+                                }, 
+                                function() {
+                                    hitErrorsWhenLoading = true;
+                                    oj.Logger.error("Failed to load message file for service menus. Service name: " + serviceItem.serviceName);
+                                    dfdLoadSingleSvcMenu.resolve();
+//                                    if (needCount) {
+//                                        self.loadedServiceCnt(self.loadedServiceCnt() + 1);
+//                                    }
+                                });
+                            },
+                            error: function (xhr, textStatus, errorThrown) {
+//                                if (needCount) {
+//                                    self.loadedServiceCnt(self.loadedServiceCnt() + 1);
+//                                }
+                                dfdLoadSingleSvcMenu.resolve();
+                                hitErrorsWhenLoading = true;
+                                oj.Logger.error("Failed to load service menu json file due to error: " + textStatus + ". Service name: " + serviceItem.serviceName);
+                            }
+                        });
+                    }
+                    else {
+                        dfdLoadSingleSvcMenu.resolve();
+                    }
+                    return dfdLoadSingleSvcMenu;
+                }
+                
+                function findAllUnloadedServiceMenus() {
+                    var unloadedMenus = [];
+                    if(self.serviceLinks && self.serviceLinks.length > 0){
+                        $.each(self.serviceLinks, function(idx, linkItem){
+                            if (!isServiceMenuLoaded(linkItem.appId)) {
+                                unloadedMenus.push(linkItem);
+                            }
+                        });
+                    }
+                    return unloadedMenus;
+                }
+                
+                function refreshSingleServiceMenu(appId, key, callback) {
+                    omcMenus = []; //TODO
+                    var svcMenuLink = findServiceMenuLinkByAppId(appId);
+                    loadSingleServiceMenuJson(svcMenuLink).done(function() {
+                        var singleServiceData = null;
+                        var menuDefIndex = getServiceMenuDefIndex(appId);
+                        if (menuDefIndex > -1) {
+                            singleServiceData = self.allServiceData[menuDefIndex];
+                            loadServiceMenuData(singleServiceData);
+                            for (var j = 0; j < self.serviceMenuData.length; j++) {
+                                var item = self.serviceMenuData[j];
+                                var menuItem = getMenuItem(item);
+                                omcMenus.push(menuItem);
+                            }
+                            if (key) {
+                                self.dataSource(new oj.JsonTreeDataSource(omcMenus));
+                                setTimeout(function(){$("#hamburgerMenu #navlistcontainer>div").ojNavigationList("expand", key, true);}, 1);
+                            }
+                            updateServiceMenuCache();
+                            if (callback) {
+                                callback();
+                            }
+                        }
+                    });
+                }
+                
+                function refreshAllUnloadedServiceMenus() {
+                    var dfdRefreshUnloadedMenus = $.Deferred();
+                    omcMenus = []; //TODO
+                    var allUnloadedMenus = findAllUnloadedServiceMenus();
+                    if (allUnloadedMenus && allUnloadedMenus.length > 0) {
+                        loadServiceData(allUnloadedMenus).done(function() {
+                            $.each(allUnloadedMenus, function(idx, linkItem){
+                                var singleServiceData = null;
+                                var menuDefIndex = getServiceMenuDefIndex(linkItem.appId);
+                                if (menuDefIndex > -1) {
+                                    singleServiceData = self.allServiceData[menuDefIndex];
+                                    loadServiceMenuData(singleServiceData);
+                                }
+                            });
+                            
+                            for (var j = 0; j < self.serviceMenuData.length; j++) {
+                                var item = self.serviceMenuData[j];
+                                var menuItem = getMenuItem(item);
+                                omcMenus.push(menuItem);
+                            }
+                            self.dataSource(new oj.JsonTreeDataSource(omcMenus));
+                            updateServiceMenuCache();
+                            dfdRefreshUnloadedMenus.resolve();
+                        });
+                    }
+                    else {
+                        dfdRefreshUnloadedMenus.resolve();
+                    }
+                    return dfdRefreshUnloadedMenus;
                 }
                 
                 //Load service menus from service registry JSON files
@@ -301,13 +614,25 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                             else {
                                 self.serviceLinks = data.serviceMenus;
                             }
-                            if (self.serviceLinks && self.serviceLinks.length > 0) {
-                                loadServiceData(dfdLoadServiceMenus, self.serviceLinks);
+                            determineInitialServiceMenusToLoad(self.serviceLinks);
+                            if (self.serviceMenuToLoad && self.serviceMenuToLoad.length > 0) {
+                                loadServiceData(self.serviceMenuToLoad).done(function() {
+                                    //Load dummy service menus if any
+                                    loadDummyDeferServiceMenus();
+                                    dfdLoadServiceMenus.resolve();
+                                });
                             }
+//                            if (self.serviceLinks && self.serviceLinks.length > 0) {
+//                                loadServiceData(dfdLoadServiceMenus, self.serviceLinks);
+//                            }
                             else {
+                                //Load dummy service menus if any
+                                loadDummyDeferServiceMenus();
                                 dfdLoadServiceMenus.resolve();
                             }
                         }, true, function(){
+                            hitErrorsWhenLoading = true;
+                            oj.Logger.error("Failed to get registration data during hamburger menu loading.");
                             dfdLoadServiceMenus.resolve();
                         });
                     return dfdLoadServiceMenus;
@@ -318,6 +643,10 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     var dfdGetUserGrants = $.Deferred();
                     if (!self.privilegeList) {
                         function userGrantsCallback(data) {
+                            if (!data) {
+                                hitErrorsWhenLoading = true;
+                                oj.Logger.error("Failed to get user granted privileges during hamburger menu loading.");
+                            }
                             self.privilegeList = data;
                             dfdGetUserGrants.resolve();
                         }
@@ -342,7 +671,10 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                                 dfdGetSubscribedApps.resolve();
                             }
                         }
-                        dfu.getSubscribedApps2WithEdition(subscribedAppsCallback, function(){dfdGetSubscribedApps.resolve();});
+                        dfu.getSubscribedApps2WithEdition(subscribedAppsCallback, function(){
+                            hitErrorsWhenLoading = true;
+                            oj.Logger.error("Failed to get user subscribed applications during hamburger menu loading.");
+                            dfdGetSubscribedApps.resolve();});
                     }
                     else {
                         dfdGetSubscribedApps.resolve();
@@ -351,62 +683,24 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 }
                 
                 //Load service menus meta-data from registered JSON files
-                function loadServiceData(dfd, serviceLinks) {
+                function loadServiceData(serviceLinks) {
+                    var dfdLoadSvcMenuData = $.Deferred();
                     if(!self.allServiceData || self.allServiceData.length < 1){
                         self.allServiceData = [];
+                    }
                         self.loadedServiceCnt = ko.observable(0);
                         self.loadedServiceCnt.subscribe(function(cnt) {
                             if (cnt === serviceLinks.length) {
-                                dfd.resolve();
+                                dfdLoadSvcMenuData.resolve();
                             }
                         });
                         //Load json files
                         $.each(serviceLinks, function(idx, linkItem){
-                            var serviceItem = {};
-                            serviceItem.appId = linkItem.appId;
-                            serviceItem.serviceName = linkItem.serviceName;
-                            serviceItem.version = linkItem.version;
-                            var header = dfu.getDefaultHeader();
-
-                            var url = linkItem.metaDataHref;
-                            url = url.substring(url.indexOf('/emsaasui/'));
-                            dfu.ajaxWithRetry(url, {
-                                type: 'get',
-                                dataType: 'json',
-                                contentType: "application/json",
-                                headers: header,
-                                success: function (data) {
-                                    serviceItem.serviceMenus = data.serviceMenus;
-                                    serviceItem.serviceAdminMenus = data.serviceAdminMenus;
-                                    url = data.serviceMenuMsgBundle;
-                                    if (!url){
-                                        self.loadedServiceCnt(self.loadedServiceCnt() + 1);
-                                        return;
-                                    }
-                                    url = url.substring(url.indexOf('/emsaasui/') + 1, url.length - 3);
-                                    
-                                    //Load resource bundle files
-                                    require(['ojL10n!' + url], function (_nls) {
-                                        serviceItem.serviceMenuMsgBundle = _nls;
-                                        serviceItem.serviceMenus = applyNlsOnMenu(serviceItem.serviceMenus, _nls, serviceItem.appId);
-                                        serviceItem.serviceAdminMenus = applyNlsOnMenu(serviceItem.serviceAdminMenus, _nls, serviceItem.appId);
-                                        self.allServiceData.push(serviceItem);
-                                        self.loadedServiceCnt(self.loadedServiceCnt() + 1);
-                                    }, 
-                                    function() {
-                                        self.loadedServiceCnt(self.loadedServiceCnt() + 1);
-                                    });
-                                },
-                                error: function (xhr, textStatus, errorThrown) {
-                                    self.loadedServiceCnt(self.loadedServiceCnt() + 1);
-                                    oj.Logger.error("Failed to load service menus due to error: " + textStatus);
-                                }
+                            loadSingleServiceMenuJson(linkItem).done(function(){
+                                self.loadedServiceCnt(self.loadedServiceCnt() + 1);
                             });
                         });
-                    }
-                    else {
-                        dfd.resolve();
-                    }
+                    return dfdLoadSvcMenuData;
                 }
                 
                 //Generate a menu separator item
@@ -428,6 +722,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 
                 //If omc service menus have been cached in window session storage, get it directly from cache
                 var cachedMenus = sessionCaches[0].retrieveDataFromCache(sessionCacheAllMenusKey);
+                self.hamburgerMenuLoaded = ko.observable(false);
                 if (cachedMenus && cachedMenus[sessionCacheOmcMenusDataKey] && cachedMenus[sessionCacheOmcMenusServiceLinksKey] && cachedMenus[sessionCacheOmcMenusPrivilegeKey] && cachedMenus[sessionCacheOmcMenusSubscribedAppsKey]) {
                     omcMenus = cachedMenus[sessionCacheOmcMenusDataKey];
                     self.subscribedApps = cachedMenus[sessionCacheOmcMenusSubscribedAppsKey];
@@ -436,12 +731,36 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     self.serviceMenuData = cachedMenus[sessionCacheServiceMenuDataKey];
                     self.baseVanityUrls = cachedMenus[sessionCacheBaseVanityUrlsKey];
                     self.userRoles = cachedMenus[sessionCacheUserRolesKey];
-                    self.dataSource(new oj.JsonTreeDataSource(omcMenus));
-                    menuUtil.fireServiceMenuLoadedEvent();
+                    self.allServiceData = cachedMenus[sessionCacheAllServiceDataKey];
+                    
+                    function refreshHamburgerMenuFromCache() {
+                        cachedMenus = sessionCaches[0].retrieveDataFromCache(sessionCacheAllMenusKey);
+                        omcMenus = cachedMenus[sessionCacheOmcMenusDataKey];
+                        self.serviceMenuData = cachedMenus[sessionCacheServiceMenuDataKey];
+                        self.dataSource(new oj.JsonTreeDataSource(omcMenus));
+                        self.hamburgerMenuLoaded(true);
+                        //$("#omcHamburgerMenuInnerComp").show();
+                        menuUtil.fireServiceMenuLoadedEvent();
+                    }
+                    if (!isServiceMenuLoaded(serviceAppId)) {
+                        refreshSingleServiceMenu(serviceAppId, null, refreshHamburgerMenuFromCache);
+                    }
+                    else {
+                        refreshHamburgerMenuFromCache();
+                    }
                 }
                 //otherwise, get all service menus from service registries
                 else {
-                    $.when(/*checkDashboardAsHomeSettings(), */loadServiceMenus(), getUserGrants(), getSubscribedApps(), fetchBaseVanityUrls(), getUserRoles()).done(function() {
+                    $.when(loadServiceMenus(), getUserGrants(), getSubscribedApps(), fetchBaseVanityUrls(), getUserRoles()).done(function() {
+                        if (hitErrorsWhenLoading) {
+                            //Show error message to warn user
+                            msgUtil.showMessage({
+                                "type": "warn",
+                                "summary": nls.BRANDING_BAR_HAMBURGER_MENU_ERR_LOADING_SUMMARY,
+                                "detail": nls.BRANDING_BAR_HAMBURGER_MENU_ERR_LOADING_DETAIL
+                            });
+                        }
+                        
                         fetchGlobalMenuLinks(self.registration);
                         for (var k = 0; k < rootMenuData.length; ++k) {
 //                            rootMenuData[k].externalUrl = globalMenuIdHrefMapping[rootMenuData[k].id] ? globalMenuIdHrefMapping[rootMenuData[k].id] : '#';
@@ -449,48 +768,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                             self.serviceMenuData.push($.extend(true, {}, rootMenuData[k]));
                         }
                         self.allServiceData && $.each(self.allServiceData, function (idx, singleServiceData) {
-                            //Find index for parent root menu item
-                            var menuId = findAppItemIndex(rootMenuData, 'omc_root_' + singleServiceData.appId);
-                            if (self.serviceMenuData[menuId]) {
-                                if (singleServiceData.serviceMenus) {
-                                    self.serviceMenuData[menuId].children = singleServiceData.serviceMenus;
-                                }
-                                //Load service admin menu items
-                                if (singleServiceData.serviceAdminMenus && singleServiceData.serviceAdminMenus.children) {
-                                    //Add a separator between service menus and admin menus if there is no one defined in JSON
-                                    if (singleServiceData.serviceMenus && singleServiceData.serviceMenus.length > 0) {
-                                        var lastServiceMenuItem = singleServiceData.serviceMenus[singleServiceData.serviceMenus.length - 1];
-                                        if (lastServiceMenuItem.type !== 'divider') {
-                                            var dividerItem = generateDividerItem('omc_' + singleServiceData.appId);
-                                            self.serviceMenuData[menuId].children.push(dividerItem);
-                                        }
-                                    }
-                                    //Append service admin menus to global service admin menus
-                                    self.serviceMenuData[menuId].children.push(singleServiceData.serviceAdminMenus);
-                                    var adminMenuId = findAppItemIndex(self.serviceMenuData,'omc_root_admin');
-                                    var adminSubMenuId = findAppItemIndex(self.serviceMenuData[adminMenuId].children, 'omc_root_admin_grp_'+singleServiceData.appId);
-                                    if (adminSubMenuId > -1) {
-                                        var adminExternalUrl = singleServiceData.serviceAdminMenus.externalUrl;
-                                        if (adminExternalUrl && adminExternalUrl !== '#') {
-                                            self.serviceMenuData[adminMenuId].children[adminSubMenuId].externalUrl = adminExternalUrl;
-                                            self.serviceMenuData[adminMenuId].children[adminSubMenuId].serviceNameForVanityUrl = singleServiceData.serviceAdminMenus.serviceNameForVanityUrl;
-                                        }
-                                        self.serviceMenuData[adminMenuId].children[adminSubMenuId].requiredPrivileges = singleServiceData.serviceAdminMenus.requiredPrivileges;
-                                        self.serviceMenuData[adminMenuId].children[adminSubMenuId].children = [];
-                                                for(var i = 0; i< singleServiceData.serviceAdminMenus.children.length; ++i){
-                                        self.serviceMenuData[adminMenuId].children[adminSubMenuId].children.push($.extend(true, {}, singleServiceData.serviceAdminMenus.children[i]));
-                                                }
-                                    }
-                                    else {
-                                        if (!self.serviceMenuData[adminMenuId].children) {
-                                            self.serviceMenuData[adminMenuId].children = [];
-                                        }
-                                        self.serviceMenuData[adminMenuId].children.push($.extend(true, {}, singleServiceData.serviceAdminMenus));
-                                        self.serviceMenuData[adminMenuId].children[rootMenuData[adminMenuId].children.length].id = 'omc_root_admin_grp_'+singleServiceData.appId;
-                                    }
-                                    self.serviceMenuData[adminMenuId].children[adminSubMenuId].children = addPrefixForRootAdminSubMenu(self.serviceMenuData[adminMenuId].children[adminSubMenuId].children);
-                                }
-                            }
+                            loadServiceMenuData(singleServiceData);
                         });
                         //Construct menu items as data source for jet ojNavigationList component
                         for (var j = 0; j < self.serviceMenuData.length; j++) {
@@ -506,7 +784,10 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                         sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheServiceMenuDataKey, self.serviceMenuData);
                         sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheBaseVanityUrlsKey, self.baseVanityUrls);
                         sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheUserRolesKey, self.userRoles);
+                        sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheAllServiceDataKey, self.allServiceData);
                         self.dataSource(new oj.JsonTreeDataSource(omcMenus));
+                        self.hamburgerMenuLoaded(true);
+                        //$("#omcHamburgerMenuInnerComp").show();
                         menuUtil.fireServiceMenuLoadedEvent();
                     });
                 }
@@ -652,6 +933,9 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                             }
                             if (menuItem.children.length === 0) {
                                 delete menuItem.children;
+                            }
+                            else {
+                                menuItem.disabled = false;
                             }
                         }
                         return menuItem;
@@ -1000,18 +1284,20 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     globalMenuIdHrefMapping['omc_root_SecurityAnalytics'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'SecurityAnalyticsUI');
                     globalMenuIdHrefMapping['omc_root_Compliance'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'ComplianceUIService');
 //                    globalMenuIdHrefMapping['omc_root_admin'] = fetchLinkFromRegistrationData(data, 'adminLinks', 'EventUI');
-                    globalMenuIdHrefMapping['omc_root_admin_alertrules'] = fetchLinkFromRegistrationData(data, 'adminLinks', 'EventUI');
+                    globalMenuIdHrefMapping['omc_root_admin_alertrules'] = fetchLinkFromRegistrationData(data, 'adminLinks', 'EventUI', 'Alert Rules');
+                    globalMenuIdHrefMapping['omc_root_admin_notificationChannels'] = fetchLinkFromRegistrationData(data, 'adminLinks', 'EventUI', 'Notification Channels')?fetchLinkFromRegistrationData(data, 'adminLinks', 'EventUI', 'Notification Channels'):'/emsaasui/eventUi/channels/html/channels-dashboard.html';
                     globalMenuIdHrefMapping['omc_root_admin_agents'] = fetchLinkFromRegistrationData(data, 'adminLinks', 'TenantManagementUI');
                     globalMenuIdHrefMapping['omc_root_admin_clouddiscoveryprofiles'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'MonitoringServiceUI')?fetchLinkFromRegistrationData(data, 'cloudServices', 'MonitoringServiceUI')+"?root=cmsCloudProfilesDashboard":null;
                     globalMenuIdHrefMapping['omc_root_admin_entitiesconfig'] = fetchLinkFromRegistrationData(data, 'adminLinks', 'AdminConsoleSaaSUi');
                 }
                 
-                function fetchLinkFromRegistrationData(data, linkType, serviceName) {
+                function fetchLinkFromRegistrationData(data, linkType, serviceName, linkName) {
                     if (data) {
                         var links = data[linkType];
                         if (links && links.length > 0) {
                             for (var i = 0; i < links.length; i++) {
-                                if (links[i].serviceName === serviceName) {
+                                if (links[i].serviceName === serviceName && (
+                                                !linkName || (linkName && links[i].name && links[i].name.indexOf(linkName)>-1))) {
                                     return links[i].href;
                                 }
                             }
@@ -1090,6 +1376,25 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                         self.preventExpandForAPMLabel = false;
                         return false;
                     }
+                    else if (ui.key.indexOf("omc_root_") > -1 && ui.key.indexOf("omc_root_admin") < 0) {
+                        var appId = ui.key.substring(9);
+                        if (!isServiceMenuLoaded(appId)) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                            refreshSingleServiceMenu(appId, ui.key);
+//                            $("#hamburgerMenu #navlistcontainer>div").ojNavigationList("expand",ui.key, true);
+                        }
+                    }
+                    else if (ui.key === "omc_root_admin") {
+                        //If not all service menus have been loaded, then load them
+                        if (findAllUnloadedServiceMenus().length > 0) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                            refreshAllUnloadedServiceMenus().done(function(){
+                                setTimeout(function(){$("#hamburgerMenu #navlistcontainer>div").ojNavigationList("expand", ui.key, true);});
+                            });
+                        }
+                    }
                 });
                 
                 window.addEventListener("contextmenu", function(event){
@@ -1138,48 +1443,61 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                         //Only handle received message for global menu selection
                         if (eventData && eventData.tag && eventData.tag === messageTag) {
                             if(eventData.menuItemId){
-                                if(eventData.underOmcAdmin){
-                                    for(var Key in menuUtil.OMCMenuConstants){
-                                        if(menuUtil.OMCMenuConstants[Key] === eventData.menuItemId){
-                                            eventData.underOmcAdmin = false;
+                                function setCurrentMenuItem() {
+                                    if(eventData.underOmcAdmin){
+                                        for(var Key in menuUtil.OMCMenuConstants){
+                                            if(menuUtil.OMCMenuConstants[Key] === eventData.menuItemId){
+                                                eventData.underOmcAdmin = false;
+                                            }
                                         }
                                     }
-                                }
-                                if(eventData.underOmcAdmin){
-                                    eventData.menuItemId = "omcadmin_" + eventData.menuItemId;
-                                }
-                                var itemTrack;
-                                for (var j = 0; j < self.serviceMenuData.length; j++) {
-                                    itemTrack = findItemTrack(self.serviceMenuData[j], eventData.menuItemId);
-                                    if (itemTrack.length>0) {
-                                        break;
-                                    }else{
-                                        itemTrack = null;
+                                    if(eventData.underOmcAdmin){
+                                        eventData.menuItemId = "omcadmin_" + eventData.menuItemId;
+                                    }
+                                    var itemTrack;
+                                    for (var j = 0; j < self.serviceMenuData.length; j++) {
+                                        itemTrack = findItemTrack(self.serviceMenuData[j], eventData.menuItemId);
+                                        if (itemTrack.length>0) {
+                                            break;
+                                        }else{
+                                            itemTrack = null;
+                                        }
+                                    }
+                                    if(itemTrack){
+                                        var expandedIdList = $("#omcMenuNavList").ojNavigationList("getExpanded");
+                                        var trackIdList = [];
+                                        while(itemTrack.length>0){
+                                            trackIdList.push(itemTrack.shift().id);
+                                        }
+                                        while(expandedIdList.length>0 && trackIdList.length > 0 && expandedIdList[0] === trackIdList[0]){
+                                            expandedIdList.shift();
+                                            trackIdList.shift();
+                                        }
+                                        while(expandedIdList.length>0){
+                                            var parentItemId = expandedIdList.pop();
+                                            $("#hamburgerMenu #navlistcontainer>div").ojNavigationList("collapse",parentItemId, true);
+                                        }
+                                        setTimeout(function(){
+                                        while(trackIdList.length>1){
+                                            var parentItemId = trackIdList.shift();
+                                            $("#hamburgerMenu #navlistcontainer>div").ojNavigationList("expand",parentItemId, true);
+                                        }
+                                        $("#hamburgerMenu #navlistcontainer>div").ojNavigationList("option", "selection", eventData.menuItemId);
+                                        $("#hamburgerMenu #navlistcontainer>div").ojNavigationList("option", "currentItem", eventData.menuItemId);
+                                        },0);
                                     }
                                 }
-                                if(itemTrack){
-                                    var expandedIdList = $("#omcMenuNavList").ojNavigationList("getExpanded");
-                                    var trackIdList = [];
-                                    while(itemTrack.length>0){
-                                        trackIdList.push(itemTrack.shift().id);
-                                    }
-                                    while(expandedIdList.length>0 && trackIdList.length > 0 && expandedIdList[0] === trackIdList[0]){
-                                        expandedIdList.shift();
-                                        trackIdList.shift();
-                                    }
-                                    while(expandedIdList.length>0){
-                                        var parentItemId = expandedIdList.pop();
-                                        $("#hamburgerMenu #navlistcontainer>div").ojNavigationList("collapse",parentItemId, true);
-                                    }
-                                    setTimeout(function(){
-                                    while(trackIdList.length>1){
-                                        var parentItemId = trackIdList.shift();
-                                        $("#hamburgerMenu #navlistcontainer>div").ojNavigationList("expand",parentItemId, true);
-                                    }
-                                    $("#hamburgerMenu #navlistcontainer>div").ojNavigationList("option", "selection", eventData.menuItemId);
-                                    $("#hamburgerMenu #navlistcontainer>div").ojNavigationList("option", "currentItem", eventData.menuItemId);
-                                    },0);
+                                if (eventData.menuItemId.indexOf("omc_root_admin_") > -1 && findAllUnloadedServiceMenus().length > 0) {
+                                    //If not all service menus have been loaded, then load them
+                                    refreshAllUnloadedServiceMenus().done(function(){
+                                        setCurrentMenuItem();
+//                                        setTimeout(function(){$("#hamburgerMenu #navlistcontainer>div").ojNavigationList("expand", ui.key, true);});
+                                    });
                                 }
+                                else {
+                                    setCurrentMenuItem();
+                                }
+                                
                             }
                         }
                     }

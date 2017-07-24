@@ -8,6 +8,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
     'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg',
     'uifwk/@version@/js/util/zdt-util-impl',
     'uifwk/@version@/js/sdk/menu-util-impl',
+    'uifwk/@version@/js/sdk/SessionCacheUtil',
     'ojs/ojknockout',
     'ojs/ojtoolbar',
     'ojs/ojmenu',
@@ -15,11 +16,27 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
     'ojs/ojdialog',
     'ojs/ojoffcanvas'
 ],
-    function (ko, $, dfumodel, msgUtilModel, contextModel, oj, nls, zdtUtilModel, menuModel) {
+    function (ko, $, dfumodel, msgUtilModel, contextModel, oj, nls, zdtUtilModel, menuModel, sessionCacheModel) {
         function BrandingBarViewModel(params) {
             var self = this;
             var msgUtil = new msgUtilModel();
             var cxtUtil = new contextModel();
+            var menuStatusSessionCacheName = '_uifwk_hamburgermenustatuscache';
+            var menuStatusSessionCacheDataKey = 'hamburger_menu_is_open';
+            var menuStatusSessionCache = new sessionCacheModel(menuStatusSessionCacheName, 1);
+            if (window.performance) {
+                    //We should only clear the cache once during a page refresh, otherwise
+                    //it may cause cached data lost though service menus already fetched
+                    if (window.performance.navigation.type === 1) {
+                        menuStatusSessionCache.clearCache();
+                    }
+                }
+            function storeHamburgerMenuStatus(status){
+                menuStatusSessionCache && menuStatusSessionCache.updateCacheData(menuStatusSessionCacheName, menuStatusSessionCacheDataKey, status);
+            }
+            function retrieveHmaburgerMenuStatus(){
+                return menuStatusSessionCache && menuStatusSessionCache.retrieveDataFromCache(menuStatusSessionCacheName) && menuStatusSessionCache.retrieveDataFromCache(menuStatusSessionCacheName)[menuStatusSessionCacheDataKey];
+            }
             var NO_HIGHLIGHT = 'NO_HIGHLIGHT';
             var CONTEXT_CHANGE = 'CONTEXT_CHANGE';
             // clear topologyParams first from global context
@@ -776,11 +793,21 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 item.stopImmediatePropagation();
             };
             
+            var avoidPageResizeOptIn = $('#uifwkLayoutHbgmenuPlaceHolder').length > 0 ? true : false;
             function injectHamburgerMenuComponent() {
                 //Check if hamburger menu has been created or not, if not create it
                 if (!$('#omcHamburgerMenu').length) {
                     var hamburgerDiv = $($("#omc-hamburger-menu-template").text());
-                    $('#offcanvasInnerContainer').append(hamburgerDiv);
+                    if (avoidPageResizeOptIn) {
+                        var menuInitialStatus = retrieveHmaburgerMenuStatus();
+                        if (menuInitialStatus === 'closed') {
+                            hamburgerDiv.css('display', 'none');
+                        }
+                        $('#uifwkLayoutHbgmenuPlaceHolder').replaceWith(hamburgerDiv);
+                    }
+                    else {
+                       $('#offcanvasInnerContainer').append(hamburgerDiv); 
+                    }
                     ko.applyBindings(self, hamburgerDiv[0]);
                 }
             }
@@ -798,10 +825,17 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 }
             }
             
+            function triggerHamburgerMenuToggleEvent(toggleType) {
+                var message = {'tag': 'EMAAS_OMC_GLOBAL_MENU_TOGGLE_STATUS'};
+                message.toggleType = toggleType;
+                window.postMessage(message, window.location.href);
+            }
+            
             self.hamburgerMenuEnabled = omcHamburgerMenuOptIn ? true : false;
+            self.renderHamburgerMenu = omcHamburgerMenuOptIn && (!window._uifwk || !window._uifwk.hideHamburgerMenuOnPage) ? true : false;
             self.isHamburgerMenuRegistered = ko.observable(false);
-            if (omcHamburgerMenuOptIn) {
-                self.hamburgerBtnLabel = nls.BRANDING_BAR_HAMBURGER_BTN_LABEL;
+            self.hamburgerBtnLabel = nls.BRANDING_BAR_HAMBURGER_BTN_LABEL;
+            if (self.renderHamburgerMenu) {
                 self.menuParams = {'appId': self.appId, 'userName': self.userName, 'tenantName': self.tenantName, 'omcCurrentMenuId': params.omcCurrentMenuId};
                 if (!self.isHamburgerMenuRegistered()) {
                     require(['ojs/ojnavigationlist','ojs/ojjsontreedatasource'], function () {
@@ -873,6 +907,27 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 
                 }());
                 
+                function setPinnedHamburgerMenuStyles() {
+                    $("#omcHamburgerMenu").removeClass('oj-offcanvas-start');
+                    $("#omcHamburgerMenu").removeClass('oj-offcanvas-open');
+                    $("#omcHamburgerMenu").removeClass('oj-offcanvas-overlay');
+                    $("#omcHamburgerMenu").removeClass('oj-offcanvas-transition');
+                    $("#uifwkLayoutMainContainer").addClass('oj-flex-item'); 
+                    $("#uifwkLayoutMainContainer").removeClass('oj-web-applayout-page');
+                    $("#offcanvasInnerContainer").addClass('oj-flex');
+                    $("#offcanvasInnerContainer").addClass('oj-flex-items-pad');
+                }
+                
+                function setOverlayHamburgerMenuStyles() {
+                    $("#omcHamburgerMenu").css('display', '');
+                    $("#omcHamburgerMenu").addClass('oj-offcanvas-start');
+                    $("#omcHamburgerMenu").removeClass('oj-flex-item');
+                    $("#uifwkLayoutMainContainer").removeClass('oj-flex-item'); 
+                    $("#uifwkLayoutMainContainer").addClass('oj-web-applayout-page');
+                    $("#offcanvasInnerContainer").removeClass('oj-flex');
+                    $("#offcanvasInnerContainer").removeClass('oj-flex-items-pad');
+                }
+                
                 self.xlargeScreen = oj.ResponsiveKnockoutUtils.createMediaQueryObservable('(min-width: 1440px)');
 
                 self.xlargeScreen.subscribe(function(isXlarge){
@@ -880,52 +935,127 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         return;
                     }
                     if(!isXlarge){
-                        if($("#omcHamburgerMenu").hasClass("oj-offcanvas-open")){
-                            oj.OffcanvasUtils.close({
-                                    "edge": "start",
-                                    "displayMode": "push",
-                                    "selector": "#omcHamburgerMenu"
-                                });
+                        if (avoidPageResizeOptIn) {
+                            setOverlayHamburgerMenuStyles();
+                            menuUtil.resizeHamburgerMenuLayout();
+                            triggerDashboardResizeEvent('Hamburger menu closed.');
+                            triggerHamburgerMenuToggleEvent('close');
                         }
-                    }else{
-                        if(!$("#omcHamburgerMenu").hasClass("oj-offcanvas-open")){
-                            oj.OffcanvasUtils.toggle({
-                                    "edge": "start",
-                                    "displayMode": "push",
-                                    "selector": "#omcHamburgerMenu",
-                                    "autoDismiss": "none"
-                                });
-                            resetCurrentHamburgerMenu();
-                        }else if($("#omcHamburgerMenu").hasClass("oj-offcanvas-overlay")){
+                        else {
+                            if($("#omcHamburgerMenu").hasClass("oj-offcanvas-open")){
                                 oj.OffcanvasUtils.close({
-                                    "edge": "start",
-                                    "displayMode": "overlay",
-                                    "selector": "#omcHamburgerMenu",
-                                    "autoDismiss": "focusLoss"
-                                });
-                                setTimeout(function(){
-                                        oj.OffcanvasUtils.open({
-                                            "edge": "start",
-                                            "displayMode": "push",
-                                            "selector": "#omcHamburgerMenu",
-                                            "autoDismiss": "none"
-                                        });
-                                        resetCurrentHamburgerMenu();
-                                },500);
+                                        "edge": "start",
+                                        "displayMode": "push",
+                                        "selector": "#omcHamburgerMenu"
+                                    });
+                            }
+                        }
+
+                    }else{
+                        if (avoidPageResizeOptIn) {
+                            if($("#omcHamburgerMenu").hasClass("oj-offcanvas-open")){
+                                oj.OffcanvasUtils.close({
+                                        "edge": "start",
+                                        "displayMode": "overlay",
+                                        "selector": "#omcHamburgerMenu"
+                                    });
+                            }
+                            var menuInitialStatus = retrieveHmaburgerMenuStatus();
+                            if (menuInitialStatus !== 'closed') {
+                                $("#omcHamburgerMenu").show();
+                                $("#uifwkLayoutMainContainer").width($(window).width() - 250);
+                            }
+                            else {
+                                $("#omcHamburgerMenu").hide();
+                                $("#uifwkLayoutMainContainer").width($(window).width());
+                            }
+                            setPinnedHamburgerMenuStyles();
+                            resetCurrentHamburgerMenu();
+                            triggerHamburgerMenuToggleEvent('open');
+                        }
+                        else {
+                            $("#omcHamburgerMenu").addClass('oj-offcanvas-start');
+                            var menuInitialStatus = retrieveHmaburgerMenuStatus();
+                            if(!$("#omcHamburgerMenu").hasClass("oj-offcanvas-open") && menuInitialStatus !== 'closed'){
+                                oj.OffcanvasUtils.toggle({
+                                        "edge": "start",
+                                        "displayMode": "push",
+                                        "selector": "#omcHamburgerMenu",
+                                        "autoDismiss": "none"
+                                    });
+                                resetCurrentHamburgerMenu();
+                            }else if($("#omcHamburgerMenu").hasClass("oj-offcanvas-overlay")){
+                                    oj.OffcanvasUtils.close({
+                                        "edge": "start",
+                                        "displayMode": "overlay",
+                                        "selector": "#omcHamburgerMenu",
+                                        "autoDismiss": "focusLoss"
+                                    });
+                                if(menuInitialStatus !== 'closed'){
+                                    setTimeout(function(){
+                                            oj.OffcanvasUtils.open({
+                                                "edge": "start",
+                                                "displayMode": "push",
+                                                "selector": "#omcHamburgerMenu",
+                                                "autoDismiss": "none"
+                                            });
+                                            resetCurrentHamburgerMenu();
+                                    },500);
+                                }
+                            }
                         }
                     }
                 });
-
+                
                 self.toggleHamburgerMenu = function() {
-                    oj.OffcanvasUtils.toggle({
+                    if (avoidPageResizeOptIn) {
+                        if (self.xlargeScreen()) {
+                            $("#omcHamburgerMenu").toggle();
+                            if ($("#omcHamburgerMenu").is(':visible')) {
+                                $("#uifwkLayoutMainContainer").width($(window).width() - 250);
+                                storeHamburgerMenuStatus("opened");
+                                resetCurrentHamburgerMenu();
+                                triggerHamburgerMenuToggleEvent('open');
+                                triggerDashboardResizeEvent('Hamburger menu opened.');
+                            }
+                            else {
+                                storeHamburgerMenuStatus("closed");
+                                $("#uifwkLayoutMainContainer").width($(window).width());
+                                triggerHamburgerMenuToggleEvent('close');
+                                triggerDashboardResizeEvent('Hamburger menu closed.');
+                            }
+                        }
+                        else {
+                            oj.OffcanvasUtils.open({
+                                "edge": "start",
+                                "displayMode": "overlay",
+        //                      "content": "#main-container",
+                                "selector": "#omcHamburgerMenu",
+                                "autoDismiss": "focusLoss"
+                            });
+                            if($("#omcHamburgerMenu").hasClass("oj-offcanvas-open")) {
+                                resetCurrentHamburgerMenu();
+                            }
+                        }
+                    }
+                    else {
+                        if(self.xlargeScreen()){
+                            if($("#omcHamburgerMenu").hasClass("oj-offcanvas-open")){
+                                storeHamburgerMenuStatus("closed");
+                            }else{
+                                storeHamburgerMenuStatus("opened");
+                            }
+                        }
+                        oj.OffcanvasUtils.toggle({
                             "edge": "start",
                             "displayMode": self.xlargeScreen() ? "push" : "overlay",
     //                      "content": "#main-container",
                             "selector": "#omcHamburgerMenu",
                             "autoDismiss": self.xlargeScreen() ? "none" : "focusLoss"
                         });
-                    if($("#omcHamburgerMenu").hasClass("oj-offcanvas-open")) {
-                        resetCurrentHamburgerMenu();
+                        if($("#omcHamburgerMenu").hasClass("oj-offcanvas-open")) {
+                            resetCurrentHamburgerMenu();
+                        }
                     }
                 };
 
@@ -935,16 +1065,20 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 }
                 if (!window._uifwk.obbMenuLoadedListenerRegistered) {
                 menuUtil.subscribeServiceMenuLoadedEvent(function(){
-                    $("#omcHamburgerMenu").on("ojopen", function(event, offcanvas) {
-                        if(offcanvas.displayMode === "push") {
-                            $("#offcanvasInnerContainer").width(document.body.clientWidth-250);
-                            triggerDashboardResizeEvent('Hamburger menu opened.');
-                        }});
-                        
-                    $("#omcHamburgerMenu").on("ojclose", function(event, offcanvas) {
-                        $("#offcanvasInnerContainer").width(document.body.clientWidth);
-                        triggerDashboardResizeEvent('Hamburger menu closed.');
-                    });
+                    $("#omcHamburgerMenuInnerComp").show();
+                    if (!avoidPageResizeOptIn) {
+                        $("#omcHamburgerMenu").on("ojopen", function(event, offcanvas) {
+                            if(offcanvas.displayMode === "push") {
+                                $("#offcanvasInnerContainer").width(document.body.clientWidth-250);
+                                triggerDashboardResizeEvent('Hamburger menu opened.');
+                            }});
+
+                        $("#omcHamburgerMenu").on("ojclose", function(event, offcanvas) {
+                            $("#offcanvasInnerContainer").width(document.body.clientWidth);
+                            triggerDashboardResizeEvent('Hamburger menu closed.');
+                        });
+                    }
+                    
                     $(window).resize(function() {
                         if (window._uifwk.isUnderPrint) {
                             window._uifwk.resizeTriggeredByPrint = true;
@@ -952,24 +1086,52 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         else {
                             window._uifwk.resizeTriggeredByPrint = false;
                         }
-                        if ($("#omcHamburgerMenu").hasClass("oj-offcanvas-open") && !$("#omcHamburgerMenu").hasClass("oj-offcanvas-overlay")) {
-                            $("#offcanvasInnerContainer").width(document.body.clientWidth - 250);
-                        } else {
-                            $("#offcanvasInnerContainer").width(document.body.clientWidth);
+                        if (!avoidPageResizeOptIn) {
+                            if ($("#omcHamburgerMenu").hasClass("oj-offcanvas-open") && !$("#omcHamburgerMenu").hasClass("oj-offcanvas-overlay")) {
+                                $("#offcanvasInnerContainer").width(document.body.clientWidth - 250);
+                            } else {
+                                $("#offcanvasInnerContainer").width(document.body.clientWidth);
+                            }
+                        }
+                        else {
+                            menuUtil.resizeHamburgerMenuLayout();
                         }
                     });
-
-                    if(self.xlargeScreen()){
-                        $((function(){
-                            oj.OffcanvasUtils.open({
+                    
+                    if (!avoidPageResizeOptIn) {
+                        $("#omcHamburgerMenu").addClass('oj-offcanvas-start');
+                        $("#omcHamburgerMenu").removeClass('oj-flex-item');
+                        var menuInitialStatus = retrieveHmaburgerMenuStatus();
+                        if(self.xlargeScreen() && menuInitialStatus !== 'closed'){
+                            $((function(){
+                                oj.OffcanvasUtils.open({
                                     "edge": "start",
                                     "displayMode": "push",
                                     "selector": "#omcHamburgerMenu",
                                     "autoDismiss": "none"
                                 });
-                            triggerDashboardResizeEvent('Hamburger menu opened.');
-                        })());
+                                triggerDashboardResizeEvent('Hamburger menu opened.');
+                                storeHamburgerMenuStatus("opened");
+                            })());
+                        }
                     }
+                    else {
+                        if(!self.xlargeScreen()) {
+                            setOverlayHamburgerMenuStyles();
+                        }
+                        else {
+                            var menuInitialStatus = retrieveHmaburgerMenuStatus();
+                            if (menuInitialStatus !== 'closed') {
+                                $("#omcHamburgerMenu").show();
+                            }
+                            else {
+                                $("#omcHamburgerMenu").hide();
+                                triggerHamburgerMenuToggleEvent('close');
+                            }
+                            menuUtil.resizeHamburgerMenuLayout();
+                        }
+                    }
+
                     
                     //Show composite menu if it's called before hamburger menu finished loading
                     if (window._uifwk && window._uifwk.compositeMenuName && window._uifwk.compositeMenuJson) {
@@ -1767,6 +1929,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 
         return BrandingBarViewModel;
     });
+
 
 
 

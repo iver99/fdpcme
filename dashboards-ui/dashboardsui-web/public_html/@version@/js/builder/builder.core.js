@@ -110,6 +110,7 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
 
         self.EVENT_TILE_MOVE_STOPED = "EVENT_TILE_MOVE_STOPED";
         self.EVENT_TILE_RESIZED = "EVENT_TILE_RESIZED";
+        self.EVENT_TILE_LINK_CHANGED = "EVENT_TILE_LINK_CHANGED";
 
         self.EVENT_AUTO_REFRESH_CHANGED = "EVENT_AUTO_REFRESH_CHANGED";
         
@@ -147,7 +148,7 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
         self.triggerBuilderResizeEvent = function(message) {
             var height = $(window).height()/* - $('#headerWrapper').outerHeight()
                     - $('#head-bar-container').outerHeight()*/;
-            var width = $("#omcHamburgerMenu:visible").not(".oj-offcanvas-overlay")[0]?$(window).width()-$("#omcHamburgerMenu").width():$(window).width();
+            var width = $("#omcHamburgerMenu:visible").not(".oj-offcanvas-start")[0]?$(window).width()-$("#omcHamburgerMenu").width():$(window).width();
             var $visibleDashboard = $("#dashboards-tabs-contents .dashboard-content:visible");
             var $rightPanelToggler = $('.right-panel-toggler');
             var $dbdLeftPanel = $('.dbd-left-panel');
@@ -182,6 +183,7 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
         self.addEventListener(self.EVENT_DSB_ENABLE_TIMERANGE_CHANGED, dashboardUpdatedListener);
         self.addEventListener(self.EVENT_TILE_MOVE_STOPED, dashboardUpdatedListener);
         self.addEventListener(self.EVENT_TILE_RESIZED, dashboardUpdatedListener);
+        self.addEventListener(self.EVENT_TILE_LINK_CHANGED, dashboardUpdatedListener);
     }
 
     Builder.registerModule(DashboardBuilder, 'DashboardBuilder');

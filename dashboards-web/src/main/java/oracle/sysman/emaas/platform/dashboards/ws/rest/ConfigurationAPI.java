@@ -201,8 +201,8 @@ public class ConfigurationAPI extends APIBase
             }
 
             Future<List<String>> futureUserRoles =null;
+            Future<String> futureUserGrants =null;
             Future<List<String>> futureSubscribedApps =null;
-            Future<String> futureSubscribedApps2 =null;
             ExecutorService pool = ParallelThreadPool.getThreadPool();
 
             final String curTenant = TenantContext.getCurrentTenant();
@@ -223,6 +223,25 @@ public class ConfigurationAPI extends APIBase
                     }
                 }
             });
+            
+            //retrieve user grants
+            futureUserGrants = pool.submit(new Callable<String>() {
+                @Override
+                public String call() throws Exception {
+                    try{
+                        long startUserGrants = System.currentTimeMillis();
+                        _LOGGER.info("Parallel request to get user grants...");
+                        String userGrants = PrivilegeChecker.getUserGrants(curTenant, curUser);
+                        long endUserGrants = System.currentTimeMillis();
+                        _LOGGER.info("Time to get user grants: {}ms, user grants are: {}", (endUserGrants - startUserGrants), userGrants);
+                        return userGrants;
+                    }catch(Exception e){
+                        _LOGGER.error("Error occurred when retrieving user granted privileges using parallel request!", e);
+                        throw e;
+                    }
+                }
+            });
+            
             //retrieve subscribapp api data
 			final TenantSubscriptionInfo tenantSubscriptionInfo= new TenantSubscriptionInfo();
             futureSubscribedApps = pool.submit(new Callable<List<String>>() {
@@ -278,10 +297,26 @@ public class ConfigurationAPI extends APIBase
 				futureUserRoles.cancel(true);
                 _LOGGER.error(e);
             }
+            
+            String userGrants = null;
+            try {
+                if(futureUserGrants!=null){
+                	userGrants = futureUserGrants.get(TIMEOUT, TimeUnit.MILLISECONDS);
+                    _LOGGER.debug("User grants data is {}", userGrants);
+                }
+            } catch (InterruptedException e) {
+                _LOGGER.error(e);
+            } catch (ExecutionException e) {
+                _LOGGER.error(e.getCause() == null ? e : e.getCause());
+            }catch(TimeoutException e){
+				//if timeout, and the task is still running, attempt to stop the task
+            	futureUserGrants.cancel(true);
+                _LOGGER.error(e);
+            }
 
 			SubscribedAppsEntity sae = subApps == null ? null : new SubscribedAppsEntity(subApps);
 			RegistrationEntity re = new RegistrationEntity(sessionExpiryTime, userRoles);
-			CombinedBrandingBarData cbbd = new CombinedBrandingBarData(new UserInfoEntity(userRoles), re, sae,subApps2);
+			CombinedBrandingBarData cbbd = new CombinedBrandingBarData(new UserInfoEntity(userRoles, userGrants), re, sae,subApps2);
 			String brandingBarData = cbbd.getBrandingbarInjectedJS();
             long end = System.currentTimeMillis();
 			_LOGGER.info("Response for [GET] /v1/configurations/brandingbardata is \"{}\". It takes {}ms for this API", brandingBarData, (end - start));

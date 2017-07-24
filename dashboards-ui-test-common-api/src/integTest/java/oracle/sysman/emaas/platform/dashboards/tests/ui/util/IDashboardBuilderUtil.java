@@ -26,6 +26,8 @@ public interface IDashboardBuilderUtil extends IUiTestCommonAPI
 	public static final String TILE_RIGHT = "right";
 
 	public void addNewDashboardToSet(WebDriver driver, String dashboardName);
+	
+	public void addTextWidgetToDashboard(WebDriver driver);
 
 	public void addWidgetToDashboard(WebDriver driver, String searchString);
 
@@ -46,6 +48,8 @@ public interface IDashboardBuilderUtil extends IUiTestCommonAPI
 	public void editDashboard(WebDriver driver, String name, String descriptions, Boolean toShowDscptn);
 
 	public void editDashboardSet(WebDriver driver, String name, String descriptions);
+	
+	public void editTextWidgetAddContent(WebDriver driver, int index, String content);
 
 	public Boolean favoriteOption(WebDriver driver);
 
@@ -126,6 +130,14 @@ public interface IDashboardBuilderUtil extends IUiTestCommonAPI
 
 	public void showWidgetTitle(WebDriver driver, String widgetName, int index, boolean visibility);
 
+	public void addLinkToWidgetTitle(WebDriver driver, String widgetName, String dashboardName);
+
+	public void addLinkToWidgetTitle(WebDriver driver, String widgetName, int index, String dashboardName);
+
+	public boolean verifyLinkOnWidgetTitle(WebDriver driver, String widgetName, String dashboardName);
+
+	public boolean verifyLinkOnWidgetTitle(WebDriver driver, String widgetName, int index, String dashboardName);
+
 	/**
 	 * sort dashboards
 	 *
@@ -154,4 +166,22 @@ public interface IDashboardBuilderUtil extends IUiTestCommonAPI
 
 	public boolean verifyWidget(WebDriver driver, String widgetName, int index);
 
+	public boolean hasWidgetLink(WebDriver driver, String widgetName);
+	/**
+	 * @param driver
+	 * @param widgetName
+	 * @param index
+	 * @return
+	 */
+	public boolean hasWidgetLink(WebDriver driver, String widgetName, int index);
+
+	/**
+	 * @param driver
+	 * @param widgetName
+	 * @param index
+	 * @return
+	 */	
+	public void clickLinkOnWidgetTitle(WebDriver driver, String widgetName, int index);
+	
+	public void clickLinkOnWidgetTitle(WebDriver driver, String widgetName);
 }
