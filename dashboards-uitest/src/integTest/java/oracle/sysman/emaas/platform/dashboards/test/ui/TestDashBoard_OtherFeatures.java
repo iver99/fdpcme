@@ -915,38 +915,41 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		webd.getLogger().info("Verify the dashboard created Successfully");
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_textWidget, dbDesc, true), "Create dashboard failed!");		
 		
-		DashboardBuilderUtil.addTextWidgetToDashboard(webd);
-		
-		WebElement textContent = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.TEXTCONTENTCSS));
+		DashboardBuilderUtil.addTextWidgetToDashboard(webd);				
 		
 		//Assert.assertTrue(DashboardBuilderUtil.verifyWidget(webd, widgetName), "text widget isn't added into the dashboard successfully");
 		DashboardBuilderUtil.addLinkInTextWidget(webd, 1, url, DashBoardPageId.PROTOCOLOPTION_HTTP);				
 		//Verify the content is added successfully
-		webd.getLogger().info("Verify the url is added successfully");								
+		webd.getLogger().info("Verify the url is added successfully");	
+		WebElement textContent = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.TEXTCONTENTCSS));
 		Assert.assertEquals(textContent.getText(), DashBoardPageId.PROTOCOLOPTION_HTTP + url);		
 		webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
 		
 		DashboardBuilderUtil.addLinkInTextWidget(webd, 1, url, DashBoardPageId.PROTOCOLOPTION_HTTPS);
 		//Verify the content is added successfully
-		webd.getLogger().info("Verify the url is added successfully");								
+		webd.getLogger().info("Verify the url is added successfully");			
+		textContent = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.TEXTCONTENTCSS));
 		Assert.assertEquals(textContent.getText(), DashBoardPageId.PROTOCOLOPTION_HTTPS + url);		
 		webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
 		
 		DashboardBuilderUtil.addLinkInTextWidget(webd, 1, url, DashBoardPageId.PROTOCOLOPTION_FTP);
 		//Verify the content is added successfully
-		webd.getLogger().info("Verify the url is added successfully");								
+		webd.getLogger().info("Verify the url is added successfully");	
+		textContent = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.TEXTCONTENTCSS));
 		Assert.assertEquals(textContent.getText(), DashBoardPageId.PROTOCOLOPTION_FTP + url);		
 		webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
 		
 		DashboardBuilderUtil.addLinkInTextWidget(webd, 1, url, DashBoardPageId.PROTOCOLOPTION_NEWS);
 		//Verify the content is added successfully
-		webd.getLogger().info("Verify the url is added successfully");								
+		webd.getLogger().info("Verify the url is added successfully");				
+		textContent = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.TEXTCONTENTCSS));
 		Assert.assertEquals(textContent.getText(), DashBoardPageId.PROTOCOLOPTION_NEWS + url);		
 		webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
 		
 		DashboardBuilderUtil.addLinkInTextWidget(webd, 1, url, DashBoardPageId.PROTOCOLOPTION_OTHER);
 		//Verify the content is added successfully
-		webd.getLogger().info("Verify the url is added successfully");								
+		webd.getLogger().info("Verify the url is added successfully");		
+		textContent = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.TEXTCONTENTCSS));
 		Assert.assertEquals(textContent.getText(), DashBoardPageId.PROTOCOLOPTION_OTHER + url);		
 		webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
 		
