@@ -1726,3 +1726,9 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
     height: calc(100% - 20px);
     margin: 0px 10px;
 }
+
+//set image max-width to 100% so that image smaller than tile show its original size, image lager than tile show 100% width
+.textWidgetWrapper img {
+    max-width: 100% !important;
+    height: auto !important;
+}

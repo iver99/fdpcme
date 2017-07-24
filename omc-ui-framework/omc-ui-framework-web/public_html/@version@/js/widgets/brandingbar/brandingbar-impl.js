@@ -832,9 +832,10 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             }
             
             self.hamburgerMenuEnabled = omcHamburgerMenuOptIn ? true : false;
+            self.renderHamburgerMenu = omcHamburgerMenuOptIn && (!window._uifwk || !window._uifwk.hideHamburgerMenuOnPage) ? true : false;
             self.isHamburgerMenuRegistered = ko.observable(false);
-            if (omcHamburgerMenuOptIn) {
-                self.hamburgerBtnLabel = nls.BRANDING_BAR_HAMBURGER_BTN_LABEL;
+            self.hamburgerBtnLabel = nls.BRANDING_BAR_HAMBURGER_BTN_LABEL;
+            if (self.renderHamburgerMenu) {
                 self.menuParams = {'appId': self.appId, 'userName': self.userName, 'tenantName': self.tenantName, 'omcCurrentMenuId': params.omcCurrentMenuId};
                 if (!self.isHamburgerMenuRegistered()) {
                     require(['ojs/ojnavigationlist','ojs/ojjsontreedatasource'], function () {
