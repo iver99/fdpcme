@@ -262,6 +262,10 @@ require(['knockout',
                         oj.Logger.error("Tenant subscribes to no service. Redirect to dashboard error page", true);
                         location.href = "./error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_NO_SUBS_MSG";
                     }
+                    else {
+                        oj.Logger.error("Failed to get tenant subscribed applications. Redirect to dashboard error page", true);
+                        location.href = "./error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_MSG";
+                    }
                 });
 
                 Builder.initializeFromCookie();
