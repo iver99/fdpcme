@@ -476,7 +476,7 @@ public class BugVerification extends LoginAndLogout
     @Test(alwaysRun = true)
     public void testEMCPDF_1094()
     {
-    	String dbdesc = "Dashboard_EMCPDF1094\nline break\r\ntest";
+    	String dbdesc = "Dashboard_EMCPDF1094\nline break\ntest";
     	String dbname = "Dashboard_EMCPDF1094";
 		//Initialize the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
