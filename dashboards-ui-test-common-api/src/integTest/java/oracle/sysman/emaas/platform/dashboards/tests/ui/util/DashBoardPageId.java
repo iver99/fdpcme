@@ -322,6 +322,8 @@ public class DashBoardPageId
 	public static final String TEXTWIDGETCONTENTCSS = "div[id^='textContentWrapper_']";
 	public static final String TEXTWIDGETEDITORCSS = "div[id^='textEditorWrapper_'] .cke_editable";
 	public static final String TEXTCONTENTCSS = "div[data-bind=\"html: content()\"]";
+	public static final String TEXTCONTENT1 = "//div[contains(@id, 'textContentWrapper_')]/div/a[1]";
+	public static final String TEXTCONTENT2 = "//div[contains(@id, 'textContentWrapper_')]/div/a[2]";
 	public static final String LINKICONCSS = ".cke_button__link";         // "//a[@title='Link']";
 	public static final String LINKDIALOGCSS = "div.cke_dialog_body";
 	public static final String PROTOCOLOPTION = "//div[contains(@class, 'cke_dialog_ui_select')]/label[text()='Protocol']/following-sibling::*//div[contains(@class, 'cke_dialog_ui_input_select')]";
