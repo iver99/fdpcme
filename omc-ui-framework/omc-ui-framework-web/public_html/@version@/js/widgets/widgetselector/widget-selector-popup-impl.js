@@ -5,7 +5,7 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
     'ojs/ojcore',
     'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg',
     'uifwk/@version@/js/util/typeahead-search-impl', 
-    'uifwk/js/util/mobile-util',
+    'uifwk/@version@/js/util/mobile-util-impl',
     'ojs/ojselectcombobox',
     'ojs/ojpopup',
     'ojs/ojinputtext',
