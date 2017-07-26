@@ -127,7 +127,6 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 self.udeTopologyData = data;
             };
             self.updateGlobalContextByTopologySelection = params.updateGlobalContextByTopologySelection;
-            self.showMaxMinButtonInDF = ko.observable(true);
             self.showEnterpriseTopology = true;
             if (params) {
                 self.associations(params.associations);
@@ -306,73 +305,6 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     }
                 }
             }
-
-
-            self.maxIconToRight = ko.observable("30px");
-            self.topologySize = ko.observable();
-            self.topologyHeight = ko.observable();
-            self.topologySize.subscribe(function (topoHeight) {
-                var legendHeight = 0;
-                if ($("#ude_topology_legend").length > 0) { //Re-set legend height if there is legend.
-                    //TO DO: hard-code legend height for now. Need to get legend height dynamically after UDE support it later.
-                    legendHeight = 300;
-                }
-                topoHeight && topoHeight.h && self.topologyHeight(Math.max(topoHeight.h, legendHeight));
-                if (self.topologyHeight() <= 201) {
-                    self.topologyCssHeight(self.topologyHeight());
-                } else {
-                    self.topologyCssHeight(201);
-                }
-
-                if ($("#ude_topology_legend").length > 0) {
-                    self.maxIconToRight("180px");
-                } else {
-                    self.maxIconToRight("30px");
-                }
-            });
-
-            self.isMaximized = ko.observable(false);
-
-            self.showTopologyMaxIcon = function () {
-                $("#maxMinTopology").css("display", "block");
-            };
-            self.hideTopologyMaxIcon = function () {
-                $("#maxMinTopology").css("display", "none");
-            };
-            self.maximizeTopology = function () {
-                self.topologyCssHeight(self.topologyHeight());
-                self.isMaximized(true);
-                var $b = $(".right-panel-toggler:visible")[0] && ko.dataFor($(".right-panel-toggler:visible")[0]).$b;
-                $b && $b.triggerBuilderResizeEvent('Topology is maximized!');
-            };
-            self.restoreTopology = function () {
-                self.topologyCssHeight(201);
-                self.isMaximized(false);
-                var $b = $(".right-panel-toggler:visible")[0] && ko.dataFor($(".right-panel-toggler:visible")[0]).$b;
-                $b && $b.triggerBuilderResizeEvent('Topology is restored!');
-            };
-            self.maxMinTopologyToggle = function () {
-                if (self.showMaxMinButtonInDF() === true) {
-                    if (!self.isMaximized()) {
-                        self.maximizeTopology();
-                    } else {
-                        self.restoreTopology();
-                    }
-                }
-            };
-
-            self.topologyCssHeight = ko.observable();
-            self.topologyStyle = ko.computed(function () {
-                if (self.showMaxMinButtonInDF() === true) {
-                    var height = "100%; max-height: 204px";
-                    if (self.topologyCssHeight()) {
-                        height = (self.topologyCssHeight() + 3) + "px";
-                    }
-                    return "display: flex; float: left; width: 100%; height: " + height + ";";
-                } else {
-                    return "display:block;float:none;width:100%;";
-                }
-            });
 
             /*
              * Called by UDE if topology is maximized or restored
