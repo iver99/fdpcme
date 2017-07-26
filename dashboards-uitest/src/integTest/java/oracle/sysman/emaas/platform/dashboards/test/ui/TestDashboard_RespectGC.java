@@ -59,7 +59,7 @@ public class TestDashboard_RespectGC extends LoginAndLogout
 		LoginAndLogout.logoutMethod();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testRespectGCTimeRange() throws InterruptedException
 	{
 		dbRespectGCTimeRangeName = "respectGC TimeRange-" + DashBoardUtils.generateTimeStamp();
@@ -102,7 +102,7 @@ public class TestDashboard_RespectGC extends LoginAndLogout
 		Assert.assertEquals(GlobalContextUtil.getTimeRangeLabel(webd).contains("Last week"), true);
 	}
 	
-	@Test
+	@Test(alwaysRun = true)
 	public void testRespectGCTimeRange_URLCheck()
 	{
 		dbRespectGCTimeRangeName = "respectGC TimeRange-" + DashBoardUtils.generateTimeStamp();
