@@ -4,6 +4,7 @@ import oracle.sysman.emaas.platform.dashboards.test.ui.util.DashBoardUtils;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.LoginAndLogout;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.PageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_190;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
@@ -11,6 +12,8 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.WelcomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
@@ -59,6 +62,9 @@ public class BugVerification extends LoginAndLogout
 		DashBoardUtils.deleteDashboard(webd, "Dashboard_EMCPDF2856");
 		DashBoardUtils.deleteDashboard(webd, "DashboardSet_3660");
 		DashBoardUtils.deleteDashboard(webd, "Dashboard_3660"); 
+		DashBoardUtils.deleteDashboard(webd, "DashboardSet_4068");
+		DashBoardUtils.deleteDashboard(webd, "Dashboard_4068"); 
+		DashBoardUtils.deleteDashboard(webd, "DashboardInSet_4068");
 
 		webd.getLogger().info("All test data have been removed");
 
@@ -472,4 +478,107 @@ public class BugVerification extends LoginAndLogout
     		webd.getLogger().info("Hamburger menu is not enabled, do need to verify the fix for EMCPDF-4039");
     	}
     }
+    
+    @Test(alwaysRun = true)
+	public void testEMCPDF_4068_1()
+	{
+		//Initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testEMCPDF_4068_1");
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		//reset all filter options
+		webd.getLogger().info("Reset all filter options");
+		DashboardHomeUtil.resetFilterOptions(webd);
+		
+		DashboardHomeUtil.gridView(webd);
+
+		//create a dashboard
+		webd.getLogger().info("Create a dashboard");
+		DashboardHomeUtil.createDashboard(webd, "Dashboard_4068", null);
+		WaitUtil.waitForPageFullyLoaded(webd);
+		
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, "Dashboard_4068", null, true),
+				"Create dashboard failed!");
+		
+		webd.click("css=" + DashBoardPageId.EDITBTNCSS);
+		WaitUtil.waitForPageFullyLoaded(webd);
+		
+		webd.click("css=" + DashBoardPageId.RIGHTDRAWEREDITSINGLEDBBTNCSS);
+		webd.clear("id=" + DashBoardPageId.DASHBOARDNAMEBOXID);
+		webd.sendKeys("css=" + DashBoardPageId.BUILDEROPTIONSEDITDESCRIPTIONCSS, "The description of this dashboard");
+
+		WebElement errMsgSummary = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.ERRORMSGSUMMARYCSS));
+		WebElement errMsgDetail = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.ERRORMSGDETAILCSS));
+		Assert.assertEquals(errMsgSummary.getText(), "Name is required");
+		Assert.assertEquals(errMsgDetail.getText(), "You must enter a value.");	
+		
+		webd.sendKeys("id=" + DashBoardPageId.DASHBOARDNAMEBOXID, "Dashboard_4068");
+
+		Assert.assertFalse(webd.isDisplayed("css=" + DashBoardPageId.ERRORMSGSUMMARYCSS), "The error message isn't disappearred after re-input name in name input box");
+		Assert.assertFalse(webd.isDisplayed("css=" + DashBoardPageId.ERRORMSGDETAILCSS), "The error message isn't disappearred after re-input name in name input box");
+		
+	}
+    
+    @Test(alwaysRun = true)
+	public void testEMCPDF_4068_2()
+	{
+		//Initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testEMCPDF_4068");
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		//reset all filter options
+		webd.getLogger().info("Reset all filter options");
+		DashboardHomeUtil.resetFilterOptions(webd);
+		
+		DashboardHomeUtil.gridView(webd);
+
+		//create a dashboard set
+		webd.getLogger().info("Create a dashboard set");
+		DashboardHomeUtil.createDashboardSet(webd, "DashboardSet_4068", null);
+		DashboardBuilderUtil.createDashboardInsideSet(webd, "DashboardInSet_4068", null);
+
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardSet(webd, "DashboardSet_4068"),
+				"Create dashboard failed!");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardInsideSet(webd, "DashboardInSet_4068"), 
+				"Create dashboard in Set failed!");
+		
+		webd.click("css=" + DashBoardPageId.EDITBTNCSS);
+		WaitUtil.waitForPageFullyLoaded(webd);
+		
+		//Verify the behavior of clearing dashboard set name
+		webd.click("css=" + DashBoardPageId.RIGHTDRAWEREDITSINGLEDBSETBTNCSS);
+		webd.clear("css=" + DashBoardPageId.DASHBOARDSETOPTIONSEDITNAMECSS);
+		webd.sendKeys("css=" + DashBoardPageId.DASHBOARDSETOPTIONSEDITDESCRIPTIONCSS, "test the behaviour when clearing the input box of name field");												
+
+		//webd.sendKeys("id=" + DashBoardPageId.DASHBOARDNAMEBOXID, "");
+		WebElement errMsgSummary1 = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.ERRORMSGSUMMARYCSS));
+		WebElement errMsgDetail1 = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.ERRORMSGDETAILCSS));
+		Assert.assertEquals(errMsgSummary1.getText(), "Name is required");
+		Assert.assertEquals(errMsgDetail1.getText(), "You must enter a value.");
+		
+		webd.sendKeys("css=" + DashBoardPageId.DASHBOARDSETOPTIONSEDITNAMECSS, "DashboardSet_4068");
+
+		Assert.assertFalse(webd.isDisplayed("css=" + DashBoardPageId.ERRORMSGSUMMARYCSS), "The error message isn't disappearred after re-input name in name input box");
+		Assert.assertFalse(webd.isDisplayed("css=" + DashBoardPageId.ERRORMSGDETAILCSS), "The error message isn't disappearred after re-input name in name input box");
+		
+		webd.click("css=" + DashBoardPageId.DASHBOARDSETFWKICONCSS);
+		
+		//Verify the behavior of clearing dashboard name which is in dashboardSet 
+		webd.click("css=" + DashBoardPageId.RIGHTDRAWEREDITSINGLEDBBTNCSS);
+		webd.clear("id=" + DashBoardPageId.DASHBOARDNAMEBOXID);
+		
+		webd.sendKeys("css=" + DashBoardPageId.BUILDEROPTIONSEDITDESCRIPTIONCSS, "The description of this dashboard");
+
+		WebElement errMsgSummary2 = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.ERRORMSGSUMMARYCSS));
+		WebElement errMsgDetail2 = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.ERRORMSGDETAILCSS));
+		Assert.assertEquals(errMsgSummary2.getText(), "Name is required");
+		Assert.assertEquals(errMsgDetail2.getText(), "You must enter a value.");	
+		
+		webd.sendKeys("id=" + DashBoardPageId.DASHBOARDNAMEBOXID, "DashboardInSet_4068");
+
+		Assert.assertFalse(webd.isDisplayed("css=" + DashBoardPageId.ERRORMSGSUMMARYCSS), "The error message isn't disappearred after re-input name in name input box");
+		Assert.assertFalse(webd.isDisplayed("css=" + DashBoardPageId.ERRORMSGDETAILCSS), "The error message isn't disappearred after re-input name in name input box");		
+	}
 }
