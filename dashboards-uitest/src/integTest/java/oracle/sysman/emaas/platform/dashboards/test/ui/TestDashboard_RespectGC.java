@@ -59,7 +59,7 @@ public class TestDashboard_RespectGC extends LoginAndLogout
 		LoginAndLogout.logoutMethod();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testRespectGCTimeRange() throws InterruptedException
 	{
 		dbRespectGCTimeRangeName = "respectGC TimeRange-" + DashBoardUtils.generateTimeStamp();
@@ -88,7 +88,7 @@ public class TestDashboard_RespectGC extends LoginAndLogout
 
 		//change the time range, verify the url will be changed
 		webd.getLogger().info("Change the time range, verify the url will be changed");
-		GlobalContextUtil.setTimeRange(webd, TimeRange.Last7Days);
+		GlobalContextUtil.setTimeRange(webd, TimeRange.NewLast7Days);
 
 		String currentURL = webd.getWebDriver().getCurrentUrl();
 		Assert.assertEquals(currentURL.contains("timePeriod%3DLAST_7_DAY"), true);
@@ -99,13 +99,13 @@ public class TestDashboard_RespectGC extends LoginAndLogout
 
 		WaitUtil.waitForPageFullyLoaded(webd);
 
-		Assert.assertEquals(GlobalContextUtil.getTimeRangeLabel(webd).contains("Last week"), true);
+		Assert.assertEquals(GlobalContextUtil.getTimeRangeLabel(webd).contains("Last 7 days"), true);
 	}
 	
-	@Test
+	@Test(alwaysRun = true)
 	public void testRespectGCTimeRange_URLCheck()
 	{
-		dbRespectGCTimeRangeName = "respectGC TimeRange-" + DashBoardUtils.generateTimeStamp();
+		dbRespectGCTimeRangeName_URLCheck = "respectGC TimeRange URL-" + DashBoardUtils.generateTimeStamp();
 
 		//initialize the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
