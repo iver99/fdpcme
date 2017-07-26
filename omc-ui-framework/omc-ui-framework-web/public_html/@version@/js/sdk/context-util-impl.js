@@ -1488,6 +1488,9 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                 }
                 ;
                 window.addEventListener("message", onTopologyStatusChange, false);
+                //return reference to event listener so integrator can dispose it
+                //when not needed
+                return onTopologyStatusChange;
             };
 
             function getEntityCacheKey() {

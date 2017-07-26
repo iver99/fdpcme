@@ -18,6 +18,26 @@ function (ko, $, oj, dfu) {
         self.isWidgetLoaded =ko.observable(false);
         self.tilesViewModel = ko.observable($b.getDashboardTilesViewModel && $b.getDashboardTilesViewModel());
 
+        self.getKOWidgetFromJSData = function(widgetData) {
+            if (!widgetData.WIDGET_DESCRIPTION) {
+                widgetData.WIDGET_DESCRIPTION = null;
+            }
+            var wgt = ko.mapping.fromJS(widgetData);
+            if(widgetData.WIDGET_DESCRIPTION){
+                wgt.WIDGET_DESCRIPTION = widgetData.WIDGET_DESCRIPTION.toString().replace(/\n/g,"<br>");
+            }
+            if (wgt && !wgt.WIDGET_VISUAL) {
+                wgt.WIDGET_VISUAL = ko.observable('');
+            }
+            if (wgt && !wgt.imgWidth) {
+                wgt.imgWidth = ko.observable('120px');
+            }
+            if (wgt && !wgt.imgHeight) {
+                wgt.imgHeight = ko.observable('120px');
+            }
+            return wgt;
+        };
+
         self.loadWidgets = function (req,successCallback) {
             var widgetDS = new Builder.WidgetDataSource();
             self.searchStaus('searching');
@@ -27,22 +47,7 @@ function (ko, $, oj, dfu) {
                             self.widgets([]);
                             if (widgets && widgets.length > 0) {
                                 for (var i = 0; i < widgets.length; i++) {
-                                    if (!widgets[i].WIDGET_DESCRIPTION) {
-                                        widgets[i].WIDGET_DESCRIPTION = null;
-                                    }
-                                    var wgt = ko.mapping.fromJS(widgets[i]);
-                                    if(widgets[i].WIDGET_DESCRIPTION){
-                                        wgt.WIDGET_DESCRIPTION = widgets[i].WIDGET_DESCRIPTION.toString().replace(/\n/g,"<br>");
-                                    }
-                                    if (wgt && !wgt.WIDGET_VISUAL) {
-                                        wgt.WIDGET_VISUAL = ko.observable('');
-                                    }
-                                    if (wgt && !wgt.imgWidth) {
-                                        wgt.imgWidth = ko.observable('120px');
-                                    }
-                                    if (wgt && !wgt.imgHeight) {
-                                        wgt.imgHeight = ko.observable('120px');
-                                    }
+                                    var wgt = self.getKOWidgetFromJSData(widgets[i]);
                                     self.widgets.push(wgt);
                                 }
                             }
@@ -286,7 +291,7 @@ function (ko, $, oj, dfu) {
 //                    ,providerVersion: '1.0.5'
 //                    ,providerName: 'DashboardFramework'
 //                    ,providerVersion: '1.0'
-                };       
+                };
     }
     return {"rightPanelWidget": rightPanelWidget};
 }

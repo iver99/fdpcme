@@ -44,7 +44,7 @@ import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
  ***************************************************************************************************/
 
 def emcpdfCommonAPIVer = getDependentSdkVersion('com.oracle.emaas.emcpdf.testsdk.ui', 'dashboards-ui-test-common-api', '2.+')
-def omctfSetupTestSDKVer = getDependentSdkVersion('com.oracle.omc.omctf.testsdk', 'omctf_omcsetup', '1.+')
+//def omctfSetupTestSDKVer = getDependentSdkVersion('com.oracle.omc.omctf.testsdk', 'omctf_omcsetup', '1.+')
 
 //Update the lrgConfig configuration to specify where the test jar is.
 dependencies{
@@ -54,7 +54,7 @@ dependencies{
     }
 
     testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: emcpdfCommonAPIVer)
-    testConfig(group: 'com.oracle.omc.omctf.testsdk', name: 'omctf_omcsetup', version: omctfSetupTestSDKVer)
+   // testConfig(group: 'com.oracle.omc.omctf.testsdk', name: 'omctf_omcsetup', version: omctfSetupTestSDKVer)
 }
 
 // depends on OMCTF-977
@@ -80,8 +80,8 @@ task onboardAllTenants(dependsOn:[omcOnboardTenants(testTenants_v3)]){
 
 task suiteLicensingTest(type: EMTest, dependsOn:[onboardAllTenants]){
 options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
-
-     	environment "WEBDRIVER_WAIT_TIMEOUT", "300000"
+	environment "VNC_SIZE", "1600x1200"
+     	environment "WEBDRIVER_WAIT_TIMEOUT", "300000"   
 	test('name': 'suiteLicensingTest') {
 	    classes([:]) {
 //		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestSuiteLicensing_OMC')
@@ -104,7 +104,7 @@ apply from: 'onboard_tenant.gradle'
 //Task is for dashboard UI Test
 task e2e (type: EMTest, dependsOn:[omcSetup, onboardTenant] ){
 options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
-//        environment "VNC_SIZE", "1600x1200"
+        environment "VNC_SIZE", "1600x1200"
         environment "WEBDRIVER_WAIT_TIMEOUT", "300000"
         test('name': 'DashboardUITest') {
             classes([:]) {
@@ -134,7 +134,7 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
 	environment "WEBDRIVER_PROXY_PORT", "80"
 	environment "SKIP_OMCSETUP", "true"
 	environment "SKIP_OMCTEARDOWN", "1"
-//        environment "VNC_SIZE", "1600x1200"
+	environment "VNC_SIZE", "1600x1200"
 	environment "WEBDRIVER_WAIT_TIMEOUT", "300000"
         test('name': 'DashboardUITest') {
             classes([:]) {

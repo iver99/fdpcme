@@ -1,7 +1,7 @@
 package oracle.sysman.emaas.platform.dashboards.ws.rest.model;
 
 /**
- * Created by chehao on 6/5/2017 10:20 AM.
+ * Created by chehao on 6/27/2017 15:52.
  */
 public class CategoryModel {
     private String providerName;

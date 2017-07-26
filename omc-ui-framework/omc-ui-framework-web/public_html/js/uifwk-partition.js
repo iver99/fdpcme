@@ -9,7 +9,7 @@ define([
 'uifwk/js/util/typeahead-search',
 'uifwk/js/util/usertenant-util',
 'uifwk/js/sdk/context-util',
-'uifwk/@version@/js/sdk/widget-selector-util',
+'uifwk/js/sdk/widget-selector-util',
 'uifwk/js/widgets/aboutbox/js/aboutbox',
 'uifwk/js/widgets/brandingbar/js/brandingbar',
 'uifwk/js/widgets/datetime-picker/js/datetime-picker',

@@ -935,9 +935,10 @@ public class DashboardManager
 		sb.append(" and ((p.is_system=0 ");
 		if (filter != null) {
 			if (filter.getIncludedWidgetGroupsString(tenantVersionModel) != null && !filter.getIncludedWidgetGroupsString(tenantVersionModel).isEmpty()) {
-				sb.append(" and (p.dashboard_id in (select t.dashboard_Id from Ems_Dashboard_Tile t where t.TENANT_ID = ?" + index++ + " and t.WIDGET_GROUP_NAME in ("
+				sb.append(" and (p.dashboard_id in (select t.dashboard_Id from Ems_Dashboard_Tile t where (t.TENANT_ID = ?"+ index++ +" or t.TENANT_ID = ?" + index++ + ") and t.WIDGET_GROUP_NAME in ("
 						+ filter.getIncludedWidgetGroupsString(tenantVersionModel) + " ))) ");
 				paramList.add(tenantId);
+				paramList.add(NON_TENANT_ID);
 			}
 		}
 		sb.append(") or (p.is_system=1 ");
@@ -962,9 +963,10 @@ public class DashboardManager
 		sb1.append(" and ( (p.is_system=0 ");
 		if (filter != null) {
 			if (filter.getIncludedWidgetGroupsString(tenantVersionModel) != null && !filter.getIncludedWidgetGroupsString(tenantVersionModel).isEmpty()) {
-				sb1.append(" and p.DASHBOARD_ID in (SELECT p2.DASHBOARD_SET_ID FROM EMS_DASHBOARD_SET p2 WHERE p2.SUB_DASHBOARD_ID IN (SELECT t.dashboard_Id FROM Ems_Dashboard_Tile t WHERE t.TENANT_ID = ?" + index++ + " and t.WIDGET_GROUP_NAME IN ("
+				sb1.append(" and p.DASHBOARD_ID in (SELECT p2.DASHBOARD_SET_ID FROM EMS_DASHBOARD_SET p2 WHERE p2.SUB_DASHBOARD_ID IN (SELECT t.dashboard_Id FROM Ems_Dashboard_Tile t WHERE (t.TENANT_ID = ?"+ index++ +" or t.TENANT_ID = ?" + index++ + ") and t.WIDGET_GROUP_NAME IN ("
 						+ filter.getIncludedWidgetGroupsString(tenantVersionModel)+ ")))");
 				paramList.add(tenantId);
+				paramList.add(NON_TENANT_ID);
 			}
 		}
 		sb1.append(") or (p.is_system=1 ");
@@ -1108,15 +1110,29 @@ public class DashboardManager
 		String existingName = dsf.getDashboardNameWithMaxSuffixNumber(name, tenantId);
 		String finalString  = null;
 		if (existingName != null) {
-			Pattern pattern = Pattern.compile("\\d+$");
-			Matcher matcher = pattern.matcher(existingName);
-			if (matcher.find()) {
-				Integer num = new Integer(matcher.group());
-				int increaseNum = num.intValue() + 1;
-				finalString = existingName.replace(num.toString(), ("" + increaseNum));
+			if (name.equals(existingName)) {
+				finalString = name + "_1";
 			} else {
-				finalString = existingName + "_1";
-			}
+				Pattern pattern = Pattern.compile("\\d+$");
+				Matcher matcher = pattern.matcher(existingName);
+				if (matcher.find()) {
+					Integer num = new Integer(matcher.group());
+					int increaseNum = num.intValue() + 1;
+					if (existingName.endsWith("_"+num)) {
+						int flag = existingName.lastIndexOf("_");
+						String subName = existingName.substring(0, flag);
+						if (subName.equals(name)) {
+							finalString = subName + "_" + increaseNum; 
+						} else {
+							finalString = name + "_1";
+						}						
+					} else {
+						finalString = name + "_1";
+					}						
+				} else {
+					finalString = name + "_1";
+				}
+			}			
 		}
 		return finalString;
 	}
@@ -1133,6 +1149,7 @@ public class DashboardManager
 				tile.setOwner(null);
 				tile.setLastModifiedBy(null);
 				tile.setLastModificationDate(null);
+				tile.setTileId(null);
 			}
 		}
 		return dbd;
@@ -1230,6 +1247,8 @@ public class DashboardManager
 						if(tile.getTileId() == null) {
 						    tile.setTileId(IdGenerator.getTileId(ZDTContext.getRequestId(), i));
 						}
+						LOGGER.info("tile id = " + tile.getTileId());
+						LOGGER.info("tenant id = " + tenantId);
 						if (tile.getCreationDate() == null) {
 							tile.setCreationDate(created);
 						}

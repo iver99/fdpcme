@@ -5,14 +5,23 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.ws.rs.core.Response;
 
+import mockit.Mock;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.TenantWithoutSubscriptionException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.UserOptionsNotFoundException;
 
+import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.model.ParameterModel;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.model.SearchModel;
+import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
+import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -839,5 +848,49 @@ public class DashboardAPITest
 			}
 		};
 		dashboardAPI.deleteDashboards("tenandIdParam","userTenant","refer");
+	}
+
+	@Test
+	public void testAddWidgetToDashboard(@Mocked final Dashboard dashboard, @Mocked final DashboardServiceFacade dashboardServiceFacade, @Mocked final JsonUtil jsonUtil, @Mocked final RestClient restClient, @Mocked final RegistryLookupUtil.VersionedLink versionedLink, @Mocked final RegistryLookupUtil registryLookupUtil, @Mocked final DashboardManager dashboardManager, @Mocked final Link link,
+										 @Mocked final BasicServiceMalfunctionException dashboardException) throws IOException {
+		final SearchModel searchModel = new SearchModel();
+		searchModel.setId(new BigInteger("1"));
+		searchModel.setDescription("desc");
+		searchModel.setOwner("owner");
+		searchModel.setCreationDate("date");
+		searchModel.setName("name");
+		List<ParameterModel> list = new ArrayList<>();
+		ParameterModel parameterModel= new ParameterModel();
+		parameterModel.setName("name");
+		parameterModel.setValue("value");
+		parameterModel.setType("type");
+		list.add(parameterModel);
+		searchModel.setParameters(list);
+		SearchModel.InnerCategory category = searchModel.new InnerCategory();
+		category.setId("1L");
+		searchModel.setCategory(category);
+		new Expectations(){
+			{
+				registryLookupUtil.getServiceInternalLink("SavedSearch", "1.0+", "search", null);
+				result = (Link)versionedLink;
+				link.getHref();
+				result ="link";
+				restClient.getWithException(anyString, anyString, anyString);
+				result = "resp";
+				jsonUtil.fromJson(anyString, SearchModel.class);
+				result = searchModel;
+				RegistryLookupUtil.getServiceInternalLink("SavedSearch", "1.0+", "category", null);
+				result = (Link)versionedLink;
+				DashboardManager.getInstance();
+				result = dashboardManager;
+				Dashboard.valueOf((EmsDashboard) any,(Dashboard)any, anyBoolean,anyBoolean, anyBoolean);
+				result = dashboard;
+
+
+			}
+		};
+		BigInteger dashboardId = new BigInteger("1");
+		BigInteger widgetId = new BigInteger("2");
+		dashboardAPI.addNewWidgetToDashboard("tenandIdParam","userTenant","refer",dashboardId,widgetId);
 	}
 }

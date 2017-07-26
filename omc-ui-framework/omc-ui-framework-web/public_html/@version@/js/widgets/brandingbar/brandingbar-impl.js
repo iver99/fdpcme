@@ -153,7 +153,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     template: {require: 'text!' + template}
                 });
             }
-            window.emctasGlobalBarCallback = function () {
+            self.emctasGlobalBarCallback = function () {
                 //enable enterpriseTopology
                 self.udeEnterPriseTopologyLanded = true;
                 self.topologyDisabled(false);
@@ -370,7 +370,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     }
                     return "display: flex; float: left; width: 100%; height: " + height + ";";
                 } else {
-                    return "height:100%;width:100%;";
+                    return "display:block;float:none;width:100%;";
                 }
             });
 
@@ -832,9 +832,10 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             }
             
             self.hamburgerMenuEnabled = omcHamburgerMenuOptIn ? true : false;
+            self.renderHamburgerMenu = omcHamburgerMenuOptIn && (!window._uifwk || !window._uifwk.hideHamburgerMenuOnPage) ? true : false;
             self.isHamburgerMenuRegistered = ko.observable(false);
-            if (omcHamburgerMenuOptIn) {
-                self.hamburgerBtnLabel = nls.BRANDING_BAR_HAMBURGER_BTN_LABEL;
+            self.hamburgerBtnLabel = nls.BRANDING_BAR_HAMBURGER_BTN_LABEL;
+            if (self.renderHamburgerMenu) {
                 self.menuParams = {'appId': self.appId, 'userName': self.userName, 'tenantName': self.tenantName, 'omcCurrentMenuId': params.omcCurrentMenuId};
                 if (!self.isHamburgerMenuRegistered()) {
                     require(['ojs/ojnavigationlist','ojs/ojjsontreedatasource'], function () {
@@ -936,6 +937,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     if(!isXlarge){
                         if (avoidPageResizeOptIn) {
                             setOverlayHamburgerMenuStyles();
+                            menuUtil.resizeHamburgerMenuLayout();
                             triggerDashboardResizeEvent('Hamburger menu closed.');
                             triggerHamburgerMenuToggleEvent('close');
                         }
@@ -961,9 +963,11 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                             var menuInitialStatus = retrieveHmaburgerMenuStatus();
                             if (menuInitialStatus !== 'closed') {
                                 $("#omcHamburgerMenu").show();
+                                $("#uifwkLayoutMainContainer").width($(window).width() - 250);
                             }
                             else {
                                 $("#omcHamburgerMenu").hide();
+                                $("#uifwkLayoutMainContainer").width($(window).width());
                             }
                             setPinnedHamburgerMenuStyles();
                             resetCurrentHamburgerMenu();
@@ -1689,13 +1693,15 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     //show enterprise topology
                     self.showEnterpriseTopology = true;
                     window.globalpillsempty = true;
-                    if (self.isTopologyDisplayed() && !self.topologyDisabled()) {
-                        self.showTopology();
-                    }
                     if (self.udeEnterPriseTopologyLanded) {
                         self.topologyDisabled(false);
                     }
                     else {
+                        // only hide the topology(when displayed)
+                        //if ude enterprise topology has not yet landed
+                        if (self.isTopologyDisplayed() && !self.topologyDisabled()) {
+                            self.showTopology();
+                        }
                         self.topologyDisabled(true);
                     }
 

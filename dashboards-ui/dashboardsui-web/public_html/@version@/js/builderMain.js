@@ -264,6 +264,10 @@ require(['knockout',
                         oj.Logger.error("Tenant subscribes to no service. Redirect to dashboard error page", true);
                         location.href = "./error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_NO_SUBS_MSG";
                     }
+                    else {
+                        oj.Logger.error("Failed to get tenant subscribed applications. Redirect to dashboard error page", true);
+                        location.href = "./error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_MSG";
+                    }
                 });
 
                 Builder.initializeFromCookie();
@@ -377,7 +381,23 @@ require(['knockout',
 				    }
 			        };
 
-                                $("#headerWrapper").on("DOMSubtreeModified", function() {
+                                function onElementHeightChange($node, callback){
+                                    var lastHeight = $node.height(), newHeight;
+                                    (function run(){
+                                        newHeight = $node.height();
+                                        if( lastHeight != newHeight ) {
+                                            callback();
+                                        }
+                                        lastHeight = newHeight;
+
+                                        if( self.onElementHeightChangeTimer )
+                                            clearTimeout(self.onElementHeightChangeTimer);
+
+                                        self.onElementHeightChangeTimer = setTimeout(run, 1000);
+                                    })();
+                                };
+
+                                onElementHeightChange($("#headerWrapper"), function() {
                                     var height = $("#headerWrapper").height();
                                     if (!self.headerHeight){
                                         self.headerHeight = height;

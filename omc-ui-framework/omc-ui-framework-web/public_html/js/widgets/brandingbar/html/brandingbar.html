@@ -1,5 +1,5 @@
     <script id="omc-hamburger-menu-template" type="text/html">
-        <div id="omcHamburgerMenu" style="width:250px;max-width: 250px;" class="oj-contrast-marker oj-web-applayout-offcanvas oj-flex-item">
+        <div id="omcHamburgerMenu" style="width:250px;max-width: 250px;overflow: auto;" class="oj-contrast-marker oj-web-applayout-offcanvas oj-flex-item">
             <div id="omcHamburgerMenuInnerComp" style="display: none;" data-bind="component: {
                 name: 'omc-uifwk-hamburger-menu',
                 params: menuParams
@@ -14,9 +14,9 @@
             <div>
                 <button id="hamburgerButton" class="oj-button-half-chrome emaas-appheader-hamburger-button emaas-appheader-toolbar-button" 
                     data-bind="ojComponent: {component:'ojButton', display:'icons', chroming: 'half',
-                                label: hamburgerBtnLabel, 
+                                label: hamburgerBtnLabel, disabled: !renderHamburgerMenu,
                                 icons: {start: 'fa-icon-font fa-bars'}}, 
-                    click: toggleHamburgerMenu, attr: {title: hamburgerBtnLabel}" role="button" tabindex="0">
+                    click: renderHamburgerMenu ? toggleHamburgerMenu : null, attr: {title: hamburgerBtnLabel}" role="button" tabindex="0">
                 </button>
             </div>
             <!-- /ko -->
@@ -212,8 +212,8 @@
         <!-- ko if: showEntitySelector() -->
         <!-- topology --->
         <!-- ko if: isTopologyCompRegistered() !== false -->
-        <div id="ude-topology-div" style="overflow-y:auto; height:auto; display: flex; padding-left: 10px; padding-right: 10px; padding-bottom: 5px;"
-             data-bind="visible: isTopologyDisplayed, event: {mouseover: showMaxMinButtonInDF() ? showTopologyMaxIcon: null, 
+        <div id="ude-topology-div" style="height:auto; display: flex; padding-left: 10px; padding-right: 10px; padding-bottom: 5px;"
+             data-bind="style:{'overflow-y': showMaxMinButtonInDF() ? 'auto': 'hidden'},visible: isTopologyDisplayed, event: {mouseover: showMaxMinButtonInDF() ? showTopologyMaxIcon: null, 
                                 mouseout: showMaxMinButtonInDF()? hideTopologyMaxIcon: null}" class="ude-sdk">
             <!-- ko if: topologyHeight() > 201 && showMaxMinButtonInDF() -->
             <div id="ude-topology-title" style="display: flex; position: absolute; z-index: 1" data-bind="style: {right: maxIconToRight}">
@@ -229,8 +229,9 @@
             <!-- /ko -->
             
             <!--<div data-bind="attr: {style: topologyStyle}" style="margin: 0 auto">test div</div>-->
-        <div style="overflow-y: auto; height: auto; display: flex; width:100%;
-            border-width: 1px; border-color: #d6dfe6; border-style: solid; background-color: white;">
+        <div style="height: auto; display: flex; width:100%;
+            border-width: 1px; border-color: #d6dfe6; border-style: solid; background-color: white;"
+            data-bind="style:{'overflow-y': showMaxMinButtonInDF() ? 'auto': 'hidden'}">
         <div class="ude-topology ude-topology-in-brandingbar" data-bind="attr: {style: topologyStyle},
            component:{name:'emctas-topology', 
             params:{

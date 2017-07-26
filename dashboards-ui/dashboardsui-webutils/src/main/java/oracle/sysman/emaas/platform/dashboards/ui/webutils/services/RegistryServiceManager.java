@@ -343,12 +343,28 @@ public class RegistryServiceManager implements ApplicationServiceManager
 
 			LOGGER.info("Initializing RegistrationManager");
 			RegistrationManager.getInstance().initComponent(builder.build());
+			
+			Properties dfUIProps = PropertyReader.loadProperty(PropertyReader.DFUI_CONFIG);
+			final String buildId = dfUIProps.getProperty("buildId");
+			final String textWidgetTemplateRel = "versionLookupSDK/emsaasui/emcpdfui/js/widgets/textwidget/dashboardTextWidget.html";
+			final String textWidgetTemplateImplUrl = NAV_BASE + "/" + buildId + "/js/widgets/textwidget/dashboardTextWidget.html";
+			final String textWidgetVMRel = "versionLookupSDK/emsaasui/emcpdfui/js/widgets/textwidget/js/dashboardTextWidget.js";
+			final String textWidgetVMImplUrl = NAV_BASE + "/" + buildId + "/js/widgets/textwidget/js/dashboardTextWidget.js";
+			if (buildId == null) {
+				LOGGER.error("buildId is null, please check /opt/ORCLemaas/Applications/Dashboard-UI/init/servicemanager.properties file!");
+			}
+			else {
+				LOGGER.info("buildId is " + buildId);
+			}
 
 			List<Link> links = new ArrayList<Link>();
 			if (applicationUrlHttp != null) {
 				links.add(new Link().withRel("welcome").withHref(applicationUrlHttp + NAV_WELCOME));
 				links.add(new Link().withRel("home").withHref(applicationUrlHttp + NAV_BASE_HOME));
 				links.add(new Link().withRel("quickLink/Dashboard Home").withHref(applicationUrlHttp + NAV_QUICK_LINK));
+				links.add(new Link().withRel("assetRoot").withHref(applicationUrlHttp + NAV_BASE));
+				links.add(new Link().withRel(textWidgetTemplateRel).withHref(applicationUrlHttp + textWidgetTemplateImplUrl));
+				links.add(new Link().withRel(textWidgetVMRel).withHref(applicationUrlHttp + textWidgetVMImplUrl));
 				//				links.add(new Link().withRel("static/dashboardsui.configurations").withHref(applicationUrlHttp + NAV_STATIC_CONF));
 				//				links.add(new Link().withRel("static/dashboardsui.registry").withHref(applicationUrlHttp + NAV_STATIC_REGISTRY));
 			}
@@ -356,6 +372,9 @@ public class RegistryServiceManager implements ApplicationServiceManager
 				links.add(new Link().withRel("welcome").withHref(applicationUrlHttps + NAV_WELCOME));
 				links.add(new Link().withRel("home").withHref(applicationUrlHttps + NAV_BASE_HOME));
 				links.add(new Link().withRel("quickLink/Dashboard Home").withHref(applicationUrlHttps + NAV_QUICK_LINK));
+				links.add(new Link().withRel("assetRoot").withHref(applicationUrlHttps + NAV_BASE));
+				links.add(new Link().withRel(textWidgetTemplateRel).withHref(applicationUrlHttps + textWidgetTemplateImplUrl));
+				links.add(new Link().withRel(textWidgetVMRel).withHref(applicationUrlHttps + textWidgetVMImplUrl));
 				//				links.add(new Link().withRel("static/dashboardsui.configurations")
 				//						.withHref(applicationUrlHttps + NAV_STATIC_CONF));
 				//				links.add(new Link().withRel("static/dashboardsui.registry").withHref(applicationUrlHttps + NAV_STATIC_REGISTRY));
