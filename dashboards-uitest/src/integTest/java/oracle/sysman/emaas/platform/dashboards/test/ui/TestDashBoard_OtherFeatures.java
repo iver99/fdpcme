@@ -48,6 +48,8 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 	private String dbName_duplicateOOB = "";
 	private String dbName_saveConfirmation = "";
 	private String dbName_textWidget = "";
+	private String dbName_textWidget_link = "";
+	private String dbName_textWidget_multiLink = "";
 
 	private final String customWidgetName = "Execution Details";
 	private final String OOBName = "Middleware Operations";
@@ -112,6 +114,8 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		DashBoardUtils.deleteDashboard(webd, dbName_duplicate);
 		DashBoardUtils.deleteDashboard(webd, dbName_duplicateOOB);
 		DashBoardUtils.deleteDashboard(webd, dbName_textWidget);
+		DashBoardUtils.deleteDashboard(webd, dbName_textWidget_link);
+		DashBoardUtils.deleteDashboard(webd, dbName_textWidget_multiLink);
 
 		webd.getLogger().info("All test data have been removed");
 
@@ -899,7 +903,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 	@Test
 	public void testTextWidget_Link()
 	{
-		dbName_textWidget = "Dashboard_textWidgetURL-" + DashBoardUtils.generateTimeStamp();
+		dbName_textWidget_link = "Dashboard_textWidgetURL-" + DashBoardUtils.generateTimeStamp();
 		
 		String dbDesc = "Add text widget into dashboard, test the link feature";
 		String url = "www.baidu.com";
@@ -910,10 +914,10 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		DashboardHomeUtil.gridView(webd);
 
 		webd.getLogger().info("Create the dashboard, then to add text widget");
-		DashboardHomeUtil.createDashboard(webd, dbName_textWidget, dbDesc, DashboardHomeUtil.DASHBOARD);
+		DashboardHomeUtil.createDashboard(webd, dbName_textWidget_link, dbDesc, DashboardHomeUtil.DASHBOARD);
 		
 		webd.getLogger().info("Verify the dashboard created Successfully");
-		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_textWidget, dbDesc, true), "Create dashboard failed!");		
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_textWidget_link, dbDesc, true), "Create dashboard failed!");		
 		
 		DashboardBuilderUtil.addTextWidgetToDashboard(webd);				
 		
@@ -964,7 +968,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 	@Test
 	public void testTextWidget_multiLink()
 	{
-		dbName_textWidget = "Dashboard_textWidgetMultiURL-" + DashBoardUtils.generateTimeStamp();
+		dbName_textWidget_multiLink = "Dashboard_textWidgetMultiURL-" + DashBoardUtils.generateTimeStamp();
 		
 		String dbDesc = "Add text widget into dashboard, add multi link";
 		String url = "www.baidu.com";
@@ -975,10 +979,10 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		DashboardHomeUtil.gridView(webd);
 
 		webd.getLogger().info("Create the dashboard, then to add text widget");
-		DashboardHomeUtil.createDashboard(webd, dbName_textWidget, dbDesc, DashboardHomeUtil.DASHBOARD);
+		DashboardHomeUtil.createDashboard(webd, dbName_textWidget_multiLink, dbDesc, DashboardHomeUtil.DASHBOARD);
 		
 		webd.getLogger().info("Verify the dashboard created Successfully");
-		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_textWidget, dbDesc, true), "Create dashboard failed!");		
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_textWidget_multiLink, dbDesc, true), "Create dashboard failed!");		
 		
 		DashboardBuilderUtil.addTextWidgetToDashboard(webd);				
 		
