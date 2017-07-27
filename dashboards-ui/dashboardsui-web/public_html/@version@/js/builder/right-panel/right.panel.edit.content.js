@@ -156,7 +156,6 @@ define(['dashboards/dbsmodel',
                                 var nextPageNo = currentPageNo + 1;
                                 if (loadedDashboardsNum < totalResults) {
                                     loadDashboardList(function () {
-                                        $(".search-content-dropdown-list-container ul").ojListView("refresh");
                                         currentPageNo = nextPageNo;
                                     }, null, nextPageNo);
                                 }
@@ -282,11 +281,12 @@ define(['dashboards/dbsmodel',
         };
 
         self.removeLinkToTitleClicked = function(e, d){
+            saveDashboard();
             self.selectedContent().WIDGET_LINKED_DASHBOARD(null);
             self.hasLinkedToTitle(false);
+            resetPaging();
             resetAddLinkToTitle();
             $b.triggerEvent($b.EVENT_TILE_LINK_CHANGED, null);
-            saveDashboard();
         };
 
         function resetAddLinkToTitle(holdHasLinkedToTitle){
