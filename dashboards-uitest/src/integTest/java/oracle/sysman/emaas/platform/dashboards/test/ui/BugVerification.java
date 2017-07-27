@@ -65,6 +65,8 @@ public class BugVerification extends LoginAndLogout
 		DashBoardUtils.deleteDashboard(webd, "DashboardSet_4068");
 		DashBoardUtils.deleteDashboard(webd, "Dashboard_4068"); 
 		DashBoardUtils.deleteDashboard(webd, "DashboardInSet_4068");
+		DashBoardUtils.deleteDashboard(webd, "Dashboard_EMCPDF1094");
+		DashBoardUtils.deleteDashboard(webd, "test EMCPDF_2975 with / character"); 
 
 		webd.getLogger().info("All test data have been removed");
 
@@ -581,4 +583,65 @@ public class BugVerification extends LoginAndLogout
 		Assert.assertFalse(webd.isDisplayed("css=" + DashBoardPageId.ERRORMSGSUMMARYCSS), "The error message isn't disappearred after re-input name in name input box");
 		Assert.assertFalse(webd.isDisplayed("css=" + DashBoardPageId.ERRORMSGDETAILCSS), "The error message isn't disappearred after re-input name in name input box");		
 	}
+    public void testEMCPDF_1094()
+    {
+    	String dbdesc = "Dashboard_EMCPDF1094\nline break\ntest";
+    	String dbname = "Dashboard_EMCPDF1094";
+	//Initialize the test
+	initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+	webd.getLogger().info("Start the test case: testEMCPDF_1094");
+
+	//reset the home page
+	webd.getLogger().info("Reset all filter options in the home page");
+	DashboardHomeUtil.resetFilterOptions(webd);
+
+	//switch to Grid View
+	webd.getLogger().info("Switch to grid view");
+	DashboardHomeUtil.gridView(webd);
+
+	//create dashboard
+	webd.getLogger().info("Create a dashboard: with description, with time refresh");
+	DashboardHomeUtil.createDashboard(webd, dbname, dbdesc, DashboardHomeUtil.DASHBOARD);
+	DashboardBuilderUtil.editDashboard(webd, dbname, dbdesc, true);
+	webd.getLogger().info("verify the dashboard created Successfully");
+	Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbname, dbdesc, true), "Create dashboard failed!"); 	
+    }
+
+    @Test(alwaysRun = true)
+    public void testEMCPDF_2975()
+    {
+    	String dbName = "test EMCPDF_2975 with / character";
+	//Initialize the test
+	initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+	webd.getLogger().info("Start the test case: testEMCPDF_2975");
+
+	//reset the home page
+	webd.getLogger().info("Reset all filter options in the home page");
+	DashboardHomeUtil.resetFilterOptions(webd);
+
+	//switch to Grid View
+	webd.getLogger().info("Switch to grid view");
+	DashboardHomeUtil.gridView(webd);
+
+	//create dashboard
+	webd.getLogger().info("Create a dashboard: no description, with time refresh");
+	DashboardHomeUtil.createDashboard(webd, dbName, null, DashboardHomeUtil.DASHBOARD);
+	webd.getLogger().info("verify the dashboard created Successfully");
+	Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName, null, true), "Create dashboard failed!");
+		
+	webd.getLogger().info("Add Widget to the dashboard");
+	DashboardBuilderUtil.addWidgetToDashboard(webd, "Donut");
+		
+	webd.getLogger().info("Save the dashboard");
+	DashboardBuilderUtil.saveDashboard(webd);
+		
+	webd.getLogger().info("Open the Widget");
+	DashboardBuilderUtil.openWidget(webd, "Donut");
+	
+	webd.getLogger().info("Back to Dashboard builder page");
+	webd.click("css=#linkHeader>a>span");
+		
+	webd.getLogger().info("Verify the dashboard");
+	Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName, null, true), "Verify dashboard failed!");    	
+    }
 }
