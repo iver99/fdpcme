@@ -75,6 +75,8 @@ import java.util.concurrent.*;
 public class DashboardAPI extends APIBase
 {
 	private static final Logger LOGGER = LogManager.getLogger(DashboardAPI.class);
+	
+	private static final String TEXT_WIDGET_ID = "1";
 
 	public DashboardAPI()
 	{
@@ -1287,7 +1289,9 @@ public class DashboardAPI extends APIBase
 				JSONArray requestEntity = new JSONArray();
 				if (widgetIds != null) {				
 					for (String widgetId : widgetIds) {
-						requestEntity.put(widgetId);
+						if (!widgetId.equals(TEXT_WIDGET_ID)) {
+							requestEntity.put(widgetId);
+						}						
 					}
 				}
 				JSONArray ssfObject = null;
