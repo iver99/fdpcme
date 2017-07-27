@@ -166,7 +166,7 @@ public class TestDashboard_RespectGC extends LoginAndLogout
 		webd.getLogger().info("Set custom Last 14 hours");
 		TimeSelectorUtil.setFlexibleRelativeTimeRange(webd, 14, TimeUnit.Hour);
 		currentURL = webd.getWebDriver().getCurrentUrl();
-		Assert.assertEquals(currentURL.contains("timePeriod%3DLAST_8_HOUR"), true);
+		Assert.assertEquals(currentURL.contains("timePeriod%3DLAST_14_HOUR"), true);
 		
 		webd.getLogger().info("Set custom Last 5 days");
 		TimeSelectorUtil.setFlexibleRelativeTimeRange(webd, 5, TimeUnit.Day);
