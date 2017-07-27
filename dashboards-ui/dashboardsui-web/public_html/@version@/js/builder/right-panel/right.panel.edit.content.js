@@ -37,6 +37,9 @@ define(['dashboards/dbsmodel',
         function resetPaging(){
             totalResults = 0;
             currentPageNo = 1;
+            loadDashboardReqSent = false;
+            self.allDashboards.removeAll();
+            self.dashboards.removeAll();
         }
         
         function loadDashboardList(sucCallback, queryStr, page){
@@ -58,6 +61,9 @@ define(['dashboards/dbsmodel',
                             headers: dfu.getDashboardsRequestHeader(),
                             contentType:'application/json',
                             success: function(data, textStatus) {
+                                if(!loadDashboardReqSent){
+                                    return;
+                                }
                                 totalResults = data.totalResults;
                                 if(page === 1){
                                     !queryStr && self.allDashboards(data.dashboards);
@@ -282,9 +288,9 @@ define(['dashboards/dbsmodel',
 
         self.removeLinkToTitleClicked = function(e, d){
             saveDashboard();
+            resetPaging();
             self.selectedContent().WIDGET_LINKED_DASHBOARD(null);
             self.hasLinkedToTitle(false);
-            resetPaging();
             resetAddLinkToTitle();
             $b.triggerEvent($b.EVENT_TILE_LINK_CHANGED, null);
         };
