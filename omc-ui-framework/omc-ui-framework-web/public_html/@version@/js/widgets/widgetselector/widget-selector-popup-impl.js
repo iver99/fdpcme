@@ -369,35 +369,7 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
 
                 };
 
-                function getWidgetGroups() {
-                    var widgetgroupsUrl = '/sso.static/savedsearch.widgetgroups';
-                    if (dfu.isDevMode()){
-                        widgetgroupsUrl=dfu.buildFullUrl(dfu.getDevData().ssfRestApiEndPoint,"/widgetgroups");
-                        if (includeDashboardIneligible) {
-                            widgetgroupsUrl = widgetgroupsUrl + "?includeDashboardIneligible=true";
-                        }
-                    }
-                    return dfu.ajaxWithRetry({
-                            url: widgetgroupsUrl,
-                            headers: dfu.getSavedSearchServiceRequestHeader(),
-                            success: function(data, textStatus) {
-                                if (widgetProviderName && widgetProviderVersion && widgetGroupList.length <= 2) {
-                                    self.widgetGroupFilterVisible(false);
-                                }
-                                else {
-                                    self.widgetGroupFilterVisible(true);
-                                }
-                                if ($.isArray(data) && availableWidgetGroups.length === data.length) {
-                                    queryWidgetsForAllSubscribedApps = true;
-                                }
-                            },
-                            error: function(xhr, textStatus, errorThrown){
-                                oj.Logger.error('Error when fetching widget groups by URL: '+widgetgroupsUrl+'.');
-                            },
-                            async: true
-                        });
-                };
-
+ 
 
                 // Refresh widget/widget group data and UI displaying
                 self.refreshWidgets = function() {
