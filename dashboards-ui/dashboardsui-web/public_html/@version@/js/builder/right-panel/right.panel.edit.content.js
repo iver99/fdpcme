@@ -287,9 +287,9 @@ define(['dashboards/dbsmodel',
         };
 
         self.removeLinkToTitleClicked = function(e, d){
+            self.selectedContent().WIDGET_LINKED_DASHBOARD(null);
             saveDashboard();
             resetPaging();
-            self.selectedContent().WIDGET_LINKED_DASHBOARD(null);
             self.hasLinkedToTitle(false);
             resetAddLinkToTitle();
             $b.triggerEvent($b.EVENT_TILE_LINK_CHANGED, null);
