@@ -642,6 +642,6 @@ public class BugVerification extends LoginAndLogout
 	webd.click("css=#linkHeader>a>span");
 		
 	webd.getLogger().info("Verify the dashboard");
-	Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName, null, true), "Verify dashboard failed!");    	
+	Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName, null, true), "Verify dashboard failed!");
     }
 }
