@@ -209,6 +209,11 @@ define(['knockout',
             tile.configureEnabled = ko.computed(function() {
                 return typeof(tile.configure)==="function";
             });
+            
+            tile.dbdRemoveIcon = ko.computed(function() {
+                return tile.type() === "TEXT_WIDGET" ? "dbd-icon-delete" : "dbd-icon-remove"
+            });
+            
             tile.tileDisplayClass = ko.computed(function() {
                 var css = 'oj-md-'+(mode.getModeWidth(tile)) + ' oj-sm-'+(mode.getModeWidth(tile)*12) + ' oj-lg-'+(mode.getModeWidth(tile));
                 css += tile.isMaximized() ? ' dbd-tile-maximized ' : '';

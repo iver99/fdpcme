@@ -1397,6 +1397,13 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
 .dbd-icon-remove:before{
    content: "\f00d";  
 }
+.dbd-icon-delete{
+    line-height: 12px;
+    margin-right: 3px;
+}
+.dbd-icon-delete:before{
+   content: "\f014";
+}
 .dbd-icon-eye{
     line-height: 12px;
 }
