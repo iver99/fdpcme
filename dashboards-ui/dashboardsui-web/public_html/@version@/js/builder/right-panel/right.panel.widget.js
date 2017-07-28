@@ -279,6 +279,9 @@ function (ko, $, oj, dfu) {
                 self.clearRightPanelSearch(true);
             }
         }
+        self.pageResize = function (){
+            $b.triggerBuilderResizeEvent('loading widget list');
+        };
          self.widgetSelectorParams = {
                     dialogId: widgetSelectorDialogId,
                     dialogTitle: 'Add Content',
@@ -286,11 +289,8 @@ function (ko, $, oj, dfu) {
                     tenantName: dfu.getTenantName(),
                     useIn: 'builder',
                     autoCloseDialog: false,
-                    widgetHandler: self.widgetPlusHandler
-//                    ,providerName: 'TargetAnalytics'
-//                    ,providerVersion: '1.0.5'
-//                    ,providerName: 'DashboardFramework'
-//                    ,providerVersion: '1.0'
+                    widgetHandler: self.widgetPlusHandler,
+                    buildPageResize:  self.pageResize 
                 };
     }
     return {"rightPanelWidget": rightPanelWidget};

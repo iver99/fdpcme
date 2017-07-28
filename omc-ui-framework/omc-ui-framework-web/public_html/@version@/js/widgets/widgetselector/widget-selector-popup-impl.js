@@ -30,6 +30,7 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                         (params.dialogId ? params.dialogId : 'widgetSelectorDialog');
                 self.useIn = $.isFunction(params.useIn) ? params.useIn() : (params.useIn?params.useIn:'normal');
                 self.widgetHandler = params.widgetHandler;
+                self.buildPageResize = params.buildPageResize;
                 self.autoCloseDialog = $.isFunction(params.autoCloseDialog) ? params.autoCloseDialog() : params.autoCloseDialog;
                 self.widgetSelectorTitle = dialogTitle ? dialogTitle : nls.WIDGET_SELECTOR_DEFAULT_DIALOG_TITLE;
                 self.widgetGroupLabel = nls.WIDGET_SELECTOR_WIDGET_GROUP_LABEL;
@@ -415,7 +416,11 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                         } 
                         self.widgetOnLoading(false);
                         self.initLoadOnScroll();
-                        })
+                        if (self.buildPageResize) {
+                            self.buildPageResize();
+                            self.buildPageResize = null;
+                        }
+                      })
                         .fail(function(xhr, textStatus, errorThrown){
                             oj.Logger.error("Failed to fetch widgets.");
                         });
