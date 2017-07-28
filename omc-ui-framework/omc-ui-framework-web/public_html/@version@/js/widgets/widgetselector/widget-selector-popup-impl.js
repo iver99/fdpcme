@@ -67,9 +67,9 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                 self.widgetOnLoading = ko.observable(true);
                 self.widgetsDataSource = ko.observable();
                 // Initialize data and refresh
-//                self.beforeOpenDialog = function(event, ui) {
-//                    self.refreshWidgets();
-//                };
+                self.beforeOpenDialog = function(event, ui) {
+                    self.refreshWidgets();
+                };
                 self.itemOnly = function(context){
                         return context['leaf'];
                 };
