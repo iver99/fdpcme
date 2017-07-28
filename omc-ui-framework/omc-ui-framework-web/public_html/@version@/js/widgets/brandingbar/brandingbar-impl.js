@@ -139,7 +139,6 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             var dfu = new dfumodel(self.userName, self.tenantName);
             //Append uifwk css file into document head
             dfu.loadUifwkCss();
-            //self.udeEnterPriseTopologyLanded = false;
             if (!ko.components.isRegistered('emctas-globalbar'))
             {
                 var versionedTemplate = window.getSDKVersionFile ?
@@ -153,10 +152,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 });
             }
             self.emctasGlobalBarCallback = function () {
-                //enable enterpriseTopology
-                self.udeEnterPriseTopologyLanded = true;
-                self.topologyDisabled(false);
-                restoreTopologyDisplayStatus();
+                //noop, this can be deleted once the reference to this method is removed
+                //from emctas
             };
 
             if (self.showGlobalContextBanner() === true) {
@@ -1572,7 +1569,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                             self.miniEntityCardActions(true);
                             self.topologyParamsSet = true;
                         }
-                        if (self.udeEnterPriseTopologyLanded && self.showEnterpriseTopology) { // set queryvar with   non-empty for enterprise topology
+                        if (self.showEnterpriseTopology) { // set queryvar with   non-empty for enterprise topology
                             self.layout("LINEAR");
                             self.queryVars({entityName: "All Entities", entityType: "Enterprise Topology"});
                         }
@@ -1625,18 +1622,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     //show enterprise topology
                     self.showEnterpriseTopology = true;
                     window.globalpillsempty = true;
-                    if (self.udeEnterPriseTopologyLanded) {
-                        self.topologyDisabled(false);
-                    }
-                    else {
-                        // only hide the topology(when displayed)
-                        //if ude enterprise topology has not yet landed
-                        if (self.isTopologyDisplayed() && !self.topologyDisabled()) {
-                            self.showTopology();
-                        }
-                        self.topologyDisabled(true);
-                    }
-
+                    self.topologyDisabled(false);
                 }
 
 
