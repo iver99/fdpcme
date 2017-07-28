@@ -102,6 +102,12 @@ define(["require", "knockout", "jquery", "ojs/ojcore", "ckeditor"],
                         imageInfoTab.get("txtVSpace").style = "display: none";
                         imageInfoTab.get("cmbAlign").style = "display: none";
                         
+                    }else if(dialogName === "link") {
+                        var linkInfoTab = dialogDefinition.getContents("info");
+                        var linkType = linkInfoTab.get("linkType");
+                        linkType.items = [["URL", "url"], ["E-mail", "email"]];
+                        console.log("****");
+                        console.log(linkType);
                     }
                 });
                 
