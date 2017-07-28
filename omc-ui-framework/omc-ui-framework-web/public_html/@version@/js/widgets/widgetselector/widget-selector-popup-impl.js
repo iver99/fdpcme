@@ -17,7 +17,6 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
             function WidgetSelectorPopupViewModel(params) {
                 var self = this;
                 new typeaheadsearch(); //Initialize typeahead search
-
                 // Get input parameters and set UI strings
                 var affirmativeTxt = $.isFunction(params.affirmativeButtonLabel) ? params.affirmativeButtonLabel() : params.affirmativeButtonLabel;
                 var dialogTitle = $.isFunction(params.dialogTitle) ? params.dialogTitle() : params.dialogTitle;
@@ -59,117 +58,143 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
 
                 // Initialize widget group and widget data
                 var labelAll = nls.WIDGET_SELECTOR_WIDGET_GROUP_ALL;
-                var groupValueAll = 'all|all|All';
-                var groupAll = {value: groupValueAll, label: labelAll};
-                self.categoryValue=ko.observableArray([groupValueAll]);
-                self.widgetGroup=ko.observable();
-                self.widgetGroupValue=ko.observable({providerName:"all", providerVersion:"all", name:"all"});
-                self.widgetGroups=ko.observableArray([{value: groupValueAll, label: labelAll}]);
                 var widgetArray = [];
-                var curGroupWidgets = [];
-                var widgetGroupList = [];
-                var curPageWidgets=[];
                 var searchResultArray = [];
-                var index=0;
-                var pageSize = 8;
-                var curPage = 1;
-                var totalPage = 0;
-                var naviFromSearchResults = false;
                 var widgetIndex = 0;
                 var queryWidgetsForAllSubscribedApps = false;
                 var availableWidgetGroups = [];
-                self.widgetList = ko.observableArray(widgetArray);
-                self.curPageWidgetList = ko.observableArray(curPageWidgets);
-                self.naviPreBtnEnabled=ko.observable(curPage === 1 ? false : true);
-                self.naviNextBtnEnabled=ko.observable(totalPage > 1 && curPage!== totalPage ? true:false);
                 self.currentWidget = ko.observable();
-                self.confirmBtnDisabled = ko.observable(true);
                 self.widgetOnLoading = ko.observable(true);
                 self.widgetsDataSource = ko.observable();
                 // Initialize data and refresh
-                self.beforeOpenDialog = function(event, ui) {
-                    self.refreshWidgets();
-                };
+//                self.beforeOpenDialog = function(event, ui) {
+//                    self.refreshWidgets();
+//                };
                 self.itemOnly = function(context){
                         return context['leaf'];
                 };
                 self.isWidgetOwnerGroup = function(file, bindingContext){
                         return bindingContext.$itemContext.leaf ? 'widget_details' : 'widget_group';
                 } ;
-
-                // Widget group selector value change handler
-                self.optionChangedHandler = function(data, event) {
-                    if (event.option === "value") {
-                        var preValue = event.previousValue;
-                        var value = event.value;
-                        if (preValue !== null && $.isArray(preValue)) {
-                            preValue = preValue[0];
-                        }
-                        if (value !== null && $.isArray(value)) {
-                            value = value[0];
-                        }
-
-                        if (preValue !== value) {
-                            self.searchWidgets();
-                        }
-                    }
+                function isGroupListView(){
+                    return $("li[id^=created-by]").length > 0;
                 };
 
-                // Show widgets data of previous page
-                self.naviPrevious = function(data, event) {
-                    console.log(event);
-                    if(event.type === "click" || (event.type === "keypress" && event.keyCode === 13)) {
-                    if (curPage === 1) {
-                        self.naviPreBtnEnabled(false);
-                    }else if (curPage === 2 && event.type === "keypress") {
-                        $("#nextButton").focus();
-                            curPage--;
-                        }
-                        else {
-                            curPage--;
-                        }
-                        if (naviFromSearchResults) {
-                            fetchWidgetsForCurrentPage(searchResultArray);
-                        }
-                        else {
-                            fetchWidgetsForCurrentPage(getAvailableWidgets());
-                        }
 
-                        self.curPageWidgetList(curPageWidgets);
-                        refreshNaviButton();
-                        refreshWidgetAndButtonStatus();
-                    }
+                self.widgetListScroll = function(){ 
+                        if ($('.oj-listview').scrollTop() + $('#widget-selector-widgets').height() >= $('#widget-selector').height()) {
+                            console.debug("Scrolled to the bottom of widget list. Loading more forwardly...");
+                            self.forwardRenderWidgets(self.DEFAULT_WIDGET_INCREMENT_AMOUNT,isGroupListView());
+                        }
+                        if ($('#widget-selector-widgets').scrollTop() <= 0) {
+                            console.debug("Scrolled to the top of widget list. Loading more backwardly...");
+                            self.backwardRenderWidgets(self.DEFAULT_WIDGET_INCREMENT_AMOUNT,isGroupListView());
+                        } 
                 };
-
-                // Show widget data of next page
-                self.naviNext = function(data, event) {
-                    if (event.type === "click" || (event.type === "keypress" && event.keyCode === 13)) {
-                        if (curPage === totalPage) {
-                            self.naviNextBtnEnabled(false);
-                        }else if (curPage === (totalPage-1) && event.type === "keypress") {
-                            $("#preButton").focus();
-                            curPage++;
+                self.initLoadOnScroll = function() {
+                    $('#widget-selector-widgets').scroll(function() {
+                        if ($('#widget-selector-widgets').scrollTop() + $('#widget-selector-widgets').height() >= $('#widget-selector').height()) {
+                            console.debug("Scrolled to the bottom of widget list. Loading more forwardly...");
+                            self.forwardRenderWidgets(self.DEFAULT_WIDGET_INCREMENT_AMOUNT,isGroupListView());
                         }
-                        else {
-                            curPage++;
+                        if ($('#widget-selector-widgets').scrollTop() <= 0) {
+                            console.debug("Scrolled to the top of widget list. Loading more backwardly...");
+                            self.backwardRenderWidgets(self.DEFAULT_WIDGET_INCREMENT_AMOUNT,isGroupListView());
                         }
-                        if (naviFromSearchResults) {
-                            fetchWidgetsForCurrentPage(searchResultArray);
-                        }
-                        else {
-                            fetchWidgetsForCurrentPage(getAvailableWidgets());
-                        }
-                        self.curPageWidgetList(curPageWidgets);
-                        refreshNaviButton();
-                        refreshWidgetAndButtonStatus();
-                    }
+                    });
                 };
+                self.DEFAULT_WIDGET_INIT_AMOUNT = 40;
+                self.DEFAULT_WIDGET_INCREMENT_AMOUNT = 20; 
+                self.MAX_LOAD_WIDGET_WINDOW_SIZE = 100; 
+                self.widgetsData = [];
+                self.loadedWidgetStartIndex = -1;
+                self.loadedWidgetEndIndex = -1;    
+                self.widgetList = [];
 
+                self.forwardRenderWidgets = function (amount, isOnSearching) {  
+                    if ((!self.widgetsData || self.widgetsData.length <= 0)&&isOnSearching) {
+                        console.warn("Failed to load widgets data incrementally for widgetArray is empty");
+                        generateWidgetsDataSource(self.widgetsData, isOnSearching);
+                    }
+                    if (!self.widgetsData || self.widgetsData.length <= 0) {
+                        console.warn("Failed to load widgets data incrementally for widgetArray is empty");
+                        return;
+                    }
+                    if (self.loadedWidgetEndIndex >= self.widgetsData.length-1) {
+                        console.log("Do not need to load widgets data forwardly as all last widgets have been loaded");
+                        return;
+                    }
+                    if (amount <= 0) {
+                        console.warn("Failed to load widgets data incrementally for invalid amout of widget. Amount value is " + amount);
+                        return;
+                    }
+                    var sizeToLoad = Math.min(amount, self.widgetsData.length - self.loadedWidgetEndIndex - 1);  
+                    console.debug("Current loadedEndIndex (before loading) is:"+self.loadedWidgetEndIndex+" and all widgets size is:"+self.widgetsData.length+", size to load is:"+sizeToLoad);
+                    for (var i = self.loadedWidgetEndIndex + 1; i < self.loadedWidgetEndIndex + 1 + sizeToLoad; i++) {  
+                        self.widgetList.push(self.widgetsData[i]);
+                    }
+                    self.loadedWidgetEndIndex += sizeToLoad;
+                    if (self.loadedWidgetStartIndex === -1) {
+                        self.loadedWidgetStartIndex = 0;
+                    }
+                    console.debug("New widgets rendered forwardly. Loaded size:"+sizeToLoad+". Start index:"+self.loadedWidgetStartIndex+",end index:"+self.loadedWidgetEndIndex);
+                    // need keep the max loaded widgets size
+                    var renderedSize = self.loadedWidgetEndIndex - self.loadedWidgetStartIndex + 1;
+                    if (renderedSize > self.MAX_LOAD_WIDGET_WINDOW_SIZE) {
+                        console.debug("Rendered widgets size exceeds window size. Rendered size:"+renderedSize);
+                        var deRenderSize = renderedSize - self.MAX_LOAD_WIDGET_WINDOW_SIZE;
+                        for (var i = 0; i < deRenderSize; i++) {
+                            self.widgetList.shift();
+                        }
+                        self.loadedWidgetStartIndex += deRenderSize;
+                        console.debug("The first widgets were removed to keep the max window size. New start index is:"+self.loadedWidgetStartIndex);
+                        // need to scroll widget list element to the correct position
+                        var widgetHeight = $('.dbd-left-panel-widget').height(); // single widget element height
+                    }
+                    generateWidgetsDataSource(self.widgetList, isOnSearching);
+                };
+                
+                self.backwardRenderWidgets = function (amount, isOnSearching) { // this method inserts values at the begining and removes at the end if needed
+                    if (self.loadedWidgetStartIndex  <= 0) {
+                        console.debug("Do not need to backward load widgets data as all first widgets have been loaded");
+                        return;
+                    }
+                    if (amount <= 0) {
+                        console.warn("Failed to backward load widgets data for invalid amout of widget. Amount value is " + amount);
+                        return;
+                    }
+                    if (!self.widgetsData || self.widgetsData.length <= 0) {
+                        console.warn("Failed to backward load widgets data incrementally for widgetsData is empty");
+                        return;
+                    }
+                    var sizeToLoad = Math.min(amount, self.loadedWidgetStartIndex);
+                    console.debug("Current loadedWidgetStartIndex (before loading) is:"+self.loadedWidgetStartIndex+" and all widgets size is:"+self.widgetsData.length+", size to load is:"+sizeToLoad);
+                    for (var i = self.loadedWidgetStartIndex - 1; i > self.loadedWidgetStartIndex - 1 - sizeToLoad; i--) {
+                        self.widgetList.unshift(self.widgetsData[i]);
+                    }
+                    self.loadedWidgetStartIndex -= sizeToLoad;
+                    console.debug("New widgets rendered backwardly. Loaded size:"+sizeToLoad+". Start index:"+self.loadedWidgetStartIndex+",end index:"+self.loadedWidgetEndIndex);
+                    // need to scroll widget list element to the correct position
+                    var widgetHeight = $('.dbd-left-panel-widget').height(); // single widget element height
+                    $('.dbd-left-panel-widgets').scrollTop(widgetHeight * sizeToLoad);
+                    // need keep the max loaded widgets size
+                    var renderedSize = self.loadedWidgetEndIndex - self.loadedWidgetStartIndex + 1;
+                    if (renderedSize > self.MAX_LOAD_WIDGET_WINDOW_SIZE) {
+                        console.debug("Rendered widgets size exceeds window size. Rendered size:"+renderedSize);
+                        var deRenderSize = renderedSize - self.MAX_LOAD_WIDGET_WINDOW_SIZE;
+                        for (var i = 0; i < deRenderSize; i++) {
+                            self.widgetList.pop();
+                        }
+                        self.loadedWidgetEndIndex -= deRenderSize;
+                        console.debug("The last widgets were removed to keep the max window size. Now end index is:"+self.loadedWidgetEndIndex);
+                    }
+                    generateWidgetsDataSource(self.widgetList, isOnSearching);
+                };
                 // Search widgets by selected widget group and search text(name, description)
                 self.searchWidgets = function() {
                     searchResultArray = [];
                     var searchingHightLightTemplate = "<span class='widget-selector-search-matching'>$&</span>";
-                    var allWidgets = getAvailableWidgets();
+                    var allWidgets = widgetArray;
                     var searchtxt = $.trim(ko.toJS(self.searchText));
                     if (searchtxt === '') {
                         searchResultArray = allWidgets;
@@ -177,93 +202,34 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                     else {
                         for (var i=0; i<allWidgets.length; i++) {
                             if (allWidgets[i].WIDGET_NAME.toLowerCase().indexOf(searchtxt.toLowerCase()) > -1 ||
-                                    (allWidgets[i].WIDGET_DESCRIPTION && allWidgets[i].WIDGET_DESCRIPTION.toLowerCase().indexOf(searchtxt.toLowerCase()) > -1)) {
+                                    (allWidgets[i].WIDGET_DESCRIPTION && allWidgets[i].WIDGET_DESCRIPTION.toLowerCase().indexOf(searchtxt.toLowerCase()) > -1)||
+                                    (allWidgets[i].WIDGET_GROUP_NAME && allWidgets[i].WIDGET_GROUP_NAME.toLowerCase().indexOf(searchtxt.toLowerCase()) > -1)||
+                                    (allWidgets[i].WIDGET_OWNER && allWidgets[i].WIDGET_OWNER.toLowerCase().indexOf(searchtxt.toLowerCase()) > -1)) {
                                 var singleWidget = $.extend(true,{},allWidgets[i]);
                                 singleWidget.highlightedName = singleWidget.WIDGET_NAME.replace(new RegExp(searchtxt, 'gi'), searchingHightLightTemplate);
                                 singleWidget.highlightedDescription = singleWidget.WIDGET_DESCRIPTION.replace(new RegExp(searchtxt, 'gi'), searchingHightLightTemplate);
+                                singleWidget.highlightedSource = singleWidget.WIDGET_GROUP_NAME && (self.widgetLableSource + singleWidget.WIDGET_GROUP_NAME.replace(new RegExp(searchtxt, 'gi'), searchingHightLightTemplate));
+                                singleWidget.highlightedOwner = singleWidget.WIDGET_OWNER && (self.widgetLableCreatedBy + singleWidget.WIDGET_OWNER.replace(new RegExp(searchtxt, 'gi'), searchingHightLightTemplate));
                                 searchResultArray.push(singleWidget);
                             }
                         }
                     }
 
-                    curPageWidgets=[];
-                    curPage = 1;
-                    totalPage = (searchResultArray.length%pageSize === 0 ? searchResultArray.length/pageSize : Math.floor(searchResultArray.length/pageSize) + 1);
-                    fetchWidgetsForCurrentPage(searchResultArray);
-                    self.curPageWidgetList(curPageWidgets);
-                    refreshNaviButton();
-                    naviFromSearchResults = true;
-                    refreshWidgetAndButtonStatus();
-                    searchtxt?generateWidgetsDataSource(searchResultArray, true):generateWidgetsDataSource(searchResultArray);
+
+                    self.widgetList = [];
+                    self.widgetsData = searchResultArray;                    
+                    self.loadedWidgetStartIndex = -1;
+                    self.loadedWidgetEndIndex = -1;  
+                    searchtxt?self.forwardRenderWidgets(self.DEFAULT_WIDGET_INIT_AMOUNT,true):self.forwardRenderWidgets(self.DEFAULT_WIDGET_INIT_AMOUNT, false);
                 };
 
+ 
                 self.onSearchBoxBlur = function(){
                     if(self.needRefreshWidgetList()){
-                        !($.trim(ko.toJS(self.searchText))) && generateWidgetsDataSource(getAvailableWidgets());
+                        !($.trim(ko.toJS(self.searchText))) && self.forwardRenderWidgets(self.DEFAULT_WIDGET_INIT_AMOUNT, false);
                     }
                 };
-
-                self.clearSearchText = function() {
-                    self.searchText('');
-                    self.searchWidgets();
-                };
-
-                //Refresh widget selection status and confirm button status
-                function refreshWidgetAndButtonStatus() {
-                    var curWidget = self.currentWidget();
-                    if (curWidget) {
-                        widgetArray[curWidget.index].isSelected(false);
-                        self.currentWidget(null);
-                    }
-                    self.confirmBtnDisabled(true);
-                };
-
-                // Get widget data to be shown in current page
-                function fetchWidgetsForCurrentPage(allWidgets) {
-                    curPageWidgets=[];
-                    for (var i=(curPage-1)*pageSize;i < curPage*pageSize && i < allWidgets.length;i++) {
-                        loadWidgetScreenshot(allWidgets[i]);
-                        curPageWidgets.push(allWidgets[i]);
-                    }
-                };
-
-                // Get available widgets to be searched from
-                function getAvailableWidgets() {
-                    var availWidgets = [];
-                    var category = ko.toJS(self.categoryValue);
-                    if (category === null || category === '' || category.length === 0) {
-                        category = 'all|all|All';
-                    }
-                    else {
-                        category = category[0];
-                    }
-                    var wg = category.split('|');
-                    var providerName = wg[0];
-                    var providerVersion = wg[1];
-                    var groupName = wg[2];
-                    if (providerName==='all' && providerVersion==='all' && groupName === 'All') {
-                        availWidgets = widgetArray;
-                    }
-                    else {
-                        for (i = 0; i < widgetArray.length; i++) {
-                            var widget = widgetArray[i];
-                            if (//widget.PROVIDER_NAME === providerName &&
-                    //                widget.PROVIDER_VERSION === providerVersion &&
-                                    widget.WIDGET_GROUP_NAME === groupName) {
-                                availWidgets.push(widget);
-                            }
-                        }
-                    }
-                    return availWidgets;
-                };
-
-                // Refresh pagination button status
-                function refreshNaviButton() {
-                    self.naviPreBtnEnabled(curPage === 1 ? false : true);
-                    self.naviNextBtnEnabled(totalPage > 1 && curPage!== totalPage ? true:false);
-                };
-
-                // Return search result of type ahead search
+               // Return search result of type ahead search
                 self.searchFilterFunc = function (arr, value) {
                     self.searchText(value);
                     return searchResultArray;
@@ -274,20 +240,12 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                     self.searchWidgets();
                 };
 
-                // Handler for navigation to widget screen shot page
-                self.widgetNaviScreenShotClicked = function(data, event) {
-                    data.isScreenShotPageDisplayed(true);
-                };
-
-                // Handler for navigation to widget description page
-                self.widgetNaviDescClicked = function(data, event) {
-                    data.isScreenShotPageDisplayed(false);
-                };
-
                 // Widget box click handler
                 self.widgetBoxClicked = function(data, event) { 
                     self.needRefreshWidgetList(false);
                     if (event.type === "keydown" && event.keyCode === 13 || event.type === "mousedown") {
+                        $('#widget-selector').children().removeClass('oj-selected oj-focus oj-hover');
+                        $('li[id^=created-by] > ul').children().removeClass('oj-selected oj-focus oj-hover');
                         var curWidget = self.currentWidget();
                         if (curWidget && (curWidget.PROVIDER_NAME !== data.PROVIDER_NAME ||
                             curWidget.WIDGET_UNIQUE_ID !== data.WIDGET_UNIQUE_ID)) { 
@@ -309,9 +267,8 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                     self.needRefreshWidgetList(true);
                 };
 
-                function isGroupListView(){
-                    return $("li[id^=created-by]").length > 0;
-                };
+
+
                 
                 function navigateListView(event ,fromWidget ,toWidget ,isDown ,topOfWidgetList){
                     if(event.target.id === "searchTxt"){
@@ -353,7 +310,7 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                     element.removeAttr("tabindex");   
                     element.blur();  
                 };
-                
+                 
                 function scrollTo(target){
                     var scrollToPosition;
                     if(target.position()){
@@ -396,8 +353,7 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                             widgetsUrl = widgetsBaseUrl + "?includeDashboardIneligible=true";
                         }
                     }
-
-                    if (queryWidgetsForAllSubscribedApps) {
+ 
                         return dfu.ajaxWithRetry({
                             url: widgetsUrl,
                             headers: dfu.getSavedSearchServiceRequestHeader(),
@@ -409,39 +365,7 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                             },
                             async: true
                         });
-                    }
-                    else {
-                        var ajaxCallDfd = $.Deferred();
-                        var loadedCnt = 0;
-                        for (var i = 0; i < availableWidgetGroups.length; i++) {
-                            //Get widgets by widget group id
-                            widgetsUrl = widgetsBaseUrl + "?widgetGroupId=" + availableWidgetGroups[i].WIDGET_GROUP_ID;
-                            if (includeDashboardIneligible) {
-                                widgetsUrl = widgetsUrl + "&includeDashboardIneligible=true";
-                            }
-                            dfu.ajaxWithRetry({
-                                url: widgetsUrl,
-                                headers: dfu.getSavedSearchServiceRequestHeader(),
-                                success: function(data, textStatus, jqXHR) {
-                                    loadWidgets(data);
-                                    loadedCnt++;
-                                    if (loadedCnt === availableWidgetGroups.length) {
-                                        ajaxCallDfd.resolve(data, textStatus, jqXHR);
-                                    }
-                                },
-                                error: function(jqXHR, textStatus, errorThrown){
-                                    loadedCnt++;
-                                    if (loadedCnt === availableWidgetGroups.length) {
-                                        ajaxCallDfd.reject(jqXHR, textStatus, errorThrown);
-                                    }
-                                    oj.Logger.error('Error when fetching widgets by URL: '+widgetsUrl+'.');
-                                },
-                                async: true
-                            });
-                        }
 
-                        return ajaxCallDfd;
-                    }
                 };
 
                 function getWidgetGroups() {
@@ -456,7 +380,6 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                             url: widgetgroupsUrl,
                             headers: dfu.getSavedSearchServiceRequestHeader(),
                             success: function(data, textStatus) {
-                                widgetGroupList = loadWidgetGroups(data);
                                 if (widgetProviderName && widgetProviderVersion && widgetGroupList.length <= 2) {
                                     self.widgetGroupFilterVisible(false);
                                 }
@@ -474,59 +397,28 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                         });
                 };
 
-                function refreshPageData() {
-                    curPage = 1;
-                    totalPage = (widgetArray.length%pageSize === 0 ? widgetArray.length/pageSize : Math.floor(widgetArray.length/pageSize) + 1);
-                    naviFromSearchResults = false;
-                    self.widgetGroups(widgetGroupList);
-                    var selectedGroup = widgetGroupList.length > 0 ? widgetGroupList[0].value : "";
-                    self.categoryValue([selectedGroup]);
-                    self.widgetList(widgetArray);
-                    self.curPageWidgetList(curPageWidgets);
-                    self.naviPreBtnEnabled(curPage === 1 ? false : true);
-                    self.naviNextBtnEnabled(totalPage > 1 && curPage!== totalPage ? true:false);
-                };
 
                 // Refresh widget/widget group data and UI displaying
                 self.refreshWidgets = function() {
                     widgetArray = [];
-                    curGroupWidgets = [];
-                    curPageWidgets=[];
                     searchResultArray = [];
-                    index=0;
-                    widgetIndex = 0;
-                    widgetGroupList = [groupAll];
-                    availableWidgetGroups = [];
-                    self.currentWidget(null);
-                    self.confirmBtnDisabled(true);
                     self.searchText("");
                     self.widgetOnLoading(true);
-                    refreshPageData();
 
-                    getWidgetGroups().done(function(data, textStatus, jqXHR){
-                        oj.Logger.info("Finished loading widget groups. Start to load widgets.");
-                        getWidgets().done(function(data, textStatus, jqXHR){ 
-                            generateWidgetsDataSource(widgetArray);
-                            oj.Logger.info("Finished loading widget groups and widgets. Start to load page display data.");
-                            //If already has search text input during widgets loading, then do a search after widgets loading finished
-                            if (self.searchText() && $.trim(self.searchText()) !== "") {
-                                self.widgetGroups(widgetGroupList);
-                                var selectedGroup = widgetGroupList.length > 0 ? widgetGroupList[0].value : "";
-                                self.categoryValue([selectedGroup]);
+                   oj.Logger.info("Start to load widgets.");
+                   getWidgets().done(function(data, textStatus, jqXHR){ 
+                        self.widgetsData = widgetArray;
+                        self.forwardRenderWidgets(self.DEFAULT_WIDGET_INIT_AMOUNT, false);
+                        oj.Logger.info("Finished loading widget groups and widgets. Start to load page display data.");
+                        if (self.searchText() && $.trim(self.searchText()) !== "") {
                                 self.searchWidgets();
-                            }
-                            else {
-                                refreshPageData();
-                            }
-                            self.widgetOnLoading(false);
+                        } 
+                        self.widgetOnLoading(false);
+                        self.initLoadOnScroll();
                         })
                         .fail(function(xhr, textStatus, errorThrown){
                             oj.Logger.error("Failed to fetch widgets.");
                         });
-                    })
-                    .fail(function(xhr, textStatus, errorThrown){
-                        oj.Logger.error("Failed to fetch widget groups.");
-                    });
                 };
                 
                 function generateWidgetsDataSource(data, isOnSearching){ 
@@ -577,7 +469,9 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                                 widget.imgHeight = ko.observable("140px");
                                 widget.highlightedName = widget.WIDGET_NAME;
                                 widget.highlightedDescription = widget.WIDGET_DESCRIPTION;
-
+                                widget.highlightedSource =  self.widgetLableSource + widget.WIDGET_GROUP_NAME;
+                                widget.highlightedOwner =  self.widgetLableCreatedBy + widget.WIDGET_OWNER;
+                                
                                 if (!widget.WIDGET_DESCRIPTION){
                                     widget.WIDGET_DESCRIPTION = "";
                                 }
@@ -585,11 +479,7 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                                 widget.isScreenShotPageDisplayed = ko.observable(true);
                                 widget.isScreenshotLoaded = false;
                                 widget.modificationDateString = getLastModificationTimeString(widget.WIDGET_CREATION_TIME);
-                                if (index < pageSize) {
-                                    loadWidgetScreenshot(widget);
-                                    curPageWidgets.push(widget);
-                                    index++;
-                                }
+                                loadWidgetScreenshot(widget);
                                 widgetArray.push(widget);
                                 widgetIndex++;
                             }
@@ -684,33 +574,6 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                     }
                 };
 
-                // Load widget groups from ajax call result data
-                function loadWidgetGroups(data) {
-                    var targetWidgetGroupArray = [];
-                    var pname = null;
-                    var pversion = null;
-                    var gname = null;
-                    var groupId = null;
-                    targetWidgetGroupArray.push(groupAll);
-                    if (data && data.length > 0) {
-                        for (var i = 0; i < data.length; i++) {
-                            groupId = data[i].WIDGET_GROUP_ID;
-                            pname = data[i].PROVIDER_NAME;
-                            pversion = data[i].PROVIDER_VERSION;
-                            gname = data[i].WIDGET_GROUP_NAME;
-                            // Disable ITA widget group since no ITA widgets for now. (group id === 3)
-                            if ((!widgetProviderName && groupId !== 3 /*&& !widgetProviderVersion */) ||
-                                    widgetProviderName === pname || (widgetProviderName === 'TargetAnalytics' && groupId === 7)
-                                /*    && widgetProviderVersion === pversion */) {
-                                    var widgetGroup = {value:pname+'|'+pversion+'|'+gname, 
-                                                        label: groupId === 2 ? nls.WIDGET_SELECTOR_WIDGET_GROUP_NAME_TA : gname};
-                                    targetWidgetGroupArray.push(widgetGroup);
-                                    availableWidgetGroups.push(data[i]);
-                            }
-                        }
-                    }
-                    return targetWidgetGroupArray;
-                };
 
                 // Calculate the time difference between current date and the last modification date
                 function getLastModificationTimeString(lastModifiedDate) {
