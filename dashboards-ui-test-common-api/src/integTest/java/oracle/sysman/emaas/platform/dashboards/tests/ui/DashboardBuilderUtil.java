@@ -30,6 +30,12 @@ public class DashboardBuilderUtil
 		dbu.addTextWidgetToDashboard(driver);
 	}
 
+	public static void addImageInTextWidget(WebDriver driver, int index, String url, String alternativeText)
+	{
+		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		dbu.addImageInTextWidget(driver, index, url, alternativeText);
+	}
+	
 	public static void addWidgetToDashboard(WebDriver driver, String searchString)
 	{
 		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);

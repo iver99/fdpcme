@@ -47,6 +47,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 	private String dbName_duplicateOOB = "";
 	private String dbName_saveConfirmation = "";
 	private String dbName_textWidget = "";
+	private String dbName_textWidget_image = "";
 
 	private final String customWidgetName = "Execution Details";
 	private final String OOBName = "Middleware Operations";
@@ -893,5 +894,44 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		
 		WebElement textContent = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.TEXTCONTENTCSS));
 		Assert.assertEquals(textContent.getText(), content);
+	}
+	
+	@Test
+	public void testTextWidget_Image()
+	{
+		dbName_textWidget_image = "Dashboard_textWidgetImage-" + DashBoardUtils.generateTimeStamp();
+		
+		String dbDesc = "Add text widget into dashboard, test the image feature";
+		String url1 = "https://storage.googleapis.com/gweb-uniblog-publish-prod/static/blog/images/google-200x200.7714256da16f.png";
+		String url2 = "http://img2.niutuku.com/desk/anime/0529/0529-17277.jpg";
+		String alternativeText = "test_image";
+		
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test image in testTextWidget");
+
+		DashboardHomeUtil.gridView(webd);
+
+		webd.getLogger().info("Create the dashboard, then to add text widget");
+		DashboardHomeUtil.createDashboard(webd, dbName_textWidget_image, dbDesc, DashboardHomeUtil.DASHBOARD);
+		
+		webd.getLogger().info("Verify the dashboard created Successfully");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_textWidget_image, dbDesc, true), "Create dashboard failed!");		
+		
+		DashboardBuilderUtil.addTextWidgetToDashboard(webd);				
+		
+		DashboardBuilderUtil.addImageInTextWidget(webd, 1, url1, alternativeText);
+		webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
+		
+		DashboardBuilderUtil.addImageInTextWidget(webd, 1, url2, null);
+		webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
+
+		List<WebElement> images = webd.getWebDriver().findElements(By.cssSelector(DashBoardPageId.IMAGESCSS));	
+		
+		for (WebElement img : images)
+		{
+			Assert.assertEquals(img.isDisplayed(), true);
+		}
+		
+		DashboardBuilderUtil.saveDashboard(webd);				
 	}
 }

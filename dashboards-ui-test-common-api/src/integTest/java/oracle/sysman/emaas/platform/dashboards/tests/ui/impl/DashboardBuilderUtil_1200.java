@@ -230,4 +230,50 @@ public class DashboardBuilderUtil_1200 extends DashboardBuilderUtil_1190
 	public boolean hasWidgetLink(WebDriver driver, String widgetName){
 		return hasWidgetLink(driver, widgetName, 0);
 	}
+	
+	@Override
+	public void addImageInTextWidget(WebDriver driver, int index, String url, String alternativeText)
+	{
+		driver.getLogger().info("add image in Text Widget");
+		
+		Validator.notEmptyString("URL", url);
+		Validator.equalOrLargerThan0("index", index);
+
+		//find current dashboard
+		WebElement selectedDashboardEl = getSelectedDashboardEl(driver);
+
+		//click content wrapper area to load ckeditor
+		driver.waitForElementPresent("css=" + DashBoardPageId.TEXTWIDGETCONTENTCSS);
+		WebElement widget = selectedDashboardEl.findElements(By.cssSelector(DashBoardPageId.TEXTWIDGETCONTENTCSS)).get(index-1);
+		widget.click();
+
+		driver.waitForElementPresent("css=" + DashBoardPageId.IMAGEICONCSS);
+
+		driver.click("css=" + DashBoardPageId.IMAGEICONCSS);
+
+		driver.waitForElementPresent("css=" + DashBoardPageId.IMAGEDIALOGCSS);
+
+		WebElement url_input = driver.getElement(DashBoardPageId.IMAGEURLINPUT);
+		url_input.clear();
+		url_input.sendKeys(url);
+		System.out.print("***url input complete");
+		
+		if(alternativeText != null)
+		{
+			System.out.print("***if begin");
+			WebElement alternative_input = driver.getElement(DashBoardPageId.ALTERNATIVEINPUT);
+			System.out.print("***input***");
+			alternative_input.clear();
+			System.out.print("***input1***");
+			alternative_input.sendKeys(alternativeText);	
+			System.out.print("***input2***");
+		}
+
+		driver.click("css=" + DashBoardPageId.OKBTNCSS);
+
+		driver.waitForServer();
+
+		driver.takeScreenShot();
+		driver.getLogger().info("add link in text widget completed");
+	}
 }
