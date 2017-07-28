@@ -102,6 +102,7 @@ define([
                         resetContainerScroll();
                         var $b = self.selectedDashboardInst().$b;
                         $b.triggerEvent($b.EVENT_DASHBOARD_INIT_FIRST_RESIZE, "Init first resize when tab selected");
+                        $b.triggerBuilderResizeEvent("Resize and re-render after tab selected");
                         setTimeout(function() {
                             $(window).trigger("resize");
                         }, 200);
