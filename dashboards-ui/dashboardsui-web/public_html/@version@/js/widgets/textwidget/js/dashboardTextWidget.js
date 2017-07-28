@@ -105,9 +105,8 @@ define(["require", "knockout", "jquery", "ojs/ojcore", "ckeditor"],
                     }else if(dialogName === "link") {
                         var linkInfoTab = dialogDefinition.getContents("info");
                         var linkType = linkInfoTab.get("linkType");
+                        //update Link Type items: only keep URL and E-mail.
                         linkType.items = [["URL", "url"], ["E-mail", "email"]];
-                        console.log("****");
-                        console.log(linkType);
                     }
                 });
                 
