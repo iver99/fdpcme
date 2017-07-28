@@ -214,6 +214,14 @@ define(['knockout',
                 return tile.type() === "TEXT_WIDGET" ? "dbd-icon-delete" : "dbd-icon-remove"
             });
             
+            tile.dbsBuilderTileRemove = function() {
+                if(tile.type() === "TEXT_WIDGET") {
+                    return getNlsString('DBS_BUILDER_TILE_DELETE');
+                }else {
+                    return getNlsString('DBS_BUILDER_TILE_REMOVE');
+                }
+            }
+            
             tile.tileDisplayClass = ko.computed(function() {
                 var css = 'oj-md-'+(mode.getModeWidth(tile)) + ' oj-sm-'+(mode.getModeWidth(tile)*12) + ' oj-lg-'+(mode.getModeWidth(tile));
                 css += tile.isMaximized() ? ' dbd-tile-maximized ' : '';
