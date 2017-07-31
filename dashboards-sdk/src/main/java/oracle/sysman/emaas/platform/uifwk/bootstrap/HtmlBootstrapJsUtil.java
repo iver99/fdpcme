@@ -84,6 +84,7 @@ public class HtmlBootstrapJsUtil
 	 */
 	public static String getBrandingDataJS(HttpServletRequest httpReq)
 	{
+                long startBdJS = System.currentTimeMillis();
 		LOGGER.debug("Start to get branding bar bootstrap js...");
 		StringBuilder sb = new StringBuilder();
 		String referer = httpReq.getHeader("referer");
@@ -106,20 +107,25 @@ public class HtmlBootstrapJsUtil
 			LOGGER.warn("Retrieved null or invalid tenant user");
 			return null;
 		}
-                
+               
+                long startPageLoadEvent = System.currentTimeMillis(); 
                 LOGGER.debug("Generating Page Load Event.");
                 generatePageLoadEvent(tenant, user, referer, sessionExp);
- 
+		long endPageLoadEvent = System.currentTimeMillis(); 		
+
 		//user info
 		LOGGER.debug("Start to get brandingbar data.");
 		String brandingbarData = DataAccessUtil.getBrandingBarData(tenant, user, referer, sessionExp);
-        if (!StringUtil.isEmpty(brandingbarData)) {
-            //append uifwk cache data structure
-            sb.append("if(!window._uifwk){window._uifwk={};}if(!window._uifwk.cachedData){window._uifwk.cachedData={};}");
-            // the returned value from dashboard-api side could be injected into html directly
-            sb.append(brandingbarData);
-        }
+                if (!StringUtil.isEmpty(brandingbarData)) {
+                    //append uifwk cache data structure
+                    sb.append("if(!window._uifwk){window._uifwk={};}if(!window._uifwk.cachedData){window._uifwk.cachedData={};}");
+                    // the returned value from dashboard-api side could be injected into html directly
+                    sb.append(brandingbarData);
+                }
+                
 		String injectableJS = sb.toString();
+                injectableJS = "/* PAGE_LOAD_EVENT_API_COST : " +  (endPageLoadEvent - startPageLoadEvent) + "ms */" + injectableJS;
+                injectableJS = "/* GET_BRANDING_BAR_DATA_API_COST : " + (System.currentTimeMillis() - startBdJS) + "ms */" + injectableJS; 
 		LOGGER.info("getBrandingDataJS(), injectableJS: " + injectableJS);
 		return injectableJS;
 	}
@@ -144,6 +150,7 @@ public class HtmlBootstrapJsUtil
 	 */
 	public static String getSDKVersionJS()
 	{
+                long start = System.currentTimeMillis();
 		List<Link> sdkFileLinks = HtmlBootstrapJsUtil.lookupLinksWithRelPrefix(SDK_FILE, HTTPS);
 		Map sdkFilesMap = HtmlBootstrapJsUtil.getSdkFilesMap(sdkFileLinks);
 		String mapResponse = JsonWriteUtil.writeValueAsString(sdkFilesMap);
@@ -152,6 +159,7 @@ public class HtmlBootstrapJsUtil
 		String getSDKVersionFunctionJS = "window.getSDKVersionFile=function(nonCacheableVersion){console.log(\"getSDKVersionFile() for: \"+nonCacheableVersion);var versionFile=nonCacheableVersion;if(window.sdkFilePath){versionFile=window.sdkFilePath[nonCacheableVersion];}if(!versionFile){versionFile=nonCacheableVersion;}console.log(\"getSDKVersionFile(), found version: \"+versionFile);return versionFile;};";
 
 		String injectableJS = sdkVersionDefinitionJS + getSDKVersionFunctionJS;
+                injectableJS = "/* GET_SDK_VERSION_JS_API_COST : " +  (System.currentTimeMillis() - start) + "ms */" + injectableJS;
 		LOGGER.debug("VersionFilesSDK(), injectableJS: " + injectableJS);
 		return injectableJS;
 	}
