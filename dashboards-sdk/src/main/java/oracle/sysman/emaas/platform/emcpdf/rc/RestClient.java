@@ -31,6 +31,7 @@ public class RestClient {
     public static final String REFERER = "Referer";
     public static final String SESSION_EXP = "SESSION_EXP";
     public static final String X_OMC_SERVICE_TRACE = "X-OMC-SERVICE-TRACE";
+    public static final String ACCEPT_LANGUAGE = "Accept-Language";
 
 	private static ClientConfig cc = new DefaultClientConfig();
 	private static Client client = Client.create(cc);

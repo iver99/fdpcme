@@ -42,6 +42,7 @@ public class DashboardTest {
             from.setOwner("owner");
             from.setType(2);
             from.setExtendedOptions("exOptions");
+            from.setApplicationType(1);
             List<EmsSubDashboard> emsSubDashboards = new ArrayList<>();
             final List<EmsDashboard> emsDashboards = new ArrayList<>();
             from.setSubDashboardList(emsSubDashboards);

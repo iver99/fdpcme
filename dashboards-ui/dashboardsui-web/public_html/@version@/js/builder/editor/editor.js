@@ -189,6 +189,10 @@ define(['knockout',
                 }
                 self.tilesReorder();
             };
+            
+            self.editTile = function (tile, isShowHideTitleChange) {
+                Builder.rightPanelChange("editcontent", tile, isShowHideTitleChange);
+            };
 
             self.moveTileTo = function(cell, tile) {
                 var dragStartRow = self.mode.getModeRow(tile);
@@ -717,51 +721,48 @@ define(['knockout',
                 widget.height = widget.WIDGET_DEFAULT_HEIGHT ? widget.WIDGET_DEFAULT_HEIGHT: height;
                 widget.column = null;
                 widget.row = null;
-                widget.type = "DEFAULT";
+                if(widget.type !== "TEXT_WIDGET") {
+                    widget.type = "DEFAULT";
+                }
                     if (widget_source===null || widget_source===undefined){
                         widget_source=1;
                     }
 
                     if (koc_name && viewmodel && template) {
-                        if (widget_source===1){
-                             if (!ko.components.isRegistered(koc_name)) {
-                                var assetRoot = dfu.getAssetRootUrl(provider_name, true);
-                                if (assetRoot===null){
-                                    oj.Logger.error("Unable to find asset root: PROVIDER_NAME=["+provider_name+"], PROVIDER_VERSION=["+provider_version+"], PROVIDER_ASSET_ROOT=["+provider_asset_root+"]");
-                                }
-                                
-                                var assetRootForVerisonedFile = assetRoot.substring(1);
-                                var versionedViewModel = window.getSDKVersionFile ? 
-                                    window.getSDKVersionFile(assetRootForVerisonedFile + viewmodel) : null;
-                                viewmodel = versionedViewModel ? (versionedViewModel.lastIndexOf('.js') ===  versionedViewModel.length - 3 ? 
-                                                versionedViewModel.substring(0, versionedViewModel.length - 3) : versionedViewModel) : assetRoot + viewmodel;
-                                var versionedTemplate = window.getSDKVersionFile ? 
-                                    window.getSDKVersionFile(assetRootForVerisonedFile + template) : null;
-                                template = versionedTemplate ? versionedTemplate : assetRoot + template;
-                            
-                                ko.components.register(koc_name,{
-                                      viewModel:{require: viewmodel},
-                                      template:{require:'text!' + template}
-                                  });
-                                oj.Logger.log("widget: "+koc_name+" is registered");
-                                oj.Logger.log("widget template: "+template);
-                                oj.Logger.log("widget viewmodel:: "+viewmodel);
+                        if (!ko.components.isRegistered(koc_name)) {
+                            var assetRoot = dfu.getAssetRootUrl(provider_name, true);
+                            if (assetRoot === null) {
+                                oj.Logger.error("Unable to find asset root: PROVIDER_NAME=[" + provider_name + "], PROVIDER_VERSION=[" + provider_version + "], PROVIDER_ASSET_ROOT=[" + provider_asset_root + "]");
                             }
 
-                            newTile =new Builder.DashboardTile(self.mode, $b.dashboard, koc_name, name, description, widget, timeSelectorModel, targets, loadImmediately, dashboardInst);
-                            var tileCell;
-                            if(!(self.tiles && self.tiles().length > 0)) {
-                                tileCell = new Builder.Cell(0, 0);
-                            }else{
-                                tileCell = self.calAvailablePositionForTile(newTile, 0, 0);
-                            }
-                            newTile.row(tileCell.row);
-                            newTile.column(tileCell.column);
-                            self.tilesGrid.registerTileToGrid(newTile);
+                            var assetRootForVerisonedFile = assetRoot && assetRoot.substring(1);
+                            var versionedViewModel = window.getSDKVersionFile ?
+                                    window.getSDKVersionFile(assetRootForVerisonedFile + viewmodel) : null;
+                            viewmodel = versionedViewModel ? (versionedViewModel.lastIndexOf('.js') === versionedViewModel.length - 3 ?
+                                    versionedViewModel.substring(0, versionedViewModel.length - 3) : versionedViewModel) : assetRoot + viewmodel;
+                            var versionedTemplate = window.getSDKVersionFile ?
+                                    window.getSDKVersionFile(assetRootForVerisonedFile + template) : null;
+                            template = versionedTemplate ? versionedTemplate : assetRoot + template;
+
+                            ko.components.register(koc_name, {
+                                viewModel: {require: viewmodel},
+                                template: {require: 'text!' + template}
+                            });
+                            oj.Logger.log("widget: " + koc_name + " is registered");
+                            oj.Logger.log("widget template: " + template);
+                            oj.Logger.log("widget viewmodel:: " + viewmodel);
                         }
-                        else {
-                            oj.Logger.error("Invalid WIDGET_SOURCE: "+widget_source);
+
+                        newTile = new Builder.DashboardTile(self.mode, $b.dashboard, koc_name, name, description, widget, timeSelectorModel, targets, loadImmediately, dashboardInst);
+                        var tileCell;
+                        if (!(self.tiles && self.tiles().length > 0)) {
+                            tileCell = new Builder.Cell(0, 0);
+                        } else {
+                            tileCell = self.calAvailablePositionForTile(newTile, 0, 0);
                         }
+                        newTile.row(tileCell.row);
+                        newTile.column(tileCell.column);
+                        self.tilesGrid.registerTileToGrid(newTile);
                     }
                     else {
                         oj.Logger.error("Invalid input: KOC_NAME=["+koc_name+"], Template=["+template+"], ViewModel=["+viewmodel+"]");

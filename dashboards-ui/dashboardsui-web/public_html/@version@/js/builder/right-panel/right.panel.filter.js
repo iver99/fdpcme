@@ -254,7 +254,7 @@ define([
                     if(timeLabel) {
                         return timeLabel;
                     }
-                    return self.rightPanelUtil.getFlexTimePeriod(self.defaultTimeRangeValue()[0]);
+                    return ctxUtil.getTranslatedTimePeriod(self.defaultTimeRangeValue()[0], omcTimeConstants.timePeriodsSet.SHORT_TERM);
                 }else {
                     return self.rightPanelUtil.getTimeInfo(self.defaultStartTime(), self.defaultEndTime());
                 }

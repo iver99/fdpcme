@@ -113,7 +113,7 @@ public class HtmlBootstrapJsUtilTest
 			}
 		};
 		String loggedInUser = HtmlBootstrapJsUtil.getLoggedInUser();
-		Assert.assertEquals(loggedInUser, "\\{currentUser:\"tenant.user\"\\}");
+		Assert.assertEquals(loggedInUser, "{currentUser:\"tenant.user\"}");
 	}
 
 	@Test(groups = { "s2" })

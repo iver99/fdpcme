@@ -17,6 +17,7 @@ import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.emcpdf.tenant.lookup.RetryableLookupClient;
 import oracle.sysman.emaas.platform.emcpdf.tenant.subscription2.*;
 import oracle.sysman.emaas.platform.emcpdf.util.JsonUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -84,8 +85,15 @@ public class TenantSubscriptionUtil {
                 TenantSubscriptionInfo tenantSubscriptionInfo1 = cachedTenantSubcriptionInfo.getTenantSubscriptionInfo();
                 LOGGER.info("retrieved tenantSubscriptionInfo for tenant {} from cache,data is {}", tenant, tenantSubscriptionInfo1);
                 LOGGER.info("retrieved subscribed apps for tenant {} from cache,data is {}", tenant, cachedApps);
-                if (cachedApps != null && tenantSubscriptionInfo1 != null) {
-                    copyTenantSubscriptionInfo(tenantSubscriptionInfo1, tenantSubscriptionInfo);
+                /**
+                 * CachedApps in cache can be empty now. Empty subscribedapps are put into cache may due to some unknow reason cause DF cannot retrieve
+                 * subscribedapps correctly, may be 404 of 'serviceRequest', or 503 error returned by 'serviceRequest'. Then we put empty subscribedapps
+                 * into cache in order to save other threads/requests' time.
+                 */
+                if (cachedApps != null) {
+                    if(tenantSubscriptionInfo1 != null){
+                        copyTenantSubscriptionInfo(tenantSubscriptionInfo1, tenantSubscriptionInfo);
+                    }
                     return cachedApps;
                 }
             }
@@ -95,13 +103,15 @@ public class TenantSubscriptionUtil {
 
         LOGGER.info("Trying to retrieve subscription info from /serviceRequest for tenant {}",tenant);
         List<String> apps = new RetryableLookupClient<List<String>>().connectAndDoWithRetry("TenantService", "1.0+", "collection/tenants", false, null, new RetryableLookupClient.RetryableRunner<List<String>>() {
+            @Override
             public List<String> runWithLink(RegistryLookupUtil.VersionedLink lookupLink) throws Exception {
                 if (lookupLink == null || lookupLink.getHref() == null || "".equals(lookupLink.getHref())) {
                     LOGGER.warn(
                             "Failed to get entity naming service, or its rel (collection/lookups) link is empty. Exists the retrieval of subscribed service for tenant {}",
                             tenant);
-//                    cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE).evict(cacheKey);
-                    return Collections.emptyList();
+                    List<String> emptyStringList = Collections.emptyList();
+                    cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE).put(cacheKey, new CachedTenantSubcriptionInfo(emptyStringList, null));
+                    return emptyStringList;
                 }
 
                 LOGGER.info("Checking tenant (" + tenant + ") subscriptions. The serviceRequest lookups href is " + lookupLink.getHref());
@@ -116,10 +126,14 @@ public class TenantSubscriptionUtil {
                     rc.setHeader("X-USER-IDENTITY-DOMAIN-NAME", tenant);
                     appsResponse = rc.getWithException(queryHref, tenant, lookupLink.getAuthToken());
                 } catch (UniformInterfaceException e) {
-                    if (e.getResponse() != null && (e.getResponse().getStatus() == 404 || e.getResponse().getStatus() == 503)) {
-                        LOGGER.error("Got status code {} when getting tenant {} subscribed apps", e.getResponse().getStatus(), tenant);
-                        LOGGER.error(e);
-                        throw new RetryableLookupClient.RetryableLookupException(e);
+                    // will print HTTP response code when response is not null.
+                    if (e.getResponse() != null) {
+                        LOGGER.error("Got HTTP response code {} when getting tenant {} subscribed apps", e.getResponse().getStatus(), tenant);
+                        //only resp code 503 will trigger retry logic.
+                        if(e.getResponse().getStatus() == 503){
+                            LOGGER.error(e);
+                            throw new RetryableLookupClient.RetryableLookupException(e);
+                        }
                     }
                     LOGGER.error(e);
                     throw e;
@@ -133,13 +147,18 @@ public class TenantSubscriptionUtil {
                     LOGGER.error(e);
                     throw new RetryableLookupClient.RetryableLookupException(e);
                 }
-                LOGGER.info("Retrieved data for tenant ({}) from serviceRequest API. URL is {}, query response is {}. It took {}ms", tenant, queryHref, appsResponse, (System.currentTimeMillis() - subappQueryStart));
+                String responseLog = appsResponse.length()>=120 ? appsResponse.substring(0,120) : appsResponse;
+                //print part of the response, if cannot get the right information we need, then we print full response later.
+                LOGGER.info("Retrieved data for tenant ({}) from serviceRequest API. URL is {}, part of the query response is {}.... It took {}ms", tenant, queryHref, responseLog, (System.currentTimeMillis() - subappQueryStart));
                 JsonUtil ju = JsonUtil.buildNormalMapper();
                 try {
                     List<ServiceRequestCollection> src = ju.fromJsonToList(appsResponse, ServiceRequestCollection.class);
                     if (src == null || src.isEmpty()) {
                         LOGGER.error("Checking tenant (" + tenant + ") subscriptions. Empty application mapping items are retrieved");
-                        return Collections.emptyList();
+                        LOGGER.info("#1.Full response from /serviceRequest is {}", appsResponse);
+                        List<String> emptyStringList = Collections.emptyList();
+                        cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE).put(cacheKey, new CachedTenantSubcriptionInfo(emptyStringList, null));
+                        return emptyStringList;
                     }
                     List<SubscriptionApps> subAppsList = new ArrayList<SubscriptionApps>();
                     for (ServiceRequestCollection s : src) {
@@ -167,12 +186,23 @@ public class TenantSubscriptionUtil {
                         }
                     }
                     tenantSubscriptionInfo.setSubscriptionAppsList(subAppsList);
-//                    LOGGER.info("Before mapping subcribed app list is {}",subAppsList.getEditionComponentsList().);
+                    //Edition info integrity check...
+                    if(!checkEditionInfoIntegrity(subAppsList)){
+                        LOGGER.info("#2.Full response from /serviceRequest is {}", appsResponse);
+                    }
+
                     List<String> subscribeAppsList = SubscriptionAppsUtil.getSubscribedAppsList(tenantSubscriptionInfo);
+                    //Edition info integrity check...
+                    if(!editionInfoIntegrityCheck(subAppsList)){
+                        LOGGER.info("#2.Full response from /serviceRequest is {}", appsResponse);
+                    }
                     LOGGER.info("After mapping Subscribed App list is {}", subscribeAppsList);
                     if (subscribeAppsList == null) {
                         LOGGER.error("After Mapping action,Empty subscription list found!");
-                        return Collections.emptyList();
+                        LOGGER.info("#3.Full response from /serviceRequest is {}", appsResponse);
+                        List<String> emptyStringList = Collections.emptyList();
+                        cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE).put(cacheKey, new CachedTenantSubcriptionInfo(emptyStringList, null));
+                        return emptyStringList;
                     }
                     LOGGER.info("Put subscribe apps into cache,{},{}", subscribeAppsList, tenantSubscriptionInfo);
                     cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE).put(cacheKey,new CachedTenantSubcriptionInfo(subscribeAppsList, tenantSubscriptionInfo));
@@ -180,15 +210,33 @@ public class TenantSubscriptionUtil {
 
                 } catch (IOException e) {
                     LOGGER.error(e);
-                    return Collections.emptyList();
+                    List<String> emptyStringList = Collections.emptyList();
+                    cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE).put(cacheKey, new CachedTenantSubcriptionInfo(emptyStringList, null));
+                    return emptyStringList;
                 }
             }
         });
         if (apps == null) {
             apps = Collections.emptyList();
+            cm.getCache(CacheConstants.CACHES_SUBSCRIBED_SERVICE_CACHE).put(cacheKey, new CachedTenantSubcriptionInfo(apps, null));
             LOGGER.warn("Retrieved null list of subscribed apps for tenant {}", tenant);
         }
         return apps;
+    }
+
+    private static boolean checkEditionInfoIntegrity(List<SubscriptionApps> subAppsList) {
+        if(!subAppsList.isEmpty()){
+            LOGGER.info("Checking edition info's integrity");
+            if(subAppsList.get(0).getEditionComponentsList()!=null && !subAppsList.get(0).getEditionComponentsList().isEmpty() ){
+                String editionInfo = subAppsList.get(0).getEditionComponentsList().get(0).getEdition();
+                if(!StringUtils.isEmpty(editionInfo)){
+                    LOGGER.info("Integrity of edition info check passed...");
+                    return true;
+                }
+            }
+        }
+        LOGGER.warn("Integrity of edition info check failed...");
+        return false;
     }
 
     public static boolean isAPMServiceOnly(List<String> services) {
@@ -239,6 +287,21 @@ public class TenantSubscriptionUtil {
         List<AppsInfo> toAppsInfoList = new ArrayList<AppsInfo>();
         toAppsInfoList.addAll(from.getAppsInfoList());
         to.setAppsInfoList(toAppsInfoList);
+    }
+    private static boolean editionInfoIntegrityCheck(List<SubscriptionApps> subAppsList) {
+        if(!subAppsList.isEmpty()){
+            LOGGER.info("Checking edition info's integrity");
+
+            if(subAppsList.get(0).getEditionComponentsList()!=null && !subAppsList.get(0).getEditionComponentsList().isEmpty() ){
+                String editionInfo = subAppsList.get(0).getEditionComponentsList().get(0).getEdition();
+                if(!StringUtils.isEmpty(editionInfo)){
+                    LOGGER.info("Integrity of edition info check passed...");
+                    return true;
+                }
+            }
+        }
+        LOGGER.warn("Integrity of edition info check failed...");
+        return false;
     }
 
     private TenantSubscriptionUtil() {
