@@ -30,7 +30,7 @@
                     <!-- /ko -->
                     <!-- ko if: widgetOnLoading() == false -->
                     <ul id="widget-selector" aria-label="list using json data" 
-                        data-bind="ojComponent: {component: 'ojListView', data: widgetsDataSource, selectionMode: 'single', item: {template: isWidgetOwnerGroup, focusable: itemOnly, selectable: itemOnly}, drillMode: 'none'}">
+                        data-bind="ojComponent: {component: 'ojListView', data: widgetsDataSource, selectionMode: 'single', item: {template: isWidgetOwnerGroup, focusable: itemOnly, selectable: itemOnly},expanded: ['created-by-me','created-by-oracle','created-by-others']}">
                     </ul>                   
                     
 
