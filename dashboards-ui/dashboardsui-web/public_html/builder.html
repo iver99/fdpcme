@@ -1097,7 +1097,7 @@
                                                         </li>
                                                     </script>
                                                     <div class="search-content-dropdown-list-container" style="z-index: 99999;" data-bind="style:{ display: rightPanelEditContent.onContentSearching()?'block':'none'}">
-                                                        <ul aria-label="list using observable array" style="max-height: 250px" class="search-content-dropdown-list-ul"
+                                                        <ul id="search-content-dropdown-list" style="max-height: 250px" class="search-content-dropdown-list-ul"
                                                             data-bind="ojComponent: {
                                                                 component: 'ojListView',
                                                                 data: rightPanelEditContent.dataSource,
@@ -1180,7 +1180,7 @@
                                         <!-- ko if:sortedTiles().length > 0 -->
                                         <span class="edit-setting-head" data-bind="text: getNlsString('COMMON_TEXT_WIDGETS')"></span>
                                             <!--ko foreach:sortedTiles-->
-                                                <span class="edit-setting-link edit-content-link" data-bind="text:WIDGET_NAME(), click: $root.rightPanelControl.switchEditPanelContent"></span>
+                                                <span class="edit-setting-link edit-content-link" data-bind="text:WIDGET_NAME()"></span>
                                             <!--/ko-->
                                         <!--/ko-->
                                     <!-- /ko -->
@@ -1191,7 +1191,7 @@
                                     <!--ko if: $data.dashboard.tiles().length>0-->
                                     <span class="edit-setting-head" data-bind="text: getNlsString('COMMON_TEXT_WIDGETS')"></span>
                                         <!--ko foreach: sortedTiles -->
-                                        <span class="edit-setting-link edit-content-link"  data-bind="text:WIDGET_NAME(), click: $root.rightPanelControl.switchEditPanelContent"></span>
+                                        <span class="edit-setting-link edit-content-link"  data-bind="text:WIDGET_NAME()"></span>
                                         <!--/ko-->
                                     <!--/ko-->
                                 <!--/ko-->
