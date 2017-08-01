@@ -67,6 +67,8 @@ public class BugVerification extends LoginAndLogout
 		DashBoardUtils.deleteDashboard(webd, "DashboardInSet_4068");
 		DashBoardUtils.deleteDashboard(webd, "Dashboard_EMCPDF1094");
 		DashBoardUtils.deleteDashboard(webd, "test EMCPDF_2975 with / character"); 
+		DashBoardUtils.deleteDashboard(webd, "Dashboard_4607");
+		DashBoardUtils.deleteDashboard(webd, "DashboardSet_4607");
 
 		webd.getLogger().info("All test data have been removed");
 
@@ -644,4 +646,123 @@ public class BugVerification extends LoginAndLogout
 	webd.getLogger().info("Verify the dashboard");
 	Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName, null, true), "Verify dashboard failed!");
     }
+    
+    //test the maximize length is 64 when editing the dashboard name
+    @Test(alwaysRun = true)
+	public void testEMCPDF_4607_1()
+	{
+		//Initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testEMCPDF_4607");
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		//reset all filter options
+		webd.getLogger().info("Reset all filter options");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		DashboardHomeUtil.gridView(webd);
+
+		//create a dashboard
+		webd.getLogger().info("Create a dashboard");
+		DashboardHomeUtil.createDashboard(webd, "Dashboard_4607", null);
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, "Dashboard_4607", null, true),
+				"Create dashboard failed!");
+
+		webd.click("css=" + DashBoardPageId.EDITBTNCSS);
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		webd.click("css=" + DashBoardPageId.RIGHTDRAWEREDITSINGLEDBBTNCSS);
+		webd.clear("id=" + DashBoardPageId.DASHBOARDNAMEBOXID);
+		//Edit db name with a string whose length is 65 characters
+		webd.sendKeys("id=" + DashBoardPageId.DASHBOARDNAMEBOXID,"dashboardNamedashboardNamedashboardNamedashboardNamedashboardName");
+	
+		webd.click(DashBoardPageId.DASHBOARDFWKICON);
+		
+		//Verify the length is cut to 64 characters
+		WebElement dashboardName = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.RIGHTDRAWEREDITSINGLEDBBTNCSS));
+		Assert.assertEquals(dashboardName.getText().length(), 64);	
+
+		webd.click("css=" + DashBoardPageId.RIGHTDRAWEREDITSINGLEDBBTNCSS);
+		webd.clear("id=" + DashBoardPageId.DASHBOARDNAMEBOXID);
+
+		webd.sendKeys("id=" + DashBoardPageId.DASHBOARDNAMEBOXID, "Dashboard_4607");
+	}
+    
+    //test the maximize length is 64 when editing the dashboard set name
+    @Test(alwaysRun = true)
+	public void testEMCPDF_4607_2()
+	{
+		//Initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testEMCPDF_4607");
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		//reset all filter options
+		webd.getLogger().info("Reset all filter options");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		DashboardHomeUtil.gridView(webd);
+
+		//create a dashboard set
+		webd.getLogger().info("Create a dashboard set");
+		DashboardHomeUtil.createDashboardSet(webd, "DashboardSet_4607", null);
+
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardSet(webd, "DashboardSet_4607"),
+				"Create dashboard set failed!");
+		
+		webd.click(DashBoardPageId.DASHBOARDSETOPTIONBTN);
+		webd.click("css=" + DashBoardPageId.DASHBOARDSETOPTIONSEDITCSS);
+		
+		//clear the name, then input a name longer than 64bit 
+		webd.clear("css=" + DashBoardPageId.DASHBOARDSETOPTIONSEDITNAMECSS);
+		webd.sendKeys("css=" + DashBoardPageId.DASHBOARDSETOPTIONSEDITNAMECSS, "dashboardNamedashboardNamedashboardNamedashboardNamedashboardName");												
+
+		WaitUtil.waitForPageFullyLoaded(webd);
+		
+		WebElement dashboardSetName = webd.getWebDriver().findElement(By.xpath(DashBoardPageId.DASHBOARDSETNAMETEXTLOCATOR));
+		Assert.assertEquals(dashboardSetName.getText().length(), 64);	
+		
+		webd.clear("css=" + DashBoardPageId.DASHBOARDSETOPTIONSEDITNAMECSS);
+		webd.sendKeys("css=" + DashBoardPageId.DASHBOARDSETOPTIONSEDITNAMECSS, "DashboardSet_4607");												
+
+		WaitUtil.waitForPageFullyLoaded(webd);			
+	}
+    //test the maximize length of name is 64 when creating dashboard
+    @Test(alwaysRun = true)
+	public void testEMCPDF_4607_3()
+	{
+		//Initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testEMCPDF_4607");
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		//reset all filter options
+		webd.getLogger().info("Reset all filter options");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		DashboardHomeUtil.gridView(webd);
+
+		//create a dashboard
+		webd.getLogger().info("Create a dashboard");
+		webd.click("id=" + DashBoardPageId.CREATEDSBUTTONID);
+		
+		WaitUtil.waitForPageFullyLoaded(webd);
+		webd.sendKeys("id=" + DashBoardPageId.DASHBOARDNAMEBOXID, "dashboardNamedashboardNamedashboardNamedashboardNamedashboardName");
+
+		webd.click("id=" + DashBoardPageId.DASHOKBUTTONID);
+		WaitUtil.waitForPageFullyLoaded(webd);
+		
+		WebElement dashboardName = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.DASHBOARDNAMECSS));
+		Assert.assertEquals(dashboardName.getText().length(), 64);			
+
+		webd.click("css=" + DashBoardPageId.EDITBTNCSS);
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		webd.click("css=" + DashBoardPageId.RIGHTDRAWEREDITSINGLEDBBTNCSS);
+		webd.click("css=" + DashBoardPageId.BUILDEROPTIONSDELETELOCATOR);
+		
+		webd.click(DashBoardPageId.BUILDERDELETEDIALOGDELETEBTNLOCATOR);		
+	}
 }
