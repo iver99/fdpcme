@@ -150,7 +150,7 @@ require(['ojs/ojcore',
                 self.floatPosition1 = "left";
                 self.dateTimeConverter1 = oj.Validation.converterFactory("dateTime").createConverter(dateTimeOption);
                 self.dateConverter = oj.Validation.converterFactory("dateTime").createConverter(dateOption);
-                self.timeConverter = oj.Validation.converterFactory("dateTime").createConverter({pattern: 'h:mm:ss:SSS a'});
+                self.timeConverter = oj.Validation.converterFactory("dateTime").createConverter({pattern: 'h:mm a'});
 
                 var tmpStart = oj.IntlConverterUtils.dateToLocalIso(start);
                 var tmpEnd = oj.IntlConverterUtils.dateToLocalIso(end)
