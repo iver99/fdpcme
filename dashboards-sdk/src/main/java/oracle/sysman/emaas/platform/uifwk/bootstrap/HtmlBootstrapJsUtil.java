@@ -29,6 +29,7 @@ import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.uifwk.util.DataAccessUtil;
 
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 
 public class HtmlBootstrapJsUtil
@@ -80,7 +81,8 @@ public class HtmlBootstrapJsUtil
 	 */
 	public static String getBrandingDataJS(HttpServletRequest httpReq)
 	{
-		LOGGER.debug("Start to get branding bar bootstrap js...");
+		long begin = System.currentTimeMillis();
+        LOGGER.debug("Start to get branding bar bootstrap js...");
 		StringBuilder sb = new StringBuilder();
 		String referer = httpReq.getHeader("referer");
 		String sessionExp = httpReq.getHeader("SESSION_EXP");
@@ -103,9 +105,9 @@ public class HtmlBootstrapJsUtil
 			return null;
 		}
 
-		//user info
-		LOGGER.debug("Start to get brandingbar data.");
+		long start = System.currentTimeMillis();
 		String brandingbarData = DataAccessUtil.getBrandingBarData(tenant, user, referer, sessionExp);
+        LOGGER.info("Retriving brandingbar data takes {}ms", System.currentTimeMillis()-start);
 		//append uifwk cache data structure
         sb.append("if(!window._uifwk){window._uifwk={};}if(!window._uifwk.cachedData){window._uifwk.cachedData={};}");
         if (!StringUtil.isEmpty(brandingbarData)) {
@@ -128,6 +130,7 @@ public class HtmlBootstrapJsUtil
         }
 		String injectableJS = sb.toString();
 		LOGGER.info("getBrandingDataJS(), injectableJS: " + injectableJS);
+		LOGGER.info("getBrandingDataJS method takes {}ms", System.currentTimeMillis() - begin);
 		return injectableJS;
 	}
 
