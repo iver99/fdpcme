@@ -36,26 +36,16 @@ public class LRUCacheManager extends AbstractCacheManager{
         init(configFileName);
     }
 
-    public static LRUCacheManager getInstance(){
-        //double check instance
+    public synchronized static LRUCacheManager getInstance(){
         if(instance == null){
-            synchronized (LRUCacheManager.class){
-                if(instance == null){
-                    instance = new LRUCacheManager();
-                }
-            }
+             instance = new LRUCacheManager();
         }
         return instance;
     }
 
-    public static LRUCacheManager getInstance(String configFileName){
-        //double check instance
+    public synchronized static LRUCacheManager getInstance(String configFileName){
         if(instance == null){
-            synchronized (LRUCacheManager.class){
-                if(instance == null){
-                    instance = new LRUCacheManager(configFileName);
-                }
-            }
+            instance = new LRUCacheManager(configFileName);
         }
         return instance;
     }
