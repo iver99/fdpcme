@@ -26,7 +26,13 @@ import org.testng.annotations.Test;
 
 public class BugVerification extends LoginAndLogout
 {
-
+	private String longName1 = "dashboardNamedashboardNamedashboardNamedashboardNamedashboardNa1e";
+	private String longName2 = "dashboardNamedashboardNamedashboardNamedashboardNamedashboardNa2e";
+	private String longName3 = "dashboardNamedashboardNamedashboardNamedashboardNamedashboardNa3e";
+	private String expectName1 = longName1.substring(0, 63);
+	private String expectName2 = longName2.substring(0, 63);
+	private String expectName3 = longName3.substring(0, 63);
+	
 	public void initTest(String testName)
 	{
 		login(this.getClass().getName() + "." + testName);
@@ -67,8 +73,9 @@ public class BugVerification extends LoginAndLogout
 		DashBoardUtils.deleteDashboard(webd, "DashboardInSet_4068");
 		DashBoardUtils.deleteDashboard(webd, "Dashboard_EMCPDF1094");
 		DashBoardUtils.deleteDashboard(webd, "test EMCPDF_2975 with / character"); 
-		DashBoardUtils.deleteDashboard(webd, "Dashboard_4607");
-		DashBoardUtils.deleteDashboard(webd, "DashboardSet_4607");
+		DashBoardUtils.deleteDashboard(webd, expectName1);
+		DashBoardUtils.deleteDashboard(webd, expectName2);
+		DashBoardUtils.deleteDashboard(webd, expectName3);
 
 		webd.getLogger().info("All test data have been removed");
 
@@ -669,25 +676,8 @@ public class BugVerification extends LoginAndLogout
 
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, "Dashboard_4607", null, true),
 				"Create dashboard failed!");
-
-		webd.click("css=" + DashBoardPageId.EDITBTNCSS);
-		WaitUtil.waitForPageFullyLoaded(webd);
-
-		webd.click("css=" + DashBoardPageId.RIGHTDRAWEREDITSINGLEDBBTNCSS);
-		webd.clear("id=" + DashBoardPageId.DASHBOARDNAMEBOXID);
-		//Edit db name with a string whose length is 65 characters
-		webd.sendKeys("id=" + DashBoardPageId.DASHBOARDNAMEBOXID,"dashboardNamedashboardNamedashboardNamedashboardNamedashboardName");
-	
-		webd.click(DashBoardPageId.DASHBOARDFWKICON);
-		
-		//Verify the length is cut to 64 characters
-		WebElement dashboardName = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.RIGHTDRAWEREDITSINGLEDBBTNCSS));
-		Assert.assertEquals(dashboardName.getText().length(), 64);	
-
-		webd.click("css=" + DashBoardPageId.RIGHTDRAWEREDITSINGLEDBBTNCSS);
-		webd.clear("id=" + DashBoardPageId.DASHBOARDNAMEBOXID);
-
-		webd.sendKeys("id=" + DashBoardPageId.DASHBOARDNAMEBOXID, "Dashboard_4607");
+		DashboardBuilderUtil.editDashboard(webd, longName2, null);
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, expectName2, null, true), "Edit dashboard failed!");
 	}
     
     //test the maximize length is 64 when editing the dashboard set name
@@ -712,22 +702,10 @@ public class BugVerification extends LoginAndLogout
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardSet(webd, "DashboardSet_4607"),
 				"Create dashboard set failed!");
 		
-		webd.click(DashBoardPageId.DASHBOARDSETOPTIONBTN);
-		webd.click("css=" + DashBoardPageId.DASHBOARDSETOPTIONSEDITCSS);
-		
-		//clear the name, then input a name longer than 64bit 
-		webd.clear("css=" + DashBoardPageId.DASHBOARDSETOPTIONSEDITNAMECSS);
-		webd.sendKeys("css=" + DashBoardPageId.DASHBOARDSETOPTIONSEDITNAMECSS, "dashboardNamedashboardNamedashboardNamedashboardNamedashboardName");												
-
-		WaitUtil.waitForPageFullyLoaded(webd);
-		
-		WebElement dashboardSetName = webd.getWebDriver().findElement(By.xpath(DashBoardPageId.DASHBOARDSETNAMETEXTLOCATOR));
-		Assert.assertEquals(dashboardSetName.getText().length(), 64);	
-		
-		webd.clear("css=" + DashBoardPageId.DASHBOARDSETOPTIONSEDITNAMECSS);
-		webd.sendKeys("css=" + DashBoardPageId.DASHBOARDSETOPTIONSEDITNAMECSS, "DashboardSet_4607");												
-
-		WaitUtil.waitForPageFullyLoaded(webd);			
+		DashboardBuilderUtil.editDashboardSet(webd, longName3, null);
+			
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardSet(webd, expectName3),
+				"Edit dashboard set failed!");
 	}
     //test the maximize length of name is 64 when creating dashboard
     @Test(alwaysRun = true)
@@ -746,23 +724,10 @@ public class BugVerification extends LoginAndLogout
 
 		//create a dashboard
 		webd.getLogger().info("Create a dashboard");
-		webd.click("id=" + DashBoardPageId.CREATEDSBUTTONID);
-		
-		WaitUtil.waitForPageFullyLoaded(webd);
-		webd.sendKeys("id=" + DashBoardPageId.DASHBOARDNAMEBOXID, "dashboardNamedashboardNamedashboardNamedashboardNamedashboardName");
-
-		webd.click("id=" + DashBoardPageId.DASHOKBUTTONID);
-		WaitUtil.waitForPageFullyLoaded(webd);
-		
-		WebElement dashboardName = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.DASHBOARDNAMECSS));
-		Assert.assertEquals(dashboardName.getText().length(), 64);			
-
-		webd.click("css=" + DashBoardPageId.EDITBTNCSS);
+		DashboardHomeUtil.createDashboard(webd, longName1, null);
 		WaitUtil.waitForPageFullyLoaded(webd);
 
-		webd.click("css=" + DashBoardPageId.RIGHTDRAWEREDITSINGLEDBBTNCSS);
-		webd.click("css=" + DashBoardPageId.BUILDEROPTIONSDELETELOCATOR);
-		
-		webd.click(DashBoardPageId.BUILDERDELETEDIALOGDELETEBTNLOCATOR);		
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, expectName1, null, true),
+				"Create dashboard failed!");			
 	}
 }
