@@ -1,8 +1,19 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
 apply from:'test.gradle'
+
+def jsversion = project.ext.getServiceVersion('DashboardService-ui')
+def versionPathElement = jsversion + "-"+ rootProject.ext.get("appTimeStamp")
 
 jar {
         from('src/main/java') {
+	    if (!project.hasProperty("devMode")) {
+	         filesMatching("**/*.properties") {
+                     filter(ReplaceTokens, tokens: [version: versionPathElement])
+                }	
+            }
                 include '**/*.xml'
+		include '**/*.properties'
         }
 }
 
