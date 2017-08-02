@@ -31,7 +31,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore", "ckeditor"],
                         {name: 'paragraph', items: ['JustifyLeft', 'JustifyCenter', 'JustifyRight']},
                         {name: 'links', items: ['Link', 'Image']}
                     ],
-                    removePlugins: 'elementspath',
+                    removePlugins: 'elementspath,magicline',
                     startupFocus: false,
                     uiColor: "#FFFFFF",
                     linkShowAdvancedTab: false,
