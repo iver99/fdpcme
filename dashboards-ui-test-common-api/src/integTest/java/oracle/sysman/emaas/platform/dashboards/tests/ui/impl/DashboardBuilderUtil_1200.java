@@ -55,7 +55,9 @@ public class DashboardBuilderUtil_1200 extends DashboardBuilderUtil_1190
 			WaitUtil.waitForPageFullyLoaded(driver);
 			actions.moveToElement(searchInput).build().perform();
 			driver.click("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHBOXCSSLOCATOR);
+			wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHGETCSSLOCATOR)));
 			searchInput.sendKeys(dashboardName);
+			driver.waitForServer();
 			driver.takeScreenShot();
 			//verify input box value
 			Assert.assertEquals(searchInput.getAttribute("value"), dashboardName);
