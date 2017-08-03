@@ -66,6 +66,7 @@ function (ko, $, oj, dfu, mbu, uiutil) {
                 resetTileHighlighted();
                 selectedContent && selectedContent(param);
             }
+                self.resetEmptyDashboardName && self.resetEmptyDashboardName(); //reset empty dashboard name when user click edit button on tile menu
 
             self.$b().triggerBuilderResizeEvent('resize right panel');
         };
@@ -100,6 +101,7 @@ function (ko, $, oj, dfu, mbu, uiutil) {
                     setTileHightlighted(self.lastHighlightWigetIndex);
                 }
             }
+            self.resetEmptyDashboardName && self.resetEmptyDashboardName(); //reset empty dashboard name when user toggle right panel
             $b.triggerBuilderResizeEvent('show right panel');
         };
 
@@ -138,6 +140,7 @@ function (ko, $, oj, dfu, mbu, uiutil) {
             } else {
                 self.editPanelContent("settings");
             }
+            self.resetEmptyDashboardName && self.resetEmptyDashboardName(); //reset empty dashboard name when user click back icon or other settings
             self.$b().triggerBuilderResizeEvent('OOB dashboard detected and hide left panel');
         };
 
