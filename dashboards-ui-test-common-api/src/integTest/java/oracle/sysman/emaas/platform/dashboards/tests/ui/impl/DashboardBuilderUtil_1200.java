@@ -270,8 +270,7 @@ public class DashboardBuilderUtil_1200 extends DashboardBuilderUtil_1190
 
 		driver.click("css=" + DashBoardPageId.OKBTNCSS);
 
-		driver.waitForServer();
-
+		//driver.waitForServer();
 		//driver.takeScreenShot();
 		driver.getLogger().info("add link in text widget completed");
 	}
