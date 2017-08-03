@@ -103,9 +103,6 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                             console.debug("Scrolled to the top of widget list. Loading more backwardly...");
                             self.backwardRenderWidgets(self.DEFAULT_WIDGET_INCREMENT_AMOUNT,isGroupListView());
                         }
-                        if(self.initWidgetDraggable){
-                            self.initWidgetDraggable();
-                        }
                     });
                 };
                 self.DEFAULT_WIDGET_INIT_AMOUNT = 40;
@@ -400,6 +397,9 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                         }
                         if(self.initWidgetDraggable){
                             self.initWidgetDraggable();
+                            $(".widget-selector-in-builder-page #widget-selector").on("ojready", function( event, ui ) {
+                                self.initWidgetDraggable();
+                            });
                         }
                       })
                         .fail(function(xhr, textStatus, errorThrown){
