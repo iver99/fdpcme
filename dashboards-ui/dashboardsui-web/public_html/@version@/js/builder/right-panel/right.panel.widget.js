@@ -207,7 +207,7 @@ function (ko, $, oj, dfu) {
         };
 
         self.initWidgetDraggable = function () {
-            $(".dbd-left-panel-widget-text").draggable({
+            $(".widget-selector-list-grid").draggable({
                 helper: "clone",
                 scroll: false,
                 start: function (e, t) {
@@ -290,6 +290,7 @@ function (ko, $, oj, dfu) {
                     useIn: 'builder',
                     autoCloseDialog: false,
                     widgetHandler: self.widgetPlusHandler,
+                    initWidgetDraggable: self.initWidgetDraggable,
                     buildPageResize:  self.pageResize 
                 };
     }

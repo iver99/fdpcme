@@ -30,6 +30,7 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                         (params.dialogId ? params.dialogId : 'widgetSelectorDialog');
                 self.useIn = $.isFunction(params.useIn) ? params.useIn() : (params.useIn?params.useIn:'normal');
                 self.widgetHandler = params.widgetHandler;
+                self.initWidgetDraggable = params.initWidgetDraggable;
                 self.buildPageResize = params.buildPageResize;
                 self.autoCloseDialog = $.isFunction(params.autoCloseDialog) ? params.autoCloseDialog() : params.autoCloseDialog;
                 self.widgetSelectorTitle = dialogTitle ? dialogTitle : nls.WIDGET_SELECTOR_DEFAULT_DIALOG_TITLE;
@@ -101,6 +102,9 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                         if ($('#widget-selector-widgets').scrollTop() <= 0) {
                             console.debug("Scrolled to the top of widget list. Loading more backwardly...");
                             self.backwardRenderWidgets(self.DEFAULT_WIDGET_INCREMENT_AMOUNT,isGroupListView());
+                        }
+                        if(self.initWidgetDraggable){
+                            self.initWidgetDraggable();
                         }
                     });
                 };
@@ -255,7 +259,9 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                         else if (!curWidget) {
                             self.currentWidget(data);
                         }
-                        widgetSelectionConfirmed();
+                        if(!(event.type === "mousedown" && self.useIn === 'builder')){
+                            widgetSelectionConfirmed();
+                        }
                     }else if (event.type === "keydown" && event.keyCode === 9) { 
                         if (event.shiftKey) { 
                             navigateWidgetList(event, false);
@@ -391,6 +397,9 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                         if (self.buildPageResize) {
                             self.buildPageResize();
                             self.buildPageResize = null;
+                        }
+                        if(self.initWidgetDraggable){
+                            self.initWidgetDraggable();
                         }
                       })
                         .fail(function(xhr, textStatus, errorThrown){
