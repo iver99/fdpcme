@@ -214,6 +214,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	private static final String NAV_CACHE = NAV_API_BASE + "cache";
 	private static final String NAV_REFRESH_OOB = NAV_API_BASE + "refresh/oob";
 	private static final String NAV_REFRESH_NLS = NAV_API_BASE + "refresh/nls";
+	private static final String NAV_REFRESH_WIDGET_CACHE = NAV_API_BASE + "refresh/widgetcache";
 	private static final String NAV_TOOL = NAV_API_BASE + "tool";
 
 	public static final ObjectName WLS_RUNTIME_SERVICE_NAME;
@@ -491,6 +492,12 @@ public class RegistryServiceManager implements ApplicationServiceManager
             }
             if (applicationUrlHttps != null) {
                 links.add(new Link().withRel("refresh/resource_bundle").withHref(applicationUrlHttps + NAV_REFRESH_NLS));
+            }
+            if (applicationUrlHttp != null) {
+                links.add(new Link().withRel("expire/widgetcache").withHref(applicationUrlHttp + NAV_REFRESH_WIDGET_CACHE));
+            }
+            if (applicationUrlHttps != null) {
+                links.add(new Link().withRel("expire/widgetcache").withHref(applicationUrlHttps + NAV_REFRESH_WIDGET_CACHE));
             }
             if (applicationUrlHttp != null) {
                 links.add(new Link().withRel("tool").withHref(applicationUrlHttp + NAV_TOOL));
