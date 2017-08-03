@@ -253,38 +253,26 @@ public class DashboardBuilderUtil_1200 extends DashboardBuilderUtil_1190
 
 		driver.waitForElementPresent("css=" + DashBoardPageId.IMAGEDIALOGCSS);
 		
-		WebElement url_input = driver.getWebDriver().findElement(By.xpath(DashBoardPageId.IMAGEURLINPUT));
-		
-		//Actions actions = new Actions(driver.getWebDriver());
-		//actions.moveToElement(url_input).build().perform();
+		WebElement url_input = driver.getWebDriver().findElement(By.xpath(DashBoardPageId.IMAGEURLINPUT));	
 		url_input.clear();
-		//WaitUtil.waitForPageFullyLoaded(driver);
-		////actions.moveToElement(url_input).build().perform();
-		//driver.click(DashBoardPageId.IMAGEURLINPUT);
 		url_input.sendKeys(url);
-		System.out.print("***url input complete");
 		
 		if(alternativeText != null)
 		{
-			System.out.print("***if begin");
 			WebElement alternative_input = driver.getWebDriver().findElement(By.xpath(DashBoardPageId.ALTERNATIVEINPUT));
-
-			System.out.print("***input***");
 			alternative_input.clear();
-			System.out.print("***input1***");
 	
 			WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(DashBoardPageId.ALTERNATIVEINPUT)));
 
 			alternative_input.sendKeys(alternativeText);	
-			System.out.print("***input2***");
 		}
 
 		driver.click("css=" + DashBoardPageId.OKBTNCSS);
 
 		driver.waitForServer();
 
-		driver.takeScreenShot();
+		//driver.takeScreenShot();
 		driver.getLogger().info("add link in text widget completed");
 	}
 }
