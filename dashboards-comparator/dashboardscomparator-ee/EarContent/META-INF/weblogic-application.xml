@@ -11,7 +11,11 @@
 	<wls:listener>
 		<wls:listener-class>oracle.sysman.emaas.platform.dashboards.comparator.webutils.services.DashboardComparatorLifecycleService
 		</wls:listener-class>
-	</wls:listener>
+	</wls:listener> 
+<!--  	<wls:listener>
+		<wls:listener-class>oracle.sysman.emaas.platform.dashboards.comparator.timer.DashboardComparatorTriggerService
+		</wls:listener-class>
+	</wls:listener> -->
 	<wls:security>
 		<wls:security-role-assignment>
 			<wls:role-name>valid-users</wls:role-name>

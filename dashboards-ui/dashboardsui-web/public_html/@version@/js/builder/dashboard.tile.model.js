@@ -484,6 +484,7 @@ define(['knockout',
                             self.beforeResizeHeight = self.resizingTile().cssHeight();
                             self.currentWigedtWidth(self.resizingTile().cssWidth());
                             self.currentWigedtHeight(self.resizingTile().cssHeight());                  
+                            $b.triggerEvent($b.EVENT_TILE_RESIZED);
                         }
                         self.tilesView.disableDraggable();
                     });

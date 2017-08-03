@@ -18,6 +18,8 @@ public class DashBoardPageId
 	public static final String DASHSAVEBUTTONID = "createDsb-2";
 	public static final String DASHBOARDTYPE_SINGLE = "dashboardtype-single";
 	public static final String DASHBOARDTYPE_SET = "dashboardtype-set";
+	public static final String ERRORMSGSUMMARYCSS = ".oj-message-summary";
+	public static final String ERRORMSGDETAILCSS = ".oj-message-detail";
 	//public static final String WidgetAddButtonID = "add-widget-button";
 	public static final String OPTIONSID = "dashboardOptsBtn";
 	public static final String DASHBOARDSAVEID = "dashboard-screenshot";
@@ -198,6 +200,7 @@ public class DashBoardPageId
 	public static final String ABOUTCLOSEID = "okButton";
 	//edit dashboard
 	public static final String TIMERANGEID = "/html/body/div[2]/div[2]/div/div/div[1]/div[1]/div/div/button";
+	public static final String EDITBTNCSS = "button[id^='rightpanel-pencil_']";
 
 	public static final String BUILDERNAMETEXTLOCATOR = "//div[contains(@class, 'builder-dbd-name')]//h1";
 	public static final String BUILDERDESCRIPTIONTEXTLOCATOR = "//div[contains(@class, 'builder-dbd-description')]//span[contains(@class, 'dbd-display-area-text')]";
@@ -283,6 +286,8 @@ public class DashBoardPageId
 	public static final String DASHBOARDSETOPTIONSREMOVEFAVORITECSS = "#dbs-favorite a[dashboardset-option=\"Remove Favorite\"]";
 	public static final String DASHBOARDSETOPTIONSHOMECSS = "#dbs-home a";
 	public static final String DASHBOARDSETOPTIONSADDHOMECSS = "#dbs-home a[dashboardset-option=\"Set as Home\"]";
+	public static final String DASHBOARDSETFWKICONCSS = "div.dbd-right-panel-editdashboardset>div>a.oj-fwk-icon-caret-start.oj-fwk-icon.back-to-edit-settings";
+	
 	//dashboard tool bar
 	public static final String DASHBOARDSAVECSS = "button.dashboardSaveBtn";
 	public static final String DASHBOARDADDTEXTWIDGETCSS = "button.dashboardTextBtn";
@@ -337,6 +342,7 @@ public class DashBoardPageId
 	public static final String RIGHTDRAWERTOGGLEWRENCHBTNCSS = ".right-panel-toggler button.toggle-right-panel-btn.rightpanel-wrench";
 	public static final String RIGHTDRAWERTOGGLEPENCILBTNCSS = ".right-panel-toggler button.toggle-right-panel-btn.rightpanel-pencil";
 	public static final String RIGHTDRAWEREDITSINGLEDBBTNCSS = ".edit-setting-link.edit-dsb-link";
+	public static final String RIGHTDRAWEREDITSINGLEDBSETBTNCSS = ".edit-setting-link.edit-dsbset-link";
 	public static final String RIGHTDRAWEREDITSINGLEDBSHARECSS = ".dbd-right-panel-editdashboard-share>span";
 	public static final String RIGHTDRAWEREDITDBFILTERCSS = ".dbd-right-panel-editdashboard-filters>span";
 	public static final String RIGHTDRAWERSEARCHINPUTCSS = ".dbd-left-panel input.widget-search-input";
