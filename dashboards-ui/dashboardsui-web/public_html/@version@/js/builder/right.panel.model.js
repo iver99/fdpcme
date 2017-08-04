@@ -209,6 +209,16 @@ define(['knockout',
 
                     self.emptyDashboard && self.rightPanelControl.initializeRightPanel(true);
                     initRightPanelDragAndTile();
+                    if(!self.rightPanelControl.resetEmptyDashboardName){
+                        if(self.rightPanelEdit && self.rightPanelEdit.resetEmptyDashboardName){
+                            self.rightPanelControl.resetEmptyDashboardName = self.rightPanelEdit.resetEmptyDashboardName;
+                        }else if(self.editDashboardDialogModel()){
+                            self.rightPanelControl.resetEmptyDashboardName = self.editDashboardDialogModel().resetEmptyDashboardName;
+                        }
+                        self.rightPanelControl.resetEmptyDashboardName && $("#dbd-tabs-container")[0] && $("#dbd-tabs-container").on( "ojbeforeselect", function( event, ui ) { //reset empty dashboard name when user switch tabs in dashboard set
+                            self.rightPanelControl.resetEmptyDashboardName()
+                        } );
+                    }
             };
             
             self.initLoadOnScroll = function() {

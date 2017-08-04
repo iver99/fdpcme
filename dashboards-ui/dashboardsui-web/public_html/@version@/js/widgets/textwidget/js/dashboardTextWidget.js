@@ -31,7 +31,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore", "ckeditor"],
                         {name: 'paragraph', items: ['JustifyLeft', 'JustifyCenter', 'JustifyRight']},
                         {name: 'links', items: ['Link', 'Image']}
                     ],
-                    removePlugins: 'elementspath',
+                    removePlugins: 'elementspath,magicline',
                     startupFocus: false,
                     uiColor: "#FFFFFF",
                     linkShowAdvancedTab: false,
@@ -102,6 +102,11 @@ define(["require", "knockout", "jquery", "ojs/ojcore", "ckeditor"],
                         imageInfoTab.get("txtVSpace").style = "display: none";
                         imageInfoTab.get("cmbAlign").style = "display: none";
                         
+                    }else if(dialogName === "link") {
+                        var linkInfoTab = dialogDefinition.getContents("info");
+                        var linkType = linkInfoTab.get("linkType");
+                        //update Link Type items: only keep URL and E-mail.
+                        linkType.items = [["URL", "url"], ["E-mail", "email"]];
                     }
                 });
                 

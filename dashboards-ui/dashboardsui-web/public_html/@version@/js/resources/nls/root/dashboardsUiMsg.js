@@ -213,6 +213,7 @@ define({
       "DBS_BUILDER_TILE_ACTIONS": "Content Settings",
       "DBS_BUILDER_TILE_EDIT":"Open in Data Explorer",
       "DBS_BUILDER_TILE_REMOVE": "Remove",
+      "DBS_BUILDER_TILE_DELETE": "Delete",
       "DBS_BUILDER_TILE_RESIZE": "Resize",
       "DBS_BUILDER_TILE_WIDER": "Wider",
       "DBS_BUILDER_TILE_NARROWER": "Narrower",
