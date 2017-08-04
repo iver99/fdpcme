@@ -902,14 +902,17 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		dbName_textWidget_image = "Dashboard_textWidgetImage-" + DashBoardUtils.generateTimeStamp();
 		
 		String dbDesc = "Add text widget into dashboard, test the image feature";
-		String url1 = "https://storage.googleapis.com/gweb-uniblog-publish-prod/static/blog/images/google-200x200.7714256da16f.png";
-		String url2 = "http://img2.niutuku.com/desk/anime/0529/0529-17277.jpg";
+		String urlString = "emsaasui/uifwk/images/o_logo.png";
+		String url = "";
 		String alternativeText = "test_image";
 		
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test image in testTextWidget");
 
 		DashboardHomeUtil.gridView(webd);
+		
+		String currentUrl = webd.getWebDriver().getCurrentUrl();
+		url = (currentUrl.substring(0, currentUrl.indexOf("emsaasui"))).concat(urlString);
 
 		webd.getLogger().info("Create the dashboard, then to add text widget");
 		DashboardHomeUtil.createDashboard(webd, dbName_textWidget_image, dbDesc, DashboardHomeUtil.DASHBOARD);
@@ -919,10 +922,10 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		
 		DashboardBuilderUtil.addTextWidgetToDashboard(webd);				
 		
-		DashboardBuilderUtil.addImageInTextWidget(webd, 1, url1, alternativeText);
+		DashboardBuilderUtil.addImageInTextWidget(webd, 1, url, alternativeText);
 		webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
 		
-		DashboardBuilderUtil.addImageInTextWidget(webd, 1, url2, null);
+		DashboardBuilderUtil.addImageInTextWidget(webd, 1, url, null);
 		webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
 
 		List<WebElement> images = webd.getWebDriver().findElements(By.cssSelector(DashBoardPageId.IMAGESCSS));	
