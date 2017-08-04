@@ -117,6 +117,8 @@ public class DashBoardPageId
 	public static final String OOBDASHBOARDNAMELOCATOR = "//div[not(contains(@style,'display:none'))]//*[contains(@class, 'dbs-dsbsystem') and (@aria-label = '_name_' or text() = '_name_')]";
 	public static final String DASHBOARDNAMECONTAINERS = "//div[not(contains(@style,'display:none'))]//*[contains(@class, 'dbs-dsbnameele')]";
 	public static final String DASHBOARDNAMEINDEXLOCATOR = "xpath=(//div[not(contains(@style,'display:none'))]//*[contains(@class, 'dbs-dsbnameele')])[_index_]";
+	
+	public static final String DASHBOARDOFLONGNAMELOCATOR = "//div[contains(@style, 'word-wrap: break-word') and @data-bind='text: dashboard.name']";
 	//Branding Bar links
 	//Home Link
 	//public static final String HomeLinkID = "/html/body/div[*]/header/div/div[1]/div[3]/div/div/div[1]/div[2]/div[1]/a";
