@@ -308,6 +308,7 @@
                                 }"></button>
                           <!-- /ko -->
                       </div>
+                      <!-- ko if: $data.type() !== "TEXT_WIDGET" -->
                       <div class="dbd-btn-maxminToggle">
                           <button class="oj-button-half-chrome dbd-tile-maxmin" tabindex="0"
                                   data-bind="
@@ -319,6 +320,7 @@
                                         label: ''
                                 }"></button>
                       </div>
+                      <!-- /ko -->
                         <div class="dbd-btn-group" data-bind="stopDataBinding: $root.dashboard.systemDashboard && $root.dashboard.systemDashboard()==true">
                             <!-- ko if: ($root.dashboard.systemDashboard()===false)&& !(($root.dashboard.sharePublic ===true)&&($root.dashboard.owner()!==$root.loginUser())) &&($root.isMobileDevice !== 'true')&&($root.toolbarModel.notZdtStatus) -->
                             <button class="oj-button-half-chrome dbd-tile-action" tabindex="0"
@@ -468,9 +470,9 @@
                                 <li data-option="remove" data-bind="css: { 'oj-disabled': $data.editDisabled()}">
                                     <a href="#">
                                         <span class="oj-menu-item-icon demo-icon-font">
-                                            <i class="fa-icon-font fa-icon-font-16 dbd-icon-remove"></i>
+                                            <i class="fa-icon-font fa-icon-font-16" data-bind="css: $data.dbdRemoveIcon"></i>
                                         </span>
-                                        <span data-bind="text: getNlsString('DBS_BUILDER_TILE_REMOVE')"></span>
+                                        <span data-bind="text: $data.dbsBuilderTileRemove()"></span>
                                     </a>
                                 </li>
                                 <!-- /ko -->
