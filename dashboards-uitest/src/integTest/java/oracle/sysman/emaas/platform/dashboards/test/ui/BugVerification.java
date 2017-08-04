@@ -29,9 +29,9 @@ public class BugVerification extends LoginAndLogout
 	private String longName1 = "dashboardNamedashboardNamedashboardNamedashboardNamedashboardNa1e";
 	private String longName2 = "dashboardNamedashboardNamedashboardNamedashboardNamedashboardNa2e";
 	private String longName3 = "dashboardNamedashboardNamedashboardNamedashboardNamedashboardNa3e";
-	private String expectName1 = longName1.substring(0, 63);
-	private String expectName2 = longName2.substring(0, 63);
-	private String expectName3 = longName3.substring(0, 63);
+	private String expectName1 = longName1.substring(0, 64);
+	private String expectName2 = longName2.substring(0, 64);
+	private String expectName3 = longName3.substring(0, 64);
 	
 	public void initTest(String testName)
 	{
@@ -658,6 +658,7 @@ public class BugVerification extends LoginAndLogout
     @Test(alwaysRun = true)
 	public void testEMCPDF_4607_1()
 	{
+    	String desc = "the description of dashboard1";
 		//Initialize the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testEMCPDF_4607");
@@ -671,19 +672,22 @@ public class BugVerification extends LoginAndLogout
 
 		//create a dashboard
 		webd.getLogger().info("Create a dashboard");
-		DashboardHomeUtil.createDashboard(webd, "Dashboard_4607", null);
+		DashboardHomeUtil.createDashboard(webd, "Dashboard_4607", desc);
 		WaitUtil.waitForPageFullyLoaded(webd);
 
-		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, "Dashboard_4607", null, true),
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, "Dashboard_4607", desc, true),
 				"Create dashboard failed!");
-		DashboardBuilderUtil.editDashboard(webd, longName2, null);
-		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, expectName2, null, true), "Edit dashboard failed!");
+	
+		DashboardBuilderUtil.editDashboard(webd, longName2, desc, true);
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, expectName2, desc, true), "Edit dashboard failed!");
 	}
     
     //test the maximize length is 64 when editing the dashboard set name
     @Test(alwaysRun = true)
 	public void testEMCPDF_4607_2()
 	{
+    	String desc = "the description of dashboard2";
+    	
 		//Initialize the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testEMCPDF_4607");
@@ -697,13 +701,13 @@ public class BugVerification extends LoginAndLogout
 
 		//create a dashboard set
 		webd.getLogger().info("Create a dashboard set");
-		DashboardHomeUtil.createDashboardSet(webd, "DashboardSet_4607", null);
+		DashboardHomeUtil.createDashboardSet(webd, "DashboardSet_4607", desc);
 
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardSet(webd, "DashboardSet_4607"),
 				"Create dashboard set failed!");
 		
-		DashboardBuilderUtil.editDashboardSet(webd, longName3, null);
-			
+		DashboardBuilderUtil.editDashboardSet(webd, longName3, desc);
+
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardSet(webd, expectName3),
 				"Edit dashboard set failed!");
 	}
@@ -711,6 +715,8 @@ public class BugVerification extends LoginAndLogout
     @Test(alwaysRun = true)
 	public void testEMCPDF_4607_3()
 	{
+    	String desc = "the description of dashboard3";
+    	
 		//Initialize the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testEMCPDF_4607");
@@ -727,7 +733,7 @@ public class BugVerification extends LoginAndLogout
 		DashboardHomeUtil.createDashboard(webd, longName1, null);
 		WaitUtil.waitForPageFullyLoaded(webd);
 
-		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, expectName1, null, true),
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, expectName1, desc, true),
 				"Create dashboard failed!");			
 	}
 }
