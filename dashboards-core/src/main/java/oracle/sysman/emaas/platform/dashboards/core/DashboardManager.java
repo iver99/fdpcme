@@ -1756,10 +1756,14 @@ public class DashboardManager
 		if(!tv.getIsV1Tenant() && !apps.contains(DashboardApplicationType.UDE)){
 			LOGGER.info("#1 Adding UDE application type for v2/v3/v4 tenant");
 			apps.add(DashboardApplicationType.UDE);
-		}else if(tv.getIsV1Tenant() && apps.contains(DashboardApplicationType.ITAnalytics)){
+                }else if(tv.getIsV1Tenant() && apps.contains(DashboardApplicationType.ITAnalytics)){
             apps.add(DashboardApplicationType.UDE);
             LOGGER.info("#1-2 Adding UDE application type for v1 tenant");
-        }
+                }
+                if (!apps.contains(DashboardApplicationType.EVT)){
+			LOGGER.info("#1 Adding EVT application type for v1/v2/v3/v4 tenant");
+			apps.add(DashboardApplicationType.EVT);                
+                }
         LOGGER.info("Tenant's applications are {}",apps);
 		return apps;
 	}
