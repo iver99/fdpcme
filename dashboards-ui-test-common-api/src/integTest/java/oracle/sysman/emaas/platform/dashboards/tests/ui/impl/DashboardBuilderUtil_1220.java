@@ -6,6 +6,7 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -65,6 +66,7 @@ public class DashboardBuilderUtil_1220 extends DashboardBuilderUtil_1200{
         //driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId_190.RIGHDRAWER_WIDGET_ADD_CSS)).click();
         driver.click(generateCssLocator(DashBoardPageId_1220.RIGHTDRAWERWIDGETCSS));
         driver.getLogger().info("Add the widget");
+        driver.getWebDriver().switchTo().activeElement().sendKeys(Keys.ENTER);
         driver.takeScreenShot();
         driver.savePageToFile();
         driver.getLogger().info("[DashboardHomeUtil] finish adding widget from right drawer");
