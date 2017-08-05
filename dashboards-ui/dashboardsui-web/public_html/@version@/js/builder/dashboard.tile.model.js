@@ -140,6 +140,10 @@ define(['knockout',
                     Builder.eagerLoadDahshboardSingleTileAtPageLoad(dfu, ko, newTile);                    
                     if (newTile){
                        self.editor.tiles.push(newTile);
+                       if(newTile.type() === "TEXT_WIDGET") {
+                            self.editor.draggingTile = newTile;
+                            self.editor.moveTileTo(new Builder.Cell(0, 0), newTile);
+                       }
                        self.show();
                        Builder.getTileConfigure(self.editor.mode, self.dashboard, newTile, self.timeSelectorModel, self.targets, dashboardInst);
                        $b.triggerEvent($b.EVENT_TILE_ADDED, null, newTile);
