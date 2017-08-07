@@ -916,7 +916,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     $("#omcHamburgerMenu").removeClass('oj-offcanvas-open');
                     $("#omcHamburgerMenu").removeClass('oj-offcanvas-overlay');
                     $("#omcHamburgerMenu").removeClass('oj-offcanvas-transition');
-                    $("#uifwkLayoutMainContainer").addClass('oj-flex-item');
+                    //$("#uifwkLayoutMainContainer").addClass('oj-flex-item'); 
                     $("#uifwkLayoutMainContainer").removeClass('oj-web-applayout-page');
                     $("#offcanvasInnerContainer").addClass('oj-flex');
                     $("#offcanvasInnerContainer").addClass('oj-flex-items-pad');

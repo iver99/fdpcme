@@ -79,9 +79,6 @@ public class BugVerification extends LoginAndLogout
 		DashBoardUtils.deleteDashboard(webd, "testEMCPDF_4594");
 		DashBoardUtils.deleteDashboard(webd, "Dashboard_4362");
 		DashBoardUtils.deleteDashboard(webd, "Dashboard_4362_set");
-		
-		
-
 
 		webd.getLogger().info("All test data have been removed");
 
