@@ -502,12 +502,16 @@
 
     .widget-selector-hide-scrollbar{
         overflow-y: hidden;
+        li{
+            padding-right: 17px;
+        }
     }
 
     .widget-selector-show-scrollbar{
         overflow-y: auto;
         li{
-            padding-right: 2px;
+            padding-right: 0;
+            width: 303px;
         }
     }
 
