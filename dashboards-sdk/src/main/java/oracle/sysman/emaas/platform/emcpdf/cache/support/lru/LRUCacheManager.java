@@ -26,11 +26,6 @@ public class LRUCacheManager extends AbstractCacheManager{
     private static LRUCacheManager instance = null;
     private static final String DEFAULT_CONIFIGURATION_FILE_NAME = "cache-config.xml";
 
-    private LRUCacheManager() {
-        LOGGER.info("Initializing Cache Manager with default configuration...");
-        init(null);
-    }
-
     private LRUCacheManager(String configFileName) {
         LOGGER.info("Initializing Cache Manager with custom configuration file named {}...", configFileName);
         init(configFileName);
@@ -38,7 +33,7 @@ public class LRUCacheManager extends AbstractCacheManager{
 
     public synchronized static LRUCacheManager getInstance(){
         if(instance == null){
-             instance = new LRUCacheManager();
+             instance = new LRUCacheManager(null);
         }
         return instance;
     }
