@@ -290,11 +290,9 @@ public class DashBoardPageId
 	public static final String DASHBOARDSETOPTIONSHOMECSS = "#dbs-home a";
 	public static final String DASHBOARDSETOPTIONSADDHOMECSS = "#dbs-home a[dashboardset-option=\"Set as Home\"]";
 	public static final String DASHBOARDSETFWKICONCSS = "div.dbd-right-panel-editdashboardset>div>a.oj-fwk-icon-caret-start.oj-fwk-icon.back-to-edit-settings";
-<<<<<<< HEAD
 
-=======
 	public static final String DASHBOARDFWKICON = "//span[text()='Edit Dashboard']/../a";
->>>>>>> cdcdf1364f9705454056b61a8bf17bd547fff403
+
 	//dashboard tool bar
 	public static final String DASHBOARDSAVECSS = "button.dashboardSaveBtn";
 	public static final String DASHBOARDADDTEXTWIDGETCSS = "button.dashboardTextBtn";
