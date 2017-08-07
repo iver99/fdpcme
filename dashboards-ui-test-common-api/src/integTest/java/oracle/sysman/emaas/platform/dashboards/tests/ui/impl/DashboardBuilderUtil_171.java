@@ -338,7 +338,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 
 		driver.getLogger().info("edit started");
 
-		driver.click(DashBoardPageId.BUILDEROPTIONSMENULOCATOR);
+		driver.click("css=" + DashBoardPageId.BUILDEROPTIONSMENULOCATOR);
 
 		driver.click("css=" + DashBoardPageId.BUILDEROPTIONSEDITLOCATORCSS);
 

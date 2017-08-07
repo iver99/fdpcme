@@ -47,6 +47,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 	private String dbName_duplicateOOB = "";
 	private String dbName_saveConfirmation = "";
 	private String dbName_textWidget = "";
+	private String dbName_longName = "dashboardNamedashboardNamedashboardNamedashboardNamedashboardNam";
 
 	private final String customWidgetName = "Execution Details";
 	private final String OOBName = "Middleware Operations";
@@ -111,6 +112,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		DashBoardUtils.deleteDashboard(webd, dbName_duplicate);
 		DashBoardUtils.deleteDashboard(webd, dbName_duplicateOOB);
 		DashBoardUtils.deleteDashboard(webd, dbName_textWidget);
+		DashBoardUtils.deleteDashboard(webd, dbName_longName);
 
 		webd.getLogger().info("All test data have been removed");
 
@@ -893,5 +895,31 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		
 		WebElement textContent = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.TEXTCONTENTCSS));
 		Assert.assertEquals(textContent.getText(), content);
+	}
+	
+	@Test
+	public void testLongName_display()
+	{		
+		String dbDesc = "Test its display when dashboard with long name";
+		
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testLongName_display");
+
+		DashboardHomeUtil.gridView(webd);
+
+		webd.getLogger().info("Create the dashboard with long name");
+		DashboardHomeUtil.createDashboard(webd, dbName_longName, dbDesc, DashboardHomeUtil.DASHBOARD);
+		
+		webd.getLogger().info("Verify the dashboard created Successfully");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_longName, dbDesc, true), "Create dashboard failed!");		
+				
+		BrandingBarUtil.clickMenuItem(webd, "Dashboards");
+
+		DashboardHomeUtil.search(webd, dbName_longName);
+		webd.click(DashBoardPageId.INFOBTNID);		
+		
+		//Verify the dashboard with long name is wrapped present in dashboard information dialog
+		webd.getLogger().info("Verify the long name is wrapped displayed in dashboard information dialog");
+		webd.isElementPresent(DashBoardPageId.DASHBOARDOFLONGNAMELOCATOR);	
 	}
 }

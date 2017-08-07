@@ -117,6 +117,8 @@ public class DashBoardPageId
 	public static final String OOBDASHBOARDNAMELOCATOR = "//div[not(contains(@style,'display:none'))]//*[contains(@class, 'dbs-dsbsystem') and (@aria-label = '_name_' or text() = '_name_')]";
 	public static final String DASHBOARDNAMECONTAINERS = "//div[not(contains(@style,'display:none'))]//*[contains(@class, 'dbs-dsbnameele')]";
 	public static final String DASHBOARDNAMEINDEXLOCATOR = "xpath=(//div[not(contains(@style,'display:none'))]//*[contains(@class, 'dbs-dsbnameele')])[_index_]";
+	
+	public static final String DASHBOARDOFLONGNAMELOCATOR = "//div[contains(@style, 'word-wrap: break-word') and @data-bind='text: dashboard.name']";
 	//Branding Bar links
 	//Home Link
 	//public static final String HomeLinkID = "/html/body/div[*]/header/div/div[1]/div[3]/div/div/div[1]/div[2]/div[1]/a";
@@ -250,6 +252,7 @@ public class DashBoardPageId
 	public static final String BUILDEROPTIONSDUPLICATEDESCRIPTIONCSS = "dupDsbDescIn";
 	public static final String BUILDEROPTIONSDUPLICATESAVECSS = ".createDsb-1";
 	public static final String DASHBOARDSETCONTAINERCSS = "div.dashboard-content";
+	public static final String DASHBOARDNAMECSS = ".builder-dbd-name-display-hover-area.dbd-display-hover-area>h1";
 	// dashboard set name
 	public static final String DASHBOARDSETNAMETEXTLOCATOR = "//div[@id='dbd-set-name']/span";
 	//dashboard set options
@@ -287,7 +290,11 @@ public class DashBoardPageId
 	public static final String DASHBOARDSETOPTIONSHOMECSS = "#dbs-home a";
 	public static final String DASHBOARDSETOPTIONSADDHOMECSS = "#dbs-home a[dashboardset-option=\"Set as Home\"]";
 	public static final String DASHBOARDSETFWKICONCSS = "div.dbd-right-panel-editdashboardset>div>a.oj-fwk-icon-caret-start.oj-fwk-icon.back-to-edit-settings";
+<<<<<<< HEAD
 
+=======
+	public static final String DASHBOARDFWKICON = "//span[text()='Edit Dashboard']/../a";
+>>>>>>> cdcdf1364f9705454056b61a8bf17bd547fff403
 	//dashboard tool bar
 	public static final String DASHBOARDSAVECSS = "button.dashboardSaveBtn";
 	public static final String DASHBOARDADDTEXTWIDGETCSS = "button.dashboardTextBtn";
