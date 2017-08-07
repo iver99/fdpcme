@@ -19,6 +19,7 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
@@ -946,5 +947,16 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 
 		webd.getLogger().info("Verify there is no Maximize icon in Text Widget");
 		Assert.assertFalse(webd.isElementPresent(DashBoardPageId.MAXIMIZEICON), "There is Maximize icon in the text widget");	
+		
+		WebElement textTileTitle = webd.getElement("css=" + DashBoardPageId.TILETITLECSS);
+		
+		Actions actions = new Actions(webd.getWebDriver()); 			
+		actions.moveToElement(textTileTitle).build().perform();
+		
+		webd.click("css=" + DashBoardPageId.CONFIGTILECSS);
+		
+		webd.getLogger().info("Verify remove icon is substituted by delete icon");
+		Assert.assertTrue(webd.isDisplayed(DashBoardPageId.DELETETILE), "Don't find delete icon");
+		Assert.assertFalse(webd.isDisplayed(DashBoardPageId.REMOVETILECSS), "Find the remove icon");
 	}
 }
