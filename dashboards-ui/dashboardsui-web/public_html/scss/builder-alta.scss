@@ -1404,7 +1404,8 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
     margin-right: 3px;
 }
 .dbd-icon-delete:before{
-   content: "\f014";
+   content: " ";
+   background:url(../images/dfSprite.png) no-repeat 0px -416px;height:16px;padding-left:18px;
 }
 .dbd-icon-eye{
     line-height: 12px;

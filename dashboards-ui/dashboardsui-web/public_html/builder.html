@@ -406,6 +406,7 @@
                                 </li>
                                 -->
                                 <li data-option="divider"></li>
+                                    <!-- ko if: $data.type() !== "TEXT_WIDGET" -->
                                         <!-- ko if: $data.editDisabled() !== true -->
                                         <li data-option="edit" data-bind="css: {'oj-disabled': !$data.maximizeEnabled() || $data.editDisabled()}">
                                             <a href="#">
@@ -417,6 +418,7 @@
                                         </li>
                                         <!-- /ko -->
                                         <li data-option="divider"></li>
+                                    <!-- /ko -->
                                         <!-- ko if: $data.editDisabled() !== true -->
                                         <li data-option="up" data-bind="css: { 'oj-disabled': (!$data.upEnabled() || !$data.maximizeEnabled() || $data.editDisabled())}">
                                             <a href="#">
