@@ -1,3 +1,13 @@
+/*
+ * Copyright (C) 2017 Oracle
+ * All rights reserved.
+ *
+ * $$File: $$
+ * $$DateTime: $$
+ * $$Author: $$
+ * $$Revision: $$
+ */
+
 package oracle.sysman.emaas.platform.dashboards.test.dashboard;
 
 import oracle.sysman.emaas.platform.dashboards.test.common.CommonTest;
@@ -11,9 +21,11 @@ import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
 
-public class DashboardDeletion
+/**
+ * @author cawei
+ */
+public class DashboardDeletionV4
 {
-
 	static String HOSTNAME;
 	static String authToken;
 	static String tenantid;
