@@ -47,6 +47,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 	private String dbName_duplicateOOB = "";
 	private String dbName_saveConfirmation = "";
 	private String dbName_textWidget = "";
+	private String dbName_textWidget_noMaximizeRestore = "";
 	private String dbName_longName = "dashboardNamedashboardNamedashboardNamedashboardNamedashboardNam";
 
 	private final String customWidgetName = "Execution Details";
@@ -113,6 +114,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		DashBoardUtils.deleteDashboard(webd, dbName_duplicateOOB);
 		DashBoardUtils.deleteDashboard(webd, dbName_textWidget);
 		DashBoardUtils.deleteDashboard(webd, dbName_longName);
+		DashBoardUtils.deleteDashboard(webd, dbName_textWidget_noMaximizeRestore);
 
 		webd.getLogger().info("All test data have been removed");
 
@@ -921,5 +923,28 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		//Verify the dashboard with long name is wrapped present in dashboard information dialog
 		webd.getLogger().info("Verify the long name is wrapped displayed in dashboard information dialog");
 		webd.isElementPresent(DashBoardPageId.DASHBOARDOFLONGNAMELOCATOR);	
+	}
+	
+	@Test
+	public void testTextWidget_noMaximizeRestoreIcon()
+	{		
+		dbName_textWidget_noMaximizeRestore = "Dashboard_textWidgetNoMR-" + DashBoardUtils.generateTimeStamp();
+		String dbDesc = "Test whether text widget remove the Maximize/Restore icon";
+		
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testTextWidget_noMaximizeRestoreIcon");
+
+		DashboardHomeUtil.gridView(webd);
+
+		webd.getLogger().info("Create the dashboard");
+		DashboardHomeUtil.createDashboard(webd, dbName_textWidget_noMaximizeRestore, dbDesc, DashboardHomeUtil.DASHBOARD);
+		
+		webd.getLogger().info("Verify the dashboard created Successfully");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_textWidget_noMaximizeRestore, dbDesc, true), "Create dashboard failed!");		
+				
+		DashboardBuilderUtil.addTextWidgetToDashboard(webd);
+
+		webd.getLogger().info("Verify there is no Maximize icon in Text Widget");
+		Assert.assertFalse(webd.isElementPresent(DashBoardPageId.MAXIMIZEICON), "There is Maximize icon in the text widget");	
 	}
 }

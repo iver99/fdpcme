@@ -326,6 +326,7 @@ public class DashBoardPageId
 	public static final String MAXIMIZETILEID = "/html/body/div[1]/div/ul/li[7]/a/span[2]";
 	public static final String RESTORETILEID = "/html/body/div[1]/div/ul/li[8]/a/span[2]";
 	public static final String REMOVETILEID = "/html/body/div[1]/div/ul/li[10]/a/span[2]";
+	public static final String MAXIMIZEICON = "//button[@title='Maximize']";
 	//tile css locators -> css=<locator>
 	public static final String WIDGETTITLECSS = ".dbd-widget";
 	public static final String TEXTWIDGETCONTENTCSS = "div[id^='textContentWrapper_']";
