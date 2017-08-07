@@ -25,6 +25,8 @@ import mockit.Mocked;
 import mockit.NonStrictExpectations;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.security.CreateSystemDashboardException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.security.UpdateSystemDashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.TenantWithoutSubscriptionException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
@@ -628,20 +630,35 @@ public class DashboardManagerTest_S2 extends BaseTest
 		dbd1.setDescription("dashboard 1: system dashboard");
 		dbd1.setIsSystem(true);
 		dbd1.setAppicationType(APM);
+		try {
+			dm.saveNewDashboard(dbd1, tenantId1);
+		}
+		catch (CreateSystemDashboardException e) {
+			LOGGER.info("context", e);
+			LOGGER.info(dbd1.getDashboardId());
+		}
+
+		String name2 = "name2" + System.currentTimeMillis();
+		dbd1 = new Dashboard();
+		dbd1.setName(name2);
+		dbd1.setDescription("dashboard 2: dashboard");
+		dbd1.setAppicationType(APM);
+		dbd1.setIsSystem(false);
 		dm.saveNewDashboard(dbd1, tenantId1);
-		Dashboard queried = dm.getDashboardById(dbd1.getDashboardId(), tenantId1);
+		Dashboard queried = dm.getDashboardById(dbd1.getDashboardId(), tenantId1); // 24 for OOB dashboard 'UI Gallery'
 		Assert.assertNotNull(queried);
 
 		// try to update system dashboard, and it is not allowed
-		queried.setName("Updated system dashboard name");
+		dbd1.setIsSystem(true);
+		queried.setName("Trying to update dashboard with systemDashboard:true");
 		try {
 			dm.updateDashboard(dbd1, tenantId1);
 		}
-		catch (CommonSecurityException e) {
+		catch (UpdateSystemDashboardException e) {
 			LOGGER.info("context", e);
 		}
 		queried = dm.getDashboardById(dbd1.getDashboardId(), tenantId1);
-		Assert.assertEquals(queried.getName(), name1);
+		Assert.assertEquals(queried.getName(), name2);
 
 		// post test
 		try {
