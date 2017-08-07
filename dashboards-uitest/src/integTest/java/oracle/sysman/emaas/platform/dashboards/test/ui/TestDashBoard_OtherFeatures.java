@@ -1046,6 +1046,8 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		Assert.assertEquals(textContent1.getText(), DashBoardPageId.PROTOCOLOPTION_HTTPS + url);			
 					
 		WebElement textContent2 = webd.getWebDriver().findElement(By.xpath(DashBoardPageId.TEXTCONTENT2));
-		Assert.assertEquals(textContent2.getText(), DashBoardPageId.PROTOCOLOPTION_HTTP + url);								
+		Assert.assertEquals(textContent2.getText(), DashBoardPageId.PROTOCOLOPTION_HTTP + url);		
+		
+		DashboardBuilderUtil.saveDashboard(webd);	
 	}
 }
