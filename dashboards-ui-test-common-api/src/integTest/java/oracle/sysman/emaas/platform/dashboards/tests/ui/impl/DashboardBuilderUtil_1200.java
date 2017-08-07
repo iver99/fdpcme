@@ -6,11 +6,14 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.util.*;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.JavascriptExecutor;
 import org.testng.Assert;
 
 public class DashboardBuilderUtil_1200 extends DashboardBuilderUtil_1190
@@ -274,4 +277,79 @@ public class DashboardBuilderUtil_1200 extends DashboardBuilderUtil_1190
 		//driver.takeScreenShot();
 		driver.getLogger().info("add link in text widget completed");
 	}
+	
+	@Override
+	public void addLinkInTextWidget(WebDriver driver, int index, String url, String option)
+	{
+		driver.getLogger().info("add link in Text Widget");
+		
+		//find current dashboard
+		WebElement selectedDashboardEl = getSelectedDashboardEl(driver);
+		
+		//click content wrapper area to load ckeditor
+		driver.waitForElementPresent("css=" + DashBoardPageId.TEXTWIDGETCONTENTCSS);
+		WebElement widget = selectedDashboardEl.findElements(By.cssSelector(DashBoardPageId.TEXTWIDGETCONTENTCSS)).get(index-1);
+		widget.click();
+		
+		driver.waitForElementPresent("css=" + DashBoardPageId.LINKICONCSS);
+		
+	 	driver.click("css=" + DashBoardPageId.LINKICONCSS);
+	 	
+	 	driver.waitForElementPresent("css=" + DashBoardPageId.LINKDIALOGCSS);
+	 	
+	 	driver.click(DashBoardPageId.PROTOCOLOPTION);	 		 	
+	 	
+	 	switch(option)
+	 	{
+	 		case DashBoardPageId.PROTOCOLOPTION_HTTP:
+	 			driver.getLogger().info("Click http protocol");	 			
+				
+	 			driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.HTTPCSS)).findElement(By.xpath("..")).click();
+			    driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.HTTPCSS)).click();
+			    
+	 			break;
+	 		case DashBoardPageId.PROTOCOLOPTION_HTTPS:
+	 			driver.getLogger().info("Click https protocol");			
+		
+			    driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.HTTPSCSS)).findElement(By.xpath("..")).click();
+			    driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.HTTPSCSS)).click();
+			    
+	 			break;	
+	 		case DashBoardPageId.PROTOCOLOPTION_FTP:
+	 			driver.getLogger().info("Click ftp protocol");
+	 			
+	 			driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.FTPCSS)).findElement(By.xpath("..")).click();
+	 			driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.FTPCSS)).click();
+	 			
+	 			break;
+	 		case DashBoardPageId.PROTOCOLOPTION_NEWS:
+	 			driver.getLogger().info("Click news protocol");
+	 			
+	 			driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.NEWSCSS)).findElement(By.xpath("..")).click();
+	 			driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.NEWSCSS)).click();
+	 			
+	 			break;
+	 		case DashBoardPageId.PROTOCOLOPTION_OTHER:
+	 			driver.getLogger().info("Click other protocol");
+	 			
+	 			driver.getWebDriver().findElement(By.xpath(DashBoardPageId.OTHERXPATH)).findElement(By.xpath("..")).click();
+	 			driver.getWebDriver().findElement(By.xpath(DashBoardPageId.OTHERXPATH)).click();
+
+	 			break;
+	 		default:
+	 				break;
+	 	}
+	 	
+	 	WebElement url_input = driver.getElement(DashBoardPageId.URLINPUT);
+	 	url_input.clear();
+	 	url_input.sendKeys(url);
+	 	
+	 	driver.click("css=" + DashBoardPageId.OKBTNCSS);	
+		
+		driver.waitForServer();
+		
+		driver.takeScreenShot();
+		driver.getLogger().info("add link in text widget completed");
+	}
+
 }
