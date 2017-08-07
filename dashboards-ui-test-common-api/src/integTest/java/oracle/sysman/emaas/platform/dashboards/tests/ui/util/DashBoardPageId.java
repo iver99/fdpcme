@@ -250,6 +250,7 @@ public class DashBoardPageId
 	public static final String BUILDEROPTIONSDUPLICATEDESCRIPTIONCSS = "dupDsbDescIn";
 	public static final String BUILDEROPTIONSDUPLICATESAVECSS = ".createDsb-1";
 	public static final String DASHBOARDSETCONTAINERCSS = "div.dashboard-content";
+	public static final String DASHBOARDNAMECSS = ".builder-dbd-name-display-hover-area.dbd-display-hover-area>h1";
 	// dashboard set name
 	public static final String DASHBOARDSETNAMETEXTLOCATOR = "//div[@id='dbd-set-name']/span";
 	//dashboard set options
@@ -287,7 +288,7 @@ public class DashBoardPageId
 	public static final String DASHBOARDSETOPTIONSHOMECSS = "#dbs-home a";
 	public static final String DASHBOARDSETOPTIONSADDHOMECSS = "#dbs-home a[dashboardset-option=\"Set as Home\"]";
 	public static final String DASHBOARDSETFWKICONCSS = "div.dbd-right-panel-editdashboardset>div>a.oj-fwk-icon-caret-start.oj-fwk-icon.back-to-edit-settings";
-	
+	public static final String DASHBOARDFWKICON = "//span[text()='Edit Dashboard']/../a";
 	//dashboard tool bar
 	public static final String DASHBOARDSAVECSS = "button.dashboardSaveBtn";
 	public static final String DASHBOARDADDTEXTWIDGETCSS = "button.dashboardTextBtn";
