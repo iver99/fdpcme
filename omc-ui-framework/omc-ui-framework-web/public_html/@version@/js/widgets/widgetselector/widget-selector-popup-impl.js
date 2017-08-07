@@ -305,7 +305,6 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                     element.attr("tabindex","0");
                     element.addClass("oj-selected oj-focus oj-hover"); 
                     element.focus(); 
-                    scrollTo(element);
                 };
                 
                 function blurListItem(element){
@@ -315,22 +314,23 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                     element.blur();  
                 };
                  
-                function scrollTo(target){
-                    var scrollToPosition;
-                    if(target.position()){
-                        scrollToPosition = target.position().top; 
-                        $("#widget-selector-widgets").scrollTop(scrollToPosition); 
-                    }
-                };
-                
+     
                 function navigateWidgetList(event ,isDown){  
                     var fromWidget = event.target;
                     var toWidget;
                     var topOfWidgetList = $($("#widget-selector").children()[0]);
                     toWidget = navigateListView(event ,fromWidget ,toWidget ,isDown ,topOfWidgetList);                    
                     if(!toWidget && isGroupListView())toWidget = jumpToNextPrevGroup(fromWidget ,isDown ,toWidget);
+                    $('#widget-selector').children().removeClass('oj-selected oj-focus oj-hover');
+                    $('li[id^=created-by] > ul').children().removeClass('oj-selected oj-focus oj-hover');
+                    blurListItem($(fromWidget)); 
                     toWidget ? focusListItem(toWidget) : $("#searchTxt").focus();
-                    blurListItem($(fromWidget));                          
+                    if(!(event.target.id === "searchTxt")){
+                        topOfWidgetList.attr("aria-selected","false");
+                        topOfWidgetList.removeClass("oj-selected oj-focus oj-hover");
+                        $(topOfWidgetList.find("ul").children()[0]).attr("aria-selected","false");
+                        $(topOfWidgetList.find("ul").children()[0]).removeClass("oj-selected oj-focus oj-hover");
+                    }
                 };
                 // Widget handler for selected widget
                 function widgetSelectionConfirmed(){
