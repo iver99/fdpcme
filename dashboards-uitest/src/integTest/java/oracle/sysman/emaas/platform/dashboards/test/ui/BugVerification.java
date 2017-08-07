@@ -77,7 +77,8 @@ public class BugVerification extends LoginAndLogout
 		DashBoardUtils.deleteDashboard(webd, expectName2);
 		DashBoardUtils.deleteDashboard(webd, expectName3);
 		DashBoardUtils.deleteDashboard(webd, "testEMCPDF_4594");
-
+		DashBoardUtils.deleteDashboard(webd, "Dashboard_4362");
+		DashBoardUtils.deleteDashboard(webd, "Dashboard_4362_set");
 
 		webd.getLogger().info("All test data have been removed");
 
@@ -785,5 +786,79 @@ public class BugVerification extends LoginAndLogout
 
 		webd.getLogger().info("Verify the widget display");
 		Assert.assertTrue(DashboardBuilderUtil.verifyWidget(webd, widgetName),"Expected widget is not displayed");
+	}
+
+	@Test(alwaysRun = true)
+	public void testEMCPDF_4362()
+	{
+		//Initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testEMCPDF_4362");
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		//reset all filter options
+		webd.getLogger().info("Reset all filter options");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		DashboardHomeUtil.gridView(webd);
+
+		//create a dashboard
+		webd.getLogger().info("Create a dashboard");
+		DashboardHomeUtil.createDashboard(webd, "Dashboard_4362", null);
+		webd.getLogger().info("edit started");
+		webd.click("css=" + DashBoardPageId.BUILDEROPTIONSMENULOCATOR);
+		webd.click("css=" + DashBoardPageId.BUILDEROPTIONSEDITLOCATORCSS);
+		webd.getElement("css=" + DashBoardPageId.BUILDEROPTIONSEDITNAMECSS).clear();
+		webd.click("css=" + DashBoardPageId.BUILDEROPTIONSEDITDESCRIPTIONCSS);
+		webd.waitForElementPresent("css=" + ".oj-message-summary");
+		Assert.assertEquals(webd.getText("css=" + ".oj-message-summary"), "Name is required");
+		webd.click("css=" + DashBoardPageId.RIGHTDRAWERTOGGLEPENCILBTNCSS);
+		webd.click("css=" + DashBoardPageId.RIGHTDRAWERTOGGLEPENCILBTNCSS);
+		webd.click("css=" + DashBoardPageId.RIGHTDRAWEREDITGENERNALCSS);
+		Assert.assertEquals(webd.getValue("css=" + DashBoardPageId.BUILDEROPTIONSEDITNAMECSS), "Dashboard_4362");
+	}
+
+	@Test(alwaysRun = true)
+	public void testEMCPDF_4362_set()
+	{
+		//Initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testEMCPDF_4362_set");
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		//reset all filter options
+		webd.getLogger().info("Reset all filter options");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		DashboardHomeUtil.gridView(webd);
+
+		//create a dashboard
+		webd.getLogger().info("Create a dashboard set");
+		DashboardHomeUtil.createDashboardSet(webd, "Dashboard_4362_set", null);
+
+		webd.getLogger().info("edit started");
+
+		//open the edit dialog
+		webd.getLogger().info("editDashboardSet started");
+
+		webd.click("id=" + DashBoardPageId.DASHBOARDSETOPTIONSMENUID);
+
+		webd.click("css=" + DashBoardPageId.DASHBOARDSETOPTIONSEDITCSS);
+
+		webd.waitForElementVisible("css=" + DashBoardPageId.DASHBOARDSETOPTIONSEDITNAMECSS);
+		//edit name
+		webd.getLogger().info("editDashboardSet start editing name");
+		webd.getElement("css=" + DashBoardPageId.DASHBOARDSETOPTIONSEDITNAMECSS).clear();
+		webd.click("css=" + DashBoardPageId.DASHBOARDSETOPTIONSEDITDESCRIPTIONCSS);
+		webd.waitForElementPresent("css=" + ".oj-message-summary");
+		Assert.assertEquals(webd.getText("css=" + ".oj-message-summary"), "Name is required");
+		webd.waitForServer();
+		webd.takeScreenShot();
+		webd.savePageToFile();
+		webd.click("css=" + DashBoardPageId.RIGHTDRAWERTOGGLEPENCILBTNCSS);
+		webd.click("id=" + DashBoardPageId.DASHBOARDSETOPTIONSMENUID);
+		webd.click("css=" + DashBoardPageId.DASHBOARDSETOPTIONSEDITCSS);
+		Assert.assertEquals(webd.getValue("css=" + DashBoardPageId.DASHBOARDSETOPTIONSEDITNAMECSS), "Dashboard_4362_set");
+
 	}
 }

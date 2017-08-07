@@ -18,6 +18,7 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.util.ITimeSelectorUtil.T
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -48,6 +49,8 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 	private String dbName_saveConfirmation = "";
 	private String dbName_textWidget = "";
 	private String dbName_longName = "dashboardNamedashboardNamedashboardNamedashboardNamedashboardNam";
+	private String dbName_textWidget_link = "";
+	private String dbName_textWidget_multiLink = "";
 
 	private final String customWidgetName = "Execution Details";
 	private final String OOBName = "Middleware Operations";
@@ -113,6 +116,8 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		DashBoardUtils.deleteDashboard(webd, dbName_duplicateOOB);
 		DashBoardUtils.deleteDashboard(webd, dbName_textWidget);
 		DashBoardUtils.deleteDashboard(webd, dbName_longName);
+		DashBoardUtils.deleteDashboard(webd, dbName_textWidget_link);
+		DashBoardUtils.deleteDashboard(webd, dbName_textWidget_multiLink);
 
 		webd.getLogger().info("All test data have been removed");
 
@@ -921,5 +926,114 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		//Verify the dashboard with long name is wrapped present in dashboard information dialog
 		webd.getLogger().info("Verify the long name is wrapped displayed in dashboard information dialog");
 		webd.isElementPresent(DashBoardPageId.DASHBOARDOFLONGNAMELOCATOR);	
+    }
+
+    @Test
+	public void testTextWidget_Link()
+	{
+		dbName_textWidget_link = "Dashboard_textWidgetURL-" + DashBoardUtils.generateTimeStamp();
+		
+		String dbDesc = "Add text widget into dashboard, test the link feature";
+		String url = "www.baidu.com";
+		
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test link in testTextWidget");
+
+		DashboardHomeUtil.gridView(webd);
+
+		webd.getLogger().info("Create the dashboard, then to add text widget");
+		DashboardHomeUtil.createDashboard(webd, dbName_textWidget_link, dbDesc, DashboardHomeUtil.DASHBOARD);
+		
+		webd.getLogger().info("Verify the dashboard created Successfully");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_textWidget_link, dbDesc, true), "Create dashboard failed!");		
+		
+		DashboardBuilderUtil.addTextWidgetToDashboard(webd);				
+		
+		//Assert.assertTrue(DashboardBuilderUtil.verifyWidget(webd, widgetName), "text widget isn't added into the dashboard successfully");
+		DashboardBuilderUtil.addLinkInTextWidget(webd, 1, url, DashBoardPageId.PROTOCOLOPTION_HTTP);
+		webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
+		//Verify the content is added successfully
+		webd.getLogger().info("Verify the url is added successfully");	
+		WebElement textContent = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.TEXTCONTENTCSS));
+		webd.getLogger().info(textContent.getText());
+		Assert.assertEquals(textContent.getText(), DashBoardPageId.PROTOCOLOPTION_HTTP + url);		
+		
+		DashboardBuilderUtil.addLinkInTextWidget(webd, 1, url, DashBoardPageId.PROTOCOLOPTION_HTTPS);
+		webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
+		//Verify the content is added successfully
+		webd.getLogger().info("Verify the url is added successfully");			
+		textContent = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.TEXTCONTENTCSS));
+		webd.getLogger().info(textContent.getText());
+		Assert.assertEquals(textContent.getText(), DashBoardPageId.PROTOCOLOPTION_HTTPS + url);				
+		
+		DashboardBuilderUtil.addLinkInTextWidget(webd, 1, url, DashBoardPageId.PROTOCOLOPTION_FTP);
+		webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
+		//Verify the content is added successfully
+		webd.getLogger().info("Verify the url is added successfully");	
+		textContent = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.TEXTCONTENTCSS));
+		webd.getLogger().info(textContent.getText());
+		Assert.assertEquals(textContent.getText(), DashBoardPageId.PROTOCOLOPTION_FTP + url);		
+		
+		DashboardBuilderUtil.addLinkInTextWidget(webd, 1, url, DashBoardPageId.PROTOCOLOPTION_NEWS);
+		webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
+		//Verify the content is added successfully
+		webd.getLogger().info("Verify the url is added successfully");				
+		textContent = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.TEXTCONTENTCSS));
+		webd.getLogger().info(textContent.getText());
+		Assert.assertEquals(textContent.getText(), DashBoardPageId.PROTOCOLOPTION_NEWS + url);		
+		
+		DashboardBuilderUtil.addLinkInTextWidget(webd, 1, url, DashBoardPageId.PROTOCOLOPTION_OTHER);
+		webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
+		//Verify the content is added successfully
+		webd.getLogger().info("Verify the url is added successfully");		
+		textContent = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.TEXTCONTENTCSS));
+		webd.getLogger().info(textContent.getText());
+		Assert.assertEquals(textContent.getText(), DashBoardPageId.PROTOCOLOPTION_OTHER + url);		
+		
+		DashboardBuilderUtil.saveDashboard(webd);				
+	}
+	
+	@Test
+	public void testTextWidget_multiLink()
+	{
+		dbName_textWidget_multiLink = "Dashboard_textWidgetMultiURL-" + DashBoardUtils.generateTimeStamp();
+		
+		String dbDesc = "Add text widget into dashboard, add multi link";
+		String url = "www.baidu.com";
+		
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test link in testTextWidget");
+
+		DashboardHomeUtil.gridView(webd);
+
+		webd.getLogger().info("Create the dashboard, then to add text widget");
+		DashboardHomeUtil.createDashboard(webd, dbName_textWidget_multiLink, dbDesc, DashboardHomeUtil.DASHBOARD);
+		
+		webd.getLogger().info("Verify the dashboard created Successfully");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_textWidget_multiLink, dbDesc, true), "Create dashboard failed!");		
+		
+		DashboardBuilderUtil.addTextWidgetToDashboard(webd);				
+		
+		DashboardBuilderUtil.addLinkInTextWidget(webd, 1, url, DashBoardPageId.PROTOCOLOPTION_HTTP);	
+		webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
+		
+		WebElement textContent = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.TEXTCONTENTCSS));
+		textContent.click();
+		webd.getWebDriver().switchTo().activeElement().sendKeys(Keys.ENTER);
+		webd.getWebDriver().switchTo().activeElement().sendKeys(Keys.ARROW_UP);
+		webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
+
+		DashboardBuilderUtil.addLinkInTextWidget(webd, 1, url, DashBoardPageId.PROTOCOLOPTION_HTTPS);	
+		webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
+		
+		//Verify the content is added successfully
+		webd.getLogger().info("Verify the two urls are added successfully");	
+		WebElement textContent1 = webd.getWebDriver().findElement(By.xpath(DashBoardPageId.TEXTCONTENT1));
+		Assert.assertEquals(textContent1.getText(), DashBoardPageId.PROTOCOLOPTION_HTTPS + url);			
+					
+		WebElement textContent2 = webd.getWebDriver().findElement(By.xpath(DashBoardPageId.TEXTCONTENT2));
+		Assert.assertEquals(textContent2.getText(), DashBoardPageId.PROTOCOLOPTION_HTTP + url);			
+		
+		DashboardBuilderUtil.saveDashboard(webd);				
 	}
 }

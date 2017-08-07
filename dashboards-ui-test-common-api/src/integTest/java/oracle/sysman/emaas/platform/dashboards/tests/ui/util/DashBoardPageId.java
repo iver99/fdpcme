@@ -25,7 +25,7 @@ public class DashBoardPageId
 	public static final String DASHBOARDSAVEID = "dashboard-screenshot";
 	public static final String WIDGETADDBUTTON = "emcpdf_dsbopts_add";//"//div[@id='ojDialogWrapper-widgetDetailsDialog']/div[5]/button";////div[18]/div[5]/button/span[text()='Add']";
 	public static final String DASHBOARDEDIT = "//*[@id='emcpdf_dsbopts_edit']";
-	
+
 	public static final String DASHBOARDDUPLICATE = "//*[@id='emcpdf_dsbopts_duplicate']";
 	public static final String DASHBOARDDELETE = "//*[@id='emcpdf_dsbopts_delete']";
 	public static final String DASHBOARDHOME = "//*[@id='emcpdf_dsbopts_home']";
@@ -84,7 +84,7 @@ public class DashBoardPageId
 	public static final String FILTERSHARELOCATOR = "//*[@id='shareopt']";
 	public static final String FILTERMELOCATOR = "//*[@id='otheropt']";
 	public static final String FILTERFAVORITELOCATOR = "//*[@id='myfavorites']";
-	
+
 	// sort by
 	public static final String SORTBYSELECTLOCATOR = "//div[not(contains(@style,'display:none'))]//*[contains(@class, 'dsb-sortcb')]//*[contains(@class, 'oj-select-chosen')]";
 	public static final String SORTBYDEFAULTLOCATOR = "/html/body/div/div/div/ul/li[1]/div";
@@ -290,7 +290,9 @@ public class DashBoardPageId
 	public static final String DASHBOARDSETOPTIONSHOMECSS = "#dbs-home a";
 	public static final String DASHBOARDSETOPTIONSADDHOMECSS = "#dbs-home a[dashboardset-option=\"Set as Home\"]";
 	public static final String DASHBOARDSETFWKICONCSS = "div.dbd-right-panel-editdashboardset>div>a.oj-fwk-icon-caret-start.oj-fwk-icon.back-to-edit-settings";
+
 	public static final String DASHBOARDFWKICON = "//span[text()='Edit Dashboard']/../a";
+
 	//dashboard tool bar
 	public static final String DASHBOARDSAVECSS = "button.dashboardSaveBtn";
 	public static final String DASHBOARDADDTEXTWIDGETCSS = "button.dashboardTextBtn";
@@ -325,10 +327,29 @@ public class DashBoardPageId
 	public static final String RESTORETILEID = "/html/body/div[1]/div/ul/li[8]/a/span[2]";
 	public static final String REMOVETILEID = "/html/body/div[1]/div/ul/li[10]/a/span[2]";
 	//tile css locators -> css=<locator>
+	public static final String DASHBOARDTITLEBARCSS = ".oj-toolbars.oj-toolbar-bottom-border.oj-btton-half-chrome.head-bar-container.fit-size-vertical-sibling";
 	public static final String WIDGETTITLECSS = ".dbd-widget";
 	public static final String TEXTWIDGETCONTENTCSS = "div[id^='textContentWrapper_']";
 	public static final String TEXTWIDGETEDITORCSS = "div[id^='textEditorWrapper_'] .cke_editable";
 	public static final String TEXTCONTENTCSS = "div[data-bind=\"html: content()\"]";
+
+	public static final String TEXTCONTENT1 = "//div[contains(@id, 'textContentWrapper_')]/div/a[1]";
+	public static final String TEXTCONTENT2 = "//div[contains(@id, 'textContentWrapper_')]/div/a[2]";
+	public static final String LINKICONCSS = ".cke_button__link";         // "//a[@title='Link']";
+	public static final String LINKDIALOGCSS = "div.cke_dialog_body";
+	public static final String PROTOCOLOPTION = "//div[contains(@class, 'cke_dialog_ui_select')]/label[text()='Protocol']/following-sibling::*//div[contains(@class, 'cke_dialog_ui_input_select')]";
+	public static final String PROTOCOLOPTION_HTTP = "http://";
+	public static final String PROTOCOLOPTION_HTTPS = "https://";
+	public static final String PROTOCOLOPTION_FTP = "ftp://";
+	public static final String PROTOCOLOPTION_NEWS = "news://";
+	public static final String PROTOCOLOPTION_OTHER = "";
+	public static final String HTTPCSS = ".cke_dialog_ui_input_select option[value='http://']";
+	public static final String HTTPSCSS = ".cke_dialog_ui_input_select option[value='https://']";
+	public static final String FTPCSS = ".cke_dialog_ui_input_select option[value='ftp://']";
+	public static final String NEWSCSS = ".cke_dialog_ui_input_select option[value='news://']";
+	public static final String OTHERXPATH = "//div[contains(@class, 'cke_dialog_ui_select')]/label[text()='Protocol']/following-sibling::*//div[contains(@class, 'cke_dialog_ui_input_select')]/select/option[@value='']";
+	public static final String URLINPUT = "//label[text()='URL']/following-sibling::*//div/input[@type='text']";
+	public static final String OKBTNCSS = "a.cke_dialog_ui_button_ok .cke_dialog_ui_button";
 	
 	public static final String TILETITLECSS = "h2.dbd-tile-title";
 	public static final String CONFIGTILECSS = "button[id^=actionButton]";
@@ -349,6 +370,7 @@ public class DashBoardPageId
 	public static final String RIGHTDRAWEREDITSINGLEDBSHARECSS = ".dbd-right-panel-editdashboard-share>span";
 	public static final String RIGHTDRAWEREDITDBFILTERCSS = ".dbd-right-panel-editdashboard-filters>span";
 	public static final String RIGHTDRAWERSEARCHINPUTCSS = ".dbd-left-panel input.widget-search-input";
+	public static final String RIGHTDRAWEREDITGENERNALCSS = ".dbd-right-panel-editdashboard-general>span";
 
 	public static final String RIGHTDRAWERSEARCHBUTTONCSS = ".dbd-left-panel button.dbd-left-panel-header-search-btn";
 	public static final String RIGHTDRAWERWIDGETTOAREACSS = ".tiles-wrapper";
@@ -443,7 +465,7 @@ public class DashBoardPageId
 	public static final String WIDGET_SELECTOR_OK_BTN_LOCATOR = "//button[@id='widget-selector-okbtn' and not(contains(@class, 'oj-disabled'))]";
 	public static final String WIDGET_SELECTOR_CLOSE_BTN_LOCATOR = "//div[contains(@class, 'oj-dialog') and not(contains(@style, 'display: none'))]/div[contains(@class, 'widget-selector-main')]/preceding-sibling::div[contains(@class, 'oj-dialog-header')]/div[contains(@class, 'oj-dialog-header-close-wrapper')]";
 	//Branding bar links id
-	public static final String BRANDINGBARICON ="#emaas-appheader-bar";
+	public static final String BRANDINGBARICON = "#emaas-appheader-bar";
 	public static final String BRANDINGBARMYHOMELINKID = "obbNavHome";
 
 	public static final String BRANDINGBARDASHBOARDHOMELINKID = "obbNavDsbHome";
@@ -478,25 +500,25 @@ public class DashBoardPageId
 	public static final String WIDGETSELECTOR_ADDBUTTONID = "add-widget-button";
 
 	//ude ID
-        public static final String EntSelReadOnlyPill = "//div[@id='globalBar_pillWrapper']";
-        public static final String EntSelTypeAheadField = "//div[@id='emcta-ctxtSel_bar']";
-        public static final String EntSelTypeAheadFieldInput = "//div[@id='emaas-appheader-globalcxt']//input[contains(@id, 'pit_')]";
-        public static final String EntSelSuggestionPopup= "//div[@id='emcta-ctxtSel_suggestPopup']";
-        public static final String EntSelPills = "//div[@id='emaas-appheader-globalcxt']//pill";
-        public static final String EntSelSearchResultsItem = "//div[@id='emcta-ctxtSel_suggestPopup']//ul//li[contains(@class,'oj-listbox-result-selectable')]";
-        public static final String EntSelSearchResultsItemByText = "//div[@id=''emcta-ctxtSel_suggestPopup'']//ul//li[contains(@class,''oj-listbox-result-selectable'') and descendant::span[contains(text(),''{0}'')]]";
-        //To get Composite results, substract all the 'Entities' category results from the entire list since there's no other way to determine if a result belongs to a certain category
-        public static final String EntSelSuggestionByCompositeCategory = "((//div[@id=''emcta-ctxtSel_suggestPopup'']//ul//li[contains(@class,''oj-listbox-result-selectable'') and not(preceding-sibling::li[not(contains(@class,''oj-listbox-result-selectable''))]//span[text()=''Entities''])])/div[span[2]/descendant-or-self::span[normalize-space()=''{0}'']])";
-        public static final String EntSelSuggestionByEntitiesCategory = "((//div[@id=''emcta-ctxtSel_suggestPopup'']//ul//li[contains(@class,''oj-listbox-result-selectable'') and preceding-sibling::li[not(contains(@class,''oj-listbox-result-selectable''))]//span[text()=''Entities'']])/div[span[2]/descendant-or-self::span[normalize-space()=''{0}'']])";
-        public static final String EntSelPillToRemoveByIndex = "(//div[@id=''emaas-appheader-globalcxt'']//a[contains(@id,''_remove'')])[{0}]";
-        public static final String EntSelPillLinkToReplaceByIndex = "//div[@id=\"emaas-appheader-globalcxt\"]//pill[{0}]//a[@class=\"pillLink\"]";
-        public static final String EntSelEditedPillByText = "//div[@id=\"emaas-appheader-globalcxt\"]//pill//a[@class=\"pillLink\"]//span[contains(text(),\"{0}\")]";
-        public static final String ENTSEL_CLEARALL_BUTTONID = "emcta-ctxtSel_clearAll";
-        public static final String ENTSEL_COMPOSITE_PILL_BYTEXT = "//div[@id=\"emaas-appheader-globalcxt\"]//pill//span[text()=\"Composite: {0}\"]";
-        public static final String ENTSEL_ENTITY_PILL_BYTEXT = "//div[@id=\"emaas-appheader-globalcxt\"]//pill//span[text()=\"{0}\"]";
-        public static final String ENTSEL_PILL_BYCONTAINSTEXT = "//div[@id=\"emaas-appheader-globalcxt\"]//pill//span[contains(text(),\"{0}\")]";
-        public static final String ENTSEL_PILL_CONTAINSTEXT_BYINDEX = "(//div[@id=\"emaas-appheader-globalcxt\"]//pill)[{0}]//span[contains(text(),\"{1}\")]";
-        public static final String ENTSEL_SUGGESTIONLIST = "//div[@id='emcta-ctxtSel_suggestPopup']//li[contains(@class,\"oj-listbox-result-selectable\")]/div[@role='option']";
+	public static final String EntSelReadOnlyPill = "//div[@id='globalBar_pillWrapper']";
+	public static final String EntSelTypeAheadField = "//div[@id='emcta-ctxtSel_bar']";
+	public static final String EntSelTypeAheadFieldInput = "//div[@id='emaas-appheader-globalcxt']//input[contains(@id, 'pit_')]";
+	public static final String EntSelSuggestionPopup = "//div[@id='emcta-ctxtSel_suggestPopup']";
+	public static final String EntSelPills = "//div[@id='emaas-appheader-globalcxt']//pill";
+	public static final String EntSelSearchResultsItem = "//div[@id='emcta-ctxtSel_suggestPopup']//ul//li[contains(@class,'oj-listbox-result-selectable')]";
+	public static final String EntSelSearchResultsItemByText = "//div[@id=''emcta-ctxtSel_suggestPopup'']//ul//li[contains(@class,''oj-listbox-result-selectable'') and descendant::span[contains(text(),''{0}'')]]";
+	//To get Composite results, substract all the 'Entities' category results from the entire list since there's no other way to determine if a result belongs to a certain category
+	public static final String EntSelSuggestionByCompositeCategory = "((//div[@id=''emcta-ctxtSel_suggestPopup'']//ul//li[contains(@class,''oj-listbox-result-selectable'') and not(preceding-sibling::li[not(contains(@class,''oj-listbox-result-selectable''))]//span[text()=''Entities''])])/div[span[2]/descendant-or-self::span[normalize-space()=''{0}'']])";
+	public static final String EntSelSuggestionByEntitiesCategory = "((//div[@id=''emcta-ctxtSel_suggestPopup'']//ul//li[contains(@class,''oj-listbox-result-selectable'') and preceding-sibling::li[not(contains(@class,''oj-listbox-result-selectable''))]//span[text()=''Entities'']])/div[span[2]/descendant-or-self::span[normalize-space()=''{0}'']])";
+	public static final String EntSelPillToRemoveByIndex = "(//div[@id=''emaas-appheader-globalcxt'']//a[contains(@id,''_remove'')])[{0}]";
+	public static final String EntSelPillLinkToReplaceByIndex = "//div[@id=\"emaas-appheader-globalcxt\"]//pill[{0}]//a[@class=\"pillLink\"]";
+	public static final String EntSelEditedPillByText = "//div[@id=\"emaas-appheader-globalcxt\"]//pill//a[@class=\"pillLink\"]//span[contains(text(),\"{0}\")]";
+	public static final String ENTSEL_CLEARALL_BUTTONID = "emcta-ctxtSel_clearAll";
+	public static final String ENTSEL_COMPOSITE_PILL_BYTEXT = "//div[@id=\"emaas-appheader-globalcxt\"]//pill//span[text()=\"Composite: {0}\"]";
+	public static final String ENTSEL_ENTITY_PILL_BYTEXT = "//div[@id=\"emaas-appheader-globalcxt\"]//pill//span[text()=\"{0}\"]";
+	public static final String ENTSEL_PILL_BYCONTAINSTEXT = "//div[@id=\"emaas-appheader-globalcxt\"]//pill//span[contains(text(),\"{0}\")]";
+	public static final String ENTSEL_PILL_CONTAINSTEXT_BYINDEX = "(//div[@id=\"emaas-appheader-globalcxt\"]//pill)[{0}]//span[contains(text(),\"{1}\")]";
+	public static final String ENTSEL_SUGGESTIONLIST = "//div[@id='emcta-ctxtSel_suggestPopup']//li[contains(@class,\"oj-listbox-result-selectable\")]/div[@role='option']";
 
 	private DashBoardPageId()
 	{
