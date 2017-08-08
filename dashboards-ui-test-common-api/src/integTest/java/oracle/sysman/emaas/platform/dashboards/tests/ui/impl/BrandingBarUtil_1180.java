@@ -138,8 +138,7 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 	{
 		if (!isHamburgerMenuDisplayed(driver)) {
 			driver.click("css=" + DashBoardPageId_1180.HAMBURGERMENU_ICON_CSS);
-			driver.takeScreenShot();
-			driver.savePageToFile();
+
 		}
 		return driver.getText("css=" + DashBoardPageId_1180.HAMBURGERMENU_CURRENTHEADER_CSS);
 	}
@@ -149,14 +148,12 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 	{
 		if (!isHamburgerMenuDisplayed(driver)) {
 			driver.click("css=" + DashBoardPageId_1180.HAMBURGERMENU_ICON_CSS);
-			driver.takeScreenShot();
-			driver.savePageToFile();
+
 		}
 
 		if (driver.isDisplayed("css=" + DashBoardPageId_1180.HAMBURGERMENU_PREVIOUSICON_CSS)) {
 			driver.click("css=" + DashBoardPageId_1180.HAMBURGERMENU_PREVIOUSICON_CSS);
-			driver.takeScreenShot();
-			driver.savePageToFile();
+
 		}
 		else {
 			throw new NoSuchElementException("goBackToParentMenu: 'goBackToParentMenu'icon is not found");
