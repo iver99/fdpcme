@@ -1072,5 +1072,11 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		webd.getLogger().info("Verify remove icon is substituted by delete icon");
 		Assert.assertTrue(webd.isDisplayed(DashBoardPageId.DELETETILE), "Don't find delete icon");
 		Assert.assertFalse(webd.isDisplayed(DashBoardPageId.REMOVETILECSS), "Find the remove icon");
+		
+		webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
+		
+		DashboardBuilderUtil.editTextWidgetAddContent(webd, 1, "This is a Text Widget");
+		
+		DashboardBuilderUtil.saveDashboard(webd);
 	}
 }
