@@ -51,6 +51,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 	private String dbName_longName = "dashboardNamedashboardNamedashboardNamedashboardNamedashboardNam";
 	private String dbName_textWidget_link = "";
 	private String dbName_textWidget_multiLink = "";
+	private String dbName_textWidget_order = "";
 
 	private final String customWidgetName = "Execution Details";
 	private final String OOBName = "Middleware Operations";
@@ -118,7 +119,8 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		DashBoardUtils.deleteDashboard(webd, dbName_longName);
 		DashBoardUtils.deleteDashboard(webd, dbName_textWidget_link);
 		DashBoardUtils.deleteDashboard(webd, dbName_textWidget_multiLink);
-
+		DashBoardUtils.deleteDashboard(webd, dbName_textWidget_order);
+		
 		webd.getLogger().info("All test data have been removed");
 
 		LoginAndLogout.logoutMethod();
@@ -1034,6 +1036,42 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		WebElement textContent2 = webd.getWebDriver().findElement(By.xpath(DashBoardPageId.TEXTCONTENT2));
 		Assert.assertEquals(textContent2.getText(), DashBoardPageId.PROTOCOLOPTION_HTTP + url);			
 		
+		DashboardBuilderUtil.saveDashboard(webd);				
+	}
+	
+	@Test
+	public void testTextWidget_order()
+	{
+		dbName_textWidget_order = "Dashboard_textWidgetOrder-" + DashBoardUtils.generateTimeStamp();
+		
+		String dbDesc = "Add text widget into dashboard, and test its order";
+		
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test the order of Text Widget");
+
+		DashboardHomeUtil.gridView(webd);
+
+		webd.getLogger().info("Create the dashboard");
+		DashboardHomeUtil.createDashboard(webd, dbName_textWidget_order, dbDesc, DashboardHomeUtil.DASHBOARD);
+		
+		webd.getLogger().info("Verify the dashboard created Successfully");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_textWidget_order, dbDesc, true), "Create dashboard failed!");		
+		
+		DashboardBuilderUtil.addWidgetToDashboard(webd, customWidgetName);
+		Assert.assertTrue(DashboardBuilderUtil.verifyWidget(webd, customWidgetName), "The widget added failed");
+				
+		DashboardBuilderUtil.addTextWidgetToDashboard(webd);	
+		
+		DashboardBuilderUtil.editTextWidgetAddContent(webd, 1, "This is a Text Widget");
+		
+		//Verify the Text Widget is ordered in the first place
+		webd.getLogger().info("Verify the Text Widget is order in first place");	
+		List<WebElement> widgets = webd.getWebDriver().findElements(By.cssSelector(DashBoardPageId.TILESLISTCSS)); 
+		
+		WebElement widget1 = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.TEXTWIDGETCSS));
+		Assert.assertTrue(widgets.get(0).equals(widget1), "The text widget isn't placed in the first place");
+		//Assert.assertTrue(widgets.get(0).getAttribute("data-tile-name").equals("Text Widget"), "The text widget isn't placed in the first place");
+
 		DashboardBuilderUtil.saveDashboard(webd);				
 	}
 }

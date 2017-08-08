@@ -358,6 +358,10 @@ public class DashBoardPageId
 	public static final String SHORTERTILECSS = "li[data-option=shorter]";
 	public static final String TALLERTILECSS = "li[data-option=taller]";
 	public static final String REMOVETILECSS = "li[data-option=remove]";
+	
+	public static final String TILESLISTCSS = "div[id^=tile]";
+	public static final String TEXTWIDGETCSS = "div[data-tile-name='Text Widget']";
+	
 	//right drawer css locators
 	public static final String RIGHTDRAWERTOGGLEBTNCSS = ".right-panel-toggler button.toggle-right-panel-btn";
 
