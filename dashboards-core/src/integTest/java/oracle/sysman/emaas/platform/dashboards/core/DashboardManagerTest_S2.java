@@ -623,7 +623,7 @@ public class DashboardManagerTest_S2 extends BaseTest
 		loadMockBeforeMethod();
 		DashboardManager dm = DashboardManager.getInstance();
 		Long tenantId1 = 11L;
-		// try to insert system dashboard, and it should work also
+		// try to insert system dashboard, and it should not work
 		String name1 = "name1" + System.currentTimeMillis();
 		Dashboard dbd1 = new Dashboard();
 		dbd1.setName(name1);
@@ -635,7 +635,6 @@ public class DashboardManagerTest_S2 extends BaseTest
 		}
 		catch (CreateSystemDashboardException e) {
 			LOGGER.info("context", e);
-			LOGGER.info(dbd1.getDashboardId());
 		}
 
 		String name2 = "name2" + System.currentTimeMillis();
@@ -645,7 +644,7 @@ public class DashboardManagerTest_S2 extends BaseTest
 		dbd1.setAppicationType(APM);
 		dbd1.setIsSystem(false);
 		dm.saveNewDashboard(dbd1, tenantId1);
-		Dashboard queried = dm.getDashboardById(dbd1.getDashboardId(), tenantId1); // 24 for OOB dashboard 'UI Gallery'
+		Dashboard queried = dm.getDashboardById(dbd1.getDashboardId(), tenantId1);
 		Assert.assertNotNull(queried);
 
 		// try to update system dashboard, and it is not allowed
@@ -665,7 +664,7 @@ public class DashboardManagerTest_S2 extends BaseTest
 			dm.deleteDashboard(dbd1.getDashboardId(), true, tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
-			e.printStackTrace();
+			LOGGER.info("context", e);
 		}
 	}
 

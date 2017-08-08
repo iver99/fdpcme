@@ -1426,7 +1426,7 @@ public class DashboardCRUD
 
 			
 			Assert.assertTrue(res.getStatusCode() == 403);
-			Assert.assertEquals(res.jsonPath().getString("errorCode"), "30000");
+			Assert.assertEquals(res.jsonPath().getString("errorCode"), "30003");
 			Assert.assertEquals(res.jsonPath().getString("errorMessage"), "Not support to update system dashboard");
 			String jsonString1 = "{ \"name\":\"Test_Custom_Dashboard\"}";
 			Response res1 = RestAssured
@@ -1447,7 +1447,7 @@ public class DashboardCRUD
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).body(jsonString2).when().put("/dashboards/" + dashboard_id);
 			Assert.assertTrue(res2.getStatusCode() == 403);
-			Assert.assertEquals(res2.jsonPath().getString("errorCode"), "30000");
+			Assert.assertEquals(res2.jsonPath().getString("errorCode"), "30003");
 			Assert.assertEquals(res2.jsonPath().getString("errorMessage"), "Not support to update system dashboard");
 
 			
