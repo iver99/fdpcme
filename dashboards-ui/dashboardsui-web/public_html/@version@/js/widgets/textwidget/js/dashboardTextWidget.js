@@ -2,6 +2,9 @@ define(["require", "knockout", "jquery", "ojs/ojcore", "ckeditor"],
         function (localrequire, ko, $) {
             function textWidgetViewModel(params) {
                 var self = this;
+                if(!params.tile.content) {
+                    params.tile.content = ko.observable();
+                }
                 self.content = params.tile.content;
                 self.emptyContent = ko.computed(function() {
                     if(!self.content()) {
