@@ -24,7 +24,7 @@ public class TestHomePage_SortBy extends LoginAndLogout
 
 		//create a dashboard
 		DashboardHomeUtil.createDashboard(webd, "ADashboard Test", "", DashboardHomeUtil.DASHBOARD);
-		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, "ADashboard Test", "", false),"Failed to create dashboard");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, "ADashboard Test", "", true),"Failed to create dashboard");
 
 		LoginAndLogout.logoutMethod();
 	}
