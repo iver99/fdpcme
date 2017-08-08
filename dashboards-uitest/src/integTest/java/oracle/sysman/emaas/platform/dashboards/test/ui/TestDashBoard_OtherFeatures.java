@@ -49,7 +49,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 	private String dbName_duplicateOOB = "";
 	private String dbName_saveConfirmation = "";
 	private String dbName_textWidget = "";
-	private String dbName_textWidget_noMaximizeRestore = "";
+	private String dbName_textWidget_toolbar = "";
 	private String dbName_longName = "dashboardNamedashboardNamedashboardNamedashboardNamedashboardNam";
 	private String dbName_textWidget_link = "";
 	private String dbName_textWidget_multiLink = "";
@@ -118,7 +118,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		DashBoardUtils.deleteDashboard(webd, dbName_duplicateOOB);
 		DashBoardUtils.deleteDashboard(webd, dbName_textWidget);
 		DashBoardUtils.deleteDashboard(webd, dbName_longName);
-		DashBoardUtils.deleteDashboard(webd, dbName_textWidget_noMaximizeRestore);
+		DashBoardUtils.deleteDashboard(webd, dbName_textWidget_toolbar);
 		DashBoardUtils.deleteDashboard(webd, dbName_textWidget_link);
 		DashBoardUtils.deleteDashboard(webd, dbName_textWidget_multiLink);
 
@@ -1041,21 +1041,21 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 	}
 	
 	@Test
-	public void testTextWidget_noMaximizeRestoreIcon()
+	public void testTextWidget_toolbar()
 	{		
-		dbName_textWidget_noMaximizeRestore = "Dashboard_textWidgetNoMR-" + DashBoardUtils.generateTimeStamp();
-		String dbDesc = "Test whether text widget remove the Maximize/Restore icon";
+		dbName_textWidget_toolbar = "Dashboard_textWidgetToolbar-" + DashBoardUtils.generateTimeStamp();
+		String dbDesc = "Test whether text widget remove the Maximize/Remove icon and add delete icon";
 		
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in testTextWidget_noMaximizeRestoreIcon");
+		webd.getLogger().info("start to test in testTextWidget_toolbarIcon");
 
 		DashboardHomeUtil.gridView(webd);
 
 		webd.getLogger().info("Create the dashboard");
-		DashboardHomeUtil.createDashboard(webd, dbName_textWidget_noMaximizeRestore, dbDesc, DashboardHomeUtil.DASHBOARD);
+		DashboardHomeUtil.createDashboard(webd, dbName_textWidget_toolbar, dbDesc, DashboardHomeUtil.DASHBOARD);
 		
 		webd.getLogger().info("Verify the dashboard created Successfully");
-		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_textWidget_noMaximizeRestore, dbDesc, true), "Create dashboard failed!");		
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_textWidget_toolbar, dbDesc, true), "Create dashboard failed!");		
 				
 		DashboardBuilderUtil.addTextWidgetToDashboard(webd);
 
