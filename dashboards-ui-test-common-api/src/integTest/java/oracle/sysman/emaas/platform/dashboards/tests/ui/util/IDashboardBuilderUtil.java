@@ -28,6 +28,8 @@ public interface IDashboardBuilderUtil extends IUiTestCommonAPI
 	public void addNewDashboardToSet(WebDriver driver, String dashboardName);
 	
 	public void addTextWidgetToDashboard(WebDriver driver);
+	
+	public void addLinkInTextWidget(WebDriver driver, int index, String url, String option);
 
 	public void addWidgetToDashboard(WebDriver driver, String searchString);
 
