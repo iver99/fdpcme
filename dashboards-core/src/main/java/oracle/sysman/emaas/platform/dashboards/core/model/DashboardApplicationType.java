@@ -67,7 +67,7 @@ public enum DashboardApplicationType
 	public static final String ORCHESTRATION_STRING = "Orchestration";
 	public static final String COMPLIANCE_STRING = "Compliance";
 	public static final String UDE_STRING = "UDE";
-	public static final String EVENT_STRING = "Event";
+	public static final String EVENT_STRING = "Alerts";
 	public static final String OMCSE_STRING = "OMCSE";
 	public static final String OMCEE_STRING = "OMCEE";
 	public static final String OMCLOG_STRING = "OMCLOG";

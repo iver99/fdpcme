@@ -83,7 +83,7 @@ public class MetadataRetriever
         WIDGET_GROUP_MAP.put(SERVICENAME_ORCHESTRATION, "Orchestration");
         //WIDGET_GROUP_MAP.put(SERVICENAME_COMPLIANCE, "");
         WIDGET_GROUP_MAP.put(SERVICENAME_UDE, "Data Explorer");
-//        WIDGET_GROUP_MAP.put(SERVICENAME_EVENT, "Event");
+        WIDGET_GROUP_MAP.put(SERVICENAME_EVENT, "Alerts");
     }
     
     /**
