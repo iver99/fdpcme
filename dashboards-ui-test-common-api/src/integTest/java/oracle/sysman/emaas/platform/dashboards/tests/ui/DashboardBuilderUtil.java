@@ -30,6 +30,12 @@ public class DashboardBuilderUtil
 		dbu.addTextWidgetToDashboard(driver);
 	}
 
+	public static void addImageInTextWidget(WebDriver driver, int index, String url, String alternativeText)
+	{
+		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		dbu.addImageInTextWidget(driver, index, url, alternativeText);
+	}
+	
 	public static void addWidgetToDashboard(WebDriver driver, String searchString)
 	{
 		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
@@ -96,6 +102,11 @@ public class DashboardBuilderUtil
 		dbu.editTextWidgetAddContent(driver, index, content);
 	}
 
+	public static void addLinkInTextWidget(WebDriver driver, int index, String url, String option)
+	{
+		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		dbu.addLinkInTextWidget(driver, index, url, option);
+	}
 	/*
 	public static void EditDashboard_targetselctor(WebDriver driver, String name, String descriptions)
 	{

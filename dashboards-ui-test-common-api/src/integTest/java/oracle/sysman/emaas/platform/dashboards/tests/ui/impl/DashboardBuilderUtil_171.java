@@ -108,6 +108,19 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 		driver.getLogger().info("Method not available in the current version");
 	}
 	
+	@Override
+	public void addImageInTextWidget(WebDriver driver, int index, String url, String alternativeText)
+	{
+		Assert.assertTrue(false, "This method is not available in the current version");
+		driver.getLogger().info("Method not available in the current version");
+	}
+	@Override
+	public void addLinkInTextWidget(WebDriver driver, int index, String url, String option)
+	{
+		Assert.assertTrue(false, "This method is not available in the current version");
+		driver.getLogger().info("Method not available in the current version");
+	}
+	
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#addWidgetToDashboard(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
