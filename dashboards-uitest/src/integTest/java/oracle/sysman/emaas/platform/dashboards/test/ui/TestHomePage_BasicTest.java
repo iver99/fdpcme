@@ -8,6 +8,7 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -44,6 +45,31 @@ public class TestHomePage_BasicTest extends LoginAndLogout
 		DashboardHomeUtil.createDashboard(webd, dbSetName, "", DashboardHomeUtil.DASHBOARDSET);
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardSet(webd, dbSetName),"Failed to create dashboard set");
 
+		LoginAndLogout.logoutMethod();
+	}
+
+	@AfterClass
+	public void removeDashboard()
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to remove the test data for test");
+
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//switch to list view
+		webd.getLogger().info("Switch to List View");
+		DashboardHomeUtil.gridView(webd);
+
+		//delete the test data
+		webd.getLogger().info("Delete the test data");
+		DashBoardUtils.deleteDashboard(webd, dbSetName);
+		DashBoardUtils.deleteDashboard(webd, dbName);
+
+		webd.getLogger().info("All test data have been removed");
+
+		//logout
 		LoginAndLogout.logoutMethod();
 	}
 
