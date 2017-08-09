@@ -501,6 +501,9 @@ define(['knockout',
                             } else if (self.resizingOptions().mode === self.editor.RESIZE_OPTIONS.SOUTH_EAST) {
                                 $(this).css('cursor', 'se-resize');
                             }
+                            if($('.tiles-wrapper').length > 0 && event.clientX < $('.tiles-wrapper').offset().left){
+                                event.clientX = $('.tiles-wrapper').offset().left;
+                            }
                             var clonedTarget = $.extend(self.resizingOptions(), {left: event.clientX, top: event.clientY});
                             self.resizingOptions(clonedTarget);
                         }
