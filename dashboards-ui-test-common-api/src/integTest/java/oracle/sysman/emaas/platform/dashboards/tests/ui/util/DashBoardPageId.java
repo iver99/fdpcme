@@ -326,6 +326,7 @@ public class DashBoardPageId
 	public static final String MAXIMIZETILEID = "/html/body/div[1]/div/ul/li[7]/a/span[2]";
 	public static final String RESTORETILEID = "/html/body/div[1]/div/ul/li[8]/a/span[2]";
 	public static final String REMOVETILEID = "/html/body/div[1]/div/ul/li[10]/a/span[2]";
+	public static final String MAXIMIZEICON = "//button[@title='Maximize']";
 	//tile css locators -> css=<locator>
 	public static final String DASHBOARDTITLEBARCSS = ".oj-toolbars.oj-toolbar-bottom-border.oj-btton-half-chrome.head-bar-container.fit-size-vertical-sibling";
 	
@@ -366,7 +367,7 @@ public class DashBoardPageId
 	public static final String SHORTERTILECSS = "li[data-option=shorter]";
 	public static final String TALLERTILECSS = "li[data-option=taller]";
 	public static final String REMOVETILECSS = "li[data-option=remove]";
-	
+	public static final String DELETETILE = "//ul[@title='Content Settings']/li/a/span[text()='Delete']";
 	public static final String TILESLISTCSS = "div[id^=tile]";
 	public static final String TEXTWIDGETCSS = "div[data-tile-name='Text Widget']";
 	

@@ -20,6 +20,7 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
@@ -48,6 +49,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 	private String dbName_duplicateOOB = "";
 	private String dbName_saveConfirmation = "";
 	private String dbName_textWidget = "";
+	private String dbName_textWidget_toolbar = "";
 	private String dbName_longName = "dashboardNamedashboardNamedashboardNamedashboardNamedashboardNam";
 	private String dbName_textWidget_image = "";
 	private String dbName_textWidget_link = "";
@@ -119,6 +121,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		DashBoardUtils.deleteDashboard(webd, dbName_duplicateOOB);
 		DashBoardUtils.deleteDashboard(webd, dbName_textWidget);
 		DashBoardUtils.deleteDashboard(webd, dbName_longName);
+		DashBoardUtils.deleteDashboard(webd, dbName_textWidget_toolbar);
 		DashBoardUtils.deleteDashboard(webd, dbName_textWidget_link);
 		DashBoardUtils.deleteDashboard(webd, dbName_textWidget_multiLink);
 		DashBoardUtils.deleteDashboard(webd, dbName_textWidget_order);
@@ -1116,5 +1119,45 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		//Assert.assertTrue(widgets.get(0).getAttribute("data-tile-name").equals("Text Widget"), "The text widget isn't placed in the first place");
 
 		DashboardBuilderUtil.saveDashboard(webd);				
+	}
+	
+	@Test
+	public void testTextWidget_toolbar()
+	{		
+		dbName_textWidget_toolbar = "Dashboard_textWidgetToolbar-" + DashBoardUtils.generateTimeStamp();
+		String dbDesc = "Test whether text widget remove the Maximize/Remove icon and add delete icon";
+		
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testTextWidget_toolbarIcon");
+
+		DashboardHomeUtil.gridView(webd);
+
+		webd.getLogger().info("Create the dashboard");
+		DashboardHomeUtil.createDashboard(webd, dbName_textWidget_toolbar, dbDesc, DashboardHomeUtil.DASHBOARD);
+		
+		webd.getLogger().info("Verify the dashboard created Successfully");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_textWidget_toolbar, dbDesc, true), "Create dashboard failed!");		
+				
+		DashboardBuilderUtil.addTextWidgetToDashboard(webd);
+
+		webd.getLogger().info("Verify there is no Maximize icon in Text Widget");
+		Assert.assertFalse(webd.isElementPresent(DashBoardPageId.MAXIMIZEICON), "There is Maximize icon in the text widget");	
+		
+		WebElement textTileTitle = webd.getElement("css=" + DashBoardPageId.TILETITLECSS);
+		
+		Actions actions = new Actions(webd.getWebDriver()); 			
+		actions.moveToElement(textTileTitle).build().perform();
+		
+		webd.click("css=" + DashBoardPageId.CONFIGTILECSS);
+		
+		webd.getLogger().info("Verify remove icon is substituted by delete icon");
+		Assert.assertTrue(webd.isDisplayed(DashBoardPageId.DELETETILE), "Don't find delete icon");
+		Assert.assertFalse(webd.isDisplayed(DashBoardPageId.REMOVETILECSS), "Find the remove icon");
+		
+		webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
+		
+		DashboardBuilderUtil.editTextWidgetAddContent(webd, 1, "This is a Text Widget");
+		
+		DashboardBuilderUtil.saveDashboard(webd);
 	}
 }
