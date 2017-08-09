@@ -521,6 +521,7 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-dialog-impl',[
                             // Disable ITA widget group since no ITA widgets for now. (group id === 3)
                             if ((!widgetProviderName && groupId !== 3 /*&& !widgetProviderVersion */) ||
                                     widgetProviderName === pname || (widgetProviderName === 'TargetAnalytics' && groupId === 7)
+                                    || (widgetProviderName === 'LogAnalyticsUI' && groupId === 6)
                                 /*    && widgetProviderVersion === pversion */) {
                                     var widgetGroup = {value:pname+'|'+pversion+'|'+gname, 
                                                         label: groupId === 2 ? nls.WIDGET_SELECTOR_WIDGET_GROUP_NAME_TA : gname};
