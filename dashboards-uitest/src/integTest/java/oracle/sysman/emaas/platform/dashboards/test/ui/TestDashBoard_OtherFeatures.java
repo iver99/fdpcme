@@ -49,9 +49,11 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 	private String dbName_saveConfirmation = "";
 	private String dbName_textWidget = "";
 	private String dbName_longName = "dashboardNamedashboardNamedashboardNamedashboardNamedashboardNam";
+	private String dbName_textWidget_image = "";
 	private String dbName_textWidget_link = "";
 	private String dbName_textWidget_multiLink = "";
 	private String dbName_textWidget_order = "";
+
 
 	private final String customWidgetName = "Execution Details";
 	private final String OOBName = "Middleware Operations";
@@ -931,6 +933,47 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
     }
 
     @Test
+	public void testTextWidget_Image()
+	{
+		dbName_textWidget_image = "Dashboard_textWidgetImage-" + DashBoardUtils.generateTimeStamp();
+		
+		String dbDesc = "Add text widget into dashboard, test the image feature";
+		String urlString = "emsaasui/uifwk/images/o_logo.png";
+		String url = "";
+		String alternativeText = "test_image";
+		
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test image in testTextWidget");
+
+		DashboardHomeUtil.gridView(webd);
+		
+		String currentUrl = webd.getWebDriver().getCurrentUrl();
+		url = (currentUrl.substring(0, currentUrl.indexOf("emsaasui"))).concat(urlString);
+
+		webd.getLogger().info("Create the dashboard, then to add text widget");
+		DashboardHomeUtil.createDashboard(webd, dbName_textWidget_image, dbDesc, DashboardHomeUtil.DASHBOARD);
+		
+		webd.getLogger().info("Verify the dashboard created Successfully");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_textWidget_image, dbDesc, true), "Create dashboard failed!");		
+		
+		DashboardBuilderUtil.addTextWidgetToDashboard(webd);				
+		
+		DashboardBuilderUtil.addImageInTextWidget(webd, 1, url, alternativeText);
+		webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
+		
+		DashboardBuilderUtil.addImageInTextWidget(webd, 1, url, null);
+		webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
+
+		List<WebElement> images = webd.getWebDriver().findElements(By.cssSelector(DashBoardPageId.IMAGESCSS));	
+		
+		for (WebElement img : images)
+		{
+			Assert.assertEquals(img.isDisplayed(), true);
+		}
+		
+		DashboardBuilderUtil.saveDashboard(webd);	
+	}
+
 	public void testTextWidget_Link()
 	{
 		dbName_textWidget_link = "Dashboard_textWidgetURL-" + DashBoardUtils.generateTimeStamp();
@@ -1034,9 +1077,9 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		Assert.assertEquals(textContent1.getText(), DashBoardPageId.PROTOCOLOPTION_HTTPS + url);			
 					
 		WebElement textContent2 = webd.getWebDriver().findElement(By.xpath(DashBoardPageId.TEXTCONTENT2));
-		Assert.assertEquals(textContent2.getText(), DashBoardPageId.PROTOCOLOPTION_HTTP + url);			
+		Assert.assertEquals(textContent2.getText(), DashBoardPageId.PROTOCOLOPTION_HTTP + url);		
 		
-		DashboardBuilderUtil.saveDashboard(webd);				
+		DashboardBuilderUtil.saveDashboard(webd);	
 	}
 	
 	@Test
