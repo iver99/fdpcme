@@ -318,6 +318,11 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                 function navigateWidgetList(event ,isDown){  
                     var fromWidget = event.target;
                     var toWidget;
+                     if((event.target.id === "searchTxt")&&!isDown){
+                        $(event.target).blur();
+                        $("#menubutton").focus();    
+                        return;
+                     }
                     var topOfWidgetList = $($("#widget-selector").children()[0]);
                     toWidget = navigateListView(event ,fromWidget ,toWidget ,isDown ,topOfWidgetList);                    
                     if(!toWidget && isGroupListView())toWidget = jumpToNextPrevGroup(fromWidget ,isDown ,toWidget);
