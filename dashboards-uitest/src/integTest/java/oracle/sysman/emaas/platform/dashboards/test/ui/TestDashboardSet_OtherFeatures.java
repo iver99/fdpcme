@@ -176,7 +176,7 @@ public class TestDashboardSet_OtherFeatures extends LoginAndLogout
 
 		//set the OOB as my favorite
 		webd.getLogger().info("Set the OOB dashboard set as My Favorite");
-		Assert.assertTrue(DashboardBuilderUtil.favoriteOption(webd),"Fail to set the OOB set as My Favorite");
+		Assert.assertTrue(DashboardBuilderUtil.favoriteOptionDashboardSet(webd),"Fail to set the OOB set as My Favorite");
 
 		//verify the dashboard is favorite
 		webd.getLogger().info("Visit my favorite page");
@@ -196,7 +196,7 @@ public class TestDashboardSet_OtherFeatures extends LoginAndLogout
 
 		//set it to not favorite
 		webd.getLogger().info("set the dashboard to not favorite");
-		Assert.assertFalse(DashboardBuilderUtil.favoriteOption(webd), "Set to not my favorite dashboard failed!");
+		Assert.assertFalse(DashboardBuilderUtil.favoriteOptionDashboardSet(webd), "Set to not my favorite dashboard failed!");
 
 		//verify the dashboard is not favoite
 		webd.getLogger().info("visit my favorite page");
