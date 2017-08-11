@@ -55,7 +55,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 	private String dbName_textWidget_link = "";
 	private String dbName_textWidget_multiLink = "";
 	private String dbName_textWidget_order = "";
-
+	private String dbName_textWidget_empty = "";
 
 	private final String customWidgetName = "Execution Details";
 	private final String OOBName = "Middleware Operations";
@@ -1159,5 +1159,51 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		DashboardBuilderUtil.editTextWidgetAddContent(webd, 1, "This is a Text Widget");
 		
 		DashboardBuilderUtil.saveDashboard(webd);
+	}
+
+	@Test(alwaysRun = true)
+	public void testEmptyTextWidget()
+	{
+		dbName_textWidget_empty= "Empty Text Widget - " + DashBoardUtils.generateTimeStamp();
+		//initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test in testEmptyTextWidget");
+
+		//reset all filter options
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//switch to grid view
+		webd.getLogger().info("Switch to grid view");
+		DashboardHomeUtil.gridView(webd);
+
+		//create a dashboard
+		webd.getLogger().info("Create a dashboard");
+		DashboardHomeUtil.createDashboard(webd, dbName_textWidget_empty, "", DashboardHomeUtil.DASHBOARD);
+
+		//Add a text widget
+		webd.getLogger().info("Add a empty text widget");
+		DashboardBuilderUtil.addTextWidgetToDashboard(webd);
+
+		//save the dashboard
+		webd.getLogger().info("Save the dashboard");
+		DashboardBuilderUtil.saveDashboard(webd);
+
+		//back to the dashboard home page
+		webd.getLogger().info("Back to the dashboard home page");
+		BrandingBarUtil.visitDashboardHome(webd);
+
+		//open the created dashboard
+		webd.getLogger().info("Open the dashboard");
+		DashboardHomeUtil.selectDashboard(webd, dbName_textWidget_empty);
+
+		//verify the dashbaord
+		webd.getLogger().info("Verify the empty dashboard was saved");
+		DashboardBuilderUtil.verifyDashboard(webd, dbName_textWidget_empty, "", true);
+
+		//verify the text widget
+		webd.getLogger().info("Verify the text widget in the dashboard");
+		WebElement textContent = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.TEXTCONTENTCSS));
+		Assert.assertEquals(textContent.getText(), "");
 	}
 }
