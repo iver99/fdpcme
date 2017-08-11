@@ -147,6 +147,9 @@ require(['ojs/ojcore',
                 var end = new Date();
                 var dateTimeOption = {year: 'numeric', month: '2-digit', day: '2-digit'};
                 var dateOption = {formatType: "date", dateFormat: "medium"};
+                
+                self.buttonLabel = 'Change disabled quick picks';
+                
                 self.floatPosition1 = "left";
                 self.dateTimeConverter1 = oj.Validation.converterFactory("dateTime").createConverter(dateTimeOption);
                 self.dateConverter = oj.Validation.converterFactory("dateTime").createConverter(dateOption);
