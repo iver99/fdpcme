@@ -48,6 +48,10 @@ public class DatabaseUtil
 
 	private static String CLOUD2_PWD = DatabaseUtil.propsReader("ODS_SYSTEM_PWD");
 
+	private static String INSERT_CLOUD1_SQL = "";
+
+    private static String INSERT_CLOUD2_SQL = "";
+
 	public static void Cloud1ExecuteSQL(String filename) throws SQLException
 	{
 		String s = new String();
@@ -128,8 +132,8 @@ public class DatabaseUtil
 
 	public static Connection ConnectCloud1()
 	{
-		Connection connection = DatabaseUtil.establishConnection(CLOUD1_HOSTNAME, CLOUD1_PORT, CLOUD1_SERVICE, CLOUD1_USERNAME,
-				CLOUD1_PWD);
+		Connection connection = DatabaseUtil.establishConnection("slc10uam.us.oracle.com", "1521", "orcl12c", "SYSEMS_T_1004",
+				"welcome1");
 
 		return connection;
 
@@ -166,7 +170,6 @@ public class DatabaseUtil
 		Connection connection = null;
 
 		try {
-
 			connection = DriverManager.getConnection("jdbc:oracle:thin:@" + HOSTNAME + ":" + PORT + ":" + SERVICE, USERNAME,
 					PASSWORD);
 
