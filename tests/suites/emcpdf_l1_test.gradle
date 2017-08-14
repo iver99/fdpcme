@@ -174,6 +174,7 @@ task DEVTest(type:EMTest,dependsOn: DEVTest_ws){
 	include "oracle/sysman/emaas/platform/dashboards/core/PreferenceManagerTest_S2.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/UserOptionsManagerTest_S2.class"
 //	include "oracle/sysman/emaas/platform/dashboards/core/persistence/PersistenceManagerTest.class"
+	include "oracle/sysman/emaas/platform/dashboards/core/persistence/DashboardServiceFacadeTest_S2.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/model/subscription2/*.class"
 
 	include "oracle/sysman/emaas/platform/dashboards/core/model/*.class"
