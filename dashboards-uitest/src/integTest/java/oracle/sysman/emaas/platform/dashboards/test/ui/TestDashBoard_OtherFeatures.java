@@ -1203,7 +1203,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 
 		//verify the text widget
 		webd.getLogger().info("Verify the text widget in the dashboard");
-		WebElement textContent = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.TEXTCONTENTCSS));
-		Assert.assertEquals(textContent.getText(), "");
+		WebElement textContent = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.TEXTWIDGETCONTENTCSS));
+		Assert.assertEquals(textContent.getText().trim(), "Start typing...");
 	}
 }
