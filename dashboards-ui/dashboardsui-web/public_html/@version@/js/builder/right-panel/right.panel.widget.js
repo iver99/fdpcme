@@ -17,6 +17,10 @@ function (ko, $, oj, dfu) {
         self.clearRightPanelSearch = ko.observable(false);
         self.isWidgetLoaded =ko.observable(false);
         self.tilesViewModel = ko.observable($b.getDashboardTilesViewModel && $b.getDashboardTilesViewModel());
+        
+        self.change$bContext = function(new$b){
+            $b = new$b;
+        };
 
         self.getKOWidgetFromJSData = function(widgetData) {
             if (!widgetData.WIDGET_DESCRIPTION) {
