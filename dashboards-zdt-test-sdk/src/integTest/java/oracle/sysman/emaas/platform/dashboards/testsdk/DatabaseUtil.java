@@ -124,7 +124,7 @@ public class DatabaseUtil
 
 	public static Connection ConnectCloud1()
 	{
-		Connection connection = DatabaseUtil.establishConnection("slc10uam.us.oracle.com", "1521", "orcl12c", "SYSEMS_T_1004",
+		Connection connection = DatabaseUtil.establishConnection("den02dtg.us.oracle.com", "1521", "orcl12c", "SYSEMS_T_1004",
 				"welcome1");
 
 		return connection;
