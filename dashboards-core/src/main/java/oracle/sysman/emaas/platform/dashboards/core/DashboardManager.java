@@ -895,8 +895,9 @@ public class DashboardManager
 		}
 		if (joinOptions) {
 			sb.append("left join Ems_Dashboard_User_Options le on (p.dashboard_Id =le.dashboard_Id and le.user_name = ?"
-					+ index++ + " and p.tenant_Id = le.tenant_Id) ");
+					+ index++ + " and le.tenant_Id = ?" + index++ + ") ");
 			paramList.add(currentUser);
+			paramList.add(tenantId);
 		}
 
 		sb.append("where 1=1 ");
