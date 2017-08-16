@@ -1,21 +1,34 @@
 
 sourceSets {
-    integTest {
-        java.srcDir 'src/integTest/java'
-        compileClasspath = configurations.testNG+configurations.restAssured + configurations.testConfig
-    }
+//    integTest {
+//        java.srcDir 'src/integTest/java'
+//        compileClasspath = configurations.testNG+configurations.restAssured + configurations.testConfig
+//    }
+	test{
+		java {
+			srcDirs = ['src/integTest/java']
+		}
+		resources.srcDirs = ['src/integTest/java','src/integTest/resources']
+		compileClasspath += configurations.testNG+configurations.restAssured + configurations.testConfig
+	}
+}
+
+test{
+	testLogging{
+		events 'passed', 'skipped', 'failed'
+	}
 }
 
 
 task integTestJar (type:Jar) {
-    from sourceSets.integTest.output
+    from sourceSets.test.output
     appendix = 'integ-tests'
 }
 dependencies {
 
-	testConfig project(':dashboards-entities') { transitive = false }
-	testConfig project(':dashboards-core')   { transitive = false }
-	testConfig project(':dashboards-web')   { transitive = false }
+	testCompile project(':dashboards-entities') { transitive = false }
+	testCompile project(':dashboards-core')   { transitive = false }
+	testCompile project(':dashboards-web')   { transitive = false }
 	testConfig(group: 'javax.servlet', name:'servlet-api', version:'2.5')  { transitive = false }
 	testConfig(group: 'com.sun.jersey', name: 'jersey-client', version: '1.17'){ transitive = false }
 	testConfig(group: 'com.sun.jersey.contribs', name: 'jersey-multipart', version: '1.17.1'){ transitive = false }
@@ -30,8 +43,11 @@ dependencies {
 	testConfig(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
 	testConfig('com.sun.jersey:jersey-servlet:1.17.1') { transitive = false }
 	testConfig('com.sun.jersey:jersey-server:1.17.1') { transitive = false }
+	testConfig('com.oracle.jdbc:ojdbc6:12.1.0.1.0') { transitive = false }
+	testConfig getProjectArtifact('em-qatool-os-webdriver')
 //        testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-web', version: "1.0.+")
 //        testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-core', version: "1.0.+")
 //        testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-entities', version: "1.0.+")
 //	testConfig(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2'){ transitive = false }
+	testCompile configurations.testNG
 }

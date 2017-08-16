@@ -10,47 +10,39 @@
 
 package oracle.sysman.emaas.platform.dashboards.testsdk;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.io.*;
+import java.sql.*;
 import java.util.Properties;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import oracle.sysman.qatool.uifwk.utils.Utils;
+import org.testng.Assert;
 
 /**
  * @author cawei
  */
 public class DatabaseUtil
 {
-	private static String CLOUD1_HOSTNAME = Utils.getProperty("ODS_HOSTNAME");
+	private static final Logger LOGGER = LogManager.getLogger(DatabaseUtil.class);
+//	private static String CLOUD1_HOSTNAME = Utils.getProperty("ODS_HOSTNAME");
+//
+//	private static String CLOUD1_PORT = Utils.getProperty("ODS_PORT");
+//
+//	private static String CLOUD1_SERVICE = Utils.getProperty("ODS_SID");
+//	private static String CLOUD1_USERNAME = "SYSEMS_T_1010";
+//	private static String CLOUD1_PWD = Utils.getProperty("ODS_SYSTEM_PWD");
+//
+//	private static String CLOUD2_HOSTNAME = DatabaseUtil.propsReader("ODS_HOSTNAME");
+//
+//	private static String CLOUD2_PORT = DatabaseUtil.propsReader("ODS_PORT");
+//
+//	private static String CLOUD2_SERVICE = DatabaseUtil.propsReader("ODS_SID");
+//
+//	private static String CLOUD2_USERNAME = "SYSEMS_T_1010";
+//
+//	private static String CLOUD2_PWD = DatabaseUtil.propsReader("ODS_SYSTEM_PWD");
 
-	private static String CLOUD1_PORT = Utils.getProperty("ODS_PORT");
-
-	private static String CLOUD1_SERVICE = Utils.getProperty("ODS_SID");
-	private static String CLOUD1_USERNAME = "SYSEMS_T_1010";
-	private static String CLOUD1_PWD = Utils.getProperty("ODS_SYSTEM_PWD");
-
-	private static String CLOUD2_HOSTNAME = DatabaseUtil.propsReader("ODS_HOSTNAME");
-
-	private static String CLOUD2_PORT = DatabaseUtil.propsReader("ODS_PORT");
-
-	private static String CLOUD2_SERVICE = DatabaseUtil.propsReader("ODS_SID");
-
-	private static String CLOUD2_USERNAME = "SYSEMS_T_1010";
-
-	private static String CLOUD2_PWD = DatabaseUtil.propsReader("ODS_SYSTEM_PWD");
-
-	private static String INSERT_CLOUD1_SQL = "";
-
-    private static String INSERT_CLOUD2_SQL = "";
 
 	public static void Cloud1ExecuteSQL(String filename) throws SQLException
 	{
@@ -91,7 +83,7 @@ public class DatabaseUtil
 
 	}
 
-	public static void Cloud2ExecuteSQL(String filename) throws SQLException
+	/*public static void Cloud2ExecuteSQL(String filename) throws SQLException
 	{
 		String s = new String();
 		StringBuffer sb = new StringBuffer();
@@ -128,7 +120,7 @@ public class DatabaseUtil
 			System.out.println(sb.toString());
 		}
 
-	}
+	}*/
 
 	public static Connection ConnectCloud1()
 	{
@@ -139,14 +131,14 @@ public class DatabaseUtil
 
 	}
 
-	public static Connection ConnectCloud2()
+	/*public static Connection ConnectCloud2()
 	{
 		Connection connection = DatabaseUtil.establishConnection(CLOUD2_HOSTNAME, CLOUD2_PORT, CLOUD2_SERVICE, CLOUD2_USERNAME,
 				CLOUD2_PWD);
 
 		return connection;
 
-	}
+	}*/
 
 	public static Connection establishConnection(String HOSTNAME, String PORT, String SERVICE, String USERNAME, String PASSWORD)
 	{
