@@ -777,6 +777,13 @@ define(['knockout',
                     if (!tile) {
                         tile = self.editor.createNewTile(widget.WIDGET_NAME, null, width, height, widget, self.timeSelectorModel, self.targets, true, dashboardInst);
                         Builder.eagerLoadDahshboardSingleTileAtPageLoad(dfu, ko, tile);
+                        
+                        //fix EMCPDF-4722 by setting tile's display info here so that the semitransparent helper has correct width and height and is always attached to mouse
+                        tile.cssWidth(self.getDisplayWidthForTile(self.editor.mode.getModeWidth(tile)));
+                        tile.cssHeight(self.getDisplayHeightForTile(self.editor.mode.getModeHeight(tile)));
+                        tile.left(pos.left-tile.cssWidth()/2);
+                        tile.top(pos.top-15);
+                        
                         u.helper.tile = tile;
                         self.editor.tiles.push(tile);
                         $b.triggerEvent($b.EVENT_TILE_ADDED, null, tile);
