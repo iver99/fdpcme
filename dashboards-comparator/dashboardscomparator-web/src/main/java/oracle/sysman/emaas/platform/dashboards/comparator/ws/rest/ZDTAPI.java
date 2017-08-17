@@ -160,13 +160,16 @@ public class ZDTAPI
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response compareOnDF(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
-            @HeaderParam(value = "X-REMOTE-USER") String userTenant)
+	public Response compareOnDF(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam)
+         //   @HeaderParam(value = "X-REMOTE-USER") String userTenant)
 	{
 		logger.info("There is an incoming call from ZDT comparator API to compare");
+		if (tenantIdParam == null){
+			tenantIdParam = "CloudServices";
+		}
 		// this comparator invokes the 2 instances REST APIs and retrieves the counts for objects (like dashboards), and return the counts for each instance
 		DashboardCountsComparator dcc = new DashboardCountsComparator();
-		InstancesComparedData<CountsEntity> result = dcc.compare(tenantIdParam, userTenant);
+		InstancesComparedData<CountsEntity> result = dcc.compare(tenantIdParam, null);  // changed
 		InstancesComapredCounts ic = new InstancesComapredCounts(new InstanceCounts(result.getInstance1()),
 				new InstanceCounts(result.getInstance2()));
 
@@ -192,14 +195,18 @@ public class ZDTAPI
 	
 	@GET
 	@Path("compare/status")
-	public Response getCompareStatus(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
-            @HeaderParam(value = "X-REMOTE-USER") String userTenant) {
+	public Response getCompareStatus(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam)
+          //  @HeaderParam(value = "X-REMOTE-USER") String userTenant) 
+	{
 		logger.info("incoming call from zdt comparator to get comparitor status");
+		if (tenantIdParam == null){
+			tenantIdParam = "CloudServices";
+		}
 		DashboardRowsComparator dcc = null;
 		String response = null;
 		try {
 			dcc = new DashboardRowsComparator();
-			response = dcc.retrieveComparatorStatusForOmcInstance(tenantIdParam, userTenant);
+			response = dcc.retrieveComparatorStatusForOmcInstance(tenantIdParam, null); // changed
 		} catch (ZDTException e1) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(e1))).build();
 		} catch (Exception e2) {
@@ -212,14 +219,18 @@ public class ZDTAPI
 	
 	@GET
 	@Path("sync/status")
-	public Response getSyncStatus(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
-            @HeaderParam(value = "X-REMOTE-USER") String userTenant) {
+	public Response getSyncStatus(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam)
+            //@HeaderParam(value = "X-REMOTE-USER") String userTenant)
+			{
 		logger.info("incoming call from zdt comparator to get sync status");
+		if (tenantIdParam == null){
+			tenantIdParam = "CloudServices";
+		}
 		DashboardRowsComparator dcc = null;
 		String response = null;
 		try {
 			dcc = new DashboardRowsComparator();
-			response = dcc.retrieveSyncStatusForOmcInstance(tenantIdParam, userTenant);
+			response = dcc.retrieveSyncStatusForOmcInstance(tenantIdParam, null); // changed
 		} catch (ZDTException e1) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(e1))).build();
 		} catch (Exception e2) {
@@ -244,8 +255,13 @@ public class ZDTAPI
 	@Path("compare")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response compareRows(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
-            @HeaderParam(value = "X-REMOTE-USER") String userTenant, @QueryParam("type") @DefaultValue("incremental")  String compareType,
+           // @HeaderParam(value = "X-REMOTE-USER") String userTenant, 
+            @QueryParam("type") @DefaultValue("incremental")  String compareType,
             @QueryParam("before") int skipMinutes) {
+		if (tenantIdParam == null){
+			tenantIdParam = "CloudServices";
+		}
+		
 		logger.info("incoming call from zdt comparator to do row comparing");
 		String message = "";
 		int status = 200;
@@ -263,8 +279,8 @@ public class ZDTAPI
 		
 		try {
 			DashboardRowsComparator dcc = new DashboardRowsComparator();
-			String tenants1 = dcc.retrieveTenants(tenantIdParam, userTenant,dcc.getClient1());			
-			String tenants2 = dcc.retrieveTenants(tenantIdParam, userTenant,dcc.getClient2());
+			String tenants1 = dcc.retrieveTenants(tenantIdParam, null,dcc.getClient1()); // changed			
+			String tenants2 = dcc.retrieveTenants(tenantIdParam, null,dcc.getClient2()); // changed		
 			if (tenants1 == null || tenants2 == null) {
 				return Response.status(400).entity(new ErrorEntity(ZDTErrorConstants.NULL_TABLE_ROWS_ERROR_CODE, ZDTErrorConstants.NULL_TABLE_ROWS_ERROR_MESSAGE)).build();
 			}
@@ -305,8 +321,8 @@ public class ZDTAPI
 				iscompared = false;							
 			}
 			InstancesComparedData<TableRowsEntity> result = null;
-			int totalRowForClient1 = dcc.getTotalRowForOmcInstance(tenantIdParam, userTenant,dcc.getClient1(), maxComparedDate);
-			int totalRowForClient2 = dcc.getTotalRowForOmcInstance(tenantIdParam, userTenant,dcc.getClient2(), maxComparedDate);
+			int totalRowForClient1 = dcc.getTotalRowForOmcInstance(tenantIdParam, null,dcc.getClient1(), maxComparedDate);// changed		
+			int totalRowForClient2 = dcc.getTotalRowForOmcInstance(tenantIdParam, null,dcc.getClient2(), maxComparedDate);// changed		
 			int totalRow = totalRowForClient1 + totalRowForClient2;
 			if (totalRow == 0) {
 	
@@ -320,7 +336,7 @@ public class ZDTAPI
 				//handle tenant one by one and save comparison result for each tenant
 				for (String tenantStr : tenants) {
 					count = count + 1;
-					result = dcc.compare(tenantIdParam, userTenant,compareType,maxComparedDate,
+					result = dcc.compare(tenantIdParam, null,compareType,maxComparedDate, // changed		
 							iscompared, tenantStr);
 					
 					if (result != null) {
@@ -357,11 +373,11 @@ public class ZDTAPI
 						
 						// save status information for client 1  -- switch data for sync
 						LookupClient client1 = result.getInstance1().getClient();
-						dcc.saveComparatorStatus(tenantIdParam,userTenant, client1, statusRow2);
+						dcc.saveComparatorStatus(tenantIdParam,null, client1, statusRow2);// changed		
 						
 						// save status informantion for client 2 -- switch data for sync
 						LookupClient client2 = result.getInstance2().getClient();
-						dcc.saveComparatorStatus(tenantIdParam,userTenant, client2, statusRow1);
+						dcc.saveComparatorStatus(tenantIdParam,null, client2, statusRow1);// changed		
 						
 						StringBuffer sb1 = new StringBuffer();
 						sb1.append(result1);
@@ -394,7 +410,7 @@ public class ZDTAPI
 				}// end loop for tenants
 				message = obj.toString(); 
 			} else {
-				result = dcc.compare(tenantIdParam, userTenant,compareType,maxComparedDate,
+				result = dcc.compare(tenantIdParam, null,compareType,maxComparedDate,// changed		
 						iscompared, null);
 				
 				if (result != null) {
@@ -428,11 +444,11 @@ public class ZDTAPI
 					
 					// save status information for client 1  -- switch data for sync
 					LookupClient client1 = result.getInstance1().getClient();
-					dcc.saveComparatorStatus(tenantIdParam,userTenant, client1, statusRow2);
+					dcc.saveComparatorStatus(tenantIdParam,null, client1, statusRow2);// changed		
 					
 					// save status informantion for client 2 -- switch data for sync
 					LookupClient client2 = result.getInstance2().getClient();
-					dcc.saveComparatorStatus(tenantIdParam,userTenant, client2, statusRow1);
+					dcc.saveComparatorStatus(tenantIdParam,null, client2, statusRow1);// changed		
 					
 					JSONObject obj = new JSONObject();
 					obj.put("comparisonDateTime", comparisonDate);
@@ -463,9 +479,13 @@ public class ZDTAPI
 	@Path("sync")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response syncOnDF(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
-            @HeaderParam(value = "X-REMOTE-USER") String userTenant,@QueryParam("type") @DefaultValue("full")  String syncType)
+            //@HeaderParam(value = "X-REMOTE-USER") String userTenant,
+            @QueryParam("type") @DefaultValue("full")  String syncType)
 	{
 		logger.info("There is an incoming call from ZDT comparator API to sync");
+		if (tenantIdParam == null){
+			tenantIdParam = "CloudServices";
+		}
 		// this comparator invokes the 2 instances REST APIs and retrieves the different table rows for the 2 instances, and update the 2 instances accordingly
 		DashboardRowsComparator dcc = null;
 		if (syncType == null) {
@@ -476,8 +496,8 @@ public class ZDTAPI
 			Date currentUtcDate = getCurrentUTCTime();
 			String syncDate = getTimeString(currentUtcDate);
 			
-			String message1 = dcc.syncForInstance(tenantIdParam,  userTenant,  dcc.getClient1(),  syncType,  syncDate);
-			String message2 = dcc.syncForInstance(tenantIdParam,  userTenant,  dcc.getClient2(),  syncType,  syncDate);
+			String message1 = dcc.syncForInstance(tenantIdParam,  null,  dcc.getClient1(),  syncType,  syncDate);// changed		
+			String message2 = dcc.syncForInstance(tenantIdParam,  null,  dcc.getClient2(),  syncType,  syncDate);// changed		
 			if (message1.contains("Errors") || message2.contains("Errors")) {
 				return Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(ZDTErrorConstants.FAIL_TO_SYNC_ERROR_CODE, ZDTErrorConstants.FAIL_TO_SYNC_ERROR_MESSAGE))).build();
 			}
