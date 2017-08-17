@@ -16,6 +16,7 @@ public class TestHomePage_BasicTest extends LoginAndLogout
 {
 	private String dbName = "";
 	private String dbSetName = "";
+	private String dbSetName_2 = "";
 
 	public void initTest(String testName)
 	{
@@ -31,6 +32,7 @@ public class TestHomePage_BasicTest extends LoginAndLogout
 	{
 		dbName = "Test Dashboaard for Filter - "+ DashBoardUtils.generateTimeStamp();
 		dbSetName = "Test Dashboard set for Filter - " + DashBoardUtils.generateTimeStamp();
+		dbSetName_2 = "Test Dashboard set with empty dashboard - " + DashBoardUtils.generateTimeStamp();
 
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to create test data for test");
@@ -44,6 +46,11 @@ public class TestHomePage_BasicTest extends LoginAndLogout
 		BrandingBarUtil.visitDashboardHome(webd);
 		DashboardHomeUtil.createDashboard(webd, dbSetName, "", DashboardHomeUtil.DASHBOARDSET);
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardSet(webd, dbSetName),"Failed to create dashboard set");
+
+		BrandingBarUtil.visitDashboardHome(webd);
+		DashboardHomeUtil.createDashboard(webd, dbSetName_2, "", DashboardHomeUtil.DASHBOARDSET);
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardSet(webd, dbSetName_2),"Failed to create dashboard set");
+		DashboardBuilderUtil.addNewDashboardToSet(webd, dbName);
 
 		LoginAndLogout.logoutMethod();
 	}
@@ -65,6 +72,7 @@ public class TestHomePage_BasicTest extends LoginAndLogout
 		//delete the test data
 		webd.getLogger().info("Delete the test data");
 		DashBoardUtils.deleteDashboard(webd, dbSetName);
+		DashBoardUtils.deleteDashboard(webd, dbSetName_2);
 		DashBoardUtils.deleteDashboard(webd, dbName);
 
 		webd.getLogger().info("All test data have been removed");
@@ -737,5 +745,7 @@ public class TestHomePage_BasicTest extends LoginAndLogout
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, dbName));
 		webd.getLogger().info("Verify the dashboard set");
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, dbSetName));
+		webd.getLogger().info("Verify the dashboard set with empty dashboard");
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, dbSetName_2));
 	}
 }

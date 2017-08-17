@@ -84,22 +84,22 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
 
 
                 self.widgetListScroll = function(){ 
-                        if ($('.oj-listview').scrollTop() + $('#widget-selector-widgets').height() >= $('#widget-selector').height()) {
+                        if ($('.oj-listview').scrollTop() + $('.widget-selector-widgets').height() >= $('#widget-selector').height()) {
                             console.debug("Scrolled to the bottom of widget list. Loading more forwardly...");
                             self.forwardRenderWidgets(self.DEFAULT_WIDGET_INCREMENT_AMOUNT,isGroupListView());
                         }
-                        if ($('#widget-selector-widgets').scrollTop() <= 0) {
+                        if ($('.widget-selector-widgets').scrollTop() <= 0) {
                             console.debug("Scrolled to the top of widget list. Loading more backwardly...");
                             self.backwardRenderWidgets(self.DEFAULT_WIDGET_INCREMENT_AMOUNT,isGroupListView());
                         } 
                 };
                 self.initLoadOnScroll = function() {
-                    $('#widget-selector-widgets').scroll(function() {
-                        if ($('#widget-selector-widgets').scrollTop() + $('#widget-selector-widgets').height() >= $('#widget-selector').height()) {
+                    $('.widget-selector-widgets').scroll(function() {
+                        if ($('.widget-selector-widgets').scrollTop() + $('.widget-selector-widgets').height() >= $('#widget-selector').height()) {
                             console.debug("Scrolled to the bottom of widget list. Loading more forwardly...");
                             self.forwardRenderWidgets(self.DEFAULT_WIDGET_INCREMENT_AMOUNT,isGroupListView());
                         }
-                        if ($('#widget-selector-widgets').scrollTop() <= 0) {
+                        if ($('.widget-selector-widgets').scrollTop() <= 0) {
                             console.debug("Scrolled to the top of widget list. Loading more backwardly...");
                             self.backwardRenderWidgets(self.DEFAULT_WIDGET_INCREMENT_AMOUNT,isGroupListView());
                         }
@@ -318,6 +318,11 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                 function navigateWidgetList(event ,isDown){  
                     var fromWidget = event.target;
                     var toWidget;
+                     if((event.target.id === "searchTxt")&&!isDown){
+                        $(event.target).blur();
+                        $("#menubutton").focus();    
+                        return;
+                     }
                     var topOfWidgetList = $($("#widget-selector").children()[0]);
                     toWidget = navigateListView(event ,fromWidget ,toWidget ,isDown ,topOfWidgetList);                    
                     if(!toWidget && isGroupListView())toWidget = jumpToNextPrevGroup(fromWidget ,isDown ,toWidget);
