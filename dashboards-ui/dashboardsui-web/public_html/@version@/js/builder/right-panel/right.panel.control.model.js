@@ -127,13 +127,14 @@ function (ko, $, oj, dfu, mbu, uiutil) {
         };
 
         self.switchEditPanelContent = function (data, event) {
+            var koData = ko.dataFor(event.currentTarget);
             if ($(event.currentTarget).hasClass('edit-dsb-link')) {
                 self.editPanelContent("editdashboard");
                 self.expandDBEditor("singleDashboard-edit", true);
             } else if($(event.currentTarget).hasClass('edit-content-link')){
                 self.editPanelContent("editcontent");
                 $('.dbd-right-panel-editcontent-title').ojCollapsible("option", "expanded", true);
-                selectedContent && selectedContent(ko.dataFor(event.currentTarget));
+                selectedContent && selectedContent(koData);
             } else if ($(event.currentTarget).hasClass('edit-dsbset-link')) {
                 self.editPanelContent("editset");
                 self.expandDBEditor("dashboardset-edit", true);

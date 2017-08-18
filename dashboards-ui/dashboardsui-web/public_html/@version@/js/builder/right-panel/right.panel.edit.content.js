@@ -247,10 +247,10 @@ define(['dashboards/dbsmodel',
         
         self.clearContentSearch = ko.observable();
         self.autoSearchDashboard = function (searchTerm) {
-            currentQueryStr = searchTerm.toLowerCase().trim();
+            currentQueryStr = searchTerm && searchTerm.toLowerCase().trim();
             resetPaging();
             self.dashboards.removeAll();
-            if(searchTerm.length>1 || initialed){
+            if(searchTerm !== null){
                 loadDashboardList(null, currentQueryStr);
             }
         };
@@ -297,7 +297,7 @@ define(['dashboards/dbsmodel',
 
         function resetAddLinkToTitle(holdHasLinkedToTitle){
             self.keyword("");
-            self.autoSearchDashboard("");
+            self.autoSearchDashboard(null);
             self.showSelectedDashboard(false);
             self.selectedDashboardId(null);
             self.addToTitleAbled(false);
