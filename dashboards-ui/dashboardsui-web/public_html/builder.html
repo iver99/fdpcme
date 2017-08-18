@@ -1184,7 +1184,7 @@
                                         <!-- ko if:sortedTiles().length > 0 -->
                                         <span class="edit-setting-head" data-bind="text: getNlsString('COMMON_TEXT_WIDGETS')"></span>
                                             <!--ko foreach:sortedTiles-->
-                                                <span class="edit-setting-link edit-content-link" data-bind="text:WIDGET_NAME()"></span>
+                                                <span class="edit-setting-link edit-content-link" data-bind="text:WIDGET_NAME(), click: $root.rightPanelControl.switchEditPanelContent"></span>
                                             <!--/ko-->
                                         <!--/ko-->
                                     <!-- /ko -->
@@ -1195,7 +1195,7 @@
                                     <!--ko if: $data.dashboard.tiles().length>0-->
                                     <span class="edit-setting-head" data-bind="text: getNlsString('COMMON_TEXT_WIDGETS')"></span>
                                         <!--ko foreach: sortedTiles -->
-                                        <span class="edit-setting-link edit-content-link"  data-bind="text:WIDGET_NAME()"></span>
+                                        <span class="edit-setting-link edit-content-link"  data-bind="text:WIDGET_NAME(), click: $root.rightPanelControl.switchEditPanelContent"></span>
                                         <!--/ko-->
                                     <!--/ko-->
                                 <!--/ko-->
