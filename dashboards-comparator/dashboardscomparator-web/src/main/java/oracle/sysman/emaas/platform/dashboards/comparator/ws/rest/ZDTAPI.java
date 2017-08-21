@@ -453,6 +453,8 @@ public class ZDTAPI
 					JSONObject obj = new JSONObject();
 					obj.put("comparisonDateTime", comparisonDate);
 					obj.put("comparisonType", compareType);
+					obj.put("differentRowNum", totalDifferentRows);
+					obj.put("totalRowNum", totalRow);
 					obj.put("divergencePercentage", percentage);
 					
 					JSONObject subObj = new JSONObject();
