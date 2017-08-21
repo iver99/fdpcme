@@ -416,6 +416,7 @@ public class ZDTAPI
 				if (result != null) {
 					int comparedDataNum = dcc.countForComparedRows(result.getInstance1().getData()) + dcc.countForComparedRows(result.getInstance2().getData());
 					logger.info("comparedNum={}",comparedDataNum);
+					totalDifferentRows = totalDifferentRows + comparedDataNum;
 					double percen = 0;
 					if (comparedDataNum != 0) {
 						percen = (double)comparedDataNum/(double)totalRow;
