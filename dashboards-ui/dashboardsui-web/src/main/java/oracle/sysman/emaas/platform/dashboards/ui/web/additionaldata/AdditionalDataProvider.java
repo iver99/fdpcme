@@ -63,6 +63,11 @@ public class AdditionalDataProvider
 			sb.append("<!-- SDKVersionJS() time: ").append(end - start).append("ms -->");
 			String result = sb.toString();
 			LOGGER.debug("Builder page SDKVersionJS data is {}", result);
+			long startPageLoadEvent = System.currentTimeMillis();
+			LOGGER.debug("Generating Page Load Event.");
+			HtmlBootstrapJsUtil.generatePageLoadEvent(tenant, user, referer, sessionExp);
+			long endPageLoadEvent = System.currentTimeMillis();
+			result = "/* PAGE_LOAD_EVENT_API_COST : " +  (endPageLoadEvent - startPageLoadEvent) + "ms */" + result;
 			return result;
 		}else{
 			//Get necessary data for branding bar
