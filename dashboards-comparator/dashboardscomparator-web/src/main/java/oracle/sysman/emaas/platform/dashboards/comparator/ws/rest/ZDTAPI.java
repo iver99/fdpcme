@@ -333,6 +333,9 @@ public class ZDTAPI
 			if (!iscompared || compareType == "full") {
 				int count = 0;
 				JSONObject obj = null;
+				JSONObject subObj = new JSONObject();
+				StringBuffer sb1 = new StringBuffer();
+				StringBuffer sb2 = new StringBuffer();
 				//handle tenant one by one and save comparison result for each tenant
 				for (String tenantStr : tenants) {
 					count = count + 1;
@@ -379,10 +382,9 @@ public class ZDTAPI
 						LookupClient client2 = result.getInstance2().getClient();
 						dcc.saveComparatorStatus(tenantIdParam,null, client2, statusRow1);// changed		
 						
-						StringBuffer sb1 = new StringBuffer();
 						sb1.append(result1);
 						
-						StringBuffer sb2 = new StringBuffer();
+						
 						sb2.append(result2);
 						
 						if (count == tenants.size()) {
@@ -396,7 +398,7 @@ public class ZDTAPI
 								if (totalDifferentRows > 1000) {
 									obj.put("divergenceSummary", "The number for different rows is more than 1000; There is too much content to display;");
 								} else {
-									JSONObject subObj = new JSONObject();
+									
 									subObj.put(result.getInstance1().getKey(), sb2.toString());
 									subObj.put(result.getInstance2().getKey(), sb1.toString());
 									obj.put("divergenceSummary", subObj);
