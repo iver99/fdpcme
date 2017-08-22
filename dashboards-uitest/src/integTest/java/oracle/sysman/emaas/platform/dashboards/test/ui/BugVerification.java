@@ -244,17 +244,11 @@ public class BugVerification extends LoginAndLogout
 		webd.getLogger().info("start to test in testEMPCDF_2970");
 
 		DashboardHomeUtil.createDashboard(webd, "~!@#$%^&*()-+", null);
-
-		webd.takeScreenShot();
-
 		DashboardBuilderUtil.verifyDashboard(webd, "~!@#$%^&*()-+", null, true);
 		DashboardBuilderUtil.saveDashboard(webd);
-		webd.takeScreenShot();
 		BrandingBarUtil.visitDashboardHome(webd);
-		webd.takeScreenShot();
 		DashboardHomeUtil.gridView(webd);
 		DashboardHomeUtil.deleteDashboard(webd, "~!@#$%^&*()-+", "dashboards_grid_view");
-		webd.takeScreenShot();
 		webd.getLogger().info("complete testing in testEMPCDF_2970");
 	}
 
@@ -307,10 +301,11 @@ public class BugVerification extends LoginAndLogout
 				.to(url.substring(0, url.indexOf("emsaasui")) + "emsaasui/emcpdfui/error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_MSG");
 		webd.waitForElementPresent("css=" + PageId.ERRORPAGESINGOUTBTNCSS);
 		webd.takeScreenShot();
+		webd.savePageToFile();
 
 		webd.click("css=" + PageId.ERRORPAGESINGOUTBTNCSS);
 		webd.getLogger().info("Sing out button is clicked");
-		webd.takeScreenShot();
+		
 
 		//initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		login(this.getClass().getName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName(), "welcome");
