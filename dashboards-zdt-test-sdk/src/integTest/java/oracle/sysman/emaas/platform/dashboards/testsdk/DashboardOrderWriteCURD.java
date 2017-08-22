@@ -10,6 +10,7 @@
 
 package oracle.sysman.emaas.platform.dashboards.testsdk;
 
+import oracle.sysman.emaas.platform.dashboards.testsdk.util.CommonTest;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
