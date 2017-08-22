@@ -417,6 +417,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             var confirmMessageIcon = "/emsaasui/uifwk/@version@/images/widgets/stat_confirm_16.png";
             var infoMessageIcon = "/emsaasui/uifwk/@version@/images/widgets/stat_info_16.png";
             var messageIconSprite = "/emsaasui/uifwk/@version@/images/uifwkSprite.png";
+            var imgBackground = "/emsaasui/uifwk/@version@/images/imgbackground.png";
             var hiddenMessages = [];
 
             self.navLinksNeedRefresh = ko.observable(false);
@@ -552,7 +553,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.sessionTimeoutMsg = nls.BRANDING_BAR_SESSION_TIMEOUT_MSG;
             self.sessionTimeoutBtnOK = nls.BRANDING_BAR_SESSION_TIMEOUT_DIALOG_BTN_OK;
             self.sessionTimeoutWarnDialogId = 'sessionTimeoutWarnDialog';
-            self.sessionTimeoutWarnCssStyle = "background:url('" + messageIconSprite + "') no-repeat 0px -46px;height:16px; width:16px; display: inline-block;";
+            self.sessionTimeoutWarnIcon = warnMessageIcon;
             self.renderSessionTimeoutDialog = ko.observable(false);
 
             //Fetch and set sso logout url and session expiry time
@@ -810,7 +811,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         $('#uifwkLayoutHbgmenuPlaceHolder').replaceWith(hamburgerDiv);
                     }
                     else {
-                       $('#offcanvasInnerContainer').append(hamburgerDiv);
+                       $('#offcanvasInnerContainer').append(hamburgerDiv); 
                     }
                     ko.applyBindings(self, hamburgerDiv[0]);
                 }
@@ -828,13 +829,13 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     $(window).trigger('resize');
                 }
             }
-
+            
             function triggerHamburgerMenuToggleEvent(toggleType) {
                 var message = {'tag': 'EMAAS_OMC_GLOBAL_MENU_TOGGLE_STATUS'};
                 message.toggleType = toggleType;
                 window.postMessage(message, window.location.href);
             }
-
+            
             self.hamburgerMenuEnabled = omcHamburgerMenuOptIn ? true : false;
             self.renderHamburgerMenu = omcHamburgerMenuOptIn && (!window._uifwk || !window._uifwk.hideHamburgerMenuOnPage) ? true : false;
             self.isHamburgerMenuRegistered = ko.observable(false);
@@ -863,11 +864,11 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 
                 function resetCurrentHamburgerMenu() {
                     //Show composite menu if it's called before hamburger menu finished loading
-                    if (window._uifwk && window._uifwk.compositeMenuName && window._uifwk.compositeMenuJson
+                    if (window._uifwk && window._uifwk.compositeMenuName && window._uifwk.compositeMenuJson 
                             && window._uifwk.stayInComposite && !window._uifwk.isCompositeMenuShown) {
                         menuUtil.showCompositeObjectMenu(window._uifwk.compositeMenuParentId,
-                                                        window._uifwk.compositeMenuName,
-                                                        window._uifwk.compositeMenuJson,
+                                                        window._uifwk.compositeMenuName, 
+                                                        window._uifwk.compositeMenuJson, 
                                                         window._uifwk.compositeMenuCollapseCallback);
                     }
                     //Set current menu item if specified by API call
@@ -882,7 +883,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         }
                     }
                 }
-
+                
                 (function() {
                     if (!window._uifwk) {
                         window._uifwk = {};
@@ -910,7 +911,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     window.onafterprint = afterPrint;
 
                 }());
-
+                
                 function setPinnedHamburgerMenuStyles() {
                     $("#omcHamburgerMenu").removeClass('oj-offcanvas-start');
                     $("#omcHamburgerMenu").removeClass('oj-offcanvas-open');
@@ -921,17 +922,17 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     $("#offcanvasInnerContainer").addClass('oj-flex');
                     $("#offcanvasInnerContainer").addClass('oj-flex-items-pad');
                 }
-
+                
                 function setOverlayHamburgerMenuStyles() {
                     $("#omcHamburgerMenu").css('display', '');
                     $("#omcHamburgerMenu").addClass('oj-offcanvas-start');
                     $("#omcHamburgerMenu").removeClass('oj-flex-item');
-                    $("#uifwkLayoutMainContainer").removeClass('oj-flex-item');
+                    $("#uifwkLayoutMainContainer").removeClass('oj-flex-item'); 
                     $("#uifwkLayoutMainContainer").addClass('oj-web-applayout-page');
                     $("#offcanvasInnerContainer").removeClass('oj-flex');
                     $("#offcanvasInnerContainer").removeClass('oj-flex-items-pad');
                 }
-
+                
                 self.xlargeScreen = oj.ResponsiveKnockoutUtils.createMediaQueryObservable('(min-width: 1440px)');
 
                 self.xlargeScreen.subscribe(function(isXlarge){
@@ -1010,7 +1011,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         }
                     }
                 });
-
+                
                 self.toggleHamburgerMenu = function() {
                     if (avoidPageResizeOptIn) {
                         if (self.xlargeScreen()) {
@@ -1082,7 +1083,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                             triggerDashboardResizeEvent('Hamburger menu closed.');
                         });
                     }
-
+                    
                     $(window).resize(function() {
                         if (window._uifwk.isUnderPrint) {
                             window._uifwk.resizeTriggeredByPrint = true;
@@ -1101,7 +1102,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                             menuUtil.resizeHamburgerMenuLayout();
                         }
                     });
-
+                    
                     if (!avoidPageResizeOptIn) {
                         $("#omcHamburgerMenu").addClass('oj-offcanvas-start');
                         $("#omcHamburgerMenu").removeClass('oj-flex-item');
@@ -1136,7 +1137,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         }
                     }
 
-
+                    
                     //Show composite menu if it's called before hamburger menu finished loading
                     if (window._uifwk && window._uifwk.compositeMenuName && window._uifwk.compositeMenuJson) {
                         menuUtil.showCompositeObjectMenu(window._uifwk.compositeMenuParentId,
@@ -1339,21 +1340,22 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     message.summary = data.summary;
                     message.detail = data.detail;
                     message.category = data.category;
+                    message.icon = imgBackground;
                     if (data.type && data.type.toUpperCase() === 'ERROR') {
                         message.iconAltText = self.altTextError;
-                        message.imgCssStyle = "background:url('" + messageIconSprite + "') no-repeat 0px -78px;height:16px; width:16px; display: inline-block;";
+                        message.imgCssStyle = "background:url('" + messageIconSprite + "') no-repeat 0px -78px;height:16px;";
                     }
                     else if (data.type && data.type.toUpperCase() === 'WARN') {
                         message.iconAltText = self.altTextWarn;
-                        message.imgCssStyle = "background:url('" + messageIconSprite + "') no-repeat 0px -46px;height:16px; width:16px; display: inline-block;";
+                        message.imgCssStyle = "background:url('" + messageIconSprite + "') no-repeat 0px -46px;height:16px;";
                     }
                     else if (data.type && data.type.toUpperCase() === 'CONFIRM') {
                         message.iconAltText = self.altTextConfirm;
-                        message.imgCssStyle = "background:url('" + messageIconSprite + "') no-repeat 0px -30px; height:16px; width:16px; display: inline-block;";
+                        message.imgCssStyle = "background:url('" + messageIconSprite + "') no-repeat 0px -30px; height:16px;";
                     }
                     else if (data.type && data.type.toUpperCase() === 'INFO') {
                         message.iconAltText = self.altTextInfo;
-                        message.imgCssStyle = "background:url('" + messageIconSprite + "') no-repeat 0px -62px;height:16px; width:16px; display: inline-block;";
+                        message.imgCssStyle = "background:url('" + messageIconSprite + "') no-repeat 0px -62px;height:16px;";
                     }
 
                     if (message.category === catPlannedDowntime) {
