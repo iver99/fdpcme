@@ -54,6 +54,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 	
 	private final String customWidgetName = "Execution Details";
 	private final String OOBName = "Middleware Operations";
+	private final String OOBDesc = "Displays the current health of your Oracle middleware ecosystem";
 
 	@BeforeClass
 	public void createTestDashboard()
@@ -154,14 +155,15 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		webd.getLogger().info("Get narrower widgets");
 		for (int i = 1; i <= 4; i++) {
 			DashboardBuilderUtil.resizeWidget(webd, widgetName, DashboardBuilderUtil.TILE_NARROWER);
-			webd.takeScreenShot();
+
+
 		}
 		webd.getLogger().info("Finished to get narrower widgets");
 
 		webd.getLogger().info("Get wider widgets");
 		for (int i = 1; i <= 10; i++) {
 			DashboardBuilderUtil.resizeWidget(webd, widgetName, DashboardBuilderUtil.TILE_WIDER);
-			webd.takeScreenShot();
+
 		}
 		webd.getLogger().info("Finished to get wider widgets");
 
@@ -341,6 +343,55 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		}
 		DashboardHomeUtil.deleteDashboard(webd, dbName_favorite, DashboardHomeUtil.DASHBOARDS_GRID_VIEW);
 		webd.getLogger().info("the dashboard has been deleted");
+	}
+
+	@Test (alwaysRun = true)
+	public void testFavorite_OOB()
+	{
+		//initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test in testFavorite_OOB");
+
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//open an OOB dashboard
+		webd.getLogger().info("Open an OOB dashboard");
+		DashboardHomeUtil.selectDashboard(webd, OOBName);
+
+		//set the OOB as my favorite
+		webd.getLogger().info("Set the OOB dashboard as My Favorite");
+		Assert.assertTrue(DashboardBuilderUtil.favoriteOption(webd),"Fail to set the OOB as My Favorite");
+
+		//verify the dashboard is favorite
+		webd.getLogger().info("Visit my favorite page");
+		BrandingBarUtil.visitMyFavorites(webd);
+
+		webd.getLogger().info("Verfiy the favortie checkbox is checked");
+		Assert.assertTrue(DashboardHomeUtil.isFilterOptionSelected(webd, "favorites"), "My Favorites option is NOT checked");
+
+		webd.getLogger().info("Verfiy the dashboard is favorite");
+		//DashboardHomeUtil.search(webd, dbName_favorite);
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, OOBName), "Can not find the dashboard");
+
+		webd.getLogger().info("Open the dashboard");
+		DashboardHomeUtil.selectDashboard(webd, OOBName);
+		webd.getLogger().info("Verify the dashboard in builder page");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, OOBName, OOBDesc, true), "Verify OOB dashboard failed!");
+
+		//set it to not favorite
+		webd.getLogger().info("set the dashboard to not favorite");
+		Assert.assertFalse(DashboardBuilderUtil.favoriteOption(webd), "Set to not my favorite dashboard failed!");
+
+		//verify the dashboard is not favoite
+		webd.getLogger().info("visit my favorite page");
+		BrandingBarUtil.visitMyFavorites(webd);
+		webd.getLogger().info("Verfiy the favortie checkbox is checked");
+		Assert.assertTrue(DashboardHomeUtil.isFilterOptionSelected(webd, "favorites"), "My Favorites option is NOT checked");
+
+		webd.getLogger().info("Verfiy the dashboard is not favorite");
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(webd, OOBName),"The dashboard is still my favorite dashboard");
 	}
 
 	@Test
