@@ -18,7 +18,6 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 ],
     function (ko, $, dfumodel, msgUtilModel, contextModel, oj, nls, zdtUtilModel, menuModel, sessionCacheModel) {
         function BrandingBarViewModel(params) {
-console.log("+++++++++++++++++++++++++++++++++++++++ in brandingbar-impl");
             var self = this;
             var msgUtil = new msgUtilModel();
             var cxtUtil = new contextModel();
@@ -1115,7 +1114,6 @@ console.log("+++++++++++++++++++++++++++++++++++++++ in brandingbar-impl");
 
             //Add listener to receive messages
             window.addEventListener("message", receiveMessage, false);
-console.log("+++++++++++++++++++++++++++++++++++++++ receiveMessage Event registered");
 
             //Expand all messages
             self.expandAllMessages = function (data, event) {
@@ -1179,7 +1177,6 @@ console.log("+++++++++++++++++++++++++++++++++++++++ receiveMessage Event regist
 
             function receiveMessage(event)
             {
-console.log("+++++++++++++++++++++++++++++++++++++++ receiveMessage:"+JSON.stringify(event.data));
                 if (event.origin !== window.location.protocol + '//' + window.location.host) {
                     return;
                 }
@@ -1259,7 +1256,6 @@ console.log("+++++++++++++++++++++++++++++++++++++++ receiveMessage:"+JSON.strin
             }
 
             function showMessage(data) {
-console.log("+++++++++++++++++++++++++++++++++++++++ brandingbar-impl: showMessage:"+JSON.stringify(data));
                 if (data) {
                     var message = {};
                     self.hasMessages(true);
@@ -1346,7 +1342,6 @@ console.log("+++++++++++++++++++++++++++++++++++++++ brandingbar-impl: showMessa
             }
 
             function removeMessage(data) {
-console.log("+++++++++++++++++++++++++++++++++++++++ brandingbar-impl: removeMessage:"+JSON.stringify(data));
                 if (data.category === catRetryInProgress) {
                     retryingMessageIds = removeItemByValue(retryingMessageIds, data.id);
                     if (retryingMessageIds.length === 0 && currentRetryingMsgId !== null) {

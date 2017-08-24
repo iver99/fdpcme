@@ -9,7 +9,7 @@ define('uifwk/@version@/js/util/zdt-util-impl', ['knockout',
     {
         function DashboardFrameworkZdtUtil() {
             var self = this;
-            var downtimeDetectUrl = "/sso.static/dashboards.omcstatustest";
+            var downtimeDetectUrl = "/sso.static/dashboards.omcstatus";
             var dfu = new dfuModel();
             var ajaxUtil = new ajaxUtilModel();
             var messageUtil = new msgUtilModel();
@@ -25,7 +25,7 @@ define('uifwk/@version@/js/util/zdt-util-impl', ['knockout',
             self.isUnderPlannedDowntime = function() {
                 var underPlannedDowntime = false;
                 if (dfu.isDevMode()){
-                    downtimeDetectUrl = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"omcstatustest");
+                    downtimeDetectUrl = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"omcstatus");
                 }
                 ajaxUtil.ajaxWithRetry({
                     type: "POST",
@@ -37,8 +37,7 @@ define('uifwk/@version@/js/util/zdt-util-impl', ['knockout',
                     retryLimit: 0
                 })
                 .fail(function(jqXHR, textStatus, errorThrown) {
-                    //var apigwHeaders = ajaxUtil.getAPIGWHeaderValues(jqXHR, 'X-ORCL-OMC-APIGW-RETRYAFTER');
-var apigwHeaders = {'retry-after': "60", 'num-retry': "3", 'msg': "Planned downtime"};
+                    var apigwHeaders = ajaxUtil.getAPIGWHeaderValues(jqXHR, 'X-ORCL-OMC-APIGW-RETRYAFTER');
                     if (jqXHR.status === 503 && apigwHeaders && apigwHeaders['msg'].toLowerCase() === 'planned downtime') {
                         underPlannedDowntime = true;
                     }
@@ -80,7 +79,7 @@ var apigwHeaders = {'retry-after': "60", 'num-retry': "3", 'msg': "Planned downt
                         }
 
                         if (dfu.isDevMode()){
-                            downtimeDetectUrl = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"omcstatustest");
+                            downtimeDetectUrl = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"omcstatus");
                         }
                         ajaxUtil.ajaxWithRetry({
                             type: "POST",
@@ -106,8 +105,7 @@ var apigwHeaders = {'retry-after': "60", 'num-retry': "3", 'msg': "Planned downt
                                 }
                                 return;
                             }
-                            //var apigwHeaders = ajaxUtil.getAPIGWHeaderValues(jqXHR, 'X-ORCL-OMC-APIGW-RETRYAFTER');
-var apigwHeaders = {'retry-after': "60", 'num-retry': "3", 'msg': "Planned downtime"};
+                            var apigwHeaders = ajaxUtil.getAPIGWHeaderValues(jqXHR, 'X-ORCL-OMC-APIGW-RETRYAFTER');
                             if (jqXHR.status === 503 && apigwHeaders && apigwHeaders['msg'].toLowerCase() === 'planned downtime') {
                                 window._uifwk.cachedData.isPlannedDowntime(true);
                                 window._uifwk.cachedData.isFetchingOMCStatus = false;

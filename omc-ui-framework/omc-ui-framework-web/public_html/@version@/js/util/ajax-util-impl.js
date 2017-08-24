@@ -135,15 +135,11 @@ define([
 
                 (function ajaxCall (retries) {
                     jqXhrObj = $.ajax(retryOptions);
-jqXhrObj.url.indexOf('omcstatustest')>-1 && console.log("+++++++++++++++++++++++++++++++++++++++ OMCSTATUS sending");
                     jqXhrObj.done(function (data, textStatus, jqXHR) {
 //                        removeMessage(messageId);
                         ajaxCallDfd.resolve(data, textStatus, jqXHR);
                     })
                     .fail(function (jqXHR, textStatus, errorThrown) {
-                        if(jqXHR.url.indexOf('omcstatustest')){
-                            jqXHR.status = 503;
-                        }
                         //Do retry
                         if (jqXHR.status === 408 || jqXHR.status === 503 || (jqXHR.status === 0 && textStatus !== 'abort')) {
                             if (!firstCalled) {
@@ -153,8 +149,7 @@ jqXhrObj.url.indexOf('omcstatustest')>-1 && console.log("+++++++++++++++++++++++
                                 //returning the error to the user. In the following example GUI shall retry 3 times after every 2 secs 
                                 //before returning the error message to the user
                                 //X-ORCL-OMC-APIGW-RETRYAFTER : retry-after=2, num-retry=3, msg="tenant locked"
-                                //var apigwHeaders = self.getAPIGWHeaderValues(jqXHR, 'X-ORCL-OMC-APIGW-RETRYAFTER');
-                                var apigwHeaders = {'retry-after': "60", 'num-retry': "3", 'msg': "Planned downtime"};
+                                var apigwHeaders = self.getAPIGWHeaderValues(jqXHR, 'X-ORCL-OMC-APIGW-RETRYAFTER');
                                 if (jqXHR.status === 503 && apigwHeaders && apigwHeaders['msg'].toLowerCase() === 'tenant locked') {
                                     if (apigwHeaders['retry-after'] && apigwHeaders['num-retry'] && retries!== 0) {
                                         retries = apigwHeaders['num-retry'];
@@ -181,7 +176,6 @@ jqXhrObj.url.indexOf('omcstatustest')>-1 && console.log("+++++++++++++++++++++++
                                         detail: detailMsg};
 
                                     //Always show retry message summary and detail on UI
-console.log("+++++++++++++++++++++++++++++++++++++++ messageUtil.showMessage(messageObj);");
                                     if (window._uiwfk && window._uiwfk.brandingbar_initialized) {
                                         messageUtil.showMessage(messageObj);
                                     }

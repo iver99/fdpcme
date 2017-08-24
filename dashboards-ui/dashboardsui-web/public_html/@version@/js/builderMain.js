@@ -432,10 +432,7 @@ require(['knockout',
 
                                 var headerViewModel = new DashboardsetHeaderViewModel();
                                 ko.applyBindings({}, $('#loading')[0]);  //to make text binding on loading work
-console.time('#headerWrapper');
                                 ko.applyBindings(headerViewModel, $('#headerWrapper')[0]);
-console.timeEnd('#headerWrapper');
-console.time('from #headerWrapper to new Builder.DashboardsetToolBarModel');
 
                                 //new Builder.DashboardDataSource().loadDashboardData(dsbId, function (dashboard) {
                                     var targetSelectorNeeded;
@@ -451,7 +448,6 @@ console.time('from #headerWrapper to new Builder.DashboardsetToolBarModel');
                                         var dashboardTitleModel = new DashboardTitleModel(dashboard);
                                         ko.applyBindings(dashboardTitleModel, $("title")[0]);
                                         var dashboardsetToolBarModel = new Builder.DashboardsetToolBarModel(dashboard);
-console.timeEnd('from #headerWrapper to new Builder.DashboardsetToolBarModel');
                                         var dashboardsetPanelsModel = new Builder.DashboardsetPanelsModel(dashboardsetToolBarModel);
                                         ko.applyBindings(dashboardsetToolBarModel, document.getElementById('dbd-set-tabs'));
                                         dashboardsetToolBarModel.initializeDashboardset();
