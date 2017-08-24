@@ -257,20 +257,38 @@ task EntityTest(type:EMTest,dependsOn: DEVUiFWKTest){
 
 }
 
-File f = new File(project.properties['emdi.GIT_VIEW_ROOT']+"/dashboards-ui/dashboardsui-web/build/public_html/test/qunit.html")
-task QunitTest(type:EMTest, dependsOn: EntityTest){
+task cleanBuild(type: Exec, dependsOn:EntityTest) {
+	def gradleExec = project.gradle.gradleHomeDir.absolutePath + '/bin/gradle'
+	standardOutput = new ByteArrayOutputStream()
+	errorOutput = standardOutput
+	ignoreExitValue = true
+	workingDir file(project.properties['emdi.GIT_VIEW_ROOT'])
+
+	executable = gradleExec
+	args 'clean', 'build'
+
+	doLast {
+		if (execResult.exitValue != 0) {
+			println(standardOutput.toString())
+			throw new GradleException("exec failed; see output above")
+		}
+	}
+}
+
+File f = new File(project.properties['emdi.GIT_VIEW_ROOT']+"/build/dashboards-ui/public_html/test/qunit.html")
+task QunitTest(type:EMTest, dependsOn: cleanBuild){
 	include "oracle/sysman/emaas/platform/dashboards/test/ui/DashboardQunitTestDriver.class"
 	systemProperty 'qunitTestUrl', "file://" + f.absolutePath
 	useWebdriver = true
 }
 
-
-File uifwkF = new File(project.properties['emdi.GIT_VIEW_ROOT']+"/omc-ui-framework/omc-ui-framework-web/build/public_html/test/qunit.html")
-task UifwkQunitTest(type:EMTest, dependsOn: EntityTest){
+File uifwkF = new File(project.properties['emdi.GIT_VIEW_ROOT']+"/build/omc-ui-framwork/public_html/test/qunit.html")
+task UifwkQunitTest(type:EMTest, dependsOn: cleanBuild){
 	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/UifwkQunitTestDriver.class"
 	systemProperty 'uifwkQunitTestUrl', "file://" + uifwkF.absolutePath
 	useWebdriver = true
 }
+
 task emcpdf_l0_test (dependsOn: [QunitTest,UifwkQunitTest])
 
 

@@ -27,7 +27,8 @@ def File sourceFontDestDir = new File(sourceWebappDir, 'libs/@version@/css/font-
 def stagingDir = buildDir.absolutePath+'/staging/public_html'
 def compiledDir = buildDir.absolutePath+'/public_html'
 def webRootSourceDir = 'public_html'
-
+def projectAbsolutePath = project.projectDir.absolutePath.toString();
+def stagingDirForQunit = projectAbsolutePath.substring(0, projectAbsolutePath.indexOf("omc-ui-framework"))+'/build/omc-ui-framwork/public_html';
 //def chefDir = project.rootDir.absolutePath +'/dashboards-chef/cookbook-emcs-omc-ui-framework/recipes'
 
 sourceCompatibility = 1.7
@@ -57,7 +58,8 @@ dependencies {
 
 task cleanJs(type:Delete) {
 	delete fileTree(dir: stagingDir)
-	delete fileTree(dir: compiledDir)	
+	delete fileTree(dir: compiledDir)
+	delete fileTree(dir:stagingDirForQunit)
 }
 
 //unpack Qunit
@@ -598,7 +600,12 @@ task copyStagedJs(type:Copy, dependsOn:[stageJs]) {
     }
     into compiledDir
 }
-
+task copyJsForQUnitTest(type:Copy, dependsOn:[copyStagedJs]){
+	from (stagingDir) {
+		include "**/*"
+	}
+	into stagingDirForQunit
+}
 task prepareRequireJsConfig(type:Copy) {
     if(!project.hasProperty("devMode")){
         from ('.') {
@@ -616,7 +623,7 @@ task prepareRequireJsConfig(type:Copy) {
     }
 }
 
-task individualMinify(dependsOn: [copyStagedJs, jsCodeCoverage, tasks.matching { Task task -> task.name.startsWith("dominify")}]){}
+task individualMinify(dependsOn: [copyStagedJs, copyJsForQUnitTest, jsCodeCoverage, tasks.matching { Task task -> task.name.startsWith("dominify")}]){}
 
 task combineAppJs(dependsOn: [individualMinify,prepareRequireJsConfig], type: com.eriwen.gradle.js.tasks.RequireJsTask) {
     source = javascript.source.staticjs.js.files   //point to your source files
