@@ -36,6 +36,7 @@ define(['knockout', 'jquery'],
              * @returns {String} message id
              */
             self.showMessage = function(message) {
+console.log("+++++++++++++++++++++++++++++++++++++++ showMessage:"+JSON.stringify(message));
                 var messageId = null;
                 if (message && typeof(message) === "object") {
                     message.tag = "EMAAS_SHOW_PAGE_LEVEL_MESSAGE";
