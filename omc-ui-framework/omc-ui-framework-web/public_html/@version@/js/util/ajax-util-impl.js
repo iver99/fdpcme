@@ -182,7 +182,21 @@ jqXhrObj.url.indexOf('omcstatustest')>-1 && console.log("+++++++++++++++++++++++
 
                                     //Always show retry message summary and detail on UI
 console.log("+++++++++++++++++++++++++++++++++++++++ messageUtil.showMessage(messageObj);");
-                                    messageUtil.showMessage(messageObj);
+                                    if (window._uiwfk && window._uiwfk.brandingbar_initialized) {
+                                        messageUtil.showMessage(messageObj);
+                                    }
+                                    else {
+                                        function onBrandingbarInitialized(event) {
+                                            if (event.origin !== window.location.protocol + '//' + window.location.host) {
+                                                return;
+                                            }
+                                            var data = event.data;
+                                            if (data && data.tag && data.tag === 'EMAAS_BRANDINGBAR_INSTANTIATED') {
+                                                messageUtil.showMessage(messageObj);
+                                            }
+                                        }
+                                        window.addEventListener("message", onBrandingbarInitialized, false);
+                                    }
                                 }
                                 firstCalled = true;
                             }

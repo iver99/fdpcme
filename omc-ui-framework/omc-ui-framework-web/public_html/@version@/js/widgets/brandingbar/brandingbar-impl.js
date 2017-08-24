@@ -1834,6 +1834,10 @@ console.log("+++++++++++++++++++++++++++++++++++++++ brandingbar-impl: removeMes
             //
             // send message when brandingbar is instantiated
             //
+            if(!window._uiwfk){
+                window._uiwfk = {};
+            }
+            window._uiwfk.brandingbar_initialized = true;
             var message = {'tag': 'EMAAS_BRANDINGBAR_INSTANTIATED'};
             window.postMessage(message, window.location.href);
 
