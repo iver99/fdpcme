@@ -15,6 +15,7 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
+import oracle.sysman.emaas.platform.dashboards.core.exception.security.UpdateSystemDashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.util.*;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.exception.ExecutionException;
@@ -1225,6 +1226,7 @@ public class DashboardManager
 				// initialize id
 				dbd.setDashboardId(IdGenerator.getDashboardId(ZDTContext.getRequestId()));
 			}
+
 			//check dashboard name
 			if (dbd.getName() == null || "".equals(dbd.getName().trim()) || dbd.getName().length() > 64) {
 				throw new CommonFunctionalException(
@@ -1395,8 +1397,7 @@ public class DashboardManager
 			}
 
 			if (DataFormatUtils.integer2Boolean(ed.getIsSystem())) {
-				throw new CommonSecurityException(
-						MessageUtils.getDefaultBundleString(CommonSecurityException.NOT_SUPPORT_UPDATE_SYSTEM_DASHBOARD_ERROR));
+				throw new UpdateSystemDashboardException();
 			}
 			if (!currentUser.equals(ed.getOwner())) {
 				throw new CommonSecurityException(

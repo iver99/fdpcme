@@ -163,14 +163,15 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		webd.getLogger().info("Get narrower widgets");
 		for (int i = 1; i <= 4; i++) {
 			DashboardBuilderUtil.resizeWidget(webd, widgetName, DashboardBuilderUtil.TILE_NARROWER);
-			webd.takeScreenShot();
+
+
 		}
 		webd.getLogger().info("Finished to get narrower widgets");
 
 		webd.getLogger().info("Get wider widgets");
 		for (int i = 1; i <= 10; i++) {
 			DashboardBuilderUtil.resizeWidget(webd, widgetName, DashboardBuilderUtil.TILE_WIDER);
-			webd.takeScreenShot();
+
 		}
 		webd.getLogger().info("Finished to get wider widgets");
 

@@ -40,7 +40,7 @@ public class DashboardsComparatorCORSFilterTest {
             {
                 httpServletRequest.getHeader("Origin");
                 result = "origin";
-                httpServletRequest.getHeader(OAM_REMOTE_USER_HEADER);
+                httpServletRequest.getHeader("X-USER-IDENTITY-DOMAIN-NAME");
                 result = "remote_user.user";
             }
         };

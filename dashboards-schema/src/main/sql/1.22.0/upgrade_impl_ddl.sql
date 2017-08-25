@@ -15,6 +15,9 @@ Rem    NOTES
 Rem      None
 Rem
 
+SET FEEDBACK ON
+SET SERVEROUTPUT ON
+
 @&EMSAAS_SQL_ROOT/1.22.0/emaas_dashboard_create_zdt_compare_table.sql
 @&EMSAAS_SQL_ROOT/1.22.0/emaas_dashboard_create_zdt_sync_table.sql
 
