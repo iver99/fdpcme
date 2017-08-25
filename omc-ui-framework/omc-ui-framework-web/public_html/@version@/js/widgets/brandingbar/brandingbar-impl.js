@@ -25,16 +25,16 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             var menuStatusSessionCacheDataKey = 'hamburger_menu_is_open';
             var menuStatusSessionCache = new sessionCacheModel(menuStatusSessionCacheName, 1);
             if (window.performance) {
-                //We should only clear the cache once during a page refresh, otherwise
-                //it may cause cached data lost though service menus already fetched
-                if (window.performance.navigation.type === 1) {
-                    menuStatusSessionCache.clearCache();
+                    //We should only clear the cache once during a page refresh, otherwise
+                    //it may cause cached data lost though service menus already fetched
+                    if (window.performance.navigation.type === 1) {
+                        menuStatusSessionCache.clearCache();
+                    }
                 }
-            }
-            function storeHamburgerMenuStatus(status) {
+            function storeHamburgerMenuStatus(status){
                 menuStatusSessionCache && menuStatusSessionCache.updateCacheData(menuStatusSessionCacheName, menuStatusSessionCacheDataKey, status);
             }
-            function retrieveHmaburgerMenuStatus() {
+            function retrieveHmaburgerMenuStatus(){
                 return menuStatusSessionCache && menuStatusSessionCache.retrieveDataFromCache(menuStatusSessionCacheName) && menuStatusSessionCache.retrieveDataFromCache(menuStatusSessionCacheName)[menuStatusSessionCacheDataKey];
             }
             var NO_HIGHLIGHT = 'NO_HIGHLIGHT';
@@ -229,7 +229,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                             self.highlightedEntities([NO_HIGHLIGHT]);
                         }
                         self.topologyInitialized = true;
-//                        $(".ude-topology-in-brandingbar .oj-diagram").ojDiagram("refresh");
+                        //$(".ude-topology-in-brandingbar .oj-diagram").ojDiagram("refresh");
                     }
                     //set brandingbar_cache information for Topology expanded state
                     var brandingBarCache = {isTopologyDisplayed: self.isTopologyDisplayed()};
@@ -263,7 +263,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                             callback();
                         }
                     });
-                } else if ($.isFunction(callback)) {
+                }
+                else if ($.isFunction(callback)) {
                     callback();
                 }
             }
@@ -519,7 +520,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                             if (urlNotificationShow) {
                                 self.notificationDisabled(false);
                                 self.notificationPageUrl = urlNotificationShow;
-                            } else {
+                            }
+                            else {
                                 oj.Logger.warn("The notifications page URL (relNotificationShow) provided by current application is invalid: " + self.relNotificationShow, false);
                                 self.notificationDisabled(true);
                             }
@@ -642,8 +644,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 }
             };
 
-            self.emaasAppheaderGlobalNavMenuBeforeOpen = function () {
-                if (!self.renderEmaasAppheaderGlobalNavMenu()) {
+            self.emaasAppheaderGlobalNavMenuBeforeOpen = function(){
+                if(!self.renderEmaasAppheaderGlobalNavMenu()){
                     self.renderEmaasAppheaderGlobalNavMenu(true);
                     $('#emaasAppheaderGlobalNavMenuId').ojMenu("refresh");
                     self.aboutBoxImmediateLoading(true);
@@ -724,7 +726,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 $("#links_menu").slideToggle('normal');
                 item.stopImmediatePropagation();
             };
-
+            
             var avoidPageResizeOptIn = $('#uifwkLayoutHbgmenuPlaceHolder').length > 0 ? true : false;
             function injectHamburgerMenuComponent() {
                 //Check if hamburger menu has been created or not, if not create it
@@ -736,30 +738,33 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                             hamburgerDiv.css('display', 'none');
                         }
                         $('#uifwkLayoutHbgmenuPlaceHolder').replaceWith(hamburgerDiv);
-                    } else {
-                        $('#offcanvasInnerContainer').append(hamburgerDiv);
+                    }
+                    else {
+                       $('#offcanvasInnerContainer').append(hamburgerDiv); 
                     }
                     ko.applyBindings(self, hamburgerDiv[0]);
                 }
             }
-
+            
             function triggerDashboardResizeEvent(message) {
                 if (window.selectedDashboardInst && window.selectedDashboardInst() && window.selectedDashboardInst().$b) {
                     window.selectedDashboardInst().$b.triggerBuilderResizeEvent(message);
-                } else if ($(".right-panel-toggler")[0] && ko.dataFor($(".right-panel-toggler")[0])) {
+                }
+                else if ($(".right-panel-toggler")[0] && ko.dataFor($(".right-panel-toggler")[0])) {
                     var $b = ko.dataFor($(".right-panel-toggler")[0]).$b;
                     $b && $b.triggerBuilderResizeEvent(message);
-                } else {
+                }
+                else {
                     $(window).trigger('resize');
                 }
             }
-
+            
             function triggerHamburgerMenuToggleEvent(toggleType) {
                 var message = {'tag': 'EMAAS_OMC_GLOBAL_MENU_TOGGLE_STATUS'};
                 message.toggleType = toggleType;
                 window.postMessage(message, window.location.href);
             }
-
+            
             self.hamburgerMenuEnabled = omcHamburgerMenuOptIn ? true : false;
             self.renderHamburgerMenu = omcHamburgerMenuOptIn && (!window._uifwk || !window._uifwk.hideHamburgerMenuOnPage) ? true : false;
             self.isHamburgerMenuRegistered = ko.observable(false);
@@ -767,8 +772,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             if (self.renderHamburgerMenu) {
                 self.menuParams = {'appId': self.appId, 'userName': self.userName, 'tenantName': self.tenantName, 'omcCurrentMenuId': params.omcCurrentMenuId};
                 if (!self.isHamburgerMenuRegistered()) {
-                    require(['ojs/ojnavigationlist', 'ojs/ojjsontreedatasource'], function () {
-                        //Register a Knockout component for hamburger menu
+                    require(['ojs/ojnavigationlist','ojs/ojjsontreedatasource'], function () {
+                    //Register a Knockout component for hamburger menu
                         var hamburgerVMPath = "uifwk/js/widgets/hamburger-menu/js/hamburger-menu";
                         var hamburgerTemplatePath = "uifwk/js/widgets/hamburger-menu/html/hamburger-menu.html";
                         if (!ko.components.isRegistered('omc-uifwk-hamburger-menu')) {
@@ -777,27 +782,29 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                                 template: {require: 'text!' + hamburgerTemplatePath}
                             });
                             self.isHamburgerMenuRegistered(true);
-                        }
+                        }     
                         injectHamburgerMenuComponent();
                     });
-                } else {
+                }
+                else {
                     self.isHamburgerMenuRegistered(true);
                     injectHamburgerMenuComponent();
                 }
-
+                
                 function resetCurrentHamburgerMenu() {
                     //Show composite menu if it's called before hamburger menu finished loading
-                    if (window._uifwk && window._uifwk.compositeMenuName && window._uifwk.compositeMenuJson
-                        && window._uifwk.stayInComposite && !window._uifwk.isCompositeMenuShown) {
+                    if (window._uifwk && window._uifwk.compositeMenuName && window._uifwk.compositeMenuJson 
+                            && window._uifwk.stayInComposite && !window._uifwk.isCompositeMenuShown) {
                         menuUtil.showCompositeObjectMenu(window._uifwk.compositeMenuParentId,
-                            window._uifwk.compositeMenuName,
-                            window._uifwk.compositeMenuJson,
-                            window._uifwk.compositeMenuCollapseCallback);
+                                                        window._uifwk.compositeMenuName, 
+                                                        window._uifwk.compositeMenuJson, 
+                                                        window._uifwk.compositeMenuCollapseCallback);
                     }
                     //Set current menu item if specified by API call
                     if (window._uifwk && window._uifwk.currentOmcMenuItemId) {
                         menuUtil.setCurrentMenuItem(window._uifwk.currentOmcMenuItemId, window._uifwk.underOmcAdmin);
-                    } else {
+                    }
+                    else {
                         //Set current menu item if specified from branding bar params
                         var selectedMenuId = params.omcCurrentMenuId;
                         if (selectedMenuId) {
@@ -805,22 +812,22 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         }
                     }
                 }
-
-                (function () {
+                
+                (function() {
                     if (!window._uifwk) {
                         window._uifwk = {};
                     }
-                    var beforePrint = function () {
+                    var beforePrint = function() {
                         window._uifwk.isUnderPrint = true;
                     };
 
-                    var afterPrint = function () {
+                    var afterPrint = function() {
                         window._uifwk.isUnderPrint = false;
                     };
 
                     if (window.matchMedia) {
                         var mediaQueryList = window.matchMedia('print');
-                        mediaQueryList.addListener(function (mql) {
+                        mediaQueryList.addListener(function(mql) {
                             if (mql.matches) {
                                 beforePrint();
                             } else {
@@ -833,7 +840,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     window.onafterprint = afterPrint;
 
                 }());
-
+                
                 function setPinnedHamburgerMenuStyles() {
                     $("#omcHamburgerMenu").removeClass('oj-offcanvas-start');
                     $("#omcHamburgerMenu").removeClass('oj-offcanvas-open');
@@ -844,94 +851,97 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     $("#offcanvasInnerContainer").addClass('oj-flex');
                     $("#offcanvasInnerContainer").addClass('oj-flex-items-pad');
                 }
-
+                
                 function setOverlayHamburgerMenuStyles() {
                     $("#omcHamburgerMenu").css('display', '');
                     $("#omcHamburgerMenu").addClass('oj-offcanvas-start');
                     $("#omcHamburgerMenu").removeClass('oj-flex-item');
-                    $("#uifwkLayoutMainContainer").removeClass('oj-flex-item');
+                    $("#uifwkLayoutMainContainer").removeClass('oj-flex-item'); 
                     $("#uifwkLayoutMainContainer").addClass('oj-web-applayout-page');
                     $("#offcanvasInnerContainer").removeClass('oj-flex');
                     $("#offcanvasInnerContainer").removeClass('oj-flex-items-pad');
                 }
-
+                
                 self.xlargeScreen = oj.ResponsiveKnockoutUtils.createMediaQueryObservable('(min-width: 1440px)');
 
-                self.xlargeScreen.subscribe(function (isXlarge) {
+                self.xlargeScreen.subscribe(function(isXlarge){
                     if (window._uifwk && (window._uifwk.isUnderPrint || window._uifwk.resizeTriggeredByPrint)) {
                         return;
                     }
-                    if (!isXlarge) {
+                    if(!isXlarge){
                         if (avoidPageResizeOptIn) {
                             setOverlayHamburgerMenuStyles();
                             menuUtil.resizeHamburgerMenuLayout();
                             triggerDashboardResizeEvent('Hamburger menu closed.');
                             triggerHamburgerMenuToggleEvent('close');
-                        } else {
-                            if ($("#omcHamburgerMenu").hasClass("oj-offcanvas-open")) {
+                        }
+                        else {
+                            if($("#omcHamburgerMenu").hasClass("oj-offcanvas-open")){
                                 oj.OffcanvasUtils.close({
-                                    "edge": "start",
-                                    "displayMode": "push",
-                                    "selector": "#omcHamburgerMenu"
-                                });
+                                        "edge": "start",
+                                        "displayMode": "push",
+                                        "selector": "#omcHamburgerMenu"
+                                    });
                             }
                         }
 
-                    } else {
+                    }else{
                         if (avoidPageResizeOptIn) {
-                            if ($("#omcHamburgerMenu").hasClass("oj-offcanvas-open")) {
+                            if($("#omcHamburgerMenu").hasClass("oj-offcanvas-open")){
                                 oj.OffcanvasUtils.close({
-                                    "edge": "start",
-                                    "displayMode": "overlay",
-                                    "selector": "#omcHamburgerMenu"
-                                });
+                                        "edge": "start",
+                                        "displayMode": "overlay",
+                                        "selector": "#omcHamburgerMenu"
+                                    });
                             }
                             var menuInitialStatus = retrieveHmaburgerMenuStatus();
                             if (menuInitialStatus !== 'closed') {
                                 $("#omcHamburgerMenu").show();
                                 $("#uifwkLayoutMainContainer").width($(window).width() - 250);
-                            } else {
+                            }
+                            else {
                                 $("#omcHamburgerMenu").hide();
                                 $("#uifwkLayoutMainContainer").width($(window).width());
                             }
                             setPinnedHamburgerMenuStyles();
                             resetCurrentHamburgerMenu();
                             triggerHamburgerMenuToggleEvent('open');
-                        } else {
+                        }
+                        else {
                             $("#omcHamburgerMenu").addClass('oj-offcanvas-start');
                             var menuInitialStatus = retrieveHmaburgerMenuStatus();
-                            if (!$("#omcHamburgerMenu").hasClass("oj-offcanvas-open") && menuInitialStatus !== 'closed') {
+                            if(!$("#omcHamburgerMenu").hasClass("oj-offcanvas-open") && menuInitialStatus !== 'closed'){
                                 oj.OffcanvasUtils.toggle({
-                                    "edge": "start",
-                                    "displayMode": "push",
-                                    "selector": "#omcHamburgerMenu",
-                                    "autoDismiss": "none"
-                                });
+                                        "edge": "start",
+                                        "displayMode": "push",
+                                        "selector": "#omcHamburgerMenu",
+                                        "autoDismiss": "none"
+                                    });
                                 resetCurrentHamburgerMenu();
-                            } else if ($("#omcHamburgerMenu").hasClass("oj-offcanvas-overlay")) {
-                                oj.OffcanvasUtils.close({
-                                    "edge": "start",
-                                    "displayMode": "overlay",
-                                    "selector": "#omcHamburgerMenu",
-                                    "autoDismiss": "focusLoss"
-                                });
-                                if (menuInitialStatus !== 'closed') {
-                                    setTimeout(function () {
-                                        oj.OffcanvasUtils.open({
-                                            "edge": "start",
-                                            "displayMode": "push",
-                                            "selector": "#omcHamburgerMenu",
-                                            "autoDismiss": "none"
-                                        });
-                                        resetCurrentHamburgerMenu();
-                                    }, 500);
+                            }else if($("#omcHamburgerMenu").hasClass("oj-offcanvas-overlay")){
+                                    oj.OffcanvasUtils.close({
+                                        "edge": "start",
+                                        "displayMode": "overlay",
+                                        "selector": "#omcHamburgerMenu",
+                                        "autoDismiss": "focusLoss"
+                                    });
+                                if(menuInitialStatus !== 'closed'){
+                                    setTimeout(function(){
+                                            oj.OffcanvasUtils.open({
+                                                "edge": "start",
+                                                "displayMode": "push",
+                                                "selector": "#omcHamburgerMenu",
+                                                "autoDismiss": "none"
+                                            });
+                                            resetCurrentHamburgerMenu();
+                                    },500);
                                 }
                             }
                         }
                     }
                 });
-
-                self.toggleHamburgerMenu = function () {
+                
+                self.toggleHamburgerMenu = function() {
                     if (avoidPageResizeOptIn) {
                         if (self.xlargeScreen()) {
                             $("#omcHamburgerMenu").toggle();
@@ -941,40 +951,43 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                                 resetCurrentHamburgerMenu();
                                 triggerHamburgerMenuToggleEvent('open');
                                 triggerDashboardResizeEvent('Hamburger menu opened.');
-                            } else {
+                            }
+                            else {
                                 storeHamburgerMenuStatus("closed");
                                 $("#uifwkLayoutMainContainer").width($(window).width());
                                 triggerHamburgerMenuToggleEvent('close');
                                 triggerDashboardResizeEvent('Hamburger menu closed.');
                             }
-                        } else {
+                        }
+                        else {
                             oj.OffcanvasUtils.open({
                                 "edge": "start",
                                 "displayMode": "overlay",
-                                //                      "content": "#main-container",
+        //                      "content": "#main-container",
                                 "selector": "#omcHamburgerMenu",
                                 "autoDismiss": "focusLoss"
                             });
-                            if ($("#omcHamburgerMenu").hasClass("oj-offcanvas-open")) {
+                            if($("#omcHamburgerMenu").hasClass("oj-offcanvas-open")) {
                                 resetCurrentHamburgerMenu();
                             }
                         }
-                    } else {
-                        if (self.xlargeScreen()) {
-                            if ($("#omcHamburgerMenu").hasClass("oj-offcanvas-open")) {
+                    }
+                    else {
+                        if(self.xlargeScreen()){
+                            if($("#omcHamburgerMenu").hasClass("oj-offcanvas-open")){
                                 storeHamburgerMenuStatus("closed");
-                            } else {
+                            }else{
                                 storeHamburgerMenuStatus("opened");
                             }
                         }
                         oj.OffcanvasUtils.toggle({
                             "edge": "start",
                             "displayMode": self.xlargeScreen() ? "push" : "overlay",
-                            //                      "content": "#main-container",
+    //                      "content": "#main-container",
                             "selector": "#omcHamburgerMenu",
                             "autoDismiss": self.xlargeScreen() ? "none" : "focusLoss"
                         });
-                        if ($("#omcHamburgerMenu").hasClass("oj-offcanvas-open")) {
+                        if($("#omcHamburgerMenu").hasClass("oj-offcanvas-open")) {
                             resetCurrentHamburgerMenu();
                         }
                     }
@@ -985,94 +998,99 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     window._uifwk = {};
                 }
                 if (!window._uifwk.obbMenuLoadedListenerRegistered) {
-                    menuUtil.subscribeServiceMenuLoadedEvent(function () {
-                        $("#omcHamburgerMenuInnerComp").show();
-                        if (!avoidPageResizeOptIn) {
-                            $("#omcHamburgerMenu").on("ojopen", function (event, offcanvas) {
-                                if (offcanvas.displayMode === "push") {
-                                    $("#offcanvasInnerContainer").width(document.body.clientWidth - 250);
-                                    triggerDashboardResizeEvent('Hamburger menu opened.');
-                                }
-                            });
+                menuUtil.subscribeServiceMenuLoadedEvent(function(){
+                    $("#omcHamburgerMenuInnerComp").show();
+                    if (!avoidPageResizeOptIn) {
+                        $("#omcHamburgerMenu").on("ojopen", function(event, offcanvas) {
+                            if(offcanvas.displayMode === "push") {
+                                $("#offcanvasInnerContainer").width(document.body.clientWidth-250);
+                                triggerDashboardResizeEvent('Hamburger menu opened.');
+                            }});
 
-                            $("#omcHamburgerMenu").on("ojclose", function (event, offcanvas) {
-                                $("#offcanvasInnerContainer").width(document.body.clientWidth);
-                                triggerDashboardResizeEvent('Hamburger menu closed.');
-                            });
-                        }
-
-                        $(window).resize(function () {
-                            if (window._uifwk.isUnderPrint) {
-                                window._uifwk.resizeTriggeredByPrint = true;
-                            } else {
-                                window._uifwk.resizeTriggeredByPrint = false;
-                            }
-                            if (!avoidPageResizeOptIn) {
-                                if ($("#omcHamburgerMenu").hasClass("oj-offcanvas-open") && !$("#omcHamburgerMenu").hasClass("oj-offcanvas-overlay")) {
-                                    $("#offcanvasInnerContainer").width(document.body.clientWidth - 250);
-                                } else {
-                                    $("#offcanvasInnerContainer").width(document.body.clientWidth);
-                                }
-                            } else {
-                                menuUtil.resizeHamburgerMenuLayout();
-                            }
+                        $("#omcHamburgerMenu").on("ojclose", function(event, offcanvas) {
+                            $("#offcanvasInnerContainer").width(document.body.clientWidth);
+                            triggerDashboardResizeEvent('Hamburger menu closed.');
                         });
-
+                    }
+                    
+                    $(window).resize(function() {
+                        if (window._uifwk.isUnderPrint) {
+                            window._uifwk.resizeTriggeredByPrint = true;
+                        }
+                        else {
+                            window._uifwk.resizeTriggeredByPrint = false;
+                        }
                         if (!avoidPageResizeOptIn) {
-                            $("#omcHamburgerMenu").addClass('oj-offcanvas-start');
-                            $("#omcHamburgerMenu").removeClass('oj-flex-item');
-                            var menuInitialStatus = retrieveHmaburgerMenuStatus();
-                            if (self.xlargeScreen() && menuInitialStatus !== 'closed') {
-                                $((function () {
-                                    oj.OffcanvasUtils.open({
-                                        "edge": "start",
-                                        "displayMode": "push",
-                                        "selector": "#omcHamburgerMenu",
-                                        "autoDismiss": "none"
-                                    });
-                                    triggerDashboardResizeEvent('Hamburger menu opened.');
-                                    storeHamburgerMenuStatus("opened");
-                                })());
-                            }
-                        } else {
-                            if (!self.xlargeScreen()) {
-                                setOverlayHamburgerMenuStyles();
+                            if ($("#omcHamburgerMenu").hasClass("oj-offcanvas-open") && !$("#omcHamburgerMenu").hasClass("oj-offcanvas-overlay")) {
+                                $("#offcanvasInnerContainer").width(document.body.clientWidth - 250);
                             } else {
-                                var menuInitialStatus = retrieveHmaburgerMenuStatus();
-                                if (menuInitialStatus !== 'closed') {
-                                    $("#omcHamburgerMenu").show();
-                                } else {
-                                    $("#omcHamburgerMenu").hide();
-                                    triggerHamburgerMenuToggleEvent('close');
-                                }
-                                menuUtil.resizeHamburgerMenuLayout();
+                                $("#offcanvasInnerContainer").width(document.body.clientWidth);
                             }
                         }
-
-
-                        //Show composite menu if it's called before hamburger menu finished loading
-                        if (window._uifwk && window._uifwk.compositeMenuName && window._uifwk.compositeMenuJson) {
-                            menuUtil.showCompositeObjectMenu(window._uifwk.compositeMenuParentId,
-                                window._uifwk.compositeMenuName,
-                                window._uifwk.compositeMenuJson,
-                                window._uifwk.compositeMenuCollapseCallback);
-                        }
-
-                        //Set current menu item if specified by API call
-                        if (window._uifwk && window._uifwk.currentOmcMenuItemId) {
-                            menuUtil.setCurrentMenuItem(window._uifwk.currentOmcMenuItemId, window._uifwk.underOmcAdmin);
-                        } else {
-                            //Set current menu item if specified from branding bar params
-                            var selectedMenuId = params.omcCurrentMenuId;
-                            if (selectedMenuId) {
-                                menuUtil.setCurrentMenuItem(selectedMenuId);
-                            }
+                        else {
+                            menuUtil.resizeHamburgerMenuLayout();
                         }
                     });
+                    
+                    if (!avoidPageResizeOptIn) {
+                        $("#omcHamburgerMenu").addClass('oj-offcanvas-start');
+                        $("#omcHamburgerMenu").removeClass('oj-flex-item');
+                        var menuInitialStatus = retrieveHmaburgerMenuStatus();
+                        if(self.xlargeScreen() && menuInitialStatus !== 'closed'){
+                            $((function(){
+                                oj.OffcanvasUtils.open({
+                                    "edge": "start",
+                                    "displayMode": "push",
+                                    "selector": "#omcHamburgerMenu",
+                                    "autoDismiss": "none"
+                                });
+                                triggerDashboardResizeEvent('Hamburger menu opened.');
+                                storeHamburgerMenuStatus("opened");
+                            })());
+                        }
+                    }
+                    else {
+                        if(!self.xlargeScreen()) {
+                            setOverlayHamburgerMenuStyles();
+                        }
+                        else {
+                            var menuInitialStatus = retrieveHmaburgerMenuStatus();
+                            if (menuInitialStatus !== 'closed') {
+                                $("#omcHamburgerMenu").show();
+                            }
+                            else {
+                                $("#omcHamburgerMenu").hide();
+                                triggerHamburgerMenuToggleEvent('close');
+                            }
+                            menuUtil.resizeHamburgerMenuLayout();
+                        }
+                    }
+
+                    
+                    //Show composite menu if it's called before hamburger menu finished loading
+                    if (window._uifwk && window._uifwk.compositeMenuName && window._uifwk.compositeMenuJson) {
+                        menuUtil.showCompositeObjectMenu(window._uifwk.compositeMenuParentId,
+                                                        window._uifwk.compositeMenuName, 
+                                                        window._uifwk.compositeMenuJson, 
+                                                        window._uifwk.compositeMenuCollapseCallback);
+                    }
+                    
+                    //Set current menu item if specified by API call
+                    if (window._uifwk && window._uifwk.currentOmcMenuItemId) {
+                        menuUtil.setCurrentMenuItem(window._uifwk.currentOmcMenuItemId, window._uifwk.underOmcAdmin);
+                    }
+                    else {
+                        //Set current menu item if specified from branding bar params
+                        var selectedMenuId = params.omcCurrentMenuId;
+                        if (selectedMenuId) {
+                            menuUtil.setCurrentMenuItem(selectedMenuId);
+                        }
+                    }
+                });
                     window._uifwk.obbMenuLoadedListenerRegistered = true;
                 }
             }
-
+            
             /**
              * Notifications button click handler
              */
@@ -1173,9 +1191,11 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     if (data.action) {
                         if (data.action.toUpperCase() === 'SHOW') {
                             showMessage(data);
-                        } else if (data.action.toUpperCase() === 'REMOVE') {
+                        }
+                        else if (data.action.toUpperCase() === 'REMOVE') {
                             removeMessage(data);
-                        } else if (data.action.toUpperCase() === 'CLEAR') {
+                        }
+                        else if (data.action.toUpperCase() === 'CLEAR') {
                             displayMessageCount = 0;
                             hiddenMessages = [];
                             displayMessages = [];
@@ -1189,13 +1209,15 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     else {
                         showMessage(data);
                     }
-                } else if (data && data.tag && data.tag === 'EMAAS_OMC_GLOBAL_CONTEXT_UPDATED') {
+                }
+                else if (data && data.tag && data.tag === 'EMAAS_OMC_GLOBAL_CONTEXT_UPDATED') {
                     console.log("**************omc context change message received");
                     if (self.showGlobalContextBanner() === true) {
                         console.log("****************call refreshOMCContext");
                         refreshOMCContext();
                     }
-                } else if (data && data.tag && data.tag === 'EMAAS_OMC_SESSION_TIME_OUT') {
+                }
+                else if (data && data.tag && data.tag === 'EMAAS_OMC_SESSION_TIME_OUT') {
                     self.renderSessionTimeoutDialog(true);
                     dfu.showSessionTimeoutWarningDialog(self.sessionTimeoutWarnDialogId);
                 }
@@ -1209,10 +1231,12 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         if (actionType === 'Open') {
                             prevStatus = 'Closed';
                             currentStatus = 'Open';
-                        } else if (actionType === 'Close') {
+                        }
+                        else if (actionType === 'Close') {
                             prevStatus = 'Open';
                             currentStatus = 'Closed';
-                        } else if (actionType === 'Refresh') {
+                        }
+                        else if (actionType === 'Refresh') {
                             prevStatus = 'Open';
                             currentStatus = 'Open';
                         }
@@ -1249,13 +1273,16 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     if (data.type && data.type.toUpperCase() === 'ERROR') {
                         message.iconAltText = self.altTextError;
                         message.imgCssStyle = "background:url('" + messageIconSprite + "') no-repeat 0px -78px;height:16px;";
-                    } else if (data.type && data.type.toUpperCase() === 'WARN') {
+                    }
+                    else if (data.type && data.type.toUpperCase() === 'WARN') {
                         message.iconAltText = self.altTextWarn;
                         message.imgCssStyle = "background:url('" + messageIconSprite + "') no-repeat 0px -46px;height:16px;";
-                    } else if (data.type && data.type.toUpperCase() === 'CONFIRM') {
+                    }
+                    else if (data.type && data.type.toUpperCase() === 'CONFIRM') {
                         message.iconAltText = self.altTextConfirm;
                         message.imgCssStyle = "background:url('" + messageIconSprite + "') no-repeat 0px -30px; height:16px;";
-                    } else if (data.type && data.type.toUpperCase() === 'INFO') {
+                    }
+                    else if (data.type && data.type.toUpperCase() === 'INFO') {
                         message.iconAltText = self.altTextInfo;
                         message.imgCssStyle = "background:url('" + messageIconSprite + "') no-repeat 0px -62px;height:16px;";
                     }
@@ -1265,21 +1292,25 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                             currentPlannedDowntimeMsgId = message.id;
                             displayMessages.splice(0, 0, message);
                         }
-                    } else if (message.category === catRetryInProgress) {
+                    }
+                    else if (message.category === catRetryInProgress) {
                         if (retryingMessageIds.length === 0) {
                             if (currentPlannedDowntimeMsgId === null) {
                                 displayMessages.splice(0, 0, message);
-                            } else {
+                            }
+                            else {
                                 displayMessages.splice(1, 0, message);
                             }
                             currentRetryingMsgId = message.id;
                         }
                         retryingMessageIds.push(message.id);
-                    } else {
+                    }
+                    else {
                         var isMsgNeeded = true;
                         if (message.category === catRetryFail && currentRetryFailMsgId !== null) {
                             isMsgNeeded = false;
-                        } else if (message.category === catRetryFail) {
+                        }
+                        else if (message.category === catRetryFail) {
                             currentRetryFailMsgId = message.id;
                         }
 
@@ -1287,9 +1318,10 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                             if (displayMessageCount < maxMsgDisplayCnt || self.hiddenMessagesExpanded()) {
                                 displayMessages.unshift(message);
                                 displayMessageCount++;
-                            } else {
+                            }
+                            else {
                                 displayMessages.unshift(message);
-                                hiddenMessages.unshift(displayMessages.pop());
+                                hiddenMessages.unshift(displayMessages.pop()); 
                             }
                         }
                     }
@@ -1297,7 +1329,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     self.messageList(displayMessages);
                     if (hiddenMessages.length > 0) {
                         self.hasHiddenMessages(true);
-                    } else {
+                    }
+                    else {
                         self.hasHiddenMessages(false);
                     }
 
@@ -1320,7 +1353,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         displayMessages = removeItemByPropertyValue(displayMessages, 'id', currentRetryingMsgId);
                         currentRetryingMsgId = null;
                     }
-                } else if (data && data.id) {
+                }
+                else if (data && data.id) {
                     var originDispMsgCnt = displayMessages.length;
                     hiddenMessages = removeItemByPropertyValue(hiddenMessages, 'id', data.id);
                     displayMessages = removeItemByPropertyValue(displayMessages, 'id', data.id);
@@ -1339,7 +1373,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     if (data.category === catPlannedDowntime) {
                         currentPlannedDowntimeMsgId = null;
                     }
-                } else if (data && data.category) {
+                }else if(data && data.category){
                     var originDispMsgCnt = displayMessages.length;
                     hiddenMessages = removeItemByPropertyValue(hiddenMessages, 'category', data.category);
                     displayMessages = removeItemByPropertyValue(displayMessages, 'category', data.category);
@@ -1364,7 +1398,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 if (hiddenMessages.length > 0) {
                     self.hasHiddenMessages(true);
                     self.hiddenMessagesExpanded(false);
-                } else {
+                }
+                else {
                     self.hasHiddenMessages(false);
                     if (displayMessageCount <= maxMsgDisplayCnt) {
                         self.hiddenMessagesExpanded(false);
@@ -1397,9 +1432,11 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     if (urlNotificationCheck === null) {
                         if (self.relNotificationCheck.indexOf("/") === 0) {
                             urlNotificationCheck = self.relNotificationCheck;
-                        } else if (self.relNotificationCheck.indexOf("sso.static/") === 0) {
+                        }
+                        else if (self.relNotificationCheck.indexOf("sso.static/") === 0) {
                             urlNotificationCheck = "/" + self.relNotificationCheck;
-                        } else if (self.relNotificationCheck.indexOf("static/") === 0) {
+                        }
+                        else if (self.relNotificationCheck.indexOf("static/") === 0) {
                             urlNotificationCheck = "/sso." + self.relNotificationCheck;
                         }
 
@@ -1409,7 +1446,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                             oj.Logger.info("Set timer to check notifications every 5 minutes.", false);
                             var interval = 5 * 60 * 1000;
                             setInterval(self.checkNotificationAvailability, interval);
-                        } else {
+                        }
+                        else {
                             oj.Logger.warn("The notification check URL (relNotificationCheck) provided by current application is invalid: " + self.relNotificationCheck, false);
                             self.notificationDisabled(true);
                         }
@@ -1434,7 +1472,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 //Even other apps are subscribed to current tenant as well, we don't show them
                 if (!isAppIdNotEmpty || self.appId === 'Dashboard' || self.appId === 'Error' || self.appId === 'EventUI') {
                     subscribedApps = [];
-                } else {
+                }
+                else {
                     subscribedApps = [self.appId];
                 }
 
@@ -1447,7 +1486,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                             var servicename = nls[appProps['appName']] ? nls[appProps['appName']] : "";
                             if (i === 0) {
                                 subscribedServices = servicename;
-                            } else {
+                            }
+                            else {
                                 subscribedServices = subscribedServices + " | " + servicename;
                             }
                         }
@@ -1466,7 +1506,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                             console.log("****************self.topologyInitialized" + self.topologyInitialized);
                             console.log("************previousCompositeMeId" + omcContext.previousCompositeMeId);
                             refreshTopology = false;
-                        } else {
+                        }
+                        else {
                             console.log("*******************refresh topology entities");
                             var compositeId = [];
                             compositeId.push(currentCompositeId);
@@ -1475,7 +1516,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                             self.topologyInitialized = true;
                         }
                         self.topologyDisabled(false);
-                    } else {
+                    }
+                    else {
 
 
 
@@ -1524,7 +1566,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                             self.customEventHandler(topologyParams.customEventHandler);
                             self.miniEntityCardActions(topologyParams.miniEntityCardActions);
                             self.topologyParamsSet = true;
-                        } else {
+                        }
+                        else {
                             self.associations(null);
                             self.customNodeDataLoader(null);
                             self.customEventHandler(null);
@@ -1534,7 +1577,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         if (self.showEnterpriseTopology) { // set queryvar with   non-empty for enterprise topology
                             self.layout("LINEAR");
                             self.queryVars({entityName: "All Entities", entityType: "Enterprise Topology"});
-                        } else {
+                        }
+                        else {
                             self.layout("TIERED");
                             self.queryVars(null);
                         }
