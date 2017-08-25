@@ -312,9 +312,10 @@ define(['dashboards/dbsmodel',
             self.toolbarModel().handleSaveUpdateToServer(function(){
                 self.toolbarModel().isUpdated(false);
             }, function(error){
-                if (error && error.errorCode && error.errorCode() === 10002) {
-                    dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING_TEXT_WIDGET_EMPTY_CONTENT'), detail: '', removeDelayTime: 5000});
-                } else if (error && error.errorCode && error.errorCode() === 10003) {
+//                if (error && error.errorCode && error.errorCode() === 10002) {
+//                    dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING_TEXT_WIDGET_EMPTY_CONTENT'), detail: '', removeDelayTime: 5000});
+//                } else 
+                if (error && error.errorCode && error.errorCode() === 10003) {
                     dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING_TEXT_WIDGET_TOO_LONG_CONTENT'), detail: '', removeDelayTime: 5000});
 
                 } else {
