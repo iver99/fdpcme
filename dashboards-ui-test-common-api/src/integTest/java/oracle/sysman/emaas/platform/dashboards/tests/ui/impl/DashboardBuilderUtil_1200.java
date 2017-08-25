@@ -58,8 +58,11 @@ public class DashboardBuilderUtil_1200 extends DashboardBuilderUtil_1190
 			WaitUtil.waitForPageFullyLoaded(driver);
 			actions.moveToElement(searchInput).build().perform();
 			driver.click("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHBOXCSSLOCATOR);
+			wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHGETCSSLOCATOR)));
 			searchInput.sendKeys(dashboardName);
+			driver.waitForServer();
 			driver.takeScreenShot();
+			driver.savePageToFile();
 			//verify input box value
 			Assert.assertEquals(searchInput.getAttribute("value"), dashboardName);
 
@@ -69,7 +72,8 @@ public class DashboardBuilderUtil_1200 extends DashboardBuilderUtil_1190
 			//wait for ajax resolved
 			WaitUtil.waitForPageFullyLoaded(driver);
 			driver.takeScreenShot();
-
+			driver.savePageToFile();
+			
 			driver.getLogger().info("[DashboardHomeUtil] start to add link");
 			List<WebElement> matchingWidgets = driver.getWebDriver().findElements(
 					By.cssSelector(DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHGETCSSLOCATOR));
@@ -151,6 +155,7 @@ public class DashboardBuilderUtil_1200 extends DashboardBuilderUtil_1190
 		textButton.click();
 		driver.waitForServer();
 		driver.takeScreenShot();
+		driver.savePageToFile();
 		driver.getLogger().info("add text widget compelted");
 	}
 	
@@ -174,6 +179,7 @@ public class DashboardBuilderUtil_1200 extends DashboardBuilderUtil_1190
 		driver.waitForServer();
 		
 		driver.takeScreenShot();
+		driver.savePageToFile();
 		driver.getLogger().info("editTextWidgetAddContent completed");
 	}
 	
@@ -232,6 +238,50 @@ public class DashboardBuilderUtil_1200 extends DashboardBuilderUtil_1190
 	@Override
 	public boolean hasWidgetLink(WebDriver driver, String widgetName){
 		return hasWidgetLink(driver, widgetName, 0);
+	}
+	
+	@Override
+	public void addImageInTextWidget(WebDriver driver, int index, String url, String alternativeText)
+	{
+		driver.getLogger().info("add image in Text Widget");
+		
+		Validator.notEmptyString("URL", url);
+		Validator.equalOrLargerThan0("index", index);
+
+		//find current dashboard
+		WebElement selectedDashboardEl = getSelectedDashboardEl(driver);
+
+		//click content wrapper area to load ckeditor
+		driver.waitForElementPresent("css=" + DashBoardPageId.TEXTWIDGETCONTENTCSS);
+		WebElement widget = selectedDashboardEl.findElements(By.cssSelector(DashBoardPageId.TEXTWIDGETCONTENTCSS)).get(index-1);
+		widget.click();
+
+		driver.waitForElementPresent("css=" + DashBoardPageId.IMAGEICONCSS);
+
+		driver.click("css=" + DashBoardPageId.IMAGEICONCSS);
+
+		driver.waitForElementPresent("css=" + DashBoardPageId.IMAGEDIALOGCSS);
+		
+		WebElement url_input = driver.getWebDriver().findElement(By.xpath(DashBoardPageId.IMAGEURLINPUT));	
+		url_input.clear();
+		url_input.sendKeys(url);
+		
+		if(alternativeText != null)
+		{
+			WebElement alternative_input = driver.getWebDriver().findElement(By.xpath(DashBoardPageId.ALTERNATIVEINPUT));
+			alternative_input.clear();
+	
+			WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(DashBoardPageId.ALTERNATIVEINPUT)));
+
+			alternative_input.sendKeys(alternativeText);	
+		}
+
+		driver.click("css=" + DashBoardPageId.OKBTNCSS);
+
+		//driver.waitForServer();
+		//driver.takeScreenShot();
+		driver.getLogger().info("add link in text widget completed");
 	}
 	
 	@Override
@@ -302,9 +352,7 @@ public class DashboardBuilderUtil_1200 extends DashboardBuilderUtil_1190
 	 	
 	 	driver.click("css=" + DashBoardPageId.OKBTNCSS);	
 		
-		driver.waitForServer();
-		
-		driver.takeScreenShot();
 		driver.getLogger().info("add link in text widget completed");
 	}
+
 }

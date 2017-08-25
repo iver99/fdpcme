@@ -1156,7 +1156,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                 dateTimeInfo = "<span class='show-individual-time-span1-short'>" + self.getTranslatedFlexTimePeriod(self.flexRelTimeVal(), self.flexRelTimeOpt()[0])  + "</span>";
                             }else {
                                 dateTimeInfo = "<span class='show-individual-time-span1'>" + self.getTranslatedFlexTimePeriod(self.flexRelTimeVal(), self.flexRelTimeOpt()[0]) + ": </span>";
-                                dateTimeInfo += start + "<span style='font-weight:bold; " + hyphenDisplay + "'>" + " - </span>" + end;
+                                dateTimeInfo += "<span class='time-range-overflow'>" + start + "<span style='font-weight:bold; " + hyphenDisplay + "'>" + " - </span>" + end + "</span>";
                             }
                         }else if(self.lrCtrlVal() === "latestOnCustom") {
                             if(self.getParam(self.timeDisplay) === "short") {
@@ -1170,9 +1170,11 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                 dateTimeInfo = start + "<span class='show-individual-time-span1-short'" + hyphenDisplay + "'> - </span>" + end;
                             }else {
                                 dateTimeInfo = "<span class='show-individual-time-span1'>" + self.timePeriodsNlsObject[timePeriodId] + ": </span>" +
+                                    "<span class='time-range-overflow'>" + 
                                     start +
                                     "<span style='font-weight:bold; " + hyphenDisplay + "'>" + " - </span>" +
-                                    end;
+                                    end +
+                                    "</span>";
                             }
                         }
                         return dateTimeInfo;
@@ -1188,7 +1190,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         dateTimeInfo = "<span class='show-individual-time-span1-short'>" + self.timePeriodsNlsObject[timePeriodId] + "</span>";
                     }else {
                         dateTimeInfo = "<span class='show-individual-time-span1'>" + self.timePeriodsNlsObject[timePeriodId] + ": </span>";
-                        dateTimeInfo += start + "<span style='font-weight:bold; " + hyphenDisplay + "'>" + " - </span>" + end;
+                        dateTimeInfo += "<span class='time-range-overflow'>" + start + "<span style='font-weight:bold; " + hyphenDisplay + "'>" + " - </span>" + end + "</span>";
                     }
                     return dateTimeInfo;
                 };

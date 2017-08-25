@@ -402,6 +402,7 @@ public class CommonUIUtils
 			webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn)).get(index - 1).click();
 
 			webd.takeScreenShot();
+			webd.savePageToFile();
 		}
 		catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -436,11 +437,10 @@ public class CommonUIUtils
 				
 		webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_Custom);
 		webd.click("css=" + TimeSelectorUIControls.sTimeRange_Custom);
-		webd.takeScreenShot();
 
 		webd.waitForElementPresent("css=" + TimeSelectorUIControls.sRangeRadio);
 		webd.click("css=" + TimeSelectorUIControls.sRangeRadio);
-		webd.takeScreenShot();
+
 
 		//set start date time and end date time
 		webd.getLogger().info("Verify if custom panpel displayed...");
@@ -448,6 +448,7 @@ public class CommonUIUtils
 		wdwait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(TimeSelectorUIControls.sPickPanel)));
 		//webd.isDisplayed(TimeSelectorUIControls.sPickPanel);
 		webd.takeScreenShot();
+		webd.savePageToFile();
 
 		if(DateOnly)
 		{
@@ -507,6 +508,15 @@ public class CommonUIUtils
 		}
 
 		return outputFormat.format(date);
+	}
+
+	public static void clickTimePicker(WebDriver webd, int Index)
+	{
+		//click the datetimepicker component
+		webd.waitForElementPresent("css=" + UIControls.TIMERANGEBTN_CSS);
+		webd.getWebDriver().findElements(By.cssSelector(UIControls.TIMERANGEBTN_CSS)).get(Index - 1).click();
+
+		webd.takeScreenShot();
 	}
 	
 	public void getCurrentDate()
