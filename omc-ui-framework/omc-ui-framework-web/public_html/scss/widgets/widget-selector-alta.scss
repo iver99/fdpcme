@@ -69,7 +69,7 @@
     font-weight: bold;
 }
 
-#widget-selector-searchbox { 
+#widget-selector-searchbox,.widget-selector-searchbox { 
     border:1px; 
     border-radius: 2px;
     border-color: #c4ced7;
@@ -81,7 +81,7 @@
     box-sizing: border-box;
 } 
 
-#widget-selector-searchbox #searchTxt { 
+#widget-selector-searchbox #searchTxt, .widget-selector-searchbox #searchTxt { 
     float: left; 
     padding-left: 5px; 
     border:0;
@@ -342,32 +342,32 @@
         padding: 0;
     }
 .widget-selector-main-new{
-    #widget-selector-searchbox .widget-searchtxt-without-filter { 
+    .widget-selector-searchbox .widget-searchtxt-without-filter { 
        width: 506px;
     }
-    #widget-selector-searchbox #widget-selector-search-input {
+    .widget-selector-searchbox .widget-selector-search-input {
         float:left;
         height:30px;
     }
-    #widget-selector-searchbox .widget-search-input-without-filter {
+    .widget-selector-searchbox .widget-search-input-without-filter {
         width: 546px;
     }
     .widget-searchbox-with-filter {
         width: 622px;
     }
-    #widget-selector-searchbox.widget-searchbox-without-filter {
+    .widget-selector-searchbox.widget-searchbox-without-filter {
         width: 580px;
         border-radius: 6px;
     }
     
-    #widget-selector-search-container {
+    .widget-selector-search-container {
         padding: 10px;
         height:32px;
         width:580px;
         background-color: lightgray
     }
 
-    #widget-selector-widgets {
+    .widget-selector-widgets {
         padding: 0;
         float: left;
         width:600px;
@@ -392,7 +392,7 @@
     }
     
     .widget-selector-text-secondary-color{
-        color: gray;
+        color: #4D4B4B;
     }
 
     .font-style-italic{
@@ -434,34 +434,34 @@
 
 .widget-selector-in-builder-page.widget-selector-main-new{
     width:320px;
-    #widget-selector-searchbox .widget-searchtxt-without-filter { 
+    .widget-selector-searchbox .widget-searchtxt-without-filter { 
        width: 236px;
     }
-    #widget-selector-searchbox #widget-selector-search-input {
+    .widget-selector-searchbox .widget-selector-search-input {
         float:left;
         height:30px;
         .oj-inputtext.oj-form-control.oj-component{
             width: 236px;
         }
     }
-    #widget-selector-searchbox .widget-search-input-without-filter {
+    .widget-selector-searchbox .widget-search-input-without-filter {
         width: 270px;
     }
     .widget-searchbox-with-filter {
         width: 332px;
     }
-    #widget-selector-searchbox.widget-searchbox-without-filter {
+    .widget-selector-searchbox.widget-searchbox-without-filter {
         width: 304px;
     }
     
-    #widget-selector-search-container {
+    .widget-selector-search-container {
         padding: 8px;
         height:32px;
         width:304px;
         background-color: white;
     }
 
-    #widget-selector-widgets {
+    .widget-selector-widgets {
         padding-left: 0;
         float: left;
         width:320px;
@@ -486,7 +486,7 @@
     }
     
     .widget-selector-text-secondary-color{
-        color: gray;
+        color: #4D4B4B;
     }
 
     .font-style-italic{

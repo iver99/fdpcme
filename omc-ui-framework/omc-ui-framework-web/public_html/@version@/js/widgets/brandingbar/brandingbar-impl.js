@@ -127,7 +127,6 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 self.udeTopologyData = data;
             };
             self.updateGlobalContextByTopologySelection = params.updateGlobalContextByTopologySelection;
-            self.showMaxMinButtonInDF = ko.observable(true);
             self.showEnterpriseTopology = true;
             if (params) {
                 self.associations(params.associations);
@@ -140,7 +139,6 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             var dfu = new dfumodel(self.userName, self.tenantName);
             //Append uifwk css file into document head
             dfu.loadUifwkCss();
-            //self.udeEnterPriseTopologyLanded = false;
             if (!ko.components.isRegistered('emctas-globalbar'))
             {
                 var versionedTemplate = window.getSDKVersionFile ?
@@ -154,10 +152,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 });
             }
             self.emctasGlobalBarCallback = function () {
-                //enable enterpriseTopology
-                self.udeEnterPriseTopologyLanded = true;
-                self.topologyDisabled(false);
-                restoreTopologyDisplayStatus();
+                //noop, this can be deleted once the reference to this method is removed
+                //from emctas
             };
 
             if (self.showGlobalContextBanner() === true) {
@@ -307,73 +303,6 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 }
             }
 
-
-            self.maxIconToRight = ko.observable("30px");
-            self.topologySize = ko.observable();
-            self.topologyHeight = ko.observable();
-            self.topologySize.subscribe(function (topoHeight) {
-                var legendHeight = 0;
-                if ($("#ude_topology_legend").length > 0) { //Re-set legend height if there is legend.
-                    //TO DO: hard-code legend height for now. Need to get legend height dynamically after UDE support it later.
-                    legendHeight = 300;
-                }
-                topoHeight && topoHeight.h && self.topologyHeight(Math.max(topoHeight.h, legendHeight));
-                if (self.topologyHeight() <= 201) {
-                    self.topologyCssHeight(self.topologyHeight());
-                } else {
-                    self.topologyCssHeight(201);
-                }
-
-                if ($("#ude_topology_legend").length > 0) {
-                    self.maxIconToRight("180px");
-                } else {
-                    self.maxIconToRight("30px");
-                }
-            });
-
-            self.isMaximized = ko.observable(false);
-
-            self.showTopologyMaxIcon = function () {
-                $("#maxMinTopology").css("display", "block");
-            };
-            self.hideTopologyMaxIcon = function () {
-                $("#maxMinTopology").css("display", "none");
-            };
-            self.maximizeTopology = function () {
-                self.topologyCssHeight(self.topologyHeight());
-                self.isMaximized(true);
-                var $b = $(".right-panel-toggler:visible")[0] && ko.dataFor($(".right-panel-toggler:visible")[0]).$b;
-                $b && $b.triggerBuilderResizeEvent('Topology is maximized!');
-            };
-            self.restoreTopology = function () {
-                self.topologyCssHeight(201);
-                self.isMaximized(false);
-                var $b = $(".right-panel-toggler:visible")[0] && ko.dataFor($(".right-panel-toggler:visible")[0]).$b;
-                $b && $b.triggerBuilderResizeEvent('Topology is restored!');
-            };
-            self.maxMinTopologyToggle = function () {
-                if (self.showMaxMinButtonInDF() === true) {
-                    if (!self.isMaximized()) {
-                        self.maximizeTopology();
-                    } else {
-                        self.restoreTopology();
-                    }
-                }
-            };
-
-            self.topologyCssHeight = ko.observable();
-            self.topologyStyle = ko.computed(function () {
-                if (self.showMaxMinButtonInDF() === true) {
-                    var height = "100%; max-height: 204px";
-                    if (self.topologyCssHeight()) {
-                        height = (self.topologyCssHeight() + 3) + "px";
-                    }
-                    return "display: flex; float: left; width: 100%; height: " + height + ";";
-                } else {
-                    return "display:block;float:none;width:100%;";
-                }
-            });
-
             /*
              * Called by UDE if topology is maximized or restored
              */
@@ -417,6 +346,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             var confirmMessageIcon = "/emsaasui/uifwk/@version@/images/widgets/stat_confirm_16.png";
             var infoMessageIcon = "/emsaasui/uifwk/@version@/images/widgets/stat_info_16.png";
             var messageIconSprite = "/emsaasui/uifwk/@version@/images/uifwkSprite.png";
+            var imgBackground = "/emsaasui/uifwk/@version@/images/imgbackground.png";
             var hiddenMessages = [];
 
             self.navLinksNeedRefresh = ko.observable(false);
@@ -552,7 +482,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.sessionTimeoutMsg = nls.BRANDING_BAR_SESSION_TIMEOUT_MSG;
             self.sessionTimeoutBtnOK = nls.BRANDING_BAR_SESSION_TIMEOUT_DIALOG_BTN_OK;
             self.sessionTimeoutWarnDialogId = 'sessionTimeoutWarnDialog';
-            self.sessionTimeoutWarnCssStyle = "background:url('" + messageIconSprite + "') no-repeat 0px -46px;height:16px; width:16px; display: inline-block;";
+            self.sessionTimeoutWarnIcon = warnMessageIcon;
             self.renderSessionTimeoutDialog = ko.observable(false);
 
             //Fetch and set sso logout url and session expiry time
@@ -810,7 +740,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         $('#uifwkLayoutHbgmenuPlaceHolder').replaceWith(hamburgerDiv);
                     }
                     else {
-                       $('#offcanvasInnerContainer').append(hamburgerDiv);
+                       $('#offcanvasInnerContainer').append(hamburgerDiv); 
                     }
                     ko.applyBindings(self, hamburgerDiv[0]);
                 }
@@ -828,13 +758,13 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     $(window).trigger('resize');
                 }
             }
-
+            
             function triggerHamburgerMenuToggleEvent(toggleType) {
                 var message = {'tag': 'EMAAS_OMC_GLOBAL_MENU_TOGGLE_STATUS'};
                 message.toggleType = toggleType;
                 window.postMessage(message, window.location.href);
             }
-
+            
             self.hamburgerMenuEnabled = omcHamburgerMenuOptIn ? true : false;
             self.renderHamburgerMenu = omcHamburgerMenuOptIn && (!window._uifwk || !window._uifwk.hideHamburgerMenuOnPage) ? true : false;
             self.isHamburgerMenuRegistered = ko.observable(false);
@@ -863,11 +793,11 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 
                 function resetCurrentHamburgerMenu() {
                     //Show composite menu if it's called before hamburger menu finished loading
-                    if (window._uifwk && window._uifwk.compositeMenuName && window._uifwk.compositeMenuJson
+                    if (window._uifwk && window._uifwk.compositeMenuName && window._uifwk.compositeMenuJson 
                             && window._uifwk.stayInComposite && !window._uifwk.isCompositeMenuShown) {
                         menuUtil.showCompositeObjectMenu(window._uifwk.compositeMenuParentId,
-                                                        window._uifwk.compositeMenuName,
-                                                        window._uifwk.compositeMenuJson,
+                                                        window._uifwk.compositeMenuName, 
+                                                        window._uifwk.compositeMenuJson, 
                                                         window._uifwk.compositeMenuCollapseCallback);
                     }
                     //Set current menu item if specified by API call
@@ -882,7 +812,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         }
                     }
                 }
-
+                
                 (function() {
                     if (!window._uifwk) {
                         window._uifwk = {};
@@ -910,7 +840,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     window.onafterprint = afterPrint;
 
                 }());
-
+                
                 function setPinnedHamburgerMenuStyles() {
                     $("#omcHamburgerMenu").removeClass('oj-offcanvas-start');
                     $("#omcHamburgerMenu").removeClass('oj-offcanvas-open');
@@ -921,17 +851,17 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     $("#offcanvasInnerContainer").addClass('oj-flex');
                     $("#offcanvasInnerContainer").addClass('oj-flex-items-pad');
                 }
-
+                
                 function setOverlayHamburgerMenuStyles() {
                     $("#omcHamburgerMenu").css('display', '');
                     $("#omcHamburgerMenu").addClass('oj-offcanvas-start');
                     $("#omcHamburgerMenu").removeClass('oj-flex-item');
-                    $("#uifwkLayoutMainContainer").removeClass('oj-flex-item');
+                    $("#uifwkLayoutMainContainer").removeClass('oj-flex-item'); 
                     $("#uifwkLayoutMainContainer").addClass('oj-web-applayout-page');
                     $("#offcanvasInnerContainer").removeClass('oj-flex');
                     $("#offcanvasInnerContainer").removeClass('oj-flex-items-pad');
                 }
-
+                
                 self.xlargeScreen = oj.ResponsiveKnockoutUtils.createMediaQueryObservable('(min-width: 1440px)');
 
                 self.xlargeScreen.subscribe(function(isXlarge){
@@ -1010,7 +940,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         }
                     }
                 });
-
+                
                 self.toggleHamburgerMenu = function() {
                     if (avoidPageResizeOptIn) {
                         if (self.xlargeScreen()) {
@@ -1082,7 +1012,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                             triggerDashboardResizeEvent('Hamburger menu closed.');
                         });
                     }
-
+                    
                     $(window).resize(function() {
                         if (window._uifwk.isUnderPrint) {
                             window._uifwk.resizeTriggeredByPrint = true;
@@ -1101,7 +1031,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                             menuUtil.resizeHamburgerMenuLayout();
                         }
                     });
-
+                    
                     if (!avoidPageResizeOptIn) {
                         $("#omcHamburgerMenu").addClass('oj-offcanvas-start');
                         $("#omcHamburgerMenu").removeClass('oj-flex-item');
@@ -1136,7 +1066,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         }
                     }
 
-
+                    
                     //Show composite menu if it's called before hamburger menu finished loading
                     if (window._uifwk && window._uifwk.compositeMenuName && window._uifwk.compositeMenuJson) {
                         menuUtil.showCompositeObjectMenu(window._uifwk.compositeMenuParentId,
@@ -1339,21 +1269,22 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     message.summary = data.summary;
                     message.detail = data.detail;
                     message.category = data.category;
+                    message.icon = imgBackground;
                     if (data.type && data.type.toUpperCase() === 'ERROR') {
                         message.iconAltText = self.altTextError;
-                        message.imgCssStyle = "background:url('" + messageIconSprite + "') no-repeat 0px -78px;height:16px; width:16px; display: inline-block;";
+                        message.imgCssStyle = "background:url('" + messageIconSprite + "') no-repeat 0px -78px;height:16px;";
                     }
                     else if (data.type && data.type.toUpperCase() === 'WARN') {
                         message.iconAltText = self.altTextWarn;
-                        message.imgCssStyle = "background:url('" + messageIconSprite + "') no-repeat 0px -46px;height:16px; width:16px; display: inline-block;";
+                        message.imgCssStyle = "background:url('" + messageIconSprite + "') no-repeat 0px -46px;height:16px;";
                     }
                     else if (data.type && data.type.toUpperCase() === 'CONFIRM') {
                         message.iconAltText = self.altTextConfirm;
-                        message.imgCssStyle = "background:url('" + messageIconSprite + "') no-repeat 0px -30px; height:16px; width:16px; display: inline-block;";
+                        message.imgCssStyle = "background:url('" + messageIconSprite + "') no-repeat 0px -30px; height:16px;";
                     }
                     else if (data.type && data.type.toUpperCase() === 'INFO') {
                         message.iconAltText = self.altTextInfo;
-                        message.imgCssStyle = "background:url('" + messageIconSprite + "') no-repeat 0px -62px;height:16px; width:16px; display: inline-block;";
+                        message.imgCssStyle = "background:url('" + messageIconSprite + "') no-repeat 0px -62px;height:16px;";
                     }
 
                     if (message.category === catPlannedDowntime) {
@@ -1643,7 +1574,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                             self.miniEntityCardActions(true);
                             self.topologyParamsSet = true;
                         }
-                        if (self.udeEnterPriseTopologyLanded && self.showEnterpriseTopology) { // set queryvar with   non-empty for enterprise topology
+                        if (self.showEnterpriseTopology) { // set queryvar with   non-empty for enterprise topology
                             self.layout("LINEAR");
                             self.queryVars({entityName: "All Entities", entityType: "Enterprise Topology"});
                         }
@@ -1696,18 +1627,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     //show enterprise topology
                     self.showEnterpriseTopology = true;
                     window.globalpillsempty = true;
-                    if (self.udeEnterPriseTopologyLanded) {
-                        self.topologyDisabled(false);
-                    }
-                    else {
-                        // only hide the topology(when displayed)
-                        //if ude enterprise topology has not yet landed
-                        if (self.isTopologyDisplayed() && !self.topologyDisabled()) {
-                            self.showTopology();
-                        }
-                        self.topologyDisabled(true);
-                    }
-
+                    self.topologyDisabled(false);
                 }
 
 

@@ -17,7 +17,7 @@ define(['knockout',
         'builder/builder.core',
         'builder/dashboardDataSource/dashboard.datasource'
     ],
-    function(ko, $, dfu, idfbcutil, ssu, cxtModel, oj, ed, dd, pfu,zdtUtilModel) {
+    function(ko, $, dfu, idfbcutil, ssu, cxtModel, oj, ed, dd, pfu, zdtUtilModel) {
         // dashboard type to keep the same with return data from REST API
         var SINGLEPAGE_TYPE = "SINGLEPAGE";
         var DEFAULT_AUTO_REFRESH_INTERVAL = 300000;
@@ -288,6 +288,8 @@ define(['knockout',
 
 
             self.handleDashboardSave = function() {
+                self.dashboardName($('#dbsHNameIn').val()); //temporary solution for: input value change made by selenium webdriver cannot be subscribed by knockout. same as the line below
+                self.dashboardDescription($('#editDbdDscp').val());
                 var outputData = self.getSummary(self.dashboardId, self.dashboardName(), self.dashboardDescription(), self.tilesViewModel);
                 outputData.eventType = "SAVE";
 
