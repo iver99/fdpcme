@@ -79,6 +79,7 @@ public class BugVerification extends LoginAndLogout
 		DashBoardUtils.deleteDashboard(webd, "testEMCPDF_4594");
 		DashBoardUtils.deleteDashboard(webd, "Dashboard_4362");
 		DashBoardUtils.deleteDashboard(webd, "Dashboard_4362_set");
+		DashBoardUtils.deleteDashboard(webd, "Dashboard_4643");
 
 		webd.getLogger().info("All test data have been removed");
 
@@ -263,17 +264,11 @@ public class BugVerification extends LoginAndLogout
 		webd.getLogger().info("start to test in testEMPCDF_2970");
 
 		DashboardHomeUtil.createDashboard(webd, "~!@#$%^&*()-+", null);
-
-		webd.takeScreenShot();
-
 		DashboardBuilderUtil.verifyDashboard(webd, "~!@#$%^&*()-+", null, true);
 		DashboardBuilderUtil.saveDashboard(webd);
-		webd.takeScreenShot();
 		BrandingBarUtil.visitDashboardHome(webd);
-		webd.takeScreenShot();
 		DashboardHomeUtil.gridView(webd);
 		DashboardHomeUtil.deleteDashboard(webd, "~!@#$%^&*()-+", "dashboards_grid_view");
-		webd.takeScreenShot();
 		webd.getLogger().info("complete testing in testEMPCDF_2970");
 	}
 
@@ -326,10 +321,11 @@ public class BugVerification extends LoginAndLogout
 				.to(url.substring(0, url.indexOf("emsaasui")) + "emsaasui/emcpdfui/error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_MSG");
 		webd.waitForElementPresent("css=" + PageId.ERRORPAGESINGOUTBTNCSS);
 		webd.takeScreenShot();
+		webd.savePageToFile();
 
 		webd.click("css=" + PageId.ERRORPAGESINGOUTBTNCSS);
 		webd.getLogger().info("Sing out button is clicked");
-		webd.takeScreenShot();
+		
 
 		//initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		login(this.getClass().getName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName(), "welcome");
@@ -819,6 +815,35 @@ public class BugVerification extends LoginAndLogout
 	}
 
 	@Test(alwaysRun = true)
+	public void testEMCPDF_4643()
+	{
+		//Initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testEMCPDF_4643");
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		//reset all filter options
+		webd.getLogger().info("Reset all filter options");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		DashboardHomeUtil.gridView(webd);
+
+		//create a dashboard
+		webd.getLogger().info("Create a dashboard");
+		DashboardHomeUtil.createDashboard(webd, "Dashboard_4643", null);
+		webd.getLogger().info("edit started");
+		webd.click("css=" + DashBoardPageId.BUILDEROPTIONSMENULOCATOR);
+		webd.click("css=" + DashBoardPageId.BUILDEROPTIONSEDITLOCATORCSS);
+		webd.getElement("css=" + DashBoardPageId.BUILDEROPTIONSEDITNAMECSS).clear();
+		webd.click("css=" + DashBoardPageId.BUILDEROPTIONSEDITDESCRIPTIONCSS);
+		webd.waitForElementPresent("css=" + ".oj-message-summary");
+		Assert.assertEquals(webd.getText("css=" + ".oj-message-summary"), "Name is required");
+		DashboardBuilderUtil.saveDashboard(webd);
+		webd.waitForElementPresent("css=" + ".emaas-appheader-message.emaas-appheader-message-summary");
+		Assert.assertEquals(webd.getText("css=" + ".emaas-appheader-message.emaas-appheader-message-summary"), "Dashboard name should not be empty." );	
+	}
+	
+	@Test(alwaysRun = true)
 	public void testEMCPDF_4362_set()
 	{
 		//Initialize the test
@@ -861,4 +886,7 @@ public class BugVerification extends LoginAndLogout
 		Assert.assertEquals(webd.getValue("css=" + DashBoardPageId.DASHBOARDSETOPTIONSEDITNAMECSS), "Dashboard_4362_set");
 
 	}
+
+
+
 }

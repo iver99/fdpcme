@@ -347,7 +347,7 @@ public class DashboardRowsComparator extends AbstractComparator
 		}
 		RestClient rc = RestClientProxy.getRestClient();
 		rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME,tenantId);
-		rc.setHeader(RestClient.X_REMOTE_USER,userTenant);
+		//rc.setHeader(RestClient.X_REMOTE_USER,userTenant);
 		
 		char[] authToken = LookupManager.getInstance().getAuthorizationToken();
 		String response = rc.get(lk.getHref(), tenantId, new String(authToken));
@@ -365,7 +365,7 @@ public class DashboardRowsComparator extends AbstractComparator
 		//String response = new TenantSubscriptionUtil.RestClient().get(url, tenantId, userTenant);
 		RestClient rc = RestClientProxy.getRestClient();
 		rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME,tenantId);
-		rc.setHeader(RestClient.X_REMOTE_USER,userTenant);
+		//rc.setHeader(RestClient.X_REMOTE_USER,userTenant);
 		
 		char[] authToken = LookupManager.getInstance().getAuthorizationToken();
 		logger.info("start to get counts data");
@@ -409,7 +409,7 @@ public class DashboardRowsComparator extends AbstractComparator
 
 		RestClient rc = RestClientProxy.getRestClient();
 		rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME, tenantId);
-		rc.setHeader(RestClient.X_REMOTE_USER, userTenant);
+		//rc.setHeader(RestClient.X_REMOTE_USER, userTenant);
 		char[] authToken = LookupManager.getInstance().getAuthorizationToken();
 		String response = rc.get(url, tenantId,new String(authToken));
 		
@@ -426,7 +426,7 @@ public class DashboardRowsComparator extends AbstractComparator
 		//String response =  new TenantSubscriptionUtil.RestClient().get(lk.getHref(), tenantId,userTenant);
 		RestClient rc = RestClientProxy.getRestClient();
 		rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME, tenantId);
-		rc.setHeader(RestClient.X_REMOTE_USER, userTenant);
+		//rc.setHeader(RestClient.X_REMOTE_USER, userTenant);
 		char[] authToken = LookupManager.getInstance().getAuthorizationToken();
 		String token = null;
 		if (authToken != null) {
@@ -447,7 +447,7 @@ public class DashboardRowsComparator extends AbstractComparator
 		//String response =  new TenantSubscriptionUtil.RestClient().get(lk.getHref(), tenantId,userTenant);
 		RestClient rc = RestClientProxy.getRestClient();
 		rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME, tenantId);
-		rc.setHeader(RestClient.X_REMOTE_USER, userTenant);
+		//rc.setHeader(RestClient.X_REMOTE_USER, userTenant);
 		char[] authToken = LookupManager.getInstance().getAuthorizationToken();
 		String response = rc.get(lk.getHref(), tenantId, new String(authToken));
 		//logger.info("checking sync status is " + response);
@@ -467,7 +467,7 @@ public class DashboardRowsComparator extends AbstractComparator
  		//String response = new TenantSubscriptionUtil.RestClient().put(lk.getHref(), entityStr, tenantId, userTenant);
  		RestClient rc = RestClientProxy.getRestClient();
 		rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME, tenantId);
-		rc.setHeader(RestClient.X_REMOTE_USER, userTenant);
+		//rc.setHeader(RestClient.X_REMOTE_USER, userTenant);
 		char[] authToken = LookupManager.getInstance().getAuthorizationToken();
 		String response = rc.put(lk.getHref(), entityStr,tenantId, new String(authToken));
  		//logger.info("Checking sync reponse. Response is " + response);
@@ -487,7 +487,7 @@ public class DashboardRowsComparator extends AbstractComparator
 		//String response = new TenantSubscriptionUtil.RestClient().get(url, tenantId, userTenant);
 		RestClient rc = RestClientProxy.getRestClient();
 		rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME,tenantId);
-		rc.setHeader(RestClient.X_REMOTE_USER,userTenant);
+		//rc.setHeader(RestClient.X_REMOTE_USER,userTenant);
 		char[] authToken = LookupManager.getInstance().getAuthorizationToken();
 		String response = rc.get(url,tenantId, new String(authToken));
 		

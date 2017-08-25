@@ -81,7 +81,8 @@ public class ZDTAPITest {
     	    	result = count;
             }
         };
-        zdtapi.compareOnDF(tenant, userTenant);
+       // zdtapi.compareOnDF(tenant, userTenant);
+        zdtapi.compareOnDF(tenant);
     }
 
     @Test
@@ -104,7 +105,8 @@ public class ZDTAPITest {
     			result = tableRow1;*/
     		}
     	};
-        zdtapi.syncOnDF(tenant, userTenant, tenant);
+       // zdtapi.syncOnDF(tenant, userTenant, tenant);
+    	 zdtapi.syncOnDF(tenant, tenant);
     }
     @Test
     public void testInnerClasses(){
@@ -124,7 +126,8 @@ public class ZDTAPITest {
     @Test
     public void testCompareRows1() {
     	
-    	zdtapi.compareRows(tenant, userTenant,"full",30);
+    //	zdtapi.compareRows(tenant, userTenant,"full",30);
+    	zdtapi.compareRows(tenant, "full",30);
     }
     
     @Test
@@ -159,7 +162,8 @@ public class ZDTAPITest {
     		}
     	};
     	
-    	zdtapi.compareRows(tenant, userTenant,"full", 30);
+    	//zdtapi.compareRows(tenant, userTenant,"full", 30);
+    	zdtapi.compareRows(tenant, "full", 30);
     }
  
     
@@ -175,15 +179,19 @@ public class ZDTAPITest {
     
     @Test
     public void testgetSyncStatus() {
-    	zdtapi.getCompareStatus("id", "userName");
-    	zdtapi.getCompareStatus(null,null);
+    	//zdtapi.getCompareStatus("id", "userName");
+    	zdtapi.getCompareStatus("id");
+    	//zdtapi.getCompareStatus(null,null);
+    	zdtapi.getCompareStatus(null);
     }
     
     @Test
     public void testgetCompareStatus() {
-    	zdtapi.getSyncStatus("id", "userName");
+    	//zdtapi.getSyncStatus("id", "userName");
+    	zdtapi.getSyncStatus("id");
 
-    	zdtapi.getCompareStatus(null,null);
+    	//zdtapi.getCompareStatus(null,null);
+    	zdtapi.getCompareStatus(null);
     }
     
 

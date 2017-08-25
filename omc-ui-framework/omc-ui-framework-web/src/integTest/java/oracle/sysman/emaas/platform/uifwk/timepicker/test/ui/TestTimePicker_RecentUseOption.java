@@ -161,12 +161,23 @@ public class TestTimePicker_RecentUseOption extends LoginAndLogout
 		webd.shutdownBrowser(true);
 	}
 
+	private void clickTimePicker(WebDriver webd, int Index)
+	{
+		//click the datetimepicker component
+		webd.waitForElementPresent("css=" + UIControls.TIMERANGEBTN_CSS);
+		webd.getWebDriver().findElements(By.cssSelector(UIControls.TIMERANGEBTN_CSS)).get(Index - 1).click();
+
+		webd.takeScreenShot();
+		webd.savePageToFile();
+	}
+
 	private String[] verifyRecentUseContent(WebDriver webd, int Index)
 	{
 		//click Recent Use option
 		webd.getLogger().info("Click Recent Use Option");
 		webd.getWebDriver().findElements(By.cssSelector(UIControls.RECENTUSE_CSS)).get(Index - 1).click();
 		webd.takeScreenShot();
+		webd.savePageToFile();
 
 		//check the expand options
 		webd.getLogger().info("Get the context");

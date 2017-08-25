@@ -4,16 +4,16 @@
                 rootAttributes: { style: 'width: 600px;'}}, attr: {id: dialogId}">   
             <div style="overflow: hidden;" >
                 <!--<label for="categorySelect" hidden style='padding: 0px; margin: 0px; width:0px;height:0px;' data-bind="text: widgetGroupLabel"></label>-->
-                <div id="widget-selector-search-container">
-                    <div id="widget-selector-searchbox" class="widget-searchbox-without-filter" data-bind="event:{keydown: widgetBoxClicked}">
-                        <div id="widget-selector-search-input" class="widget-search-input-without-filter">
+                <div class="widget-selector-search-container">
+                    <div class="widget-selector-searchbox widget-searchbox-without-filter" data-bind="event:{keydown: widgetBoxClicked}">
+                        <div class="widget-selector-search-input widget-search-input-without-filter">
                             <input id="searchTxt" maxlength='100' autofocus="autofocus" class="widget-searchtxt-without-filter"
                                data-bind="ojComponent:{component:'ojInputText',value: searchText}, 
                                             attr: {placeholder: searchBoxPlaceHolder, 'aria-label': searchBoxPlaceHolder},
                                             typeAheadSearch: {filterFunc: searchFilterFunc,  response: searchResponse, source: []},
                                             event: {blur: onSearchBoxBlur}"/>
                         </div>
-                        <div id="widget-selector-search-icon-container">
+                        <div class="widget-selector-search-icon-container">
                             <button id="widget-selector-search-button" style="margin-left: -2px;" class="oj-button-half-chrome widget-selector-search-button" data-bind="attr:{id:'widget-selector-search-button_'+[].toString.apply(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1)))},click: searchWidgets,
                                 ojComponent: {component: 'ojButton', label: searchButtonLabel, display: 'icons', chroming: 'half',
                                 icons: {start:'widget-selector-search-icon'}}"> 
@@ -21,7 +21,7 @@
                         </div>
                     </div> 
                 </div>
-                <div id="widget-selector-widgets" data-bind="attr:{'data-wgt-slt-auto-close': autoCloseDialog !== false ? 'TRUE' : 'FALSE'},
+                <div class="widget-selector-widgets" data-bind="attr:{'data-wgt-slt-auto-close': autoCloseDialog !== false ? 'TRUE' : 'FALSE'},
                                                         event: {mouseover: function(data, event) {!isMobileDevice() && data.hideScrollbar(false);},
                                                         mouseout: function(data, event) {!isMobileDevice() && data.hideScrollbar(true);}},
                                                         css:{'widget-selector-hide-scrollbar': hideScrollbar(),'widget-selector-show-scrollbar': !hideScrollbar()}">
@@ -43,16 +43,16 @@
         <div class="widget-selector-main-new widget-selector-in-builder-page"  data-testapiversion="1.7.5">   
             <div style="overflow: hidden;" >
                 <!--<label for="categorySelect" hidden style='padding: 0px; margin: 0px; width:0px;height:0px;' data-bind="text: widgetGroupLabel"></label>-->
-                <div id="widget-selector-search-container" class="fit-size-vertical-sibling">
-                    <div id="widget-selector-searchbox" class="widget-searchbox-without-filter" data-bind="event:{keydown: widgetBoxClicked}">
-                        <div id="widget-selector-search-input" class="widget-search-input-without-filter">
+                <div class="widget-selector-search-container fit-size-vertical-sibling">
+                    <div class="widget-selector-searchbox widget-searchbox-without-filter" data-bind="event:{keydown: widgetBoxClicked}">
+                        <div class="widget-selector-search-input widget-search-input-without-filter">
                             <input id="searchTxt" maxlength='100' autofocus="autofocus" class="widget-searchtxt-without-filter"
                                data-bind="ojComponent:{component:'ojInputText',value: searchText}, 
                                             attr: {placeholder: searchBoxPlaceHolder, 'aria-label': searchBoxPlaceHolder},
                                             typeAheadSearch: {filterFunc: searchFilterFunc,  response: searchResponse, source: []},
                                             event: {blur: onSearchBoxBlur}"/>
                         </div>
-                        <div id="widget-selector-search-icon-container">
+                        <div class="widget-selector-search-icon-container">
                             <button id="widget-selector-search-button" style="margin-left: -2px;" class="oj-button-half-chrome widget-selector-search-button" data-bind="attr:{id:'widget-selector-search-button_'+[].toString.apply(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1)))},click: searchWidgets,
                                 ojComponent: {component: 'ojButton', label: searchButtonLabel, display: 'icons', chroming: 'half',
                                 icons: {start:'widget-selector-search-icon'}}"> 
@@ -60,7 +60,7 @@
                         </div>
                     </div> 
                 </div>
-                <div id="widget-selector-widgets" class="fit-size" data-bind="
+                <div class="widget-selector-widgets fit-size" data-bind="
                                                         event: {mouseover: function(data, event) {!isMobileDevice() && data.hideScrollbar(false);},
                                                         mouseout: function(data, event) {!isMobileDevice() && data.hideScrollbar(true);}},
                                                         css:{'widget-selector-hide-scrollbar': hideScrollbar(),'widget-selector-show-scrollbar': !hideScrollbar()}">

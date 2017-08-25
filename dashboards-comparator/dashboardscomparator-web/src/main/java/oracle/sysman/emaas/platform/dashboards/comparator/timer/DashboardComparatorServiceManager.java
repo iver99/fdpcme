@@ -33,7 +33,7 @@ public class DashboardComparatorServiceManager implements ApplicationServiceMana
 		NotificationListener notification = new DashboardComparatorHandlerNotification();
 		timer.addNotificationListener(notification, null, null);
 		//start to compare and sync in about 2.7 hours after deployment
-		Date timerTriggerAt = new Date(new Date().getTime() + 10000000L);
+		Date timerTriggerAt = new Date(new Date().getTime()); //+ 10000000L);
 		notificationId = timer.addNotification("DashboardComparisonServiceTimer", null, notification, timerTriggerAt, PERIOD, 0);
 		timer.start();
 		LOGGER.info("Timer for dashboard comparison started. notificationId={}", notificationId);

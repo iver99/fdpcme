@@ -141,6 +141,10 @@ define(['knockout',
                     self.rightPanelControl.dashboardEditDisabled(true) ;
                 }
             };
+            
+            self.loadRightPanelWidget = function(_$b){
+                self.rightPanelWidget.change$bContext(_$b);
+            };
 
             self.loadToolBarModel(toolBarModel,self.$b);
 

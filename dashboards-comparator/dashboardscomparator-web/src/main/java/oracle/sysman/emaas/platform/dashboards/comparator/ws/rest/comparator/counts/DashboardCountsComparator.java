@@ -145,7 +145,7 @@ public class DashboardCountsComparator extends AbstractComparator
 		
 		RestClient rc = RestClientProxy.getRestClient();
 		rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME,tenantId);
-		rc.setHeader(RestClient.X_REMOTE_USER,userTenant);
+		//rc.setHeader(RestClient.X_REMOTE_USER,userTenant);
 		
 		char[] authToken = LookupManager.getInstance().getAuthorizationToken();
 		//String response = rc.get(lk.getHref(),tenantId,new String(authToken));

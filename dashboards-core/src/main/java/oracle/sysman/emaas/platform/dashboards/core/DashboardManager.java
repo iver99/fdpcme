@@ -15,6 +15,7 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
+import oracle.sysman.emaas.platform.dashboards.core.exception.security.UpdateSystemDashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.util.*;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.exception.ExecutionException;
@@ -895,8 +896,9 @@ public class DashboardManager
 		}
 		if (joinOptions) {
 			sb.append("left join Ems_Dashboard_User_Options le on (p.dashboard_Id =le.dashboard_Id and le.user_name = ?"
-					+ index++ + " and p.tenant_Id = le.tenant_Id) ");
+					+ index++ + " and le.tenant_Id = ?" + index++ + ") ");
 			paramList.add(currentUser);
+			paramList.add(tenantId);
 		}
 
 		sb.append("where 1=1 ");
@@ -967,9 +969,10 @@ public class DashboardManager
 		if (filter != null) {
 			if (filter.getIncludedWidgetGroupsString(tenantVersionModel) != null && !filter.getIncludedWidgetGroupsString(tenantVersionModel).isEmpty()) {
 				sb1.append(" and ((p.DASHBOARD_ID in (SELECT p2.DASHBOARD_SET_ID FROM EMS_DASHBOARD_SET p2 WHERE p2.SUB_DASHBOARD_ID IN (SELECT t.dashboard_Id FROM Ems_Dashboard_Tile t WHERE (t.TENANT_ID = ?"+ index++ +" or t.TENANT_ID = ?" + index++ + ") and t.WIDGET_GROUP_NAME IN ("
-						+ filter.getIncludedWidgetGroupsString(tenantVersionModel)+ ")) ) OR (          p.DASHBOARD_ID in ((select distinct dashboard_id from ems_dashboard t2 where t2.type=2 and t2.tenant_id = ?"+index++  +" and t2.deleted = 0) minus (SELECT distinct t4.DASHBOARD_SET_ID FROM EMS_DASHBOARD_SET t4 WHERE t4.tenant_id= ?"+ index++ +" and t4.deleted=0))             ) )   )");
+						+ filter.getIncludedWidgetGroupsString(tenantVersionModel)+ ")) ) OR (          p.DASHBOARD_ID in ((select distinct t2.dashboard_id from ems_dashboard t2 where t2.type=2 and t2.tenant_id = ?"+index++  +" and t2.deleted = 0) minus (SELECT distinct t4.DASHBOARD_SET_ID FROM EMS_DASHBOARD_SET t4 WHERE t4.tenant_id= ?"+ index++ +" and t4.deleted=0 and t4.sub_dashboard_id in (select sub_dashboard_id from ems_dashboard_set t5 where t5.sub_dashboard_id in (select distinct t6.dashboard_id from ems_dashboard_tile t6 where t6.tenant_id=?"+index++  +" and t6.deleted=0 ))  ))             ) )   )");
 				paramList.add(tenantId);
 				paramList.add(NON_TENANT_ID);
+				paramList.add(tenantId);
 				paramList.add(tenantId);
 				paramList.add(tenantId);
 			}
@@ -1223,6 +1226,7 @@ public class DashboardManager
 				// initialize id
 				dbd.setDashboardId(IdGenerator.getDashboardId(ZDTContext.getRequestId()));
 			}
+
 			//check dashboard name
 			if (dbd.getName() == null || "".equals(dbd.getName().trim()) || dbd.getName().length() > 64) {
 				throw new CommonFunctionalException(
@@ -1393,8 +1397,7 @@ public class DashboardManager
 			}
 
 			if (DataFormatUtils.integer2Boolean(ed.getIsSystem())) {
-				throw new CommonSecurityException(
-						MessageUtils.getDefaultBundleString(CommonSecurityException.NOT_SUPPORT_UPDATE_SYSTEM_DASHBOARD_ERROR));
+				throw new UpdateSystemDashboardException();
 			}
 			if (!currentUser.equals(ed.getOwner())) {
 				throw new CommonSecurityException(

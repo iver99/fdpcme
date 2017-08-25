@@ -1748,3 +1748,7 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
     max-width: 100% !important;
     height: auto !important;
 }
+
+#uifwkLayoutMainContainer{
+    overflow: hidden !important;
+}

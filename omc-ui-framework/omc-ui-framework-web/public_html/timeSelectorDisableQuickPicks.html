@@ -39,7 +39,7 @@
             <div id="timePicker1">
                 <div data-bind="component: {name: 'date-time-picker', params: timeParams1}"></div>
             </div>
-            <button id="changeOption1" data-bind="ojComponent: {component: 'ojButton'}, click: changeOption1">Change disabled quick picks</button>
+            <button id="changeOption1" data-bind="ojComponent: {component: 'ojButton', label: buttonLabel}, click: changeOption1"></button>
             
             <br/>
             
@@ -50,7 +50,7 @@
             <div>
                 <div data-bind="component: {name: 'date-time-picker', params: timeParams2}"></div>
             </div>
-            <button id="changeOption2" data-bind="ojComponent: {component: 'ojButton'}, click: changeOption2">Change disabled quick picks</button>
+            <button id="changeOption2" data-bind="ojComponent: {component: 'ojButton', label: buttonLabel}, click: changeOption2"></button>
 
         </div>
     </body>
