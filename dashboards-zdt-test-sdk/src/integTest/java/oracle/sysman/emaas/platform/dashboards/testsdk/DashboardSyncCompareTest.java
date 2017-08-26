@@ -10,20 +10,20 @@
 
 package oracle.sysman.emaas.platform.dashboards.testsdk;
 
+import java.sql.SQLException;
+
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.jayway.restassured.RestAssured;
-import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
-
-import java.sql.SQLException;
 
 /**
  * @author cawei
  */
-public class DashboardSyncCompareTest {
+public class DashboardSyncCompareTest
+{
 	/**
 	 * Calling CommonTest.java to Set up RESTAssured defaults & Reading the inputs from the testenv.properties file before
 	 * executing test cases
@@ -37,7 +37,8 @@ public class DashboardSyncCompareTest {
 	static String remoteuser;
 
 	@BeforeClass
-	public static void setUp() {
+	public static void setUp()
+	{
 		CommonTest ct = new CommonTest();
 		HOSTNAME = ct.getHOSTNAME();
 		portno = ct.getPortno();
@@ -48,65 +49,11 @@ public class DashboardSyncCompareTest {
 	}
 
 	@Test
-	public void preferenceCRUD() {
+	public void testFullCompare() throws SQLException
+	{
+		DatabaseUtil.Cloud1InsertData();
 		try {
-			System.out.println("full compare");
-
-			Response res1 = RestAssured
-					.given()
-					.contentType(ContentType.JSON)
-					.log()
-					.everything()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).body("").when().put("/preferences/TestPreference");
-			System.out.println(res1.asString());
-			System.out.println("==POST operation is done");
-			System.out.println("											");
-			System.out.println("Status code is: " + res1.getStatusCode());
-			Assert.assertTrue(res1.getStatusCode() == 200);
-			Assert.assertNotNull(res1.jsonPath().get("href"));
-			Assert.assertEquals(res1.jsonPath().get("key"), "TestPreference");
-			Assert.assertEquals(res1.jsonPath().get("value"), "test preference");
-
-			System.out.println("update the preference");
-			String jsonString1 = "{ \"value\":\"test preference update\"}";
-			Response res2 = RestAssured
-					.given()
-					.contentType(ContentType.JSON)
-					.log()
-					.everything()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).body(jsonString1).when().put("/preferences/TestPreference");
-			System.out.println(res2.asString());
-			System.out.println("==POST operation is done");
-			System.out.println("											");
-			System.out.println("Status code is: " + res2.getStatusCode());
-			Assert.assertTrue(res2.getStatusCode() == 200);
-			Assert.assertNotNull(res2.jsonPath().get("href"));
-			Assert.assertEquals(res2.jsonPath().get("key"), "TestPreference");
-			Assert.assertEquals(res2.jsonPath().get("value"), "test preference update");
-
-			System.out.println("Delete the preference which created");
-			Response res3 = RestAssured
-					.given()
-					.contentType(ContentType.JSON)
-					.log()
-					.everything()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).when().delete("/preferences/TestPreference");
-			System.out.println("Status code is: " + res3.getStatusCode());
-			Assert.assertTrue(res3.getStatusCode() == 204);
-		} catch (Exception ex) {
-			Assert.fail(ex.getLocalizedMessage());
-		}
-
-	}
-
-	@Test
-	public void testFullCompare() throws SQLException {
-		DatabaseUtil.Cloud1ExecuteSQL(null);
-		try {
-			RestAssured.baseURI = "http://" + HOSTNAME + ":" + "8028";
+			RestAssured.baseURI = "http://" + HOSTNAME + ":" + "8022";
 			RestAssured.basePath = "/emcpdfcomparator/api/v1/comparator/compare?";
 			Response res = RestAssured
 					.given()
@@ -116,22 +63,24 @@ public class DashboardSyncCompareTest {
 							"Authorization", authToken).when().get("?type=full");
 			System.out.println("The response is" + res.getStatusCode());
 			Assert.assertTrue(res.getStatusCode() == 200);
-			//			System.out.println("The text"+res.jsonPath().get("items.serviceName"));
-			//			System.out.println("The text"+res.jsonPath().get("items[0].links[0].rel"));
-			//			Assert.assertEquals(res.jsonPath().get("items[0].links[4].rel"), "serviceapi/dashboards.service");
-			//			Assert.assertEquals(res.jsonPath().get("items[0].links[9].rel"), "serviceapi/dashboards.subscribedapps");
-			//			Assert.assertEquals(res.jsonPath().get("items[0].links[12].rel"), "serviceapi/dashboards.subscribedapps2");
-			//			Assert.assertEquals(res.jsonPath().get("items[0].links[15].rel"), "serviceapi/dashboards.logging");
-		} catch (Exception e) {
+			Assert.assertNotNull(res.jsonPath().get("comparisonDateTime"));
+			Assert.assertEquals(res.jsonPath().get("comparisonType"), "full");
+			Assert.assertNotNull(res.jsonPath().get("differentRowNum"));
+			Assert.assertNotNull(res.jsonPath().get("totalRowNum"));
+			Assert.assertNotNull(res.jsonPath().get("divergencePercentage"));
+
+		}
+		catch (Exception e) {
 
 			Assert.fail(e.getLocalizedMessage());
 		}
 	}
 
-	@Test
-	public void testFullCompareStatus() {
+	@Test(dependsOnMethods = { "testFullCompare" })
+	public void testFullCompareStatus()
+	{
 		try {
-			RestAssured.baseURI = "http://" + HOSTNAME + ":" + "8028";
+			RestAssured.baseURI = "http://" + HOSTNAME + ":" + "8022";
 			RestAssured.basePath = "/emcpdfcomparator/api/v1/";
 			Response res = RestAssured
 					.given()
@@ -141,97 +90,103 @@ public class DashboardSyncCompareTest {
 							"Authorization", authToken).when().get("comparator/compare/status");
 			System.out.println("The response is" + res.getStatusCode());
 			Assert.assertTrue(res.getStatusCode() == 200);
-			//			System.out.println("The text"+res.jsonPath().get("items.serviceName"));
-			//			System.out.println("The text"+res.jsonPath().get("items[0].links[0].rel"));
-			//			Assert.assertEquals(res.jsonPath().get("items[0].links[4].rel"), "serviceapi/dashboards.service");
-			//			Assert.assertEquals(res.jsonPath().get("items[0].links[9].rel"), "serviceapi/dashboards.subscribedapps");
-			//			Assert.assertEquals(res.jsonPath().get("items[0].links[12].rel"), "serviceapi/dashboards.subscribedapps2");
-			//			Assert.assertEquals(res.jsonPath().get("items[0].links[15].rel"), "serviceapi/dashboards.logging");
-		} catch (Exception e) {
+			Assert.assertEquals(res.jsonPath().get("comparisonType"), "full");
+			Assert.assertNotNull(res.jsonPath().get("divergencePercentage"));
+			Assert.assertNotNull(res.jsonPath().get("lastComparisonDateTime"));
+			Assert.assertNotNull(res.jsonPath().get("nextScheduledComparisonDateTime"));
+		}
+		catch (Exception e) {
 
 			Assert.fail(e.getLocalizedMessage());
 		}
 	}
 
-	@Test
-	public void testIncrementalCompare() {
+	@Test(dependsOnMethods = { "testFullCompareStatus" })
+	public void testFullSync()
+	{
 		try {
-			RestAssured.baseURI = "http://" + HOSTNAME + ":" + "8028";
+			RestAssured.baseURI = "http://" + HOSTNAME + ":" + "8022";
+			RestAssured.basePath = "/emcpdfcomparator/api/v1/";
+			Response res = RestAssured
+					.given()
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).when().get("comparator/sync");
+			System.out.println("The response is" + res.getStatusCode());
+			Assert.assertTrue(res.getStatusCode() == 200);
+			Assert.assertEquals(res.jsonPath().get("omc1"), "Sync is successful!");
+			Assert.assertEquals(res.jsonPath().get("omc2"), "Sync is successful!");
+
+		}
+		catch (Exception e) {
+
+			Assert.fail(e.getLocalizedMessage());
+		}
+	}
+
+	@Test(dependsOnMethods = { "testFullSync" })
+	public void testFullSyncStatus()
+	{
+		try {
+			RestAssured.baseURI = "http://" + HOSTNAME + ":" + "8022";
+			RestAssured.basePath = "/emcpdfcomparator/api/v1/comparator/sync/status";
+			Response res = RestAssured
+					.given()
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).when().get("comparator/sync/status");
+			System.out.println("The response is" + res.getStatusCode());
+			Assert.assertTrue(res.getStatusCode() == 200);
+			Assert.assertNotNull(res.jsonPath().get("lastSyncDateTime"));
+			Assert.assertNotNull(res.jsonPath().get("syncType"));
+			Assert.assertNotNull(res.jsonPath().get("nextScheduledSyncDateTime"));
+			Assert.assertNotNull(res.jsonPath().get("divergencePercentage"));
+
+		}
+		catch (Exception e) {
+
+			Assert.fail(e.getLocalizedMessage());
+		}
+	}
+
+	@Test(dependsOnMethods = { "testFullSyncStatus" })
+	public void testIncrementalCompare()
+	{
+		try {
+			DatabaseUtil.Cloud1DeleteData();
+			DatabaseUtil.Cloud2DeleteData();
+			DatabaseUtil.Cloud2InsertData();
+			RestAssured.baseURI = "http://" + HOSTNAME + ":" + "8022";
 			RestAssured.basePath = "/emcpdfcomparator/api/v1/comparator/compare";
 			Response res = RestAssured
 					.given()
 					.log()
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).when().get("comparator/compare/status");
+							"Authorization", authToken).when().get("comparator/compare");
 			System.out.println("The response is" + res.getStatusCode());
 			Assert.assertTrue(res.getStatusCode() == 200);
-			//			System.out.println("The text"+res.jsonPath().get("items.serviceName"));
-			//			System.out.println("The text"+res.jsonPath().get("items[0].links[0].rel"));
-			//			Assert.assertEquals(res.jsonPath().get("items[0].links[4].rel"), "serviceapi/dashboards.service");
-			//			Assert.assertEquals(res.jsonPath().get("items[0].links[9].rel"), "serviceapi/dashboards.subscribedapps");
-			//			Assert.assertEquals(res.jsonPath().get("items[0].links[12].rel"), "serviceapi/dashboards.subscribedapps2");
-			//			Assert.assertEquals(res.jsonPath().get("items[0].links[15].rel"), "serviceapi/dashboards.logging");
-		} catch (Exception e) {
+			Assert.assertNotNull(res.jsonPath().get("comparisonDateTime"));
+			Assert.assertEquals(res.jsonPath().get("comparisonType"), "incremental");
+			Assert.assertNotNull(res.jsonPath().get("differentRowNum"));
+			Assert.assertNotNull(res.jsonPath().get("totalRowNum"));
+			Assert.assertNotNull(res.jsonPath().get("divergencePercentage"));
+			Assert.assertNotNull(res.jsonPath().get("divergenceSummary"));
+
+		}
+		catch (Exception e) {
 
 			Assert.fail(e.getLocalizedMessage());
 		}
 	}
 
-	@Test
-	public void testIncrementalCompare1() {
+	@Test(dependsOnMethods = { "testIncrementalCompare" })
+	public void testIncrementalCompareStatus()
+	{
 		try {
-			RestAssured.baseURI = "http://" + HOSTNAME + ":" + "8028";
-			RestAssured.basePath = "/emcpdfcomparator/api/v1/comparator/sync";
-			Response res = RestAssured
-					.given()
-					.log()
-					.everything()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).when().get("comparator/sync");
-			System.out.println("The response is" + res.getStatusCode());
-			Assert.assertTrue(res.getStatusCode() == 200);
-			//			System.out.println("The text"+res.jsonPath().get("items.serviceName"));
-			//			System.out.println("The text"+res.jsonPath().get("items[0].links[0].rel"));
-			//			Assert.assertEquals(res.jsonPath().get("items[0].links[4].rel"), "serviceapi/dashboards.service");
-			//			Assert.assertEquals(res.jsonPath().get("items[0].links[9].rel"), "serviceapi/dashboards.subscribedapps");
-			//			Assert.assertEquals(res.jsonPath().get("items[0].links[12].rel"), "serviceapi/dashboards.subscribedapps2");
-			//			Assert.assertEquals(res.jsonPath().get("items[0].links[15].rel"), "serviceapi/dashboards.logging");
-		} catch (Exception e) {
-
-			Assert.fail(e.getLocalizedMessage());
-		}
-	}
-
-	@Test
-	public void testIncrementalCompareAfterSync() {
-		try {
-			RestAssured.baseURI = "http://" + HOSTNAME + ":" + "8028";
-			RestAssured.basePath = "/emcpdfcomparator/api/v1/comparator/sync";
-			Response res = RestAssured
-					.given()
-					.log()
-					.everything()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).when().get("comparator/sync");
-			System.out.println("The response is" + res.getStatusCode());
-			Assert.assertTrue(res.getStatusCode() == 200);
-			//			System.out.println("The text"+res.jsonPath().get("items.serviceName"));
-			//			System.out.println("The text"+res.jsonPath().get("items[0].links[0].rel"));
-			//			Assert.assertEquals(res.jsonPath().get("items[0].links[4].rel"), "serviceapi/dashboards.service");
-			//			Assert.assertEquals(res.jsonPath().get("items[0].links[9].rel"), "serviceapi/dashboards.subscribedapps");
-			//			Assert.assertEquals(res.jsonPath().get("items[0].links[12].rel"), "serviceapi/dashboards.subscribedapps2");
-			//			Assert.assertEquals(res.jsonPath().get("items[0].links[15].rel"), "serviceapi/dashboards.logging");
-		} catch (Exception e) {
-
-			Assert.fail(e.getLocalizedMessage());
-		}
-	}
-
-	@Test
-	public void testIncrementalCompareStatus() {
-		try {
-			RestAssured.baseURI = "http://" + HOSTNAME + ":" + "8028";
+			RestAssured.baseURI = "http://" + HOSTNAME + ":" + "8022";
 			RestAssured.basePath = "/emcpdfcomparator/api/v1";
 			Response res = RestAssured
 					.given()
@@ -241,166 +196,67 @@ public class DashboardSyncCompareTest {
 							"Authorization", authToken).when().get("comparator/compare/status");
 			System.out.println("The response is" + res.getStatusCode());
 			Assert.assertTrue(res.getStatusCode() == 200);
-			//			System.out.println("The text"+res.jsonPath().get("items.serviceName"));
-			//			System.out.println("The text"+res.jsonPath().get("items[0].links[0].rel"));
-			//			Assert.assertEquals(res.jsonPath().get("items[0].links[4].rel"), "serviceapi/dashboards.service");
-			//			Assert.assertEquals(res.jsonPath().get("items[0].links[9].rel"), "serviceapi/dashboards.subscribedapps");
-			//			Assert.assertEquals(res.jsonPath().get("items[0].links[12].rel"), "serviceapi/dashboards.subscribedapps2");
-			//			Assert.assertEquals(res.jsonPath().get("items[0].links[15].rel"), "serviceapi/dashboards.logging");
-		} catch (Exception e) {
+			Assert.assertEquals(res.jsonPath().get("comparisonType"), "incremental");
+			Assert.assertNotNull(res.jsonPath().get("divergencePercentage"));
+			Assert.assertNotNull(res.jsonPath().get("lastComparisonDateTime"));
+			Assert.assertNotNull(res.jsonPath().get("nextScheduledComparisonDateTime"));
+		}
+		catch (Exception e) {
 
 			Assert.fail(e.getLocalizedMessage());
 		}
 	}
 
-	@Test
-	public void testIncrementalCompareStatus1() {
+	@Test(dependsOnMethods = { "testIncrementalCompareStatus" })
+	public void testIncrementalSync()
+	{
 		try {
-			RestAssured.baseURI = "http://" + HOSTNAME + ":" + "8028";
+			RestAssured.baseURI = "http://" + HOSTNAME + ":" + "8022";
 			RestAssured.basePath = "/emcpdfcomparator/api/v1/comparator/sync";
 			Response res = RestAssured
 					.given()
 					.log()
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).when().get("comparator/sync");
+							"Authorization", authToken).when().get("comparator/sync?type=incremental");
 			System.out.println("The response is" + res.getStatusCode());
 			Assert.assertTrue(res.getStatusCode() == 200);
-			//			System.out.println("The text"+res.jsonPath().get("items.serviceName"));
-			//			System.out.println("The text"+res.jsonPath().get("items[0].links[0].rel"));
-			//			Assert.assertEquals(res.jsonPath().get("items[0].links[4].rel"), "serviceapi/dashboards.service");
-			//			Assert.assertEquals(res.jsonPath().get("items[0].links[9].rel"), "serviceapi/dashboards.subscribedapps");
-			//			Assert.assertEquals(res.jsonPath().get("items[0].links[12].rel"), "serviceapi/dashboards.subscribedapps2");
-			//			Assert.assertEquals(res.jsonPath().get("items[0].links[15].rel"), "serviceapi/dashboards.logging");
-		} catch (Exception e) {
+			Assert.assertEquals(res.jsonPath().get("omc1"), "Sync is successful!");
+			Assert.assertEquals(res.jsonPath().get("omc2"), "Sync is successful!");
+
+		}
+		catch (Exception e) {
 
 			Assert.fail(e.getLocalizedMessage());
 		}
 	}
 
-	@Test
-	public void testIncrementalCompareStatusAfterSync() {
+	@Test(dependsOnMethods = { "testIncrementalSync" })
+	public void testIncrementalSyncStatus()
+	{
 		try {
-			RestAssured.baseURI = "http://" + HOSTNAME + ":" + "8028";
-			RestAssured.basePath = "/emcpdfcomparator/api/v1/comparator/sync";
+			RestAssured.baseURI = "http://" + HOSTNAME + ":" + "8022";
+			RestAssured.basePath = "/emcpdfcomparator/api/v1/comparator/sync/status";
 			Response res = RestAssured
 					.given()
 					.log()
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).when().get("comparator/sync");
+							"Authorization", authToken).when().get("comparator/sync/status");
 			System.out.println("The response is" + res.getStatusCode());
 			Assert.assertTrue(res.getStatusCode() == 200);
-			//			System.out.println("The text"+res.jsonPath().get("items.serviceName"));
-			//			System.out.println("The text"+res.jsonPath().get("items[0].links[0].rel"));
-			//			Assert.assertEquals(res.jsonPath().get("items[0].links[4].rel"), "serviceapi/dashboards.service");
-			//			Assert.assertEquals(res.jsonPath().get("items[0].links[9].rel"), "serviceapi/dashboards.subscribedapps");
-			//			Assert.assertEquals(res.jsonPath().get("items[0].links[12].rel"), "serviceapi/dashboards.subscribedapps2");
-			//			Assert.assertEquals(res.jsonPath().get("items[0].links[15].rel"), "serviceapi/dashboards.logging");
-		} catch (Exception e) {
+			Assert.assertNotNull(res.jsonPath().get("lastSyncDateTime"));
+			Assert.assertNotNull(res.jsonPath().get("syncType"));
+			Assert.assertEquals(res.jsonPath().get("syncType"), "incremental");
+			Assert.assertNotNull(res.jsonPath().get("nextScheduledSyncDateTime"));
+			Assert.assertNotNull(res.jsonPath().get("divergencePercentage"));
+			DatabaseUtil.Cloud1DeleteData();
+			DatabaseUtil.Cloud2DeleteData();
+
+		}
+		catch (Exception e) {
 
 			Assert.fail(e.getLocalizedMessage());
 		}
 	}
-
-	@Test
-	public void testIncrementalSync() {
-		try {
-			RestAssured.baseURI = "http://" + HOSTNAME + ":" + "8028";
-			RestAssured.basePath = "/emcpdfcomparator/api/v1/comparator/sync";
-			Response res = RestAssured
-					.given()
-					.log()
-					.everything()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).when().get("comparator/sync");
-			System.out.println("The response is" + res.getStatusCode());
-			Assert.assertTrue(res.getStatusCode() == 200);
-			//			System.out.println("The text"+res.jsonPath().get("items.serviceName"));
-			//			System.out.println("The text"+res.jsonPath().get("items[0].links[0].rel"));
-			//			Assert.assertEquals(res.jsonPath().get("items[0].links[4].rel"), "serviceapi/dashboards.service");
-			//			Assert.assertEquals(res.jsonPath().get("items[0].links[9].rel"), "serviceapi/dashboards.subscribedapps");
-			//			Assert.assertEquals(res.jsonPath().get("items[0].links[12].rel"), "serviceapi/dashboards.subscribedapps2");
-			//			Assert.assertEquals(res.jsonPath().get("items[0].links[15].rel"), "serviceapi/dashboards.logging");
-		} catch (Exception e) {
-
-			Assert.fail(e.getLocalizedMessage());
-		}
-	}
-
-	@Test
-	public void testSync() {
-		try {
-			RestAssured.baseURI = "http://" + HOSTNAME + ":" + "8028";
-			RestAssured.basePath = "/emcpdfcomparator/api/v1/";
-			Response res = RestAssured
-					.given()
-					.log()
-					.everything()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).when().get("comparator/sync");
-			System.out.println("The response is" + res.getStatusCode());
-			Assert.assertTrue(res.getStatusCode() == 200);
-			//			System.out.println("The text"+res.jsonPath().get("items.serviceName"));
-			//			System.out.println("The text"+res.jsonPath().get("items[0].links[0].rel"));
-			//			Assert.assertEquals(res.jsonPath().get("items[0].links[4].rel"), "serviceapi/dashboards.service");
-			//			Assert.assertEquals(res.jsonPath().get("items[0].links[9].rel"), "serviceapi/dashboards.subscribedapps");
-			//			Assert.assertEquals(res.jsonPath().get("items[0].links[12].rel"), "serviceapi/dashboards.subscribedapps2");
-			//			Assert.assertEquals(res.jsonPath().get("items[0].links[15].rel"), "serviceapi/dashboards.logging");
-		} catch (Exception e) {
-
-			Assert.fail(e.getLocalizedMessage());
-		}
-	}
-
-	@Test
-	public void testSyncStatus() {
-		try {
-			RestAssured.baseURI = "http://" + HOSTNAME + ":" + "8028";
-			RestAssured.basePath = "/emcpdfcomparator/api/v1/comparator/sync";
-			Response res = RestAssured
-					.given()
-					.log()
-					.everything()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).when().get("comparator/sync");
-			System.out.println("The response is" + res.getStatusCode());
-			Assert.assertTrue(res.getStatusCode() == 200);
-			//			System.out.println("The text"+res.jsonPath().get("items.serviceName"));
-			//			System.out.println("The text"+res.jsonPath().get("items[0].links[0].rel"));
-			//			Assert.assertEquals(res.jsonPath().get("items[0].links[4].rel"), "serviceapi/dashboards.service");
-			//			Assert.assertEquals(res.jsonPath().get("items[0].links[9].rel"), "serviceapi/dashboards.subscribedapps");
-			//			Assert.assertEquals(res.jsonPath().get("items[0].links[12].rel"), "serviceapi/dashboards.subscribedapps2");
-			//			Assert.assertEquals(res.jsonPath().get("items[0].links[15].rel"), "serviceapi/dashboards.logging");
-		} catch (Exception e) {
-
-			Assert.fail(e.getLocalizedMessage());
-		}
-	}
-
-	@Test
-	public void testSyncStatus1() {
-		try {
-			RestAssured.baseURI = "http://" + HOSTNAME + ":" + "8028";
-			RestAssured.basePath = "/emcpdfcomparator/api/v1/comparator/sync";
-			Response res = RestAssured
-					.given()
-					.log()
-					.everything()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).when().get("comparator/sync");
-			System.out.println("The response is" + res.getStatusCode());
-			Assert.assertTrue(res.getStatusCode() == 200);
-			//			System.out.println("The text"+res.jsonPath().get("items.serviceName"));
-			//			System.out.println("The text"+res.jsonPath().get("items[0].links[0].rel"));
-			//			Assert.assertEquals(res.jsonPath().get("items[0].links[4].rel"), "serviceapi/dashboards.service");
-			//			Assert.assertEquals(res.jsonPath().get("items[0].links[9].rel"), "serviceapi/dashboards.subscribedapps");
-			//			Assert.assertEquals(res.jsonPath().get("items[0].links[12].rel"), "serviceapi/dashboards.subscribedapps2");
-			//			Assert.assertEquals(res.jsonPath().get("items[0].links[15].rel"), "serviceapi/dashboards.logging");
-		} catch (Exception e) {
-
-			Assert.fail(e.getLocalizedMessage());
-		}
-	}
-
 }

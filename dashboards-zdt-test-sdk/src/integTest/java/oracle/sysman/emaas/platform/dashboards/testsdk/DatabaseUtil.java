@@ -10,13 +10,24 @@
 
 package oracle.sysman.emaas.platform.dashboards.testsdk;
 
-import java.io.*;
-import java.sql.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Properties;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import oracle.sysman.qatool.uifwk.utils.Utils;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.testng.Assert;
 
 /**
@@ -25,24 +36,44 @@ import org.testng.Assert;
 public class DatabaseUtil
 {
 	private static final Logger LOGGER = LogManager.getLogger(DatabaseUtil.class);
-//	private static String CLOUD1_HOSTNAME = Utils.getProperty("ODS_HOSTNAME");
-//
-//	private static String CLOUD1_PORT = Utils.getProperty("ODS_PORT");
-//
-//	private static String CLOUD1_SERVICE = Utils.getProperty("ODS_SID");
-//	private static String CLOUD1_USERNAME = "SYSEMS_T_1010";
-//	private static String CLOUD1_PWD = Utils.getProperty("ODS_SYSTEM_PWD");
-//
-//	private static String CLOUD2_HOSTNAME = DatabaseUtil.propsReader("ODS_HOSTNAME");
-//
-//	private static String CLOUD2_PORT = DatabaseUtil.propsReader("ODS_PORT");
-//
-//	private static String CLOUD2_SERVICE = DatabaseUtil.propsReader("ODS_SID");
-//
-//	private static String CLOUD2_USERNAME = "SYSEMS_T_1010";
-//
-//	private static String CLOUD2_PWD = DatabaseUtil.propsReader("ODS_SYSTEM_PWD");
+	private static String CLOUD1_HOSTNAME = Utils.getProperty("ODS_HOSTNAME");
 
+	private static String CLOUD1_PORT = Utils.getProperty("ODS_PORT");
+
+	private static String CLOUD1_SERVICE = Utils.getProperty("ODS_SID");
+	private static String CLOUD1_USERNAME = "SYSEMS_T_1010";
+	private static String CLOUD1_PWD = Utils.getProperty("ODS_SYSTEM_PWD");
+
+	private static String CLOUD2_HOSTNAME = DatabaseUtil.propsReader("ODS_HOSTNAME");
+
+	private static String CLOUD2_PORT = DatabaseUtil.propsReader("ODS_PORT");
+
+	private static String CLOUD2_SERVICE = DatabaseUtil.propsReader("ODS_SID");
+
+	private static String CLOUD2_USERNAME = "SYSEMS_T_1010";
+
+	private static String CLOUD2_PWD = DatabaseUtil.propsReader("ODS_SYSTEM_PWD");
+
+	public static void Cloud1DeleteData()
+	{
+		Connection conn = DatabaseUtil.ConnectCloud1();//this c is null
+
+		PreparedStatement pstmt = null;
+		String sql = "delete from ems_dashboard where dashboard_Id>4000000;delete from ems_zdt_comparator;delete from ems_zdt_sync;";
+		System.out.println(sql);
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.executeUpdate();
+
+			pstmt.close();
+
+			conn.close();
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println(e);
+		}
+	}
 
 	public static void Cloud1ExecuteSQL(String filename) throws SQLException
 	{
@@ -83,7 +114,54 @@ public class DatabaseUtil
 
 	}
 
-	/*public static void Cloud2ExecuteSQL(String filename) throws SQLException
+	public static void Cloud1InsertData()
+	{
+		Connection conn = DatabaseUtil.ConnectCloud1();//this c is null
+
+		PreparedStatement pstmt = null;
+		String sql = "insert into ems_dashboard values(?,'Test dashboard',0,CONCAT('Test dashboard description',?),'18-JUL-17 05.09.38.583000000 AM','18-JUL-17 05.09.38.583000000 AM','Oracle','Oracle',0,3,1,'screenshot',0,?,1,0,1,0,null,1)";
+		System.out.println(sql);
+		try {
+			for (int i = 0; i < 100; i++) {
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setLong(1, 5000000 + i);
+				pstmt.setLong(2, 5000000 + i);
+				pstmt.setLong(3, 673850132);
+				int j = pstmt.executeUpdate();
+
+				Assert.assertNotEquals(j, 0);
+				pstmt.close();
+			}
+			conn.close();
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println(e);
+		}
+	}
+
+	public static void Cloud2DeleteData()
+	{
+		Connection conn = DatabaseUtil.ConnectCloud1();//this c is null
+
+		PreparedStatement pstmt = null;
+		String sql = "delete from ems_dashboard where dashboard_Id>4000000;delete from ems_zdt_comparator;delete from ems_zdt_sync;";
+		System.out.println(sql);
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.executeUpdate();
+
+			pstmt.close();
+
+			conn.close();
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println(e);
+		}
+	}
+
+	public static void Cloud2ExecuteSQL(String filename) throws SQLException
 	{
 		String s = new String();
 		StringBuffer sb = new StringBuffer();
@@ -120,25 +198,51 @@ public class DatabaseUtil
 			System.out.println(sb.toString());
 		}
 
-	}*/
+	}
+
+	public static void Cloud2InsertData()
+	{
+		Connection conn = DatabaseUtil.ConnectCloud1();//this c is null
+
+		PreparedStatement pstmt = null;
+		String sql = "insert into ems_dashboard values(?,'Test dashboard',0,CONCAT('Test dashboard description',?),'18-JUL-17 05.09.38.583000000 AM','18-JUL-17 05.09.38.583000000 AM','Oracle','Oracle',0,3,1,'screenshot',0,?,1,0,1,0,null,1)";
+		System.out.println(sql);
+		try {
+			for (int i = 0; i < 100; i++) {
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setLong(1, 5000000 + i);
+				pstmt.setLong(2, 5000000 + i);
+				pstmt.setLong(3, 673850132);
+				int j = pstmt.executeUpdate();
+
+				Assert.assertNotEquals(j, 0);
+				pstmt.close();
+			}
+			conn.close();
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println(e);
+		}
+	}
 
 	public static Connection ConnectCloud1()
 	{
-		Connection connection = DatabaseUtil.establishConnection("den02dtg.us.oracle.com", "1521", "orcl12c", "SYSEMS_T_1004",
-				"welcome1");
+		Connection connection = DatabaseUtil.establishConnection(CLOUD1_HOSTNAME, CLOUD1_PORT, CLOUD1_SERVICE, CLOUD1_USERNAME,
+				CLOUD1_PWD);
 
 		return connection;
 
 	}
 
-	/*public static Connection ConnectCloud2()
+	public static Connection ConnectCloud2()
 	{
 		Connection connection = DatabaseUtil.establishConnection(CLOUD2_HOSTNAME, CLOUD2_PORT, CLOUD2_SERVICE, CLOUD2_USERNAME,
 				CLOUD2_PWD);
 
 		return connection;
 
-	}*/
+	}
 
 	public static Connection establishConnection(String HOSTNAME, String PORT, String SERVICE, String USERNAME, String PASSWORD)
 	{
