@@ -157,18 +157,11 @@ public class ZDTAPI
 		
 		logger.info("incoming call from zdt comparator to do row comparing");
 		String message = "";
-		int status = 200;
 		if (compareType == null) {
 			compareType = "incremental";
 		}
-		if (skipMinutes <= 0) {
-			skipMinutes = 30;    //TODO to check: what is the accurate default skipping time for comparator?
-		}
-		String maxComparedDate = null;
-		if (skipMinutes > 0) {
-			maxComparedDate = TimeUtil.getMaxTimeStampStr(skipMinutes);
-		}
-		logger.info("the max compared date is "+maxComparedDate);
+		//get comparison start time
+		String maxComparedDate = getSkipMinsTimeStamp(skipMinutes);
 		
 		try {
 			DashboardRowsComparator dcc = new DashboardRowsComparator();
@@ -178,23 +171,23 @@ public class ZDTAPI
 				return Response.status(400).entity(new ErrorEntity(ZDTErrorConstants.NULL_TABLE_ROWS_ERROR_CODE, ZDTErrorConstants.NULL_TABLE_ROWS_ERROR_MESSAGE)).build();
 			}
 			JSONArray tenantArrayForClient1 = null;
-			
+
 			JSONObject obj1 = new JSONObject(tenants1);
-			boolean iscomparedForClient1 = obj1.getBoolean("isCompared");
-			logger.info("iscompared1=" + iscomparedForClient1);
+			boolean isComparedForClient1 = obj1.getBoolean("isCompared");
+			logger.info("iscompared1=" + isComparedForClient1);
 			tenantArrayForClient1 = obj1.getJSONArray("tenants");
 			logger.info("tenantArray size1 = " + tenantArrayForClient1.length());
-			
+
 			JSONArray tenantArrayForClient2 = null;
-			
+
 			JSONObject obj2 = new JSONObject(tenants2);
-			boolean iscomparedForClient2 = obj2.getBoolean("isCompared");
-			logger.info("iscompared2=" + iscomparedForClient2);
+			boolean isComparedForClient2 = obj2.getBoolean("isCompared");
+			logger.info("iscompared2=" + isComparedForClient2);
 			tenantArrayForClient2 = obj2.getJSONArray("tenants");
 			logger.info("tenantArray size2 = " + tenantArrayForClient2.length());
 			
 			if (tenantArrayForClient1.length() == 0 && tenantArrayForClient2.length() == 0) {
-				return Response.status(status).entity("{\"msg\":\"#1.No user created dashboards, No need to compare\"}").build();
+				return Response.status(Status.NO_CONTENT).entity("{\"msg\":\"#1.No user created dashboards, No need to compare\"}").build();
 			}
 			
 			Set<String> tenants = new HashSet<String>();
@@ -208,51 +201,45 @@ public class ZDTAPI
 				tenants.add(tenant);
 			}
 			
-			boolean iscompared = true;
-			if ((!iscomparedForClient1) || (!iscomparedForClient2)) {
+			boolean isCompared = true;
+			if ((!isComparedForClient1) || (!isComparedForClient2)) {
 				// any one of the clouds has not yet been compared, then they should be compared in full mode
-				iscompared = false;							
+				isCompared = false;
 			}
 			InstancesComparedData<TableRowsEntity> result = null;
 			int totalRowForClient1 = dcc.getTotalRowForOmcInstance(tenantIdParam, null,dcc.getClient1(), maxComparedDate);// changed		
-			int totalRowForClient2 = dcc.getTotalRowForOmcInstance(tenantIdParam, null,dcc.getClient2(), maxComparedDate);// changed		
+			int totalRowForClient2 = dcc.getTotalRowForOmcInstance(tenantIdParam, null,dcc.getClient2(), maxComparedDate);// changed
+			logger.info("Total rows in 2 clouds are Cloud1:{} and Cloud2: {}", totalRowForClient1,totalRowForClient2);
 			int totalRow = totalRowForClient1 + totalRowForClient2;
 			if (totalRow == 0) {
-	
-				return Response.status(status).entity("{\"msg\":\"#2.No user created dashboards, No need to compare\"}").build();
+				return Response.status(Status.NO_CONTENT).entity("{\"msg\":\"#2.No user created dashboards in 2 clouds, No need to compare\"}").build();
 			}
 			int totalDifferentRows = 0;
 			
-			if (!iscompared || compareType == "full") {
+			if (!isCompared || compareType == "full") {
 				int count = 0;
 				JSONObject obj = null;
-				JSONObject subObj = new JSONObject();
-				StringBuffer sb1 = new StringBuffer();
-				StringBuffer sb2 = new StringBuffer();
 				//handle tenant one by one and save comparison result for each tenant
 				for (String tenantStr : tenants) {
 					count = count + 1;
 					result = dcc.compare(tenantIdParam,compareType,maxComparedDate, // changed
-							iscompared, tenantStr);
+							isCompared, tenantStr);
 					
 					if (result != null) {
 						int comparedDataNum = dcc.countForComparedRows(result.getInstance1().getData()) + dcc.countForComparedRows(result.getInstance2().getData());
-						logger.info("comparedNum={}",comparedDataNum);
-						
+						logger.info("Different rows for tenant {} is {}", tenantStr, comparedDataNum);
 						totalDifferentRows = totalDifferentRows + comparedDataNum;
 						
 						double percentage = 0;
+						// divergence percentage will be calculated only when the last tenant is fetched
+						if (count == tenants.size()) {
+							//calculate the divergence percentage
+							percentage = calcPercentage(totalRow, totalDifferentRows);
+						}
+
 						Date currentUtcDate = TimeUtil.getCurrentUTCTime();
 						String comparisonDate = TimeUtil.getTimeString(currentUtcDate);
 						String nextScheduleDateStr = getNextScheduleTime(currentUtcDate);
-						
-						if (count == tenants.size()) {
-							// the last tenant is fetched										
-							double percen = (double)totalDifferentRows/(double)totalRow;
-							DecimalFormat df = new DecimalFormat("#.##########");
-							percentage = Double.parseDouble(df.format(percen));
-						}
-						
 						JsonUtil jsonUtil = JsonUtil.buildNormalMapper();
 						
 						TableRowsEntity data1 = result.getInstance1().getData();
@@ -265,19 +252,14 @@ public class ZDTAPI
 						
 						// save status information for client 1  -- switch data for sync
 						LookupClient client1 = result.getInstance1().getClient();
-						//IMPORTANT NOTE: save the data that cloud1 missing into cloud1
+						//IMPORTANT NOTE: save the data that cloud1 missing into cloud1 compare table
 						dcc.saveComparatorStatus(tenantIdParam,null, client1, statusRow2);// changed		
 						
 						// save status informantion for client 2 -- switch data for sync
 						LookupClient client2 = result.getInstance2().getClient();
-						//IMPORTANT NOTE: save the data that cloud2 missing into cloud2
+						//IMPORTANT NOTE: save the data that cloud2 missing into cloud2 compare table
 						dcc.saveComparatorStatus(tenantIdParam,null, client2, statusRow1);// changed		
-						
-						sb1.append(result1);
-						
-						
-						sb2.append(result2);
-						
+
 						if (count == tenants.size()) {
 							 obj = new JSONObject();
 								obj.put("comparisonDateTime", comparisonDate);
@@ -289,12 +271,14 @@ public class ZDTAPI
 								if (totalDifferentRows > 1000) {
 									obj.put("divergenceSummary", "The number for different rows is more than 1000; There is too much content to display;");
 								} else {
-									
-									subObj.put(result.getInstance1().getKey(), sb2.toString());
-									subObj.put(result.getInstance2().getKey(), sb1.toString());
+									//NOTE: This is by design, because the data cloud1 missing is in result2 and the data missing in cloud2 is in result1
+									JSONObject subObj = new JSONObject();
+									subObj.put(result.getInstance1().getKey(), result2);
+									subObj.put(result.getInstance2().getKey(), result1);
 									obj.put("divergenceSummary", subObj);
 								}	
-						}						
+						}
+						//compare work for a single tenant is over, reset the result
 						result = null;
 						
 					} else {
@@ -305,21 +289,15 @@ public class ZDTAPI
 			} else {
 				//incremental compare begin...
 				result = dcc.compare(tenantIdParam,compareType,maxComparedDate,// changed
-						iscompared, null);
+						isCompared, null);
 				
 				if (result != null) {
 					int comparedDataNum = dcc.countForComparedRows(result.getInstance1().getData()) + dcc.countForComparedRows(result.getInstance2().getData());
 					logger.info("comparedNum={}",comparedDataNum);
 					totalDifferentRows = totalDifferentRows + comparedDataNum;
-					double percen = 0;
-					if (comparedDataNum != 0) {
-						percen = (double)comparedDataNum/(double)totalRow;
-					}
-					if (totalRow == 0) {
-						return Response.status(status).entity("{\"msg\":\"#3.No user created dashboards, No need to compare\"}").build();
-					}
-					DecimalFormat df = new DecimalFormat("#.######");
-					double percentage = Double.parseDouble(df.format(percen));
+					//calculate the divergence percentage
+					double percentage = calcPercentage(totalRow, totalDifferentRows);
+
 					Date currentUtcDate = TimeUtil.getCurrentUTCTime();
 					String comparisonDate = TimeUtil.getTimeString(currentUtcDate);
 					String nextScheduleDateStr = getNextScheduleTime(currentUtcDate);
@@ -367,7 +345,24 @@ public class ZDTAPI
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(e))).build();
 		}
 		
-		return Response.status(status).entity(message).build();
+		return Response.status(Status.OK).entity(message).build();
+	}
+
+	/**
+	 * current time - skip mins = compare start time
+	 * @param skipMinutes
+	 * @return
+	 */
+	private String getSkipMinsTimeStamp(int skipMinutes) {
+		if (skipMinutes <= 0) {
+			skipMinutes = 30;    //TODO to check: what is the accurate default skipping time for comparator?
+		}
+		String maxComparedDate = null;
+		if (skipMinutes > 0) {
+			maxComparedDate = TimeUtil.getMaxTimeStampStr(skipMinutes);
+		}
+		logger.info("Comparison start time is {}", maxComparedDate);
+		return maxComparedDate;
 	}
 
 	private String getNextScheduleTime(Date currentUtcDate) {
@@ -420,6 +415,12 @@ public class ZDTAPI
  			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(e))).build();
  		}
 		
+	}
+
+	private double calcPercentage(int totalRows, int differentRow){
+		double percen = (double)differentRow/(double)totalRows;
+		DecimalFormat df = new DecimalFormat("#.##########");
+		return Double.parseDouble(df.format(percen));
 	}
 
 	public static class InstanceCounts

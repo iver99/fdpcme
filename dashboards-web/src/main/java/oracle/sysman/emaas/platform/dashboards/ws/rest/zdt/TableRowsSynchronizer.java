@@ -10,25 +10,15 @@
 
 package oracle.sysman.emaas.platform.dashboards.ws.rest.zdt;
 
-import java.math.BigInteger;
-import java.util.List;
-
 import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
 import oracle.sysman.emaas.platform.dashboards.core.zdt.DataManager;
-
+import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.DashboardRowEntity;
-import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.DashboardSetRowEntity;
-import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.DashboardTileParamsRowEntity;
-import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.DashboardTileRowEntity;
-import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.DashboardUserOptionsRowEntity;
-import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.PreferenceRowEntity;
-import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.TableRowsEntity;
-
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
+import java.math.BigInteger;
+import java.util.List;
 
 /**
  * @author guochen
@@ -48,18 +38,20 @@ public class TableRowsSynchronizer {
 			if (!em.getTransaction().isActive()) {
 				em.getTransaction().begin();
 			}
-        	if (syncPreferenceTableRows(em, data.getEmsPreference()) <= 0) logger.debug("nothing was added to EMS_Prefernce!");
-        	if (syncDashboardTableRows(em,data.getEmsDashboard()) <= 0) logger.debug("nothing was added to EMS_DASHBOARD!");
-        	if (syncDashboardSetTableRows(em,data.getEmsDashboardSet()) <= 0)
-        	logger.debug("nothing was added to EMS_DASHBOARD_SET!");
-        	if (syncDashboardUserOptionsTableRows(em,data.getEmsDashboardUserOptions()) <= 0)
-            logger.debug("nothing was added to EMS_DASHBOARD_USER_OPTIONS!");
-        	if (syncDashboardTileTableRows(em,data.getEmsDashboardTile()) <= 0)
-            logger.debug("nothing was added to EMS_DASHBOARD_TILE!");
-        	if (syncDashboardTileParamsTableRows(em,data.getEmsDashboardTileParams()) <= 0)
-        	logger.debug("nothing was added to EMS_DASHBOARD_TILE_PARAMS!");
-        	em.getTransaction().commit();
-        	return "sync is successful";
+            if (syncPreferenceTableRows(em, data.getEmsPreference()) <= 0)
+                logger.info("Nothing was added to EMS_PREFERNCE!");
+            if (syncDashboardTableRows(em, data.getEmsDashboard()) <= 0)
+                logger.info("Nothing was added to EMS_DASHBOARD!");
+            if (syncDashboardSetTableRows(em, data.getEmsDashboardSet()) <= 0)
+                logger.info("Nothing was added to EMS_DASHBOARD_SET!");
+            if (syncDashboardUserOptionsTableRows(em, data.getEmsDashboardUserOptions()) <= 0)
+                logger.info("Nothing was added to EMS_DASHBOARD_USER_OPTIONS!");
+            if (syncDashboardTileTableRows(em, data.getEmsDashboardTile()) <= 0)
+                logger.info("Nothing was added to EMS_DASHBOARD_TILE!");
+            if (syncDashboardTileParamsTableRows(em, data.getEmsDashboardTileParams()) <= 0)
+                logger.info("Nothing was added to EMS_DASHBOARD_TILE_PARAMS!");
+            em.getTransaction().commit();
+            return "sync is successful";
         }
         catch (Exception e) {
         	logger.error(e);

@@ -550,11 +550,11 @@ public class DataManager
 			return 0;
 		}
 		if ((StringUtil.isEmpty(owner))) {
-			logger.debug("creation date cannot be null!");
+			logger.debug("owner cannot be null or empty!");
 			return 0;
 		}
 		if (isSystem == null) {
-			logger.debug("creation date cannot be null!");
+			logger.debug("isSystem cannot be null!");
 			return 0;
 		}
 
@@ -610,11 +610,11 @@ public class DataManager
 			return 0;
 		}
 		if (StringUtil.isEmpty(creationDate)) {
-			logger.debug("CREATION_DATE is null!");
+			logger.debug("CREATION_DATE is null or empty!");
 			return 0;
 		}
 		if (StringUtil.isEmpty(title)) {
-			logger.debug("TITLE is null!");
+			logger.debug("TITLE is null or empty!");
 			return 0;
 		}
 		if (position == null) {
@@ -638,7 +638,7 @@ public class DataManager
 			return 0;
 		}
 		if (StringUtil.isEmpty(widgetCreationTime)) {
-			logger.debug("WIDGET_CREATION_TIME is null!");
+			logger.debug("WIDGET_CREATION_TIME is null or emtpy!");
 			return 0;
 		}
 		if (widgetSource == null) {
@@ -646,15 +646,15 @@ public class DataManager
 			return 0;
 		}
 		if (StringUtil.isEmpty(widgetKocName)) {
-			logger.debug("WIDGET_KOC_NAME is null!");
+			logger.debug("WIDGET_KOC_NAME is null or empty!");
 			return 0;
 		}
 		if (StringUtil.isEmpty(widgetViewmode)) {
-			logger.debug("WIDGET_VIEWMODE is null!");
+			logger.debug("WIDGET_VIEWMODE is null or empty!");
 			return 0;
 		}
 		if (StringUtil.isEmpty(widgetTemplate)) {
-			logger.debug("WIDGET_TEMPLATE is null!");
+			logger.debug("WIDGET_TEMPLATE is null or empty!");
 			return 0;
 		}
 		if (widgetSupportTimeControl == null) {
@@ -882,15 +882,15 @@ public class DataManager
 							   Long tenantId, String creationDate, String lastModificationDate, Integer deleted) {
 		logger.debug("Calling syncPreference");
 		if (StringUtil.isEmpty(userName)) {
-			logger.debug("USER_NAME is null");
+			logger.debug("USER_NAME is null or empty!");
 			return 0;
 		}
 		if (StringUtil.isEmpty(prefKey)) {
-			logger.debug("PREF_KEY is null");
+			logger.debug("PREF_KEY is null or empty!");
 			return 0;
 		}
 		if (StringUtil.isEmpty(prefValue)) {
-			logger.debug("PREF_VALUE is null");
+			logger.debug("PREF_VALUE is null or empty!");
 			return 0;
 		}
 		if (tenantId == null) {
