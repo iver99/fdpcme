@@ -166,17 +166,6 @@ public class ZDTAPITest {
     	zdtapi.compareRows(tenant, "full", 30);
     }
  
-    
-    @Test
-    public void testGetCurrentTime() {
-    	zdtapi.getCurrentUTCTime();
-    }
-    
-    @Test
-    public void testGetTimeString() {
-    	zdtapi.getTimeString(new Date());
-    }
-    
     @Test
     public void testgetSyncStatus() {
     	//zdtapi.getCompareStatus("id", "userName");
