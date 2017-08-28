@@ -213,7 +213,7 @@ public class DashboardOrderWriteCURD
 		try {
 			System.out.println("------------------------------------------");
 			System.out
-			.println("Access the system dashboard, then verify the system dashboard is the first one in dashboard list");
+					.println("Access the system dashboard, then verify the system dashboard is the first one in dashboard list");
 			Response res3 = RestAssured
 					.given()
 					.contentType(ContentType.JSON)

@@ -12,6 +12,8 @@ package oracle.sysman.emaas.platform.dashboards.testsdk;
 
 import java.sql.SQLException;
 
+import oracle.sysman.emaas.platform.dashboards.test.common.CommonTest;
+
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
