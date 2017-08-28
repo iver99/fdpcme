@@ -13,7 +13,14 @@ package oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.ro
 import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
- * @author guochen
+ *  NOTE: if schema changes, corresponding Entity class need to be updated and equals and hashcode methods should be  rewrited too
+ * DASHBOARD_SET_ID
+ * TENANT_ID
+ * SUB_DASHBOARD_ID
+ * POSITION
+ * CREATION_DATE
+ * LAST_MODIFICATION_DATE
+ * DELETED
  */
 public class DashboardSetRowEntity implements RowEntity
 {
@@ -58,48 +65,42 @@ public class DashboardSetRowEntity implements RowEntity
 			if (other.creationDate != null) {
 				return false;
 			}
-		}
-		else if (!creationDate.equals(other.creationDate)) {
+		} else if (!creationDate.equals(other.creationDate)) {
 			return false;
 		}
 		if (lastModificationDate == null) {
 			if (other.lastModificationDate != null) {
 				return false;
 			}
-		}
-		else if (!lastModificationDate.equals(other.lastModificationDate)) {
+		} else if (!lastModificationDate.equals(other.lastModificationDate)) {
 			return false;
 		}
 		if (dashboardSetId == null) {
 			if (other.dashboardSetId != null) {
 				return false;
 			}
-		}
-		else if (!dashboardSetId.equals(other.dashboardSetId)) {
+		} else if (!dashboardSetId.equals(other.dashboardSetId)) {
 			return false;
 		}
 		if (position == null) {
 			if (other.position != null) {
 				return false;
 			}
-		}
-		else if (!position.equals(other.position)) {
+		} else if (!position.equals(other.position)) {
 			return false;
 		}
 		if (subDashboardId == null) {
 			if (other.subDashboardId != null) {
 				return false;
 			}
-		}
-		else if (!subDashboardId.equals(other.subDashboardId)) {
+		} else if (!subDashboardId.equals(other.subDashboardId)) {
 			return false;
 		}
 		if (tenantId == null) {
 			if (other.tenantId != null) {
 				return false;
 			}
-		}
-		else if (!tenantId.equals(other.tenantId)) {
+		} else if (!tenantId.equals(other.tenantId)) {
 			return false;
 		}
 		return true;
