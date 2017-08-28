@@ -63,7 +63,7 @@ public class TableRowsSynchronizer {
         }
         catch (Exception e) {
         	logger.error(e);
-        	return e.getMessage();
+        	return "Errors: error occurred when sync.";
         } finally {
 			if (em != null) {
 				em.close();

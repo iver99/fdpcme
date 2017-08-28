@@ -63,6 +63,9 @@ public class ZDTAPI extends APIBase
 
 	/**
 	 *  This method is return all the tenants that have dashboards in EMS_DASHBOARD table
+	 *  NOTE:
+	 *  #1. check compare table to see if comparison is done before,
+	 *  #2. return all tenant(id) from table, no matter record is marked as deleted or not.
 	 * @return
 	 */
 	@GET
@@ -93,25 +96,13 @@ public class ZDTAPI extends APIBase
 			return Response.status(Status.OK).entity(obj).build();
 		} catch (Exception e) {
 			logger.error("errors in getting all tenants:"+e.getLocalizedMessage());
-			return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Errors:" + e.getLocalizedMessage()).build();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity("{\"msg\": \"Error occurred when retrieve all tenants\"}").build();
 		} finally {
 			if (em != null) {
 				em.close();
 			}
 		}
 	}
-	
-
-	public Date getCurrentUTCTime()
-	{
-		Calendar cal = Calendar.getInstance(Locale.getDefault());
-		long localNow = System.currentTimeMillis();
-		long offset = cal.getTimeZone().getOffset(localNow);
-		Date utcDate = new Date(localNow - offset);
-		
-		return utcDate;
-	}
-
 
     /**
      *  this method return all records in each table for each tenant
@@ -155,11 +146,10 @@ public class ZDTAPI extends APIBase
 			obj.put(TABLE_DATA_KEY_DASHBOARD_USER_OPTIONS, tableData);
 			tableData = getPreferenceTableData(em,type, lastComparisonDate,maxComparedDate, tenant);
 			obj.put(TABLE_DATA_KEY_DASHBOARD_PREFERENCES, tableData);
-		}
-		catch (JSONException e) {
-			return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Errors:" + e.getLocalizedMessage()).build();
-		}
-		finally {
+		}catch (JSONException e) {
+			logger.error(e);
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity("{\"msg\": \"Error occurred when get all table rows.\"}").build();
+		}finally {
 			if (em != null) {
 				em.close();
 			}
@@ -168,7 +158,7 @@ public class ZDTAPI extends APIBase
 	}
 
     /**
-     * this method return all the records counts in each table
+     * return the table counts of each table in this cloud
      * @param maxComparedData
      * @return
      */
@@ -183,11 +173,6 @@ public class ZDTAPI extends APIBase
 		try {
 			DashboardServiceFacade dsf = new DashboardServiceFacade();
 			em = dsf.getEntityManager();
-		/*	if (maxComparedData == null) {
-				Date currentDate = new Date();
-				SimpleDateFormat format = new SimpleDateFormat("YYYY-MM-DD hh:mm:ss");
-				maxComparedData = format.format(currentDate);
-			}*/
 			long dashboardCount = DataManager.getInstance().getAllDashboardsCount(em,maxComparedData);
 			long userOptionsCount = DataManager.getInstance().getAllUserOptionsCount(em,maxComparedData);
 			long preferenceCount = DataManager.getInstance().getAllPreferencessCount(em,maxComparedData);
@@ -201,6 +186,7 @@ public class ZDTAPI extends APIBase
 		
 		} catch (Exception e) {
 			logger.error("error while getting count of tables:",e);
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity("{\"msg\": \"Fail to get records count in cloud.\"}").build();
 		} finally {
 			if (em != null) {
 				em.close();
@@ -208,106 +194,6 @@ public class ZDTAPI extends APIBase
 
 		}
 		return Response.ok(getJsonUtil().toJson(zdte)).build();
-	}
-	
-	private  List<List<?>> splitList(List<?> list, int len) {
-		if (list == null || list.size() == 0 || len < 1) {
-			return null;
-		}		 
-		List<List<?>> result = new ArrayList<List<?>>();		 		 
-		int size = list.size();
-		int count = (size + len - 1) / len;		 	 
-		for (int i = 0; i < count; i++) {			
-			List<?> subList = list.subList(i * len, ((i + 1) * len > size ? size : len * (i + 1)));
-			result.add(subList);
-		}
-			return result;
-		}
-	
-	public List<TableRowsEntity> splitTableRowEntity(TableRowsEntity originalEntity){
-		List<TableRowsEntity> entities = new ArrayList<TableRowsEntity>();
-		if (originalEntity != null) {
-			List<List<?>> splitDashboard = null;
-			List<List<?>> splitDashboardSet = null;
-			List<List<?>> splitTile = null;
-			List<List<?>> splitTileParams = null;
-			List<List<?>> splitUserOptions = null;
-			List<List<?>> splitPreference = null;
-			// for each connection, we just sync 1000 rows
-			int length = 1000;
-			if (originalEntity.getEmsDashboard() != null) {
-				splitDashboard = splitList(originalEntity.getEmsDashboard(), length);
-			}
-			
-			if (originalEntity.getEmsDashboardSet() != null) {
-				splitDashboardSet = splitList(originalEntity.getEmsDashboardSet(),length);
-			}
-			
-			if (originalEntity.getEmsDashboardTile() != null) {
-				splitTile = splitList(originalEntity.getEmsDashboardTile(),length);
-			}
-			
-			if (originalEntity.getEmsDashboardTileParams() != null) {
-				splitTileParams = splitList(originalEntity.getEmsDashboardTileParams(),length);
-			}
-			
-			if (originalEntity.getEmsDashboardUserOptions() != null) {
-				splitUserOptions = splitList(originalEntity.getEmsDashboardUserOptions(),length);
-			}
-			
-			if (originalEntity.getEmsPreference() != null) {
-				splitPreference = splitList(originalEntity.getEmsPreference(),length);
-			}
-			
-			// sync search table first and then sync parameter table to avoid key constraints
-			if (splitDashboard != null) {
-				for (List<?> DashboardList : splitDashboard) {
-					TableRowsEntity rowEntity = new TableRowsEntity();
-					rowEntity.setEmsDashboard((List<DashboardRowEntity>) DashboardList);
-					entities.add(rowEntity);
-				}
-			}
-			if (splitDashboardSet != null) {
-				for (List<?> dashboardSetList : splitDashboardSet) {					
-					TableRowsEntity rowEntity = new TableRowsEntity();
-					rowEntity.setEmsDashboardSet((List<DashboardSetRowEntity>) dashboardSetList);
-					entities.add(rowEntity);
-				}
-			}
-			
-			if (splitTile != null) {
-				for (List<?> tileList : splitTile) {
-					TableRowsEntity rowEntity = new TableRowsEntity();
-					rowEntity.setEmsDashboardTile((List<DashboardTileRowEntity>) tileList);
-					entities.add(rowEntity);
-				}
-			}
-			
-			if (splitTileParams != null) {
-				for (List<?> tileParams : splitTileParams) {
-					TableRowsEntity rowEntity = new TableRowsEntity();
-					rowEntity.setEmsDashboardTileParams((List<DashboardTileParamsRowEntity>) tileParams);
-					entities.add(rowEntity);
-				}
-			}
-			
-			if (splitUserOptions != null) {
-				for (List<?> userOptionsList : splitUserOptions) {
-					TableRowsEntity rowEntity = new TableRowsEntity();
-					rowEntity.setEmsDashboardUserOptions((List<DashboardUserOptionsRowEntity>) userOptionsList);
-					entities.add(rowEntity);
-				}
-			}
-			
-			if (splitPreference != null) {
-				for (List<?> preferenceList : splitPreference) {
-					TableRowsEntity rowEntity = new TableRowsEntity();
-					rowEntity.setEmsPreference((List<PreferenceRowEntity>) preferenceList);
-					entities.add(rowEntity);
-				}
-			}
-		}
-		return entities;
 	}
 
 	/**
@@ -333,22 +219,16 @@ public class ZDTAPI extends APIBase
 		EntityManager em = null;
 		String lastComparisonDateForSync = null;
 		List<Map<String, Object>> comparedDataToSync = null;
-		try {			
-			DashboardServiceFacade dsf = new DashboardServiceFacade();
-			em = dsf.getEntityManager();
-			lastComparisonDateForSync = DataManager.getInstance().getLastComparisonDateForSync(em);
-			logger.info("lastComparisonDateForSync="+lastComparisonDateForSync);
-			comparedDataToSync = DataManager.getInstance().getComparedDataToSync(em, lastComparisonDateForSync);
-			logger.info("comparedDataToSync="+comparedDataToSync);
-		} catch (Exception e) {
-			logger.error(e.getLocalizedMessage(), e);
-			return Response.status(400).entity(e.getLocalizedMessage()).build();				
-		} finally {
-			if (em != null) {
-				em.close();
-			}
+		DashboardServiceFacade dsf = new DashboardServiceFacade();
+		em = dsf.getEntityManager();
+		lastComparisonDateForSync = DataManager.getInstance().getLastComparisonDateForSync(em);
+		logger.info("lastComparisonDateForSync="+lastComparisonDateForSync);
+		comparedDataToSync = DataManager.getInstance().getComparedDataToSync(em, lastComparisonDateForSync);
+		logger.info("comparedDataToSync="+comparedDataToSync);
+		if (em != null) {
+			em.close();
 		}
-		try {	
+		try {
 			if (comparedDataToSync != null && !comparedDataToSync.isEmpty()) {
 				for (Map<String, Object> dataMap : comparedDataToSync) {
 					Object compareResult = dataMap.get("COMPARISON_RESULT");
@@ -371,52 +251,23 @@ public class ZDTAPI extends APIBase
 					
 					if (response != null && response.contains("Errors:")) {
 						saveToSyncTable(syncDate, type, "FAILED",lastCompareDate);
-						return Response.status(500).entity(response).build();
+						return Response.status(Status.INTERNAL_SERVER_ERROR).entity("{\"msg\" :\"Error occurred when sync...\"}").build();
 					}
 				}
 				int flag = saveToSyncTable(syncDate, type, "SUCCESSFUL",lastCompareDate);
 				if (flag < 0) {
-					return Response.status(500).entity("Fail to save sync status data").build();
+					return Response.status(Status.INTERNAL_SERVER_ERROR).entity("{\"msg\": \"Fail to save sync status data\"}").build();
 				}
 			} else {
-				return Response.ok("Nothing to sync as no compared data").build();
+				return Response.ok("{\"msg\": \"Nothing to sync as no compared data\"}").build();
 			}
-						
-			return Response.ok("Sync is successful!").build();
+			return Response.ok("{\"msg\": \"Sync is successful!\"}").build();
 		} catch (IOException e) {
-			logger.error(e.getLocalizedMessage(), e);
-			return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Errors:" + e.getLocalizedMessage()).build();
+			logger.error(e);
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity("{\"msg\": \"IOException occurred in server side\"}").build();
 		} 
 	}
 	
-	private int saveToSyncTable(String syncDateStr, String type, String syncResult, String lastComparisonDate) {
-		Date syncDate = null;
-		try {  
-		    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");  
-		    syncDate = sdf.parse(syncDateStr);  
-		} catch (ParseException e) {  
-		    logger.error(e);
-		}
-		String nextScheduleDateStr = null;
-		Calendar cal = Calendar.getInstance();
-		if (syncDate != null) {
-			cal.setTime(syncDate);
-			cal.add(Calendar.HOUR_OF_DAY, 6);
-			Date nextScheduleDate = cal.getTime();
-			nextScheduleDateStr = getTimeString(nextScheduleDate);
-		}
-		
-		double divergencePercentage = 0.0; 
-		return DataManager.getInstance().saveToSyncTable(syncDateStr, nextScheduleDateStr, type, syncResult, divergencePercentage, lastComparisonDate);		
-	}
-	
-	private String getTimeString(Date date)
-	{
-		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");  
-		String dateStr = sdf.format(date);
-		return dateStr;
-	}
-
 	/**
 	 * sync status of last time, empty for the first time.
 	 * @return
@@ -428,7 +279,6 @@ public class ZDTAPI extends APIBase
 		infoInteractionLogAPIIncomingCall(null, null, "Service calling to (GET) /v1/zdt/sync/status");
 		EntityManager em = null;
 		String message = null;
-		int statusCode = 200;
 		String sync_date = "";
 		String sync_type = "";
 		String next_schedule_date = "";
@@ -445,21 +295,19 @@ public class ZDTAPI extends APIBase
 		ZDTSyncStatusRowEntity syncStatus = new ZDTSyncStatusRowEntity(sync_date,sync_type, next_schedule_date, percentage);
 		try {
 			message = getJsonUtil().toJson(syncStatus);
-			return Response.status(statusCode).entity(message).build();
+			return Response.status(Status.OK).entity(message).build();
 		} catch (Exception e) {
-			message = "Errors:" + e.getLocalizedMessage();
-			statusCode = 500;
 			logger.error("Errors while transfer sync status object to json string {}",e.getLocalizedMessage());
 		} finally {
 			if (em != null) {
 				em.close();
 			}
 		}
-		return Response.status(statusCode).entity(message).build();
+		return Response.status(Status.INTERNAL_SERVER_ERROR).entity("{\"msg\":\"Error occurred in server side, please see logs.\"").build();
 	}
 
 	/**
-	 * latest compare status
+	 * latest compare status,retrieve from compare table, get the latest comparison record(comparison_date)
 	 * @return
 	 */
 	@GET
@@ -469,7 +317,6 @@ public class ZDTAPI extends APIBase
 		infoInteractionLogAPIIncomingCall(null, null, "Service calling to (GET) /v1/zdt/compare/status");
 		EntityManager em = null;
 		String message = null;
-		int statusCode = 200;
 		String comparison_date = "";
 		String comparison_type = "";
 		//String comparison_result = null;
@@ -488,22 +335,20 @@ public class ZDTAPI extends APIBase
 		ZDTComparatorStatusRowEntity comparatorStatus = new ZDTComparatorStatusRowEntity(comparison_date,comparison_type, next_schedule_date, percentage);
 		try {
 			message = getJsonUtil().toJson(comparatorStatus);
-			return Response.status(statusCode).entity(message).build();
+			return Response.status(Status.OK).entity(message).build();
 		} catch (Exception e) {
-			message = "Errors:" + e.getLocalizedMessage();
-			statusCode = 500;
 			logger.error("Errors while transfer comparator status object to json string {}",e.getLocalizedMessage());
 		} finally {
 			if (em != null) {
 				em.close();
 			}
 		}
-		return Response.status(statusCode).entity(message).build();
+		return Response.status(Status.INTERNAL_SERVER_ERROR).entity("\"msg\": \"Error occurred in Server side. Please see logs\"").build();
 	}
 
 
 	/**
-	 * latest comparasion result(stored into zdt table).
+	 *  Save comparison result into compare table
 	 * @param jsonObj
 	 * @return
 	 */
@@ -515,7 +360,6 @@ public class ZDTAPI extends APIBase
 		infoInteractionLogAPIIncomingCall(null, null, "Service calling to (PUT) /v1/zdt/compare/result");
 		EntityManager em = null;
 		String message = null;
-		int statusCode = 200;
 		String comparisonDate = null;
 		String nextScheduleDate = null;
 		String comparisonType = null;
@@ -524,8 +368,8 @@ public class ZDTAPI extends APIBase
 		if (jsonObj != null) {
 			try {
 				if (jsonObj.getString("lastComparisonDateTime") == null) {
-					message = "comparison date time can not be null";
-					statusCode = 500;
+					message = "{\"msg\": \"comparison date time can not be null\"}";
+					return Response.status(Status.BAD_REQUEST).entity(message).build();
 				} else {
 					try {
 						comparisonDate = jsonObj.getString("lastComparisonDateTime");
@@ -537,15 +381,15 @@ public class ZDTAPI extends APIBase
 						int result = DataManager.getInstance().saveToComparatorTable(em, comparisonDate,nextScheduleDate,
 								comparisonType, comparisonResult, divergencePercentage);
 						if (result < 0) {
-							message = "Error: error occurs while saving data to zdt comparator table";
-							statusCode = 500;
+							message = "{\"msg\": \"Error: error occurs while saving data to zdt comparator table\"}";
+							return Response.status(Status.INTERNAL_SERVER_ERROR).entity(message).build();
 						} else {
-							message = "succeed to save data to zdt comparator table";
+							message = "{\"msg\": \"Succeed to save data to zdt comparator table\"}";
+							return Response.status(Status.OK).entity(message).build();
 						}		
 					} catch (Exception e) {
-						statusCode = 500;
 						logger.error("could not save data to comparator table, "+e.getLocalizedMessage());
-						return Response.status(statusCode).entity("could not save data to comparator table").build();						
+						return Response.status(Status.INTERNAL_SERVER_ERROR).entity("could not save data to comparator table").build();
 					} finally {
 						if (em != null) {
 							em.close();
@@ -553,13 +397,11 @@ public class ZDTAPI extends APIBase
 					}
 				}
 			} catch (JSONException e) {
-				statusCode = 500;
 				logger.error("could not save data to comparator table, "+e.getLocalizedMessage());
-				return Response.status(statusCode).entity("could not save data to comparator table").build();	
+				return Response.status(Status.INTERNAL_SERVER_ERROR).entity("could not save data to comparator table").build();
 			}
 		}
-	
-		return Response.status(statusCode).entity(message).build();
+		return Response.status(Status.SERVICE_UNAVAILABLE).entity(message).build();
 	}
 
 	
@@ -617,4 +459,150 @@ public class ZDTAPI extends APIBase
 		List<Map<String, Object>> list = DataManager.getInstance().getPreferenceTableData(em, type,date,maxComparedData, tenant);
 		return getJSONArrayForListOfObjects(TABLE_DATA_KEY_DASHBOARD_PREFERENCES, list);
 	}
+
+	private Date getCurrentUTCTime()
+	{
+		Calendar cal = Calendar.getInstance(Locale.getDefault());
+		long localNow = System.currentTimeMillis();
+		long offset = cal.getTimeZone().getOffset(localNow);
+		Date utcDate = new Date(localNow - offset);
+
+		return utcDate;
+	}
+
+	/**
+	 * split a list into mutiple sub lists
+	 * @param list
+	 * @param len
+	 * @return
+	 */
+	private  List<List<?>> splitList(List<?> list, int len) {
+		if (list == null || list.size() == 0 || len < 1) {
+			return null;
+		}
+		List<List<?>> result = new ArrayList<List<?>>();
+		int size = list.size();
+		int count = (size + len - 1) / len;
+		for (int i = 0; i < count; i++) {
+			List<?> subList = list.subList(i * len, ((i + 1) * len > size ? size : len * (i + 1)));
+			result.add(subList);
+		}
+		return result;
+	}
+
+	public List<TableRowsEntity> splitTableRowEntity(TableRowsEntity originalEntity){
+		List<TableRowsEntity> entities = new ArrayList<TableRowsEntity>();
+		if (originalEntity != null) {
+			List<List<?>> splitDashboard = null;
+			List<List<?>> splitDashboardSet = null;
+			List<List<?>> splitTile = null;
+			List<List<?>> splitTileParams = null;
+			List<List<?>> splitUserOptions = null;
+			List<List<?>> splitPreference = null;
+			// for each connection, we just sync 1000 rows
+			//this means every sub lists max have 1000 items.
+			int length = 1000;
+			if (originalEntity.getEmsDashboard() != null) {
+				splitDashboard = splitList(originalEntity.getEmsDashboard(), length);
+			}
+
+			if (originalEntity.getEmsDashboardSet() != null) {
+				splitDashboardSet = splitList(originalEntity.getEmsDashboardSet(),length);
+			}
+
+			if (originalEntity.getEmsDashboardTile() != null) {
+				splitTile = splitList(originalEntity.getEmsDashboardTile(),length);
+			}
+
+			if (originalEntity.getEmsDashboardTileParams() != null) {
+				splitTileParams = splitList(originalEntity.getEmsDashboardTileParams(),length);
+			}
+
+			if (originalEntity.getEmsDashboardUserOptions() != null) {
+				splitUserOptions = splitList(originalEntity.getEmsDashboardUserOptions(),length);
+			}
+
+			if (originalEntity.getEmsPreference() != null) {
+				splitPreference = splitList(originalEntity.getEmsPreference(),length);
+			}
+
+			// sync search table first and then sync parameter table to avoid key constraints
+			if (splitDashboard != null) {
+				for (List<?> DashboardList : splitDashboard) {
+					TableRowsEntity rowEntity = new TableRowsEntity();
+					rowEntity.setEmsDashboard((List<DashboardRowEntity>) DashboardList);
+					entities.add(rowEntity);
+				}
+			}
+			if (splitDashboardSet != null) {
+				for (List<?> dashboardSetList : splitDashboardSet) {
+					TableRowsEntity rowEntity = new TableRowsEntity();
+					rowEntity.setEmsDashboardSet((List<DashboardSetRowEntity>) dashboardSetList);
+					entities.add(rowEntity);
+				}
+			}
+
+			if (splitTile != null) {
+				for (List<?> tileList : splitTile) {
+					TableRowsEntity rowEntity = new TableRowsEntity();
+					rowEntity.setEmsDashboardTile((List<DashboardTileRowEntity>) tileList);
+					entities.add(rowEntity);
+				}
+			}
+
+			if (splitTileParams != null) {
+				for (List<?> tileParams : splitTileParams) {
+					TableRowsEntity rowEntity = new TableRowsEntity();
+					rowEntity.setEmsDashboardTileParams((List<DashboardTileParamsRowEntity>) tileParams);
+					entities.add(rowEntity);
+				}
+			}
+
+			if (splitUserOptions != null) {
+				for (List<?> userOptionsList : splitUserOptions) {
+					TableRowsEntity rowEntity = new TableRowsEntity();
+					rowEntity.setEmsDashboardUserOptions((List<DashboardUserOptionsRowEntity>) userOptionsList);
+					entities.add(rowEntity);
+				}
+			}
+
+			if (splitPreference != null) {
+				for (List<?> preferenceList : splitPreference) {
+					TableRowsEntity rowEntity = new TableRowsEntity();
+					rowEntity.setEmsPreference((List<PreferenceRowEntity>) preferenceList);
+					entities.add(rowEntity);
+				}
+			}
+		}
+		return entities;
+	}
+
+	private int saveToSyncTable(String syncDateStr, String type, String syncResult, String lastComparisonDate) {
+		Date syncDate = null;
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+			syncDate = sdf.parse(syncDateStr);
+		} catch (ParseException e) {
+			logger.error(e);
+		}
+		String nextScheduleDateStr = null;
+		Calendar cal = Calendar.getInstance();
+		if (syncDate != null) {
+			cal.setTime(syncDate);
+			cal.add(Calendar.HOUR_OF_DAY, 6);
+			Date nextScheduleDate = cal.getTime();
+			nextScheduleDateStr = getTimeString(nextScheduleDate);
+		}
+
+		double divergencePercentage = 0.0;
+		return DataManager.getInstance().saveToSyncTable(syncDateStr, nextScheduleDateStr, type, syncResult, divergencePercentage, lastComparisonDate);
+	}
+
+	private String getTimeString(Date date)
+	{
+		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+		String dateStr = sdf.format(date);
+		return dateStr;
+	}
+
 }
