@@ -567,6 +567,7 @@ public class DataManager
 				Map<String, Object> dateMap = result.get(0);
 		    	String creationD  = dateMap.get("CREATION_DATE").toString();
 		    	if (creationD == null) {
+		    		logger.error("Creation date is null, will not sync dashboard table data!");
 		    		return 0;
 		    	}
 		    	Object lastModifiedObj = dateMap.get("LAST_MODIFICATION_DATE");
@@ -737,6 +738,7 @@ public class DataManager
 				Map<String, Object> dateMap = result.get(0);
 		    	String creationD  = dateMap.get("CREATION_DATE").toString();
 		    	if (creationD == null) {
+					logger.error("Creation date is null, will not sync dashboard tile table data!");
 		    		return 0;
 		    	}
 		    	Object lastModifiedObj = dateMap.get("LAST_MODIFICATION_DATE");
@@ -792,6 +794,7 @@ public class DataManager
 				Map<String, Object> dateMap = result.get(0);
 		    	String creationD  = dateMap.get("CREATION_DATE").toString();
 		    	if (creationD == null) {
+					logger.error("Creation date is null, will not sync user option table data!");
 		    		return 0;
 		    	}
 		    	Object lastModifiedObj = dateMap.get("LAST_MODIFICATION_DATE");
@@ -849,6 +852,7 @@ public class DataManager
 				Map<String, Object> dateMap = result.get(0);
 		    	String creationD  = dateMap.get("CREATION_DATE").toString();
 		    	if (creationD == null) {
+					logger.error("Creation date is null, will not sync dashboard set table data!");
 		    		return 0;
 		    	}
 		    	Object lastModifiedObj = dateMap.get("LAST_MODIFICATION_DATE");
@@ -903,6 +907,7 @@ public class DataManager
 				Map<String, Object> dateMap = result.get(0);
 		    	String creationD  = dateMap.get("CREATION_DATE").toString();
 		    	if (creationD == null) {
+					logger.error("Creation date is null, will not sync preference table data!");
 		    		return 0;
 		    	}
 		    	Object lastModifiedObj = dateMap.get("LAST_MODIFICATION_DATE");
