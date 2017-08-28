@@ -27,6 +27,11 @@ public class TimeUtil {
         return dateStr;
     }
 
+    /**
+     * currentTime - skipMins = compare time stamp
+     * @param skipMinutes
+     * @return
+     */
     public static String getMaxTimeStampStr(int skipMinutes) {
         Date currentUtcDate = TimeUtil.getCurrentUTCTime();
         Calendar cal = Calendar.getInstance();

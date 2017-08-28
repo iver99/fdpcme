@@ -51,6 +51,7 @@ import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.row
 public class ZDTAPI
 {
 	private static final Logger logger = LogManager.getLogger(ZDTAPI.class);
+	private static final String CLOUD_SERVICES = "CloudServices";
 
 	/**
 	 * compare records counts in 2 clouds, if a table size is not matched in
@@ -67,7 +68,7 @@ public class ZDTAPI
 	{
 		logger.info("There is an incoming call from ZDT comparator API to compare");
 		if (tenantIdParam == null){
-			tenantIdParam = "CloudServices";
+			tenantIdParam = CLOUD_SERVICES;
 		}
 		// this comparator invokes the 2 instances REST APIs and retrieves the counts for objects (like dashboards), and return the counts for each instance
 		DashboardCountsComparator dcc = new DashboardCountsComparator();
@@ -85,12 +86,12 @@ public class ZDTAPI
 	 */
 	@GET
 	@Path("compare/status")
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response getCompareStatus(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam)
-          //  @HeaderParam(value = "X-REMOTE-USER") String userTenant) 
 	{
 		logger.info("incoming call from zdt comparator to get comparitor status");
 		if (tenantIdParam == null){
-			tenantIdParam = "CloudServices";
+			tenantIdParam = CLOUD_SERVICES;
 		}
 		DashboardRowsComparator dcc = null;
 		String response = null;
@@ -114,12 +115,11 @@ public class ZDTAPI
 	 */
 	@GET
 	@Path("sync/status")
-	public Response getSyncStatus(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam)
-            //@HeaderParam(value = "X-REMOTE-USER") String userTenant)
-			{
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getSyncStatus(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam){
 		logger.info("incoming call from zdt comparator to get sync status");
 		if (tenantIdParam == null){
-			tenantIdParam = "CloudServices";
+			tenantIdParam = CLOUD_SERVICES;
 		}
 		DashboardRowsComparator dcc = null;
 		String response = null;
@@ -127,8 +127,10 @@ public class ZDTAPI
 			dcc = new DashboardRowsComparator();
 			response = dcc.retrieveSyncStatusForOmcInstance(tenantIdParam, null); // changed
 		} catch (ZDTException e1) {
+			logger.error(e1);
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(e1))).build();
 		} catch (Exception e2) {
+			logger.error(e2);
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(e2))).build();
 		}
 		
@@ -147,11 +149,10 @@ public class ZDTAPI
 	@Path("compare")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response compareRows(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
-           // @HeaderParam(value = "X-REMOTE-USER") String userTenant, 
             @QueryParam("type") @DefaultValue("incremental")  String compareType,
             @QueryParam("before") int skipMinutes) {
 		if (tenantIdParam == null){
-			tenantIdParam = "CloudServices";
+			tenantIdParam = CLOUD_SERVICES;
 		}
 		
 		logger.info("incoming call from zdt comparator to do row comparing");
@@ -161,7 +162,7 @@ public class ZDTAPI
 			compareType = "incremental";
 		}
 		if (skipMinutes <= 0) {
-			skipMinutes = 30;    // to check: what is the accurate default skipping time for comparator?
+			skipMinutes = 30;    //TODO to check: what is the accurate default skipping time for comparator?
 		}
 		String maxComparedDate = null;
 		if (skipMinutes > 0) {
@@ -193,7 +194,7 @@ public class ZDTAPI
 			logger.info("tenantArray size2 = " + tenantArrayForClient2.length());
 			
 			if (tenantArrayForClient1.length() == 0 && tenantArrayForClient2.length() == 0) {
-				return Response.status(status).entity("No user created dashboards, Nothing to compare").build();
+				return Response.status(status).entity("{\"msg\":\"#1.No user created dashboards, No need to compare\"}").build();
 			}
 			
 			Set<String> tenants = new HashSet<String>();
@@ -218,7 +219,7 @@ public class ZDTAPI
 			int totalRow = totalRowForClient1 + totalRowForClient2;
 			if (totalRow == 0) {
 	
-				return Response.status(status).entity("No user created dashboards, Nothing to compare").build();					
+				return Response.status(status).entity("{\"msg\":\"#2.No user created dashboards, No need to compare\"}").build();
 			}
 			int totalDifferentRows = 0;
 			
@@ -243,11 +244,7 @@ public class ZDTAPI
 						double percentage = 0;
 						Date currentUtcDate = TimeUtil.getCurrentUTCTime();
 						String comparisonDate = TimeUtil.getTimeString(currentUtcDate);
-						Calendar cal = Calendar.getInstance();
-						cal.setTime(currentUtcDate);
-						cal.add(Calendar.HOUR_OF_DAY, 12);
-						Date nextScheduleDate = cal.getTime();
-						String nextScheduleDateStr = TimeUtil.getTimeString(nextScheduleDate);
+						String nextScheduleDateStr = getNextScheduleTime(currentUtcDate);
 						
 						if (count == tenants.size()) {
 							// the last tenant is fetched										
@@ -268,10 +265,12 @@ public class ZDTAPI
 						
 						// save status information for client 1  -- switch data for sync
 						LookupClient client1 = result.getInstance1().getClient();
+						//IMPORTANT NOTE: save the data that cloud1 missing into cloud1
 						dcc.saveComparatorStatus(tenantIdParam,null, client1, statusRow2);// changed		
 						
 						// save status informantion for client 2 -- switch data for sync
 						LookupClient client2 = result.getInstance2().getClient();
+						//IMPORTANT NOTE: save the data that cloud2 missing into cloud2
 						dcc.saveComparatorStatus(tenantIdParam,null, client2, statusRow1);// changed		
 						
 						sb1.append(result1);
@@ -299,11 +298,12 @@ public class ZDTAPI
 						result = null;
 						
 					} else {
-						Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(ZDTErrorConstants.NULL_LINK_ERROR_CODE, ZDTErrorConstants.NULL_LINK_ERROR_MESSAGE))).build();
+						return Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(ZDTErrorConstants.NULL_LINK_ERROR_CODE, ZDTErrorConstants.NULL_LINK_ERROR_MESSAGE))).build();
 					}
 				}// end loop for tenants
 				message = obj.toString(); 
 			} else {
+				//incremental compare begin...
 				result = dcc.compare(tenantIdParam, null,compareType,maxComparedDate,// changed		
 						iscompared, null);
 				
@@ -316,17 +316,13 @@ public class ZDTAPI
 						percen = (double)comparedDataNum/(double)totalRow;
 					}
 					if (totalRow == 0) {
-						return Response.status(status).entity("No user created dashboards, Nothing to compare").build();					
+						return Response.status(status).entity("{\"msg\":\"#3.No user created dashboards, No need to compare\"}").build();
 					}
 					DecimalFormat df = new DecimalFormat("#.######");
 					double percentage = Double.parseDouble(df.format(percen));
 					Date currentUtcDate = TimeUtil.getCurrentUTCTime();
 					String comparisonDate = TimeUtil.getTimeString(currentUtcDate);
-					Calendar cal = Calendar.getInstance();
-					cal.setTime(currentUtcDate);
-					cal.add(Calendar.HOUR_OF_DAY, 12);
-					Date nextScheduleDate = cal.getTime();
-					String nextScheduleDateStr =TimeUtil.getTimeString(nextScheduleDate);
+					String nextScheduleDateStr = getNextScheduleTime(currentUtcDate);
 					JsonUtil jsonUtil = JsonUtil.buildNormalMapper();
 					
 					TableRowsEntity data1 = result.getInstance1().getData();
@@ -359,17 +355,27 @@ public class ZDTAPI
 				
 					message = obj.toString();					
 				} else {
-					Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(ZDTErrorConstants.NULL_LINK_ERROR_CODE, ZDTErrorConstants.NULL_LINK_ERROR_MESSAGE))).build();
+					return Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(ZDTErrorConstants.NULL_LINK_ERROR_CODE, ZDTErrorConstants.NULL_LINK_ERROR_MESSAGE))).build();
 				}
 			}
 		} catch(ZDTException zdtE) {
+			logger.error("ZDTException occurred when compare...");
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(zdtE))).build();
 		}
 		catch (Exception e) {
+			logger.error("error occurred when compare...");
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(e))).build();
 		}
 		
 		return Response.status(status).entity(message).build();
+	}
+
+	private String getNextScheduleTime(Date currentUtcDate) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(currentUtcDate);
+		cal.add(Calendar.HOUR_OF_DAY, 12);// according to pamela, change this from 6 to 12
+		Date nextScheduleDate = cal.getTime();
+		return TimeUtil.getTimeString(nextScheduleDate);
 	}
 
 	/**
@@ -387,7 +393,7 @@ public class ZDTAPI
 	{
 		logger.info("There is an incoming call from ZDT comparator API to sync");
 		if (tenantIdParam == null){
-			tenantIdParam = "CloudServices";
+			tenantIdParam = CLOUD_SERVICES;
 		}
 		// this comparator invokes the 2 instances REST APIs and retrieves the different table rows for the 2 instances, and update the 2 instances accordingly
 		DashboardRowsComparator dcc = null;
