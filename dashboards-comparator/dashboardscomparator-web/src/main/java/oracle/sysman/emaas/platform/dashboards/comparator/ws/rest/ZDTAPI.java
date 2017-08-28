@@ -232,7 +232,7 @@ public class ZDTAPI
 				//handle tenant one by one and save comparison result for each tenant
 				for (String tenantStr : tenants) {
 					count = count + 1;
-					result = dcc.compare(tenantIdParam, null,compareType,maxComparedDate, // changed		
+					result = dcc.compare(tenantIdParam,compareType,maxComparedDate, // changed
 							iscompared, tenantStr);
 					
 					if (result != null) {
@@ -304,7 +304,7 @@ public class ZDTAPI
 				message = obj.toString(); 
 			} else {
 				//incremental compare begin...
-				result = dcc.compare(tenantIdParam, null,compareType,maxComparedDate,// changed		
+				result = dcc.compare(tenantIdParam,compareType,maxComparedDate,// changed
 						iscompared, null);
 				
 				if (result != null) {

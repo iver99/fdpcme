@@ -465,8 +465,8 @@ public class DashboardRowsComparatorTest
         };
 		DashboardRowsComparator drc = new DashboardRowsComparator();
 	
-		drc.compare(null, null, null, "2017-05-27", false, "tenant");
-		drc.compare(null, null, null, "2017-05-27", false, null);
+		drc.compare(null, null, "2017-05-27", false, "tenant");
+		drc.compare(null, null, "2017-05-27", false, null);
 	}
 	
 	@Test
