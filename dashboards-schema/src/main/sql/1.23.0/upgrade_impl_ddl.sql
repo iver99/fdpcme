@@ -19,6 +19,6 @@ SET FEEDBACK ON
 SET SERVEROUTPUT ON
 
 @&EMSAAS_SQL_ROOT/1.23.0/emaas_dashboard_drop_fk.sql
-
+@&EMSAAS_SQL_ROOT/1.23.0/emaas_dashboard_compress_index.sql
 
 
