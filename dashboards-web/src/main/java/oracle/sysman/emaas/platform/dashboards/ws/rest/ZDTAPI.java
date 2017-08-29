@@ -406,33 +406,33 @@ public class ZDTAPI extends APIBase
 
 	
 
-	private JSONArray getDashboardSetTableData(EntityManager em, String type, String date, String maxComparedData, String tenant)
+	private JSONArray getDashboardSetTableData(EntityManager em, String type, String lastComparisonDate, String maxComparedData, String tenant)
 	{
-		List<Map<String, Object>> list = DataManager.getInstance().getDashboardSetTableData(em, type,date,maxComparedData, tenant);
+		List<Map<String, Object>> list = DataManager.getInstance().getDashboardSetTableData(em, type,lastComparisonDate,maxComparedData, tenant);
 		return getJSONArrayForListOfObjects(TABLE_DATA_KEY_DASHBOARD_SET, list);
 	}
 
-	private JSONArray getDashboardTableData(EntityManager em, String type, String date, String maxComparedData, String tenant)
+	private JSONArray getDashboardTableData(EntityManager em, String type, String lastComparisonDate, String maxComparedData, String tenant)
 	{
-		List<Map<String, Object>> list = DataManager.getInstance().getDashboardTableData(em, type,date,maxComparedData, tenant);
+		List<Map<String, Object>> list = DataManager.getInstance().getDashboardTableData(em, type,lastComparisonDate,maxComparedData, tenant);
 		return getJSONArrayForListOfObjects(TABLE_DATA_KEY_DASHBOARD, list);
 	}
 
-	private JSONArray getDashboardTileParamsTableData(EntityManager em, String type, String date, String maxComparedData, String tenant)
+	private JSONArray getDashboardTileParamsTableData(EntityManager em, String type, String lastComparisonDate, String maxComparedData, String tenant)
 	{
-		List<Map<String, Object>> list = DataManager.getInstance().getDashboardTileParamsTableData(em ,type,date,maxComparedData, tenant);
+		List<Map<String, Object>> list = DataManager.getInstance().getDashboardTileParamsTableData(em ,type,lastComparisonDate,maxComparedData, tenant);
 		return getJSONArrayForListOfObjects(TABLE_DATA_KEY_DASHBOARD_TILE_PARAMS, list);
 	}
 
-	private JSONArray getDashboardTileTableData(EntityManager em, String type, String date, String maxComparedData, String tenant)
+	private JSONArray getDashboardTileTableData(EntityManager em, String type, String lastComparisonDate, String maxComparedData, String tenant)
 	{
-		List<Map<String, Object>> list = DataManager.getInstance().getDashboardTileTableData(em, type,date,maxComparedData, tenant);
+		List<Map<String, Object>> list = DataManager.getInstance().getDashboardTileTableData(em, type,lastComparisonDate,maxComparedData, tenant);
 		return getJSONArrayForListOfObjects(TABLE_DATA_KEY_DASHBOARD_TILES, list);
 	}
 
-	private JSONArray getDashboardUserOptionsTableData(EntityManager em, String type, String date, String maxComparedData, String tenant)
+	private JSONArray getDashboardUserOptionsTableData(EntityManager em, String type, String lastComparisonDate, String maxComparedData, String tenant)
 	{
-		List<Map<String, Object>> list = DataManager.getInstance().getDashboardUserOptionsTableData(em, type,date,maxComparedData, tenant);
+		List<Map<String, Object>> list = DataManager.getInstance().getDashboardUserOptionsTableData(em, type,lastComparisonDate,maxComparedData, tenant);
 		return getJSONArrayForListOfObjects(TABLE_DATA_KEY_DASHBOARD_USER_OPTIONS, list);
 	}
 
