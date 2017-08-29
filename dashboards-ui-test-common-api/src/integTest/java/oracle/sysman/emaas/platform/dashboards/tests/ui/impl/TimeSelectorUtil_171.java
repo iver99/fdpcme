@@ -143,28 +143,28 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 		webd.takeScreenShot();
 		webd.savePageToFile();
 
-//		if (webd.isDisplayed(TimeSelectorUIControls.sErrorMsg)) {
-//			try {
-//				throw new Exception(webd.getText(TimeSelectorUIControls.sErrorMsg));
-//			}
-//			catch (Exception e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//			return null;
-//		}
-//		else {
-			try {
-				clickApplyButton(webd);
-			}
-			catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			String returnTimeRange = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn))
-					.get(index - 1).getText();
-			return dateConvert(webd, returnTimeRange, TimeRange.Custom, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
-//		}
+		//		if (webd.isDisplayed(TimeSelectorUIControls.sErrorMsg)) {
+		//			try {
+		//				throw new Exception(webd.getText(TimeSelectorUIControls.sErrorMsg));
+		//			}
+		//			catch (Exception e) {
+		//				// TODO Auto-generated catch block
+		//				e.printStackTrace();
+		//			}
+		//			return null;
+		//		}
+		//		else {
+		try {
+			clickApplyButton(webd);
+		}
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String returnTimeRange = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn))
+				.get(index - 1).getText();
+		return dateConvert(webd, returnTimeRange, TimeRange.Custom, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
+		//		}
 
 	}
 
@@ -226,29 +226,28 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 		webd.sendKeys("css=" + TimeSelectorUIControls.sEndDateInput, endDate);
 		webd.click("css=" + TimeSelectorUIControls.sEndDateInput);
 
-
-//		if (webd.isDisplayed(TimeSelectorUIControls.sErrorMsg)) {
-//			try {
-//				throw new Exception(webd.getText(TimeSelectorUIControls.sErrorMsg));
-//			}
-//			catch (Exception e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//			return null;
-//		}
-//		else {
-			try {
-				clickApplyButton(webd);
-			}
-			catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			String returnTimeRange = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn))
-					.get(index - 1).getText();
-			return dateConvert(webd, returnTimeRange, TimeRange.Custom, "MM/dd/yyyy", "MMM d, yyyy");
-//		}
+		//		if (webd.isDisplayed(TimeSelectorUIControls.sErrorMsg)) {
+		//			try {
+		//				throw new Exception(webd.getText(TimeSelectorUIControls.sErrorMsg));
+		//			}
+		//			catch (Exception e) {
+		//				// TODO Auto-generated catch block
+		//				e.printStackTrace();
+		//			}
+		//			return null;
+		//		}
+		//		else {
+		try {
+			clickApplyButton(webd);
+		}
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String returnTimeRange = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn))
+				.get(index - 1).getText();
+		return dateConvert(webd, returnTimeRange, TimeRange.Custom, "MM/dd/yyyy", "MMM d, yyyy");
+		//		}
 	}
 
 	@Override
@@ -480,12 +479,12 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 					.get(Index - 1).getAttribute("value")
 					+ " "
 					+ webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sStartTimeInput)).get(Index - 1)
-							.getAttribute("value");
+					.getAttribute("value");
 			String returnEndDate = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sEndDateInput))
 					.get(Index - 1).getAttribute("value")
 					+ " "
 					+ webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sEndTimeInput)).get(Index - 1)
-							.getAttribute("value");
+					.getAttribute("value");
 
 			returnStartDate = timeFormatChange(webd, returnStartDate, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
 			returnEndDate = timeFormatChange(webd, returnEndDate, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
@@ -577,12 +576,12 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 					.get(index - 1).getAttribute("value")
 					+ " "
 					+ webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sStartTimeInput)).get(index - 1)
-							.getAttribute("value");
+					.getAttribute("value");
 			String returnEndDate = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sEndDateInput))
 					.get(index - 1).getAttribute("value")
 					+ " "
 					+ webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sEndTimeInput)).get(index - 1)
-							.getAttribute("value");
+					.getAttribute("value");
 
 			returnStartDate = timeFormatChange(webd, returnStartDate, "MM/dd/yyyy", "MMM d, yyyy");
 			returnEndDate = timeFormatChange(webd, returnEndDate, "MM/dd/yyyy", "MMM d, yyyy");
@@ -828,6 +827,10 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 		String returnStartDate = "";
 		String returnEndDate = "";
 
+		String currentDate = driver.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sDateTimePick)).get(0)
+				.findElement(By.cssSelector(TimeSelectorUIControls.sEndDateInput)).getAttribute("value");
+
+		String[] currentDateArray = currentDate.split("/");
 		if (convertDate.startsWith(timeRange)) {
 			tmpDate = convertDate.substring(timeRange.length() + 1);
 		}
@@ -841,15 +844,13 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 		}
 
 		String[] date = tmpDate.split("-");
-		String StartDate="";
+		String StartDate = "";
 		String EndDate = "";
-		if(date.length>1)
-		{
-			StartDate= date[0].trim();
+		if (date.length > 1) {
+			StartDate = date[0].trim();
 			EndDate = date[1].trim();
 		}
-		else
-		{
+		else {
 			StartDate = date[0].trim();
 			EndDate = date[0].trim();
 		}
@@ -861,13 +862,13 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 		today.clear();
 		today.set(Calendar.YEAR, current.get(Calendar.YEAR));
 		today.set(Calendar.MONTH, current.get(Calendar.MONTH));
-		today.set(Calendar.DAY_OF_MONTH, current.get(Calendar.DAY_OF_MONTH));
+		today.set(Calendar.DAY_OF_MONTH, Integer.parseInt(currentDateArray[1].trim()));
 
 		Calendar yesterday = Calendar.getInstance(); //yesterday
 		yesterday.clear();
 		yesterday.set(Calendar.YEAR, current.get(Calendar.YEAR));
 		yesterday.set(Calendar.MONTH, current.get(Calendar.MONTH));
-		yesterday.set(Calendar.DAY_OF_MONTH, current.get(Calendar.DAY_OF_MONTH) - 1);
+		yesterday.set(Calendar.DAY_OF_MONTH, Integer.parseInt(currentDateArray[1].trim()) - 1);
 
 		int actualTodayMonth = today.get(Calendar.MONTH) + 1;
 		int actualYesterdayMonth = yesterday.get(Calendar.MONTH) + 1;
