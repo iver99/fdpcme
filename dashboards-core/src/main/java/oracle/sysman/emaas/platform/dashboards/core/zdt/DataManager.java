@@ -328,16 +328,8 @@ public class DataManager
 				+ "POSITION, CREATION_DATE, LAST_MODIFICATION_DATE, TO_CHAR(DELETED) AS DELETED"
 				+ " FROM EMS_DASHBOARD_SET WHERE LAST_MODIFICATION_DATE > to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') and LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')"
 				+ " and dashboard_set_id in (select dashboard_id from ems_dashboard where is_system <>1)";
-		if (tenant != null) {
-			return getDatabaseTableData(em,sqlByTenant,null,maxComparedDate, tenant);
-		} else {
-			if (type.equals("incremental") && lastComparisonDate != null) {
-				return getDatabaseTableData(em,sqlByDate,lastComparisonDate,maxComparedDate, null);
-			} else {
-				return getDatabaseTableData(em,sql,null,maxComparedDate, null);
-			}
-		}
-		
+		return getDBTableRows(em, type, lastComparisonDate, maxComparedDate, tenant, sql, sqlByTenant, sqlByDate);
+
 	}
 
 	/**
@@ -360,15 +352,7 @@ public class DataManager
 				+ "SHARE_PUBLIC, ENABLE_ENTITY_FILTER, ENABLE_DESCRIPTION, EXTENDED_OPTIONS, SHOW_INHOME FROM EMS_DASHBOARD "
 				+ "WHERE LAST_MODIFICATION_DATE > to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') and LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')"
 				+ " and  is_system <> 1";
-		if (tenant != null) {
-			return getDatabaseTableData(em,sqlByTenant,null,maxComparedDate, tenant);
-		} else {
-			if (type.equals("incremental") && lastComparisonDate != null) {
-				return getDatabaseTableData(em,sqlByDate,lastComparisonDate,maxComparedDate, null);
-			} else {
-				return getDatabaseTableData(em,sql,null,maxComparedDate, null);//FIXME should this sql still using last modification date?
-			}
-		}
+		return getDBTableRows(em, type, lastComparisonDate, maxComparedDate, tenant, sql, sqlByTenant, sqlByDate);
 	}
 
 	/**
@@ -388,15 +372,7 @@ public class DataManager
 				+ "CREATION_DATE, LAST_MODIFICATION_DATE, DELETED FROM EMS_DASHBOARD_TILE_PARAMS "
 				+ "WHERE LAST_MODIFICATION_DATE > to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') and LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')"
 				+ " and is_system <>1";
-		if (tenant != null) {
-			return getDatabaseTableData(em,sqlByTenant,null,maxComparedDate, tenant);
-		} else {
-			if (type.equals("incremental") && lastComparisonDate != null) {
-				return getDatabaseTableData(em,sqlByDate,lastComparisonDate,maxComparedDate, null);
-			} else {
-				return getDatabaseTableData(em,sql,null,maxComparedDate,null);
-			}
-		}
+		return getDBTableRows(em, type, lastComparisonDate, maxComparedDate, tenant, sql, sqlByTenant, sqlByDate);
 	}
 
 	/**
@@ -422,16 +398,8 @@ public class DataManager
 				+ "TILE_ROW, TILE_COLUMN, TYPE, WIDGET_SUPPORT_TIME_CONTROL, WIDGET_LINKED_DASHBOARD, WIDGET_DELETED, WIDGET_DELETION_DATE, DELETED FROM EMS_DASHBOARD_TILE "
 				+ "WHERE LAST_MODIFICATION_DATE > to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') and LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')"
 				+ " and dashboard_id in (select dashboard_id from ems_dashboard where is_system <>1)";
-		if (tenant != null) {
-			return getDatabaseTableData(em,sqlByTenant,null,maxComparedDate, tenant);
-		} else {
-			if (type.equals("incremental") && lastComparisonDate != null) {
-				return getDatabaseTableData(em,sqlByDate,lastComparisonDate,maxComparedDate, null);
-			} else {
-				return getDatabaseTableData(em,sql,null,maxComparedDate, null);
-			}
-		}
-	
+		return getDBTableRows(em, type, lastComparisonDate, maxComparedDate, tenant, sql, sqlByTenant, sqlByDate);
+
 	}
 
 	/**
@@ -450,15 +418,7 @@ public class DataManager
 		String sqlByDate = "SELECT USER_NAME, TENANT_ID, TO_CHAR(DASHBOARD_ID) AS DASHBOARD_ID, AUTO_REFRESH_INTERVAL, ACCESS_DATE, IS_FAVORITE, EXTENDED_OPTIONS, CREATION_DATE, LAST_MODIFICATION_DATE,"
 				+ " DELETED FROM EMS_DASHBOARD_USER_OPTIONS WHERE LAST_MODIFICATION_DATE > to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') and LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')"
 				+ " and  dashboard_id in (select dashboard_Id from ems_dashboard where is_system <>1)";
-		if (tenant != null) {
-			return getDatabaseTableData(em,sqlByTenant,null,maxComparedDate,tenant);
-		} else {
-			if (type.equals("incremental") && lastComparisonDate != null) {
-				return getDatabaseTableData(em,sqlByDate,lastComparisonDate,maxComparedDate, null);
-			} else {
-				return getDatabaseTableData(em,sql,null,maxComparedDate, null);
-			}
-		}
+		return getDBTableRows(em, type, lastComparisonDate, maxComparedDate, tenant, sql, sqlByTenant, sqlByDate);
 
 	}
 
@@ -473,16 +433,36 @@ public class DataManager
 		String sqlByTenant = "SELECT USER_NAME, PREF_KEY, PREF_VALUE, TENANT_ID, CREATION_DATE, LAST_MODIFICATION_DATE,DELETED FROM EMS_PREFERENCE where LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') and tenant_Id=?";		
 		String sqlByDate = "SELECT USER_NAME, PREF_KEY, PREF_VALUE, TENANT_ID, CREATION_DATE, LAST_MODIFICATION_DATE,DELETED FROM EMS_PREFERENCE "
 				+ "WHERE LAST_MODIFICATION_DATE > to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') and LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')";
+		return getDBTableRows(em, type, lastComparisonDate, maxComparedDate, tenant, sql, sqlByTenant, sqlByDate);
+
+	}
+
+	/**
+	 * #1. if tenant is not null(full compare), return data that last modification date < max compared date data.
+	 * #2. if comparison is incremental, and last comparison date is not null, return data that last modification date > last comparison date and last modification date < max compared date data
+	 * #3. if comparison is incremental, and last comparison date is null(Or comparison is full and tenant is null),return data that last modification date < last compared date data.(rarely meet this case)
+	 * @param em
+	 * @param type
+	 * @param lastComparisonDate
+	 * @param maxComparedDate
+	 * @param tenant
+	 * @param sql
+	 * @param sqlByTenant
+	 * @param sqlByDate
+	 * @return return the table rows need to be compared
+	 */
+	private List<Map<String, Object>> getDBTableRows(EntityManager em, String type, String lastComparisonDate, String maxComparedDate, String tenant, String sql, String sqlByTenant, String sqlByDate) {
 		if (tenant != null) {
 			return getDatabaseTableData(em,sqlByTenant,null,maxComparedDate, tenant);
 		} else {
 			if (type.equals("incremental") && lastComparisonDate != null) {
 				return getDatabaseTableData(em,sqlByDate,lastComparisonDate,maxComparedDate, null);
 			} else {
+				//enter this else branch, there are 2 case: #1. Comparison is incremental but lastComparison is null, #2. comparison is full, but tenant is null
+				//both above cases are abnormal
 				return getDatabaseTableData(em,sql,null,maxComparedDate, null);
 			}
 		}
-	
 	}
 
 	/**

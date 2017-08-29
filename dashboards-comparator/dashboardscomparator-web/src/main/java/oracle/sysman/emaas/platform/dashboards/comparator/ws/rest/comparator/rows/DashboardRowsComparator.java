@@ -117,6 +117,7 @@ public class DashboardRowsComparator extends AbstractComparator
 			} else {
 				tre1 = retrieveRowsForSingleInstance(client1, tenantId,
 						comparisonType, maxComparedDate, null);
+				//FIXME fix this later
 				if (tre1 == null) {
 					logger.error("Failed to retrieve ZDT table rows entity for instance {}", key1);
 					return null;
@@ -306,24 +307,7 @@ public class DashboardRowsComparator extends AbstractComparator
 		cd.getInstance2().getData().setEmsPreference(result.getList2());
 	}
 
-	/**
-	 * @param response
-	 * @return
-	 * @throws IOException
-	 * @throws ZDTException 
-	 */
-	private TableRowsEntity retrieveRowsEntityFromJsonForSingleInstance(String response) throws IOException, ZDTException
-	{
-		JsonUtil ju = JsonUtil.buildNormalMapper();
-		TableRowsEntity tre = ju.fromJson(response, TableRowsEntity.class);
-		if (tre == null) {
-			logger.warn("Checking dashboard OMC instance table rows: null/empty entity retrieved.");
-			throw new ZDTException(ZDTErrorConstants.NULL_TABLE_ROWS_ERROR_CODE, ZDTErrorConstants.NULL_TABLE_ROWS_ERROR_MESSAGE);
-		}
-		//logger.info(tre.getEmsDashboard()==null?"nullRows":tre.getEmsDashboard().size());
-		return tre;
-	}
-	
+
 	public String retrieveTenants(String tenantId, String userTenant, LookupClient client) throws Exception {
 		Link lk = getSingleInstanceUrl(client, "zdt/tenants", "http");
 		if (lk == null) {
@@ -374,7 +358,7 @@ public class DashboardRowsComparator extends AbstractComparator
 	 * @throws IOException
 	 */
 	private TableRowsEntity retrieveRowsForSingleInstance(LookupClient lc, String tenantId,
-			String comparisonType, String maxComparedDate, String tenant) throws Exception
+			String comparisonType, String maxComparedDate, String tenant) throws ZDTException,Exception
 	{
 		Link lk = getSingleInstanceUrl(lc, "zdt/tablerows", "http");
 		if (lk == null) {
@@ -388,18 +372,20 @@ public class DashboardRowsComparator extends AbstractComparator
 			url = lk.getHref() + "?comparisonType="+comparisonType+"&maxComparedDate="+URLEncoder.encode(maxComparedDate, "UTF-8");
 		}
 
-		//String response = new TenantSubscriptionUtil.RestClient().get(url, tenantId,userTenant);
-
-		logger.info("get table data URL is "+url);
+		logger.info("get table data URL is {}", url);
 
 		RestClient rc = RestClientProxy.getRestClient();
 		rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME, tenantId);
-		//rc.setHeader(RestClient.X_REMOTE_USER, userTenant);
 		char[] authToken = LookupManager.getInstance().getAuthorizationToken();
 		String response = rc.get(url, tenantId,new String(authToken));
-		
-		//logger.info("Checking dashboard OMC instance table rows. Response is " + response);
-		return retrieveRowsEntityFromJsonForSingleInstance(response);
+
+		JsonUtil ju = JsonUtil.buildNormalMapper();
+		TableRowsEntity tre = ju.fromJson(response, TableRowsEntity.class);
+		if (tre == null) {
+			logger.warn("Checking dashboard OMC instance table rows: null/empty entity retrieved.");
+			throw new ZDTException(ZDTErrorConstants.NULL_TABLE_ROWS_ERROR_CODE, ZDTErrorConstants.NULL_TABLE_ROWS_ERROR_MESSAGE);
+		}
+		return tre;
 	}
 	
 	public String retrieveComparatorStatusForOmcInstance(String tenantId, String userTenant) throws Exception {
@@ -408,18 +394,11 @@ public class DashboardRowsComparator extends AbstractComparator
 			logger.warn("Get a null or empty link for one single instance!");
 			throw new ZDTException(ZDTErrorConstants.NULL_LINK_ERROR_CODE, ZDTErrorConstants.NULL_LINK_ERROR_MESSAGE);
 		}
-		//String response =  new TenantSubscriptionUtil.RestClient().get(lk.getHref(), tenantId,userTenant);
 		RestClient rc = RestClientProxy.getRestClient();
 		rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME, tenantId);
-		//rc.setHeader(RestClient.X_REMOTE_USER, userTenant);
 		char[] authToken = LookupManager.getInstance().getAuthorizationToken();
-		String token = null;
-		if (authToken != null) {
-			token = new String(authToken);
-		}
 		String response = rc.get(lk.getHref(), tenantId, new String(authToken));
-		//logger.info("checking comparator status is " + response);
-		
+
 		return response;
 	}
 	
@@ -429,14 +408,11 @@ public class DashboardRowsComparator extends AbstractComparator
 			logger.warn("Get a null or empty link for one single instance!");
 			throw new ZDTException(ZDTErrorConstants.NULL_LINK_ERROR_CODE, ZDTErrorConstants.NULL_LINK_ERROR_MESSAGE);
 		}
-		//String response =  new TenantSubscriptionUtil.RestClient().get(lk.getHref(), tenantId,userTenant);
 		RestClient rc = RestClientProxy.getRestClient();
 		rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME, tenantId);
-		//rc.setHeader(RestClient.X_REMOTE_USER, userTenant);
 		char[] authToken = LookupManager.getInstance().getAuthorizationToken();
 		String response = rc.get(lk.getHref(), tenantId, new String(authToken));
-		//logger.info("checking sync status is " + response);
-		
+
 		return response;
 	}
 	
@@ -448,14 +424,10 @@ public class DashboardRowsComparator extends AbstractComparator
 		}
 		JsonUtil jsonUtil = JsonUtil.buildNonNullMapper();
 		String entityStr = jsonUtil.toJson(statusRowEntity);
- 		//logger.info("print the put data {} !",entityStr);
- 		//String response = new TenantSubscriptionUtil.RestClient().put(lk.getHref(), entityStr, tenantId, userTenant);
  		RestClient rc = RestClientProxy.getRestClient();
 		rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME, tenantId);
-		//rc.setHeader(RestClient.X_REMOTE_USER, userTenant);
 		char[] authToken = LookupManager.getInstance().getAuthorizationToken();
 		String response = rc.put(lk.getHref(), entityStr,tenantId, new String(authToken));
- 		//logger.info("Checking sync reponse. Response is " + response);
 		return response;
 	}
 
