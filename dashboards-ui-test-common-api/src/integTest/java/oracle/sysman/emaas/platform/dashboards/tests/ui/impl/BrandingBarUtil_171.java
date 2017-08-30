@@ -629,6 +629,6 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 	}
 	@Override
 	public void verifyUserMenuItemByText(WebDriver driver, String item, String text){
-		String temp= "";
+		// overrided in BrandingBarUtil_1230
 	}
 }
