@@ -163,7 +163,7 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 		}
 		String returnTimeRange = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn))
 				.get(index - 1).getText();
-		return dateConvert(webd, returnTimeRange, TimeRange.Custom, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
+		return dateConvert(webd, returnTimeRange, TimeRange.Custom, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a", index);
 		//		}
 
 	}
@@ -246,7 +246,7 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 		}
 		String returnTimeRange = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn))
 				.get(index - 1).getText();
-		return dateConvert(webd, returnTimeRange, TimeRange.Custom, "MM/dd/yyyy", "MMM d, yyyy");
+		return dateConvert(webd, returnTimeRange, TimeRange.Custom, "MM/dd/yyyy", "MMM d, yyyy", index);
 		//		}
 	}
 
@@ -472,7 +472,7 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 				.get(Index - 1).getText();
 
 		if (returnTimeRange.startsWith(rangeoption.getRangeOption() + ":")) {
-			return dateConvert(webd, returnTimeRange, rangeoption, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
+			return dateConvert(webd, returnTimeRange, rangeoption, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a", Index);
 		}
 		else {
 			String returnStartDate = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sStartDateInput))
@@ -491,7 +491,7 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 
 			String returnDate = returnTimeRange + ": " + returnStartDate + " - " + returnEndDate;
 
-			return dateConvert(webd, returnDate, rangeoption, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
+			return dateConvert(webd, returnDate, rangeoption, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a", Index);
 		}
 
 	}
@@ -569,7 +569,7 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 
 		if (returnTimeRange.startsWith(rangeOption.getRangeOption() + ":")) {
 			//dateConvert with date only
-			return dateConvert(webd, returnTimeRange, rangeOption, "MM/dd/yyyy", "MMM d, yyyy");
+			return dateConvert(webd, returnTimeRange, rangeOption, "MM/dd/yyyy", "MMM d, yyyy", index);
 		}
 		else {
 			String returnStartDate = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sStartDateInput))
@@ -588,7 +588,7 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 
 			String returnDate = returnTimeRange + ": " + returnStartDate + " - " + returnEndDate;
 
-			return dateConvert(webd, returnDate, rangeOption, "MM/dd/yyyy", "MMM d, yyyy");
+			return dateConvert(webd, returnDate, rangeOption, "MM/dd/yyyy", "MMM d, yyyy", index);
 		}
 	}
 
@@ -820,15 +820,15 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 	}
 
 	protected String dateConvert(WebDriver driver, String convertDate, TimeRange timerange, String fromDateFormat,
-			String toDateFormat)
+			String toDateFormat, int index)
 	{
 		String timeRange = timerange.getRangeOption();
 		String tmpDate = "";
 		String returnStartDate = "";
 		String returnEndDate = "";
 
-		String currentDate = driver.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sDateTimePick)).get(0)
-				.findElement(By.cssSelector(TimeSelectorUIControls.sEndDateInput)).getAttribute("value");
+		String currentDate = driver.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sDateTimePick))
+				.get(index - 1).findElement(By.cssSelector(TimeSelectorUIControls.sEndDateInput)).getAttribute("value");
 
 		String[] currentDateArray = currentDate.split("/");
 		if (convertDate.startsWith(timeRange)) {
