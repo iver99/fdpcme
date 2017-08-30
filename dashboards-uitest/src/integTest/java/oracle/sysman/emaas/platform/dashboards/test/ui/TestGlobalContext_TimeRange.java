@@ -12,12 +12,8 @@ package oracle.sysman.emaas.platform.dashboards.test.ui;
 
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.DashBoardUtils;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.LoginAndLogout;
-import oracle.sysman.emaas.platform.dashboards.test.ui.util.PageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.*;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -239,7 +235,7 @@ public class TestGlobalContext_TimeRange extends LoginAndLogout
 	
 	private void urlVerification(String serviceURL, String StartTimeStamp, String EndTimeStamp)
 	{
-		String url = webd.getWebDriver().getCurrentUrl();
+		String url = webd.getCurrentUrl();
 		webd.getLogger().info("url = " + url);
 		if (!url.substring(url.indexOf("emsaasui") + 9).contains(serviceURL)) {
 			Assert.fail("Wrong Service URL");

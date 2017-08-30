@@ -377,7 +377,7 @@ public class CommonUIUtils
 		}
 		catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			webd.getLogger().info(e.getLocalizedMessage());			
 		}		
 		try {
 			if(DateOnly){
@@ -393,7 +393,7 @@ public class CommonUIUtils
 		}
 		catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			webd.getLogger().info(e.getLocalizedMessage());
 		}
 		
 		try {
@@ -406,7 +406,7 @@ public class CommonUIUtils
 		}
 		catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			webd.getLogger().info(e.getLocalizedMessage());
 		}
 		
 		webd.getLogger().info("start:"+start);

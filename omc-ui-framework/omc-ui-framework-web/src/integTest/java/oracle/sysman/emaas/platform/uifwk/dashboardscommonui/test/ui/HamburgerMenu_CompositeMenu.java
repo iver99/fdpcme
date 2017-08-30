@@ -11,18 +11,12 @@
 package oracle.sysman.emaas.platform.uifwk.dashboardscommonui.test.ui;
 
 import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.WidgetSelectorUtil;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.emaas.platform.uifwk.dashboardscommonui.test.ui.util.CommonUIUtils;
 import oracle.sysman.emaas.platform.uifwk.dashboardscommonui.test.ui.util.LoginAndLogout;
 import oracle.sysman.emaas.platform.uifwk.dashboardscommonui.test.ui.util.UIControls;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -31,10 +25,6 @@ import org.testng.annotations.Test;
  */
 public class HamburgerMenu_CompositeMenu extends LoginAndLogout
 {
-	private static final Logger LOGGER = LogManager.getLogger(HamburgerMenu_CompositeMenu.class);
-	private static String sAppName = "";
-	private static boolean roles[] = { false, false, false, false };
-
 	public void initTest(String testName, String queryString)
 	{
 
@@ -55,7 +45,7 @@ public class HamburgerMenu_CompositeMenu extends LoginAndLogout
 		//click the 'Show Composite' button
 		webd.getLogger().info("Click the 'Show Composite' button");
 		String indicator = UIControls.SGENERATEMENUBTN.replace("_name_", "Show Composite");
-		//webd.click("css=" + indicator);
+		
 		webd.getWebDriver().findElement(By.cssSelector(indicator)).click();
 		//check the hamburger menu
 		webd.getLogger().info("Check the menu items in hamburger menu");
