@@ -17,7 +17,7 @@ import org.testng.annotations.Test;
  * @since release specific (what release of product did this appear in)
  */
 
-public class TestWelcomePage extends LoginAndLogout
+public class TestWelcomePage_V1 extends LoginAndLogout
 {
 
 	public void initTest(String testName)
@@ -41,7 +41,7 @@ public class TestWelcomePage extends LoginAndLogout
 		webd.getLogger().info("Test open APM in welcome page finished!!!");
 	}
 
-	@Test(alwaysRun = true)
+	//@Test(alwaysRun = true)
 	public void testOpenCompliancePage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -56,20 +56,6 @@ public class TestWelcomePage extends LoginAndLogout
 		webd.getLogger().info("Test open Compliance in welcome page finished!!!");
 	}
 
-	//	@Test(alwaysRun = true)
-	//	public void testOpenServiceOfferingPage()
-	//	{
-	//		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-	//		webd.getLogger().info("Start to test opening 'Service Offerings' in welcome page...");
-	//
-	//		BrandingBarUtil.visitWelcome(webd);
-	//		WelcomeUtil.learnMoreServiceOffering(webd);
-	//		webd.switchToWindow();
-	//		String tmpUrl = webd.getWebDriver().getCurrentUrl();
-	//		webd.getLogger().info("Open 'Service Offerings' by url: " + tmpUrl);
-	//		Assert.assertEquals(tmpUrl, "https://cloud.oracle.com/management");
-	//		webd.getLogger().info("Test opening 'Service Offerings' in welcome page finished!!!");
-	//	}
 
 	@Test(alwaysRun = true)
 	public void testOpenDashboardPage()
@@ -101,34 +87,6 @@ public class TestWelcomePage extends LoginAndLogout
 		webd.getLogger().info("Test opening Data Explorers-Log in welcome page finished!!!");
 	}
 
-	//	@Test(alwaysRun = true)
-	//	public void testOpenGetStartedPage()
-	//	{
-	//		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-	//		webd.getLogger().info("Start to test opening 'How to get started' in welcome page...");
-	//
-	//		BrandingBarUtil.visitWelcome(webd);
-	//		WelcomeUtil.learnMoreHow(webd);
-	//		webd.switchToWindow();
-	//		String tmpUrl = webd.getWebDriver().getCurrentUrl();
-	//		webd.getLogger().info("Open 'How to get started' by url: " + tmpUrl);
-	//		Assert.assertEquals(tmpUrl, "http://docs.oracle.com/cloud/latest/em_home/index.html");
-	//		webd.getLogger().info("Test opening 'How to get started' in welcome page finished!!!");
-	//	}
-
-	//	@Test(alwaysRun = true)
-	//	public void testOpenInfraMonitoring()
-	//	{
-	//		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-	//		webd.getLogger().info("Start to test open Infrastructure Monitoring in welcome page...");
-	//
-	//		BrandingBarUtil.visitWelcome(webd);
-	//		WelcomeUtil.visitInfraMonitoring(webd);
-	//		String tmpUrl = webd.getWebDriver().getCurrentUrl();
-	//		webd.getLogger().info("Open Infrastructure Monitoring by url: " + tmpUrl);
-	//		urlVerification(tmpUrl, "monitoringservicesui/cms/index.html");
-	//		webd.getLogger().info("Test open Infrastructure Monitoring in welcome page finished!!!");
-	//	}
 
 	@Test(alwaysRun = true)
 	public void testOpenDE_SearchPage()
@@ -145,7 +103,7 @@ public class TestWelcomePage extends LoginAndLogout
 		webd.getLogger().info("Test opening Data Explorers-Search in welcome page finished!!!");
 	}
 
-	@Test(alwaysRun = true)
+	//@Test(alwaysRun = true)
 	public void testOpenInfrastructureMonitoringPage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -190,7 +148,7 @@ public class TestWelcomePage extends LoginAndLogout
 		webd.getLogger().info("Test opening ITA: Availability Analytics in welcome page finished!!!");
 	}
 
-	//@Test(alwaysRun = true)
+	@Test(alwaysRun = true)
 	public void testOpenITA_DEPage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -331,7 +289,7 @@ public class TestWelcomePage extends LoginAndLogout
 		webd.getLogger().info("Test open LA in welcome page finished!!!");
 	}
 
-	@Test(alwaysRun = true)
+	//@Test(alwaysRun = true)
 	public void testOpenOrchestrationPage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -346,7 +304,7 @@ public class TestWelcomePage extends LoginAndLogout
 		webd.getLogger().info("Test open Security Analytics in welcome page finished!!!");
 	}
 
-	@Test(alwaysRun = true)
+	//@Test(alwaysRun = true)
 	public void testOpenSecurityPage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -361,21 +319,6 @@ public class TestWelcomePage extends LoginAndLogout
 		webd.getLogger().info("Test open Security Analytics in welcome page finished!!!");
 	}
 
-	//	@Test(alwaysRun = true)
-	//	public void testOpenVideosPage()
-	//	{
-	//		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-	//		webd.getLogger().info("Start to test opening 'Videos' in welcome page...");
-	//
-	//		BrandingBarUtil.visitWelcome(webd);
-	//		WelcomeUtil.learnMoreVideo(webd);
-	//		webd.switchToWindow();
-	//		String tmpUrl = webd.getWebDriver().getCurrentUrl();
-	//		webd.getLogger().info("Open 'Videos' by url: " + tmpUrl);
-	//		Assert.assertEquals(tmpUrl, "http://docs.oracle.com/cloud/latest/em_home/em_home_videos.htm");
-	//		webd.getLogger().info("Test opening 'Videos' in welcome page finished!!!");
-	//	}
-
 	@Test(alwaysRun = true)
 	public void testWelcomepage()
 	{
@@ -389,13 +332,14 @@ public class TestWelcomePage extends LoginAndLogout
 		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, "ITA"));
 		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, "dashboards"));
 		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, "dataExplorers"));
-		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, "infraMonitoring"));
-		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, "securityAnalytics"));
-		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, "orchestration"));
-		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, "compliance"));
+		//Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, "infraMonitoring"));
+		//Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, "securityAnalytics"));
+		//Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, "orchestration"));
+		//Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, "compliance"));
 
 		Assert.assertTrue(WelcomeUtil.isLearnMoreItemExisted(webd, "getStarted"));
 		Assert.assertTrue(WelcomeUtil.isLearnMoreItemExisted(webd, "videos"));
 		Assert.assertTrue(WelcomeUtil.isLearnMoreItemExisted(webd, "serviceOfferings"));
 	}
 }
+
