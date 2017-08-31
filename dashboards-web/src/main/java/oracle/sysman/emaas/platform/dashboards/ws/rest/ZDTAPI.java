@@ -215,20 +215,26 @@ public class ZDTAPI extends APIBase
 		if (type == null) {
 			type = "full";
 		}
-		logger.info("syncDate="+syncDate);
+		logger.info("syncDate={}", syncDate);
 		EntityManager em = null;
 		String lastComparisonDateForSync = null;
 		List<Map<String, Object>> comparedDataToSync = null;
-		DashboardServiceFacade dsf = new DashboardServiceFacade();
-		em = dsf.getEntityManager();
-		lastComparisonDateForSync = DataManager.getInstance().getLastComparisonDateForSync(em);
-		logger.info("lastComparisonDateForSync="+lastComparisonDateForSync);
-		comparedDataToSync = DataManager.getInstance().getComparedDataToSync(em, lastComparisonDateForSync);
-		logger.info("comparedDataToSync="+comparedDataToSync);
-		if (em != null) {
-			em.close();
+		try{
+			DashboardServiceFacade dsf = new DashboardServiceFacade();
+			em = dsf.getEntityManager();
+			lastComparisonDateForSync = DataManager.getInstance().getLastComparisonDateForSync(em);
+			logger.info("lastComparisonDateForSync="+lastComparisonDateForSync);
+			//this object contains the divergence data that will be synced, can be more than 1 records. pls NOTE how to retrieve divergence data from compare table
+			comparedDataToSync = DataManager.getInstance().getComparedDataToSync(em, lastComparisonDateForSync);
+			//I think comparedDataToSync can never be null, even when there is no divergence, this comparedDataToSync will not be null
+			logger.info("comparedDataToSync="+comparedDataToSync);
+		}finally{
+			if (em != null) {
+				em.close();
+			}
 		}
 		try {
+			//I think this comparedDataToSync can never be null, even there is no divergence, it will not be null
 			if (comparedDataToSync != null && !comparedDataToSync.isEmpty()) {
 				for (Map<String, Object> dataMap : comparedDataToSync) {
 					Object compareResult = dataMap.get("COMPARISON_RESULT");
@@ -381,7 +387,7 @@ public class ZDTAPI extends APIBase
 						int result = DataManager.getInstance().saveToComparatorTable(em, comparisonDate,nextScheduleDate,
 								comparisonType, comparisonResult, divergencePercentage);
 						if (result < 0) {
-							message = "{\"msg\": \"Error: error occurs while saving data to zdt comparator table\"}";
+							message = "{\"msg\": \"#1.Error: error occurs while saving data to zdt comparator table\"}";
 							return Response.status(Status.INTERNAL_SERVER_ERROR).entity(message).build();
 						} else {
 							message = "{\"msg\": \"Succeed to save data to zdt comparator table\"}";
@@ -389,7 +395,7 @@ public class ZDTAPI extends APIBase
 						}		
 					} catch (Exception e) {
 						logger.error("could not save data to comparator table, "+e.getLocalizedMessage());
-						return Response.status(Status.INTERNAL_SERVER_ERROR).entity("could not save data to comparator table").build();
+						return Response.status(Status.INTERNAL_SERVER_ERROR).entity("{\"msg\": \"#2.Error: error occurs while saving data to zdt comparator table\"}").build();
 					} finally {
 						if (em != null) {
 							em.close();
@@ -398,10 +404,10 @@ public class ZDTAPI extends APIBase
 				}
 			} catch (JSONException e) {
 				logger.error("could not save data to comparator table, "+e.getLocalizedMessage());
-				return Response.status(Status.INTERNAL_SERVER_ERROR).entity("could not save data to comparator table").build();
+				return Response.status(Status.INTERNAL_SERVER_ERROR).entity("{\"msg\": \"#3.Error: error occurs while saving data to zdt comparator table\"}").build();
 			}
 		}
-		return Response.status(Status.SERVICE_UNAVAILABLE).entity(message).build();
+		return Response.status(Status.BAD_REQUEST).entity("{\"msg\": \"Error: No input data\"}").build();
 	}
 
 	
