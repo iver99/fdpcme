@@ -250,8 +250,8 @@
                         <!-- ko if:$root.isEmpty() -->
                         <div class="tooltip-add-widget" style="padding-top: 64px; text-align: center">
                             <!--add-widget-tooltip-->
-                            <img src="@version@/images/imgbackground.png" style="background: url('@version@/images/dfSprite.png') no-repeat 0px -1064px;height:220px;"  width="240px" height="240px" margin-bottom="30px" data-bind="attr:{alt:oj.Translations.getTranslatedString('Add content to dashboard')}"/>
-                            <p style="font-size: 24px; font-weight: bold;" data-bind="text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_TITLE')"></p>
+                            <img src="@version@/images/imgbackground.png" style="background: url('@version@/images/dfSprite.png') no-repeat 0px -1064px;height:220px; margin-bottom:20px;"  width="220px" height="220px" data-bind="attr:{alt:oj.Translations.getTranslatedString('Add content to dashboard')}"/>
+                            <p style="font-size: 24px; font-weight: 400;" data-bind="text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_TITLE')"></p>
                             <!-- ko if:($root.dashboard.systemDashboard()===false) && !(($root.dashboard.sharePublic()===true)&&($root.dashboard.owner()!==$root.loginUser())) -->
                             <p style="font-size: 16px;" data-bind="text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_TEXT_LINE1')"></p>                            
                             <!-- /ko -->
@@ -279,7 +279,9 @@
                                             <!-- /ko -->
                                         </div>
                                         <div class="dbd-resize-handler-placeholder dbd-resize-handler cursor-resize-right-bottom dbd-resize-handler-right-bottom">
-                                            <span class="oj-fwk-icon-arrow-s-end oj-component-icon"></span>
+                                            <!-- ko if: ($root.dashboard.systemDashboard()===false)&& !(($root.dashboard.sharePublic ===true)&&($root.dashboard.owner()!==$root.loginUser())) &&($root.isMobileDevice !== 'true')&&($root.toolbarModel.notZdtStatus) -->
+                                            <span class="oj-fwk-icon-arrow-s-end oj-component-icon dbd-resize-arrow-icon"></span>
+                                            <!-- /ko -->
                                         </div>
                                     </div>
                                 </div>
@@ -492,7 +494,7 @@
                     <div data-bind="css:{'cursor-resize-ew dbd-resize-handler dbd-resize-handler-right':($data.dashboard.systemDashboard()===false) && !(($data.dashboard.sharePublic()===true)&&($data.dashboard.owner()!==$data.loginUser())) &&($data.isMobileDevice !== 'true')}"></div>
                     <div data-bind="css:{'cursor-resize-ns dbd-resize-handler dbd-resize-handler-bottom':($data.dashboard.systemDashboard()===false) && !(($data.dashboard.sharePublic()===true)&&($data.dashboard.owner()!==$data.loginUser())) &&($data.isMobileDevice !== 'true')}"></div>
                     <div data-bind="css:{'cursor-resize-right-bottom dbd-resize-handler dbd-resize-handler-right-bottom':($root.dashboard.systemDashboard()===false) && !(($data.dashboard.sharePublic()===true)&&($data.dashboard.owner()!==$data.loginUser())) &&($data.isMobileDevice !== 'true')}">
-                        <span data-bind="css:{'oj-fwk-icon-arrow-s-end oj-component-icon':($data.dashboard.systemDashboard()===false) && !(($data.dashboard.sharePublic()===true)&&($data.dashboard.owner()!==$data.loginUser())) &&($data.isMobileDevice !== 'true')}"></span>
+                        <span data-bind="css:{'oj-fwk-icon-arrow-s-end oj-component-icon dbd-resize-arrow-icon':($data.dashboard.systemDashboard()===false) && !(($data.dashboard.sharePublic()===true)&&($data.dashboard.owner()!==$data.loginUser())) &&($data.isMobileDevice !== 'true')}"></span>
                     </div>
                 <!-- /ko -->
                 <!-- /ko -->

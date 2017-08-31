@@ -804,6 +804,12 @@ body, html {
     .dbd-resize-handler-placeholder.cursor-resize-right-bottom{
         cursor:default;
     }
+    .dbd-resize-arrow-icon{
+        display:none;
+    }
+}
+.dbd-tile-container:hover .dbd-resize-arrow-icon{
+    display:block;
 }
 .dbd-tile-container.tile-border-highlight{
     border: 2px solid #3085C7;
