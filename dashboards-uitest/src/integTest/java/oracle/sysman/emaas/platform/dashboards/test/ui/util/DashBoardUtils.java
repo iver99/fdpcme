@@ -15,6 +15,7 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
@@ -112,18 +113,15 @@ public class DashBoardUtils
 
 	public static void handleAlert(WebDriver webdriver)
 	{
-//		WebDriverWait wait = new WebDriverWait(webdriver.getWebDriver(), 900L);
-//		Alert alert = wait.until(ExpectedConditions.alertIsPresent());
-//
-//		//Accepting alert.
-//		webdriver.getLogger().info("foucus on the alert");
-//		alert = webdriver.getWebDriver().switchTo().alert();
+		WebDriverWait wait = new WebDriverWait(webdriver.getWebDriver(), 900L);
+		Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+
+		//Accepting alert.
+		webdriver.getLogger().info("foucus on the alert");
+		alert = webdriver.getWebDriver().switchTo().alert();
 
 		webdriver.getLogger().info("click button on the dialog, should navigate to the home page");
-		//alert.accept();
-		
-		webdriver.switchToPopup();
-		webdriver.getAlert().accept();
+		alert.accept();
 	}
 
 	/**
