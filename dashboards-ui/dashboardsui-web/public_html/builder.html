@@ -63,7 +63,7 @@
                     <!-- ko if: visibility -->
                     <li data-bind="attr:{'id':id}">
                         <a href="#" data-bind="attr:{'dashboardset-option':name}">
-                            <span class="fa-icon-font fa-icon-font-14 oj-menu-item-icon oj-fwk-icon" data-bind="css:icon"></span>
+                            <span class="fa-icon-font oj-menu-item-icon oj-fwk-icon" data-bind="css:icon"></span>
                             <span data-bind="text:label"></span>
                         </a>
                         <!--ko if:subMenu.length!==0-->
@@ -71,7 +71,7 @@
                             <!--ko foreach:subMenu-->
                             <li data-bind="attr:{'id':id}">
                                 <a href="#">
-                                    <span class="fa-icon-font fa-icon-font-14 oj-menu-item-icon oj-fwk-icon" data-bind="css:icon"></span>
+                                    <span class="fa-icon-font oj-menu-item-icon oj-fwk-icon" data-bind="css:icon"></span>
                                     <span data-bind="text:label"></span>
                                 </a>
                             </li>
@@ -362,7 +362,7 @@
                                         <!-- ko if: $data.editDisabled() !== true -->
                                         <li data-option="wider" data-bind="css: { 'oj-disabled': (!$data.widerEnabled() || !$data.maximizeEnabled() || $data.editDisabled())}">
                                             <a href="#">
-                                                <span class="oj-menu-item-icon demo-icon-font">
+                                                <span class="oj-menu-item-icon demo-icon-font tile-menu-img">
                                                     <!--func_window_wider_16_ena-->
                                                     <img src="@version@/images/imgbackground.png" style="background: url('@version@/images/dfSprite.png') no-repeat 0px -352px;height:16px;" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_WIDER')}, css: { 'dbd-icon-disabled': (!$data.widerEnabled() || !$data.maximizeEnabled() || $data.editDisabled())}"/>
                                                 </span>
@@ -373,7 +373,7 @@
                                         <!-- ko if: $data.editDisabled() !== true -->
                                         <li data-option="narrower" data-bind="css: { 'oj-disabled': !$data.narrowerEnabled() || !$data.maximizeEnabled() || $data.editDisabled()}">
                                             <a href="#">
-                                                <span class="oj-menu-item-icon demo-icon-font">
+                                                <span class="oj-menu-item-icon demo-icon-font tile-menu-img">
                                                     <!--func_window_narrower_16_ena-->
                                                     <img src="@version@/images/imgbackground.png" style="background: url('@version@/images/dfSprite.png') no-repeat 0px -368px;height:16px;" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_NARROWER')}, css: { 'dbd-icon-disabled': !$data.narrowerEnabled() || !$data.maximizeEnabled() || $data.editDisabled()}"/>
                                                 </span>
@@ -384,7 +384,7 @@
                                         <!-- ko if: $data.editDisabled() !== true -->
                                         <li data-option="taller" data-bind="css: {'oj-disabled': !$data.maximizeEnabled() || $data.editDisabled()}">
                                             <a href="#">
-                                                <span class="oj-menu-item-icon demo-icon-font">
+                                                <span class="oj-menu-item-icon demo-icon-font tile-menu-img">
                                                     <!--func_window_taller_16_ena-->
                                                     <img src="@version@/images/imgbackground.png" style="background: url('@version@/images/dfSprite.png') no-repeat 0px -256px;height:16px;" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_TALLER')}, css: {'dbd-icon-disabled': !$data.maximizeEnabled() || $data.editDisabled()}"/>
                                                 </span>
@@ -395,7 +395,7 @@
                                         <!-- ko if: $data.editDisabled() !== true -->
                                         <li data-option="shorter" data-bind="css: {'oj-disabled': !$data.shorterEnabled() || !$data.maximizeEnabled() || $data.editDisabled()}">
                                             <a href="#">
-                                                <span class="oj-menu-item-icon demo-icon-font">
+                                                <span class="oj-menu-item-icon demo-icon-font tile-menu-img">
                                                     <!--func_window_shorter_16_ena-->
                                                     <img src="@version@/images/imgbackground.png" style="background: url('@version@/images/dfSprite.png') no-repeat 0px -272px;height:16px;" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_SHORTER')}, css: {'dbd-icon-disabled': !$data.shorterEnabled() || !$data.maximizeEnabled() || $data.editDisabled()}"/>
                                                 </span>
@@ -412,7 +412,7 @@
                                         <!-- ko if: $data.editDisabled() !== true -->
                                         <li data-option="edit" data-bind="css: {'oj-disabled': !$data.maximizeEnabled() || $data.editDisabled()}">
                                             <a href="#">
-                                                <span class="oj-menu-item-icon demo-icon-font">
+                                                <span class="oj-menu-item-icon demo-icon-font tile-menu-img">
                                                     <img src="@version@/images/imgbackground.png" class="absolute-Center" style="background: url('@version@/images/dfSprite.png') no-repeat 0px -560px;height:16px;" data-bind="attr: {alt: getNlsString('COMMON_BTN_EDIT')}, css: {'dbd-icon-disabled': !$data.maximizeEnabled() || $data.editDisabled()}"/>
                                                 </span>
                                                 <span data-bind="text: getNlsString('COMMON_BTN_EDIT')"></span>
@@ -424,7 +424,7 @@
                                         <!-- ko if: $data.editDisabled() !== true -->
                                         <li data-option="up" data-bind="css: { 'oj-disabled': (!$data.upEnabled() || !$data.maximizeEnabled() || $data.editDisabled())}">
                                             <a href="#">
-                                                <span class="oj-menu-item-icon demo-icon-font">
+                                                <span class="oj-menu-item-icon demo-icon-font tile-menu-img">
                                                     <!--func_window_up_16_ena-->
                                                     <img src="@version@/images/imgbackground.png" style="background: url('@version@/images/dfSprite.png') no-repeat 0px -304px;height:16px;" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_UP')}, css: { 'dbd-icon-disabled': (!$data.upEnabled() || !$data.maximizeEnabled() || $data.editDisabled())}"/>
                                                 </span>
@@ -435,7 +435,7 @@
                                         <!-- ko if: $data.editDisabled() !== true -->
                                         <li data-option="down" data-bind="css: { 'oj-disabled': !$data.maximizeEnabled() || $data.editDisabled()}">
                                             <a href="#">
-                                                <span class="oj-menu-item-icon demo-icon-font">
+                                                <span class="oj-menu-item-icon demo-icon-font tile-menu-img">
                                                     <!--func_window_down_16_ena-->
                                                     <img src="@version@/images/imgbackground.png" style="background: url('@version@/images/dfSprite.png') no-repeat 0px -464px;height:16px;" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_DOWN')}, css: { 'dbd-icon-disabled': !$data.maximizeEnabled() || $data.editDisabled()}"/>
                                                 </span>
@@ -446,7 +446,7 @@
                                         <!-- ko if: $data.editDisabled() !== true -->
                                         <li data-option="left" data-bind="css: {'oj-disabled': !$data.leftEnabled() || !$data.maximizeEnabled() || $data.editDisabled()}">
                                             <a href="#">
-                                                <span class="oj-menu-item-icon demo-icon-font">
+                                                <span class="oj-menu-item-icon demo-icon-font tile-menu-img">
                                                     <!--func_window_left_16_ena-->
                                                     <img src="@version@/images/imgbackground.png" style="background: url('@version@/images/dfSprite.png') no-repeat 0px -448px;height:16px;" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_LEFT')}, css: {'dbd-icon-disabled': !$data.leftEnabled() || !$data.maximizeEnabled() || $data.editDisabled()}"/>
                                                 </span>
@@ -457,7 +457,7 @@
                                         <!-- ko if: $data.editDisabled() !== true -->
                                         <li data-option="right" data-bind="css: {'oj-disabled': !$data.rightEnabled() || !$data.maximizeEnabled() || $data.editDisabled()}">
                                             <a href="#">
-                                                <span class="oj-menu-item-icon demo-icon-font">
+                                                <span class="oj-menu-item-icon demo-icon-font tile-menu-img">
                                                     <!--func_window_right_16_ena-->
                                                     <img src="@version@/images/imgbackground.png" style="background: url('@version@/images/dfSprite.png') no-repeat 0px -288px;height:16px;" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_RIGHT')}, css: {'dbd-icon-disabled': !$data.rightEnabled() || !$data.maximizeEnabled() || $data.editDisabled()}"/>
                                                 </span>
