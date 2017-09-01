@@ -38,6 +38,7 @@ public class TableRowsSynchronizer {
 			if (!em.getTransaction().isActive()) {
 				em.getTransaction().begin();
 			}
+            //make sure sync in order that will not break DB constraints
             if (syncPreferenceTableRows(em, data.getEmsPreference()) <= 0)
                 logger.info("Nothing was added to EMS_PREFERNCE!");
             if (syncDashboardTableRows(em, data.getEmsDashboard()) <= 0)
