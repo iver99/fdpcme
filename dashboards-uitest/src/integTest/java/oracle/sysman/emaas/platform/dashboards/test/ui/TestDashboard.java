@@ -82,8 +82,6 @@ public class TestDashboard extends LoginAndLogout
 		
 		webd.evalJavascript("scroll(0,0)");
 		
-		//((JavascriptExecutor) webd.getWebDriver()).executeScript("scroll(0,0)");
-		
 		//find "All Entities" button and click it		
 		Assert.assertTrue(webd.isDisplayed(PageId.ENTITYBUTTON), "'All Entities' button isn't displayed in self dashboard");
 		webd.click(PageId.ENTITYBUTTON);	

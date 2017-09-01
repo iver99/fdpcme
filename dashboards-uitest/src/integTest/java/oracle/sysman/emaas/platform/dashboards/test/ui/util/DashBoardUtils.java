@@ -113,15 +113,16 @@ public class DashBoardUtils
 
 	public static void handleAlert(WebDriver webdriver)
 	{
-		WebDriverWait wait = new WebDriverWait(webdriver.getWebDriver(), 900L);
-		Alert alert = wait.until(ExpectedConditions.alertIsPresent());
-
-		//Accepting alert.
-		webdriver.getLogger().info("foucus on the alert");
-		alert = webdriver.getWebDriver().switchTo().alert();
-
-		webdriver.getLogger().info("click button on the dialog, should navigate to the home page");
-		alert.accept();
+//		WebDriverWait wait = new WebDriverWait(webdriver.getWebDriver(), 900L);
+//		Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+//
+//		//Accepting alert.
+//		webdriver.getLogger().info("foucus on the alert");
+//		alert = webdriver.getWebDriver().switchTo().alert();
+//
+//		webdriver.getLogger().info("click button on the dialog, should navigate to the home page");
+//		alert.accept();
+		webdriver.getAlert().accept();
 	}
 
 	/**

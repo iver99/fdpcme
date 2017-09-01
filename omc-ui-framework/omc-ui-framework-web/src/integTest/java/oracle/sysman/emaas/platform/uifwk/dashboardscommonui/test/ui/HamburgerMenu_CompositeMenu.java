@@ -46,7 +46,7 @@ public class HamburgerMenu_CompositeMenu extends LoginAndLogout
 		webd.getLogger().info("Click the 'Show Composite' button");
 		String indicator = UIControls.SGENERATEMENUBTN.replace("_name_", "Show Composite");
 		
-		webd.getWebDriver().findElement(By.cssSelector(indicator)).click();
+		webd.click("css=" + indicator);
 		//check the hamburger menu
 		webd.getLogger().info("Check the menu items in hamburger menu");
 		Assert.assertTrue(BrandingBarUtil.isMenuItemExisted(webd, "Composite Menu 1"));

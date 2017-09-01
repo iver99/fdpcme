@@ -75,16 +75,13 @@ public class TestDashBoard extends LoginAndLogout
 
 		webd.getLogger().info("Verfiy the favortie checkbox is checked");
 		Assert.assertTrue(DashboardHomeUtil.isFilterOptionSelected(webd, "favorites"), "My Favorites option is NOT checked");
-		//		WebElement el = webd.getWebDriver().findElement(By.id(DashBoardPageId.Favorite_BoxID));
-		//		Assert.assertTrue(el.isSelected());
-
+		
 		webd.getLogger().info("Verfiy the dashboard is favorite");
 		//DashboardHomeUtil.search(webd, dbName_favorite);
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, dbName_favorite), "Can not find the dashboard");
 
 		webd.getLogger().info("Open the dashboard");
 		DashboardHomeUtil.selectDashboard(webd, dbName_favorite);
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		webd.getLogger().info("Verify the dashboard in builder page");
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_favorite, dbDesc, true), "Create dashboard failed!");

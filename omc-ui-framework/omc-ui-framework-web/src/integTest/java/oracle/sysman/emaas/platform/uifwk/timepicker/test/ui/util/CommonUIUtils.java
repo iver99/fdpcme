@@ -444,11 +444,7 @@ public class CommonUIUtils
 
 		//set start date time and end date time
 		webd.getLogger().info("Verify if custom panpel displayed...");
-		WebDriverWait wdwait = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		wdwait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(TimeSelectorUIControls.sPickPanel)));
-		//webd.isDisplayed(TimeSelectorUIControls.sPickPanel);
-		webd.takeScreenShot();
-		webd.savePageToFile();
+		webd.waitForElementVisible("css=" + TimeSelectorUIControls.sPickPanel);
 
 		if(DateOnly)
 		{

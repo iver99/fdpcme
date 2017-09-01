@@ -137,7 +137,7 @@ public class LoginAndLogout
 		
 		webd.getLogger().info("after::start to test in LoginAndOut");
 		
-		if (!webd.getWebDriver().getCurrentUrl().equals(url) && !webd.getWebDriver().getCurrentUrl().contains("omcCtx=")) {
+		if (!webd.getCurrentUrl().equals(url) && !webd.getCurrentUrl().contains("omcCtx=")) {
 			//Append omc context into login url
 			if (!url.contains("omcCtx=")) {
 				url = url
@@ -192,7 +192,7 @@ public class LoginAndLogout
 		webd.getLogger().info("after::start to test in LoginAndOut");
 		
 		url = url + "?DOMAIN-INSTANCE-NAME=" + OnboardV4Tenant.getInstanceID();
-		if (!webd.getWebDriver().getCurrentUrl().equals(url) && !webd.getWebDriver().getCurrentUrl().contains("omcCtx=")) {
+		if (!webd.getCurrentUrl().equals(url) && !webd.getCurrentUrl().contains("omcCtx=")) {
 			//Append omc context into login url
 			if (!url.contains("omcCtx=")) {
 				url = url

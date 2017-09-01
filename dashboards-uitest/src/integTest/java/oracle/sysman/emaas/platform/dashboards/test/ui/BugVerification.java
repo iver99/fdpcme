@@ -312,8 +312,7 @@ public class BugVerification extends LoginAndLogout
 		String url = webd.getCurrentUrl();
 		webd.getLogger().info("current url = " + url);
 
-		webd.getWebDriver().navigate()
-				.to(url.substring(0, url.indexOf("emsaasui")) + "emsaasui/emcpdfui/error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_MSG");
+		webd.open(url.substring(0, url.indexOf("emsaasui")) + "emsaasui/emcpdfui/error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_MSG");
 		webd.waitForElementPresent("css=" + PageId.ERRORPAGESINGOUTBTNCSS);
 
 		webd.click("css=" + PageId.ERRORPAGESINGOUTBTNCSS);
@@ -570,6 +569,8 @@ public class BugVerification extends LoginAndLogout
 		Assert.assertFalse(webd.isDisplayed("css=" + DashBoardPageId.ERRORMSGSUMMARYCSS), "The error message isn't disappearred after re-input name in name input box");
 		Assert.assertFalse(webd.isDisplayed("css=" + DashBoardPageId.ERRORMSGDETAILCSS), "The error message isn't disappearred after re-input name in name input box");		
 	}
+    
+    @Test(alwaysRun = true)
     public void testEMCPDF_1094()
     {
     	String dbdesc = "Dashboard_EMCPDF1094\nline break\ntest";
