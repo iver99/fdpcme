@@ -497,6 +497,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 }
             }, true, null);
 
+            window.cachedSSOLogoutUrl = "/logout";
+
             self.clearMessage = function (data, event) {
                 removeMessage(data);
             };
