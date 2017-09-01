@@ -80,6 +80,7 @@ public class ZDTAPI extends APIBase
 			DashboardServiceFacade dsf = new DashboardServiceFacade();
 			em = dsf.getEntityManager();
 			String lastComparisonDate = DataManager.getInstance().getLatestComparisonDateForCompare(em);
+			logger.info("Last compared date is {}", lastComparisonDate);
 			List<Object> tenants = DataManager.getInstance().getAllTenants(em);
 			JSONArray array = new JSONArray();
 			if (tenants != null) {
@@ -93,6 +94,7 @@ public class ZDTAPI extends APIBase
 			}
 			obj.put("isCompared", flag);
 			obj.put("tenants", array);
+			obj.put("lastComparedDate", lastComparisonDate);
 			return Response.status(Status.OK).entity(obj).build();
 		} catch (Exception e) {
 			logger.error("errors in getting all tenants:"+e.getLocalizedMessage());

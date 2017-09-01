@@ -98,9 +98,8 @@ public class ZDTAPI
 		try {
 			dcc = new DashboardRowsComparator();
 			response = dcc.retrieveComparatorStatusForOmcInstance(tenantIdParam, null); // changed
-		} catch (ZDTException e1) {
-			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(e1))).build();
-		} catch (Exception e2) {
+		}catch (Exception e2) {
+			logger.error(e2);
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(e2))).build();
 		}
 		
@@ -126,10 +125,7 @@ public class ZDTAPI
 		try {
 			dcc = new DashboardRowsComparator();
 			response = dcc.retrieveSyncStatusForOmcInstance(tenantIdParam, null); // changed
-		} catch (ZDTException e1) {
-			logger.error(e1);
-			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(e1))).build();
-		} catch (Exception e2) {
+		}catch (Exception e2) {
 			logger.error(e2);
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(e2))).build();
 		}
@@ -161,22 +157,24 @@ public class ZDTAPI
 			compareType = "incremental";
 		}
 		//get comparison start time
+		//FIXME test this time stamp
 		String maxComparedDate = getSkipMinsTimeStamp(skipMinutes);
 		
 		try {
 			DashboardRowsComparator dcc = new DashboardRowsComparator();
 			String tenants1 = dcc.retrieveTenants(tenantIdParam, null,dcc.getClient1()); // changed			
-			String tenants2 = dcc.retrieveTenants(tenantIdParam, null,dcc.getClient2()); // changed		
+			String tenants2 = dcc.retrieveTenants(tenantIdParam, null,dcc.getClient2()); // changed
+			//FIXME fix this return later......
 			if (tenants1 == null || tenants2 == null) {
-				return Response.status(400).entity(new ErrorEntity(ZDTErrorConstants.NULL_TABLE_ROWS_ERROR_CODE, ZDTErrorConstants.NULL_TABLE_ROWS_ERROR_MESSAGE)).build();
+				return Response.status(Status.BAD_REQUEST).entity(new ErrorEntity(ZDTErrorConstants.NULL_TABLE_ROWS_ERROR_CODE, ZDTErrorConstants.NULL_TABLE_ROWS_ERROR_MESSAGE)).build();
 			}
 			JSONArray tenantArrayForClient1 = null;
 
 			JSONObject obj1 = new JSONObject(tenants1);
 			boolean isComparedForClient1 = obj1.getBoolean("isCompared");
-			logger.info("iscompared1=" + isComparedForClient1);
 			tenantArrayForClient1 = obj1.getJSONArray("tenants");
-			logger.info("tenantArray size1 = " + tenantArrayForClient1.length());
+			String lastComparedDateC1 = obj1.getString("lastComparedDate");
+			logger.info("C1: isCompared={}, tenant list size = {}, last compared date = {}", isComparedForClient1, tenantArrayForClient1.length(),lastComparedDateC1);
 
 			JSONArray tenantArrayForClient2 = null;
 
@@ -185,7 +183,10 @@ public class ZDTAPI
 			logger.info("iscompared2=" + isComparedForClient2);
 			tenantArrayForClient2 = obj2.getJSONArray("tenants");
 			logger.info("tenantArray size2 = " + tenantArrayForClient2.length());
-			
+			String lastComparedDateC2 = obj2.getString("lastComparedDate");
+			logger.info("C2: isCompared={}, tenant list size = {}, last compared date = {}", isComparedForClient2, tenantArrayForClient2.length(),lastComparedDateC2);
+
+
 			if (tenantArrayForClient1.length() == 0 && tenantArrayForClient2.length() == 0) {
 				return Response.status(Status.NO_CONTENT).entity("{\"msg\":\"#1.No user created dashboards, No need to compare\"}").build();
 			}
@@ -212,7 +213,7 @@ public class ZDTAPI
 			logger.info("Total rows in 2 clouds are Cloud1:{} and Cloud2: {}", totalRowForClient1,totalRowForClient2);
 			int totalRow = totalRowForClient1 + totalRowForClient2;
 			if (totalRow == 0) {
-				return Response.status(Status.NO_CONTENT).entity("{\"msg\":\"#2.No user created dashboards in 2 clouds, No need to compare\"}").build();
+				return Response.status(Status.OK).entity("{\"msg\":\"#2.No user created dashboards in 2 clouds, No need to compare\"}").build();
 			}
 			int totalDifferentRows = 0;
 			
@@ -266,6 +267,11 @@ public class ZDTAPI
 								obj.put("comparisonType", compareType);
 								obj.put("differentRowNum", totalDifferentRows);
 								obj.put("totalRowNum", totalRow);
+								if(isCompared){
+									obj.put("msg","NOTE: This is the comparison result of all user created data in 2 clouds, but latest 30 mins modified data will not be compared");
+								}else{
+									obj.put("msg","NOTE: This is the comparison result since last compared date [" + lastComparedDateC1 + "], but latest 30 mins modified data will not be compared");// here we take cloud1's last compared date.
+								}
 								obj.put("divergencePercentage", percentage);
 								
 								if (totalDifferentRows > 1000) {
@@ -324,6 +330,11 @@ public class ZDTAPI
 					obj.put("comparisonType", compareType);
 					obj.put("differentRowNum", totalDifferentRows);
 					obj.put("totalRowNum", totalRow);
+					if(isCompared){
+						obj.put("msg","NOTE: This is the comparison result of all user created data in 2 clouds, but latest 30 mins modified data will not be compared");
+					}else{
+						obj.put("msg","NOTE: This is the comparison result since last compared date [" + lastComparedDateC1 + "], but latest 30 mins modified data will not be compared");// here we take cloud1's last compared date.
+					}
 					obj.put("divergencePercentage", percentage);
 					
 					JSONObject subObj = new JSONObject();
@@ -337,11 +348,11 @@ public class ZDTAPI
 				}
 			}
 		} catch(ZDTException zdtE) {
-			logger.error("ZDTException occurred when compare...");
+			logger.error("ZDTException occurred when compare...{}",zdtE);
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(zdtE))).build();
 		}
 		catch (Exception e) {
-			logger.error("error occurred when compare...");
+			logger.error("error occurred when compare...,{}",e);
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(e))).build();
 		}
 		
@@ -409,9 +420,8 @@ public class ZDTAPI
 			object.put(dcc.getKey1(), message1);
 			object.put(dcc.getKey2(), message2);
 			return Response.ok(object).build();
-	    } catch(ZDTException zdtE) {
- 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(zdtE))).build();
- 		} catch (Exception e) {
+	    }catch (Exception e) {
+			logger.error(e);
  			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(e))).build();
  		}
 		
