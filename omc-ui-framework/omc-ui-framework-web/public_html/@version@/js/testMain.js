@@ -153,7 +153,12 @@ require(['knockout',
                     template:{require:'text!uifwk/js/widgets/brandingbar/html/brandingbar.html'}
                 });
             }
-
+            if (!ko.components.isRegistered('df-widget-selector')) {
+                ko.components.register("df-widget-selector",{
+                    viewModel:{require:'uifwk/js/widgets/widgetselector/js/widget-selector'},
+                    template:{require:'text!uifwk/js/widgets/widgetselector/html/widget-selector.html'}
+                });
+            }
 
             /**
             * Get URL parameter value according to URL parameter name
@@ -269,41 +274,8 @@ require(['knockout',
     //                ,providerVersion: '1.0'
                 };
 
-                self.isWidgetSelectorCompRegistered = ko.observable(false);
-                function registerWidgetSelectorComponent(callback) {
-                    if (!self.isWidgetSelectorCompRegistered()) {
-                        require([], function () {
-                            if (!ko.components.isRegistered('df-widget-selector')) {
-                                var versionedWidgetSelectorViewModel = window.getSDKVersionFile ?
-                                    window.getSDKVersionFile('emsaasui/uifwk/js/widgets/widgetselector/js/widget-selector.js') : null;
-                                var widgetSelectorViewModel = versionedWidgetSelectorViewModel ? (versionedWidgetSelectorViewModel.lastIndexOf('.js') === versionedWidgetSelectorViewModel.length - 3 ?
-                                    versionedWidgetSelectorViewModel.substring(0, versionedWidgetSelectorViewModel.length - 3) : versionedWidgetSelectorViewModel) :
-                                    'emsaasui/uifwk/js/widgets/widgetselector/js/widget-selector';
-                                var versionedWidgetSelectorTemplate = window.getSDKVersionFile ?
-                                    window.getSDKVersionFile('emsaasui/uifwk/js/widgets/widgetselector/html/widget-selector.html') : null;
-                                var widgetSelectorTemplate = versionedWidgetSelectorTemplate ? versionedWidgetSelectorTemplate :
-                                    'emsaasui/uifwk/js/widgets/widgetselector/html/widget-selector.html';
-                                ko.components.register("df-widget-selector",{
-                                    viewModel: {require: widgetSelectorViewModel},
-                                    template: {require: 'text!' + widgetSelectorTemplate}
-                                });
-                            }
-                            self.isWidgetSelectorCompRegistered(true);
-                            if ($.isFunction(callback)) {
-                                callback();
-                            }
-                        });
-                    }
-                    else if ($.isFunction(callback)) {
-                        callback();
-                    }
-                }
-
-
                 self.openWidgetSelectorDialog = function() {
-                    registerWidgetSelectorComponent(function(){
-                        $('#'+widgetSelectorDialogId).ojDialog('open');
-                    });
+                    $('#'+widgetSelectorDialogId).ojDialog('open');
                 };
                 
                 var widgetSelectorPopupUtil = new widgetSelectorUtilModel(widgetSelectorDialogId);
