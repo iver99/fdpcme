@@ -918,13 +918,13 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     }
                 };
                 
-                self.isStartLaterThanEnd = function(start, end) {
-                    if(start > end) {
-                        return true;
-                    }else {
-                        return false;
-                    }
-                };
+//                self.isStartLaterThanEnd = function(start, end) {
+//                    if(start > end) {
+//                        return true;
+//                    }else {
+//                        return false;
+//                    }
+//                };
                 
                 self.isCustomBeyondWindowLimit = function() {
                     if(!self.customWindowLimit) {
@@ -941,10 +941,12 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 };
                 
                 self.isStartLaterThanEnd = function() {
-//                    var start = self.startDateISO() + self.startTime();
-//                    var end = self.endDateISO() + self.endTime();
-                    var start = self.inputDateConverter.parse(self.rawStartDate()) + self.timeConverter().parse(self.rawStartTime());
-                    var end = self.inputDateConverter.parse(self.rawEndDate()) + self.timeConverter().parse(self.rawEndTime());
+                    var start = self.startDateISO() + self.startTime();
+                    var end = self.endDateISO() + self.endTime();
+                    //rawValue of JET inputDate/inputTime is not latest value if user select date/time instead of type them directly
+                    //So below way to get start and end time is not accurate.
+//                    var start = self.inputDateConverter.parse(self.rawStartDate()) + self.timeConverter().parse(self.rawStartTime());
+//                    var end = self.inputDateConverter.parse(self.rawEndDate()) + self.timeConverter().parse(self.rawEndTime());
                     if(new Date(start) > new Date(end)) {
                         return true;
                     }else {
