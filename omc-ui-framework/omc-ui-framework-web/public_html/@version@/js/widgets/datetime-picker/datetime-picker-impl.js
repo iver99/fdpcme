@@ -360,6 +360,8 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         setTimeInputError("endTime", nls.DATETIME_PICKER_TIME_VALIDATE_ERROR_MSG);
                     }else if(value === 2) {
                         setTimeInputError("endTime", self.beyondWindowLimitErrorMsg);
+                    }else if(value === 3) {
+                        setTimeInputError("endTime", nls.DATETIME_PICKER_TIME_VALIDATE_FUTURE_ERROR_MSG);
                     }
                 });
                 
@@ -940,6 +942,15 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     }
                 };
                 
+                self.isEndTimeLaterThanCurrentTime = function() {
+                    var end = self.endDateISO() + self.endTime();
+                    if(new Date(end) > new Date()) {
+                        return true;
+                    }else {
+                        return false;
+                    }
+                }
+                
                 self.isStartLaterThanEnd = function() {
                     var start = self.startDateISO() + self.startTime();
                     var end = self.endDateISO() + self.endTime();
@@ -1027,6 +1038,8 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     }
                     if(self.isStartLaterThanEnd() === true) {
                         self.startTimeError(1);
+                    }else if(self.isEndTimeLaterThanCurrentTime() === true) {
+                        self.endTimeError(3);
                     }else if(self.isCustomBeyondWindowLimit() === true) {
                         self.startTimeError(2);
                     }else {
@@ -1049,6 +1062,8 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     }
                     if(self.isStartLaterThanEnd() === true) {
                         self.endTimeError(1);
+                    }else if(self.isEndTimeLaterThanCurrentTime() === true) {
+                        self.endTimeError(3);
                     }else if(self.isCustomBeyondWindowLimit() === true) {
                         self.endTimeError(2);
                     }else {
