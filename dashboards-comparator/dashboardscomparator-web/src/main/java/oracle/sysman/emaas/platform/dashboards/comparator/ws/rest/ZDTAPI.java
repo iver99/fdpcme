@@ -109,7 +109,6 @@ public class ZDTAPI
 	/**
 	 *  will invoke compare action, #1.fetch data, #2.compare data, #3.store the different data into zdt table
 	 * @param tenantIdParam
-	 * @param compareType
 	 * @param skipMinutes
 	 * @return
 	 */
@@ -117,7 +116,6 @@ public class ZDTAPI
 	@Path("compare")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response compareRows(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
-            @QueryParam("type") @DefaultValue("incremental")  String compareType,
             @QueryParam("before") int skipMinutes) {
 		if (tenantIdParam == null){
 			tenantIdParam = CLOUD_SERVICES;
@@ -125,9 +123,6 @@ public class ZDTAPI
 		
 		logger.info("incoming call from zdt comparator to do row comparing");
 		String message = "";
-		if (compareType == null) {
-			compareType = "incremental";
-		}
 		//get comparison start time
 		//FIXME test this time stamp
 		String maxComparedDate = getSkipMinsTimeStamp(skipMinutes);
@@ -175,10 +170,14 @@ public class ZDTAPI
 			}
 			
 			boolean isCompared = true;
+			String compareType = "incremental";
+			//check compare table, if compared before, it is a incremental, otherwise is a full compare.
 			if ((!isComparedForClient1) || (!isComparedForClient2)) {
 				// any one of the clouds has not yet been compared, then they should be compared in full mode
 				isCompared = false;
+				compareType = "full";
 			}
+			logger.info("Is Compared? = {}, compare type = {}", isCompared, compareType);
 			InstancesComparedData<TableRowsEntity> result = null;
 			int totalRowForClient1 = dcc.getTotalRowForOmcInstance(tenantIdParam, null,dcc.getClient1(), maxComparedDate);// changed		
 			int totalRowForClient2 = dcc.getTotalRowForOmcInstance(tenantIdParam, null,dcc.getClient2(), maxComparedDate);// changed
@@ -189,7 +188,7 @@ public class ZDTAPI
 			}
 			int totalDifferentRows = 0;
 			
-			if (!isCompared || compareType == "full") {
+			if ("full".equals(compareType)) {
 				int count = 0;
 				JSONObject obj = null;
 				//handle tenant one by one and save comparison result for each tenant
