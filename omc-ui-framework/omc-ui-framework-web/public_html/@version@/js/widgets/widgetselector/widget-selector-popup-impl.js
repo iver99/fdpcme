@@ -265,7 +265,7 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                         }else{ 
                             navigateWidgetList(event, true);
                         }
-                    }else if(event.target.id === "searchTxt"){ 
+                    }else if(event.target.classList && event.target.classList.contains("searchTxt")){ 
                         return true;
                     }
                     self.needRefreshWidgetList(true);
@@ -329,7 +329,7 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                     $('#widget-selector').children().removeClass('oj-selected oj-focus oj-hover');
                     $('li[id^=created-by] > ul').children().removeClass('oj-selected oj-focus oj-hover');
                     blurListItem($(fromWidget)); 
-                    toWidget ? focusListItem(toWidget) : $("#searchTxt").focus();
+                    toWidget ? focusListItem(toWidget) : $(".searchTxt").focus();
                     if(!(event.target.id === "searchTxt")){
                         topOfWidgetList.attr("aria-selected","false");
                         topOfWidgetList.removeClass("oj-selected oj-focus oj-hover");
