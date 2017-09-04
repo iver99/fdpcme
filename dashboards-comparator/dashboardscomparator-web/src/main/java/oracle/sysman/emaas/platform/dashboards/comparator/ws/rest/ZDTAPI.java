@@ -19,7 +19,6 @@ import java.util.Set;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -39,7 +38,6 @@ import oracle.sysman.emaas.platform.dashboards.comparator.exception.ZDTErrorCons
 import oracle.sysman.emaas.platform.dashboards.comparator.exception.ZDTException;
 import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.counts.CountsEntity;
-import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.counts.DashboardCountsComparator;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.DashboardRowsComparator;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.InstanceData;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.InstancesComparedData;
@@ -52,32 +50,6 @@ public class ZDTAPI
 {
 	private static final Logger logger = LogManager.getLogger(ZDTAPI.class);
 	private static final String CLOUD_SERVICES = "CloudServices";
-
-	/**
-	 * compare records counts in 2 clouds, if a table size is not matched in
-	 * 2 clouds, will return the table counts of each table, and if a table size is matched in 2 clouds, it will return 0.
-	 * NOTE : **This api is deprecated according to Pamela**
-	 * @param tenantIdParam
-	 * @return
-	 */
-	@GET
-	@Deprecated
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response compareOnDF(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam)
-         //   @HeaderParam(value = "X-REMOTE-USER") String userTenant)
-	{
-		logger.info("There is an incoming call from ZDT comparator API to compare");
-		if (tenantIdParam == null){
-			tenantIdParam = CLOUD_SERVICES;
-		}
-		// this comparator invokes the 2 instances REST APIs and retrieves the counts for objects (like dashboards), and return the counts for each instance
-		DashboardCountsComparator dcc = new DashboardCountsComparator();
-		InstancesComparedData<CountsEntity> result = dcc.compare(tenantIdParam, null);  // changed
-		InstancesComapredCounts ic = new InstancesComapredCounts(new InstanceCounts(result.getInstance1()),
-				new InstanceCounts(result.getInstance2()));
-
-		return Response.status(Status.OK).entity(JsonUtil.buildNormalMapper().toJson(ic)).build();
-	}
 
 	/**
 	 * this method is return the comparator status for omc instances.(will request zdt/compare/status API)
