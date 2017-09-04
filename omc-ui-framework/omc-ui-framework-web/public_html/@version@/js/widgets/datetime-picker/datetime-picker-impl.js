@@ -1530,9 +1530,11 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     }
                     
                     if(self.showRightPanel() === true && self.isCustomBeyondWindowLimit() === true) {
-                        self.flexRelTimeValError(2);
+                        //In above code, we set the start/end date/time. Jet may need some time to render calender and time and somehow override our error.
+                        // We need to use setTimeout to make sure below error is correctly rendered.
+                        setTimeout(function() {self.flexRelTimeValError(2)}, 0);
                     }else {
-                        self.flexRelTimeValError(0);
+                        setTimeout(function() {self.flexRelTimeValError(0)}, 0);
                     }
                 };
                 
