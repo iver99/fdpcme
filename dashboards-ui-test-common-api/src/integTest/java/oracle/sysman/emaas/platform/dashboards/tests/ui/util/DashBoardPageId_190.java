@@ -384,7 +384,7 @@ public class DashBoardPageId_190
 	// widget selector popup dialog
 	public static final String WIDGET_SELECTOR_WIDGET_AREA = "//div[@id='widget-selector-widgets']";
 
-	public static final String WIDGET_SELECTOR_SEARCH_INPUT_LOCATOR = "//div[@id='widget-selector-search-container']//input[contains(@class, 'searchTxt')]";
+	public static final String WIDGET_SELECTOR_SEARCH_INPUT_LOCATOR = "//div[@id='widget-selector-search-container']//input[@id='searchTxt']";
 	public static final String WIDGET_SELECTOR_SEARCH_BTN = "//button[contains(@class, 'widget-selector-search-button')]";
 	public static final String WIDGET_SELECTOR_WIDGET_ITEMS = "//li[contains(@class, 'widget-selector-li')]";
 	public static final String WIDGET_SELECTOR_WIDGET_ITEMS_BY_TITLE = "//li[contains(@class, 'widget-selector-li')]/a[@data-widget-title=%s]";
