@@ -27,7 +27,7 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
-import org.openqa.selenium.JavascriptExecutor;
+import oracle.sysman.qatool.uifwk.webdriver.WebDriver.ClickType;
 
 /**
  * @author cawei
@@ -83,11 +83,10 @@ public class EntitySelectorUtil_1160 extends EntitySelectorUtil_1150
 		logger.log(Level.INFO, "Click Global Context Entity Selector to display suggestions");
                 wait.until(ExpectedConditions.elementToBeClickable(By.xpath(DashBoardPageId.EntSelTypeAheadField))); //Global Context bar
                 //workaround for EMCTAS-7739 -  use javascript click instead of driver click
-                ((JavascriptExecutor)driver.getWebDriver()).executeScript("arguments[0].click();", driver.getWebDriver().findElement(By.xpath(DashBoardPageId.EntSelTypeAheadField)));
+                driver.click("xpath=" + DashBoardPageId.EntSelTypeAheadField, ClickType.JAVASCRIPT);
                 
                 //Wait until type ahead component is fully operational
-                logger.log(Level.INFO, "Global Context bar was clicked. Wait until type ahead component is fully operational");
-                WaitUtil.waitForPageFullyLoaded(driver);
+                logger.log(Level.INFO, "Global Context bar was clicked");
                 
                 //Verify type ahead field exists in Global Context bar
                 logger.log(Level.INFO, "Verify Entity Selector type ahead field is present");
@@ -314,10 +313,7 @@ public class EntitySelectorUtil_1160 extends EntitySelectorUtil_1150
                 //Click on the suggestion that matches the search parameters
                 final int prevCount = getNumberOfPills(driver, logger);
                 logger.log(Level.INFO, "Click on matching suggestion");
-                WebElement element = getMatchingSuggestion(driver, logger, entityName, entityType, category);
-		((JavascriptExecutor)driver.getWebDriver()).executeScript("arguments[0].click();", element);
-                driver.takeScreenShot();
-                driver.savePageToFile();
+                driver.click("xpath=" + getMatchingSuggestion(driver, logger, entityName, entityType, category), ClickType.JAVASCRIPT);
                 
                 //Wait for typeahead input to dissappear
                 logger.log(Level.INFO, "Waiting for the type ahead input to disappear");
@@ -449,7 +445,7 @@ public class EntitySelectorUtil_1160 extends EntitySelectorUtil_1150
                 });
         }
         
-        private WebElement getMatchingSuggestion(WebDriver driver, Logger logger, String entityName, String entityType, String category) {
+        private String getMatchingSuggestion(WebDriver driver, Logger logger, String entityName, String entityType, String category) {
                 String xpath = category.equals(CATEGORY_COMPOSITE) ? MessageFormat.format(DashBoardPageId.EntSelSuggestionByCompositeCategory,
                                     entityType) : MessageFormat.format(DashBoardPageId.EntSelSuggestionByEntitiesCategory, entityType);
                 String trimmed = entityName.replaceAll(" +", "");
@@ -461,8 +457,9 @@ public class EntitySelectorUtil_1160 extends EntitySelectorUtil_1150
                     for (WebElement suggestion : suggestions) {
                         String value = suggestion.getText().replaceAll(" +", "").split("\n")[0];
                         if (value.contains(trimmed)) {
-                            logger.log(Level.INFO, "Match found at index: {0}", suggestions.indexOf(suggestion));
-                            return suggestion;
+                            int index = suggestions.indexOf(suggestion);
+                            logger.log(Level.INFO, "Match found at index: {0}", index);
+                            return xpath + "[" + ++index + "]";
                         }                
                     }
                 }
