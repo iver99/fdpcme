@@ -952,12 +952,17 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 }
                 
                 self.isStartLaterThanEnd = function() {
-                    var start = self.startDateISO() + self.startTime();
-                    var end = self.endDateISO() + self.endTime();
-                    //rawValue of JET inputDate/inputTime is not latest value if user select date/time instead of type them directly
-                    //So below way to get start and end time is not accurate.
-//                    var start = self.inputDateConverter.parse(self.rawStartDate()) + self.timeConverter().parse(self.rawStartTime());
-//                    var end = self.inputDateConverter.parse(self.rawEndDate()) + self.timeConverter().parse(self.rawEndTime());
+//                    var start = self.startDateISO() + self.startTime();
+//                    var end = self.endDateISO() + self.endTime();
+                    //rawValue of JET inputDate/inputTime is not latest value if user SELECT date/time instead of type them directly
+                    //value doesn't get the latest value if users' inputs doesn't pass JET converter and validator
+                    //So using rawValue/value doesn't get latest value in input boxes, Here we use jquery to get the value
+                    var startDate = $("#inputStartDate_"+self.randomId).val();
+                    var endDate = $("#inputEndDate_"+self.randomId).val();
+                    var startTime = $("#inputStartTime_"+self.randomId).val();
+                    var endTime = $("#inputEndTime_"+self.randomId).val();
+                    var start = self.inputDateConverter.parse(startDate) + self.timeConverter().parse(startTime);
+                    var end = self.inputDateConverter.parse(endDate) + self.timeConverter().parse(endTime);
                     if(new Date(start) > new Date(end)) {
                         return true;
                     }else {
