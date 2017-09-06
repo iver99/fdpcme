@@ -330,7 +330,7 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                     $('li[id^=created-by] > ul').children().removeClass('oj-selected oj-focus oj-hover');
                     blurListItem($(fromWidget)); 
                     toWidget ? focusListItem(toWidget) : $(".searchTxt").focus();
-                    if(!(event.target.classList && event.target.classList.contains("searchTxt")){
+                    if(!(event.target.classList && event.target.classList.contains("searchTxt"))){
                         topOfWidgetList.attr("aria-selected","false");
                         topOfWidgetList.removeClass("oj-selected oj-focus oj-hover");
                         $(topOfWidgetList.find("ul").children()[0]).attr("aria-selected","false");
