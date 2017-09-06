@@ -54,13 +54,11 @@ task emcpdf_zdtReplay(type: EMTest) {
  
 //task emcpdf_zdtReplaySaveState(type: EMTest)
  
-task emcpdf_zdtCompare(type: EMTest)
-{
+task emcpdf_zdtCompare(type: EMTest){
 	include "oracle/sysman/emaas/platform/dashboards/testsdk/DashboardSyncCompareTest.class"
 	useRestAssured = true
 }
 
-task emcpdf_zdtActiveDown(type:EMTest)
-{
+task emcpdf_zdtActiveDown(type:EMTest){
 	include  "oracle/sysman/emaas/platform/dashboards/testsdk/testZDTActiveDown.class"
 }
