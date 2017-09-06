@@ -334,7 +334,7 @@ public class DashboardRowsComparatorTest
             }
         };
         DashboardRowsComparator drc = new DashboardRowsComparator();
-		drc.syncForInstance("tenantId", "userTenant", null, "full","date");
+		drc.syncForInstance("tenantId", "userTenant", null);
 	}
 	
 	@Test

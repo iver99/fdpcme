@@ -75,7 +75,7 @@ public class ZDTAPITest {
     		}
     	};
        // zdtapi.syncOnDF(tenant, userTenant, tenant);
-    	 zdtapi.syncOnDF(tenant, tenant);
+    	 zdtapi.syncOnDF(tenant);
     }
     @Test
     public void testInnerClasses(){

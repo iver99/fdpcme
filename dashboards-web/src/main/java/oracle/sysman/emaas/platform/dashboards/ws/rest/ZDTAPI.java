@@ -91,6 +91,8 @@ public class ZDTAPI extends APIBase
 			boolean flag = true;
 			if (lastComparisonDate == null) {
 				flag =  false;
+				//reset lastComparisonDate to empty str because if it is a null, it will not be put into json response
+				lastComparisonDate = "";
 			}
 			obj.put("isCompared", flag);
 			obj.put("tenants", array);
@@ -200,25 +202,21 @@ public class ZDTAPI extends APIBase
 
 	/**
 	 * sync data from zdt table
-	 * @param type
-	 * @param syncDate
 	 * @return
 	 */
 	@GET
 	@Path("sync")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response sync(@QueryParam("syncType") String type, @QueryParam("syncDate") String syncDate)
+	public Response sync()
 	{
-		infoInteractionLogAPIIncomingCall(null, null, "Service call to (GET) /v1/zdt/sync?syncType="+ type +"&syncDate=" + syncDate);
+		infoInteractionLogAPIIncomingCall(null, null, "Service call to (GET) /v1/zdt/sync");
 		logger.info("Service call to /v1/zdt/sync");
 		TableRowsEntity data = null;
 		String lastCompareDate = null;
-		if (type == null) {
-			type = "full";
-		}
-		logger.info("syncDate={}", syncDate);
 		EntityManager em = null;
+		Date currentUtcDate = getCurrentUTCTime();
+		String syncDate = getTimeString(currentUtcDate);
 		String lastComparisonDateForSync = null;
 		List<Map<String, Object>> comparedDataToSync = null;
 		try{
@@ -258,11 +256,11 @@ public class ZDTAPI extends APIBase
 					}
 					
 					if (response != null && response.contains("Errors:")) {
-						saveToSyncTable(syncDate, type, "FAILED",lastCompareDate);
+						saveToSyncTable(syncDate, "full", "FAILED",lastCompareDate);
 						return Response.status(Status.INTERNAL_SERVER_ERROR).entity("{\"msg\" :\"Error occurred when sync...\"}").build();
 					}
 				}
-				int flag = saveToSyncTable(syncDate, type, "SUCCESSFUL",lastCompareDate);
+				int flag = saveToSyncTable(syncDate, "full", "SUCCESSFUL",lastCompareDate);
 				if (flag < 0) {
 					return Response.status(Status.INTERNAL_SERVER_ERROR).entity("{\"msg\": \"Fail to save sync status data\"}").build();
 				}

@@ -422,19 +422,17 @@ public class DashboardRowsComparator extends AbstractComparator
 		return response;
 	}
 
-	public String syncForInstance(String tenantId, String userTenant,  LookupClient client, String type, String syncDate) throws Exception
+	public String syncForInstance(String tenantId, String userTenant,  LookupClient client) throws Exception
 	{
 		Link lk = getSingleInstanceUrl(client, "zdt/sync", "http");
 		if (lk == null) {
 			logger.warn("Get a null or empty link for one single instance!");
 			return "Errors:Get a null or empty link for one single instance!";
 		}
-		String url = lk.getHref() + "?syncType=" + type + "&syncDate=" + URLEncoder.encode(syncDate, "UTF-8");
-		logger.info("sync url is "+ url);
 		RestClient rc = RestClientProxy.getRestClient();
 		rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME,tenantId);
 		char[] authToken = LookupManager.getInstance().getAuthorizationToken();
-		String response = rc.get(url,tenantId, new String(authToken));
+		String response = rc.get(lk.getHref(),tenantId, new String(authToken));
 		
 		return response;
 	}

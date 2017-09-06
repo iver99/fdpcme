@@ -240,10 +240,10 @@ public class ZDTAPI
 								obj.put("totalRowNum", totalRow);
 							obj.put("divergencePercentage", percentage);
 							if(isCompared){
-									obj.put("msg","NOTE: This is the comparison result of all user created data in 2 clouds, but latest 30 mins modified data will not be compared");
-								}else{
-									obj.put("msg","NOTE: This is the comparison result since last compared date [" + lastComparedDateC1 + "], but latest 30 mins modified data will not be compared. To see all divergence data please request 'comparator/divergences'");// here we take cloud1's last compared date.
-								}
+								obj.put("msg","NOTE: This is the comparison result since last compared date [" + lastComparedDateC1 + "], but latest 30 mins modified data will not be compared. To see all divergence data please request 'comparator/divergences'");// here we take cloud1's last compared date.
+							}else{
+								obj.put("msg","NOTE: This is the comparison result of all user created data in 2 clouds, but latest 30 mins modified data will not be compared");
+							}
 
 								if (totalDifferentRows > 100) {
 									obj.put("divergenceSummary", "The number for different rows is more than 1000; There is too much content to display;");
@@ -358,15 +358,12 @@ public class ZDTAPI
 	/**
 	 * will sync sync action, #1.retrieve data from zdt table, #2. sync action. #3. store sync status into sync table
 	 * @param tenantIdParam
-	 * @param syncType
 	 * @return
 	 */
 	@GET
 	@Path("sync")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response syncOnDF(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
-            //@HeaderParam(value = "X-REMOTE-USER") String userTenant,
-            @QueryParam("type") @DefaultValue("full")  String syncType)
+	public Response syncOnDF(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam)
 	{
 		logger.info("There is an incoming call from ZDT comparator API to sync");
 		if (tenantIdParam == null){
@@ -374,16 +371,10 @@ public class ZDTAPI
 		}
 		// this comparator invokes the 2 instances REST APIs and retrieves the different table rows for the 2 instances, and update the 2 instances accordingly
 		DashboardRowsComparator dcc = null;
-		if (syncType == null) {
-			syncType = "full";
-		}
 		try {
 			dcc = new DashboardRowsComparator();		
-			Date currentUtcDate = TimeUtil.getCurrentUTCTime();
-			String syncDate = TimeUtil.getTimeString(currentUtcDate);
-			
-			String message1 = dcc.syncForInstance(tenantIdParam,  null,  dcc.getClient1(),  syncType,  syncDate);// changed		
-			String message2 = dcc.syncForInstance(tenantIdParam,  null,  dcc.getClient2(),  syncType,  syncDate);// changed		
+			String message1 = dcc.syncForInstance(tenantIdParam,  null,  dcc.getClient1());// changed
+			String message2 = dcc.syncForInstance(tenantIdParam,  null,  dcc.getClient2());// changed
 			if (message1.contains("Errors") || message2.contains("Errors")) {
 				return Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(ZDTErrorConstants.FAIL_TO_SYNC_ERROR_CODE, ZDTErrorConstants.FAIL_TO_SYNC_ERROR_MESSAGE))).build();
 			}
