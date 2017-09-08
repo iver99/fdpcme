@@ -313,8 +313,9 @@ public class EntitySelectorUtil_1160 extends EntitySelectorUtil_1150
                 //Click on the suggestion that matches the search parameters
                 final int prevCount = getNumberOfPills(driver, logger);
                 logger.log(Level.INFO, "Click on matching suggestion");
-                driver.click("xpath=" + getMatchingSuggestion(driver, logger, entityName, entityType, category), ClickType.JAVASCRIPT);
-                
+                String xpath = getMatchingSuggestion(driver, logger, entityName, entityType, category);
+                driver.click("xpath=" + xpath);
+
                 //Wait for typeahead input to dissappear
                 logger.log(Level.INFO, "Waiting for the type ahead input to disappear");
                 driver.waitForNotElementPresent("xpath=" + DashBoardPageId.EntSelTypeAheadFieldInput);
@@ -451,11 +452,13 @@ public class EntitySelectorUtil_1160 extends EntitySelectorUtil_1150
                 String trimmed = entityName.replaceAll(" +", "");
                 logger.log(Level.INFO, "Select value in typeahead: {0}", trimmed);
                 List<WebElement> suggestions = driver.getWebDriver().findElements(By.xpath(xpath));
+                logger.log(Level.INFO, "xpath: ''{0}''", xpath);
                 
                 if (!suggestions.isEmpty()) {
-                    logger.log(Level.INFO, "Check first for match in suggestions list.");
+                    logger.log(Level.INFO, "Check first for match in suggestions list ({0} elements matching xpath)", suggestions.size());
                     for (WebElement suggestion : suggestions) {
                         String value = suggestion.getText().replaceAll(" +", "").split("\n")[0];
+                        logger.log(Level.INFO, "Check value at [{0}]: {1}", new Object[] { suggestions.indexOf(suggestion), value });
                         if (value.contains(trimmed)) {
                             int index = suggestions.indexOf(suggestion);
                             logger.log(Level.INFO, "Match found at index: {0}", index);
