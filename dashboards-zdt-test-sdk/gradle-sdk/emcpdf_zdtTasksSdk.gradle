@@ -30,7 +30,7 @@ import com.oracle.emdi.gradle.testinfra.tasks.EMTest
 
 dependencies
 {
-    	testConfig group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-zdt-test-sdk-integ-tests', version: "${REPO_BID}") {transitive = true}
+    	testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-zdt-test-sdk-integ-tests', version: "${REPO_BID}") {transitive = true}
      	testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-web', version: "${REPO_BID}") {transitive = true}
         testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-core', version: "${REPO_BID}") {transitive = true}
         testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-entities', version: "${REPO_BID}") {transitive = true}
