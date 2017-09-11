@@ -89,7 +89,7 @@ public class ZDTAPITest {
     @Test
     public void testSync(@Mocked final PersistenceManager persistenceManager, 
 			@Mocked final EntityManager em) throws Exception {
-        zdtapi.sync("full", "2017-05-12 14:14:21");
+        zdtapi.sync();
     }
     
     @Test
@@ -132,7 +132,7 @@ public class ZDTAPITest {
                 result = comparedDataToSync;
     		}
     	};
-    	zdtapi.sync(null, "2017-05-12 15:29:23");
+    	zdtapi.sync();
     }
     
     @Test
