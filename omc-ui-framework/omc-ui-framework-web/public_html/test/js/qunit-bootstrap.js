@@ -91,8 +91,19 @@ require(['ojs/ojcore',
     'ojs/ojknockout',
     'knockout',
     'jquery',
-    'widgets/hamburger-menu/qa-hamburger-menu-impl','ojs/ojjsontreedatasource'], 
-    function (oj, ojk, ko, $, hamburgerMenuTest,ojtree){   
-       new oj.JsonTreeDataSource([]);
+    'ojs/ojjsontreedatasource',
+    'widgets/hamburger-menu/qa-hamburger-menu-impl','util/qa-ajax-util-impl'], 
+    function (oj, ojk, ko, $, ojtree, hamburgerMenuTest,ajaxUtilTest){   
+        window.DEV_MODE ={ 
+                   "tenant": "fake",
+                   "user": "fake",                              
+                   "wlsAuth": "fake",                                  
+                   "registryUrl": "fake",   
+                   "dfRestApiEndPoint": "fake",                         
+                   "ssfRestApiEndPoint": "fake",                             
+                   "dashboardFrameworkAPIEndPoint": "fake",
+                   "savedSearchEndPoint": "fake"
+        };
        hamburgerMenuTest.run();   
+       ajaxUtilTest.run();
 });
