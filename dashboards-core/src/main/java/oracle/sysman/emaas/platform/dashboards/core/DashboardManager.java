@@ -251,7 +251,7 @@ public class DashboardManager
 	
 	/**
 	 * 
-	 * @param name
+	 * @param names
 	 * @param tenantId
 	 * @return
 	 */
