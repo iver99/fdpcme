@@ -97,7 +97,7 @@ public class DashboardManagerTest_S2 extends BaseTest
 			LOGGER.info("context", e);
 		}
 		dm.getDashboardByName(null, 0L);
-		dm.getLastAccessDate(null, 0L);
+//		dm.getLastAccessDate(null, 0L);
 		try {
 			dm.isDashboardFavorite(null, 0L);
 		}
@@ -155,7 +155,7 @@ public class DashboardManagerTest_S2 extends BaseTest
 			LOGGER.info("context", e);
 		}
 
-		dm.getLastAccessDate(BigInteger.valueOf(1L), 0L);
+//		dm.getLastAccessDate(BigInteger.valueOf(1L), 0L);
 		try {
 			dm.isDashboardFavorite(BigInteger.valueOf(1L), 0L);
 		}
@@ -208,7 +208,7 @@ public class DashboardManagerTest_S2 extends BaseTest
 			LOGGER.info("context", e);
 		}
 
-		dm.getLastAccessDate(BigInteger.valueOf(1L), 0L);
+//		dm.getLastAccessDate(BigInteger.valueOf(1L), 0L);
 		try {
 			dm.isDashboardFavorite(BigInteger.valueOf(1L), 0L);
 		}
@@ -287,7 +287,7 @@ public class DashboardManagerTest_S2 extends BaseTest
 			LOGGER.info("context", e);
 		}
 
-		dm.getLastAccessDate(BigInteger.valueOf(1L), 0L);
+//		dm.getLastAccessDate(BigInteger.valueOf(1L), 0L);
 		try {
 			dm.isDashboardFavorite(BigInteger.valueOf(1L), 0L);
 		}
@@ -928,12 +928,6 @@ public class DashboardManagerTest_S2 extends BaseTest
 		ScreenshotData shot = dm.getDashboardBase64ScreenShotById(dbd1.getDashboardId(), tenantId1);
 		Assert.assertEquals(shot.getScreenshot(), testScreenshotDate);
 
-		List<Dashboard> ds = dm.listAllDashboards(tenantId1);
-		Assert.assertEquals(!ds.isEmpty(), true);
-		Assert.assertEquals(ds.get(0).getName(), dbd1.getName());
-		Assert.assertEquals(ds.get(0).getLastModifiedBy(), dbd1.getLastModifiedBy());
-		Assert.assertEquals(ds.get(0).getLastModificationDate(), dbd1.getLastModificationDate());
-
 		dm.addFavoriteDashboard(dbd1.getDashboardId(), tenantId1);
 		Assert.assertEquals(dm.isDashboardFavorite(dbd1.getDashboardId(), tenantId1), true);
 	}
@@ -1041,43 +1035,6 @@ public class DashboardManagerTest_S2 extends BaseTest
 		}
 	}
 
-	@Test(groups = { "s2" })
-	public void testGetUpdateLastAccessDateS2() throws DashboardException, InterruptedException
-	{
-		loadMockBeforeMethod();
-		DashboardManager dm = DashboardManager.getInstance();
-		String name1 = "name1" + System.currentTimeMillis();
-		Long tenantId1 = 11L;
-		Dashboard dbd1 = new Dashboard();
-		dbd1.setName(name1);
-		dbd1 = dm.saveNewDashboard(dbd1, tenantId1);
-		Date lastAccess1 = dm.getLastAccessDate(dbd1.getDashboardId(), tenantId1);
-		Assert.assertNotNull(lastAccess1);
-		//		dm.updateLastAccessDate(dbd1.getDashboardId(), tenantId1);
-		dm.getDashboardById(dbd1.getDashboardId(), tenantId1);
-		Date lastAccess2 = dm.getLastAccessDate(dbd1.getDashboardId(), tenantId1);
-		Assert.assertNotNull(lastAccess2);
-		Thread.sleep(2000);
-		//		dm.updateLastAccessDate(dbd1.getDashboardId(), tenantId1);
-		dm.getDashboardById(dbd1.getDashboardId(), tenantId1);
-		Date newLastAccess = dm.getLastAccessDate(dbd1.getDashboardId(), tenantId1);
-		Assert.assertTrue(newLastAccess.getTime() >= lastAccess2.getTime() + 1900);
-
-		// delete dashboard/soft deletion
-		dm.deleteDashboard(dbd1.getDashboardId(), tenantId1);
-		Date lastAccess = dm.getLastAccessDate(dbd1.getDashboardId(), tenantId1);
-		Assert.assertNull(lastAccess);
-
-		// delete dashboard/hard deletion
-		try {
-			dm.deleteDashboard(dbd1.getDashboardId(), true, tenantId1);
-		}
-		catch (DashboardNotFoundException e) {
-			LOGGER.info("context", e);
-		}
-		lastAccess = dm.getLastAccessDate(dbd1.getDashboardId(), tenantId1);
-		Assert.assertNull(lastAccess);
-	}
 
 	@Test(groups = "s2")
 	public void testListDashboardS2(@Mocked final DashboardServiceFacade anyDashboardServiceFacade,
