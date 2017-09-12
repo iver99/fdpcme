@@ -14,7 +14,7 @@ define(['ojs/ojcore',
                
                var argsWithLenOneObject = [{"url":"/emsaasui/emcpdfui/builder.html"}];
                retryOptions = ajaxUtil.getAjaxOptions(argsWithLenOneObject);
-               assert.equal(argsWithLenOneObject[0], retryOptions);
+               assert.equal(argsWithLenOneObject[0].url, retryOptions.url);
                
                var argsWithLenTwoObject = ["/emsaasui/emcpdfui/builder.html", {"name":"dashboard"}];
                retryOptions = ajaxUtil.getAjaxOptions(argsWithLenTwoObject);
