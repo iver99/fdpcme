@@ -251,7 +251,7 @@ public class DashboardManager
 	
 	/**
 	 * 
-	 * @param name
+	 * @param names
 	 * @param tenantId
 	 * @return
 	 */
@@ -480,6 +480,8 @@ public class DashboardManager
 					}
 				}
 
+				//update last access, before any return.
+				updateLastAccessDate(dashboardId, tenantId, dsf);
 				if (selectedId != null) {
 					try {
 						ed = this.getEmsDashboardById(dsf, selectedId, tenantId);
@@ -1416,6 +1418,9 @@ public class DashboardManager
 				parentDashboardSet.setScreenShot(ed.getScreenShot());
 				dsf.mergeEmsDashboard(parentDashboardSet);
 			}
+
+			//update last access
+			updateLastAccessDate(dbd.getDashboardId(), tenantId, dsf);
 			return Dashboard.valueOf(ed, dbd, true, true, true);
 		}
 		finally {
@@ -1526,21 +1531,29 @@ public class DashboardManager
 		}
 	}
 
+	/**
+	 * update tenant's dashboard's last access date in user option, or create a new user option if it doesn't exist.
+	 * @param dashboardId
+	 * @param tenantId
+	 * @param dsf
+	 */
 	private void updateLastAccessDate(BigInteger dashboardId, Long tenantId, DashboardServiceFacade dsf)
 	{
 		if (dashboardId == null || dashboardId.compareTo(BigInteger.ZERO) <= 0) {
-			LOGGER.debug("Last access date for dashboard is not updated: dashboard id with value {} is invalid", dashboardId);
+			LOGGER.warn("Last access date for dashboard is not updated: dashboard id with value {} is invalid", dashboardId);
 			return;
 		}
 		//EntityManager em = null;
 		EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
 		if (ed == null || ed.getDeleted() != null && ed.getDeleted().compareTo(BigInteger.ZERO) > 0) {
+			LOGGER.warn("Dashboard is deleted, will not update last access date...");
 			return;
 		}
 		//em = dsf.getEntityManager();
 		String currentUser = UserContext.getCurrentUser();
 		// TODO Shall we still save the last access date if it wan't accessed by a user?
 		if(NON_TENANT_ID.equals(tenantId) || currentUser == null) {
+			LOGGER.warn("Tenant id or current user is null, will not update last access date.");
 		    return;
 		}
 		EmsUserOptions edla = dsf.getEmsUserOptions(currentUser, dashboardId);
