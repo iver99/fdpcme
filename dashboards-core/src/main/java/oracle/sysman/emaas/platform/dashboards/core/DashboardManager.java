@@ -1559,6 +1559,7 @@ public class DashboardManager
 		}
 		EmsUserOptions edla = dsf.getEmsUserOptions(currentUser, dashboardId);
 		if (edla == null) {
+			LOGGER.debug("Create new user option for user {} with dashboard id {}", currentUser, dashboardId);
 			edla = new EmsUserOptions();
 			edla.setUserName(currentUser);
 			edla.setDashboardId(dashboardId);
@@ -1566,6 +1567,7 @@ public class DashboardManager
 			dsf.persistEmsUserOptions(edla);
 		}
 		else {
+			LOGGER.debug("Update new user option for user {} with dashboard id {}", currentUser, dashboardId);
 			edla.setAccessDate(DateUtil.getCurrentUTCTime());
 			dsf.mergeEmsUserOptions(edla);
 		}
