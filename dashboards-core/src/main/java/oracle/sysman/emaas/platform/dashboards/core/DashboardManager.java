@@ -480,8 +480,6 @@ public class DashboardManager
 					}
 				}
 
-				//update last access, before any return.
-				updateLastAccessDate(dashboardId, tenantId, dsf);
 				if (selectedId != null) {
 					try {
 						ed = this.getEmsDashboardById(dsf, selectedId, tenantId);
@@ -490,6 +488,8 @@ public class DashboardManager
 						edbdtList = ed.getDashboardTileList();
 					} catch (DashboardException e) {
 						LOGGER.error(e);
+						//update last access, before any return.
+						updateLastAccessDate(dashboardId, tenantId, dsf);
 						return cdSet;
 					}
 				}
@@ -507,7 +507,8 @@ public class DashboardManager
 
 			// combine single dashboard or selected dashbaord
 			CombinedDashboard cd = CombinedDashboard.valueOf(ed, ep, euo,savedSearchResponse);
-
+			//update last access, before any return.
+			updateLastAccessDate(dashboardId, tenantId, dsf);
 			// return combined dashboard Set
 			if (cdSet != null) {
 				cdSet.setSelected(cd);
