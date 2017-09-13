@@ -48,9 +48,8 @@ define(['ojs/ojcore',
                assert.equal("dashboard", retryOptions.name);
                
                var argsWithLenThreeNullBoth = ["/emsaasui/emcpdfui/builder.html", null, null];
-               retryOptions = ajaxUtil.getAjaxOptions(argsWithLenThreeNullFunction);
+               retryOptions = ajaxUtil.getAjaxOptions(argsWithLenThreeNullBoth);
                assert.equal("/emsaasui/emcpdfui/builder.html", retryOptions.url);
-               assert.equal("dashboard", retryOptions.name);
             });
         }
     }
