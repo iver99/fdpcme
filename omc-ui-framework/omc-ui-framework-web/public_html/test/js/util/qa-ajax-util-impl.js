@@ -15,11 +15,15 @@ define(['ojs/ojcore',
                var argsWithLenOneObject = [{"url":"/emsaasui/emcpdfui/builder.html"}];
                retryOptions = ajaxUtil.getAjaxOptions(argsWithLenOneObject);
                assert.equal(argsWithLenOneObject[0].url, retryOptions.url);
+               retryOptions.assertFucntion= function(){return true;};
+               assert.equal(undefined ,argsWithLenOneObject[0].assertFucntion, "success");
                
                var argsWithLenTwoObject = ["/emsaasui/emcpdfui/builder.html", {"name":"dashboard"}];
                retryOptions = ajaxUtil.getAjaxOptions(argsWithLenTwoObject);
                assert.equal("dashboard", retryOptions.name);
                assert.equal("/emsaasui/emcpdfui/builder.html", retryOptions.url);
+               retryOptions.assertFucntion= function(){return true;};
+               assert.equal(undefined ,argsWithLenTwoObject[1].assertFucntion, "success");
 
                var argsWithFunction = function(){return true;}; 
                var argsWithLenTwoFunction = ["/emsaasui/emcpdfui/builder.html", argsWithFunction];
@@ -31,14 +35,22 @@ define(['ojs/ojcore',
                retryOptions = ajaxUtil.getAjaxOptions(argsWithLenTwoNull);
                assert.equal("/emsaasui/emcpdfui/builder.html", retryOptions.url);
                
+               var argsWithLenTwoNullString = [{"name":"dashboard"}, null];
+               retryOptions = ajaxUtil.getAjaxOptions(argsWithLenTwoNullString);
+               assert.equal("dashboard", retryOptions.name);
+               retryOptions.assertFucntion= function(){return true;};
+               assert.equal(undefined ,argsWithLenTwoNullString[0].assertFucntion, "success");
+               
                var argsWithLenThree = ["/emsaasui/emcpdfui/builder.html", argsWithFunction,{"name":"dashboard"}];
                retryOptions = ajaxUtil.getAjaxOptions(argsWithLenThree);
                assert.equal("/emsaasui/emcpdfui/builder.html", retryOptions.url);
                assert.equal(argsWithFunction, retryOptions.success);
                assert.equal("dashboard", retryOptions.name);
+               retryOptions.assertFucntion= function(){return true;};
+               assert.equal(undefined ,argsWithLenThree[2].assertFucntion, "success");
                
                var argsWithLenThreeNullObject = ["/emsaasui/emcpdfui/builder.html", argsWithFunction, null];
-               retryOptions = ajaxUtil.getAjaxOptions(argsWithLenThree);
+               retryOptions = ajaxUtil.getAjaxOptions(argsWithLenThreeNullObject);
                assert.equal("/emsaasui/emcpdfui/builder.html", retryOptions.url);
                assert.equal(argsWithFunction, retryOptions.success);
                
@@ -46,6 +58,8 @@ define(['ojs/ojcore',
                retryOptions = ajaxUtil.getAjaxOptions(argsWithLenThreeNullFunction);
                assert.equal("/emsaasui/emcpdfui/builder.html", retryOptions.url);
                assert.equal("dashboard", retryOptions.name);
+               retryOptions.assertFucntion= function(){return true;};
+               assert.equal(undefined ,argsWithLenThreeNullFunction[2].assertFucntion, "success");
                
                var argsWithLenThreeNullBoth = ["/emsaasui/emcpdfui/builder.html", null, null];
                retryOptions = ajaxUtil.getAjaxOptions(argsWithLenThreeNullBoth);
