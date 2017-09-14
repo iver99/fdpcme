@@ -277,6 +277,7 @@ public class TestHomePage_SortBy extends LoginAndLogout
 
 		//sort the dashboard by name Ascending
 		webd.getLogger().info("Sort the dashboard by last accessed by Ascending");
+		BrandingBarUtil.visitDashboardHome(webd);
 		DashboardHomeUtil.sortBy(webd, DashboardHomeUtil.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME_ASC);
 		//verify the result
 		webd.getLogger().info("Verify the sort result");
@@ -364,6 +365,7 @@ public class TestHomePage_SortBy extends LoginAndLogout
 
 		//sort the dashboard by name Ascending
 		webd.getLogger().info("Sort the dashboard by last accessed by Descending");
+		BrandingBarUtil.visitDashboardHome(webd);
 		DashboardHomeUtil.sortBy(webd, DashboardHomeUtil.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME_DSC);
 		//verify the result
 		webd.getLogger().info("Verify the sort result");
@@ -664,6 +666,7 @@ public class TestHomePage_SortBy extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("Verify the sort result");
+		BrandingBarUtil.visitDashboardHome(webd);
 		names = DashboardHomeUtil.listDashboardNames(webd);
 		Assert.assertEquals(names.get(0), "ADashboard Test");
 		webd.getLogger().info("The last dashboards sorted by 'Default' is " + names.get(0));
