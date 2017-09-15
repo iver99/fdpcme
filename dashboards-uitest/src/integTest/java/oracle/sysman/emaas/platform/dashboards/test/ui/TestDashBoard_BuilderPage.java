@@ -50,7 +50,6 @@ public class TestDashBoard_BuilderPage extends LoginAndLogout
 	private String dbRespectGCTimeRangeName = "";
 	private String dbRespectGCTimeRangeName_URLCheck = "";
 	private String dbName_noDesc = "";
-	private String dbName_setHome = "";
 
 	private final String widgetName_UDE = "Area Chart";
 	private final String widgetName = "Top Hosts by Log Entries";
@@ -149,7 +148,6 @@ public class TestDashBoard_BuilderPage extends LoginAndLogout
 		DashBoardUtils.deleteDashboard(webd, dbName4_Test);	
 		DashBoardUtils.deleteDashboard(webd, dbName5_Test);	
 		DashBoardUtils.deleteDashboard(webd, dbName_textWidget);
-		DashBoardUtils.deleteDashboard(webd, dbName_setHome);
 		DashBoardUtils.deleteDashboard(webd, dbName_noDesc);
 		
 		DashBoardUtils.deleteDashboard(webd, dbRespectGCTimeRangeName);
@@ -751,55 +749,7 @@ public class TestDashBoard_BuilderPage extends LoginAndLogout
 		TimeSelectorUtil.setFlexibleRelativeTimeRange(webd, 2, TimeUnit.Year);
 		currentURL = webd.getWebDriver().getCurrentUrl();
 		Assert.assertEquals(currentURL.contains("timePeriod%3DLAST_2_YEAR"), true);		
-	}
-	
-	@Test(alwaysRun = true)
-	public void testSetHome()
-	{
-		dbName_setHome = "setHomeDashboard-" + DashBoardUtils.generateTimeStamp();
-		String dbDesc = "SetHome_testDashboard desc";
-
-		//Initialize the test
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start to test in testSetHome");
-		WaitUtil.waitForPageFullyLoaded(webd);
-		//reset the home page
-		webd.getLogger().info("Reset all filter options in the home page");
-		DashboardHomeUtil.resetFilterOptions(webd);
-
-		//switch to Grid View
-		webd.getLogger().info("Switch to grid view");
-		DashboardHomeUtil.gridView(webd);
-
-		//create dashboard
-		webd.getLogger().info("create a dashboard: with description, time refresh");
-		DashboardHomeUtil.createDashboard(webd, dbName_setHome, dbDesc, DashboardHomeUtil.DASHBOARD);
-
-		//verify dashboard in builder page
-		webd.getLogger().info("Verify the dashboard created Successfully");
-		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_setHome, dbDesc, true), "Create dashboard failed!");
-
-		//set it as home
-		webd.getLogger().info("Set home page");
-		Assert.assertTrue(DashboardBuilderUtil.toggleHome(webd), "Set the dasbhoard as Home failed!");
-
-		//check home page
-		webd.getLogger().info("Access to the home page");
-		BrandingBarUtil.visitMyHome(webd);
-		webd.getLogger().info("Verfiy the home page");
-		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_setHome, dbDesc, true), "It is NOT the home page!");
-
-		//set it not home
-		webd.getLogger().info("Set not home page");
-		Assert.assertFalse(DashboardBuilderUtil.toggleHome(webd), "Remove the dasbhoard as Home failed!");
-
-		//check home page
-		webd.getLogger().info("Access to the home page");
-		BrandingBarUtil.visitMyHome(webd);
-		webd.getLogger().info("Verfiy the home page");
-		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, WelcomeUtil.SERVICE_NAME_DASHBOARDS),
-				"It is NOT the home page!");
-	}
+	}	
 	
 	@Test(alwaysRun=true)
 	public void testAutoRefresh()
