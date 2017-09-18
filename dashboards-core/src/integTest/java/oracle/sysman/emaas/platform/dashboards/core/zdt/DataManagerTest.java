@@ -3,6 +3,7 @@ package oracle.sysman.emaas.platform.dashboards.core.zdt;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import oracle.sysman.emaas.platform.dashboards.core.zdt.exception.SyncException;
 import org.testng.annotations.Test;
 
 import mockit.Expectations;
@@ -299,7 +300,7 @@ public class DataManagerTest
 
 	@Test
 	public void getSyncDashboardTableRow(@Mocked final PersistenceManager persistenceManager, 
-			@Mocked final EntityManager entityManager,@Mocked final Query query){
+			@Mocked final EntityManager entityManager,@Mocked final Query query) throws SyncException {
 		BigInteger dashboardId = new BigInteger("1");
 		String name = "name";
 		Long type = 1L;
@@ -397,7 +398,7 @@ public class DataManagerTest
 	}	
 	@Test
 public void getSyncDashboardTableRowInsert(@Mocked final PersistenceManager persistenceManager, 
-		@Mocked final EntityManager entityManager,@Mocked final Query query){
+		@Mocked final EntityManager entityManager,@Mocked final Query query) throws SyncException {
 	BigInteger dashboardId = new BigInteger("1");
 	String name = "name";
 	Long type = 1L;
@@ -453,7 +454,7 @@ public void getSyncDashboardTableRowInsert(@Mocked final PersistenceManager pers
 
 	@Test
 	public void testSyncDashboardTile(@Mocked final PersistenceManager persistenceManager, 
-			@Mocked final EntityManager entityManager,@Mocked final Query query){
+			@Mocked final EntityManager entityManager,@Mocked final Query query) throws SyncException {
 		String tileId = "1";
 		BigInteger dashboardId = new BigInteger("1");
 		String creationDate = "creationdate";
@@ -563,7 +564,7 @@ public void getSyncDashboardTableRowInsert(@Mocked final PersistenceManager pers
 	}
 	@Test
 	public void testSyncDashboardTileInsert(@Mocked final PersistenceManager persistenceManager, 
-			@Mocked final EntityManager entityManager,@Mocked final Query query) {
+			@Mocked final EntityManager entityManager,@Mocked final Query query) throws SyncException {
 		String tileId = "1";
 		BigInteger dashboardId = new BigInteger("1");
 		String creationDate = "creationdate";
@@ -613,7 +614,7 @@ public void getSyncDashboardTableRowInsert(@Mocked final PersistenceManager pers
 	}
 	@Test
 	public void testSyncDashboardTileParam(@Mocked final PersistenceManager persistenceManager, 
-			@Mocked final EntityManager entityManager,@Mocked final Query query){
+			@Mocked final EntityManager entityManager,@Mocked final Query query) throws SyncException {
 		String tileId = "1";
 		String paramName = "paramName";
 		Long tenantId = 1L;
@@ -657,7 +658,7 @@ public void getSyncDashboardTableRowInsert(@Mocked final PersistenceManager pers
 	}
 	@Test
 	public void testSyncDashboardTileParamInsert(@Mocked final PersistenceManager persistenceManager, 
-			@Mocked final EntityManager entityManager,@Mocked final Query query){
+			@Mocked final EntityManager entityManager,@Mocked final Query query) throws SyncException {
 		String tileId = "1";
 		String paramName = "paramName";
 		Long tenantId = 1L;
@@ -683,7 +684,7 @@ public void getSyncDashboardTableRowInsert(@Mocked final PersistenceManager pers
 
 	@Test
 	public void testSyncDashboardUserOption(@Mocked final PersistenceManager persistenceManager, 
-			@Mocked final EntityManager entityManager,@Mocked final Query query) {
+			@Mocked final EntityManager entityManager,@Mocked final Query query) throws SyncException {
 		String userName = "username";
 		Long tenantId = 1L;
 		BigInteger dashboardId = new BigInteger("1");
@@ -720,7 +721,7 @@ public void getSyncDashboardTableRowInsert(@Mocked final PersistenceManager pers
 	}
 	@Test
 	public void testSyncDashboardUserOptionInsert(@Mocked final PersistenceManager persistenceManager, 
-			@Mocked final EntityManager entityManager,@Mocked final Query query) {
+			@Mocked final EntityManager entityManager,@Mocked final Query query) throws SyncException {
 		String userName = "username";
 		Long tenantId = 1L;
 		BigInteger dashboardId = new BigInteger("1");
@@ -746,7 +747,7 @@ public void getSyncDashboardTableRowInsert(@Mocked final PersistenceManager pers
 
 	@Test
 	public void testSyncDashboardSet(@Mocked final PersistenceManager persistenceManager, 
-			@Mocked final EntityManager entityManager,@Mocked final Query query){
+			@Mocked final EntityManager entityManager,@Mocked final Query query) throws SyncException {
 		BigInteger dashboardSetId = new BigInteger("1");
 		Long tenantId = 1L;
 		BigInteger subDashboardId = new BigInteger("1");
@@ -779,7 +780,7 @@ public void getSyncDashboardTableRowInsert(@Mocked final PersistenceManager pers
 
 	@Test
 	public void testSyncDashboardSetInsert(@Mocked final PersistenceManager persistenceManager, 
-			@Mocked final EntityManager entityManager,@Mocked final Query query){
+			@Mocked final EntityManager entityManager,@Mocked final Query query) throws SyncException {
 		BigInteger dashboardSetId = new BigInteger("1");
 		Long tenantId = 1L;
 		BigInteger subDashboardId = new BigInteger("1");
@@ -800,7 +801,7 @@ public void getSyncDashboardTableRowInsert(@Mocked final PersistenceManager pers
 
 	@Test
 	public void testSyncPreference(@Mocked final PersistenceManager persistenceManager, 
-			@Mocked final EntityManager entityManager,@Mocked final Query query){
+			@Mocked final EntityManager entityManager,@Mocked final Query query) throws SyncException {
 		String userName = "userName";
 		String prefKey = "prefKey";
 		String prefValue = "prefValue";
@@ -832,7 +833,7 @@ public void getSyncDashboardTableRowInsert(@Mocked final PersistenceManager pers
 
 	@Test
 	public void testSyncPreferenceInsert(@Mocked final PersistenceManager persistenceManager, 
-			@Mocked final EntityManager entityManager,@Mocked final Query query){
+			@Mocked final EntityManager entityManager,@Mocked final Query query) throws SyncException {
 		String userName = "userName";
 		String prefKey = "prefKey";
 		String prefValue = "prefValue";
