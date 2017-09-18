@@ -22,6 +22,7 @@ import javax.persistence.Query;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
 import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 
+import oracle.sysman.emaas.platform.dashboards.core.zdt.exception.SyncException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.persistence.config.QueryHints;
@@ -511,65 +512,11 @@ public class DataManager
 
 	public int syncDashboardTableRow(EntityManager entityManager,BigInteger dashboardId, String name, Long type, String description, String creationDate, String lastModificationDate, String lastModifiedBy, String owner,
 									 Integer isSystem, Integer applicationType, Integer enableTimeRange, String screenShot, BigInteger deleted, Long tenantId, Integer enableRefresh, Integer sharePublic,
-									 Integer enableEntityFilter, Integer enableDescription, String extendedOptions, Integer showInHome) {
+									 Integer enableEntityFilter, Integer enableDescription, String extendedOptions, Integer showInHome) throws SyncException {
 		logger.info("Calling the DataManager.syncDashboardTableRow");
 		//these check are db constraint
-		if (dashboardId == null) {
-			logger.warn("dashboard id cannot be null!");
+		if (checkDbDashboardConstraint(dashboardId, name, type, creationDate, owner, isSystem, enableTimeRange, deleted, tenantId, enableRefresh, sharePublic, enableEntityFilter, enableDescription, showInHome))
 			return 0;
-		}
-		if (StringUtil.isEmpty(name)) {
-			logger.warn("name cannot be null!");
-			return 0;
-		}
-		if (type == null) {
-			logger.warn("type cannot be null!");
-			return 0;
-		}
-		if ((StringUtil.isEmpty(creationDate))) {
-			logger.warn("creation date cannot be null!");
-			return 0;
-		}
-		if ((StringUtil.isEmpty(owner))) {
-			logger.warn("owner cannot be null or empty!");
-			return 0;
-		}
-		if (isSystem == null) {
-			logger.warn("isSystem cannot be null!");
-			return 0;
-		}
-		if (enableTimeRange == null) {
-			logger.warn("ENABLE_TIME_RANGE cannot be null!");
-			return 0;
-		}
-		if (deleted == null) {
-			logger.warn("deleted cannot be null!");
-			return 0;
-		}
-		if (tenantId == null) {
-			logger.warn("tenantId cannot be null!");
-			return 0;
-		}
-		if (enableRefresh == null) {
-			logger.warn("enableRefresh cannot be null!");
-			return 0;
-		}
-		if (sharePublic == null) {
-			logger.warn("sharePublic cannot be null!");
-			return 0;
-		}
-		if (enableEntityFilter == null) {
-			logger.warn("enableEntityFilter cannot be null!");
-			return 0;
-		}
-		if (enableDescription == null) {
-			logger.warn("enableDescription cannot be null!");
-			return 0;
-		}
-		if (showInHome == null) {
-			logger.warn("showInHome cannot be null!");
-			return 0;
-		}
 
 
 		if (!entityManager.getTransaction().isActive()) {
@@ -604,90 +551,80 @@ public class DataManager
 			return insertDashboard(entityManager, dashboardId, name, type, description, creationDate, lastModificationDate, lastModifiedBy, owner,
 					isSystem, applicationType, enableTimeRange, screenShot, deleted, tenantId, enableRefresh, sharePublic, enableEntityFilter, enableDescription, extendedOptions, showInHome);
 		} catch (Exception e) {
-			logger.error(e.getLocalizedMessage());
-			return 0;
-		} 
+			logger.error(e);
+			throw new SyncException("Error occur when sync dashboard set table..");
+		}
+	}
+
+	private boolean checkDbDashboardConstraint(BigInteger dashboardId, String name, Long type, String creationDate, String owner, Integer isSystem, Integer enableTimeRange, BigInteger deleted, Long tenantId, Integer enableRefresh, Integer sharePublic, Integer enableEntityFilter, Integer enableDescription, Integer showInHome) {
+		if (dashboardId == null) {
+			logger.warn("dashboard id cannot be null!");
+			return true;
+		}
+		if (StringUtil.isEmpty(name)) {
+			logger.warn("name cannot be null!");
+			return true;
+		}
+		if (type == null) {
+			logger.warn("type cannot be null!");
+			return true;
+		}
+		if ((StringUtil.isEmpty(creationDate))) {
+			logger.warn("creation date cannot be null!");
+			return true;
+		}
+		if ((StringUtil.isEmpty(owner))) {
+			logger.warn("owner cannot be null or empty!");
+			return true;
+		}
+		if (isSystem == null) {
+			logger.warn("isSystem cannot be null!");
+			return true;
+		}
+		if (enableTimeRange == null) {
+			logger.warn("ENABLE_TIME_RANGE cannot be null!");
+			return true;
+		}
+		if (deleted == null) {
+			logger.warn("deleted cannot be null!");
+			return true;
+		}
+		if (tenantId == null) {
+			logger.warn("tenantId cannot be null!");
+			return true;
+		}
+		if (enableRefresh == null) {
+			logger.warn("enableRefresh cannot be null!");
+			return true;
+		}
+		if (sharePublic == null) {
+			logger.warn("sharePublic cannot be null!");
+			return true;
+		}
+		if (enableEntityFilter == null) {
+			logger.warn("enableEntityFilter cannot be null!");
+			return true;
+		}
+		if (enableDescription == null) {
+			logger.warn("enableDescription cannot be null!");
+			return true;
+		}
+		if (showInHome == null) {
+			logger.warn("showInHome cannot be null!");
+			return true;
+		}
+		return false;
 	}
 
 	public int syncDashboardTile(EntityManager entityManager,String tileId, BigInteger dashboardId, String creationDate, String lastModificationDate, String lastModifiedBy, String owner, String title, Long height,
 								 Long width, Integer isMaximized, Long position, Long tenantId, String widgetUniqueId, String widgetName, String widgetDescription, String widgetGroupName,
 								 String widgetIcon, String widgetHistogram, String widgetOwner, String widgetCreationTime, Long widgetSource, String widgetKocName, String widgetViewmode, String widgetTemplate,
 								 String providerName, String providerVersion, String providerAssetRoot, Long tileRow, Long tileColumn, Long type, Integer widgetSupportTimeControl, 
-								 Long widgetLinkedDashboard, Integer widgetDeleted, String widgetDeletionDate, Integer deleted) {
+								 Long widgetLinkedDashboard, Integer widgetDeleted, String widgetDeletionDate, Integer deleted) throws SyncException {
 		logger.info("Calling the DataManager,syncDashboardTile");
 		//db constraint check
-		if (dashboardId == null) {
-			logger.warn("DASHBOARD_ID is null!");
+		if (checkDbDashboardTileConstraint(dashboardId, creationDate, owner, title, isMaximized, position, tenantId, widgetUniqueId, widgetName, widgetOwner, widgetCreationTime, widgetSource, widgetKocName, widgetViewmode, widgetTemplate, widgetSupportTimeControl, widgetDeleted, deleted))
 			return 0;
-		}
-		if (StringUtil.isEmpty(creationDate)) {
-			logger.warn("CREATION_DATE is null or empty!");
-			return 0;
-		}
-		if (owner == null) {
-			logger.warn("owner is null!");
-			return 0;
-		}
-		if (StringUtil.isEmpty(title)) {
-			logger.warn("TITLE is null or empty!");
-			return 0;
-		}
-		if (isMaximized == null) {
-			logger.warn("isMaximized is null!");
-			return 0;
-		}
-		if (position == null) {
-			logger.warn("position is null!");
-			return 0;
-		}
-		if (tenantId == null) {
-			logger.warn("tenantId is null!");
-			return 0;
-		}
-		if (widgetUniqueId == null) {
-			logger.warn("widgetUniqueId is null!");
-			return 0;
-		}
-		if (widgetName == null) {
-			logger.warn("widgetName is null!");
-			return 0;
-		}
-		if (widgetOwner == null) {
-			logger.warn("widgetOwner is null!");
-			return 0;
-		}
-		if (widgetCreationTime == null) {
-			logger.warn("widgetCreationTime is null!");
-			return 0;
-		}
-		if (widgetSource == null) {
-			logger.warn("widgetSource is null!");
-			return 0;
-		}
-		if (widgetKocName == null) {
-			logger.warn("widgetKocName is null!");
-			return 0;
-		}
-		if (widgetViewmode == null) {
-			logger.warn("widgetViewmode is null!");
-			return 0;
-		}
-		if (widgetTemplate == null) {
-			logger.warn("widgetTemplate is null!");
-			return 0;
-		}
-		if (widgetSupportTimeControl == null) {
-			logger.warn("widgetSupportTimeControl is null!");
-			return 0;
-		}
-		if (widgetDeleted == null) {
-			logger.warn("widgetDeleted is null!");
-			return 0;
-		}
-		if (deleted == null) {
-			logger.warn("deleted is null!");
-			return 0;
-		}
 		if (!entityManager.getTransaction().isActive()) {
 			entityManager.getTransaction().begin();
 		}
@@ -726,36 +663,93 @@ public class DataManager
 					providerName, providerVersion, providerAssetRoot, tileRow, tileColumn, type, widgetSupportTimeControl, widgetLinkedDashboard,
 					widgetDeleted,widgetDeletionDate,  deleted);
 		} catch (Exception e) {
-			logger.error(e.getLocalizedMessage());
-			return 0;
-		} 
+			logger.error(e);
+			throw new SyncException("Error occur when sync dashboard tile table..");
+		}
+	}
+
+	private boolean checkDbDashboardTileConstraint(BigInteger dashboardId, String creationDate, String owner, String title, Integer isMaximized, Long position, Long tenantId, String widgetUniqueId, String widgetName, String widgetOwner, String widgetCreationTime, Long widgetSource, String widgetKocName, String widgetViewmode, String widgetTemplate, Integer widgetSupportTimeControl, Integer widgetDeleted, Integer deleted) {
+		if (dashboardId == null) {
+			logger.warn("DASHBOARD_ID is null!");
+			return true;
+		}
+		if (StringUtil.isEmpty(creationDate)) {
+			logger.warn("CREATION_DATE is null or empty!");
+			return true;
+		}
+		if (owner == null) {
+			logger.warn("owner is null!");
+			return true;
+		}
+		if (StringUtil.isEmpty(title)) {
+			logger.warn("TITLE is null or empty!");
+			return true;
+		}
+		if (isMaximized == null) {
+			logger.warn("isMaximized is null!");
+			return true;
+		}
+		if (position == null) {
+			logger.warn("position is null!");
+			return true;
+		}
+		if (tenantId == null) {
+			logger.warn("tenantId is null!");
+			return true;
+		}
+		if (widgetUniqueId == null) {
+			logger.warn("widgetUniqueId is null!");
+			return true;
+		}
+		if (widgetName == null) {
+			logger.warn("widgetName is null!");
+			return true;
+		}
+		if (widgetOwner == null) {
+			logger.warn("widgetOwner is null!");
+			return true;
+		}
+		if (widgetCreationTime == null) {
+			logger.warn("widgetCreationTime is null!");
+			return true;
+		}
+		if (widgetSource == null) {
+			logger.warn("widgetSource is null!");
+			return true;
+		}
+		if (widgetKocName == null) {
+			logger.warn("widgetKocName is null!");
+			return true;
+		}
+		if (widgetViewmode == null) {
+			logger.warn("widgetViewmode is null!");
+			return true;
+		}
+		if (widgetTemplate == null) {
+			logger.warn("widgetTemplate is null!");
+			return true;
+		}
+		if (widgetSupportTimeControl == null) {
+			logger.warn("widgetSupportTimeControl is null!");
+			return true;
+		}
+		if (widgetDeleted == null) {
+			logger.warn("widgetDeleted is null!");
+			return true;
+		}
+		if (deleted == null) {
+			logger.warn("deleted is null!");
+			return true;
+		}
+		return false;
 	}
 
 	public int syncDashboardTileParam(EntityManager entityManager, String tileId, String paramName,
 									  Long tenantId, Integer isSystem, Long paramType, String paramValueStr,
-									  Long paramValueNum, String paramValueTimestamp, String creationDate, String lastModificationDate, Integer deleted) {
+									  Long paramValueNum, String paramValueTimestamp, String creationDate, String lastModificationDate, Integer deleted) throws SyncException {
 		logger.info("Calling DataManager.syncDashboardTileParam");
 		//check db constraint
-		if(paramName == null){
-			logger.warn("PARAM_NAME is null!");
-			return 0;
-		}
-		if(tenantId == null){
-			logger.warn("TENANT_ID is null!");
-			return 0;
-		}
-		if(isSystem == null){
-			logger.warn("IS_SYSTEM is null!");
-			return 0;
-		}
-		if(paramType == null){
-			logger.warn("PARAM_TYPE is null!");
-			return 0;
-		}
-		if(deleted == null){
-			logger.warn("deleted is null!");
-			return 0;
-		}
+		if (checkDbDashboardTileParamConstraint(paramName, tenantId, isSystem, paramType, deleted)) return 0;
 		if (!entityManager.getTransaction().isActive()) {
 			entityManager.getTransaction().begin();
 		}
@@ -790,41 +784,43 @@ public class DataManager
 					isSystem, paramType, paramValueStr, paramValueNum,
 					paramValueTimestamp, creationDate, lastModificationDate, deleted);
 		}catch (Exception e){
-			logger.error(e.getLocalizedMessage());
-			return 0;
+			logger.error(e);
+			throw new SyncException("Error occur when sync dashboard tile param table..");
 		}
+	}
+
+	private boolean checkDbDashboardTileParamConstraint(String paramName, Long tenantId, Integer isSystem, Long paramType, Integer deleted) {
+		if(paramName == null){
+			logger.warn("PARAM_NAME is null!");
+			return true;
+		}
+		if(tenantId == null){
+			logger.warn("TENANT_ID is null!");
+			return true;
+		}
+		if(isSystem == null){
+			logger.warn("IS_SYSTEM is null!");
+			return true;
+		}
+		if(paramType == null){
+			logger.warn("PARAM_TYPE is null!");
+			return true;
+		}
+		if(deleted == null){
+			logger.warn("deleted is null!");
+			return true;
+		}
+		return false;
 	}
 
 
 	public int syncDashboardUserOption(EntityManager entityManager,String userName, Long tenantId, BigInteger dashboardId,
 									   Long autoRefreshInterval, String accessDate, Integer isFavorite, String extendedOptions,
-									   String creationDate, String lastModificationDate, Integer deleted) {
+									   String creationDate, String lastModificationDate, Integer deleted) throws SyncException {
 		logger.info("Calling DataManager.syncDashboardUserOption");
 		//check db constraint
-		if (StringUtil.isEmpty(userName)) {
-			logger.warn("USER_NAME is null!");
+		if (checkDbUserOptionConstraint(userName, tenantId, dashboardId, autoRefreshInterval, isFavorite, deleted))
 			return 0;
-		}
-		if (tenantId == null) {
-			logger.warn("TENANT_ID is null !");
-			return 0;
-		}
-		if (dashboardId == null) {
-			logger.warn("DASHBOARD_ID is null !");
-			return 0;
-		}
-		if (autoRefreshInterval == null) {
-			logger.warn("autoRefreshInterval is null !");
-			return 0;
-		}
-		if (isFavorite == null) {
-			logger.warn("isFavorite is null !");
-			return 0;
-		}
-		if (deleted == null) {
-			logger.warn("deleted is null !");
-			return 0;
-		}
 
 		if (!entityManager.getTransaction().isActive()) {
 			entityManager.getTransaction().begin();
@@ -860,35 +856,44 @@ public class DataManager
 			return insertDashboardUserOption(entityManager, userName, tenantId, dashboardId, autoRefreshInterval,
 					accessDate, isFavorite, extendedOptions, creationDate, lastModificationDate, deleted);
 		} catch (Exception e) {
-			logger.error(e.getLocalizedMessage());
-			return 0;
+			logger.error(e);
+			throw new SyncException("Error occur when sync user option table..");
 		}
 	}
 
-	public int syncDashboardSet(EntityManager entityManager,BigInteger dashboardSetId, Long tenantId, BigInteger subDashboardId,
-								Long position, String creationDate, String lastModificationDate, BigInteger deleted) {
-		logger.info("Calling DataManager.syncDashboardSet", dashboardSetId);
-		//db constraint check
-		if (dashboardSetId == null) {
-			logger.warn("DASHBOARD_SET_ID is null !");
-			return 0;
+	private boolean checkDbUserOptionConstraint(String userName, Long tenantId, BigInteger dashboardId, Long autoRefreshInterval, Integer isFavorite, Integer deleted) {
+		if (StringUtil.isEmpty(userName)) {
+			logger.warn("USER_NAME is null!");
+			return true;
 		}
 		if (tenantId == null) {
 			logger.warn("TENANT_ID is null !");
-			return 0;
+			return true;
 		}
-		if (subDashboardId == null) {
-			logger.warn("SUB_DASHBOARD_ID is null !");
-			return 0;
+		if (dashboardId == null) {
+			logger.warn("DASHBOARD_ID is null !");
+			return true;
 		}
-		if (position == null) {
-			logger.warn("POSITION is null !");
-			return 0;
+		if (autoRefreshInterval == null) {
+			logger.warn("autoRefreshInterval is null !");
+			return true;
+		}
+		if (isFavorite == null) {
+			logger.warn("isFavorite is null !");
+			return true;
 		}
 		if (deleted == null) {
 			logger.warn("deleted is null !");
-			return 0;
+			return true;
 		}
+		return false;
+	}
+
+	public int syncDashboardSet(EntityManager entityManager,BigInteger dashboardSetId, Long tenantId, BigInteger subDashboardId,
+								Long position, String creationDate, String lastModificationDate, BigInteger deleted) throws SyncException {
+		logger.info("Calling DataManager.syncDashboardSet", dashboardSetId);
+		//db constraint check
+		if (checkDbDashboardSetConstraint(dashboardSetId, tenantId, subDashboardId, position, deleted)) return 0;
 		if (!entityManager.getTransaction().isActive()) {
 			entityManager.getTransaction().begin();
 		}
@@ -920,38 +925,40 @@ public class DataManager
 			logger.info("Dashboard Set with id {} does not exist insert now", dashboardSetId);
 			return insertDashboardSet(entityManager, dashboardSetId, tenantId, subDashboardId, position, creationDate, lastModificationDate, deleted);
 		} catch (Exception e) {
-			logger.error(e.getLocalizedMessage());
-			return 0;
-		} 
+			logger.error(e);
+			throw new SyncException("Error occur when sync dashboard table..");
+		}
+	}
+
+	private boolean checkDbDashboardSetConstraint(BigInteger dashboardSetId, Long tenantId, BigInteger subDashboardId, Long position, BigInteger deleted) {
+		if (dashboardSetId == null) {
+			logger.warn("DASHBOARD_SET_ID is null !");
+			return true;
+		}
+		if (tenantId == null) {
+			logger.warn("TENANT_ID is null !");
+			return true;
+		}
+		if (subDashboardId == null) {
+			logger.warn("SUB_DASHBOARD_ID is null !");
+			return true;
+		}
+		if (position == null) {
+			logger.warn("POSITION is null !");
+			return true;
+		}
+		if (deleted == null) {
+			logger.warn("deleted is null !");
+			return true;
+		}
+		return false;
 	}
 
 	public int syncPreferences(EntityManager entityManager,String userName, String prefKey, String prefValue,
-							   Long tenantId, String creationDate, String lastModificationDate, Integer deleted) {
+							   Long tenantId, String creationDate, String lastModificationDate, Integer deleted) throws SyncException {
 		logger.info("Calling syncPreference");
 		//these check are db constraint
-		if (StringUtil.isEmpty(userName)) {
-			logger.warn("USER_NAME is null or empty!");
-			return 0;
-		}
-		if (StringUtil.isEmpty(prefKey)) {
-			logger.warn("PREF_KEY is null or empty!");
-			return 0;
-		}
-		if (StringUtil.isEmpty(prefValue)) {
-			logger.warn("PREF_VALUE is null or empty!");
-			return 0;
-		}
-		if (tenantId == null) {
-			logger.warn("TENANT_ID is null");
-			return 0;
-		}
-		if(deleted == null){
-			logger.warn("DELETED is null");
-			return 0;
-		}
-		if (!entityManager.getTransaction().isActive()) {
-			entityManager.getTransaction().begin();
-		}
+		if (checkDbPreferenceConstraint(entityManager, userName, prefKey, prefValue, tenantId, deleted)) return 0;
 		try {
 			List<Map<String, Object>> result = getLastAccessDateForPreference(entityManager, userName, prefKey, tenantId);
 			if (result != null && result.size() > 0) {
@@ -980,9 +987,36 @@ public class DataManager
 			logger.info("Preference with prefKey {} does not exist insert now", prefKey);
 			return insertPreferences(entityManager, userName, prefKey, prefValue, tenantId, creationDate, lastModificationDate, deleted);
 		} catch (Exception e) {
-			logger.error(e.getLocalizedMessage());
-			return 0;
-		} 
+			logger.error(e);
+			throw new SyncException("Error occur when sync preference table..");
+		}
+	}
+
+	private boolean checkDbPreferenceConstraint(EntityManager entityManager, String userName, String prefKey, String prefValue, Long tenantId, Integer deleted) {
+		if (StringUtil.isEmpty(userName)) {
+			logger.warn("USER_NAME is null or empty!");
+			return true;
+		}
+		if (StringUtil.isEmpty(prefKey)) {
+			logger.warn("PREF_KEY is null or empty!");
+			return true;
+		}
+		if (StringUtil.isEmpty(prefValue)) {
+			logger.warn("PREF_VALUE is null or empty!");
+			return true;
+		}
+		if (tenantId == null) {
+			logger.warn("TENANT_ID is null");
+			return true;
+		}
+		if(deleted == null){
+			logger.warn("DELETED is null");
+			return true;
+		}
+		if (!entityManager.getTransaction().isActive()) {
+			entityManager.getTransaction().begin();
+		}
+		return false;
 	}
 
 	private int insertDashboard(EntityManager entityManager, BigInteger dashboardId, String name, Long type, String description, String creationDate, String lastModificationDate, String lastModifiedBy, String owner,

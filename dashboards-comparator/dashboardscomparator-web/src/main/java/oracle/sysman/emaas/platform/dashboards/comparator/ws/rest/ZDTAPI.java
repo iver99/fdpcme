@@ -379,8 +379,8 @@ public class ZDTAPI
 				return Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(ZDTErrorConstants.FAIL_TO_SYNC_ERROR_CODE, ZDTErrorConstants.FAIL_TO_SYNC_ERROR_MESSAGE))).build();
 			}
 			JSONObject object = new JSONObject();
-			object.put(dcc.getKey1(), message1);
-			object.put(dcc.getKey2(), message2);
+			object.put(dcc.getKey1(), message1.contains("successful")?"Sync is successful!":"");
+			object.put(dcc.getKey2(), message2.contains("successful")?"Sync is successful!":"");
 			return Response.ok(object).build();
 	    }catch (Exception e) {
 			logger.error(e);

@@ -27,6 +27,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import oracle.sysman.emaas.platform.dashboards.core.zdt.exception.SyncException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
@@ -219,6 +220,11 @@ public class ZDTAPI extends APIBase
 		String syncDate = getTimeString(currentUtcDate);
 		String lastComparisonDateForSync = null;
 		List<Map<String, Object>> comparedDataToSync = null;
+		/**
+		 * FIXME handle half-sync here
+		 */
+
+
 		try{
 			DashboardServiceFacade dsf = new DashboardServiceFacade();
 			em = dsf.getEntityManager();
@@ -241,37 +247,37 @@ public class ZDTAPI extends APIBase
 					Object compareDate = dataMap.get("COMPARISON_DATE");
 					data = getJsonUtil().fromJson(compareResult.toString(), TableRowsEntity.class);
 					List<TableRowsEntity> entities = splitTableRowEntity(data);
-					String response = null;
 					if (entities != null) {
 						for (TableRowsEntity entity : entities) {
-							response = new TableRowsSynchronizer().sync(entity);
+							new TableRowsSynchronizer().sync(entity);
 						}
 					}
-					if (lastCompareDate != null) {
-						if (lastCompareDate.compareTo( (String) compareDate) < 0) {
-							lastCompareDate = (String) compareDate;
-						}
-					} else {
-						lastCompareDate = (String) compareDate;
-					}
-					
-					if (response != null && response.contains("Errors:")) {
+					lastCompareDate = getComparedDateforSync(lastCompareDate, (String) compareDate);
+					/*if (response != null && response.contains("Errors:")) {
 						saveToSyncTable(syncDate, "full", "FAILED",lastCompareDate);
-						return Response.status(Status.INTERNAL_SERVER_ERROR).entity("{\"msg\" :\"Error occurred when sync...\"}").build();
-					}
+						return Response.status(Status.INTERNAL_SERVER_ERROR).entity("{\"msg\" :\"Errors occurred when sync...\"}").build();
+					}*/
 				}
 				int flag = saveToSyncTable(syncDate, "full", "SUCCESSFUL",lastCompareDate);
 				if (flag < 0) {
-					return Response.status(Status.INTERNAL_SERVER_ERROR).entity("{\"msg\": \"Fail to save sync status data\"}").build();
+					logger.error("sync is successful, but save SUCCESSFUL into sync table fail..");
+					return Response.status(Status.INTERNAL_SERVER_ERROR).entity("{\"msg\": \"Errors Fail to save sync status data\"}").build();
 				}
 			} else {
 				return Response.ok("{\"msg\": \"Nothing to sync as no compared data\"}").build();
 			}
 			return Response.ok("{\"msg\": \"Sync is successful!\"}").build();
-		} catch (IOException e) {
+		}catch(SyncException e){
+			/**
+			 * FIXME handle half-sync here
+			 */
 			logger.error(e);
-			return Response.status(Status.INTERNAL_SERVER_ERROR).entity("{\"msg\": \"IOException occurred in server side\"}").build();
-		} 
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity("{\"msg\": \"Errors SyncException occurred when sync\"}").build();
+		}
+		catch (IOException e) {
+			logger.error(e);
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity("{\"msg\": \"Errors IOException occurred in server side\"}").build();
+		}
 	}
 	
 	/**
@@ -609,6 +615,16 @@ public class ZDTAPI extends APIBase
 		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 		String dateStr = sdf.format(date);
 		return dateStr;
+	}
+	private String getComparedDateforSync(String lastCompareDate, String compareDate) {
+		if (lastCompareDate != null) {
+			if (lastCompareDate.compareTo(compareDate) < 0) {
+				lastCompareDate = compareDate;
+			}
+		} else {
+			lastCompareDate = compareDate;
+		}
+		return lastCompareDate;
 	}
 
 }
