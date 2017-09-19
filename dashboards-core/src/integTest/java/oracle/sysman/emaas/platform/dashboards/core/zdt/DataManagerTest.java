@@ -419,12 +419,16 @@ public void getSyncDashboardTableRowInsert(@Mocked final PersistenceManager pers
 	Integer enableDescription = 1;
 	String extendedOptions = "extendedoptions";
 	Integer showInHome = 1;
+	final List<Map<String, Object>> list = new ArrayList<>();
+	Map<String,Object> map = new HashMap<>();
+	map.put("CREATION_DATE","2017:09:09 09:09:09.000");
+	map.put("LAST_MODIFICATION_DATE","2017:09:09 09:09:09.000");
 
-	final Map<String, Object> objs = new HashMap<String,Object>();		
+	list.add(map);
 		new Expectations(){
 		{
 			query.getResultList();
-				result = new HashMap<String,Object>();
+				result = list;
 		}
 	};
 	dataManager.syncDashboardTableRow(entityManager,
