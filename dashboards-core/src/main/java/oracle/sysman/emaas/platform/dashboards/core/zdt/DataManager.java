@@ -22,6 +22,9 @@ import javax.persistence.Query;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
 import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 
+import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
+import oracle.sysman.emaas.platform.dashboards.core.zdt.exception.HalfSyncException;
+import oracle.sysman.emaas.platform.dashboards.core.zdt.exception.NoComparedResultException;
 import oracle.sysman.emaas.platform.dashboards.core.zdt.exception.SyncException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -55,7 +58,11 @@ public class DataManager
 	private static final String SQL_GET_COMPARED_DATA_TO_SYNC = "SELECT to_char(COMPARISON_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as COMPARISON_DATE, comparison_result from ems_zdt_comparator where comparison_result is not null";
 	
 	private static final String SQL_GET_ALL_TENANTS = "select distinct tenant_id from ems_dashboard where is_system <>1";
-	
+
+	private static final String SQL_GET_HALF_SYNC_RECORD = "SELECT * FROM EMS_ZDT_SYNC WHERE SYNC_TYPE = 'half'";
+
+	private static final String SQL_GET_HALF_SYNC_COMPARED_DATA_TO_SYNC = "SELECT comparison_result from EMS_ZDT_COMPARATOR where comparison_date = to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')";
+
 	private static DataManager instance = new DataManager();
 	/**
 	 * Returns the singleton instance for zdt data manager
@@ -1441,4 +1448,69 @@ public class DataManager
 			return false;
 		}
 	}
+
+	public Map<String, Object> checkHalfSyncRecord(EntityManager em) throws HalfSyncException {
+		List<Object> result = getSingleTableData(em,SQL_GET_HALF_SYNC_RECORD);
+		if(result == null || result.size() == 0){
+			logger.info("No half sync record found in sync table!");
+			return null;
+		}
+		if(result.size() > 1){
+			logger.error("'SYNC_TYPE = half' record is more than 1, which is unexpected. ");
+			throw new HalfSyncException("'SYNC_TYPE = half' record is more than 1, which is unexpected. ");
+		}
+		logger.info("half-sync record found in sync table...");
+		//return the only 1 half record
+		return (Map<String, Object>)(result.get(0));
+	}
+
+	public int updateHalfSyncStatus(String syncResult, String type){
+
+		logger.info("Prepare to update half sync status.");
+		EntityManager em = null;
+		try {
+			DashboardServiceFacade dsf = new DashboardServiceFacade();
+			em =dsf.getEntityManager();
+			//check half-sync record number first
+			checkHalfSyncRecord(em);
+			if (!em.getTransaction().isActive()) {
+				em.getTransaction().begin();
+			}
+			String sql = "update EMS_ZDT_SYNC set SYNC_RESULT= ? where SYNC_TYPE = 'half'";
+			String sql2 = "update EMS_ZDT_SYNC set SYNC_RESULT= ?, SYNC_TYPE=? where SYNC_TYPE = 'half'";
+			if(type !=null){
+				em.createNativeQuery(sql).setParameter(1, syncResult).setParameter(2, type).executeUpdate();
+			}else{
+				em.createNativeQuery(sql).setParameter(1, syncResult).executeUpdate();
+			}
+			em.createNativeQuery(sql).setParameter(1, syncResult).executeUpdate();
+			em.getTransaction().commit();
+		}catch (Exception e) {
+			em.getTransaction().rollback();
+			logger.error("errors occurs in updateHalfSyncStatus,{}", e);
+			return -1;
+//			throw new HalfSyncException("Errors occurs in updateHalfSyncStatus");
+		} finally {
+			if (em != null) {
+				em.close();
+			}
+		}
+		return 0;
+	}
+
+    public Map<String, Object> getHalfSyncedComparedData(EntityManager em, String lastComparisonDateForSync)throws HalfSyncException, NoComparedResultException {
+        logger.info("Get half synced compared data for last compared date is {}", lastComparisonDateForSync);
+        if(lastComparisonDateForSync == null){
+            logger.error("lastComparisonDateForSync can not be null for getting half synced compared data");
+            throw new HalfSyncException("lastComparisonDateForSync can not be null for getting half synced compared data");
+        }
+
+        List<Map<String, Object>> result = getDatabaseTableData(em,SQL_GET_HALF_SYNC_COMPARED_DATA_TO_SYNC, lastComparisonDateForSync,null, null);
+
+        if(result == null){
+            logger.error("No compared result found for last compared date {}", lastComparisonDateForSync);
+            throw new NoComparedResultException("No compared result found for compared date "+ lastComparisonDateForSync);
+        }
+        return result.get(0);
+    }
 }
