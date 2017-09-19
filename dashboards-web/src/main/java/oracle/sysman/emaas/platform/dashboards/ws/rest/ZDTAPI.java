@@ -167,7 +167,7 @@ public class ZDTAPI extends APIBase
 
     /**
      * return the table counts of each table in this cloud
-     * @param maxComparedData
+     * @param maxComparedData Current time - 30mins, This parameter is a MUST or will return 0 of all table
      * @return
      */
 	@GET
@@ -175,7 +175,7 @@ public class ZDTAPI extends APIBase
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getEntitiesCount(@QueryParam("maxComparedDate") String maxComparedData)
 	{
-		infoInteractionLogAPIIncomingCall(null, null, "Service call to [GET] /v1/zdt/counts");
+		infoInteractionLogAPIIncomingCall(null, null, "Service call to [GET] /v1/zdt/counts/maxComparedDate", maxComparedData);
 		EntityManager em = null;
 		ZDTEntity zdte = null;
 		try {
@@ -187,7 +187,7 @@ public class ZDTAPI extends APIBase
 			long dashboardSetCount = DataManager.getInstance().getAllDashboardSetCount(em,maxComparedData);
 			long tileCount = DataManager.getInstance().getAllTileCount(em,maxComparedData);
 			long tileParamCount = DataManager.getInstance().getAllTileParamsCount(em,maxComparedData);
-			logger.debug("ZDT counters: dashboards count - {}, favorite count - {}, preference count - {}", dashboardCount,
+			logger.info("ZDT counters: dashboards count - {}, favorite count - {}, preference count - {}", dashboardCount,
 					userOptionsCount, preferenceCount);
 			zdte = new ZDTEntity(dashboardCount, userOptionsCount, preferenceCount,
 					dashboardSetCount,tileCount,tileParamCount);

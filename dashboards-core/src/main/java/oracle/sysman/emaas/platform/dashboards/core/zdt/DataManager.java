@@ -192,8 +192,7 @@ public class DataManager
 	public long getAllDashboardsCount(EntityManager em, String maxComparedDate)
 	{
 		try {
-			String sql = "SELECT COUNT(1) FROM EMS_DASHBOARD where LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')"
-					+ " and is_system <> 1";
+			String sql = "SELECT COUNT(1) FROM EMS_DASHBOARD where LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')";
 			Query query = em.createNativeQuery(sql).setParameter(1, maxComparedDate);
 			List<Object> result = query.getResultList();
 			if (result != null && result.size() == 1) {
@@ -215,7 +214,7 @@ public class DataManager
 	{
 		try {
 			String sql = "SELECT COUNT(1) FROM EMS_DASHBOARD_USER_OPTIONS where LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')"
-					+ " and dashboard_id in (select dashboard_Id from ems_dashboard where is_system <>1)";
+					+ " and dashboard_id in (select dashboard_Id from ems_dashboard)";
 			Query query = em.createNativeQuery(sql).setParameter(1, maxComparedDate);
 			List<Object> result = query.getResultList();
 			if (result != null && result.size() == 1) {
@@ -237,7 +236,7 @@ public class DataManager
 	{
 		try {
 			String sql = "SELECT COUNT(1) FROM EMS_DASHBOARD_TILE where LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')"
-					+ " and dashboard_id in (select dashboard_id from ems_dashboard where is_system <>1)";
+					+ " and dashboard_id in (select dashboard_id from ems_dashboard)";
 			Query query = em.createNativeQuery(sql).setParameter(1, maxComparedDate);
 			List<Object> result = query.getResultList();
 			if (result != null && result.size() == 1) {
@@ -259,7 +258,7 @@ public class DataManager
 	{
 		try {
 			String sql = "SELECT COUNT(1) FROM EMS_DASHBOARD_SET where LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') and"
-					+ " dashboard_set_id in (select dashboard_id from ems_dashboard where is_system <>1)";
+					+ " dashboard_set_id in (select dashboard_id from ems_dashboard)";
 			Query query = em.createNativeQuery(sql).setParameter(1, maxComparedDate);
 			List<Object> result = query.getResultList();
 			if (result != null && result.size() == 1) {
@@ -280,8 +279,7 @@ public class DataManager
 	public long getAllTileParamsCount(EntityManager em, String maxComparedDate)
 	{
 		try {
-			String sql = "SELECT COUNT(1) FROM EMS_DASHBOARD_TILE_PARAMS where LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')"
-					+ " and is_system <>1";
+			String sql = "SELECT COUNT(1) FROM EMS_DASHBOARD_TILE_PARAMS where LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')";
 			Query query = em.createNativeQuery(sql).setParameter(1, maxComparedDate);
 			List<Object> result = query.getResultList();
 			if (result != null && result.size() == 1) {
