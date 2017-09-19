@@ -86,11 +86,11 @@ public class ZDTAPITest {
         zdtapi.getEntitiesCount( "2017-05-27");
     }
 
-    @Test
+   /* @Test
     public void testSync(@Mocked final PersistenceManager persistenceManager, 
 			@Mocked final EntityManager em) throws Exception {
         zdtapi.sync();
-    }
+    }*/
     
     @Test
     public void testSplitTableRowEntity() {
@@ -116,7 +116,7 @@ public class ZDTAPITest {
     	zdtapi.splitTableRowEntity(entity);
     }
     
-    @Test
+    /*@Test
     public void testSync2(@Mocked final PersistenceManager persistenceManager, 
 			@Mocked final EntityManager em) throws Exception {
         final List<Map<String, Object>> comparedDataToSync = new ArrayList<Map<String, Object>>();
@@ -133,7 +133,7 @@ public class ZDTAPITest {
     		}
     	};
     	zdtapi.sync();
-    }
+    }*/
     
     @Test
     public void testGetAllTenants(@Mocked final PersistenceManager persistenceManager, 
