@@ -726,7 +726,7 @@ public class DashboardCRUDV4
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when().get("/dashboards?offset=0&limit=240&orderBy=default");
 			Assert.assertTrue(res2.getStatusCode() == 200);
-			Assert.assertEquals(res1.jsonPath().get("dashboards.name[0]"), "Test_LastAccess");
+			Assert.assertEquals(res2.jsonPath().get("dashboards.name[0]"), "Test_LastAccess");
 
 			//access an existed dashboard
 			Response res3 = RestAssured

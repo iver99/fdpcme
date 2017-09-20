@@ -626,7 +626,6 @@ public class DashboardCRUD
 							"Authorization", authToken).body(jsonString1).when().post("/dashboards");
 			Assert.assertTrue(res1.getStatusCode() == 201);
 			dashboard_id = res1.jsonPath().getString("id");
-System.out.println("Dashboard id is"+dashboard_id);
 			//verify the default order
 			Response res2 = RestAssured
 					.given()
