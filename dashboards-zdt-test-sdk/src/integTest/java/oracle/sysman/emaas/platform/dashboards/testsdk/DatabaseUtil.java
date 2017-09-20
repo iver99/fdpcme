@@ -41,7 +41,7 @@ public class DatabaseUtil
 	private static String CLOUD1_PORT = Utils.getProperty("ODS_PORT");
 
 	private static String CLOUD1_SERVICE = Utils.getProperty("ODS_SID");
-	private static String CLOUD1_USERNAME = "SYSEMS_T_1010";
+	private static String CLOUD1_USERNAME = "SYSEMS_T_1004";
 	private static String CLOUD1_PWD = Utils.getProperty("ODS_SYSTEM_PWD");
 
 	private static String CLOUD2_HOSTNAME = DatabaseUtil.propsReader("ODS_HOSTNAME");
@@ -50,7 +50,7 @@ public class DatabaseUtil
 
 	private static String CLOUD2_SERVICE = DatabaseUtil.propsReader("ODS_SID");
 
-	private static String CLOUD2_USERNAME = "SYSEMS_T_1010";
+	private static String CLOUD2_USERNAME = "SYSEMS_T_1004";
 
 	private static String CLOUD2_PWD = DatabaseUtil.propsReader("ODS_SYSTEM_PWD");
 
@@ -128,7 +128,7 @@ public class DatabaseUtil
 				pstmt.setLong(2, 5000000 + i);
 				pstmt.setLong(3, 673850132);
 				int j = pstmt.executeUpdate();
-
+				System.out.println("The number of iteration"+i);
 				Assert.assertNotEquals(j, 0);
 				pstmt.close();
 			}
@@ -288,7 +288,7 @@ public class DatabaseUtil
 
 	public static String propsReader(String PROPERTY)
 	{
-		String T_WORK = System.getenv("T_WORK") + "/cloud2Logs/work";
+		String T_WORK = System.getenv("T_WORK");
 		Properties prop = new Properties();
 		InputStream input = null;
 		try {

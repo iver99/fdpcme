@@ -12,7 +12,7 @@ package oracle.sysman.emaas.platform.dashboards.testsdk;
 
 import java.sql.SQLException;
 
-import oracle.sysman.emaas.platform.dashboards.test.common.CommonTest;
+
 
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -42,7 +42,7 @@ public class DashboardSyncCompareTest
 	public static void setUp()
 	{
 		CommonTest ct = new CommonTest();
-		HOSTNAME = ct.getHOSTNAME();
+		HOSTNAME = ct.getHOSTNAME1();
 		portno = ct.getPortno();
 		serveruri = ct.getServeruri();
 		authToken = ct.getAuthToken();
@@ -56,17 +56,16 @@ public class DashboardSyncCompareTest
 		DatabaseUtil.Cloud1InsertData();
 		try {
 			RestAssured.baseURI = "http://" + HOSTNAME + ":" + "8022";
-			RestAssured.basePath = "/emcpdfcomparator/api/v1/comparator/compare?";
+			RestAssured.basePath = "/emcpdfcomparator/api/v1/";
 			Response res = RestAssured
 					.given()
 					.log()
 					.everything()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).when().get("?type=full");
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "OAM_REMOTE_USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).when().get("comparator/compare");
 			System.out.println("The response is" + res.getStatusCode());
 			Assert.assertTrue(res.getStatusCode() == 200);
 			Assert.assertNotNull(res.jsonPath().get("comparisonDateTime"));
-			Assert.assertEquals(res.jsonPath().get("comparisonType"), "full");
 			Assert.assertNotNull(res.jsonPath().get("differentRowNum"));
 			Assert.assertNotNull(res.jsonPath().get("totalRowNum"));
 			Assert.assertNotNull(res.jsonPath().get("divergencePercentage"));
@@ -88,11 +87,10 @@ public class DashboardSyncCompareTest
 					.given()
 					.log()
 					.everything()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "OAM_REMOTE_USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when().get("comparator/compare/status");
 			System.out.println("The response is" + res.getStatusCode());
 			Assert.assertTrue(res.getStatusCode() == 200);
-			Assert.assertEquals(res.jsonPath().get("comparisonType"), "full");
 			Assert.assertNotNull(res.jsonPath().get("divergencePercentage"));
 			Assert.assertNotNull(res.jsonPath().get("lastComparisonDateTime"));
 			Assert.assertNotNull(res.jsonPath().get("nextScheduledComparisonDateTime"));
@@ -113,7 +111,7 @@ public class DashboardSyncCompareTest
 					.given()
 					.log()
 					.everything()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "OAM_REMOTE_USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when().get("comparator/sync");
 			System.out.println("The response is" + res.getStatusCode());
 			Assert.assertTrue(res.getStatusCode() == 200);
@@ -132,12 +130,12 @@ public class DashboardSyncCompareTest
 	{
 		try {
 			RestAssured.baseURI = "http://" + HOSTNAME + ":" + "8022";
-			RestAssured.basePath = "/emcpdfcomparator/api/v1/comparator/sync/status";
+			RestAssured.basePath = "/emcpdfcomparator/api/v1/";
 			Response res = RestAssured
 					.given()
 					.log()
 					.everything()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "OAM_REMOTE_USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when().get("comparator/sync/status");
 			System.out.println("The response is" + res.getStatusCode());
 			Assert.assertTrue(res.getStatusCode() == 200);
@@ -161,17 +159,16 @@ public class DashboardSyncCompareTest
 			DatabaseUtil.Cloud2DeleteData();
 			DatabaseUtil.Cloud2InsertData();
 			RestAssured.baseURI = "http://" + HOSTNAME + ":" + "8022";
-			RestAssured.basePath = "/emcpdfcomparator/api/v1/comparator/compare";
+			RestAssured.basePath = "/emcpdfcomparator/api/v1/";
 			Response res = RestAssured
 					.given()
 					.log()
 					.everything()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "OAM_REMOTE_USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when().get("comparator/compare");
 			System.out.println("The response is" + res.getStatusCode());
 			Assert.assertTrue(res.getStatusCode() == 200);
 			Assert.assertNotNull(res.jsonPath().get("comparisonDateTime"));
-			Assert.assertEquals(res.jsonPath().get("comparisonType"), "incremental");
 			Assert.assertNotNull(res.jsonPath().get("differentRowNum"));
 			Assert.assertNotNull(res.jsonPath().get("totalRowNum"));
 			Assert.assertNotNull(res.jsonPath().get("divergencePercentage"));
@@ -189,16 +186,15 @@ public class DashboardSyncCompareTest
 	{
 		try {
 			RestAssured.baseURI = "http://" + HOSTNAME + ":" + "8022";
-			RestAssured.basePath = "/emcpdfcomparator/api/v1";
+			RestAssured.basePath = "/emcpdfcomparator/api/v1/";
 			Response res = RestAssured
 					.given()
 					.log()
 					.everything()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "OAM_REMOTE_USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when().get("comparator/compare/status");
 			System.out.println("The response is" + res.getStatusCode());
 			Assert.assertTrue(res.getStatusCode() == 200);
-			Assert.assertEquals(res.jsonPath().get("comparisonType"), "incremental");
 			Assert.assertNotNull(res.jsonPath().get("divergencePercentage"));
 			Assert.assertNotNull(res.jsonPath().get("lastComparisonDateTime"));
 			Assert.assertNotNull(res.jsonPath().get("nextScheduledComparisonDateTime"));
@@ -214,13 +210,13 @@ public class DashboardSyncCompareTest
 	{
 		try {
 			RestAssured.baseURI = "http://" + HOSTNAME + ":" + "8022";
-			RestAssured.basePath = "/emcpdfcomparator/api/v1/comparator/sync";
+			RestAssured.basePath = "/emcpdfcomparator/api/v1/";
 			Response res = RestAssured
 					.given()
 					.log()
 					.everything()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).when().get("comparator/sync?type=incremental");
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "OAM_REMOTE_USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).when().get("comparator/sync");
 			System.out.println("The response is" + res.getStatusCode());
 			Assert.assertTrue(res.getStatusCode() == 200);
 			Assert.assertEquals(res.jsonPath().get("omc1"), "Sync is successful!");
@@ -238,18 +234,17 @@ public class DashboardSyncCompareTest
 	{
 		try {
 			RestAssured.baseURI = "http://" + HOSTNAME + ":" + "8022";
-			RestAssured.basePath = "/emcpdfcomparator/api/v1/comparator/sync/status";
+			RestAssured.basePath = "/emcpdfcomparator/api/v1/";
 			Response res = RestAssured
 					.given()
 					.log()
 					.everything()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "OAM_REMOTE_USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when().get("comparator/sync/status");
 			System.out.println("The response is" + res.getStatusCode());
 			Assert.assertTrue(res.getStatusCode() == 200);
 			Assert.assertNotNull(res.jsonPath().get("lastSyncDateTime"));
 			Assert.assertNotNull(res.jsonPath().get("syncType"));
-			Assert.assertEquals(res.jsonPath().get("syncType"), "incremental");
 			Assert.assertNotNull(res.jsonPath().get("nextScheduledSyncDateTime"));
 			Assert.assertNotNull(res.jsonPath().get("divergencePercentage"));
 			DatabaseUtil.Cloud1DeleteData();
