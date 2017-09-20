@@ -635,7 +635,7 @@ public class DashboardCRUDV4
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when().get("/dashboards?offset=0&limit=240&orderBy=default");
 			Assert.assertTrue(res2.getStatusCode() == 200);
-			Assert.assertEquals(res1.jsonPath().get("dashboards.name[0]"), "Test_Default_Order");
+			Assert.assertEquals(res2.jsonPath().get("dashboards.name[0]"), "Test_Default_Order");
 
 			//access an existed dashboard
 			Response res3 = RestAssured
@@ -656,8 +656,8 @@ public class DashboardCRUDV4
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when().get("/dashboards?offset=0&limit=240&orderBy=default");
 			Assert.assertTrue(res4.getStatusCode() == 200);
-			Assert.assertEquals(res1.jsonPath().get("dashboards.name[0]"), "Middleware Operations");
-			Assert.assertEquals(res1.jsonPath().get("dashboards.name[1]"), "Test_Default_Order");
+			Assert.assertEquals(res4.jsonPath().get("dashboards.name[0]"), "Middleware Operations");
+			Assert.assertEquals(res4.jsonPath().get("dashboards.name[1]"), "Test_Default_Order");
 
 			//update the dashboard created
 			String jsonString2 = "{\"name\": \"Test_Dashboard_Sort_Edit\"}";
@@ -667,8 +667,8 @@ public class DashboardCRUDV4
 					.log()
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).body(jsonString1).when().put("/dashboards/" + dashboard_id);
-			Assert.assertTrue(res1.getStatusCode() == 200);
+							"Authorization", authToken).body(jsonString2).when().put("/dashboards/" + dashboard_id);
+			Assert.assertTrue(res5.getStatusCode() == 200);
 
 			//verify the default order
 			Response res6 = RestAssured
@@ -678,9 +678,9 @@ public class DashboardCRUDV4
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when().get("/dashboards?offset=0&limit=240&orderBy=default");
-			Assert.assertTrue(res4.getStatusCode() == 200);
-			Assert.assertEquals(res1.jsonPath().get("dashboards.name[0]"), "Test_Dashboard_Sort_Edit");
-			Assert.assertEquals(res1.jsonPath().get("dashboards.name[1]"), "Middleware Operations");
+			Assert.assertTrue(res6.getStatusCode() == 200);
+			Assert.assertEquals(res6.jsonPath().get("dashboards.name[0]"), "Test_Dashboard_Sort_Edit");
+			Assert.assertEquals(res6.jsonPath().get("dashboards.name[1]"), "Middleware Operations");
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
@@ -747,8 +747,8 @@ public class DashboardCRUDV4
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when().get("/dashboards?offset=0&limit=240&orderBy=default");
 			Assert.assertTrue(res4.getStatusCode() == 200);
-			Assert.assertEquals(res1.jsonPath().get("dashboards.name[0]"), "Database Operations");
-			Assert.assertEquals(res1.jsonPath().get("dashboards.name[1]"), "Test_LastAccess");
+			Assert.assertEquals(res4.jsonPath().get("dashboards.name[0]"), "Database Operations");
+			Assert.assertEquals(res4.jsonPath().get("dashboards.name[1]"), "Test_LastAccess");
 
 			//update the dashboard created
 			String jsonString2 = "{\"name\": \"Test_LastAccess_Edit\"}";
@@ -758,8 +758,8 @@ public class DashboardCRUDV4
 					.log()
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).body(jsonString1).when().put("/dashboards/" + dashboard_id);
-			Assert.assertTrue(res1.getStatusCode() == 200);
+							"Authorization", authToken).body(jsonString2).when().put("/dashboards/" + dashboard_id);
+			Assert.assertTrue(res5.getStatusCode() == 200);
 
 			//verify the default order
 			Response res6 = RestAssured
@@ -769,9 +769,9 @@ public class DashboardCRUDV4
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when().get("/dashboards?offset=0&limit=240&orderBy=default");
-			Assert.assertTrue(res4.getStatusCode() == 200);
-			Assert.assertEquals(res1.jsonPath().get("dashboards.name[0]"), "Test_LastAccess_Edit");
-			Assert.assertEquals(res1.jsonPath().get("dashboards.name[1]"), "Database Operations");
+			Assert.assertTrue(res6.getStatusCode() == 200);
+			Assert.assertEquals(res6.jsonPath().get("dashboards.name[0]"), "Test_LastAccess_Edit");
+			Assert.assertEquals(res6.jsonPath().get("dashboards.name[1]"), "Database Operations");
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
