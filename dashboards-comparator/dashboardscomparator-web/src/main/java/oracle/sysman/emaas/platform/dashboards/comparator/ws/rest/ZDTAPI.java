@@ -246,7 +246,7 @@ public class ZDTAPI
 							}
 
 								if (totalDifferentRows > 100) {
-									obj.put("divergenceSummary", "The number for different rows is more than 1000; There is too much content to display;");
+									obj.put("divergenceSummary", "The number for different rows is more than 100; There is too much content to display;");
 								} else {
 									//NOTE: This is by design, because the data cloud1 missing is in result2 and the data missing in cloud2 is in result1
 									JSONObject subObj = new JSONObject();
@@ -307,12 +307,15 @@ public class ZDTAPI
 					}else{
 						obj.put("msg","NOTE: This is the comparison result of all user created data in 2 clouds, but latest 30 mins modified data will not be compared");
 					}
+					if (totalDifferentRows > 100) {
+						obj.put("divergenceSummary", "The number for different rows is more than 100; There is too much content to display;");
+					} else {
+						JSONObject subObj = new JSONObject();
+						subObj.put(result.getInstance1().getKey(), result2);
+						subObj.put(result.getInstance2().getKey(), result1);
+						obj.put("divergenceSummary", subObj);
+					}
 
-					JSONObject subObj = new JSONObject();
-					subObj.put(result.getInstance1().getKey(), result2);
-					subObj.put(result.getInstance2().getKey(), result1);
-					obj.put("divergenceSummary", subObj);
-				
 					message = obj.toString();					
 				} else {
 					return Response.status(Status.INTERNAL_SERVER_ERROR).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(ZDTErrorConstants.NULL_LINK_ERROR_CODE, ZDTErrorConstants.NULL_LINK_ERROR_MESSAGE))).build();
