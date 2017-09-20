@@ -238,9 +238,9 @@ public class ZDTAPI
 								obj.put("comparisonType", compareType);
 								obj.put("differentRowNum", totalDifferentRows);
 								obj.put("totalRowNum", totalRow);
-							obj.put("divergencePercentage", percentage);
+							obj.put("divergencePercentage", percentage * 100 + "%");
 							if(isCompared){
-								obj.put("msg","NOTE: This is the comparison result since last compared date [" + lastComparedDateC1 + "], but latest 30 mins modified data will not be compared. To see all divergence data please request 'comparator/divergences'");// here we take cloud1's last compared date.
+								obj.put("msg","NOTE: This is the comparison result since last compared date [" + lastComparedDateC1 + "], but latest 30 mins modified data will not be compared.");// here we take cloud1's last compared date.
 							}else{
 								obj.put("msg","NOTE: This is the comparison result of all user created data in 2 clouds, but latest 30 mins modified data will not be compared");
 							}
@@ -301,9 +301,9 @@ public class ZDTAPI
 					obj.put("comparisonType", compareType);
 					obj.put("differentRowNum", totalDifferentRows);
 					obj.put("totalRowNum", totalRow);
-					obj.put("divergencePercentage", percentage);
+					obj.put("divergencePercentage", percentage * 100 + "%");
 					if(isCompared){
-						obj.put("msg","NOTE: This is the comparison result since last compared date [" + lastComparedDateC1 + "], but latest 30 mins modified data will not be compared. To see all divergence data please request 'comparator/divergences'");// here we take cloud1's last compared date.
+						obj.put("msg","NOTE: This is the comparison result since last compared date [" + lastComparedDateC1 + "], but latest 30 mins modified data will not be compared.");// here we take cloud1's last compared date.
 					}else{
 						obj.put("msg","NOTE: This is the comparison result of all user created data in 2 clouds, but latest 30 mins modified data will not be compared");
 					}
