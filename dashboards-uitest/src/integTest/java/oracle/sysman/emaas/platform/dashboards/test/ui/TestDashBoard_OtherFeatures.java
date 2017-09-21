@@ -13,6 +13,7 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.impl.DashboardBuilderUtil_1230;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.ITimeSelectorUtil.TimeRange;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
@@ -1117,7 +1118,9 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
 		
 		WebElement textContent = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.TEXTCONTENTCSS));
-		textContent.click();
+		
+		DashboardBuilderUtil.switchTextWidgetToEditMode(webd, 1);
+		
 		webd.getWebDriver().switchTo().activeElement().sendKeys(Keys.ENTER);
 		webd.getWebDriver().switchTo().activeElement().sendKeys(Keys.ARROW_UP);
 		webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
