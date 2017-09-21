@@ -25,6 +25,7 @@ BEGIN
   
   COMMIT;
   EXCEPTION
+  WHEN NO_DATA_FOUND THEN DBMS_OUTPUT.PUT_LINE('Did not find un-synced data, so nothing is needed to do...');
   WHEN OTHERS THEN
     ROLLBACK;
     DBMS_OUTPUT.PUT_LINE('Failed to delete un-synced data before upgrade due to '||SQLERRM);
