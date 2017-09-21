@@ -323,7 +323,7 @@
                       </div>
                       <!-- /ko -->
                         <div class="dbd-btn-group" data-bind="stopDataBinding: $root.dashboard.systemDashboard && $root.dashboard.systemDashboard()==true">
-                            <!-- ko if: ($root.dashboard.systemDashboard()===false)&& !(($root.dashboard.sharePublic ===true)&&($root.dashboard.owner()!==$root.loginUser())) &&($root.isMobileDevice !== 'true')&&($root.toolbarModel.notZdtStatus) -->
+                            <!-- ko if: ($root.dashboard.systemDashboard()===false)&& !($data.editDisabled()) &&($root.isMobileDevice !== 'true')&&($root.toolbarModel.notZdtStatus) -->
                             <button class="oj-button-half-chrome dbd-tile-action" tabindex="0"
                                     data-bind="attr: {'id': 'actionButton' + $data.clientGuid, title: getNlsString('DBS_BUILDER_TILE_ACTIONS')},
                                                ojComponent: {component: 'ojButton', 
