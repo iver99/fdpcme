@@ -1509,6 +1509,7 @@ public class DataManager
             logger.error("No compared result found for last compared date {}", lastComparisonDateForSync);
             throw new NoComparedResultException("No compared result found for compared date "+ lastComparisonDateForSync);
         }
+        //FIXME could throw NPE
         return result.get(0);
     }
 }
