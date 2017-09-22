@@ -15,5 +15,4 @@ dependencies {
 	testConfig project(':dashboards-web')   { transitive = false }
 	testConfig project('path':':dashboards-ui-test-common-api', 'configuration': 'integTestOutput')
 
-	testCompile configurations.testNG
 }
