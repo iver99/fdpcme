@@ -9,6 +9,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.AfterMethod;
+import oracle.sysman.qatool.uifwk.utils.Utils;
 
 public class LoginAndLogout
 {
@@ -32,7 +33,7 @@ public class LoginAndLogout
 	{
 		String tenantID = null, username = null, password = null;
 		try {
-			tenantID = oracle.sysman.emsaas.login.utils.Utils.getProperty("TENANT_ID");
+			tenantID = Utils.getProperty("TENANT_ID");
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -40,7 +41,7 @@ public class LoginAndLogout
 		}
 
 		try {
-			username = oracle.sysman.emsaas.login.utils.Utils.getProperty("SSO_USERNAME");
+			username = Utils.getProperty("SSO_USERNAME");
 
 		}
 		catch (Exception e) {
@@ -48,7 +49,7 @@ public class LoginAndLogout
 			username = "emcsadmin";
 		}
 		try {
-			password = oracle.sysman.emsaas.login.utils.Utils.getProperty("SSO_PASSWORD");
+			password = Utils.getProperty("SSO_PASSWORD");
 
 		}
 		catch (Exception e) {
@@ -65,12 +66,12 @@ public class LoginAndLogout
 		String url = null;
 		webd.getLogger().info("before::start to test in LoginAndOut");
 		try {
-			url = oracle.sysman.emsaas.login.utils.Utils.getProperty("OMCS_DASHBOARD_URL");
+			url = Utils.getProperty("OMCS_DASHBOARD_URL");
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 			//			url = oracle.sysman.emsaas.login.utils.Utils.getProperty("OMCS_DASHBOARD_URL");
-			url = oracle.sysman.emsaas.login.utils.Utils.getProperty("OHS_URL") + "/emsaasui/emcpdfui/home.html";
+			url = Utils.getProperty("OHS_URL") + "/emsaasui/emcpdfui/home.html";
 		}
 
 		String testPropertiesFile = System.getenv("EMAAS_PROPERTIES_FILE");

@@ -61,4 +61,5 @@ task emcpdf_zdtCompare(type: EMTest){
 
 task emcpdf_zdtActiveDown(type:EMTest){
 	include  "oracle/sysman/emaas/platform/dashboards/testsdk/testZDTActiveDown.class"
+	useWebdriver = true
 }
