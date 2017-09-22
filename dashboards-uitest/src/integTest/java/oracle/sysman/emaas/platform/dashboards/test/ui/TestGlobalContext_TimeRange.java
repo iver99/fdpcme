@@ -357,7 +357,7 @@ public class TestGlobalContext_TimeRange extends LoginAndLogout
 
 		//open the dashboard
 		webd.getLogger().info("Open the dashboard created");
-		DashboardHomeUtil.selectDashboard(webd, dsb_4757);
+		DashboardHomeUtil.selectDashboard(webd, dsb_4757_withWidget);
 
 		//verify the time range not changed
 		webd.getLogger().info("Verify the time range not changed");
