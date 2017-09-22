@@ -269,7 +269,7 @@ public class TestGlobalContext_TimeRange extends LoginAndLogout
 
 		//get the time range of the time selector
 		webd.getLogger().info("Get the time range set in the time selector");
-		String timeRange_in_df = TimeSelectorUtil.getTimeRangeLabel(webd).trim();
+		String timeRange_in_df = TimeSelectorUtil.getTimeRangeLabel(webd).trim().trim().split(":")[0];
 		webd.getLogger().info("Time Range in DF: "+ timeRange_in_df);
 
 		//navigate to UDE page
@@ -290,7 +290,7 @@ public class TestGlobalContext_TimeRange extends LoginAndLogout
 
 		//verify the time range not changed
 		webd.getLogger().info("Verify the time range not changed");
-		String currentTimeRange = TimeSelectorUtil.getTimeRangeLabel(webd).trim();
+		String currentTimeRange = TimeSelectorUtil.getTimeRangeLabel(webd).trim().trim().split(":")[0];
 		Assert.assertEquals(timeRange_in_df, currentTimeRange);
 
 		//verify the URL in builder page
