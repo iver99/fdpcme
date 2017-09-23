@@ -251,7 +251,7 @@ public class DashboardTileParamsRowEntity implements RowEntity
 	{
 		return "DashboardTileParamsRowEntity [tileId=" + tileId + ", paramName=" + paramName + ", tenantId=" + tenantId
 				+ ", isSystem=" + isSystem + ", paramType=" + paramType + ", paramValueStr=" + paramValueStr + ", paramValueNum="
-				+ paramValueNum + ", paramValueTimestamp=" + paramValueTimestamp + ", creationDate=" + creationDate + ", lastModificationDate=" + lastModificationDate+ "]";
+				+ paramValueNum + ", paramValueTimestamp=" + paramValueTimestamp + ", creationDate=" + creationDate + ", deleted=" + deleted + " lastModificationDate=" + lastModificationDate+ "]";
 	}
 
 	@Override

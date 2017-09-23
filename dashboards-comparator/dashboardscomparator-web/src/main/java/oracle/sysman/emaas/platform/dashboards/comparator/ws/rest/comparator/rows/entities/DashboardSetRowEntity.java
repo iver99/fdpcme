@@ -103,6 +103,11 @@ public class DashboardSetRowEntity implements RowEntity
 		} else if (!tenantId.equals(other.tenantId)) {
 			return false;
 		}
+		if (deleted == null) {
+			if (other.deleted != null)
+				return false;
+		} else if (!deleted.equals(other.deleted))
+			return false;
 		return true;
 	}
 	
@@ -183,6 +188,7 @@ public class DashboardSetRowEntity implements RowEntity
 		result = prime * result + (tenantId == null ? 0 : tenantId.hashCode());
 		result = prime * result + (creationDate == null ? 0 : creationDate.hashCode());
 		result = prime * result + (lastModificationDate == null ? 0 : lastModificationDate.hashCode());
+		result = prime * result + (deleted == null ? 0 : deleted.hashCode());
 		return result;
 	}
 
