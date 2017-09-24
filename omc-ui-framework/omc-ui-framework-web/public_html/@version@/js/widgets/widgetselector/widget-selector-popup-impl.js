@@ -269,7 +269,7 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                         }else{ 
                             navigateWidgetList(event, true);
                         }
-                    }else if(event.target.id === "searchTxt"){ 
+                    }else if(event.target.classList && event.target.classList.contains("searchTxt")){ 
                         return true;
                     }
                     self.needRefreshWidgetList(true);
@@ -279,7 +279,7 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
 
                 
                 function navigateListView(event ,fromWidget ,toWidget ,isDown ,topOfWidgetList){
-                    if(event.target.id === "searchTxt"){
+                    if(event.target.classList && event.target.classList.contains("searchTxt")){
                         toWidget = topOfWidgetList;
                         if(isGroupListView()) toWidget = $(topOfWidgetList.find("ul").children()[0]);
                     }else{
@@ -322,7 +322,7 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                 function navigateWidgetList(event ,isDown){  
                     var fromWidget = event.target;
                     var toWidget;
-                     if((event.target.id === "searchTxt")&&!isDown){
+                     if((event.target.classList && event.target.classList.contains("searchTxt"))&&!isDown){
                         $(event.target).blur();
                         $("#menubutton").focus();    
                         return;
@@ -333,8 +333,8 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                     $('#widget-selector').children().removeClass('oj-selected oj-focus oj-hover');
                     $('li[id^=created-by] > ul').children().removeClass('oj-selected oj-focus oj-hover');
                     blurListItem($(fromWidget)); 
-                    toWidget ? focusListItem(toWidget) : $("#searchTxt").focus();
-                    if(!(event.target.id === "searchTxt")){
+                    toWidget ? focusListItem(toWidget) : $(".searchTxt").focus();
+                    if(!(event.target.classList && event.target.classList.contains("searchTxt"))){
                         topOfWidgetList.attr("aria-selected","false");
                         topOfWidgetList.removeClass("oj-selected oj-focus oj-hover");
                         $(topOfWidgetList.find("ul").children()[0]).attr("aria-selected","false");
@@ -623,6 +623,8 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                     return result;
                 };
                 self.useIn === 'builder' && self.refreshWidgets();
+                var message = {'tag': 'EMAAS_WIDGETSELECTOR_INITIALIZED'};
+                window.postMessage(message, window.location.href);
             }
 
             return WidgetSelectorPopupViewModel;
