@@ -55,8 +55,8 @@ public class TestDashBoardSet_BuilderPage extends LoginAndLogout
 		webd.getLogger().info("Verify if the dashboard set existed in builder page");
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardSet(webd, dbsetName_Test2), "Dashboard set NOT found!");
 
-		webd.getLogger().info("Set the refresh setting to OFF");
-		DashboardBuilderUtil.refreshDashboardSet(webd, DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_OFF);
+	//	webd.getLogger().info("Set the refresh setting to OFF");
+	//	DashboardBuilderUtil.refreshDashboardSet(webd, DashboardBuilderUtil.REFRESH_DASHBOARD_SETTINGS_OFF);
 
 		//create a dashboard in dashboard set
 		webd.getLogger().info("Create a dashboard inside dashboard set");
