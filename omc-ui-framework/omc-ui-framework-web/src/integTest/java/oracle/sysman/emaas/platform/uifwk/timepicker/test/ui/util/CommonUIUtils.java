@@ -368,7 +368,7 @@ public class CommonUIUtils
 			startDate = timeFormatChange(webd, startDateTime, "MM/dd/yy", "MM/dd/yyyy");
 			}
 			else if(MillionSecond){
-				start = timeFormatChange(webd, startDateTime, "MM/dd/yy hh:mm:ss:SSS a", "MM/dd/yyyy hh:mm:ss.SSS a");
+				start = timeFormatChange(webd, startDateTime, "MM/dd/yy hh:mm:ss.SSS a", "MM/dd/yyyy hh:mm:ss.SSS a");
 			}
 			else
 			{
@@ -384,7 +384,7 @@ public class CommonUIUtils
 				endDate = timeFormatChange(webd, endDateTime, "MM/dd/yy", "MM/dd/yyyy");
 				}
 				else if(MillionSecond){
-					end = timeFormatChange(webd, endDateTime, "MM/dd/yy hh:mm:ss:SSS a", "MM/dd/yyyy hh:mm:ss.SSS a");
+					end = timeFormatChange(webd, endDateTime, "MM/dd/yy hh:mm:ss.SSS a", "MM/dd/yyyy hh:mm:ss.SSS a");
 				}
 				else
 				{
