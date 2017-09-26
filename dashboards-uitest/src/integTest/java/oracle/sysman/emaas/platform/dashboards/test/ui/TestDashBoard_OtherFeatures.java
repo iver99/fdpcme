@@ -57,7 +57,9 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 	private String dbName_textWidget_multiLink = "";
 	private String dbName_textWidget_order = "";
 	private String dbName_textWidget_empty = "";
-
+	private String dbName_textWidget_clickLink1 = "";
+	private String dbName_textWidget_clickLink2 = "";
+	
 	private final String customWidgetName = "Execution Details";
 	private final String OOBName = "Middleware Operations";
 	private final String OOBDesc = "Displays the current health of your Oracle middleware ecosystem";
@@ -1259,5 +1261,83 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		webd.getLogger().info("Verify the text widget in the dashboard");
 		WebElement textContent = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.TEXTWIDGETCONTENTCSS));
 		Assert.assertEquals(textContent.getText().trim(), "Start typing...");
+	}
+	
+	@Test
+	public void testTextWidget_clickLink1()
+	{
+		dbName_textWidget_clickLink1 = "Dashboard_textWidget_clickLink-" + DashBoardUtils.generateTimeStamp();
+		
+		String dbDesc = "Add text widget into dashboard, test click link, open it with new tab";
+		String url = "www.baidu.com";
+		
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test link in testTextWidget");
+
+		DashboardHomeUtil.gridView(webd);
+
+		webd.getLogger().info("Create the dashboard, then to add text widget");
+		DashboardHomeUtil.createDashboard(webd, dbName_textWidget_clickLink1, dbDesc, DashboardHomeUtil.DASHBOARD);
+		
+		webd.getLogger().info("Verify the dashboard created Successfully");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_textWidget_clickLink1, dbDesc, true), "Create dashboard failed!");		
+		
+		DashboardBuilderUtil.addTextWidgetToDashboard(webd);				
+		
+		DashboardBuilderUtil.addLinkInTextWidget(webd, 1, url, DashBoardPageId.PROTOCOLOPTION_HTTP);	
+		webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
+		
+		DashboardBuilderUtil.saveDashboard(webd);	
+		
+		webd.click(DashBoardPageId.TEXTCONTENT1);	
+		
+		webd.switchToWindow();
+		
+		Assert.assertTrue(webd.isDisplayed("css=" + "#lg>img"), "The link isn't opened correctly");		
+	}
+	
+	@Test
+	public void testTextWidget_clickLink2()
+	{
+		dbName_textWidget_clickLink2 = "Dashboard_textWidget_clickLink-" + DashBoardUtils.generateTimeStamp();
+		
+		String dbDesc = "Add text widget into dashboard, test click link, open it with same tab";
+		String url = "www.baidu.com";
+		
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test link in testTextWidget");
+
+		DashboardHomeUtil.gridView(webd);
+
+		webd.getLogger().info("Create the dashboard, then to add text widget");
+		DashboardHomeUtil.createDashboard(webd, dbName_textWidget_clickLink2, dbDesc, DashboardHomeUtil.DASHBOARD);
+		
+		webd.getLogger().info("Verify the dashboard created Successfully");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_textWidget_clickLink2, dbDesc, true), "Create dashboard failed!");		
+		
+		DashboardBuilderUtil.addTextWidgetToDashboard(webd);				
+		
+		DashboardBuilderUtil.addLinkInTextWidget(webd, 1, url, DashBoardPageId.PROTOCOLOPTION_HTTP);	
+		
+		webd.waitForElementPresent("css=" + DashBoardPageId.LINKICONCSS);		
+	 	webd.click("css=" + DashBoardPageId.LINKICONCSS);	 	
+	 	webd.click("css=" + DashBoardPageId.TARGETCSS);
+	 	
+	 	webd.click(DashBoardPageId.TARGETOPTION);
+	 	
+		webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.SAMETABCSS)).findElement(By.xpath("..")).click();
+		webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.SAMETABCSS)).click();
+		
+		webd.click("css=" + DashBoardPageId.OKBTNCSS);	
+	 	
+		webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);		
+		
+		DashboardBuilderUtil.saveDashboard(webd);	
+		
+		webd.click(DashBoardPageId.TEXTCONTENT1);	
+		
+		webd.switchToWindow();
+		
+		Assert.assertTrue(webd.isDisplayed("css=" + "#lg>img"), "The link isn't opened correctly");
 	}
 }
