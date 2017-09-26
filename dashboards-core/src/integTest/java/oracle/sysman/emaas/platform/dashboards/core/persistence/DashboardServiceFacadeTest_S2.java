@@ -13,7 +13,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 
-import com.sun.tools.classfile.Exceptions_attribute;
+
 import mockit.Deencapsulation;
 import mockit.Expectations;
 import mockit.Mocked;
