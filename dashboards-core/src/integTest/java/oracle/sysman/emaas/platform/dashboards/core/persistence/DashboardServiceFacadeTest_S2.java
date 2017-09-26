@@ -20,6 +20,7 @@ import mockit.Mocked;
 import mockit.NonStrictExpectations;
 import oracle.sysman.emaas.platform.dashboards.core.BaseTest;
 import oracle.sysman.emaas.platform.dashboards.core.util.DateUtil;
+import oracle.sysman.emaas.platform.dashboards.core.util.StringEscapeUtil;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTileParams;
@@ -466,6 +467,54 @@ public class DashboardServiceFacadeTest_S2 extends BaseTest
 		DashboardServiceFacade dsf = new DashboardServiceFacade(1L);
 		dsf.getDashboardIdsByNames(names,1L);
 		dsf.getDashboardNameWithMaxSuffixNumber("'Also Testing'",1L);
+	}
+
+	@Test(groups = {"s2"})
+	public void testGetEmsDashboardByNameAndDescriptionAndOwner
+			(@Mocked final Query query, @Mocked final PersistenceManager mockpm, @Mocked final EntityManager em,
+			 @Mocked final EntityManagerFactory mockemf, @Mocked final StringEscapeUtil se,
+			 @Mocked final EmsDashboard emsDashboard)
+	{
+		final List<Object> fakeList = new ArrayList<>();
+		fakeList.add(emsDashboard);
+		new Expectations() {
+			{
+				PersistenceManager.getInstance();
+				result = mockpm;
+				mockpm.getEntityManagerFactory();
+				result = mockemf;
+				mockemf.createEntityManager();
+				result = em;
+				query.getResultList();
+				result = fakeList;
+			}
+		};
+		DashboardServiceFacade dsf = new DashboardServiceFacade(1L);
+		Assert.assertEquals(dsf.getEmsDashboardByNameAndDescriptionAndOwner("Test","ownwer","description"),emsDashboard);
+	}
+
+	@Test(groups = {"s2"})
+	public void testRemovePreferenceByKey
+			(@Mocked final Query query, @Mocked final PersistenceManager mockpm, @Mocked final EntityManager em,
+			 @Mocked final EntityManagerFactory mockemf, @Mocked final StringEscapeUtil se,
+			 @Mocked final EmsPreference emsPreference)
+	{
+		final List<EmsPreference> fakeList = new ArrayList<>();
+		fakeList.add(emsPreference);
+		new Expectations() {
+			{
+				PersistenceManager.getInstance();
+				result = mockpm;
+				mockpm.getEntityManagerFactory();
+				result = mockemf;
+				mockemf.createEntityManager();
+				result = em;
+				query.getResultList();
+				result = fakeList;
+			}
+		};
+		DashboardServiceFacade dsf = new DashboardServiceFacade(1L);
+		dsf.removePreferenceByKey("userName","key",1L);
 	}
 
 
