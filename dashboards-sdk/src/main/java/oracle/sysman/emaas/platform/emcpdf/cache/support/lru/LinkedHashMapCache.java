@@ -98,7 +98,9 @@ public class LinkedHashMapCache extends AbstractCache{
             LOGGER.debug("Put action for key {} will not executed as cache status is not available", key);
             return;
         }
-        cacheMap.put(key, new CachedItem(key,value));
+        synchronized (cacheMap){
+            cacheMap.put(key, new CachedItem(key,value));
+        }
         LOGGER.debug("CachedItem with key {} and value {} is [cached] into cache group {}",key,value,name);
     }
 
@@ -109,7 +111,9 @@ public class LinkedHashMapCache extends AbstractCache{
             return;
         }
         super.evict(key);
-        cacheMap.remove(key);
+        synchronized (cacheMap){
+            cacheMap.remove(key);
+        }
         LOGGER.debug("Cached Item with key {} is [evicted] from cache group {}",key,name);
     }
 
