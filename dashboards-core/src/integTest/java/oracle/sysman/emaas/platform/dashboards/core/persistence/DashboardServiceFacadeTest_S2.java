@@ -4,13 +4,18 @@
 package oracle.sysman.emaas.platform.dashboards.core.persistence;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
+import javax.persistence.Query;
 
+import com.sun.tools.classfile.Exceptions_attribute;
+import mockit.Deencapsulation;
+import mockit.Expectations;
 import mockit.Mocked;
 import mockit.NonStrictExpectations;
 import oracle.sysman.emaas.platform.dashboards.core.BaseTest;
@@ -438,5 +443,30 @@ public class DashboardServiceFacadeTest_S2 extends BaseTest
 			}
 		}
 	}
+
+	@Test(groups = {"s2"})
+	public void testGetDashboardIdsByNames(@Mocked final Query query, @Mocked final PersistenceManager mockpm,@Mocked final EntityManager em, @Mocked final EntityManagerFactory mockemf) {
+		final List<Object> fakeList = new ArrayList<>();
+		fakeList.add(1);
+		new Expectations() {
+			{
+				PersistenceManager.getInstance();
+				result = mockpm;
+				mockpm.getEntityManagerFactory();
+				result = mockemf;
+				mockemf.createEntityManager();
+				result = em;
+				query.getResultList();
+				result = fakeList;
+			}
+		};
+		List<String> names = new ArrayList<>();
+		names.add("Testing");
+		names.add("'Also Testing'");
+		DashboardServiceFacade dsf = new DashboardServiceFacade(1L);
+		dsf.getDashboardIdsByNames(names,1L);
+		dsf.getDashboardNameWithMaxSuffixNumber("'Also Testing'",1L);
+	}
+
 
 }
