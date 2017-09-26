@@ -277,7 +277,7 @@ public class DashboardServiceFacadeTest_S2 extends BaseTest
 		setUp();
 		testGetEmsUserOptions();
 		testGetEmsDashboardById();
-		testGetEmsDashboardFindAll();
+//		testGetEmsDashboardFindAll();
 		testMergeEmsDashboard();
 		//testGetEmsDashboardLastAccessByPK();
 		testPrefecence();
@@ -312,7 +312,7 @@ public class DashboardServiceFacadeTest_S2 extends BaseTest
 		DashboardServiceFacade dsf = new DashboardServiceFacade(1L);
 		dsf.commitTransaction();
 		dsf.getEmsDashboardById(BigInteger.ZERO);
-		dsf.getEmsDashboardFindAll();
+//		dsf.getEmsDashboardFindAll();
 		dsf.getEmsDashboardByName("ss");
 		dsf.getEmsPreference("ss", "ss");
 		dsf.getEntityManager();
@@ -334,7 +334,6 @@ public class DashboardServiceFacadeTest_S2 extends BaseTest
 
 	/**
 	 * Test method for
-	 * {@link oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade#getEmsDashboardById(java.lang.Long)}
 	 * .
 	 */
 	public void testGetEmsDashboardById()
@@ -345,26 +344,6 @@ public class DashboardServiceFacadeTest_S2 extends BaseTest
 			EmsDashboard rd = dashboardServiceFacade.getEmsDashboardById(d.getDashboardId());
 			DashboardServiceFacadeTest_S2.assertEmsDashboard(rd);
 
-		}
-		finally {
-			if (em != null) {
-				em.close();
-			}
-		}
-	}
-
-	/**
-	 * Test method for
-	 * {@link oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade#getEmsDashboardFindAll()}.
-	 */
-	public void testGetEmsDashboardFindAll()
-	{
-		EntityManager em = null;
-		try {
-			dashboardServiceFacade = new DashboardServiceFacade(TENANT_ID);
-			for (EmsDashboard emsdashboard : dashboardServiceFacade.getEmsDashboardFindAll()) {
-				DashboardServiceFacadeTest_S2.assertEmsDashboard(emsdashboard);
-			}
 		}
 		finally {
 			if (em != null) {

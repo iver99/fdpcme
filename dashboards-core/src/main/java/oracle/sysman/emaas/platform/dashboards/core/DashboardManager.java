@@ -251,7 +251,7 @@ public class DashboardManager
 	
 	/**
 	 * 
-	 * @param name
+	 * @param names
 	 * @param tenantId
 	 * @return
 	 */
@@ -708,46 +708,6 @@ public class DashboardManager
 	}
 
 	/**
-	 * Retrieves last access date for specified dashboard
-	 *
-	 * @param dashboardId
-	 * @param tenantId
-	 * @return
-	 */
-	public Date getLastAccessDate(BigInteger dashboardId, Long tenantId)
-	{
-		if (dashboardId == null || dashboardId.compareTo(BigInteger.ZERO) <= 0) {
-			LOGGER.debug("Last access for dashboard not found for dashboard id {} is invalid", dashboardId);
-			return null;
-		}
-		EntityManager em = null;
-		try {
-			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
-			em = dsf.getEntityManager();
-			EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
-			if (ed == null) {
-				LOGGER.debug("Last access is not found for dashboard with id {} is not found", dashboardId);
-				return null;
-			}
-			if (ed.getDeleted() != null && ed.getDeleted().compareTo(BigInteger.ZERO) > 0) {
-				LOGGER.debug("Last access is not found for dashboard with id {} is deleted", dashboardId);
-				return null;
-			}
-			String currentUser = UserContext.getCurrentUser();
-			EmsUserOptions options = dsf.getEmsUserOptions(currentUser, dashboardId);
-			if (options != null) {
-				return options.getAccessDate();
-			}
-			return null;
-		}
-		finally {
-			if (em != null) {
-				em.close();
-			}
-		}
-	}
-
-	/**
 	 * Check if the dashboard with spacified id is favorite dashboard or not
 	 *
 	 * @param dashboardId
@@ -773,31 +733,6 @@ public class DashboardManager
 				em.close();
 			}
 		}
-	}
-
-	/**
-	 * Returns all dashboards
-	 *
-	 * @param tenantId
-	 * @return
-	 */
-	public List<Dashboard> listAllDashboards(Long tenantId)
-	{
-		DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
-		List<EmsDashboard> edList = dsf.getEmsDashboardFindAll();
-		List<Dashboard> dbdList = new ArrayList<Dashboard>(edList.size());
-		for (EmsDashboard ed : edList) {
-			dbdList.add(Dashboard.valueOf(ed, null, false, false, false));
-		}
-		EntityManager em = null;
-		try {
-			em = dsf.getEntityManager();
-		} finally {
-			if (em != null) {
-				em.close();
-			}
-		}
-		return dbdList;
 	}
 
 	/**
