@@ -10,6 +10,7 @@
  
 package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
@@ -19,7 +20,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
+import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.tenant.TenantIdProcessor;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardManager;
+import oracle.sysman.emaas.platform.dashboards.core.TenantManager;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DatabaseDependencyUnavailableException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
@@ -73,5 +76,47 @@ public class InternalToolAPI extends APIBase {
         finally {
             clearUserContext();
         }
+    }
+    
+    @DELETE
+    @Path("offboard/{tenantName}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteTenant(@PathParam("tenantName") String tenantName){
+        infoInteractionLogAPIIncomingCall(tenantName, null, "Service call to [DELETE] /v1/tool/offboard/{}", tenantName);
+        if (tenantName == null || tenantName.isEmpty()) {
+            return Response.status(400).entity("BAD REQUEST. PLEASE PROVIDE THE TENANT NAME.").build();
+        }
+        
+        StringBuilder message = new StringBuilder();
+        int statusCode = 200;
+        try {
+            if (!DependencyStatus.getInstance().isDatabaseUp())  {
+                LOGGER.error("Error to call [DELETE] /v1/tool/offboard/{}: database is down", tenantName);
+                throw new DatabaseDependencyUnavailableException();
+            }
+            
+            Long internalTenantId = TenantIdProcessor.getInternalTenantIdFromOpcTenantId(tenantName);
+            LOGGER.info("Get internal tenant id {} for opc tenant id {}", internalTenantId, tenantName);
+            
+            TenantManager tenantManager  = TenantManager.getInstance();
+            tenantManager.cleanTenant(internalTenantId);
+            message.append(tenantName).append(" has been deleted!");
+        } catch (BasicServiceMalfunctionException basicEx) {
+            statusCode = 500;
+            message.append("Tenant Id [").append(tenantName).append("] does not exist: ")
+                    .append(basicEx.getMessage().toUpperCase());
+            LOGGER.error("Tenant Id {} does not exist: {}", tenantName, basicEx.getMessage());
+        } catch (DashboardException e) {
+            statusCode = 500;
+            message.append("Fall into error while deleting tenant [").append(tenantName).append("] because: ")
+                    .append(e.getMessage().toUpperCase());
+            LOGGER.error("Fall into error while deleting tenant [{}] because: {}", tenantName, e.getMessage());
+        } catch(Exception ex) {
+            statusCode = 500;
+            message.append("Fall into error while deleting tenant [").append(tenantName).append("] because: ")
+            .append(ex.getMessage().toUpperCase());
+            LOGGER.error("Fall into error while deleting tenant [{}] because: {}", tenantName, ex.getMessage());
+        }
+        return Response.status(statusCode).entity(message.toString()).build();
     }
 }
