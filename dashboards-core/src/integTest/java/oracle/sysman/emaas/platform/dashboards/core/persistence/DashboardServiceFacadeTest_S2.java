@@ -585,4 +585,46 @@ public class DashboardServiceFacadeTest_S2 extends BaseTest
 		dsf.getEmsDashboardByIds(new ArrayList<BigInteger>(Arrays.asList(new BigInteger("124"), new BigInteger("356"))),
 				1L);
 	}
+
+    @Test(groups = {"s2"})
+    public void testServeralRemainMethods
+            (@Mocked final Query query, @Mocked final PersistenceManager mockpm, @Mocked final EntityManager em,
+             @Mocked final EntityManagerFactory mockemf, @Mocked final StringEscapeUtil se,
+             @Mocked final EmsDashboard emsDashboard, @Mocked final EmsSubDashboard emsSubDashboard,
+             @Mocked final EmsDashboardTile emsDashboardTile)
+    {
+        new Expectations() {
+            {
+                PersistenceManager.getInstance();
+                result = mockpm;
+                mockpm.getEntityManagerFactory();
+                result = mockemf;
+                mockemf.createEntityManager();
+                result = em;
+                em.createNativeQuery(anyString,withAny(Class.class));
+                result = query;
+                em.createNativeQuery(anyString);
+                result = query;
+                query.getResultList();
+                // following result correspond to the below test , one-by-one
+                result = new ArrayList<EmsDashboard>(Arrays.asList(emsDashboard));
+                result = new ArrayList<EmsSubDashboard>(Arrays.asList(emsSubDashboard));
+                result = new ArrayList<>(Arrays.asList(emsDashboardTile));
+                result = new ArrayList<>(Arrays.asList(new EmsDashboardTileParams()));
+                result = new ArrayList<>(Arrays.asList(new EmsPreference()));
+                result = new ArrayList<>(Arrays.asList(new EmsUserOptions()));
+                result = new ArrayList<>(Arrays.asList(1L,2L));
+
+            }
+        };
+        DashboardServiceFacade dsf = new DashboardServiceFacade(1L);
+        dsf.removeDashboardsByTenant(true,1L);
+        dsf.removeDashboardSetsByTenant(true,1L);
+        dsf.removeDashboardTilesByTenant(true,1L);
+        dsf.removeDashboardTileParamsByTenant(true,1L);
+        dsf.removeDashboardPreferenceByTenant(true,1L);
+        dsf.removeUserOptionsByTenant(true,1L);
+        Deencapsulation.invoke(dsf,"isIncludedInSet",new BigInteger("123"));
+        dsf.updateSubDashboardVisibleInHome(emsDashboard,new ArrayList<BigInteger>(Arrays.asList(new BigInteger("123"))));
+    }
 }
