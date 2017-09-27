@@ -327,9 +327,13 @@ public class DashboardServiceFacadeTest_S2 extends BaseTest
 		dsf.getFavoriteEmsDashboards("");
 		dsf.mergeEmsDashboard(new EmsDashboard());
 		dsf.mergeEmsPreference(new EmsPreference());
+		dsf.mergeEmsUserOptions(new EmsUserOptions());
 		dsf.persistEmsDashboard(new EmsDashboard());
 		dsf.persistEmsPreference(new EmsPreference());
+		dsf.persistEmsUserOptions(new EmsUserOptions());
 		dsf.removeAllEmsPreferences("");
+		dsf.removeAllEmsUserOptions(new BigInteger("123"));
+		dsf.removeEmsSubDashboardBySetId(new BigInteger("123"));
 		EmsDashboard rd = new EmsDashboard();
 		rd.setDashboardId(BigInteger.ZERO);
 		dsf.removeEmsDashboard(rd);
@@ -337,6 +341,14 @@ public class DashboardServiceFacadeTest_S2 extends BaseTest
 		rp.setPrefKey("");
 		rp.setUserName("");
 		dsf.removeEmsPreference(rp);
+
+		//some method are marked as /uncheck/ are test below
+		dsf.removeDashboardsByTenant(true,1L);
+		dsf.removeDashboardSetsByTenant(true,1L);
+		dsf.removeDashboardTilesByTenant(true,1L);
+		dsf.removeDashboardTileParamsByTenant(true,1L);
+		dsf.removeDashboardPreferenceByTenant(true,1L);
+		dsf.removeUserOptionsByTenant(true,1L);
 	}
 
 	/**
