@@ -22,11 +22,7 @@ import mockit.NonStrictExpectations;
 import oracle.sysman.emaas.platform.dashboards.core.BaseTest;
 import oracle.sysman.emaas.platform.dashboards.core.util.DateUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.StringEscapeUtil;
-import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
-import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
-import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTileParams;
-import oracle.sysman.emaas.platform.dashboards.entity.EmsPreference;
-import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
+import oracle.sysman.emaas.platform.dashboards.entity.*;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -293,7 +289,8 @@ public class DashboardServiceFacadeTest_S2 extends BaseTest
 
 	@Test(groups = { "s2" })
 	public void testCC(@Mocked final PersistenceManager mockpm, @Mocked final EntityManager mockem,
-			@Mocked final EntityManagerFactory mockemf, @Mocked final EntityTransaction mocket)
+			@Mocked final EntityManagerFactory mockemf, @Mocked final EntityTransaction mocket,
+					   @Mocked final Query query, @Mocked final	EmsDashboard emsDashboard)
 	{
 		new NonStrictExpectations() {
 			{
@@ -313,6 +310,9 @@ public class DashboardServiceFacadeTest_S2 extends BaseTest
 				result = null;
 				mockem.merge(any);
 				result = null;
+				mockem.createNativeQuery(anyString);
+				result = query;
+
 			}
 		};
 
@@ -349,6 +349,14 @@ public class DashboardServiceFacadeTest_S2 extends BaseTest
 		dsf.removeDashboardTileParamsByTenant(true,1L);
 		dsf.removeDashboardPreferenceByTenant(true,1L);
 		dsf.removeUserOptionsByTenant(true,1L);
+		dsf.removeEmsSubDashboardBySetId(new BigInteger("123"));
+		dsf.removeEmsSubDashboardBySubId(new BigInteger("123"));
+		dsf.updateTileLinkedDashboard(new BigInteger("123"));
+		dsf.getEmsDashboardsBySubId(new BigInteger("123"));
+		dsf.removeEmsUserOptions(new EmsUserOptions());
+		dsf.removeUnsharedEmsSubDashboard(new BigInteger("123"),"owner");
+		dsf.refreshOobDashboards(new ArrayList<BigInteger>(Arrays.asList(new BigInteger("123"))),new ArrayList<EmsDashboard>(Arrays.asList(new EmsDashboard())));
+		dsf.refreshResourceBundleByService("serviceName",new ArrayList<EmsResourceBundle>(Arrays.asList(new EmsResourceBundle())));
 	}
 
 	/**
