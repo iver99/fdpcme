@@ -5,6 +5,7 @@ package oracle.sysman.emaas.platform.dashboards.core.persistence;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -517,5 +518,51 @@ public class DashboardServiceFacadeTest_S2 extends BaseTest
 		dsf.removePreferenceByKey("userName","key",1L);
 	}
 
+	@Test(groups = {"s2"})
+	public void testGetlinkedDashboards(@Mocked final Query query, @Mocked final PersistenceManager mockpm,
+										@Mocked final EntityManagerFactory mockemf, @Mocked final EntityManager em){
+		final List<String> fakeList = new ArrayList<>();
+		new Expectations(){
+			{	PersistenceManager.getInstance();
+				result = mockpm;
+				mockpm.getEntityManagerFactory();
+				result = mockemf;
+				mockemf.createEntityManager();
+				result = em;
+				em.createNativeQuery(anyString);
+				result = query;
+				query.getResultList();
+				result = fakeList;
+			}
+		};
+		DashboardServiceFacade dsf = new DashboardServiceFacade(1L);
+		Assert.assertEquals(fakeList,dsf.getlinkedDashboards(new BigInteger("123")));
+	}
 
+	@Test(groups = {"s2"})
+	public void testGetEmsDashboardByIds
+			(@Mocked final Query query, @Mocked final PersistenceManager mockpm, @Mocked final EntityManager em,
+			 @Mocked final EntityManagerFactory mockemf, @Mocked final StringEscapeUtil se,
+			 @Mocked final EmsDashboard emsDashboard)
+	{
+		final List<EmsDashboard> fakeList = new ArrayList<>();
+		fakeList.add(emsDashboard);
+		new Expectations() {
+			{
+				PersistenceManager.getInstance();
+				result = mockpm;
+				mockpm.getEntityManagerFactory();
+				result = mockemf;
+				mockemf.createEntityManager();
+				result = em;
+				em.createNativeQuery(anyString,EmsDashboard.class);
+				result = query;
+				query.getResultList();
+				result = fakeList;
+			}
+		};
+		DashboardServiceFacade dsf = new DashboardServiceFacade(1L);
+		dsf.getEmsDashboardByIds(new ArrayList<BigInteger>(Arrays.asList(new BigInteger("124"), new BigInteger("356"))),
+				1L);
+	}
 }
