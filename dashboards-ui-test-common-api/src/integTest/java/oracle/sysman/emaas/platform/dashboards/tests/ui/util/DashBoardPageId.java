@@ -340,8 +340,8 @@ public class DashBoardPageId
 	public static final String LINKICONCSS = ".cke_button__link";         // "//a[@title='Link']";
 	public static final String TARGETCSS = "a[id^='cke_target_']";
 	public static final String TARGETOPTION = "//div[contains(@class, 'cke_dialog_ui_select')]/label[text()='Target']/following-sibling::*//div[contains(@class, 'cke_dialog_ui_input_select')]";
-	public static final String NEWTABCSS = ".cke_dialog_ui_input_select option[value='New Window (_blank)']";
-	public static final String SAMETABCSS = ".cke_dialog_ui_input_select option[value='Same Window (_self)']";
+	public static final String NEWTABCSS = ".cke_dialog_ui_input_select option[value='_blank']";
+	public static final String SAMETABCSS = ".cke_dialog_ui_input_select option[value='_self']";
 	public static final String LINKDIALOGCSS = "div.cke_dialog_body";
 	public static final String PROTOCOLOPTION = "//div[contains(@class, 'cke_dialog_ui_select')]/label[text()='Protocol']/following-sibling::*//div[contains(@class, 'cke_dialog_ui_input_select')]";
 	public static final String PROTOCOLOPTION_HTTP = "http://";
@@ -363,6 +363,7 @@ public class DashBoardPageId
 	public static final String ALTERNATIVEINPUT = "//label[text()='Alternative Text']/following-sibling::*//div/input[@type='text']";
 
 	public static final String IMAGESCSS = "[id^='textContentWrapper_']>div>img";
+	public static final String IMAGECSS = "[id^='textContentWrapper_']>div>a>img";
 	
 	public static final String TILETITLECSS = "h2.dbd-tile-title";
 	public static final String CONFIGTILECSS = "button[id^=actionButton]";

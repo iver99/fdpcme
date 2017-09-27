@@ -59,6 +59,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 	private String dbName_textWidget_empty = "";
 	private String dbName_textWidget_clickLink1 = "";
 	private String dbName_textWidget_clickLink2 = "";
+	private String dbName_textWidget_clickImage = "";
 	
 	private final String customWidgetName = "Execution Details";
 	private final String OOBName = "Middleware Operations";
@@ -1293,7 +1294,8 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		
 		webd.switchToWindow();
 		
-		Assert.assertTrue(webd.isDisplayed("css=" + "#lg>img"), "The link isn't opened correctly");		
+		String imgcss = "#lg>img";
+		Assert.assertTrue(webd.isDisplayed("css=" + imgcss), "The link isn't opened correctly");		
 	}
 	
 	@Test
@@ -1334,10 +1336,52 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		
 		DashboardBuilderUtil.saveDashboard(webd);	
 		
-		webd.click(DashBoardPageId.TEXTCONTENT1);	
+		webd.click(DashBoardPageId.TEXTCONTENT1);
+		webd.waitForElementPresent("css=" + "#lg>img");
+		
+	//	webd.switchToWindow();
+		String imgcss = "#lg>img";
+		
+		Assert.assertTrue(webd.isDisplayed("css=" + imgcss), "The link isn't opened correctly");
+	}
+	
+	 @Test
+	public void testTextWidget_clickImage()
+	{
+		dbName_textWidget_clickImage = "Dashboard_textWidgetClickImage-" + DashBoardUtils.generateTimeStamp();
+		
+		String dbDesc = "Add text widget into dashboard, test click image feature";
+		String urlString = "emsaasui/uifwk/images/o_logo.png";
+		String url = "";
+		String alternativeText = "test_image";
+		
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test image in testTextWidget");
+
+		DashboardHomeUtil.gridView(webd);
+		
+		String currentUrl = webd.getWebDriver().getCurrentUrl();
+		url = (currentUrl.substring(0, currentUrl.indexOf("emsaasui"))).concat(urlString);
+
+		webd.getLogger().info("Create the dashboard, then to add text widget");
+		DashboardHomeUtil.createDashboard(webd, dbName_textWidget_clickImage, dbDesc, DashboardHomeUtil.DASHBOARD);
+		
+		webd.getLogger().info("Verify the dashboard created Successfully");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_textWidget_clickImage, dbDesc, true), "Create dashboard failed!");		
+		
+		DashboardBuilderUtil.addTextWidgetToDashboard(webd);				
+		
+		DashboardBuilderUtil.addImageInTextWidget(webd, 1, url, alternativeText);
+		webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);	
+		
+		DashboardBuilderUtil.saveDashboard(webd);	
+		
+		webd.click("css=" + DashBoardPageId.IMAGECSS);
 		
 		webd.switchToWindow();
 		
-		Assert.assertTrue(webd.isDisplayed("css=" + "#lg>img"), "The link isn't opened correctly");
+		String imgcss = ".transparent";
+		
+		Assert.assertTrue(webd.isDisplayed("css=" + imgcss), "The image isn't opened in the new window");		
 	}
 }
