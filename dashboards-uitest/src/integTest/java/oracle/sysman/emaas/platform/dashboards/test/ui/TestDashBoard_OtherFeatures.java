@@ -13,7 +13,6 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.impl.DashboardBuilderUtil_1230;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.ITimeSelectorUtil.TimeRange;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
@@ -1265,17 +1264,22 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 	}
 	
 	@Test
-	public void testTextWidget_clickLink1()
+	public void testTextWidget_clickLink()
 	{
 		dbName_textWidget_clickLink1 = "Dashboard_textWidget_clickLink-" + DashBoardUtils.generateTimeStamp();
 		
 		String dbDesc = "Add text widget into dashboard, test click link, open it with new tab";
-		String url = "www.baidu.com";
+		
+		String urlString = "emsaasui/uifwk/images/o_logo.png";
+		String url = "";		
 		
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test link in testTextWidget");
 
 		DashboardHomeUtil.gridView(webd);
+		
+		String currentUrl = webd.getWebDriver().getCurrentUrl();
+		url = (currentUrl.substring(8, currentUrl.indexOf("emsaasui"))).concat(urlString);
 
 		webd.getLogger().info("Create the dashboard, then to add text widget");
 		DashboardHomeUtil.createDashboard(webd, dbName_textWidget_clickLink1, dbDesc, DashboardHomeUtil.DASHBOARD);
@@ -1285,7 +1289,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		
 		DashboardBuilderUtil.addTextWidgetToDashboard(webd);				
 		
-		DashboardBuilderUtil.addLinkInTextWidget(webd, 1, url, DashBoardPageId.PROTOCOLOPTION_HTTP);	
+		DashboardBuilderUtil.addLinkInTextWidget(webd, 1, url, DashBoardPageId.PROTOCOLOPTION_HTTPS);	
 		webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
 		
 		DashboardBuilderUtil.saveDashboard(webd);	
@@ -1294,55 +1298,8 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		
 		webd.switchToWindow();
 		
-		String imgcss = "#lg>img";
-		Assert.assertTrue(webd.isDisplayed("css=" + imgcss), "The link isn't opened correctly");		
-	}
-	
-	@Test
-	public void testTextWidget_clickLink2()
-	{
-		dbName_textWidget_clickLink2 = "Dashboard_textWidget_clickLink-" + DashBoardUtils.generateTimeStamp();
-		
-		String dbDesc = "Add text widget into dashboard, test click link, open it with same tab";
-		String url = "www.baidu.com";
-		
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test link in testTextWidget");
-
-		DashboardHomeUtil.gridView(webd);
-
-		webd.getLogger().info("Create the dashboard, then to add text widget");
-		DashboardHomeUtil.createDashboard(webd, dbName_textWidget_clickLink2, dbDesc, DashboardHomeUtil.DASHBOARD);
-		
-		webd.getLogger().info("Verify the dashboard created Successfully");
-		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_textWidget_clickLink2, dbDesc, true), "Create dashboard failed!");		
-		
-		DashboardBuilderUtil.addTextWidgetToDashboard(webd);				
-		
-		DashboardBuilderUtil.addLinkInTextWidget(webd, 1, url, DashBoardPageId.PROTOCOLOPTION_HTTP);	
-		
-		webd.waitForElementPresent("css=" + DashBoardPageId.LINKICONCSS);		
-	 	webd.click("css=" + DashBoardPageId.LINKICONCSS);	 	
-	 	webd.click("css=" + DashBoardPageId.TARGETCSS);
-	 	
-	 	webd.click(DashBoardPageId.TARGETOPTION);
-	 	
-		webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.SAMETABCSS)).findElement(By.xpath("..")).click();
-		webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.SAMETABCSS)).click();
-		
-		webd.click("css=" + DashBoardPageId.OKBTNCSS);	
-	 	
-		webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);		
-		
-		DashboardBuilderUtil.saveDashboard(webd);	
-		
-		webd.click(DashBoardPageId.TEXTCONTENT1);
-		webd.waitForElementPresent("css=" + "#lg>img");
-		
-	//	webd.switchToWindow();
-		String imgcss = "#lg>img";
-		
-		Assert.assertTrue(webd.isDisplayed("css=" + imgcss), "The link isn't opened correctly");
+		String imgcss = ".transparent";		
+		Assert.assertTrue(webd.isDisplayed("css=" + imgcss), "The image isn't opened in the new window");
 	}
 	
 	 @Test
@@ -1376,12 +1333,12 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		
 		DashboardBuilderUtil.saveDashboard(webd);	
 		
-		webd.click("css=" + DashBoardPageId.IMAGECSS);
+		webd.waitForServer();
+		webd.click("css=" + DashBoardPageId.IMAGESCSS);
 		
 		webd.switchToWindow();
 		
-		String imgcss = ".transparent";
-		
+		String imgcss = ".transparent";		
 		Assert.assertTrue(webd.isDisplayed("css=" + imgcss), "The image isn't opened in the new window");		
 	}
 }

@@ -363,7 +363,6 @@ public class DashBoardPageId
 	public static final String ALTERNATIVEINPUT = "//label[text()='Alternative Text']/following-sibling::*//div/input[@type='text']";
 
 	public static final String IMAGESCSS = "[id^='textContentWrapper_']>div>img";
-	public static final String IMAGECSS = "[id^='textContentWrapper_']>div>a>img";
 	
 	public static final String TILETITLECSS = "h2.dbd-tile-title";
 	public static final String CONFIGTILECSS = "button[id^=actionButton]";
