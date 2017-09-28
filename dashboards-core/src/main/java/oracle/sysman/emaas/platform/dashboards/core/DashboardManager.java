@@ -488,6 +488,8 @@ public class DashboardManager
 						edbdtList = ed.getDashboardTileList();
 					} catch (DashboardException e) {
 						LOGGER.error(e);
+						//update last access, before any return.
+						updateLastAccessDate(dashboardId, tenantId, dsf);
 						return cdSet;
 					}
 				}
@@ -505,7 +507,8 @@ public class DashboardManager
 
 			// combine single dashboard or selected dashbaord
 			CombinedDashboard cd = CombinedDashboard.valueOf(ed, ep, euo,savedSearchResponse);
-
+			//update last access, before any return.
+			updateLastAccessDate(dashboardId, tenantId, dsf);
 			// return combined dashboard Set
 			if (cdSet != null) {
 				cdSet.setSelected(cd);
@@ -823,7 +826,7 @@ public class DashboardManager
 		sb = new StringBuilder(" from Ems_Dashboard p  ");
 
 		boolean joinOptions = false;
-		if (getListDashboardsOrderBy(orderBy, false).toLowerCase().contains("access_date")) {
+		if (getListDashboardsOrderBy(orderBy).toLowerCase().contains("access_date")) {
 			joinOptions = true;
 		}
 		if (filter != null && filter.getIncludedFavorites() != null && filter.getIncludedFavorites().booleanValue() == true) {
@@ -932,7 +935,7 @@ public class DashboardManager
 		//query
 		StringBuilder sbQuery = new StringBuilder(sb);
 		//order by
-		sbQuery.append(getListDashboardsOrderBy(orderBy, false));
+		sbQuery.append(getListDashboardsOrderBy(orderBy));
 		//			sbQuery.append(sb);
 		sbQuery.insert(0,
 				"select p.DASHBOARD_ID,p.DELETED,p.DESCRIPTION,p.SHOW_INHOME,p.ENABLE_TIME_RANGE,p.ENABLE_REFRESH,p.IS_SYSTEM,p.SHARE_PUBLIC,"
@@ -1351,6 +1354,9 @@ public class DashboardManager
 				parentDashboardSet.setScreenShot(ed.getScreenShot());
 				dsf.mergeEmsDashboard(parentDashboardSet);
 			}
+
+			//update last access
+			updateLastAccessDate(dbd.getDashboardId(), tenantId, dsf);
 			return Dashboard.valueOf(ed, dbd, true, true, true);
 		}
 		finally {
@@ -1461,25 +1467,34 @@ public class DashboardManager
 		}
 	}
 
+	/**
+	 * update tenant's dashboard's last access date in user option, or create a new user option if it doesn't exist.
+	 * @param dashboardId
+	 * @param tenantId
+	 * @param dsf
+	 */
 	private void updateLastAccessDate(BigInteger dashboardId, Long tenantId, DashboardServiceFacade dsf)
 	{
 		if (dashboardId == null || dashboardId.compareTo(BigInteger.ZERO) <= 0) {
-			LOGGER.debug("Last access date for dashboard is not updated: dashboard id with value {} is invalid", dashboardId);
+			LOGGER.warn("Last access date for dashboard is not updated: dashboard id with value {} is invalid", dashboardId);
 			return;
 		}
 		//EntityManager em = null;
 		EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
 		if (ed == null || ed.getDeleted() != null && ed.getDeleted().compareTo(BigInteger.ZERO) > 0) {
+			LOGGER.warn("Dashboard is deleted, will not update last access date...");
 			return;
 		}
 		//em = dsf.getEntityManager();
 		String currentUser = UserContext.getCurrentUser();
 		// TODO Shall we still save the last access date if it wan't accessed by a user?
 		if(NON_TENANT_ID.equals(tenantId) || currentUser == null) {
+			LOGGER.warn("Tenant id or current user is null, will not update last access date.");
 		    return;
 		}
 		EmsUserOptions edla = dsf.getEmsUserOptions(currentUser, dashboardId);
 		if (edla == null) {
+			LOGGER.debug("Create new user option for user {} with dashboard id {}", currentUser, dashboardId);
 			edla = new EmsUserOptions();
 			edla.setUserName(currentUser);
 			edla.setDashboardId(dashboardId);
@@ -1487,6 +1502,7 @@ public class DashboardManager
 			dsf.persistEmsUserOptions(edla);
 		}
 		else {
+			LOGGER.debug("Update new user option for user {} with dashboard id {}", currentUser, dashboardId);
 			edla.setAccessDate(DateUtil.getCurrentUTCTime());
 			dsf.mergeEmsUserOptions(edla);
 		}
@@ -1613,7 +1629,12 @@ public class DashboardManager
 		return index;
 	}
 
-	private String getListDashboardsOrderBy(String orderBy, boolean isUnion)
+	/**
+	 * return order by sql query
+	 * @param orderBy
+	 * @return
+	 */
+	private String getListDashboardsOrderBy(String orderBy)
 	{
 		if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_NAME.equals(orderBy)
 				|| DashboardConstants.DASHBOARD_QUERY_ORDER_BY_NAME_ASC.equals(orderBy)) {
@@ -1631,20 +1652,10 @@ public class DashboardManager
 		}
 		else if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME.equals(orderBy)
 				|| DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME_DSC.equals(orderBy)) {
-			if (isUnion) {
-				return " order by CASE WHEN p.access_Date IS NULL THEN 0 ELSE 1 END DESC, p.access_Date DESC, p.dashboard_Id DESC";
-			}
-			else {
 				return " order by CASE WHEN le.access_Date IS NULL THEN 0 ELSE 1 END DESC, le.access_Date DESC, p.dashboard_Id DESC";
-			}
 		}
 		else if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME_ASC.equals(orderBy)) {
-			if (isUnion) {
-				return " order by CASE WHEN p.access_Date IS NULL THEN 0 ELSE 1 END, p.access_Date, p.dashboard_Id";
-			}
-			else {
 				return " order by CASE WHEN le.access_Date IS NULL THEN 0 ELSE 1 END, le.access_Date, p.dashboard_Id";
-			}
 		}
 		else if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_LAST_MODIFEID.equals(orderBy)
 				|| DashboardConstants.DASHBOARD_QUERY_ORDER_BY_LAST_MODIFEID_DSC.equals(orderBy)) {
@@ -1662,12 +1673,7 @@ public class DashboardManager
 		}
 		else {
 			//default order by
-			if (isUnion) {
-				return " order by p.application_Type, p.type DESC, lower(p.name), p.name, CASE WHEN p.access_Date IS NULL THEN 0 ELSE 1 END DESC, p.access_Date DESC";
-			}
-			else {
-				return " order by p.application_Type, p.type DESC, lower(p.name), p.name, CASE WHEN le.access_Date IS NULL THEN 0 ELSE 1 END DESC, le.access_Date DESC";
-			}
+				return " order by CASE WHEN le.access_Date IS NULL THEN 0 ELSE 1 END DESC, le.access_Date DESC, p.dashboard_Id DESC";
 		}
 	}
 
