@@ -1268,7 +1268,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 	{
 		dbName_textWidget_clickLink1 = "Dashboard_textWidget_clickLink-" + DashBoardUtils.generateTimeStamp();
 		
-		String dbDesc = "Add text widget into dashboard, test click link, open it with new tab";
+		String dbDesc = "Add text widget into dashboard, test click link, open it with new window";
 		
 		String urlString = "emsaasui/uifwk/images/o_logo.png";
 		String url = "";		
@@ -1298,8 +1298,9 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		
 		webd.switchToWindow();
 		
-		String imgcss = ".transparent";		
-		Assert.assertTrue(webd.isDisplayed("css=" + imgcss), "The image isn't opened in the new window");
+	//	String imgcss = ".transparent";		
+	//	Assert.assertTrue(webd.isDisplayed("css=" + imgcss), "The image isn't opened in the new window");
+		DashBoardUtils.verifyURL(webd, "uifwk/images/o_logo.png");
 	}
 	
 	 @Test
@@ -1307,7 +1308,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 	{
 		dbName_textWidget_clickImage = "Dashboard_textWidgetClickImage-" + DashBoardUtils.generateTimeStamp();
 		
-		String dbDesc = "Add text widget into dashboard, test click image feature";
+		String dbDesc = "Add text widget into dashboard, test click image, open it with new window";
 		String urlString = "emsaasui/uifwk/images/o_logo.png";
 		String url = "";
 		String alternativeText = "test_image";
@@ -1338,7 +1339,9 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		
 		webd.switchToWindow();
 		
-		String imgcss = ".transparent";		
-		Assert.assertTrue(webd.isDisplayed("css=" + imgcss), "The image isn't opened in the new window");		
+		//String imgcss = ".transparent";		
+		//Assert.assertTrue(webd.isDisplayed("css=" + imgcss), "The image isn't opened in the new window");	
+		
+		DashBoardUtils.verifyURL(webd, "uifwk/images/o_logo.png");
 	}
 }
