@@ -20,6 +20,7 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
+import mockit.Deencapsulation;
 import mockit.Expectations;
 import mockit.Mocked;
 import mockit.NonStrictExpectations;
@@ -40,6 +41,7 @@ import oracle.sysman.emaas.platform.dashboards.core.model.TileParam;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.MockDashboardServiceFacade;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Binary;
 import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil.VersionedLink;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
@@ -1291,5 +1293,39 @@ public class DashboardManagerTest_S2 extends BaseTest
 		};
 		dashboardManager.getCombinedDashboardById(new BigInteger("1"), 1L, "username");
 
+	}
+
+	@Test(groups = {"s2"})
+	public void testGetDashboardIdsByNames(@Mocked final DashboardServiceFacade anyDashboardServiceFacade,
+											 @Mocked final EntityManager anyEntityManager, @Mocked final EntityTransaction andEntityTransaction,
+											 @Mocked final Query anyQuery, @Mocked final BigDecimal anyNumber)
+	{
+		DashboardManager dm = DashboardManager.getInstance();
+		dm.getDashboardIdsByNames(new ArrayList<>(Arrays.asList("Test","Testing")),1L);
+	}
+
+	@Test(groups = {"s2"})
+	public void testGetDashboardSetsBySubId(@Mocked final DashboardServiceFacade anyDashboardServiceFacade,
+										   @Mocked final EntityManager anyEntityManager, @Mocked final EntityTransaction andEntityTransaction,
+										   @Mocked final Query anyQuery, @Mocked final BigDecimal anyNumber,
+											@Mocked final EmsDashboard emsDashboard) throws Exception
+	{
+		DashboardManager dm = DashboardManager.getInstance();
+		new Expectations(){
+			{
+//				anyDashboardServiceFacade.getEmsDashboardById(BigInteger.valueOf(1L));
+//				result = emsDashboard;
+//				emsDashboard.getDeleted();
+//				result = BigInteger.ZERO;
+//				emsDashboard.getSharePublic().intValue();
+//				result = 1;
+				anyDashboardServiceFacade.getDashboardNameWithMaxSuffixNumber("name",1L);
+				result = "For Testing";
+				result = "For Testing _123";
+
+			}
+		};
+		Deencapsulation.invoke(dm,"generateNewName",anyDashboardServiceFacade,1L,"name");
+		Deencapsulation.invoke(dm,"generateNewName",anyDashboardServiceFacade,1L,"name");
 	}
 }
