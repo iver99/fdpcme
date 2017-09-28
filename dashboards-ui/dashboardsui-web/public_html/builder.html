@@ -407,7 +407,6 @@
                                 </li>
                                 -->
                                 <li data-option="divider"></li>
-                                    <!-- ko if: $data.type() !== "TEXT_WIDGET" -->
                                         <!-- ko if: $data.editDisabled() !== true -->
                                         <li data-option="edit" data-bind="css: {'oj-disabled': !$data.maximizeEnabled() || $data.editDisabled()}">
                                             <a href="#">
@@ -417,7 +416,6 @@
                                                 <span data-bind="text: getNlsString('COMMON_BTN_EDIT')"></span>
                                             </a>
                                         </li>
-                                        <!-- /ko -->
                                         <li data-option="divider"></li>
                                     <!-- /ko -->
                                         <!-- ko if: $data.editDisabled() !== true -->
