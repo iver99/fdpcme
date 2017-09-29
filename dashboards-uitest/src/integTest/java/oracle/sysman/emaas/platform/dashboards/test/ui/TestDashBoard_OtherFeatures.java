@@ -1301,6 +1301,8 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 	//	String imgcss = ".transparent";		
 	//	Assert.assertTrue(webd.isDisplayed("css=" + imgcss), "The image isn't opened in the new window");
 		DashBoardUtils.verifyURL(webd, "uifwk/images/o_logo.png");
+		
+		webd.switchToParentWindow();
 	}
 	
 	 @Test
@@ -1343,5 +1345,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		//Assert.assertTrue(webd.isDisplayed("css=" + imgcss), "The image isn't opened in the new window");	
 		
 		DashBoardUtils.verifyURL(webd, "uifwk/images/o_logo.png");
+		
+		webd.switchToParentWindow();
 	}
 }
