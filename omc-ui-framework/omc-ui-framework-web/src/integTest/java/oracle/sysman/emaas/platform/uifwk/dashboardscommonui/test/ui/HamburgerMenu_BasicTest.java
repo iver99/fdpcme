@@ -90,13 +90,18 @@ public class HamburgerMenu_BasicTest extends LoginAndLogout
 	public void testClickAddEntityMenuItem()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), "");
-		webd.getLogger().info("start to test in testClickAddEntityMenuItem()");
-		WaitUtil.waitForPageFullyLoaded(webd);
+	    webd.getLogger().info("start to test in testClickAddEntityMenuItem()");
+	    WaitUtil.waitForPageFullyLoaded(webd);
+	    BrandingBarUtil.expandSubMenu(webd, BrandingBarUtil.ROOT_MENU_ADMIN);
+	    webd.capturePageState();
+	    String url = webd.getAttribute("omc_root_admin_addentity@href");
+	    webd.getLogger().info("The URL is:"+ url);
+	    webd.capturePageState();
+	    BrandingBarUtil.clickMenuItem(webd, BrandingBarUtil.GLOBAL_ADMIN_MENU_ADD_ENTITY);
+	    WaitUtil.waitForPageFullyLoaded(webd);
+	    String currurl = webd.getWebDriver().getCurrentUrl();
+	    Assert.assertEquals(currurl, url);
 
-		BrandingBarUtil.expandSubMenu(webd, BrandingBarUtil.ROOT_MENU_ADMIN);
-		BrandingBarUtil.clickMenuItem(webd, BrandingBarUtil.GLOBAL_ADMIN_MENU_ADD_ENTITY);
-		WaitUtil.waitForPageFullyLoaded(webd);
-		CommonUIUtils.verifyURL_WithPara(webd, "monitoringservicesui/cms/global-index.html?root=cmsConfigureEntityDiscovery");
 	}
 
 	@Test(alwaysRun = true)
