@@ -1263,7 +1263,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		Assert.assertEquals(textContent.getText().trim(), "Start typing...");
 	}
 	
-	//@Test
+	@Test
 	public void testTextWidget_clickLink()
 	{
 		dbName_textWidget_clickLink1 = "Dashboard_textWidget_clickLink-" + DashBoardUtils.generateTimeStamp();
@@ -1298,14 +1298,15 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		
 		webd.switchToWindow();
 		
-	//	String imgcss = ".transparent";		
-	//	Assert.assertTrue(webd.isDisplayed("css=" + imgcss), "The image isn't opened in the new window");
 		DashBoardUtils.verifyURL(webd, "uifwk/images/o_logo.png");
+		webd.takeScreenShot();
 		
-		webd.switchToParentWindow();
+		webd.switchToMainWindow();
+		
+		//webd.switchToParentWindow();
 	}
 	
-	 //@Test
+	@Test
 	public void testTextWidget_clickImage()
 	{
 		dbName_textWidget_clickImage = "Dashboard_textWidgetClickImage-" + DashBoardUtils.generateTimeStamp();
@@ -1341,11 +1342,10 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		
 		webd.switchToWindow();
 		
-		//String imgcss = ".transparent";		
-		//Assert.assertTrue(webd.isDisplayed("css=" + imgcss), "The image isn't opened in the new window");	
-		
 		DashBoardUtils.verifyURL(webd, "uifwk/images/o_logo.png");
+		webd.takeScreenShot();
 		
-		webd.switchToParentWindow();
+		webd.switchToMainWindow();
+	//	webd.switchToParentWindow();
 	}
 }
