@@ -17,17 +17,17 @@ public class LoginAndLogout
 	@AfterMethod
 	public static void logoutMethod()
 	{
-//		if (webd != null) {
-//			webd.getLogger().info("If signout icon is invisible, need to scroll screen to display it");
-//			WebElement webe = webd.getWebDriver().findElement(By.cssSelector("#menubutton"));
-//			((JavascriptExecutor) webd.getWebDriver()).executeScript("arguments[0].scrollIntoView(true);", webe);
-//			((JavascriptExecutor) webd.getWebDriver()).executeScript("scroll(0,0)");
-//			webd.takeScreenShot();
-//			webd.savePageToFile();
-//			webd.getLogger().info("start to logout");
+		if (webd != null) {
+			webd.getLogger().info("If signout icon is invisible, need to scroll screen to display it");
+			WebElement webe = webd.getWebDriver().findElement(By.cssSelector("#menubutton"));
+			((JavascriptExecutor) webd.getWebDriver()).executeScript("arguments[0].scrollIntoView(true);", webe);
+			((JavascriptExecutor) webd.getWebDriver()).executeScript("scroll(0,0)");
+			webd.takeScreenShot();
+			webd.savePageToFile();
+			webd.getLogger().info("start to logout");
 
 			LoginUtils.doLogout(webd);
-//		}
+		}
 	}
 
 	public void customlogin(String testName, String customUser)
