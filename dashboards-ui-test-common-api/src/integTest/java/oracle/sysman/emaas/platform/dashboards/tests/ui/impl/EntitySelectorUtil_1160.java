@@ -121,7 +121,6 @@ public class EntitySelectorUtil_1160 extends EntitySelectorUtil_1150
             
                 final WebDriver finalDriver = driver;
                 final Logger finalLogger = logger;
-                logger.log(Level.INFO, "Entity Selector wait version");
 
                 // Workaround for farm issues. Verify type ahead dropdown
                 // is actually displaying entities. 
