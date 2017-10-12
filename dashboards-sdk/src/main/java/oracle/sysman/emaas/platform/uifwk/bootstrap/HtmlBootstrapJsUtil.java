@@ -307,7 +307,7 @@ public class HtmlBootstrapJsUtil
 		String relSsoLogout = "sso.logout";
 		String ssoLogoutUrl = null;
 		String tenantName = LoginDataStore.getTenantName();
-		Link lk = RegistryLookupUtil.getServiceExternalLink(securityServiceName, securityServiceVersion, relSsoLogout, tenantName);
+		Link lk = RegistryLookupUtil.getServiceExternalLink(securityServiceName, securityServiceVersion, relSsoLogout, tenantName,false);
 		lk = RegistryLookupUtil.replaceWithVanityUrl(lk, tenantName, securityServiceName);
 		if (lk != null) {
 			ssoLogoutUrl = lk.getHref();

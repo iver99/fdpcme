@@ -18,6 +18,7 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceI
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceQuery;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.SanitizedInstanceInfo;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
@@ -41,7 +42,6 @@ public class RegistryLookupUtil
 	private static Logger itrLogger = LogUtil.getInteractionLogger();
 	// keep the following the same with service name
 	public static final String APM_SERVICE = "ApmUI";
-
 	public static final String ITA_SERVICE = "emcitas-ui-apps";
 	public static final String LA_SERVICE = "LogAnalyticsUI";
 	public static final String TA_SERVICE = "TargetAnalytics";
@@ -84,14 +84,14 @@ public class RegistryLookupUtil
 		return RegistryLookupUtil.getServiceInternalLink(serviceName, version, rel, false, tenantName);
 	}
 
-	public static VersionedLink getServiceExternalLink(String serviceName, String version, String rel, String tenantName)
+	public static VersionedLink getServiceExternalLink(String serviceName, String version, String rel, String tenantName, boolean useApiGWLookup)
 	{
-		return RegistryLookupUtil.getServiceExternalLink(serviceName, version, rel, false, tenantName);
+		return RegistryLookupUtil.getServiceExternalLink(serviceName, version, rel, false, tenantName,useApiGWLookup);
 	}
 
 	public static VersionedLink getServiceExternalLinkWithRelPrefix(String serviceName, String version, String rel,
-																	String tenantName){
-		return RegistryLookupUtil.getServiceExternalLink(serviceName, version, rel, true, tenantName);
+																	String tenantName, boolean useApiGWLookup){
+		return RegistryLookupUtil.getServiceExternalLink(serviceName, version, rel, true, tenantName,useApiGWLookup);
 	}
 
 	public static String getServiceExternalEndPoint(String serviceName, String version, String tenantName)
@@ -145,7 +145,7 @@ public class RegistryLookupUtil
 
 	public static EndpointEntity getServiceExternalEndPointEntity(String serviceName, String version, String tenantName)
 	{
-		Link link = RegistryLookupUtil.getServiceExternalLink(serviceName, version, "sso.endpoint/virtual", tenantName);
+		Link link = RegistryLookupUtil.getServiceExternalLink(serviceName, version, "sso.endpoint/virtual", tenantName,false);
 		if (link != null) {
 			return new EndpointEntity(serviceName, version, link.getHref());
 		}
@@ -268,24 +268,28 @@ public class RegistryLookupUtil
 	}
 
 	private static VersionedLink getServiceExternalLink(String serviceName, String version, String rel, boolean prefixMatch,
-														String tenantName)
+														String tenantName, boolean useApiGWLookup)
 	{
 		LOGGER.debug(
-				"/getServiceExternalLink/ Trying to retrieve service external link for service: \"{}\", version: \"{}\", rel: \"{}\", tenant: \"{}\"",
-				serviceName, version, rel, tenantName);
+				"/getServiceExternalLink/ Trying to retrieve service external link for service: \"{}\", version: \"{}\", rel: \"{}\", tenant: \"{}\", useApiGWLookup: \"{}\"",
+				serviceName, version, rel, tenantName,useApiGWLookup);
 		InstanceInfo info = getInstanceInfo(serviceName, version);
 		VersionedLink lk = null;
+		LOGGER.info("Is this a look up on APIGW registry? {}", useApiGWLookup);
 		try {
 			List<InstanceInfo> result = null;
+			InstanceInfo ins = null;
 			if (!StringUtil.isEmpty(tenantName)) {
-				InstanceInfo ins = LookupManager.getInstance().getLookupClient().getInstanceForTenant(info, tenantName);
+				ins = useApiGWLookup == true? LookupManager.getInstance().getGatewayLookupClient().getInstanceForTenant(info, tenantName)
+						: LookupManager.getInstance().getLookupClient().getInstanceForTenant(info, tenantName);
 				LOGGER.debug("#4. Retrieved instance {} by using getInstanceForTenant for tenant {}", ins, tenantName);
 				if (ins == null) {
 					LOGGER.error(
 							"#4.Error: retrieved null instance info with getInstanceForTenant. Details: serviceName={}, version={}, tenantName={}",
 							serviceName, version, tenantName);
 					//TODO not sure if this is necessary, some RegistryLookupUtil have this line of code, some not.
-					result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
+					result = useApiGWLookup == true? LookupManager.getInstance().getGatewayLookupClient().lookup(new InstanceQuery(info))
+							: LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
 				}
 				else {
 					result = new ArrayList<InstanceInfo>();
@@ -294,7 +298,8 @@ public class RegistryLookupUtil
 
 			}
 			else {
-				result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
+				result = useApiGWLookup == true? LookupManager.getInstance().getGatewayLookupClient().lookup(new InstanceQuery(info))
+						: LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
 			}
 			if (result != null && !result.isEmpty()) {
 
