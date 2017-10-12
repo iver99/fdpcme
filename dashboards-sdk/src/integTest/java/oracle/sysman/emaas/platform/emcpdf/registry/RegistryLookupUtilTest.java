@@ -76,11 +76,11 @@ public class RegistryLookupUtilTest
 		link.withHref("htt://www.test.com");
 		new Expectations(RegistryLookupUtil.class) {
 			{
-				RegistryLookupUtil.getServiceExternalLink(anyString, anyString, anyString, anyString);
+				RegistryLookupUtil.getServiceExternalLink(anyString, anyString, anyString, anyString,false);
 				result = link;
 			}
 		};
-		EndpointEntity ee = RegistryLookupUtil.getServiceExternalEndPointEntity(serviceName, version, tenantName);
+		EndpointEntity ee = RegistryLookupUtil.getServiceExternalEndPointEntity(serviceName, version, tenantName,false);
 		Assert.assertEquals(ee.getServiceName(), serviceName);
 		Assert.assertEquals(ee.getVersion(), version);
 		Assert.assertEquals(ee.getHref(), href);

@@ -99,15 +99,15 @@ public class RegistryLookupAPI extends APIBase
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getRegistryLink(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
-			@QueryParam("serviceName") String serviceName, @QueryParam("version") String version)
+			@QueryParam("serviceName") String serviceName, @QueryParam("version") String version,@DefaultValue("false") @QueryParam("useApiGWLookup") boolean useApiGWLookup)
 	{
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer,
-				"Service call to [GET] /v1/registry/lookup/endpoint?serviceName={}&version={}", serviceName, version);
+				"Service call to [GET] /v1/registry/lookup/endpoint?serviceName={}&version={}&useApiGWLookup={}", serviceName, version,useApiGWLookup);
 		try {
 			if (!DependencyStatus.getInstance().isEntityNamingUp()) {
 				LOGGER.error(
-						"Error to call [GET] /v1/registry/lookup/endpoint?serviceName={}&version={}: EntityNaming service is down",
-						serviceName, version);
+						"Error to call [GET] /v1/registry/lookup/endpoint?serviceName={}&version={}&useApiGWLookup={}: EntityNaming service is down",
+						serviceName, version,useApiGWLookup);
 				throw new EntityNamingDependencyUnavailableException();
 			}
 			initializeUserContext(tenantIdParam, userTenant);
@@ -116,7 +116,7 @@ public class RegistryLookupAPI extends APIBase
 						MessageUtils.getDefaultBundleString("REGISTRY_LOOKUP_ENDPOINT_NOT_FOUND_ERROR", serviceName, version));
 				return Response.status(Status.NOT_FOUND).entity(JsonUtil.buildNormalMapper().toJson(error)).build();
 			}
-			EndpointEntity endPoint = RegistryLookupUtil.getServiceExternalEndPointEntity(serviceName, version, tenantIdParam);
+			EndpointEntity endPoint = RegistryLookupUtil.getServiceExternalEndPointEntity(serviceName, version, tenantIdParam,useApiGWLookup);
 			if (endPoint != null) {
 				endPoint = RegistryLookupUtil.replaceWithVanityUrl(endPoint, tenantIdParam, serviceName);
 				return Response.status(Status.OK).entity(JsonUtil.buildNonNullMapper().toJson(endPoint)).build();

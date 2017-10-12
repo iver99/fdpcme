@@ -148,9 +148,9 @@ public class RegistryLookupUtil
 		return null;
 	}
 
-	public static EndpointEntity getServiceExternalEndPointEntity(String serviceName, String version, String tenantName)
+	public static EndpointEntity getServiceExternalEndPointEntity(String serviceName, String version, String tenantName, boolean useApiGWLookup)
 	{
-		Link link = RegistryLookupUtil.getServiceExternalLink(serviceName, version, "sso.endpoint/virtual", tenantName);
+		Link link = RegistryLookupUtil.getServiceExternalLink(serviceName, version, "sso.endpoint/virtual", tenantName, useApiGWLookup);
 		if (link != null) {
 			return new EndpointEntity(serviceName, version, link.getHref());
 		}
