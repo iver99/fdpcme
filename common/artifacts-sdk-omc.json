@@ -33,7 +33,7 @@
 		"method": "artifactFilterSdkVersion",
 		"group": "com.oracle.emaas.emcpsrvs.sdk",
 		"name": "emaas-platform-tenant-sdk",
-		"version": "2.0.+",
+		"version": "2.1.+",
 		"transitive": false
 	},
         "multi-instances-sdk": {
