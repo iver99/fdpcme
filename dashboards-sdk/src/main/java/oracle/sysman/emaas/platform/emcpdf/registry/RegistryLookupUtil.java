@@ -84,9 +84,14 @@ public class RegistryLookupUtil
 		return RegistryLookupUtil.getServiceInternalLink(serviceName, version, rel, false, tenantName);
 	}
 
-	public static VersionedLink getServiceExternalLink(String serviceName, String version, String rel, String tenantName, boolean useApiGWLookup)
+	public static VersionedLink getServiceExternalLink(String serviceName, String version, String rel, String tenantName, boolean useApiGwLookup)
 	{
-		return RegistryLookupUtil.getServiceExternalLink(serviceName, version, rel, false, tenantName,useApiGWLookup);
+		return RegistryLookupUtil.getServiceExternalLink(serviceName, version, rel, false, tenantName,useApiGwLookup);
+	}
+
+	public static VersionedLink getServiceExternalLink(String serviceName, String version, String rel, String tenantName)
+	{
+		return RegistryLookupUtil.getServiceExternalLink(serviceName, version, rel, false, tenantName,false);
 	}
 
 	public static VersionedLink getServiceExternalLinkWithRelPrefix(String serviceName, String version, String rel,
@@ -145,7 +150,7 @@ public class RegistryLookupUtil
 
 	public static EndpointEntity getServiceExternalEndPointEntity(String serviceName, String version, String tenantName)
 	{
-		Link link = RegistryLookupUtil.getServiceExternalLink(serviceName, version, "sso.endpoint/virtual", tenantName,false);
+		Link link = RegistryLookupUtil.getServiceExternalLink(serviceName, version, "sso.endpoint/virtual", tenantName);
 		if (link != null) {
 			return new EndpointEntity(serviceName, version, link.getHref());
 		}

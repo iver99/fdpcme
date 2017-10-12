@@ -76,7 +76,7 @@ public class RegistryLookupUtilTest
 		link.withHref("htt://www.test.com");
 		new Expectations(RegistryLookupUtil.class) {
 			{
-				RegistryLookupUtil.getServiceExternalLink(anyString, anyString, anyString, anyString,anyBoolean);
+				RegistryLookupUtil.getServiceExternalLink(anyString, anyString, anyString, anyString);
 				result = link;
 			}
 		};
