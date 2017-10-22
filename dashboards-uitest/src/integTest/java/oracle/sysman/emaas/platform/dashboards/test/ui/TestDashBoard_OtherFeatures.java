@@ -1236,8 +1236,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		webd.getLogger().info("Verify the text widget in the dashboard");		
 		Assert.assertEquals(webd.getText("css=" + DashBoardPageId.TEXTWIDGETCONTENTCSS).trim(), "Start typing...");
 	}
-<<<<<<< HEAD
-	
+<	
 	//@Test
 	public void testTextWidget_clickLink()
 	{
@@ -1324,6 +1323,3 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 	//	webd.switchToParentWindow();
 	}
 }
-=======
-}
->>>>>>> 04692375ce7c4871407c28ff6b58d6ae07f68046
