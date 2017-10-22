@@ -1236,7 +1236,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		webd.getLogger().info("Verify the text widget in the dashboard");		
 		Assert.assertEquals(webd.getText("css=" + DashBoardPageId.TEXTWIDGETCONTENTCSS).trim(), "Start typing...");
 	}
-<	
+	
 	//@Test
 	public void testTextWidget_clickLink()
 	{
